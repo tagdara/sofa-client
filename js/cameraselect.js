@@ -43,10 +43,19 @@ class CameraSelect extends React.Component {
 
     }
     
+    setCurrentCamera = (data) => {
+        this.setState({cameras:data})
+        if (data.length>0) {
+            this.setState( {currentCamera:data[0]} )
+        } else {
+            this.setState( {currentCamera:null} )
+        }
+    }
+    
     componentDidMount() {
-  	    fetch('http://home.dayton.home:8090/data/cameras')
+  	    fetch('/data/cameras')
  		    .then(result=>result.json())
- 		    .then(data=>this.setState({cameras:data, currentCamera:data[0]}))
+ 		    .then(data=>this.setCurrentCamera(data))
     }
     
     nextCamera = () => {
@@ -82,8 +91,9 @@ class CameraSelect extends React.Component {
 
         return (
             <div className={classes.CameraSelect}>
-                {
+                { this.state.currentCamera!='' ?
                 <SecurityCamera selectButtons={true} openGrid={ this.handleGridOpen } key={ this.state.currentCamera } name={ this.state.currentCamera } sender={this.props.sender} nextCamera={this.nextCamera} prevCamera={this.prevCamera}></SecurityCamera>
+                :null
                 }
                 <CameraGrid showGrid={this.state.showGrid} closeDialog={this.handleGridClose} cameras={this.state.cameras} />
             </div> 

@@ -122,9 +122,11 @@ class AreaList extends React.Component {
                     <LightGrid name={'all'} lightCount={this.lightCount} closeGrid={this.closeDialog} showGrid={this.state.showdialog} key='lightlist' filter='ON' Category='Light' devices={ this.props.devices } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
                 </Card>
                 {
+                    this.state.areamap ?
                     Object.keys(this.state.areamap).map(name => 
                         <Area key={ name } name={ name } devices={ this.devicesByArea(name)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(name)) } sendMessage={this.props.sendMessage} ></Area>
                     )
+                    : null
 
                 }
             </div> 

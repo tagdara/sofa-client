@@ -91,7 +91,7 @@ class CameraSelect extends React.Component {
 
         return (
             <div className={classes.CameraSelect}>
-                { this.state.currentCamera!='' ?
+                { this.state.currentCamera!=null ?
                 <SecurityCamera selectButtons={true} openGrid={ this.handleGridOpen } key={ this.state.currentCamera } name={ this.state.currentCamera } sender={this.props.sender} nextCamera={this.nextCamera} prevCamera={this.prevCamera}></SecurityCamera>
                 :null
                 }

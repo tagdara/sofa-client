@@ -300,7 +300,7 @@ class DeviceApp extends Component {
                     <Toolbar />
                     <BottomNav className={classes.phoneBottom} pageChange={this.pageChange} />
                     <Sockette 
-                        url="ws://home.dayton.home:8090/ws"
+                        url={this.state.server}
                         getSocket={socket => {
                             this.setState({socket});
                         }}
@@ -341,7 +341,7 @@ class DeviceApp extends Component {
                         </Grid>
                     </div>
                     <Sockette 
-                        url="ws://home.dayton.home:8090/ws"
+                        url={this.state.server}
                         getSocket={socket => {
                             this.setState({socket});
                         }}

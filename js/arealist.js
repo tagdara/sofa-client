@@ -94,7 +94,7 @@ class AreaList extends React.Component {
     };  
     
     componentDidMount() {
-  	    fetch('http://home.dayton.home:8090/data/areamap')
+  	    fetch('/data/areamap')
  		    .then(result=>result.json())
             .then(result=>this.setState({areamap:result}));
     }

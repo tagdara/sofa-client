@@ -34,7 +34,7 @@ class CameraList extends React.Component {
     }
     
     componentDidMount() {
-  	    fetch('http://home.dayton.home:8090/data/cameras')
+  	    fetch('/data/cameras')
  		    .then(result=>result.json())
  		    .then(data=>this.setState({cameras:data}))
     }

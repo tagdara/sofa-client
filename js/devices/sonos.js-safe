@@ -1,0 +1,167 @@
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import SonosDialog from './sonosDialog';
+
+const styles = theme => ({
+    card: {
+        display: 'flex',
+        maxWidth: '480px',
+        margin: 8,
+        boxSizing: "border-box",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "16 24 16 24",
+    },
+    cardname: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+    content: {
+        minWidth: 0,
+        padding: "0 !important",
+        flexGrow:1,
+        display: "flex",
+        justifyContent: "space-between",
+    },
+    metadata: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "flex-end",
+        minWidth: 0,
+    },
+    icon: {
+        paddingLeft: 8,
+        minWidth: 62,
+        height: 62,
+        width: 62,
+        alignSelf: "flex-end",
+    },
+});
+
+class Sonos extends React.Component {
+    
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            tracked: ['artist','title','album','art','linked','input','playbackState'],
+            players: {},
+            endpointId: '',
+            title: '',
+            artist: '',
+            artbase: "",
+            art: "",
+            linked: [],
+            input: '',
+            open: false,
+            playbackState: 'STOPPED',
+            linkedPlayers: {},
+            showOverlay: true,
+            showdialog: false,
+        };
+    }    
+
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+
+        var tracked=prevState.tracked;
+        var changes={};
+        
+        if (nextProps.deviceState===undefined) {
+            return changes
+        }
+        
+        var data=nextProps.deviceState
+        var endpointId=nextProps.device.endpointId
+        
+        if (data.hasOwnProperty('event')) {
+            if (endpointId==data.event.endpoint.endpointId) {
+                if (data.hasOwnProperty('context')){
+                    for (var i = 0; i < data.context.properties.length; i++) {
+                        if (tracked.indexOf(data.context.properties[i].name)>-1) {
+                            changes[data.context.properties[i].name]=data.context.properties[i].value;
+                        }
+                    }
+                } 
+                // might be both. We probably don't need to apply the ones from context in a change 
+                // but might as well keep it all in sync.
+                if (data.hasOwnProperty('payload')){
+                    if (data.payload.hasOwnProperty('change')){
+                        for (var i = 0; i < data.payload.change.properties.length; i++) {
+                            if (tracked.indexOf(data.payload.change.properties[i].name)>-1) {
+                                changes[data.payload.change.properties[i].name]=data.payload.change.properties[i].value;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return changes;
+    }
+
+    componentDidMount() {
+        if (!this.props.deviceState.hasOwnProperty('event')) {
+            this.props.updateDevice(this.props.device.friendlyName)
+        }
+    }
+    
+    createLinks = () => {
+        
+        let links=[]
+        for (var i = 0; i < this.state.linked.length; i++) {
+            links.push(<Typography  key={ this.state.linked[i]+"link" } variant="body2">{this.state.linked[i]}</Typography>)
+        }
+        return links
+    }
+    
+    handleClickOpen = () => {
+        this.setState({ showdialog: true });
+    };  
+    
+    closeDialog = () => {
+        this.setState({ showdialog: false });
+    };    
+
+    render() {
+
+        const { classes, theme } = this.props;
+        
+        return (
+             this.props.name===this.state.input ? 
+                <Card className={classes.card}>
+                    <CardContent className={classes.content} onClick={ () => this.handleClickOpen()}>
+                        <div>
+                            <Typography variant="body2">{this.props.name}</Typography>
+                            {this.createLinks()}
+                        </div>
+                    </CardContent>
+                    <CardContent className={classes.content} onClick={ () => this.handleClickOpen()}>
+                        <div className={classes.metadata}>
+                            <Typography variant="subheading" noWrap>{this.state.title}</Typography>
+                            <Typography variant="body1" color="textSecondary" noWrap>
+                                {this.state.artist}
+                            </Typography>
+                        </div>
+                        <img src={this.state.art} className={classes.icon} />
+                    </CardContent>
+                    <SonosDialog showdialog={this.state.showdialog} closeDialog={this.closeDialog} linkedPlayers={this.props.linkedPlayers} name={this.props.name} device={ this.props.device } deviceState={ this.props.deviceState } sender={ this.props.sender } />
+                </Card>
+            : null
+        );
+    }
+}
+
+Sonos.propTypes = {
+    classes: PropTypes.object.isRequired,
+    theme: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles, { withTheme: true })(Sonos);

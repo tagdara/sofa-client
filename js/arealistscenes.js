@@ -75,7 +75,7 @@ class AreaListScenes extends React.Component {
     }
 
     componentDidMount() {
-  	    fetch('http://home.dayton.home:8090/data/globalScenes')
+  	    fetch('/data/globalScenes')
  		    .then(result=>result.json())
             .then(data=>this.setState({scenes: data}));
     }

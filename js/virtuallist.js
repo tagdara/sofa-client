@@ -6,6 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Shade from './devices/shade';
+import Sprinkler from './devices/sprinkler';
+import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
         
@@ -28,7 +30,7 @@ class VirtualList extends React.Component {
     }   
     
     componentDidMount() {
-  	    fetch('http://home.dayton.home:8090/data/virtual')
+  	    fetch('/config/virtualDevices')
  		    .then(result=>result.json())
  		    .then(data=>this.setState({devices:data}))
     }
@@ -40,8 +42,18 @@ class VirtualList extends React.Component {
         return (
             <div className={classes.list}>
                 {
-                    Object.keys(this.state.devices).map((key, index) => ( 
-                        <Shade key={ index } name={ key } up={ this.state.devices[key]['commands']['up']['target']  }  stop={ this.state.devices[key]['commands']['stop']['target'] }  down={ this.state.devices[key]['commands']['down']['target']  } sender={this.props.sender}/>
+                    Object.keys(this.state.devices).map((key, index) => (
+                        this.state.devices[key]['type']=='windowshade' ?
+                            <Shade key={ index } name={ key } up={ this.state.devices[key]['commands']['up']['target']  }  stop={ this.state.devices[key]['commands']['stop']['target'] }  down={ this.state.devices[key]['commands']['down']['target']  } sender={this.props.sender}/>
+                            :null
+                    ))
+                }
+                <Divider />
+                {
+                    Object.keys(this.state.devices).map((key, index) => (
+                        this.state.devices[key]['type']=='water' ?
+                            <Sprinkler key={ index } name={ key } on={ this.state.devices[key]['commands']['on']['target']  }  off={ this.state.devices[key]['commands']['off']['target']  } sender={this.props.sender}/>
+                            :null
                     ))
                 }
             </div> 

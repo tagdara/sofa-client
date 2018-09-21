@@ -1,41 +1,28 @@
 import React, { Component } from "react";
-import Switch from '@material-ui/core/Switch';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+
 import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import BasicLight from './devices/basiclight';
-import DimmableLight from './devices/dimmablelight';
-import TunableLight from './devices/tunablelight';
-import ColorLight from './devices/colorlight';
-import Thermostat from './devices/thermostat';
-import Zone from './devices/zone';
 import List from '@material-ui/core/List';
+
 import Paper from '@material-ui/core/Paper';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import PropTypes from 'prop-types';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import FolderIcon from '@material-ui/icons/Folder';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Slide from  '@material-ui/core/Slide';
-import IconButton from '@material-ui/core/IconButton';
+
 import CloseIcon from '@material-ui/icons/Close';
+
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+
 import GroupLight from './devices/grouplight'
 import Light from './devices/light'
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Button from '@material-ui/core/Button';
+import SceneEditor from './sceneEditor'
 
-const styles = {
+const styles  = theme =>  ({
+    
     root: {
         flexGrow: 1,
     },
@@ -57,24 +44,6 @@ const styles = {
     halves: {
         width: '50%',
     },
-    halfSlider: {
-        width: '50%',
-        paddingLeft: 16,
-        paddingRight: 16,
-        display: 'flex',
-        flex: 1,
-    },
-
-    brilabel: {
-        width: '100%',
-    },
-    expansionDetails: {
-        padding:4,
-    },
-    appBar: {
-        paddingTop: "env(safe-area-inset-top)",
-        position: 'relative',
-    },
     flex: {
         flex: 1,
     },
@@ -87,14 +56,32 @@ const styles = {
         height: 40,
         padding: "16px",
         alignItems: "center",
+    },
+    tabRow: {
+        color: theme.palette.primary.contrastText,
+        display: "flex",
+        justifyContent: "center",
+    },
+    tabInfo: {
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary[500],
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+    tabTitle: {
+        backgroundColor: theme.palette.primary[700],
+        padding: 0,
+        paddingTop: "env(safe-area-inset-top)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
+    },
+    groupHead: {
+        backgroundColor: theme.palette.primary[100],
+        padding: 0,
     }
-};
-
-
-
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
+});
 
 
 class Area extends React.Component {
@@ -103,164 +90,121 @@ class Area extends React.Component {
         super(props);
 
         this.state = {
-            brightness: 0,
-            powerState: false,
-            colorTemperatureInKelvin: 4000,
+            frontTab: 0,
+            computedLevel: 0,
+            level: 0,
             target: null,
             open: false,
-            endpointIdCache: [],
-            lastmessage: '',
-            updates: {},
             areaState: {},
+            edit: false,
         };
-        this.avgState = this.avgState.bind(this);
+    }
+    
+    static getDerivedStateFromProps(nextProps, prevState) {
 
+        var data=nextProps.deviceProperties
+        var changes={}
+        
+        if (nextProps.hasOwnProperty('sceneData')) {
+            if (nextProps.sceneData.hasOwnProperty('shortcuts')) {
+                changes.level=Area.computeLevels(nextProps.sceneData, data)
+            }
+        }
+
+        return changes
+    }
+    
+    
+    static computeLevels(sceneData, deviceProperties) {
+
+        var highscore=0
+        var currentlevel=0
+        var scores={}
+
+        for (var i = 0; i < 4; i++) {
+            var level=i.toString()
+            if (sceneData['shortcuts'].hasOwnProperty(level)) {
+                var sceneName=sceneData['shortcuts'][level]
+                var scene=sceneData['scenes'][sceneName]
+
+                var levscore=0
+                for (var light in scene) {        
+                    if (deviceProperties.hasOwnProperty(light)) {
+                        if (deviceProperties[light]['powerState']=='ON') {
+                            var bri=deviceProperties[light]['brightness']
+                        } else {
+                            var bri=0
+                        }
+                        levscore+=(50-Math.abs(bri-scene[light]['set']))
+                    }
+                }
+
+                scores[level]=levscore
+                if (levscore>highscore) {
+                    currentlevel=i
+                    highscore=levscore
+                }
+            }
+        }
+
+        return currentlevel
     }
 
-    avgState(prop) {
-        
-        if (prop=='on') {
-            
-            for (var dev in this.props.deviceProperties) {
-                if (this.props.deviceProperties[dev].hasOwnProperty('powerState')) {
-                    if (this.props.deviceProperties[dev].powerState=='ON') {
-                        return true
-                    }
-                }
-            }
-            
-            return false
-            
-        } else if (prop=='brightness') {
-            
-            var brightnessCount=0;
-            var totalbrightness=0;
-            for (var dev in this.props.deviceProperties) {
-                if (this.props.deviceProperties[dev].hasOwnProperty('brightness')) {
-                    brightnessCount=brightnessCount+1;
-                    if (this.props.deviceProperties[dev].powerState=='ON') {
-                        totalbrightness=totalbrightness+this.props.deviceProperties[dev].brightness;
-                    }
-                }
-            }
-        
-            if (brightnessCount==0) { return 0 }
+    handlePreLevelChange = event => {
+        this.setState({ level: event });
+    }; 
 
-            var avgb=totalbrightness/brightnessCount
-            return avgb;
+    runScene = sceneName => {
         
-        } else if (prop=='temperature') {
-            var temperatureCount=0;
-            var totaltemperature=0;
-            for (var dev in this.props.deviceProperties) {
-                if (this.props.deviceProperties[dev].hasOwnProperty('colorTemperatureInKelvin')) {
-                    temperatureCount=temperatureCount+1;
-                    if (this.props.deviceProperties[dev].powerState=='ON') {
-                        totaltemperature=totaltemperature+this.props.deviceProperties[dev].colorTemperatureInKelvin;
+        var scene=this.props.sceneData['scenes'][sceneName]
+        
+        for (var light in scene) {
+            if (scene.hasOwnProperty(light)) {
+                if (scene[light]['set']==0) {
+                    if (scene[light].powerState!='OFF') {
+                        this.props.sendAlexaCommand(light, '', 'PowerController', 'TurnOff')
+                    }
+                } else if (scene[light]['set']>0) {
+                    if (scene[light].powerState!='ON') {
+                        this.props.sendAlexaCommand(light, '', 'PowerController', 'TurnOn')
+                    }
+                    if (scene[light].brightness!=scene[light]['set']) {
+                        this.props.sendAlexaCommand(light, '', 'BrightnessController', 'SetBrightness', scene[light]['set'])
                     }
                 }
+            } else {
+                console.log('Light not in device properties',light)
             }
-            
-            if (temperatureCount==0) { return 0 }
-
-            var avgb=totaltemperature/temperatureCount
-            return avgb;
+        }
         
+    }
+
+
+    runShortcut = level => {
+        console.log('run shortcut', level)
+        
+        if (this.props.sceneData['shortcuts'].hasOwnProperty(level.toString())) {
+            var sceneName=this.props.sceneData['shortcuts'][level]
+            this.runScene(sceneName)
         } else {
-            return 0;
-        }
-        
-    }
-    
-    anyOn() {
-        for (var dev in this.props.deviceProperties) {
-            if (this.props.deviceProperties[dev].hasOwnProperty('powerState')) {
-                if (this.props.deviceProperties[dev].powerState=='ON') {
-                    return true
-                }
-            }
-        }
-        
-        return false
-        
-    }
-
-
-    renderSwitch(device) {
-
-        if (device==={} || device==undefined) {
-            return null;
-        }
-        if (device.hasOwnProperty('displayCategories')) {
-            switch(device.displayCategories[0]) {
-                case 'LIGHT':
-                    var capabilities=[]
-                    for (var i = 0; i < device.capabilities.length; i++) {
-                        capabilities.push(device.capabilities[i].interface)
-                    }
-                    return <Light key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendMessage={this.props.sendMessage} />
-
-                default:
-                    return null;
-            }
+            console.log('No scene shortcut for area level', level)
         }
     }
-    
-    state = {
-        open: false,
-    };
 
-    handleClickOpen = () => {
-        this.setState({ open: true });
-    };
-
-    handleClose = () => {
-        this.setState({ open: false });
-    };
 
     render() {
         const { classes, fullScreen } = this.props;
         const { devices } = this.state;  
         return (
             <Paper elevation={2} className={classes.paperItem} >
-                <Typography variant="subheading" className={classes.halves} onClick={ () => this.handleClickOpen()}>{this.props.name}</Typography>
-                <Slider className={classes.halves} min={0} max={100} defaultValue={this.avgState('brightness')} value={this.avgState('brightness')} 
-                        trackStyle={{ backgroundColor: 'orangeRed', height: 2 }}
-                        handleStyle={{
-                            borderColor: 'orangeRed',
-                            backgroundColor: 'orangeRed',
-                        }}
+                <Typography variant="subheading" className={classes.halves} onClick={ () => this.props.selectArea(this.props.name)}>{this.props.name}</Typography>
+                <Slider className={classes.halves} min={0} max={3} defaultValue={this.state.level} value={this.state.level}
+                    trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
+                    handleStyle={{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -7, height: 16, width: 16}}
+                    railStyle={{ height: 3 }}
+                    onChange={this.handlePreLevelChange} 
+                    onAfterChange={this.runShortcut} 
                 />
-            <Dialog
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'sm'}
-                open={this.state.open}
-                onClose={this.handleClose}
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
-                <DialogTitle id="area-dialog-title">
-                    { this.props.name!='All' ?
-
-                    <GroupLight key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } sendMessage={this.props.sendMessage} />
-                    : null
-                    
-                    }
-                </DialogTitle>
-                <DialogContent>
-                    <List className={classes.root}>
-                    {
-                        Object.keys(this.props.devices).sort().map(c => (
-                        
-                            this.renderSwitch(this.props.devices[c])))
-                    }
-                  </List>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleClose} color="primary" autoFocus>OK</Button>
-                </DialogActions>
-            </Dialog>
             </Paper>
         );
     }

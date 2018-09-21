@@ -1,18 +1,18 @@
-
 import React from "react";
-import Receiver from './devices/receiver';
-import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+
+import Card from '@material-ui/core/Card';
+
 import SecurityCamera from './devices/securitycamera';
 import CameraGrid from './devices/cameraGrid';
+
 
 const styles = theme => ({
         
     CameraSelect: {
-        paddingBottom: 4,
+        margin: 8,
+        padding: 0,
         minWidth: 320,
     },
 });
@@ -28,19 +28,10 @@ class CameraSelect extends React.Component {
             currentCameraNumber: 0,
             showGrid: false,
         };
-        
         this.nextCamera = this.nextCamera.bind(this);
         this.prevCamera = this.prevCamera.bind(this);
         this.handleGridOpen = this.handleGridOpen.bind(this);
         this.handleGridClose = this.handleGridClose.bind(this);
-        
-    }
-    
-    
-    setBaseState = data => {
-
-        return {cameras:data}
-
     }
     
     setCurrentCamera = (data) => {
@@ -52,37 +43,35 @@ class CameraSelect extends React.Component {
         }
     }
     
-    componentDidMount() {
-  	    fetch('/data/cameras')
- 		    .then(result=>result.json())
- 		    .then(data=>this.setCurrentCamera(data))
-    }
-    
     nextCamera = () => {
         var nextcam=this.state.currentCameraNumber+1
-        if (nextcam>this.state.cameras.length-1) { nextcam=0; console.log('set nextcam to 0 due to length') }
-        if (nextcam<0) {nextcam=this.state.cameras.length-1; console.log('set nextcam to l-1 due to length')}
+        if (nextcam>this.state.cameras.length-1) { nextcam=0; }
+        if (nextcam<0) {nextcam=this.state.cameras.length-1; }
         
         this.setState({currentCameraNumber: nextcam, currentCamera:this.state.cameras[nextcam]})
     }
     
     prevCamera = () => {
         var nextcam=this.state.currentCameraNumber-1
-        if (nextcam>this.state.cameras.length-1) { nextcam=0; console.log('set nextcam to 0 due to length') }
-        if (nextcam<0) {nextcam=this.state.cameras.length-1; console.log('set nextcam to l-1 due to length')}
+        if (nextcam>this.state.cameras.length-1) { nextcam=0; }
+        if (nextcam<0) {nextcam=this.state.cameras.length-1; }
         
         this.setState({currentCameraNumber: nextcam, currentCamera:this.state.cameras[nextcam]})
     }
     
     handleGridOpen = () => {
         this.setState({ showGrid: true });
-        //this.setState({ 'camera': "/image/dlink/camera"+this.props.name})
     };  
 
     handleGridClose = () => {
         this.setState({ showGrid: false });
-        //this.setState({ 'camera': "/image/dlink/camera"+this.props.name})
     };  
+    
+    componentDidMount() {
+  	    fetch('/data/cameras')
+ 		    .then(result=>result.json())
+ 		    .then(data=>this.setCurrentCamera(data))
+    }
 
     
     render() {
@@ -90,13 +79,14 @@ class CameraSelect extends React.Component {
         const { classes } = this.props;
 
         return (
-            <div className={classes.CameraSelect}>
+
+            <Card className={classes.CameraSelect}>
                 { this.state.currentCamera!=null ?
                 <SecurityCamera selectButtons={true} openGrid={ this.handleGridOpen } key={ this.state.currentCamera } name={ this.state.currentCamera } sender={this.props.sender} nextCamera={this.nextCamera} prevCamera={this.prevCamera}></SecurityCamera>
                 :null
                 }
                 <CameraGrid showGrid={this.state.showGrid} closeDialog={this.handleGridClose} cameras={this.state.cameras} />
-            </div> 
+            </Card> 
         );
     }
 }

@@ -1,15 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Switch from '@material-ui/core/Switch';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Avatar from '@material-ui/core/Avatar';
+
 import TvDialog from './tvDialog';
 
 const styles = theme => ({
 
+    icon: {
+        minWidth: 62,
+        height: 62,
+        width: 62,
+        alignSelf: "flex-end",
+    },
+    listItem: {
+        padding: "16 0",
+        width: '100%',
+    },
     card: {
         display: 'flex',
         maxWidth: '480px',
@@ -17,32 +29,15 @@ const styles = theme => ({
         boxSizing: "border-box",
         flexDirection: "column",
         justifyContent: "space-between",
-        padding: "8 24 16 24",
-    },
-    cardname: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
+        padding: "4 16",
     },
     content: {
         minWidth: 0,
         padding: "0 !important",
         flexGrow:1,
         display: "flex",
-        justifyContent: "space-between",
-    },
-    metadata: {
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-    },
-    icon: {
-        minWidth: 62,
-        height: 62,
-        width: 62,
-        alignSelf: "flex-end",
-    },
+        alignItems: "center"
+    }, 
 });
 
 class Tv extends React.Component {
@@ -51,12 +46,20 @@ class Tv extends React.Component {
         super(props);
 
         this.state = {
-            endpointId: '',
+            powerState: 'OFF',
             showdialog: false,
             icon: '/react/images/tv.jpg?v2',
         };
     }    
-    
+
+    static getDerivedStateFromProps(nextProps, prevState) {
+        
+        var changes={}
+        if (nextProps.deviceProperties.powerState !== prevState.powerState) {
+            changes['powerState']=nextProps.deviceProperties.powerState
+        }  
+        return changes
+    }
     
     handleClickOpen = () => {
         this.setState({ showdialog: true });
@@ -67,7 +70,6 @@ class Tv extends React.Component {
         console.log(this)
     }   
  
-    
     handlePowerChange = event => {
         event.stopPropagation();
         this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
@@ -82,32 +84,25 @@ class Tv extends React.Component {
     
     render() {
 
-        const { classes, theme } = this.props;
+        const { classes } = this.props;
 
         return (
                 <Card className={classes.card}>
                     <CardContent className={classes.content} onClick={ () => this.handleClickOpen()}>
-                        <div className={classes.cardname}>
-                            <Typography variant="body2">{this.props.name}</Typography>
-                        </div>
-                        <Switch color="primary" checked={this.props.deviceProperties.powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
-                    </CardContent>
-                    <CardContent className={classes.content} onClick={ () => this.handleClickOpen()}>
-                        <div className={classes.metadata}>
-                            <Typography variant="subheading" noWrap>{this.props.deviceProperties.input}</Typography>
-                        </div>
-                        <img src={this.state.icon} className={classes.icon} />
+                        <ListItem className={classes.listItem}>
+                            <Avatar src={this.state.icon} />
+                            <ListItemText primary={this.props.name} secondary={this.props.deviceProperties.input}/>
+                            <Switch color="primary" checked={this.state.powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
+                        </ListItem>
                     </CardContent>
                     <TvDialog showdialog={this.state.showdialog} closeDialog={this.closeDialog} name={this.props.name} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={ this.props.sendMessage } />
                 </Card>
-
         );
     }
 }
 
 Tv.propTypes = {
     classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(Tv);
+export default withStyles(styles)(Tv);

@@ -36,6 +36,7 @@
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "rc-slider": "^8.6.1",
     "react-color": "^2.14.1",
+    "react-prevent-clickthrough": "0.0.3",
     "socket.io-client": "^2.1.1",
     "sockette": "^2.0.0",
     "sockette-component": "^1.0.0"

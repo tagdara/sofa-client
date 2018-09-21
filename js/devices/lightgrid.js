@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';import IconButton from '@material-ui/core/IconButton';
 import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
 import CloseIcon from '@material-ui/icons/Close';
 import Sonos from './sonos';
@@ -19,6 +21,14 @@ import WarningIcon from '@material-ui/icons/Warning';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import Button from '@material-ui/core/Button';
 import GroupLight from './grouplight'
+import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import Slide from  '@material-ui/core/Slide';
+import Divider from '@material-ui/core/Divider';
+import Paper from '@material-ui/core/Paper';
+import CustomScroll from 'react-custom-scroll';
 
 const styles = theme => ({
     
@@ -53,14 +63,14 @@ const styles = theme => ({
         display: "flex",
         alignItems: "center",
     },
-    camGrid: {
+    lGrid: {
         display: "flex",
         flexWrap: "wrap",
-        maxWidth: 1440,
-        width: "100%",
 
-        paddingBottom: "env(safe-area-inset-bottom)",
-        overflowY: "auto",
+        padding: 0,
+        flex: "auto",
+        flexGrow: 0,
+        margin: "0 0 auto 0",
     },
     paper: {
         boxShadow: "none",
@@ -73,11 +83,55 @@ const styles = theme => ({
         paddingTop: "env(safe-area-inset-top)",
     },
     gridTitle: {
-        flexGrow: 1,
+        color: theme.palette.primary.contrastText,
+    },
+    menuIcon: {
+        color: theme.palette.primary.contrastText,
+    },
+    tabRow: {
+        color: theme.palette.primary.contrastText,
+        display: "flex",
+        justifyContent: "center",
+    },
+    tabInfo: {
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary[500],
+        display: "flex",
+        justifyContent: "space-around",
+        alignItems: "center",
     },
 
-
+    topBar: {
+        width: "100%",
+    },
+    tabTitle: {
+        backgroundColor: theme.palette.primary[500],
+        paddingTop: "env(safe-area-inset-top)",
+        padding: "16px 24px 0px 24px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
+    },
+    gridPlaceholder: {
+        height: 2,
+        minWidth: 320,
+        flexGrow: 1,
+    },
+    fullDialog: {
+        boxSizing: "border-box",
+    },
+    dialogContent: {
+        height: "100%",
+        padding: 8,
+    },
+    dialogActions: {
+        paddingBottom: "env(safe-area-inset-bottom)",    
+    }
 });
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 class LightGrid extends React.Component {
 
@@ -85,7 +139,8 @@ class LightGrid extends React.Component {
         super(props);
 
         this.state = {
-            filter: 'open',
+            filter: 'on',
+            frontTab: 0,
         }
         
         this.avgState = this.avgState.bind(this);
@@ -155,35 +210,63 @@ class LightGrid extends React.Component {
         }
     }
     
+    
+    handleTab = (event, tabno) => {
+        if (tabno==0) { this.setState({frontTab: tabno, filter: 'on'})}
+        if (tabno==1) { this.setState({frontTab: tabno, filter: 'all'})}
+    };    
+    
     render() {
         
-        const { classes, theme } = this.props;
+        const { classes, fullScreen  } = this.props;
         
         return (
-            <Dialog fullScreen open={this.props.showGrid}  className={classes.camGridDialog} PaperProps ={{ classes: { root: classes.paper}}}>
-                <AppBar position="static" className={classes.camGridToolbar}>
-                    <Toolbar>
-                        <Typography variant="title" color="inherit" className={classes.gridTitle}>
-                            Lights
-                        </Typography>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={(e) =>  this.props.closeGrid(e)}>
-                            <CloseIcon />
-                        </IconButton>
-                    </Toolbar>
-                </AppBar>                
+            <Dialog 
+                fullScreen={fullScreen}
+                maxWidth={'md'}
+                open={this.props.showGrid}  
+                onClose={this.props.closeGrid}
+                TransitionComponent={Transition}
+                className={fullScreen ? classes.fullDialog : classes.normalDialog }
+            >
+                <DialogTitle id="area-dialog-title" className={classes.tabTitle} >
+                    <Paper className={classes.tabInfo} elevation={0}>
+                        { this.props.lightCount('on')>0 ? 
+                            <Typography variant="subheading"  className={classes.gridTitle} >{this.props.lightCount('on')} lights are on</Typography>
+                            : 
+                            <Typography variant="subheading"  className={classes.gridTitle} color="inherit" >All lights off</Typography>
+                        }
+                    </Paper>
+                    <Tabs className={classes.tabRow} value={this.state.frontTab} onChange={this.handleTab}>
+                        <Tab label="On" />
+                        <Tab label="All" />
+                    </Tabs>
+                </DialogTitle>
+                { this.props.name=='all' ?
+                null
+                :
                 <Card className={classes.card}>
                     <CardContent className={classes.content}>
                     <GroupLight key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } sendMessage={this.props.sendMessage} />
                     </CardContent>
                 </Card>
-
-                <div className={classes.camGrid}>
+                }
+                <Divider />
+                <DialogContent className={classes.dialogContent }>
+                        <div className={classes.lGrid }>
                 { 
                 this.props.devices.map((device) =>
+                    this.state.filter=='all' || String(this.props.deviceProperties[device.friendlyName].powerState).toLowerCase()==this.state.filter.toLowerCase() ?
                     <Light key={ device.endpointId } name={ device.friendlyName } filter={ this.props.filter} device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendMessage={this.props.sendMessage}  />
+                    : null
                 )}
-
+                <div className={classes.gridPlaceholder}></div>
                 </div>
+                </DialogContent>
+                <Divider />
+                <DialogActions className={classes.dialogActions} >
+                    <Button onClick={(e) => this.props.closeGrid(e)} color="primary" autoFocus>OK</Button>
+                </DialogActions>
             </Dialog>
         )
     }
@@ -191,7 +274,8 @@ class LightGrid extends React.Component {
 
 LightGrid.propTypes = {
     classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(LightGrid);
+export default withStyles(styles)(withMobileDialog()(LightGrid));
+

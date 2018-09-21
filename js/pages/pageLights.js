@@ -1,15 +1,14 @@
-import React, { Component, createElement  } from 'react';
+import React, { Component } from "react";
 import AreaList from '../arealist';
-import AreaListScenes from '../arealistscenes';
-import LightList from '../lightlist';
+import ButtonHero from '../buttonHero';
 
 class PageLights extends Component {
 
     render() {
         return (
             <div>
-                <AreaListScenes />
-                <AreaList deviceByName={this.props.deviceByName} devices={ this.props.devicesByCategory('LIGHT') } propertiesFromDevices={ this.props.propertiesFromDevices} deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('LIGHT')) } sendMessage={this.props.sendMessage} />
+                <AreaList sendAlexaCommand={this.props.sendAlexaCommand} deviceByName={this.props.deviceByName} devices={ this.props.devicesByCategory('LIGHT') } propertiesFromDevices={ this.props.propertiesFromDevices} deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('LIGHT')) } sendMessage={this.props.sendMessage} />
+                <ButtonHero sendAlexaCommand={this.props.sendAlexaCommand} deviceByName={this.props.deviceByName} devices={ this.props.devicesByCategory('BUTTON') } propertiesFromDevices={ this.props.propertiesFromDevices} deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('BUTTON')) } sendMessage={this.props.sendMessage} />
             </div>
         );
     }

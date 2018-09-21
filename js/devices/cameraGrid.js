@@ -1,79 +1,125 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import Slide from  '@material-ui/core/Slide';
+
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
-import CloseIcon from '@material-ui/icons/Close';
-import SecurityCamera from './securitycamera';
-import AppBar from '@material-ui/core/AppBar';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+
+import SecurityCamera from './securitycamera';
 
 const styles = theme => ({
     
     
-    camGridDialog: {
-        overflowX: "auto",
-    },
-    camGrid: {
+
+    lGrid: {
         display: "flex",
         flexWrap: "wrap",
-
-        paddingBottom: "env(safe-area-inset-bottom)",
-        overflowY: "auto",
+        padding: 0,
+        flex: "auto",
+        flexGrow: 0,
+        margin: "0 0 auto 0",
     },
     paper: {
-        backgroundColor: "#111",
+        backgroundColor: "#424242",
         boxShadow: "none",
         overflow: "hidden"
     },
-    camGridToolbar: {
-        color: "#AAA",
+    tabTitle: {
+        backgroundColor: '#424242',
+        padding: 0,
         paddingTop: "env(safe-area-inset-top)",
-        backgroundColor: "#222",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
     },
-    gridTitle: {
+    dialogTitle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexGrow: 1,
+        color: theme.palette.primary.contrastText,
+    },
+    dialogActions: {
+        backgroundColor: '#424242',
+        paddingBottom: "env(safe-area-inset-bottom)",
+    },
+    gridPlaceholder: {
+        height: 2,
+        minWidth: 320,
         flexGrow: 1,
     },
-
+    dialogContent: {
+        backgroundColor: '#111',
+        height: "100%",
+        padding: 8,
+    },
+    dialogMaxWidth: {
+        backgroundColor: '#111',
+        height: "100%",
+        padding: "8 0",
+    },
 
 });
+
+function Transition(props) {
+    return <Slide direction="up" {...props} />;
+}
 
 class CameraDialog extends React.Component {
 
     render() {
         
-        const { classes, theme } = this.props;
+        const { classes, fullScreen } = this.props;
         
         return (
-            <Dialog fullScreen open={this.props.showGrid} onClose={() =>  this.props.closeDialog()} className={classes.camGridDialog} PaperProps ={{ classes: { root: classes.paper}}}>
-                <AppBar position="static" className={classes.camGridToolbar}>
-                    <Toolbar>
-                        <Typography variant="title" color="inherit" className={classes.gridTitle}>
+            <Dialog 
+                fullScreen={fullScreen}
+                fullWidth={true}
+                maxWidth={'md'}
+                open={this.props.showGrid}
+                onClose={this.props.closeDialog}
+                TransitionComponent={Transition}
+                className={fullScreen ? classes.fullDialog : classes.normalDialog }
+                PaperProps ={{ classes: { root: classes.paper}}}
+            >
+                <DialogTitle className={classes.tabTitle}>
+                    <Toolbar className={classes.appBar} elevation={0}>
+                        <Typography variant="title" color="inherit" className={classes.dialogTitle}>
                             Cameras
                         </Typography>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={() =>  this.props.closeDialog()}>
-                            <CloseIcon />
-                        </IconButton>
                     </Toolbar>
-                </AppBar>                
-                <div className={classes.camGrid}>
-                {
+                </DialogTitle>
+                <DialogContent className={fullScreen ? classes.dialogMaxWidth : classes.dialogContent }>
+                    <div className={classes.lGrid}>
+                    {
                     this.props.cameras.map((name) => 
                         <SecurityCamera key={ name } name={ name } sender={this.props.sender} ></SecurityCamera>
-                    )
-                }
-                </div>
+                    )}
+                    <div className={classes.gridPlaceholder}></div>
+                    </div>
+                </DialogContent>
+                <Divider />
+                <DialogActions className={classes.dialogActions} >
+                    <Button onClick={(e) => this.props.closeDialog(e)} color="primary" autoFocus>OK</Button>
+                </DialogActions>
+
             </Dialog>
         )
     }
-};
+}
 
 CameraDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+    fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(CameraDialog);
+export default withStyles(styles)(withMobileDialog()(CameraDialog));

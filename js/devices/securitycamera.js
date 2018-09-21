@@ -1,26 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardMedia from '@material-ui/core/CardMedia';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import CameraDialog from './cameraDialog';
+
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import IconButton from '@material-ui/core/IconButton';
+import Paper from '@material-ui/core/Paper';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
+import CameraDialog from './cameraDialog';
+
 const styles = theme => ({
+    
     card: {
-        margin: 8,
-        maxWidth: 480,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         flexDirection: 'column',
         position: 'relative',
+        flexBasis: 0,
+        flexGrow: 1,
+        minWidth: "320px",
+        margin: "1px"
     },
     nextbutton: {
         position: "absolute",
@@ -79,19 +82,39 @@ class SecurityCamera extends React.Component {
             currenturl: "",
             imageloaded: false,
             showDialog: false,
+            refreshInterval: 3000,
         };
+        this.changeInterval = this.changeInterval.bind(this);
     }    
-
+    
     componentDidMount() {
-        console.log('Selectbuttons',this.props.selectButtons)
         this.setState({'camera': this.state.camerabasepath+this.props.name})
         this.setState({'updateurl':this.state.camerabasepath+this.props.name+'?'+Date.now()})
-        this.interval = setInterval(() => this.setState({'updateurl':this.state.camera+'?'+Date.now()}), 3000);
+        this.interval = setInterval(() => this.setState({'updateurl':this.state.camera+'?'+Date.now()}), this.state.refreshInterval);
     }
     
     imageFinished() {
         this.setState( {'imageloaded': true})
         this.setState( {'currenturl':this.state.updateurl})
+    }
+
+    changeInterval() {
+        
+        var refreshInterval=this.state.refreshInterval
+        
+        if (refreshInterval==500) { 
+            refreshInterval=5000
+        } else if (refreshInterval==1000) { 
+            refreshInterval=500
+        } else if (refreshInterval==3000) { 
+            refreshInterval=1000
+        } else if (refreshInterval==5000) { 
+            refreshInterval=3000
+        }
+        clearInterval(this.interval);
+        this.interval = setInterval(() => this.setState({'updateurl':this.state.camera+'?'+Date.now()}), refreshInterval);
+        this.setState({refreshInterval:refreshInterval})
+         
     }
 
     componentWillUnmount() {
@@ -100,12 +123,10 @@ class SecurityCamera extends React.Component {
 
     closeDialog = () => {
         this.setState({ 'camera': "/thumbnail/dlink/camera/"+this.props.name, showDialog: false });
-        //this.setState({ 'camera': "/thumbnail/dlink/camera"+this.props.name})
     };  
     
     handleClickOpen = () => {
         this.setState({ 'camera': "/image/dlink/camera/"+this.props.name, showDialog: true });
-        //this.setState({ 'camera': "/image/dlink/camera"+this.props.name})
     };  
     
     render() {
@@ -113,7 +134,7 @@ class SecurityCamera extends React.Component {
         const { classes, theme } = this.props;
 
         return (
-                <Card className={classes.card} >
+                <Paper elevation={0} className={classes.card} >
                     <img
                         className={this.state.imageloaded ? classes.im : classes.hiddenimage}
                         src={this.state.updateurl}
@@ -140,8 +161,8 @@ class SecurityCamera extends React.Component {
                         <ViewModuleIcon />
                     </IconButton>
                     : null }                    
-                    <CameraDialog showDialog={this.state.showDialog} closeDialog={this.closeDialog} src={this.state.currenturl} />
-                </Card>
+                    <CameraDialog refreshInterval={this.state.refreshInterval} changeInterval={this.changeInterval} showDialog={this.state.showDialog} closeDialog={this.closeDialog} src={this.state.currenturl} />
+                </Paper>
         );
     }
 }

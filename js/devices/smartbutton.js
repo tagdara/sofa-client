@@ -11,6 +11,10 @@ import PinDialog from './pinDialog';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 
 const styles = theme => ({
@@ -55,7 +59,12 @@ const styles = theme => ({
     },
     snackBar: {
         marginBottom: "env(safe-area-inset-bottom)",
-    }
+    },
+    listItem: {
+        padding: "16 0",
+        width: '100%',
+    },
+
     
 });
 
@@ -117,17 +126,14 @@ class SmartButton extends React.Component {
 
 
         return (
-                <Card className={classes.card}>
-                    <CardContent className={classes.content}>
-                        <Avatar className={classes.avatar} onClick={ () => this.handlePress(true) }><TuneIcon/></Avatar>
-                        <div className={classes.cardname}>
-                            <Typography variant="body2">{this.props.name}</Typography>
-                        </div>
-                    </CardContent>
-                    { this.state.pinDevices.indexOf(this.props.name) > -1 ?
+            <ListItem className={classes.listItem}>
+                <Avatar onClick={ () => this.handlePress(true) }><TuneIcon/></Avatar>
+                <ListItemText primary={this.props.name}/>
+                
+                { this.state.pinDevices.indexOf(this.props.name) > -1 ?
                     <PinDialog submitPin={this.submitPin} showPinPad={this.state.showPinPad} unlocker={ this.handlePinPress } closeDialog={ this.closeDialog }/>
-                    : null}
-                    { this.state.pinDevices.indexOf(this.props.name) > -1 ?
+                : null}
+                { this.state.pinDevices.indexOf(this.props.name) > -1 ?
                     <Snackbar
                         className={classes.snackbar}
                         anchorOrigin={{
@@ -154,7 +160,7 @@ class SmartButton extends React.Component {
                         ]}
                     />
                     : null}
-                </Card>
+            </ListItem>
         );
     }
 }

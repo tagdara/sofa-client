@@ -1,4 +1,4 @@
-<HTML manifest="/beta.appcache">
+<HTML manifest="/dist/beta.appcache">
     
     <HEAD>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
@@ -11,14 +11,32 @@
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="application-name" content="Home"/>
 
-        <title>Beta</title>
-    
-        <style>
-            @import url("css/reactsofa.css")
-        </style>
+        <title>Home</title>
     
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        <Style>
+            body {
+                padding-top: 0px;
+                margin-top: 0px;
+                margin-left: 0px;
+                margin-right: 0px;
+                margin-bottom: 0px;
+                margin-bottom: env(safe-area-inset-bottom);
+                margin: 0;
+            }
+
+            #root {
+                margin-top: env(safe-area-inset-top);
+                height: 100%;
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            .rc-slider-disabled {
+                background-color: initial !important;
+            }
+            
+        </style>
     </HEAD>
 
     <BODY>

@@ -15,14 +15,13 @@ import Chip from '@material-ui/core/Chip';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';import Paper from '@material-ui/core/Paper';
+import DialogActions from '@material-ui/core/DialogActions';
+import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import Divider from '@material-ui/core/Divider';
-import Avatar from '@material-ui/core/Avatar';
 import { HuePicker } from 'react-color';
 
 const styles = theme => ({
@@ -61,14 +60,9 @@ const styles = theme => ({
     },
 
     stackedLightControl: {
+        width: "100%",
         paddingLeft: 16,
         paddingRight: 16,
-        flex:1,
-    },
-    buttonsAndSlider: {
-        paddingTop: 0,
-        paddingRight: 28,
-        paddingLeft: 10,
     },
     nameAndSwitch: {
         display: "flex",
@@ -82,41 +76,40 @@ const styles = theme => ({
     listItemLabel: {
         paddingBottom: 0,
     },
-    paperLight: {
+    grouplight: {
+        width: "100%",
         display: "flex",
-        alignItems: "center",
-        paddingLeft: 16,
-    },
-    chipLine: {
-        paddingTop:0,
-        paddingLeft:8,
-        paddingRight:8,
+        flexGrow: 1,
     }
 });
 
-class TunableLight extends React.Component {
+class GroupLight extends React.Component {
     
     constructor(props) {
         super(props);
 
         this.state = {
-            brightness: 0,
+            brightness: 50,
             powerState: false,
             colorTemperatureInKelvin: 4000,
+            color: {hue: 200, saturation:1, brightness: 1},
             target: null,
             open: false,
             endpointId: '',
             lastmessage: '',
+            controllermap: [],
+            areaState: {},
         };
     }
 
- 
     static getDerivedStateFromProps(nextProps, prevState) {
-        return TunableLight.parseState(nextProps.deviceState, prevState.endpointId)
-    
+        
+        var changes={}
+        changes.brightness=nextProps.avgState('brightness')
+        return changes
     }
 
-    static parseState(data, endpointId) {
+    static parseState(data) {
         
         
         var changes={}
@@ -124,78 +117,136 @@ class TunableLight extends React.Component {
             return changes
         }
         
-        if (data.hasOwnProperty('event')) {
-            
-            if (endpointId=='') {
-                changes.endpointId=data.event.endpoint.endpointId
-            }
-            
-            if ((endpointId==data.event.endpoint.endpointId) || changes.hasOwnProperty('endpointId')) {
+        var brightnessCount=0;
+        var totalbrightness=0;
+        var temperatureCount=0;
+        var totaltemperature=0;
 
-                if (data.hasOwnProperty('context')){
-                    for (var i = 0; i < data.context.properties.length; i++) {
-                        if (data.context.properties[i].name=='powerState') {
-                            changes.powerState= data.context.properties[i].value=='ON';
-                        } 
-                        else if (data.context.properties[i].name=='brightness') {
-                            changes.brightness=data.context.properties[i].value;
-                        }   
-                        else if (data.context.properties[i].name=='colorTemperatureInKelvin') {
-                            changes.colorTemperatureInKelvin=data.context.properties[i].value;
-                        } 
 
-                    }
-                } 
-                // might be both. We probably don't need to apply the ones from context in a change 
-                // but might as well keep it all in sync.
-                if (data.hasOwnProperty('payload')){
-                    if (data.payload.hasOwnProperty('change')){
-                        for (var i = 0; i < data.payload.change.properties.length; i++) {
-                            if (data.payload.change.properties[i].name=='powerState') {
-                                changes.powerState=data.payload.change.properties[i].value=='ON';
-                            } 
-                            else if (data.payload.change.properties[i].name=='brightness') {
-                                changes.brightness=data.payload.change.properties[i].value;
-                            }   
-                            else if (data.payload.change.properties[i].name=='colorTemperatureInKelvin') {
-                                changes.colorTemperatureInKelvin=data.payload.change.properties[i].value;
-                            } 
+        changes.areaState=data;
+        changes.powerState=false;
+        
+        for (var dev in data) {
+            if (data[dev].hasOwnProperty('context')) {
+                for (var i = 0; i < data[dev].context.properties.length; i++) {
+                    if (data[dev].context.properties[i].name=='powerState') {
+                        if (data[dev].context.properties[i].value=='ON') {
+                            changes.powerState=true;
                         }
+                    } else if (data[dev].context.properties[i].name=='brightness') {
+                        brightnessCount=brightnessCount+1;
+                        totalbrightness=totalbrightness+data[dev].context.properties[i].value;
+                        changes.brightness=totalbrightness/brightnessCount;
+                    } else if (data[dev].context.properties[i].name=='colorTemperatureInKelvin') {
+                        temperatureCount=temperatureCount+1;
+                        totaltemperature=totaltemperature+data[dev].context.properties[i].value;
+                        changes.colorTemperatureInKelvin=totaltemperature/temperatureCount;
                     }
                 }
-
-
             }
-        }
+        } 
         return changes;
     }
+
+
+
+    componentDidMount() {
+        var controllermap={ 'ColorController': [], 'ColorTemperatureController': [], 'BrightnessController':[], 'PowerController':[] }
+        for (var dev in this.props.devices) {
+            if (this.props.devices[dev].hasOwnProperty('displayCategories')) {
+                switch(this.props.devices[dev].displayCategories[0]) {
+                    case 'LIGHT':
+                        for (var j = 0; j < this.props.devices[dev].capabilities.length; j++) {
+                            if (controllermap.hasOwnProperty(this.props.devices[dev].capabilities[j].interface.split('.')[1])) {
+                                controllermap[this.props.devices[dev].capabilities[j].interface.split('.')[1]].push(this.props.devices[dev].friendlyName)
+                            }
+                        }
+                }
+            }
+        }
+  	    this.setState({ 'controllermap': controllermap })
+    }
+
     
- 
     handlePowerChange = event => {
-        this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
-        var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/PowerController/powerState", "value":event.target.checked}
-        this.props.sender(JSON.stringify(ops));
+        
+        this.setState({ powerState: event.target.checked });
+        for (var i = 0; i < this.props.devices.length; i++) {
+            if (event.target.checked) {
+                var ops={"op":"set", "path":"discovery/"+this.props.devices[i].friendlyName+"/PowerController/powerState", "command":"TurnOn", "value":event.target.checked}
+            } else {
+                var ops={"op":"set", "path":"discovery/"+this.props.devices[i].friendlyName+"/PowerController/powerState", "command":"TurnOff", "value":event.target.checked}
+            }
+            this.props.sendMessage(JSON.stringify(ops));
+        }
+
     }; 
 
     handlePreBrightnessChange = event => {
-        this.setState({ brightness: event, target:this.props.device.friendlyName});
+        this.setState({ brightness: event, target:this.props.friendlyName});
     }; 
 
+
     handleBrightnessChange = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/BrightnessController/brightness", "value":event}
-        this.props.sender(JSON.stringify(ops));
+        //for (var i = 0; i < this.state.controllermap['BrightnessController'].length; i++) {
+        
+        for (var i = 0; i < this.props.devices.length; i++) {
+            if (this.props.deviceProperties[this.props.devices[i].friendlyName].hasOwnProperty('brightness')) {
+                var ops={"op":"set", "path":"discovery/"+this.props.devices[i].friendlyName+"/BrightnessController/brightness", "command":"SetBrightness", "value":event}
+                this.props.sendMessage(JSON.stringify(ops));
+            }
+        }
     }; 
 
     handlePreColorTemperatureChange = event => {
-        this.setState({ colorTemperatureInKelvin: event, target:this.props.device.friendlyName});
+        this.setState({ colorTemperatureInKelvin: event, target:this.props.friendlyName});
     }; 
 
     handleColorTemperatureChange = event => {
-        this.setState({ colorTemperatureInKelvin: event, target:this.props.friendlyName});
-        var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/ColorTemperatureController/colorTemperatureInKelvin", "value":event}
-        this.props.sender(JSON.stringify(ops));
+
+        for (var i = 0; i < this.state.controllermap['ColorTemperatureController'].length; i++) {
+            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorTemperatureController'][i]+"/ColorTemperatureController/colorTemperatureInKelvin", "command":"SetColorTemperature", "value":event}
+            this.props.sendMessage(JSON.stringify(ops));
+        }
     }; 
+
+
+    sb2sl(color) {
+
+        var SB = {hue:color.hue, saturation:color.saturation, brightness:color.brightness};
+        var SL = {h:color.hue, s:0, l:0};
+        SL.l = (2 - SB.saturation) * SB.brightness / 2;
+        SL.s = SL.l&&SL.l<1 ? SB.saturation*SB.brightness/(SL.l<0.5 ? SL.l*2 : 2-SL.l*2) : SL.s;
+        return SL
+    }
+        
+    sl2sb(color) {
+        var SL = {h:color.h, s:color.s, l:color.l};
+        var SB = {hue:color.h, saturation:0, brightness:0};
+        var t = SL.s * (SL.l<0.5 ? SL.l : 1-SL.l);
+        SB.brightness = SL.l+t;
+        SB.saturation = SL.l>0 ? 2*t/SB.brightness : SB.saturation ;
+        return SB
+    }
     
+    handleColorSliderChange = color => {
+        var hsb=this.sl2sb(color.hsl)
+        this.setState({ color: hsb, target:this.props.friendlyName});
+        for (var i = 0; i < this.state.controllermap['ColorController'].length; i++) {
+            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorController'][i]+"/ColorController/color", "command":"SetColor", "value":hsb}
+            this.props.sendMessage(JSON.stringify(ops));
+        }
+
+    }
+
+    handleColorChange = hsb => {
+        this.setState({ color: hsb, target:this.props.friendlyName});
+        for (var i = 0; i < this.state.controllermap['ColorController'].length; i++) {
+            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorController'][i]+"/ColorController/color", "command":"SetColor", "value":hsb}
+            this.props.sendMessage(JSON.stringify(ops));
+        }
+    }
+
  
     handleClickOpen = () => {
         this.setState({ open: true });
@@ -209,27 +260,24 @@ class TunableLight extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Paper className={classes.paperLight}>
-            <Avatar className={classes.avatar} onClick={ () => this.handleClickOpen()}>
-                <LightbulbOutlineIcon />
-            </Avatar>
+            <Paper elevation={0} className={classes.grouplight}>
                 <List className={classes.stackedLightControl}>
                     <ListItem className={classes.nameAndSwitch}>
-                        <ListItemText className={classes.deviceName} primary={this.props.device.friendlyName}/>
+                        <ListItemText className={classes.deviceName} primary={this.props.name+' Lights'} onClick={ () => this.handleClickOpen()}/>
                         <ListItemSecondaryAction>
-                            <Switch color="primary" checked={this.state.powerState} onChange={this.handlePowerChange} />
+                            <Switch color="primary" checked={ this.props.avgState('on') } onChange={ this.handlePowerChange } />
                         </ListItemSecondaryAction>
                     </ListItem>
                     <ListItem className={classes.buttonsAndSlider}>
-                        <Slider min={0} max={100} defaultValue={0} step={10} value={this.state.brightness} disabled={!this.state.powerState}
-                            onChange={this.handlePreBrightnessChange} 
-                            onAfterChange={this.handleBrightnessChange} 
-                            trackStyle={ this.state.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 10 } : { backgroundColor: 'silver', height: 10 }}
-                            handleStyle={this.state.powerState ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -3, height: 16, width: 16} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: 0, height: 10}
+                        <Slider min={0} max={100} defaultValue={0} step={10} value={ this.state.brightness } disabled={ !this.props.avgState('on') }
+                            onChange={ this.handlePreBrightnessChange } 
+                            onAfterChange={ this.handleBrightnessChange } 
+                            trackStyle={ this.props.avgState('on') ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
+                            handleStyle={ this.props.avgState('on') ? 
+                                    { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -7, height: 16, width: 16} :
+                                    { borderColor: 'silver', backgroundColor: 'silver', marginTop: -7, height: 16, width: 16}
                             }
-                            railStyle={{ height: 10 }}
+                            railStyle={{ height: 3 }}
                         />
                     </ListItem>
                 </List>
@@ -310,6 +358,29 @@ class TunableLight extends React.Component {
                     />
                     </Paper>
                     </ListItem>
+                    <Divider />
+                    <ListItem className={classes.listItemLabel}>
+                        <ListItemText primary="Color" />
+                    </ListItem>
+                    <ListItem>
+                        <HuePicker
+                            color={ this.sb2sl(this.state.color) }
+                            onChangeComplete={ this.handleColorSliderChange }
+                        />
+                    </ListItem>
+                    <ListItem className={classes.chipLine}>
+                    <Paper elevation={0}>
+                    <Chip 
+                        key = 'reveal'
+                        label= "reveal" 
+                        className={ classes.chip }
+                        onClick={ () => this.handleColorChange({hue: 43.5, saturation:0.27, brightness: 1}) }
+                    />
+
+                    </Paper>
+                    </ListItem>
+
+
                 </List>
                 </DialogContent>
                 <DialogActions>
@@ -318,7 +389,7 @@ class TunableLight extends React.Component {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Paper>
+            </Paper>
                 
 
             
@@ -326,9 +397,9 @@ class TunableLight extends React.Component {
     }
 }
 
-TunableLight.propTypes = {
+GroupLight.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TunableLight);
+export default withStyles(styles)(GroupLight);
 

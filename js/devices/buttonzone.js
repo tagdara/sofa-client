@@ -1,19 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import TuneIcon from '@material-ui/icons/Tune';
+
 import Avatar from '@material-ui/core/Avatar';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import PinDialog from './pinDialog';
-import Snackbar from '@material-ui/core/Snackbar';
-import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
+import Snackbar from '@material-ui/core/Snackbar';
+import Typography from '@material-ui/core/Typography';
+
 import CloseIcon from '@material-ui/icons/Close';
 import DialpadIcon from '@material-ui/icons/Dialpad';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import TuneIcon from '@material-ui/icons/Tune';
+
+import PinDialog from './pinDialog';
 
 
 const styles = theme => ({
@@ -21,14 +23,10 @@ const styles = theme => ({
     card: {
         display: 'flex',
         maxWidth: '480px',
-        margin: 8,
+        flexGrow: 1,
         boxSizing: "border-box",
         justifyContent: "space-between",
-        padding: "16",
-    },
-    buttonname: {
-        flexGrow:2,
-        paddingLeft:16,
+        margin: 2,
     },
     content: {
         minWidth: 0,
@@ -38,25 +36,13 @@ const styles = theme => ({
         justifyContent: "flex-start",
         alignItems: "center",
     },
-    metadata: {
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "flex-end",
-    },
-    icon: {
-        minWidth: 62,
-        height: 62,
-        width: 62,
-        alignSelf: "flex-end",
-    },
-    avatar: {
-        color: '#fff',
-        backgroundColor: deepOrange[200],
-    },
     snackBar: {
         marginBottom: "env(safe-area-inset-bottom)",
-    }
+    },
+    listItem: {
+        padding: 16,
+        width: '100%',
+    },
     
 });
 
@@ -119,15 +105,15 @@ class ButtonZone extends React.Component {
 
 
         return (
-                <Card className={classes.card}>
-                    <CardContent className={classes.content}>
-                        <Avatar className={classes.avatar} onClick={ () => this.handlePress(true) }><Icon>{this.props.icon}</Icon></Avatar>
-                        <Typography className={classes.buttonname}>{this.props.name}</Typography>
+                <Paper className={classes.card}>
+                    <ListItem className={classes.listItem}>
+                        <Avatar onClick={ () => this.handlePress(true) }><DialpadIcon /></Avatar>
                         { this.props.zoneProperties.hasOwnProperty(this.props.name) ?
-                        <Typography variant="body2">{this.props.zoneProperties[this.props.name].position}</Typography>
-                        : null
+                        <ListItemText primary={this.props.name} secondary={this.props.zoneProperties[this.props.name].position}/>
+                        : 
+                        <ListItemText primary={this.props.name}/>
                         }
-                    </CardContent>
+                    </ListItem>
                     { this.state.pinDevices.indexOf(this.props.name) > -1 ?
                     <PinDialog submitPin={this.submitPin} showPinPad={this.state.showPinPad} unlocker={ this.handlePinPress } closeDialog={ this.closeDialog }/>
                     : null}
@@ -158,7 +144,7 @@ class ButtonZone extends React.Component {
                         ]}
                     />
                     : null}
-                </Card>
+                </Paper>
         );
     }
 }

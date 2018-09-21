@@ -1,19 +1,23 @@
-
 import React from "react";
-import Area from './area';
-import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+
+import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
 import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import deepOrange from '@material-ui/core/colors/deepOrange';
+
+import Area from './area';
+import AreaSelect from './areaSelect';
+import AreaDialog from './areaDialog';
 import LightListDialog from './lightListDialog';
 import LightGrid from './devices/lightgrid'
-import deepOrange from '@material-ui/core/colors/deepOrange';
+
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+
 
 const styles = theme => ({
         
@@ -39,6 +43,7 @@ const styles = theme => ({
     },
     countLabel: {
         padding: "8 16",
+        flexGrow: 1,
     },
     off: {
         backgroundColor: "#777",
@@ -55,18 +60,35 @@ class AreaList extends React.Component {
         super(props);
 
         this.state = {
+            regionData: {},
             areamap: {},
+            sceneData: {},
             showdialog: false,
+            showEditor: false,
+            showAraDialog: false,
+            selectedAreas: [],
+            region: 'main',
+            selectedArea: '',
         };
+    }
+    
+    sceneDataByArea = area => {
+        if (this.state.sceneData.hasOwnProperty(area)) {
+            return this.state.sceneData[area]
+        } else {
+            return {}
+        }
     }
     
     devicesByArea = area => {
 
         var ads=[]
-        for (var i = 0; i < this.state.areamap[area].lights.length; i++) {
-            var dbn=this.props.deviceByName(this.state.areamap[area].lights[i])
-            if (dbn) {
-                ads.push(dbn)
+        if (this.state.areamap.hasOwnProperty(area)) {
+            for (var i = 0; i < this.state.areamap[area].lights.length; i++) {
+                var dbn=this.props.deviceByName(this.state.areamap[area].lights[i])
+                if (dbn) {
+                    ads.push(dbn)
+                }
             }
         }
         return ads
@@ -85,18 +107,71 @@ class AreaList extends React.Component {
         return count
     }  
     
+    handleEdit = () => {
+        this.setState({ showEditor: true} )
+    }
+    
+    closeEditor = () => {
+        this.setState({ showEditor: false} )
+    }
+
+    selectArea = (name) => {
+        this.setState({ selectedArea: name, showAreaDialog: true} )
+    }
+    
+    closeAreaDialog = () => {
+        this.setState({ showAreaDialog: false} )
+    }
+
+   
     handleClickOpen = () => {
         this.setState({ showdialog: true });
     };    
     
     closeDialog = () => {
         this.setState({ showdialog: false });
-    };  
+    };
+    
+    confirmRegion = (data) => {
+        
+        if (!data.hasOwnProperty(this.state.region)) {
+            data[this.state.region]=[]
+        }
+        this.setState({regionData: data });
+    }
+    
+    saveRegion = (name, data) => {
+        
+        var rdata=this.state.regionData
+        rdata[name]=data
+        this.setState({regionData: rdata})
+        this.regionSaveChanges()
+        
+    }
+    
+    regionSaveChanges = () => {
+        
+        fetch('/config/regionmap', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(this.state.regionData)
+            })
+            .then(res=>console.log(res))
+    }
     
     componentDidMount() {
-  	    fetch('/data/areamap')
+  	    fetch('/config/areamap')
  		    .then(result=>result.json())
             .then(result=>this.setState({areamap:result}));
+  	    fetch('/config/scenemap')
+ 		    .then(result=>result.json())
+            .then(data=>this.setState({sceneData: data}));
+  	    fetch('/config/regionmap')
+ 		    .then(result=>result.json())
+            .then(data=>this.confirmRegion(data));
     }
     
     render() {
@@ -107,27 +182,37 @@ class AreaList extends React.Component {
         return (
             <div className={classes.areaList}>
                 <Card className={classes.card}>
-                    <CardContent className={classes.content} onClick={ () => this.handleClickOpen() } >
+                    <CardContent className={classes.content}>
                         { this.lightCount('on')>0 ? 
-                        <Avatar className={classes.on} ><LightbulbOutlineIcon/></Avatar>
+                        <Avatar className={classes.on}  onClick={ () => this.handleClickOpen() }><LightbulbOutlineIcon/></Avatar>
                         : 
-                        <Avatar className={classes.off} ><LightbulbOutlineIcon/></Avatar>
+                        <Avatar className={classes.off}  onClick={ () => this.handleClickOpen() }><LightbulbOutlineIcon/></Avatar>
                         }
                         { this.lightCount('on')>0 ? 
-                            <Typography className={classes.countLabel} variant="subheading">{this.lightCount('on')} lights are on</Typography>
+                            <Typography className={classes.countLabel} variant="subheading" onClick={ () => this.handleClickOpen() }>{this.lightCount('on')} lights are on</Typography>
                             : 
-                            <Typography className={classes.countLabel} variant="subheading">All lights off</Typography>
+                            <Typography className={classes.countLabel} variant="subheading" onClick={ () => this.handleClickOpen() }> All lights off</Typography>
+
                         }
+                        <IconButton aria-label="Close" onClick={(e) => this.handleEdit()}>
+                            <EditIcon />
+                        </IconButton>
                     </CardContent>
+                    {this.state.regionData.hasOwnProperty(this.state.region) ?
+                    <AreaSelect name={this.state.region} updateList={this.saveRegion} open={this.state.showEditor} close={this.closeEditor} areas={this.state.areamap} selectedAreas={this.state.regionData[this.state.region] } />
+                    : null }
                     <LightGrid name={'all'} lightCount={this.lightCount} closeGrid={this.closeDialog} showGrid={this.state.showdialog} key='lightlist' filter='ON' Category='Light' devices={ this.props.devices } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
+                    { this.state.selectedArea ?
+                        <AreaDialog open={this.state.showAreaDialog} close={this.closeAreaDialog} name={this.state.selectedArea} sceneData={this.sceneDataByArea(this.state.selectedArea)} devices={ this.devicesByArea(this.state.selectedArea)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(this.state.selectedArea)) } sendMessage={this.props.sendMessage} />
+                    : null }
                 </Card>
                 {
-                    this.state.areamap ?
-                    Object.keys(this.state.areamap).map(name => 
-                        <Area key={ name } name={ name } devices={ this.devicesByArea(name)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(name)) } sendMessage={this.props.sendMessage} ></Area>
-                    )
-                    : null
 
+                    this.state.regionData.hasOwnProperty(this.state.region) ?
+                    this.state.regionData[this.state.region].map((name) => 
+                        <Area sendAlexaCommand={this.props.sendAlexaCommand} key={ name } name={ name } sceneData={this.sceneDataByArea(name)} devices={ this.devicesByArea(name)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(name)) } selectArea={this.selectArea} sendMessage={this.props.sendMessage} ></Area>
+                    )
+                    : null 
                 }
             </div> 
         );

@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import CloseIcon from '@material-ui/icons/Close';
 import Card from '@material-ui/core/Card';
+import SceneEditor from './sceneEditor';
 
 const styles = theme => ({
 
@@ -17,7 +18,7 @@ const styles = theme => ({
         maxWidth: '480px',
         margin: 8,
         boxSizing: "border-box",
-        padding: "16 8",
+        padding: "8 8",
         flexWrap: 'wrap',
     },
     root: {
@@ -39,8 +40,10 @@ const styles = theme => ({
 class AreaListScenes extends React.Component {
 
     state = {
+        scenes: [],
         open: false,
         target: "",
+        showEditor: false,
     };
 
     handleClick = (item, reason) => {
@@ -65,15 +68,15 @@ class AreaListScenes extends React.Component {
 
         this.setState({ open: false });
     };
+
+    handleEdit = () => {
+        this.setState({ showEditor: true })
+    };
     
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            scenes: [],
-        };
-    }
-
+    closeEditor = (event, reason) => {
+        this.setState({ showEditor: false });
+    };
+    
     componentDidMount() {
   	    fetch('/data/globalScenes')
  		    .then(result=>result.json())
@@ -99,6 +102,7 @@ class AreaListScenes extends React.Component {
                         />
                     ))
                 }
+
             <Snackbar
                 anchorOrigin={{
                         vertical: 'bottom',

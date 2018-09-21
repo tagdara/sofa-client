@@ -50,8 +50,11 @@ const styles = theme => ({
     label: {
         paddingLeft: 16,
         flexGrow: 2,
-    }
-
+    },
+    listItem: {
+        padding: "8 0",
+        width: '100%',
+    },
 });
 
 class Shade extends React.Component {
@@ -71,12 +74,9 @@ class Shade extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Card className={classes.card}>
-            
-                    <Avatar className={classes.avatar}>
-                        <TonalityIcon />
-                    </Avatar>
-                    <Typography className={classes.label}>{this.props.name}</Typography>
+            <ListItem className={classes.listItem}>
+                <Avatar><TonalityIcon /></Avatar>
+                <ListItemText primary={this.props.name}/>
                     <IconButton className={classes.button} onClick={ () => this.handlePress(this.props.down) }>
                         <ExpandMoreIcon />
                     </IconButton>
@@ -86,7 +86,7 @@ class Shade extends React.Component {
                     <IconButton className={classes.button} onClick={ () => this.handlePress(this.props.up) }>
                         <ExpandLessIcon />
                     </IconButton>
-            </Card>
+            </ListItem>
         );
     }
 }

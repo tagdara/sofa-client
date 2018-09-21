@@ -20,74 +20,32 @@ import deepOrange from '@material-ui/core/colors/deepOrange';
 import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
-    card: {
-        display: 'flex',
-        maxWidth: '480px',
-        margin: 8,
-        boxSizing: "border-box",
-        padding: "8 24 8 24",
-        flexWrap: 'wrap',
-        alignItems: "center",
-    },
-    content: {
-        display: 'flex',
-        margin: 8,
-        boxSizing: "border-box",
-        padding: "8 24 8 24",
-        flexWrap: 'wrap',
-        alignItems: "center",
-        flexGrow: 1,
-        minWidth: "320px",
-    },
-
-    xcard: {
-        display: 'flex',
-        maxWidth: '480px',
-        margin: 1,
-        boxSizing: "border-box",
-        justifyContent: "space-between",
-        padding: "8 16 8 24",
-        alignItems: "center",
-    },        
-    root: {
-        width: '100%',
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    stackedLightControl: {
-        minHeight: 84,
-        paddingLeft: 16,
-        paddingRight: 0,
-        flex:1,
-		paddingTop: 0,
-		paddingBottom: 0,
-		display: "flex",
-		flexDirection: "column",
-		justifyContent: "space-around",
-    },
-    buttonsAndSlider: {
-        paddingTop: 0,
-        paddingRight: 24,
-        paddingLeft: 10,
-    },
-    nameAndSwitch: {
-        display: "flex",
-        paddingRight: 0,
-        paddingLeft: 10,
-        alignItems: "center",
-    },
-    deviceName: {
-        flex: 1,
-    },
-    listItemLabel: {
-        paddingBottom: 0,
-    },
-
+ 
     litAvatar: {
         color: '#fff',
         backgroundColor: deepOrange[500],
+    },
+    stack: {
+        height: 44,
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        paddingLeft: 16,
+        paddingRight: 16,
+        justifyContent: "center",
+    },
+    sliderPaper: {
+        display: "flex",
+        flexDirection: "row",
+        padding: "16 8 16 16",
+        alignItems: "center",
+        minWidth: 320,
+    },
+    stackSlider: {
+        marginTop: 4,
+        marginLeft: 4,
+        marginRight: 6,
     }
-
 });
 
 class Light extends React.Component {
@@ -115,7 +73,6 @@ class Light extends React.Component {
         if (data.hasOwnProperty('brightness')) {
             changes.brightness=data.brightness
         }
-
         return changes
     }
 
@@ -154,35 +111,32 @@ class Light extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Paper elevation={0} className={classes.content}>
+                <Paper className={classes.sliderPaper} elevation={0}>
                     <Avatar className={this.state.powerState=="ON" ? classes.litAvatar: classes.avatar} onClick={ () => this.handleClickOpen()}>
                         <LightbulbOutlineIcon />
                     </Avatar>
-                    <List className={classes.stackedLightControl}>
-                        <ListItem className={classes.nameAndSwitch}>
-                            <ListItemText className={classes.deviceName} primary={this.props.name}/>
-                            <ListItemSecondaryAction>
-                                <Switch color="primary" checked={this.state.powerState=='ON'} onChange={this.handlePowerChange} />
-                            </ListItemSecondaryAction>
-                        </ListItem>
+                    <div className={classes.stack}>
+                        <Typography variant="subheading">{this.props.name}</Typography>
                         {this.state.brightness=="no" ?
                         null :
-                        <ListItem className={classes.buttonsAndSlider}>
-                            <Slider min={0} max={100} defaultValue={0} step={10} value={this.state.brightness} disabled={!this.state.powerState=='ON'}
-                                onChange={this.handlePreBrightnessChange} 
-                                onAfterChange={this.handleBrightnessChange} 
-                                trackStyle={ this.state.powerState=='ON' ? { backgroundColor: 'orangeRed', opacity: .5, height: 10 } : { backgroundColor: 'silver', height: 10 }}
-                                handleStyle={this.state.powerState=='ON' ? 
-                                    { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -3, height: 16, width: 16} :
-                                    { borderColor: 'silver', backgroundColor: 'silver', marginTop: 0, height: 10, width: 10}
-                                }
-                                railStyle={{ height: 10 }}
-                            /> 
-                        </ListItem>
+                        <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.brightness}
+                            onChange={this.handlePreBrightnessChange} 
+                            onAfterChange={this.handleBrightnessChange} 
+                            trackStyle={ this.state.powerState=='ON' ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
+                            handleStyle={this.state.powerState=='ON' ? 
+                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
+                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
+                            }
+                            railStyle={{ height: 3 }}
+                            className={classes.stackSlider}
+                            disabled={ !this.state.powerState=='ON' }
+                        />
                         }
-                    </List>
-                <LightDialog open={this.state.open} name={ this.props.name } handleClose={this.handleClose} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
-            </Paper>
+                    </div>
+                    <Switch color="primary" checked={this.state.powerState=='ON'} onChange={this.handlePowerChange} />
+                    <LightDialog open={this.state.open} name={ this.props.name } handleClose={this.handleClose} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
+                </Paper>
+
         );
     }
 }

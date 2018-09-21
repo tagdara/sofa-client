@@ -4,8 +4,10 @@ import { withStyles } from '@material-ui/core/styles';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
 import CloseIcon from '@material-ui/icons/Close';
+import TimerIcon from '@material-ui/icons/Timer';
 
 const styles = theme => ({
     bigcamholder: {
@@ -129,6 +131,9 @@ class CameraDialog extends React.Component {
         return (
             <Dialog fullScreen open={this.props.showDialog} onClose={() =>  this.closeDialog()} className={classes.bigcamDialog} PaperProps ={{ classes: { root: classes.paper}}}>
                 <DialogActions>
+                    <Button size="small" color="primary" onClick={() => this.props.changeInterval()}>
+                        <TimerIcon />{this.props.refreshInterval/1000}
+                    </Button>
                     <IconButton onClick={() => this.rotate()} aria-label="Rotate" color="primary" >
                         <ScreenRotationIcon />
                     </IconButton>

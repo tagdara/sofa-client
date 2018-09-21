@@ -23,6 +23,10 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Divider from '@material-ui/core/Divider';
 import { HuePicker } from 'react-color';
+import Avatar from '@material-ui/core/Avatar';
+import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import PlaceIcon from '@material-ui/icons/Place';
+import deepOrange from '@material-ui/core/colors/deepOrange';
 
 const styles = theme => ({
         
@@ -60,6 +64,7 @@ const styles = theme => ({
     },
 
     stackedLightControl: {
+        width: "100%",
         paddingLeft: 16,
         paddingRight: 16,
     },
@@ -74,7 +79,41 @@ const styles = theme => ({
     },
     listItemLabel: {
         paddingBottom: 0,
+    },
+    grouplight: {
+        width: "100%",
+        display: "flex",
+        flexGrow: 1,
+        maxWidth: 480,
+        minWidth: 320,
+    },
+    litAvatar: {
+        color: '#fff',
+        backgroundColor: deepOrange[500],
+    },
+    stack: {
+        height: 44,
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        paddingLeft: 16,
+        paddingRight: 16,
+        justifyContent: "center",
+    },
+    sliderPaper: {
+        display: "flex",
+        flexDirection: "row",
+        padding: "16 8 16 16",
+        alignItems: "center",
+        minWidth: 320,
+        backgroundColor: theme.palette.primary[50],
+    },
+    stackSlider: {
+        marginTop: 4,
+        marginLeft: 4,
+        marginRight: 6,
     }
+
 });
 
 class GroupLight extends React.Component {
@@ -199,7 +238,7 @@ class GroupLight extends React.Component {
     handleColorTemperatureChange = event => {
 
         for (var i = 0; i < this.state.controllermap['ColorTemperatureController'].length; i++) {
-            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorTemperatureController'][i]+"/ColorTemperatureController/colorTemperatureInKelvin", "value":event}
+            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorTemperatureController'][i]+"/ColorTemperatureController/colorTemperatureInKelvin", "command":"SetColorTemperature", "value":event}
             this.props.sendMessage(JSON.stringify(ops));
         }
     }; 
@@ -227,7 +266,7 @@ class GroupLight extends React.Component {
         var hsb=this.sl2sb(color.hsl)
         this.setState({ color: hsb, target:this.props.friendlyName});
         for (var i = 0; i < this.state.controllermap['ColorController'].length; i++) {
-            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorController'][i]+"/ColorController/color", "value":hsb}
+            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorController'][i]+"/ColorController/color", "command":"SetColor","value":hsb}
             this.props.sendMessage(JSON.stringify(ops));
         }
 
@@ -236,7 +275,7 @@ class GroupLight extends React.Component {
     handleColorChange = hsb => {
         this.setState({ color: hsb, target:this.props.friendlyName});
         for (var i = 0; i < this.state.controllermap['ColorController'].length; i++) {
-            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorController'][i]+"/ColorController/color", "value":hsb}
+            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorController'][i]+"/ColorController/color", "command":"SetColor", "value":hsb}
             this.props.sendMessage(JSON.stringify(ops));
         }
     }
@@ -254,27 +293,29 @@ class GroupLight extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Paper elevation={0}>
-                <List className={classes.stackedLightControl}>
-                    <ListItem className={classes.nameAndSwitch}>
-                        <ListItemText className={classes.deviceName} primary={this.props.name} onClick={ () => this.handleClickOpen()}/>
-                        <ListItemSecondaryAction>
-                            <Switch color="primary" checked={ this.props.avgState('on') } onChange={ this.handlePowerChange } />
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                    <ListItem className={classes.buttonsAndSlider}>
-                        <Slider min={0} max={100} defaultValue={0} step={10} value={ this.state.brightness } disabled={ !this.props.avgState('on') }
-                            onChange={ this.handlePreBrightnessChange } 
-                            onAfterChange={ this.handleBrightnessChange } 
-                            trackStyle={ this.props.avgState('on') ? { backgroundColor: 'orangeRed', opacity: .5, height: 10 } : { backgroundColor: 'silver', height: 10 }}
-                            handleStyle={ this.props.avgState('on') ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -3, height: 16, width: 16} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: 0, height: 10, width: 10}
-                            }
-                            railStyle={{ height: 10 }}
-                        />
-                    </ListItem>
-                </List>
+            <Paper className={classes.sliderPaper} elevation={0}>
+                <Avatar className={ this.props.avgState('on') ? classes.litAvatar: classes.avatar} onClick={ () => this.handleClickOpen()}>
+                    <PlaceIcon />
+                </Avatar>
+                <div className={classes.stack}>
+                    <Typography variant="subheading" gutterBottom>{this.props.name+' Lights'}</Typography>
+                    {this.state.brightness=="no" ?
+                    null :
+                    <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.brightness}
+                        onChange={this.handlePreBrightnessChange} 
+                        onAfterChange={this.handleBrightnessChange} 
+                        trackStyle={ this.props.avgState('on')  ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
+                        handleStyle={ this.props.avgState('on')  ? 
+                            { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
+                            { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
+                        }
+                        railStyle={{ height: 3 }}
+                        className={classes.stackSlider}
+                        disabled={ !this.props.avgState('on') }
+                    />
+                    }
+                </div>
+                <Switch color="primary" checked={ this.props.avgState('on') } onChange={this.handlePowerChange} />
             <Dialog open={this.state.open} onClose={this.handleClose} >
                 <DialogTitle >{this.props.name}</DialogTitle>
                 <DialogContent>
@@ -282,7 +323,7 @@ class GroupLight extends React.Component {
                     <ListItem>
                         <ListItemText primary="Power" onClick={ () => this.handleClickOpen()}/>
                         <ListItemSecondaryAction>
-                            <Switch color="primary" checked={this.state.powerState} onChange={this.handlePowerChange} />
+                            <Switch color="primary" checked={ this.props.avgState('on') } onChange={this.handlePowerChange} />
                         </ListItemSecondaryAction>
                     </ListItem>
                     <Divider />
@@ -290,15 +331,16 @@ class GroupLight extends React.Component {
                         <ListItemText primary="Brightness" />
                     </ListItem>
                     <ListItem>
-                        <Slider min={0} max={100} defaultValue={0} step={10} value={this.state.brightness} disabled={!this.state.powerState}
+                        <Slider min={0} max={100} defaultValue={0} step={10} value={this.state.brightness}
                             onChange={this.handlePreBrightnessChange} 
                             onAfterChange={this.handleBrightnessChange} 
-                            trackStyle={ this.state.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 10 } : { backgroundColor: 'silver', height: 10 }}
+                            trackStyle={ this.state.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
                             handleStyle={this.state.powerState ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -3, height: 16, width: 16} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: 0, height: 10}
+                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
+                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
                             }
-                            railStyle={{ height: 10 }}
+                            railStyle={{ height: 3 }}
+                            disabled={ !this.props.avgState('on') }
                         />
                     </ListItem>
                     <Divider />
@@ -306,16 +348,16 @@ class GroupLight extends React.Component {
                         <ListItemText primary="White Color Temperature" />
                     </ListItem>
                     <ListItem>
-                        <Slider min={2000} max={7000} defaultValue={0} step={100} value={this.state.colorTemperatureInKelvin} disabled={!this.state.powerState}
+                        <Slider min={2000} max={7000} defaultValue={0} step={100} value={this.state.colorTemperatureInKelvin}
                             onChange={this.handlePreColorTemperatureChange} 
                             onAfterChange={this.handleColorTemperatureChange} 
-                            trackStyle={ this.state.powerState ? { backgroundColor: 'orangeRed', height: 3 } : { backgroundColor: 'silver', height: 3 }}
-                            trackStyle={ this.state.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 10 } : { backgroundColor: 'silver', height: 10 }}
+                            trackStyle={ this.state.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
                             handleStyle={this.state.powerState ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -3, height: 16, width: 16} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: 0, height: 10}
+                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
+                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
                             }
-                            railStyle={{ height: 10 }}
+                            railStyle={{ height: 3 }}
+                            disabled={ !this.props.avgState('on') }
                         />
                     </ListItem>
                     <ListItem>

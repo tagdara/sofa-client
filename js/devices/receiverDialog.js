@@ -3,46 +3,36 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+
 import Paper from '@material-ui/core/Paper';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+
 import Avatar from '@material-ui/core/Avatar';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
 import Divider from '@material-ui/core/Divider';
+
+import Toolbar from '@material-ui/core/Toolbar';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+import Slide from  '@material-ui/core/Slide';
+
 const styles = theme => ({
 
-    card: {
-        display: 'flex',
-        maxWidth: '480px',
-        margin: 8,
-        boxSizing: "borderbox",
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    cardname: {
-        display: "flex",
-        flexDirection: "column",
-        paddingBottom: 8,
-    },
     content: {
         minWidth: 0,
         paddingBottom: 16,
@@ -63,16 +53,6 @@ const styles = theme => ({
         color: "white",
         margin: theme.spacing.unit,
     },
-    paperLight: {
-        display: "flex",
-        alignItems: "center",
-        paddingLeft: 16,
-    },
-    stackedVolumeControl: {
-        paddingLeft: 16,
-        paddingRight: 16,
-        flex:1,
-    },
     slider: {
         paddingTop: 0,
         paddingRight: 28,
@@ -84,13 +64,6 @@ const styles = theme => ({
         paddingLeft: 10,
         alignItems: "center",
     },    
-    dialog: {
-        paddingTop: "env(safe-area-inset-top)",
-        paddingBottom: "env(safe-area-inset-bottom)",
-        maxWidth: '480px',
-        minWidth: '320px',
-        boxSizing: "border-box",
-    },
     cover: {
         minWidth: 62,
         height: 62,
@@ -98,13 +71,58 @@ const styles = theme => ({
         alignSelf: "flex-end",
         margin: 16,
     },
-    embeddedExpansion: {
-        padding:0,
-    },
     chipLine: {
         width: "100%",
+    },
+    tabTitle: {
+        backgroundColor: theme.palette.primary[700],
+        padding: 0,
+        paddingTop: "env(safe-area-inset-top)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
+    },
+    dialogTitle: {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        flexGrow: 1,
+        color: theme.palette.primary.contrastText,
+    },
+    dialogActions: {
+        paddingBottom: "env(safe-area-inset-bottom)",
+    },
+    stack: {
+        height: 44,
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
+        paddingLeft: 16,
+        paddingRight: 16,
+        justifyContent: "center",
+    },
+    sliderPaper: {
+        display: "flex",
+        flexDirection: "row",
+        padding: "16 8 16 16",
+        alignItems: "center",
+        minWidth: 320,
+        maxWidth: 480,
+    },
+    stackSlider: {
+        marginTop: 4,
+        marginLeft: 4,
+        marginRight: 6,
+    },
+		dialogActions: {
+        paddingBottom: "env(safe-area-inset-bottom)",
     }
+
 });
+
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
 
 class ReceiverDialog extends React.Component {
     
@@ -138,11 +156,10 @@ class ReceiverDialog extends React.Component {
     handlePowerChange = event => {
         this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
         if (event.target.checked) {
-            var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/PowerController/powerState", "command":"TurnOn", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOn')
         } else {
-            var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/PowerController/powerState", "command":"TurnOff", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOff')
         }
-        this.props.sendMessage(JSON.stringify(ops));
     }; 
     
     handlePreVolumeChange = event => {
@@ -150,35 +167,43 @@ class ReceiverDialog extends React.Component {
     }; 
 
     handleVolumeChange = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/SpeakerController/volume", "command":"SetVolume", "value":event}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SpeakerController', 'SetVolume', event)
     }; 
 
     handleMuteChange = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/SpeakerController/muted", "command":"SetMute", "value":!this.state.muted}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SpeakerController', 'SetMute', !this.state.muted)
     }; 
     
     handleSurround = (event, surroundmode) => {
-        event.stopPropagation();
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/SurroundController/surround", "command":"SetSurround", "value":surroundmode}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SurroundController', 'SetSurround', surroundmode)
     }; 
 
     handleInput = (event, inputname) => {
-        event.stopPropagation();
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/InputController/input", "command":"SetInput", "value":inputname}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'InputController', 'SetInput', inputname)
     }; 
 
     
     render() {
 
-        const { classes, theme } = this.props;
+        const { classes, fullScreen} = this.props;
 
         return (
-                <Dialog fullScreen open={this.props.showdialog} onClose={() => this.props.closeDialog()} className={classes.dialog}>
-                    <DialogTitle >{this.props.name}</DialogTitle>
+                <Dialog 
+                    fullScreen={fullScreen}
+                    fullWidth={true}
+                    maxWidth={'sm'}
+                    open={this.props.showdialog}
+                    onClose={() => this.props.closeDialog()}
+                    TransitionComponent={Transition}
+                    className={fullScreen ? classes.fullDialog : classes.normalDialog }
+                >
+                    <DialogTitle className={classes.tabTitle}>
+                        <Toolbar elevation={0}>
+                            <Typography variant="title" color="inherit" className={classes.dialogTitle}>
+                                {this.props.name}
+                            </Typography>
+                        </Toolbar>
+                    </DialogTitle>
                     <DialogContent>
                     <List>
                         <ListItem>
@@ -188,34 +213,27 @@ class ReceiverDialog extends React.Component {
                             </ListItemSecondaryAction>
                         </ListItem>
                         <Divider />
-                        <ListItem>
-                        <Avatar onClick={ () => this.handleMuteChange()}>
-                            {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
-                        </Avatar>
-                        <List className={classes.stackedVolumeControl}>
-                            <ListItem className={classes.sliderName}>
-                                <ListItemText className={classes.deviceName} primary="Volume"/>
-                            </ListItem>
-                            <ListItem className={classes.slider}>
+                        <ListItem className={classes.sliderPaper}>
+                            <Avatar onClick={ () => this.handleMuteChange()} >
+                                {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
+                            </Avatar>
+                            <div className={classes.stack}>
+                                <Typography variant="subheading">Volume</Typography>
                                 <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
                                     onChange={this.handlePreVolumeChange} 
                                     onAfterChange={this.handleVolumeChange} 
-                                    trackStyle={ this.props.deviceProperties.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 10 } : { backgroundColor: 'silver', height: 10 }}
-                                    handleStyle={ this.props.deviceProperties.powerState ? 
-                                        { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -3, height: 16, width: 16} :
-                                        { borderColor: 'silver', backgroundColor: 'silver', marginTop: 0, height: 10}
-                                    }
-                                    railStyle={{ height: 10 }}
+                                    trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }} 
+                                    handleStyle= {{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} }
+                                    railStyle={{ height: 3 }}
+                                    className={classes.stackSlider}
                                 />
-                            </ListItem>
-                        </List>
+                            </div>
                         </ListItem>
                         <Divider />
-                        <List>
-                            <ListItem >
-                                <ListItemText className={classes.deviceName} primary="Input"/>
-                            </ListItem>
-                            <ListItem className={classes.chipLine}>
+                        <ListItem >
+                            <ListItemText className={classes.deviceName} primary="Input"/>
+                        </ListItem>
+                        <ListItem className={classes.chipLine}>
                                     <Chip 
                                         key = 'Sonos'
                                         label= 'Sonos'
@@ -229,11 +247,8 @@ class ReceiverDialog extends React.Component {
                                         onClick={ (e) => this.handleInput(e, 'HDMI_1')}
                                     />
                             </ListItem>
-                        </List>
-                        <Divider />
-                        <ListItem>
-                        <ExpansionPanel elevation={0}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} className={classes.embeddedExpansion}>
+                            <Divider />
+                            <ListItem>
                                 <div>
                                     <Typography variant="subheading" noWrap>Surround Sound</Typography>
                                     <div className={classes.chipLine}>
@@ -251,17 +266,12 @@ class ReceiverDialog extends React.Component {
                                     />
                                     </div>
                                 </div>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails>
-                                <Typography>
-                                    Other Surround Sound Modes Go Here
-                                </Typography>
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                        </ListItem>
+                            </ListItem>
                     </List>
                     </DialogContent>
-                    <DialogActions>
+										<Divider />
+                    <DialogActions className={classes.dialogActions}>
+												
                         <Button  onClick={() => this.props.closeDialog() } color="primary" autoFocus>
                             OK
                         </Button>
@@ -274,7 +284,7 @@ class ReceiverDialog extends React.Component {
 
 ReceiverDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(ReceiverDialog);
+export default withStyles(styles)(withMobileDialog()(ReceiverDialog));

@@ -10,6 +10,9 @@ import ClearIcon from '@material-ui/icons/Clear';
 import DoneIcon from '@material-ui/icons/Done';
 import Avatar from '@material-ui/core/Avatar';
 import Paper from '@material-ui/core/Paper';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const styles = theme => ({
     paperLight: {
@@ -32,20 +35,17 @@ const styles = theme => ({
         margin: 8,
         backgroundColor: "#6a6",
         color: "#fff",
-        height: 28,
-        width: 28,
     },
     xopen: {
         boxSizing: "border-box",
         margin: 8,
         backgroundColor: "#e66",
-        height: 28,
-        width: 28,
     },
-    icon: {
-        height: 20,
-        width: 20,
-    }
+    listItem: {
+        padding: "8 0",
+        width: '100%',
+    },
+
 });
 
     const filterShouldRender = filter => element => elseElement => {
@@ -60,16 +60,14 @@ class Zone extends React.Component {
 
         const { classes } = this.props;
         return (
-            <Paper className={this.props.classes.paperLight} elevation={0}>
+            <ListItem className={classes.listItem}>
                 { this.props.deviceProperties.position=='closed' ?
                 <Avatar className={classes.xclosed} onClick={ () => this.toggleFilter('all') }><DoneIcon className={classes.icon} /></Avatar>
                 :
                 <Avatar className={classes.xopen} onClick={ () => this.toggleFilter('all') }><ClearIcon className={classes.icon} /></Avatar>
                 }
-                <div className={classes.cardtext}>
-                    <Typography variant="subheading">{this.props.name}</Typography>
-                </div>
-                </Paper>
+                <ListItemText primary={this.props.name}/>
+            </ListItem>
         );
     }
 }

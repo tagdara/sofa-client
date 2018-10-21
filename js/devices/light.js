@@ -25,14 +25,17 @@ const styles = theme => ({
         color: '#fff',
         backgroundColor: deepOrange[500],
     },
+
     stack: {
         height: 44,
         display: "flex",
-        flexDirection: "column",
         flexGrow: 1,
         paddingLeft: 16,
-        paddingRight: 16,
-        justifyContent: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+    },
+    stackLabel: {
+        alignSelf: "center",
     },
     sliderPaper: {
         display: "flex",
@@ -81,12 +84,11 @@ class Light extends React.Component {
     handlePowerChange = event => {
         if (event.target.checked) {
             this.setState({ powerState: 'ON', target: this.props.name});
-            var ops={"op":"set", "path":"discovery/"+this.props.name+"/PowerController/powerState", "command":"TurnOn", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "PowerController", "TurnOn")
         } else {
             this.setState({ powerState: 'OFF', target: this.props.name});
-            var ops={"op":"set", "path":"discovery/"+this.props.name+"/PowerController/powerState", "command":"TurnOff", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "PowerController", "TurnOff")
         }
-        this.props.sendMessage(JSON.stringify(ops));
     }; 
 
     handlePreBrightnessChange = event => {
@@ -94,8 +96,7 @@ class Light extends React.Component {
     }; 
 
     handleBrightnessChange = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/BrightnessController/brightness", "command":"SetBrightness", "value":event}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "BrightnessController", "SetBrightness", event)
     }; 
 
     handleClickOpen = () => {
@@ -116,7 +117,11 @@ class Light extends React.Component {
                         <LightbulbOutlineIcon />
                     </Avatar>
                     <div className={classes.stack}>
-                        <Typography variant="subheading">{this.props.name}</Typography>
+                        <Typography variant="subheading" className={classes.stackLabel} gutterBottom>{this.props.name}</Typography>
+                        {this.state.brightness=="no" ?
+                            null :
+                            <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.brightness+"%"}</Typography>
+                        }
                         {this.state.brightness=="no" ?
                         null :
                         <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.brightness}
@@ -128,13 +133,12 @@ class Light extends React.Component {
                                 { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
                             }
                             railStyle={{ height: 3 }}
-                            className={classes.stackSlider}
                             disabled={ !this.state.powerState=='ON' }
                         />
                         }
                     </div>
                     <Switch color="primary" checked={this.state.powerState=='ON'} onChange={this.handlePowerChange} />
-                    <LightDialog open={this.state.open} name={ this.props.name } handleClose={this.handleClose} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
+                    <LightDialog sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.open} name={ this.props.name } handleClose={this.handleClose} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
                 </Paper>
 
         );

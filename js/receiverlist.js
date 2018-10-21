@@ -54,7 +54,14 @@ class ReceiverList extends React.Component {
         return false
 
     }
+    
+    componentDidMount() {
 
+  	    fetch('/list/yamaha/inputs')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({inputs:result}));
+    }
+    
     render() {
         
         const { classes } = this.props;

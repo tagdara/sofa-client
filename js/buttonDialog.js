@@ -23,6 +23,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import VirtualList from './virtuallist';
+import ComputerList from './computerList';
 import SmartButton from './devices/smartbutton';
 
 const styles = theme => ({
@@ -97,8 +98,10 @@ class ThermostatDialog extends React.Component {
                 <Divider />
                 <DialogContent className={classes.dialogContent }>
                     <List className={classes.thermostatList} >
-                        <VirtualList sender={ this.props.sendMessage } />
+                        <VirtualList sendAlexaCommand={this.props.sendAlexaCommand} />
                     </List>
+                    <Divider />
+                    <ComputerList sendAlexaCommand={this.props.sendAlexaCommand} devices={ this.props.devicesByCategory('PC') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('PC')) } sendAlexaCommand={this.props.sendAlexaCommand} />
                 </DialogContent>
                 <Divider />
                 <DialogActions className={classes.dialogActions} >

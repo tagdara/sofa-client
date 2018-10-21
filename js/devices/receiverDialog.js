@@ -35,6 +35,7 @@ const styles = theme => ({
 
     content: {
         minWidth: 0,
+        padding: 0,
         paddingBottom: 16,
     },
     metadata: {
@@ -45,13 +46,20 @@ const styles = theme => ({
     chip: {
         background: "silver",
         color: "black",
-        margin: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        marginTop: theme.spacing.unit,
+        marginBottom: theme.spacing.unit,
+        marginLeft: 0,
     },
 
     hotchip: {
         background: "orangeRed",
         color: "white",
-        margin: theme.spacing.unit,
+        marginRight: theme.spacing.unit,
+        marginTop: theme.spacing.unit,
+        marginBottom: theme.spacing.unit,
+        marginLeft: 0,
+
     },
     slider: {
         paddingTop: 0,
@@ -64,14 +72,16 @@ const styles = theme => ({
         paddingLeft: 10,
         alignItems: "center",
     },    
-    cover: {
-        minWidth: 62,
-        height: 62,
-        width: 62,
-        alignSelf: "flex-end",
-        margin: 16,
+    chipLineLabel: {
+        width: "100%",
+    },
+    chipListItem: {
+        width: "100%",
+        display: "block",
+        padding: "16 24" ,
     },
     chipLine: {
+        paddingTop: 0,
         width: "100%",
     },
     tabTitle: {
@@ -95,27 +105,29 @@ const styles = theme => ({
     stack: {
         height: 44,
         display: "flex",
-        flexDirection: "column",
         flexGrow: 1,
         paddingLeft: 16,
-        paddingRight: 16,
-        justifyContent: "center",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+    },
+    stackLabel: {
+        alignSelf: "center",
     },
     sliderPaper: {
         display: "flex",
         flexDirection: "row",
-        padding: "16 8 16 16",
+        padding: "16 24",
         alignItems: "center",
-        minWidth: 320,
-        maxWidth: 480,
     },
-    stackSlider: {
-        marginTop: 4,
-        marginLeft: 4,
-        marginRight: 6,
-    },
-		dialogActions: {
+	dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",
+    },
+    powerLine: {
+        width: "100%",
+        padding: "16 16 16 12",
+    },
+    powerLabel: {
+        padding: 0,
     }
 
 });
@@ -130,6 +142,7 @@ class ReceiverDialog extends React.Component {
         super(props);
 
         this.state = {
+            topInputs: ['TV','Sonos'],
             tracked: ['surround','decoder','input','volume','powerState'],
             endpointId: '',
             surround: '',
@@ -179,9 +192,8 @@ class ReceiverDialog extends React.Component {
     }; 
 
     handleInput = (event, inputname) => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'InputController', 'SetInput', inputname)
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'InputController', 'SelectInput', inputname)
     }; 
-
     
     render() {
 
@@ -204,54 +216,46 @@ class ReceiverDialog extends React.Component {
                             </Typography>
                         </Toolbar>
                     </DialogTitle>
-                    <DialogContent>
+                    <DialogContent className={classes.content}>
                     <List>
-                        <ListItem>
-                            <ListItemText primary="Power"/>
-                            <ListItemSecondaryAction>
-                                <Switch color="primary" checked={this.props.deviceProperties.powerState=='ON'} onChange={this.handlePowerChange} />
-                            </ListItemSecondaryAction>
+                        <ListItem  className={classes.powerLine}>
+                            <Switch color="primary" checked={this.props.deviceProperties.powerState=='ON'} onChange={this.handlePowerChange} />
+                            <ListItemText className={classes.powerLabel} primary="Power"/>
                         </ListItem>
-                        <Divider />
                         <ListItem className={classes.sliderPaper}>
                             <Avatar onClick={ () => this.handleMuteChange()} >
                                 {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                             </Avatar>
                             <div className={classes.stack}>
-                                <Typography variant="subheading">Volume</Typography>
+                                <Typography variant="subheading" className={classes.stackLabel} gutterBottom>Volume</Typography>
+                                <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.volume+"%"}</Typography>
                                 <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
                                     onChange={this.handlePreVolumeChange} 
                                     onAfterChange={this.handleVolumeChange} 
                                     trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }} 
-                                    handleStyle= {{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} }
+                                    handleStyle= {{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -7, height: 16, width: 16} }
                                     railStyle={{ height: 3 }}
-                                    className={classes.stackSlider}
                                 />
                             </div>
                         </ListItem>
-                        <Divider />
-                        <ListItem >
-                            <ListItemText className={classes.deviceName} primary="Input"/>
-                        </ListItem>
-                        <ListItem className={classes.chipLine}>
+                            <ListItem className={classes.chipListItem}>
+                                <Typography variant="subheading" noWrap className={classes.chipLineLabel}>Input</Typography>
+                                <div className={classes.chipLine}>
+                                { Object.keys(this.props.inputs).map(inp => (
+                                    this.state.topInputs.includes(this.props.inputs[inp]) ?
                                     <Chip 
-                                        key = 'Sonos'
-                                        label= 'Sonos'
-                                        className={ (this.props.deviceProperties.input=='AV5') ? classes.hotchip : classes.chip }
-                                        onClick={ (e) => this.handleInput(e, 'AV_5')}
+                                        key = {inp}
+                                        label= {this.props.inputs[inp]}
+                                        className={ (this.props.input==this.props.inputs[inp]) ? classes.hotchip : classes.chip }
+                                        onClick={ (e) => this.handleInput(e, inp)}
                                     />
-                                    <Chip 
-                                        key = 'TV'
-                                        label='TV'
-                                        className={  (this.props.deviceProperties.input=='HDMI1') ? classes.hotchip : classes.chip }
-                                        onClick={ (e) => this.handleInput(e, 'HDMI_1')}
-                                    />
+                                    : null
+                                ))}
+                                </div>
                             </ListItem>
-                            <Divider />
-                            <ListItem>
-                                <div>
-                                    <Typography variant="subheading" noWrap>Surround Sound</Typography>
-                                    <div className={classes.chipLine}>
+                            <ListItem className={classes.chipListItem}>
+                                <Typography variant="subheading" noWrap className={classes.chipLineLabel}>Surround Sound</Typography>
+                                <div className={classes.chipLine}>
                                     <Chip 
                                         key = '7ch Stereo'
                                         label= '7ch Stereo'
@@ -265,7 +269,6 @@ class ReceiverDialog extends React.Component {
                                         onClick={ (e) => this.handleSurround(e, 'Surround Decoder')}
                                     />
                                     </div>
-                                </div>
                             </ListItem>
                     </List>
                     </DialogContent>

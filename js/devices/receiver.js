@@ -49,6 +49,7 @@ class Receiver extends React.Component {
             powerState: 'OFF',
             icon: '/react/images/receiver.png?v2',
             showdialog: false,
+            inputs: {},
         };
         
         this.closeDialog = this.closeDialog.bind(this);
@@ -79,8 +80,28 @@ class Receiver extends React.Component {
     closeDialog = () => { 
         this.setState({ showdialog: false})
     } 
+    
+    getYamahaInput = inputname => {
+        // this is to fix the hacky yamaha input naming system
+        for (var yinput in this.state.inputs) {
+            if (inputname==yinput) {
+                return this.state.inputs[yinput]
+            }
+            if (inputname==yinput.replace('_','')) {
+                return this.state.inputs[yinput]
+            }
+        }
+        return inputname
+                
+    }
 
-     
+    componentDidMount() {
+
+  	    fetch('/list/yamaha/inputs')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({inputs:result}));
+    }
+    
     render() {
 
         const { classes } = this.props;
@@ -90,11 +111,11 @@ class Receiver extends React.Component {
                     <CardContent className={classes.content}>
                         <ListItem className={classes.listItem}>
                             <Avatar src={this.state.icon} onClick={ () => this.handleClickOpen()}/>
-                            <ListItemText onClick={ () => this.handleClickOpen()} primary={this.props.name} secondary={this.props.deviceProperties.input + " / "+ this.props.deviceProperties.surround}/>
+                            <ListItemText onClick={ () => this.handleClickOpen()} primary={this.props.name} secondary={this.getYamahaInput(this.props.deviceProperties.input) + " / "+ this.props.deviceProperties.surround}/>
                             <Switch color="primary" checked={this.state.powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
                         </ListItem>
                     </CardContent>
-                    <ReceiverDialog sendAlexaCommand={this.props.sendAlexaCommand} showdialog={this.state.showdialog} closeDialog={this.closeDialog} name={this.props.name} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={ this.props.sendMessage } />
+                    <ReceiverDialog input={this.getYamahaInput(this.props.deviceProperties.input)} inputs={this.state.inputs} sendAlexaCommand={this.props.sendAlexaCommand} showdialog={this.state.showdialog} closeDialog={this.closeDialog} name={this.props.name} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={ this.props.sendMessage } />
                 </Card>
         );
     }

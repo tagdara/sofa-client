@@ -58,7 +58,40 @@ function Transition(props) {
 }
 
 class ThermostatDialog extends React.Component {
-
+    
+    settableDevices = () => {
+        
+        var settable=[]
+        for (var i = 0; i < this.props.devices.length; i++) {
+            for (var j = 0; j < this.props.devices[i].capabilities.length; j++) {
+                if (this.props.devices[i].capabilities[j].interface=="Alexa.ThermostatController") {
+                    settable.push(this.props.devices[i])
+                    break
+                }
+            }
+        }
+        return settable;
+    }; 
+    
+    nonSettableDevices = () => {
+        
+        var nonSettable=[]
+        for (var i = 0; i < this.props.devices.length; i++) {
+            var devSettable=false
+            for (var j = 0; j < this.props.devices[i].capabilities.length; j++) {
+                if (this.props.devices[i].capabilities[j].interface=="Alexa.ThermostatController") {
+                    devSettable=true;
+                    break
+                }
+            }
+            if (!devSettable) {
+                nonSettable.push(this.props.devices[i])    
+            }
+        }
+        return nonSettable;
+    }; 
+    
+    
     render() {
         
         const { classes, fullScreen  } = this.props;
@@ -86,8 +119,7 @@ class ThermostatDialog extends React.Component {
                 <DialogContent className={classes.dialogContent }>
                         <List className={classes.thermostatList} >
                     { 
-                    this.props.devices.map((device) =>
-                        (device.friendlyName == 'Main Thermostat' || device.friendlyName=='Master bedroom' ?
+                    this.settableDevices().map((device) => (
                         <ThermostatSettable sendAlexaCommand={this.props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendMessage={this.props.sendMessage} />
                         :
                         null
@@ -95,11 +127,9 @@ class ThermostatDialog extends React.Component {
                         <Divider />
 
                     { 
-                    this.props.devices.map((device) =>
-                        (device.friendlyName=='Main Thermostat' || device.friendlyName=='Master bedroom' ?
-                        null :
+                    this.nonSettableDevices().map((device) => (
                         <Thermostat key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] }  />
-
+                        : null
                     ))}
                         </List>
                 </DialogContent>

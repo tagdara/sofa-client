@@ -106,8 +106,7 @@ class LightDialogBrightness extends React.Component {
     }; 
 
     handleBrightnessChange = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/BrightnessController/brightness", "command":"SetBrightness", "value":event}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "BrightnessController", "SetBrightness", event)
     }; 
 
     render() {
@@ -123,12 +122,12 @@ class LightDialogBrightness extends React.Component {
                         <Slider min={0} max={100} defaultValue={0} step={10} value={this.state.brightness} disabled={!this.props.powerState}
                             onChange={this.handlePreBrightnessChange} 
                             onAfterChange={this.handleBrightnessChange} 
-                            trackStyle={ this.props.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 10 } : { backgroundColor: 'silver', height: 10 }}
+                            trackStyle={ this.props.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
                             handleStyle={this.props.powerState ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -3, height: 16, width: 16} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: 0, height: 10}
+                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
+                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
                             }
-                            railStyle={{ height: 10 }}
+                            railStyle={{ height: 3 }}
                         />
                     </ListItem>
                 </List>

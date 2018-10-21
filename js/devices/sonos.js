@@ -128,7 +128,7 @@ class Sonos extends React.Component {
                             }
                         </ListItem>
                     </List>
-                    <SonosGroupDialog key={this.props.name+'grp'} open={this.state.showdialog} close={this.closeDialog} coordinator={this.props.name} devices={this.props.devices} players={this.props.linkedPlayers} linked={this.props.deviceProperties.linked} sendMessage={this.props.sendMessage} />
+                    <SonosGroupDialog sendAlexaCommand={this.props.sendAlexaCommand} key={this.props.name+'grp'} open={this.state.showdialog} close={this.closeDialog} coordinator={this.props.name} devices={this.props.devices} players={this.props.linkedPlayers} linked={this.props.deviceProperties.linked} sendMessage={this.props.sendMessage} />
                 </Paper>
             : null
         );

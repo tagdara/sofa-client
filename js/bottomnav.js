@@ -41,8 +41,8 @@ class BottomNav extends React.Component {
 
     return (
         <BottomNavigation value={value} onChange={this.handleChange} className={classes.root}>
-            <BottomNavigationAction label="Lights" value="Lights" icon={<LightbulbOutlineIcon />} />
             <BottomNavigationAction label="AV" value="Audio Video" icon={<SubscriptionsIcon />} />
+            <BottomNavigationAction label="Lights" value="Lights" icon={<LightbulbOutlineIcon />} />
             <BottomNavigationAction label="Security" value="Security" icon={<VerifiedUserIcon />} />
         </BottomNavigation>
     );

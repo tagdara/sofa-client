@@ -23,6 +23,7 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import Button from '@material-ui/core/Button';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 import Slide from  '@material-ui/core/Slide';
+import List from '@material-ui/core/List';
 
 const styles = theme => ({
     
@@ -131,7 +132,7 @@ class ZoneGrid extends React.Component {
             <Dialog 
                 fullScreen={fullScreen}
                 fullWidth={true}
-                maxWidth={'md'}
+                maxWidth={'sm'}
                 open={this.props.showGrid}
                 onClose={this.props.closeGrid}
                 TransitionComponent={Transition}
@@ -147,12 +148,12 @@ class ZoneGrid extends React.Component {
                     </Toolbar>
                 </DialogTitle>
                 <DialogContent>
-                    <div className={classes.camGrid}>
+                    <List className={classes.thermostatList} >
                         { 
                         this.props.devices.map((device) =>
                             <Zone key={ device.endpointId } name={ device.friendlyName } filter={ this.props.filter} device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sender={this.props.sender} updateDevice={this.props.updateDevice} />
                         )}
-                    </div>
+                    </List>
                 </DialogContent>
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={(e) =>  this.props.closeGrid(e)} color="primary" autoFocus>OK</Button>

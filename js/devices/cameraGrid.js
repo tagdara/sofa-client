@@ -13,8 +13,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 
 import SecurityCamera from './securitycamera';
+import CameraRecordingList from '../cameraRecordingList';
 
 const styles = theme => ({
     
@@ -76,6 +79,19 @@ function Transition(props) {
 
 class CameraDialog extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            frontTab: 0,
+        }
+    }
+    
+    handleTab = (event, tabno) => {
+        if (tabno==0) { this.setState({frontTab: tabno})}
+        if (tabno==1) { this.setState({frontTab: tabno})}
+    };   
+
     render() {
         
         const { classes, fullScreen } = this.props;
@@ -97,16 +113,24 @@ class CameraDialog extends React.Component {
                             Cameras
                         </Typography>
                     </Toolbar>
+                    <Tabs className={classes.tabRow} value={this.state.frontTab} onChange={this.handleTab}>
+                        <Tab label="Live" />
+                        <Tab label="Recorded" />
+                    </Tabs>
                 </DialogTitle>
-                <DialogContent className={fullScreen ? classes.dialogMaxWidth : classes.dialogContent }>
-                    <div className={classes.lGrid}>
-                    {
-                    this.props.cameras.map((name) => 
-                        <SecurityCamera key={ name } name={ name } sender={this.props.sender} ></SecurityCamera>
-                    )}
-                    <div className={classes.gridPlaceholder}></div>
-                    </div>
-                </DialogContent>
+                { this.state.frontTab==0 ?
+                    <DialogContent className={fullScreen ? classes.dialogMaxWidth : classes.dialogContent }>
+                        <div className={classes.lGrid}>
+                        {
+                        this.props.cameras.map((name) => 
+                            <SecurityCamera key={ name } name={ name } sender={this.props.sender} ></SecurityCamera>
+                        )}
+                            <div className={classes.gridPlaceholder}></div>
+                        </div>
+                    </DialogContent>
+                :
+                    <CameraRecordingList cameras={this.props.cameras} />
+                }
                 <Divider />
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={(e) => this.props.closeDialog(e)} color="primary" autoFocus>OK</Button>

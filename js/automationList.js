@@ -83,6 +83,9 @@ const styles = theme => ({
     areaInput: {
         marginTop:0,
         marginLeft: 16,
+    },
+    sec: {
+        paddingRight: 16,
     }
 
 });
@@ -99,6 +102,7 @@ class AutomationList extends React.Component {
 
         this.state = {
             adding: false,
+            editing: false,
             selectedName: '',
             selectedDevices: [],
             areamap: {},
@@ -109,51 +113,83 @@ class AutomationList extends React.Component {
         }
     }
 
-    updateList = (regionname, roomlist) => {
-        var curmap=this.state.automations
-        curmap[regionname]['actions']=roomlist
-        this.setState({automations:curmap})
-    }
-    
 
     runAutomation = name => {
-        
-        var actions=this.props.automations[name].actions
-        for (var i = 0; i < actions.length; i++) {
-            this.props.sendAlexaCommand(actions[i].deviceName, '', actions[i].controller, actions[i].command, actions[i].value)
-        }
+        this.props.sendAlexaCommand(name, 'logic:activity:'+name, 'SceneController', 'Activate')
     }
-    
+
     editNewAutomationName = (e) => {
         this.setState({ newAutomationName: e.target.value })
     }
     
+    handleAddAutomation = () => {
+        this.setState({ adding: true, editing: false})
+    }
+
+    handleEditAutomations = () => {
+        this.setState({ adding: false, editing: true})
+    }
+    
+    handleDoneAddEdit = () => {
+        this.setState({ adding: false, editing: false})
+    }
+
     handleAdd = (add) => {
         
         if (this.state.automations.hasOwnProperty(this.state.newAutomationName)) {
-            console.log('That region already exists')
+            console.log('An automation with that name already exists')
         } else {
-            var curmap=this.state.automations;
-            curmap[this.state.newAutomationName]={'actions': []}
-            this.setState({ automations: curmap, newAutomationName: '' },
-                () => this.saveAutomations()
-            );
+            this.addAutomation(this.state.newAutomationName);
+            this.setState({ newAutomationName: '', adding: false, editing: false });
         }
 
     }
-    
-    handleDelete = (delarea) => {
-        var curmap=this.state.automations;
-        delete curmap[delarea]
-        this.setState({automations: curmap},
-                () => this.saveAutomations()
-        );
+
+    handleSelect = (automation) => {
+        console.log('handle select', automation, this.state.editing)
+        if (!this.state.editing) {
+            this.props.select(automation)
+        }
     }
     
-    handleSelect = (region) => {
-        if (!this.props.editMode) {
-            this.props.select(region)
-        }
+    addAutomation = (automationName) => {
+
+        var automations=this.state.automations
+        automations[automationName]={'count': 0}
+        console.log('Automatiions will be', automations)
+
+        fetch('/add/logic/automation/'+automationName, {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([])
+            })
+            .then(res=>console.log(res))
+    } 
+    
+    deleteAutomation = (automationName) => {
+
+        var automations=this.state.automations
+        delete automations[automationName]
+
+        fetch('/del/logic/automation/'+automationName, {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([])
+            })
+            .then(res=>console.log(res))
+            .then(result=>this.setState({automations:automations}));
+    } 
+    
+    componentDidMount() {
+  	    fetch('/list/logic/automationlist')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({automations:result}));
     }
     
     render() {
@@ -161,28 +197,30 @@ class AutomationList extends React.Component {
         const { classes, fullScreen  } = this.props;
         
         return (
+            <React.Fragment>
             <DialogContent className={classes.dialogContent }>
                 <List className={classes.List} >
-                    { Object.keys(this.props.automations).map(name => 
-                        <ListItem className={classes.listItem} key={ name+'-reg' } onClick={() => this.handleSelect(name)}>
-                            <Avatar onClick={ () => this.runAutomation(name)}>
+                    { Object.keys(this.state.automations).map(automation => 
+                        <ListItem className={classes.listItem} key={ automation+'-reg' }>
+                        { !this.state.editing ?
+                            <Avatar onClick={ () => this.runAutomation(automation)}>
                                 <ListIcon />
                             </Avatar>
-                            <ListItemText primary={name} secondary={this.props.automations[name]['actions'].length+' actions'} />
-                            {this.props.editMode ?
-                            <ListItemSecondaryAction>
-                                <IconButton aria-label="Close" onClick={() => this.props.handleDeleteAutomation(name)}>
-                                    <CloseIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                            : null }
+                        :
+                            <Avatar onClick={ () => this.deleteAutomation(automation)}>
+                                <CloseIcon />
+                            </Avatar>
+                        }
+                            <ListItemText primary={automation} secondary={this.state.automations[automation].count+' actions'}  onClick={() => this.handleSelect(automation)}/>
                         </ListItem>
                     )}
 
-                    { this.props.editMode ?
+                    { this.state.adding ?
                         <form className={classes.container} noValidate autoComplete="off">
                         <ListItem className={classes.listItem}>
-                            <ListItemIcon><EditIcon /></ListItemIcon>
+                            <Avatar>
+                                <EditIcon />
+                            </Avatar>
                             <TextField
                                 className={classes.areaInput}
                                 id="required"
@@ -191,7 +229,7 @@ class AutomationList extends React.Component {
                                 value={this.state.newAutomationName}
                                 onChange={(e) => this.editNewAutomationName(e)}
                             />
-                            <ListItemSecondaryAction>
+                            <ListItemSecondaryAction className={classes.sec}>
                                 <IconButton aria-label="Confirm" onClick={(e) => this.handleAdd(true)}>
                                     <CheckIcon />
                                 </IconButton>
@@ -201,6 +239,22 @@ class AutomationList extends React.Component {
                     : null }
                 </List>
             </DialogContent>
+            <Divider />
+            <DialogActions className={classes.dialogActions} >
+                {!this.state.adding && !this.state.editing ?
+                    <Button onClick={() => this.handleAddAutomation()} color="primary" autoFocus>ADD</Button>
+                : null }
+                {!this.state.adding && !this.state.editing ?
+                    <Button onClick={() => this.handleEditAutomations()} color="primary" autoFocus>EDIT</Button>
+                : null }
+                {!this.state.adding && !this.state.editing ?
+                    <Button onClick={() => this.props.close()} color="primary" autoFocus>CLOSE</Button>
+                : null }
+                {this.state.adding || this.state.editing ?
+                    <Button onClick={() => this.handleDoneAddEdit()} color="primary" autoFocus>DONE</Button>
+                : null }
+            </DialogActions>
+            </React.Fragment>
         )
     }
 }

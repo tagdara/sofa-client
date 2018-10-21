@@ -36,6 +36,10 @@ const styles = theme => ({
     open: {
         backgroundColor: "#e66",
     },
+    notready: {
+        backgroundColor: "#ccc",
+    },
+
     listItem: {
         padding: 16,
         width: '100%',
@@ -54,12 +58,27 @@ class ZoneList extends React.Component {
         }
     }
 
+    zoneReady = () => {
+        
+        if (Object.keys(this.props.deviceProperties).length==0) {
+            return false
+        } else {
+            for (var dev in this.props.deviceProperties) {
+                if (this.props.deviceProperties[dev].position==undefined) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
     
     zoneCount = condition => {
         var count=0;
         for (var dev in this.props.deviceProperties) {
             if (condition=='all' || this.props.deviceProperties[dev].position==condition) {
-                count=count+1
+                if (this.props.deviceProperties[dev].type=='Alarm') {
+                    count=count+1
+                }
             }
         }
         return count
@@ -81,10 +100,12 @@ class ZoneList extends React.Component {
             var device=this.props.devices[dev]
             if (this.props.deviceProperties[device.friendlyName].hasOwnProperty('position')) {
                 if (this.props.deviceProperties[device.friendlyName].position=='open') {
-                    if (openzones) {
-                        openzones=openzones+", "+device.friendlyName
-                    } else {
-                        openzones=device.friendlyName
+                    if (this.props.deviceProperties[device.friendlyName].type=='Alarm') {
+                        if (openzones) {
+                            openzones=openzones+", "+device.friendlyName
+                        } else {
+                            openzones=device.friendlyName
+                        }
                     }
                 }
             }
@@ -99,6 +120,7 @@ class ZoneList extends React.Component {
         return (
                 <Card className={classes.card} onClick={ (e) => this.handleGrid(e)}>
                     <CardContent className={classes.content}>
+                        { this.zoneReady() ?
                         <ListItem className={classes.listItem}>
                             { this.zoneCount('open')>0 ? 
                                 <Avatar className={classes.open} ><PriorityHighIcon/></Avatar>
@@ -111,6 +133,12 @@ class ZoneList extends React.Component {
                                 <ListItemText primary={'All zones secure'}/>
                             }
                         </ListItem>
+                        :
+                        <ListItem className={classes.listItem}>
+                            <Avatar className={classes.notready} ><PriorityHighIcon/></Avatar>
+                            <ListItemText primary={'Waiting for zone data'}/>
+                        </ListItem>
+                        }
                     </CardContent>
                 <ZoneGrid closeGrid={this.handleCloseGrid} showGrid={this.state.showGrid} zoneCount={this.zoneCount} deviceProperties={this.props.deviceProperties} devices={this.props.devices} />
             </Card>

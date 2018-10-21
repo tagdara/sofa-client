@@ -24,6 +24,9 @@ import Divider from '@material-ui/core/Divider';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import Toolbar from '@material-ui/core/Toolbar';
+
+
 import GroupLight from './devices/grouplight'
 import Light from './devices/light'
 import SceneEditor from './sceneEditor'
@@ -76,10 +79,13 @@ const styles  = theme =>  ({
         justifyContent: "space-around",
         alignItems: "center",
     },
+    baseTitle: {
+        minHeight: 48,
+    },
     tabTitle: {
+        paddingTop: "env(safe-area-inset-top)",
         backgroundColor: theme.palette.primary[700],
         padding: 0,
-        paddingTop: "env(safe-area-inset-top)",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-around",
@@ -117,6 +123,9 @@ class AreaDialog extends React.Component {
         super(props);
 
         this.state = {
+            scenes: {},
+            shortcuts: {},
+            lights: {},
             frontTab: 0,
             computedLevel: 0,
             level: 0,
@@ -135,7 +144,26 @@ class AreaDialog extends React.Component {
 
     }
     
-    computeLevels() {
+    static getDerivedStateFromProps(nextProps, prevState) {
+
+        var data=nextProps.deviceProperties
+        var changes={}
+        
+        if (nextProps.hasOwnProperty('deviceProperties')) {
+            changes.devices=nextProps.devices
+            changes.deviceProperties=nextProps.deviceProperties
+            if (prevState.hasOwnProperty('delaySet')) {
+                if (!prevState.delaySet) {
+                    changes.level=AreaDialog.computeLevels(nextProps.sceneData, data, prevState)
+                }
+            }
+        }
+
+        return changes
+    }
+    
+    
+    static computeLevels(sceneData, deviceProperties, prevState) {
 
         var highscore=0
         var currentlevel=0
@@ -143,15 +171,15 @@ class AreaDialog extends React.Component {
 
         for (var i = 0; i < 4; i++) {
             var level=i.toString()
-            if (this.props.sceneData['shortcuts'].hasOwnProperty(level)) {
-                var sceneName=this.props.sceneData['shortcuts'][level]
-                var scene=this.props.sceneData['scenes'][sceneName]
+            if (prevState.shortcuts.hasOwnProperty(level)) {
+                var sceneName=prevState.shortcuts[level]
+                var scene=prevState.scenes[sceneName]
 
                 var levscore=0
-                for (var light in scene) {        
-                    if (this.props.deviceProperties.hasOwnProperty(light)) {
-                        if (this.props.deviceProperties[light]['powerState']=='ON') {
-                            var bri=this.props.deviceProperties[light]['brightness']
+                for (var light in scene) {    
+                    if (deviceProperties.hasOwnProperty(light)) {
+                        if (deviceProperties[light]['powerState']=='ON') {
+                            var bri=deviceProperties[light]['brightness']
                         } else {
                             var bri=0
                         }
@@ -167,12 +195,9 @@ class AreaDialog extends React.Component {
             }
         }
 
-        if (this.state.computedLevel!=currentlevel) {
-            this.setState({computedLevel:currentlevel, level:currentlevel})
-        }
-
         return currentlevel
-    }
+    }    
+
 
     lightList() {
         
@@ -256,7 +281,7 @@ class AreaDialog extends React.Component {
                     for (var i = 0; i < device.capabilities.length; i++) {
                         capabilities.push(device.capabilities[i].interface)
                     }
-                    return <Light key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendMessage={this.props.sendMessage} />
+                    return <Light sendAlexaCommand={this.props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } />
 
                 default:
                     return null;
@@ -272,37 +297,7 @@ class AreaDialog extends React.Component {
         this.setState({ level: event });
     }; 
 
-    handleLevelChange = scene => {
 
-        if (this.props.sceneData.hasOwnProperty(scene)) {
-            for (var light in this.props.sceneData[scene]) {
-                if (this.props.deviceProperties.hasOwnProperty(light)) {
-                    if (this.props.sceneData[scene][light]['set']==0) {
-                        if (this.props.deviceProperties[light].powerState!='OFF') {
-                            var ops={"op":"set", "path":"discovery/"+light+"/PowerController/powerState", "command":"TurnOff", "value":true}
-                            console.log('Setting',light ,'off')
-                            this.props.sendMessage(JSON.stringify(ops));
-                        }
-                    } else if (this.props.sceneData[scene][light]['set']>0) {
-                        if (this.props.deviceProperties[light].powerState!='ON') {
-                            var ops={"op":"set", "path":"discovery/"+light+"/PowerController/powerState", "command":"TurnOn", "value":true}
-                            console.log('Setting',light ,'on')
-                            this.props.sendMessage(JSON.stringify(ops));
-                        }
-                        if (this.props.deviceProperties[light].brightness!=this.props.sceneData[scene][light]['set']) {
-                            var ops={"op":"set", "path":"discovery/"+light+"/BrightnessController/brightness", "command":"SetBrightness", "value":this.props.sceneData[scene][light]['set']}
-                            console.log('Setting',light ,'to',this.props.sceneData[scene][light]['set'])
-                            this.props.sendMessage(JSON.stringify(ops));
-                        }
-                    }
-                } else {
-                    console.log('Light not in device properties',light)
-                }
-            }
-        }
-    }; 
-
-    
     handleTab = (event, tabno) => {
         if (tabno==0) { this.setState({frontTab: tabno})}
         if (tabno==1) { this.setState({frontTab: tabno})}
@@ -316,8 +311,31 @@ class AreaDialog extends React.Component {
         this.setState({edit:false})
     }
     
-    componentDidMount() {
-        this.computeLevels()
+
+    parseAreaScenes = (areascenes) => {
+        var changes={}
+        if (areascenes.hasOwnProperty('lights')) {
+            changes['lights']=areascenes['lights']
+        }
+        if (areascenes.hasOwnProperty('scenes')) {
+            changes['scenes']=areascenes['scenes']
+            changes['delaySet']=false
+        }
+        if (areascenes.hasOwnProperty('shortcuts')) {
+            changes['shortcuts']=areascenes['shortcuts']
+        }
+
+        if (changes) {
+            this.setState(changes,
+                () => AreaDialog.computeLevels(this.props.sceneData,this.props.deviceProperties, this.state)
+            );
+        }
+    }
+    
+    componentDidMount() {    
+  	    fetch('/list/logic/areascenes/'+this.props.name)
+ 		    .then(result=>result.json())
+            .then(result=>this.parseAreaScenes(result));
     }
     
     render() {
@@ -334,9 +352,11 @@ class AreaDialog extends React.Component {
                 className={fullScreen ? classes.fullDialog : classes.normalDialog }
             >
                 <DialogTitle id="area-dialog-title" className={classes.tabTitle} >
-                    <Paper className={classes.tabInfo} elevation={0}>
-                        <Typography variant="subheading"  className={classes.gridTitle} >{this.props.name}</Typography>
-                    </Paper>
+                    <Toolbar elevation={0} className={classes.baseTitle}>
+                        <Typography variant="title" color="inherit" className={classes.dialogTitle}>
+                            {this.props.name}
+                        </Typography>
+                    </Toolbar>
                     <Tabs className={classes.tabRow} value={this.state.frontTab} onChange={this.handleTab}>
                         <Tab label="Scenes" />
                         <Tab label="Lights" />
@@ -345,7 +365,7 @@ class AreaDialog extends React.Component {
 
                 { this.props.name!='All' && this.state.frontTab==1 ?
                 <DialogTitle className={classes.groupHead}>
-                    <GroupLight key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } sendMessage={this.props.sendMessage} />
+                    <GroupLight sendAlexaCommand={this.props.sendAlexaCommand} key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } />
                     <Divider />                
                 </DialogTitle>
                 : null
@@ -360,7 +380,7 @@ class AreaDialog extends React.Component {
                   </List>
                 </DialogContent>
                 :
-                <SceneEditor computedLevel={this.state.computedLevel} handleLevelChange={this.handleLevelChange} edit={this.state.edit} editFinished={this.editFinished} lightList={this.lightList()} area={this.props.name} sendMessage={this.props.sendMessage} />
+                <SceneEditor sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} computedLevel={this.state.computedLevel} edit={this.state.edit} editFinished={this.editFinished} lightList={this.lightList()} area={this.props.name} />
                 }
                 <Divider />
                 <DialogActions className={classes.dialogActions}>

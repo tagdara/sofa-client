@@ -41,7 +41,7 @@ class Thermostat extends React.Component {
             <ListItem className={classes.listItem}>
                 <Avatar className={this.tempColor(this.props.deviceProperties.temperature)}>{this.props.deviceProperties.temperature}</Avatar>
                 { this.props.deviceProperties.hasOwnProperty('targetSetPoint') ?
-                    <ListItemText primary={this.props.name} secondary={'Heat set to '+this.props.deviceProperties.targetSetPoint}/>
+                    <ListItemText primary={this.props.name} secondary={this.props.deviceProperties.thermostatMode=='OFF' ? 'Off' : 'Heat set to '+this.props.deviceProperties.targetSetPoint}/>
                     :
                     <ListItemText primary={this.props.name} />
                 }

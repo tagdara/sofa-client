@@ -71,14 +71,12 @@ class Tv extends React.Component {
     }   
  
     handlePowerChange = event => {
-        event.stopPropagation();
         this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
         if (event.target.checked) {
-            var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/PowerController/powerState", "command":"TurnOn", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOn')
         } else {
-            var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/PowerController/powerState", "command":"TurnOff", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOff')
         }
-        this.props.sendMessage(JSON.stringify(ops));
     }; 
     
     
@@ -88,14 +86,14 @@ class Tv extends React.Component {
 
         return (
                 <Card className={classes.card}>
-                    <CardContent className={classes.content} onClick={ () => this.handleClickOpen()}>
+                    <CardContent className={classes.content}>
                         <ListItem className={classes.listItem}>
-                            <Avatar src={this.state.icon} />
-                            <ListItemText primary={this.props.name} secondary={this.props.deviceProperties.input}/>
+                            <Avatar src={this.state.icon} onClick={ () => this.handleClickOpen()} />
+                            <ListItemText primary={this.props.name} secondary={this.props.deviceProperties.input} onClick={ () => this.handleClickOpen()}/>
                             <Switch color="primary" checked={this.state.powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
                         </ListItem>
                     </CardContent>
-                    <TvDialog showdialog={this.state.showdialog} closeDialog={this.closeDialog} name={this.props.name} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={ this.props.sendMessage } />
+                    <TvDialog sendAlexaCommand={this.props.sendAlexaCommand}  showdialog={this.state.showdialog} closeDialog={this.closeDialog} name={this.props.name} device={ this.props.device } deviceProperties={ this.props.deviceProperties } />
                 </Card>
         );
     }

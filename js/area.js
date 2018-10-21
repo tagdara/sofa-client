@@ -7,6 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 
 import Paper from '@material-ui/core/Paper';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
@@ -42,7 +45,9 @@ const styles  = theme =>  ({
         height: 72,
     },
     halves: {
-        width: '50%',
+        flexGrow: 1,
+        flexBasis: 0,
+        boxSizing: "border-box",
     },
     flex: {
         flex: 1,
@@ -51,10 +56,10 @@ const styles  = theme =>  ({
         marginLeft: -12,
         marginRight: 20,
     },
-    paperItem: {
+    areaListItem: {
         display: "flex",
-        height: 40,
-        padding: "16px",
+        height: 64,
+        padding: "16 32 16 24",
         alignItems: "center",
     },
     tabRow: {
@@ -90,13 +95,17 @@ class Area extends React.Component {
         super(props);
 
         this.state = {
+            scenes: {},
+            shortcuts: {},
+            lights: {},
             frontTab: 0,
             computedLevel: 0,
-            level: 0,
+            level: -1,
             target: null,
             open: false,
             areaState: {},
             edit: false,
+            delaySet: true,
         };
     }
     
@@ -105,9 +114,13 @@ class Area extends React.Component {
         var data=nextProps.deviceProperties
         var changes={}
         
-        if (nextProps.hasOwnProperty('sceneData')) {
-            if (nextProps.sceneData.hasOwnProperty('shortcuts')) {
-                changes.level=Area.computeLevels(nextProps.sceneData, data)
+        if (nextProps.hasOwnProperty('deviceProperties')) {
+            changes.devices=nextProps.devices
+            changes.deviceProperties=nextProps.deviceProperties
+            if (prevState.hasOwnProperty('delaySet')) {
+                if (!prevState.delaySet) {
+                    changes.level=Area.computeLevels(nextProps.sceneData, data, prevState)
+                }
             }
         }
 
@@ -115,7 +128,7 @@ class Area extends React.Component {
     }
     
     
-    static computeLevels(sceneData, deviceProperties) {
+    static computeLevels(sceneData, deviceProperties, prevState) {
 
         var highscore=0
         var currentlevel=0
@@ -123,12 +136,12 @@ class Area extends React.Component {
 
         for (var i = 0; i < 4; i++) {
             var level=i.toString()
-            if (sceneData['shortcuts'].hasOwnProperty(level)) {
-                var sceneName=sceneData['shortcuts'][level]
-                var scene=sceneData['scenes'][sceneName]
+            if (prevState.shortcuts.hasOwnProperty(level)) {
+                var sceneName=prevState.shortcuts[level]
+                var scene=prevState.scenes[sceneName]
 
                 var levscore=0
-                for (var light in scene) {        
+                for (var light in scene) {    
                     if (deviceProperties.hasOwnProperty(light)) {
                         if (deviceProperties[light]['powerState']=='ON') {
                             var bri=deviceProperties[light]['brightness']
@@ -151,52 +164,69 @@ class Area extends React.Component {
     }
 
     handlePreLevelChange = event => {
-        this.setState({ level: event });
+        
+        this.setState({ level: event, delaySet: true});
     }; 
 
     runScene = sceneName => {
-        
-        var scene=this.props.sceneData['scenes'][sceneName]
-        
-        for (var light in scene) {
-            if (scene.hasOwnProperty(light)) {
-                if (scene[light]['set']==0) {
-                    if (scene[light].powerState!='OFF') {
-                        this.props.sendAlexaCommand(light, '', 'PowerController', 'TurnOff')
-                    }
-                } else if (scene[light]['set']>0) {
-                    if (scene[light].powerState!='ON') {
-                        this.props.sendAlexaCommand(light, '', 'PowerController', 'TurnOn')
-                    }
-                    if (scene[light].brightness!=scene[light]['set']) {
-                        this.props.sendAlexaCommand(light, '', 'BrightnessController', 'SetBrightness', scene[light]['set'])
-                    }
-                }
-            } else {
-                console.log('Light not in device properties',light)
-            }
-        }
-        
+        var fullscene=this.props.name+" "+sceneName
+        this.props.sendAlexaCommand(fullscene, "logic:scene:"+fullscene, "SceneController", "Activate")
+    }
+    
+    endSliderDelay = () => {
+        this.setState({ delaySet: false},
+                () =>  Area.computeLevels(this.props.sceneData,this.props.deviceProperties, this.state)
+        );
+    }
+    
+    delaySliderUpdates = () => {
+        this.setState({ delaySet: true},
+            () =>  setTimeout(() => endSliderDelay(), 1000)
+        )
     }
 
-
     runShortcut = level => {
-        console.log('run shortcut', level)
+        console.log('run shortcut', level, this.state.shortcuts)
         
-        if (this.props.sceneData['shortcuts'].hasOwnProperty(level.toString())) {
-            var sceneName=this.props.sceneData['shortcuts'][level]
+        if (this.state.shortcuts.hasOwnProperty(level.toString())) {
+            var sceneName=this.state.shortcuts[level]
             this.runScene(sceneName)
         } else {
             console.log('No scene shortcut for area level', level)
         }
     }
+    
+    parseAreaScenes = (areascenes) => {
+        var changes={}
+        if (areascenes.hasOwnProperty('lights')) {
+            changes['lights']=areascenes['lights']
+        }
+        if (areascenes.hasOwnProperty('scenes')) {
+            changes['scenes']=areascenes['scenes']
+            changes['delaySet']=false
+        }
+        if (areascenes.hasOwnProperty('shortcuts')) {
+            changes['shortcuts']=areascenes['shortcuts']
+        }
 
+        if (changes) {
+            this.setState(changes,
+                () => Area.computeLevels(this.props.sceneData,this.props.deviceProperties, this.state)
+            );
+        }
+    }
+    
+    componentDidMount() {    
+  	    fetch('/list/logic/areascenes/'+this.props.name)
+ 		    .then(result=>result.json())
+            .then(result=>this.parseAreaScenes(result));
+    }
 
     render() {
         const { classes, fullScreen } = this.props;
         const { devices } = this.state;  
         return (
-            <Paper elevation={2} className={classes.paperItem} >
+            <ListItem className={classes.areaListItem}>
                 <Typography variant="subheading" className={classes.halves} onClick={ () => this.props.selectArea(this.props.name)}>{this.props.name}</Typography>
                 <Slider className={classes.halves} min={0} max={3} defaultValue={this.state.level} value={this.state.level}
                     trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
@@ -205,7 +235,7 @@ class Area extends React.Component {
                     onChange={this.handlePreLevelChange} 
                     onAfterChange={this.runShortcut} 
                 />
-            </Paper>
+            </ListItem>
         );
     }
 }

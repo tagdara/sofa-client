@@ -66,8 +66,10 @@ class ButtonZone extends React.Component {
     }
     
     sendPress = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/ButtonController/pressState", "command":"Press", "value":true}
-        this.props.sendMessage(JSON.stringify(ops));
+        //var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/ButtonController/pressState", "command":"Press", "value":true}
+        //this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "ButtonController", "Press")
+
     }
     
     handlePress = event => {
@@ -115,7 +117,7 @@ class ButtonZone extends React.Component {
                         }
                     </ListItem>
                     { this.state.pinDevices.indexOf(this.props.name) > -1 ?
-                    <PinDialog submitPin={this.submitPin} showPinPad={this.state.showPinPad} unlocker={ this.handlePinPress } closeDialog={ this.closeDialog }/>
+                    <PinDialog submitPin={this.submitPin} open={this.state.showPinPad} unlocker={ this.handlePinPress } close={ this.closeDialog }/>
                     : null}
                     { this.state.pinDevices.indexOf(this.props.name) > -1 ?
                     <Snackbar

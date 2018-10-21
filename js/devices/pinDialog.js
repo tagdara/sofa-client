@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import withMobileDialog from '@material-ui/core/withMobileDialog';
+
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -38,6 +40,7 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
+import Slide from  '@material-ui/core/Slide';
 
 const styles = theme => ({
 
@@ -133,20 +136,16 @@ const styles = theme => ({
     }
 });
 
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 class PinDialog extends React.Component {
     
     constructor(props) {
         super(props);
 
         this.state = {
-            tracked: ['surround','decoder','input','volume','powerState'],
-            endpointId: '',
-            surround: '',
-            decoder: '',
-            input: '',
-            volume: 0,
-            powerState: false,
-            icon: '/react/images/tv.jpg?v2',
             pin: '',
         };
     }   
@@ -162,12 +161,20 @@ class PinDialog extends React.Component {
 
     render() {
 
-        const { classes, theme } = this.props;
+        const { classes, fullScreen } = this.props;
 
         return (
-            <Dialog open={this.props.showPinPad} onClose={() => this.props.closeDialog()} className={this.props.classes.dialog}>
+            <Dialog 
+                fullScreen={fullScreen}
+                fullWidth={true}
+                maxWidth={'xs'}
+                open={this.props.open}  
+                onClose={this.props.close}
+                TransitionComponent={Transition}
+                className={fullScreen ? classes.fullDialog : classes.normalDialog }
+            >
                 <DialogActions>
-                    <IconButton onClick={() => this.props.closeDialog() }>
+                    <IconButton onClick={() => this.props.close() }>
                         <CloseIcon />
                     </IconButton>
                 </DialogActions>
@@ -218,7 +225,7 @@ class PinDialog extends React.Component {
 
 PinDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
+    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(PinDialog);
+export default withStyles(styles)(withMobileDialog()(PinDialog));

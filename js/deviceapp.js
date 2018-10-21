@@ -120,7 +120,8 @@ class DeviceApp extends Component {
             })
             .then(res=>console.log('Alexa command response:',res))
     }
-    
+
+
     sendAlexaCommand = (deviceName, endpointId, controller, command, val) => {
         
         if (endpointId=='') {
@@ -131,14 +132,12 @@ class DeviceApp extends Component {
         var endpoint={"endpointId": endpointId, "cookie": {}, "scope":{ "type":"BearerToken", "token":"access-token-from-skill" }}
         var payload=JSON.parse(JSON.stringify(this.state.controllers[controller][command]))
         
-        console.log('prepayload',val, this.state.controllers[controller])
         for (var prop in payload) {
             if (payload[prop]=='value') {
                 payload[prop]=val
                 break
             }
         }
-        console.log('postpayload',payload)
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
         console.log('Sending alexa command:',data)
         this.postAlexaCommand(data)
@@ -205,7 +204,9 @@ class DeviceApp extends Component {
     
     mergeStates = (devs) => {
         var devstate= {...this.state.deviceState, ...devs }
-        this.setState({deviceState:devstate})
+        this.setState({deviceState:devstate}, 
+            () => console.log('Merge state done', Object.keys(devs).length)
+        )
     }
     
     updateDevice = dev => {
@@ -221,9 +222,10 @@ class DeviceApp extends Component {
         }
     }
 
-    updateMultipleDevices = devs => {
+    updateMultipleDevices = (devs) => {
 
-        fetch('/data/devices?stateReport', {
+        console.log('getting updates for multiple devices', devs.length)
+        fetch('/deviceState', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -235,13 +237,25 @@ class DeviceApp extends Component {
             .then(res =>this.mergeStates(res))    
     }
 
+    updateDeviceList = (devs) => {
+        console.log('got device list')
+        var udl=[]
+        for (var i = 0; i < devs.length; i++) {
+            udl.push(devs[i].friendlyName)
+        }
+        this.setState({devices: devs}, 
+            () =>  this.updateMultipleDevices(udl)
+        )
+    }
+
 
     componentDidMount() {
         window.addEventListener('resize', this.handleWindowSizeChange);
         console.log('Fetching device info')
-        fetch('/data/devices')
+        fetch('/deviceList')
  		    .then(result=>result.json())
-            .then(data=>this.setState({devices: data})); 
+            .then(data=>this.updateDeviceList(data))
+            //.then(this.setState({devices: data})
             
   	    fetch('/controllercommands')
  		    .then(result=>result.json())
@@ -260,8 +274,8 @@ class DeviceApp extends Component {
 		    var x=a['friendlyName'].toLowerCase(),
 			y=b['friendlyName'].toLowerCase();
 		    return x<y ? -1 : x>y ? 1 : 0;
-	    });        
-
+	    });    
+	    
         return categoryDevices
         
     }
@@ -314,7 +328,6 @@ class DeviceApp extends Component {
 
 
     handleDrawerOpen = () => {
-        console.log('xx')
         this.setState({ drawerOpen: true });
     };
 
@@ -357,17 +370,17 @@ class DeviceApp extends Component {
                     </AppBar>
 
                     <Toolbar />
-                    <Sidebar sendAlexaCommand={this.sendAlexaCommand} open={this.state.drawerOpen} close={this.handleDrawerClose} devices={this.devicesByCategory('ALL')} propertiesFromDevices={this.propertiesFromDevices} sendMessage={this.sendMessage} />
+                    <Sidebar sendAlexaCommand={this.sendAlexaCommand} open={this.state.drawerOpen} close={this.handleDrawerClose} devicesByCategory={this.devicesByCategory} devices={this.devicesByCategory('ALL')} propertiesFromDevices={this.propertiesFromDevices} />
 
                     <div className={classes.mobileControlArea}>
                         {this.state.page == 'Audio Video' ?
-                            <PageAV sendAlexaCommand={this.sendAlexaCommand} devicesByCategory={this.devicesByCategory} deviceByName={this.deviceByName} propertiesFromDevices={this.propertiesFromDevices} sendMessage={this.sendMessage} />
+                            <PageAV sendAlexaCommand={this.sendAlexaCommand} devicesByCategory={this.devicesByCategory} deviceByName={this.deviceByName} propertiesFromDevices={this.propertiesFromDevices} />
                         : null }
                         {this.state.page == 'Lights' ?
-                            <PageLights sendAlexaCommand={this.sendAlexaCommand} devicesByCategory={this.devicesByCategory} deviceByName={this.deviceByName} propertiesFromDevices={this.propertiesFromDevices} sendMessage={this.sendMessage} />
+                            <PageLights sendAlexaCommand={this.sendAlexaCommand} devicesByCategory={this.devicesByCategory} deviceByName={this.deviceByName} propertiesFromDevices={this.propertiesFromDevices} />
                         : null }
                         {this.state.page == 'Security' ?
-                            <PageSecurity sendAlexaCommand={this.sendAlexaCommand} devicesByCategory={this.devicesByCategory} deviceByName={this.deviceByName} propertiesFromDevices={this.propertiesFromDevices} sendMessage={this.sendMessage}/>
+                            <PageSecurity sendAlexaCommand={this.sendAlexaCommand} devicesByCategory={this.devicesByCategory} deviceByName={this.deviceByName} propertiesFromDevices={this.propertiesFromDevices} />
                         : null }
                     </div>
                     <Toolbar />
@@ -404,7 +417,7 @@ class DeviceApp extends Component {
                         </Toolbar>
                     </AppBar>
                     <Toolbar />
-                    <Sidebar sendAlexaCommand={this.sendAlexaCommand} open={this.state.drawerOpen} close={this.handleDrawerClose} devices={this.devicesByCategory('ALL')} propertiesFromDevices={this.propertiesFromDevices} sendMessage={this.sendMessage} />
+                    <Sidebar sendAlexaCommand={this.sendAlexaCommand} open={this.state.drawerOpen} close={this.handleDrawerClose} devices={this.devicesByCategory('ALL')} devicesByCategory={this.devicesByCategory} propertiesFromDevices={this.propertiesFromDevices} sendMessage={this.sendMessage} />
                     <div className={classes.controlArea}>
                         <Grid container spacing={16}>
                             <Grid item xs={4} className={classes.gridColumn}>

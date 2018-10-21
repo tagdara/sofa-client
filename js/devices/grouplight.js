@@ -206,11 +206,10 @@ class GroupLight extends React.Component {
         this.setState({ powerState: event.target.checked });
         for (var i = 0; i < this.props.devices.length; i++) {
             if (event.target.checked) {
-                var ops={"op":"set", "path":"discovery/"+this.props.devices[i].friendlyName+"/PowerController/powerState", "command":"TurnOn", "value":event.target.checked}
-            } else {
-                var ops={"op":"set", "path":"discovery/"+this.props.devices[i].friendlyName+"/PowerController/powerState", "command":"TurnOff", "value":event.target.checked}
+                this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "PowerController", "TurnOn")
+             } else {
+                this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "PowerController", "TurnOff")
             }
-            this.props.sendMessage(JSON.stringify(ops));
         }
 
     }; 
@@ -221,12 +220,9 @@ class GroupLight extends React.Component {
 
 
     handleBrightnessChange = event => {
-        //for (var i = 0; i < this.state.controllermap['BrightnessController'].length; i++) {
-        
         for (var i = 0; i < this.props.devices.length; i++) {
             if (this.props.deviceProperties[this.props.devices[i].friendlyName].hasOwnProperty('brightness')) {
-                var ops={"op":"set", "path":"discovery/"+this.props.devices[i].friendlyName+"/BrightnessController/brightness", "command":"SetBrightness", "value":event}
-                this.props.sendMessage(JSON.stringify(ops));
+                this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "BrightnessController", "SetBrightness", event)
             }
         }
     }; 
@@ -236,10 +232,8 @@ class GroupLight extends React.Component {
     }; 
 
     handleColorTemperatureChange = event => {
-
         for (var i = 0; i < this.state.controllermap['ColorTemperatureController'].length; i++) {
-            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorTemperatureController'][i]+"/ColorTemperatureController/colorTemperatureInKelvin", "command":"SetColorTemperature", "value":event}
-            this.props.sendMessage(JSON.stringify(ops));
+            this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "ColorTemperatureController", "SetColorTemperature", event)
         }
     }; 
 
@@ -266,8 +260,7 @@ class GroupLight extends React.Component {
         var hsb=this.sl2sb(color.hsl)
         this.setState({ color: hsb, target:this.props.friendlyName});
         for (var i = 0; i < this.state.controllermap['ColorController'].length; i++) {
-            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorController'][i]+"/ColorController/color", "command":"SetColor","value":hsb}
-            this.props.sendMessage(JSON.stringify(ops));
+            this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "ColorController", "SetColor", hsb)
         }
 
     }
@@ -275,8 +268,7 @@ class GroupLight extends React.Component {
     handleColorChange = hsb => {
         this.setState({ color: hsb, target:this.props.friendlyName});
         for (var i = 0; i < this.state.controllermap['ColorController'].length; i++) {
-            var ops={"op":"set", "path":"discovery/"+this.state.controllermap['ColorController'][i]+"/ColorController/color", "command":"SetColor", "value":hsb}
-            this.props.sendMessage(JSON.stringify(ops));
+            this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "ColorController", "SetColor", hsb)
         }
     }
 

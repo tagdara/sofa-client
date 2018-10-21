@@ -127,17 +127,17 @@ class TVDialog extends React.Component {
             volume: 0,
             powerState: false,
             icon: '/react/images/tv.jpg?v2',
+            inputs: [],
         };
     }    
     
     handlePowerChange = event => {
         this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
         if (event.target.checked) {
-            var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/PowerController/powerState", "command":"TurnOn", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOn')
         } else {
-            var ops={"op":"set", "path":"discovery/"+this.props.device.friendlyName+"/PowerController/powerState", "command":"TurnOff", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOff')
         }
-        this.props.sendMessage(JSON.stringify(ops));
     }; 
     
     handlePreVolumeChange = event => {
@@ -145,20 +145,28 @@ class TVDialog extends React.Component {
     }; 
 
     handleVolumeChange = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/SpeakerController/volume", "command":"SetVolume", "value":event}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SpeakerController', 'SetVolume', event )
     }; 
 
     handleMuteChange = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/SpeakerController/muted", "command":"SetMute", "value":!this.state.muted}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SpeakerController', 'SetMute', !this.state.muted )
     }; 
     
     handleSurround = surroundmode => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/SurroundController/surround", "command":"SetSurround", "value":surroundmode}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SurroundController', 'SetSurround', surroundmode )
     }; 
 
+    handleInput = (event, inputname) => {
+        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'InputController', 'SelectInput', inputname)
+    };
+    
+    
+    componentDidMount() {
+
+  	    fetch('/list/sonybravia/inputs')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({inputs:result}));
+    }
     
     render() {
 
@@ -196,35 +204,19 @@ class TVDialog extends React.Component {
                         <ListItem>
                             <div className={classes.chipLine}>
                             <Chip 
-                                key = 'Apple TV'
-                                label= 'Apple TV'
-                                className={ (this.props.deviceProperties.input=='Apple TV') ? classes.hotchip : classes.chip }
-                                onClick={ (e) => this.handleInput(e, 'Apple TV')}
-                            />
-                            <Chip 
                                 key = 'Android TV'
                                 label= 'Android TV'
                                 className={ (this.props.deviceProperties.input=='Android TV') ? classes.hotchip : classes.chip }
-                                onClick={ (e) => this.handleInput(e, 'Android TV')}
+                                onClick={ (e) => this.handleInput(e, 'Home')}
                             />
-                            <Chip 
-                                key = 'ChromeCast'
-                                label= 'ChromeCast'
-                                className={ (this.props.deviceProperties.input=='ChromeCast') ? classes.hotchip : classes.chip }
-                                onClick={ (e) => this.handleInput(e, 'ChromeCast')}
-                            />
-                            <Chip 
-                                key = 'Steam'
-                                label= 'Steam'
-                                className={ (this.props.deviceProperties.input=='Steam') ? classes.hotchip : classes.chip }
-                                onClick={ (e) => this.handleInput(e, 'Steam')}
-                            />
-                            <Chip 
-                                key = 'Wii'
-                                label= 'Wii'
-                                className={ (this.props.deviceProperties.input=='Wii') ? classes.hotchip : classes.chip }
-                                onClick={ (e) => this.handleInput(e, 'Wii')}
-                            />
+                            { this.state.inputs.map((tvinput) => 
+                                <Chip 
+                                    key = {tvinput.uri}
+                                    label= {tvinput.label ? tvinput.label : tvinput.title }
+                                    className={ (this.props.deviceProperties.input==tvinput.uri) ? classes.hotchip : classes.chip }
+                                    onClick={ (e) => this.handleInput(e, tvinput.uri)}
+                                />
+                            )}
                             </div>
                         </ListItem>
                         <Divider />

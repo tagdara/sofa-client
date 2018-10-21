@@ -65,8 +65,7 @@ class Shade extends React.Component {
     };  
     
     handlePress = event => {
-        var ops={"op":"set", "path":"discovery/"+event+"/ButtonController/pressState", "command":"Press", "value":true}
-        this.props.sender(JSON.stringify(ops));
+        this.props.sendAlexaCommand(event, '', 'ButtonController', 'Press')
     }   
     
     render() {

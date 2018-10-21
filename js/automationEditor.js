@@ -1,82 +1,33 @@
 import React from "react";
-import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-
 import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Avatar from '@material-ui/core/Avatar';
-
-import Slide from  '@material-ui/core/Slide';
-import Checkbox from  '@material-ui/core/Checkbox';
-
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import TextField from '@material-ui/core/TextField';
+
 import TuneIcon from '@material-ui/icons/Tune';
 import EditIcon from '@material-ui/icons/Edit';
 import PlaceIcon from '@material-ui/icons/Place';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
-
-import TextField from '@material-ui/core/TextField';
-
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import DeviceActionSelect from "./deviceActionSelect"
+import SceneActionSelect from "./sceneActionSelect"
 
 const styles = theme => ({
         
-    content: {
-        minWidth: 0,
-        padding: "0 !important",
-        flexGrow:1,
-        display: "flex",
-        alignItems: "center"
-    },
-    list: {
-        minWidth: 320,
-        width: "100%",
-    },
-    tabTitle: {
-        backgroundColor: theme.palette.primary[700],
-        padding: 0,
-        paddingTop: "env(safe-area-inset-top)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
-    },
-    dialogTitle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexGrow: 1,
-        color: theme.palette.primary.contrastText,
-    },
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    listItem: {
-        padding: 16,
-    },
-    dialogContent: {
-        padding: 0,
-    },
-    sceneExpand: {
-        padding: "0",
-        marginBottom: 2,
-    },
     areaInput: {
         marginTop:0,
         marginLeft: 16,
@@ -84,14 +35,22 @@ const styles = theme => ({
     },
     deviceName: {
         padding: 0,
-    }
+    },
+    dialogActions: {
+        paddingBottom: "env(safe-area-inset-bottom)",
+    },
+    dialogContent: {
+        padding: 0,
+    },
+    listActions: {
+        minWidth: 320,
+        width: "100%",
+    },
+    listItem: {
+        padding: 16,
+    },
 
 });
-
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
-
 
 class AutomationEditor extends React.Component {
     
@@ -99,74 +58,49 @@ class AutomationEditor extends React.Component {
         super(props);
 
         this.state = {
+            actions: [],
+            addingAction: false,
+            addingScene: false,
+            editingActions: false,
             adding: false,
-            selectedName: '',
-            selectedDevices: [],
-            areamap: {},
-            automations: {},
-            roomBrowser: false,
-            objectBrowser: false,
-            newAutomationName: '',
-            actions:[],
-            delSelect: false,
         }
-    }
-
-    updateList = (regionname, roomlist) => {
-        var curmap=this.state.automations
-        curmap[regionname]['rooms']=roomlist
-        this.setState({automations:curmap})
-    }
-    
-    editNewAutomationName = (e) => {
-        this.setState({ newAutomationName: e.target.value })
     }
 
     editActionValue = (index, e) => {
-        var actions=this.props.actions
+        var actions=this.state.actions
         actions[index].value=e.target.value
-        this.props.save(this.props.name, actions)
+        this.saveAutomationActions(actions)
     }
 
+    handleAddAction = () => {
+        this.setState({addingAction: true})
+    }  
     
-    handleAdd = (add) => {
-        
-        if (this.state.automations.hasOwnProperty(this.state.newAutomationName)) {
-            console.log('That region already exists')
-        } else {
-            var curmap=this.state.automations;
-            curmap[this.state.newAutomationName]={'rooms': []}
-            this.setState({ automations: curmap, newAutomationName: '' },
-                () => this.saveAutomations()
-            );
-        }
+    handleAddSceneAction = () => {
+        this.setState({addingScene: true})
+    }  
 
-    }
+    handleEditActions = () => {
+        this.setState({editingActions: true})
+    }  
     
-    handleDelete = (delarea) => {
-        var curmap=this.state.automations;
-        delete curmap[delarea]
-        this.setState({automations: curmap},
-                () => this.saveAutomations()
-        );
-    }
+    handleDoneAddEdit = () => {
+        this.setState({addingAction: false, editingActions: false, addingScene: false})
+    }  
     
-    handleSelect = (region) => {
-        if (!this.props.editMode) {
-            this.props.handleSelect(region)
-        }
+    handleActionSelect = (deviceName, endpointId, controller, cmd) => {
+        console.log(deviceName, endpointId, controller, cmd)
+        var actions=this.state.actions
+        actions.push({'deviceName':deviceName, "endpointId":endpointId, "controller":controller, "command":cmd, "value":0})
+        this.saveAutomationActions(actions)
+        this.setState({addingAction: false, editingActions: false, addingScene: false})
     }
-    
-    handleActionSelect = (deviceName, controller, cmd) => {
-        console.log(deviceName, controller, cmd)
-        var actions=this.props.actions
-        actions.push({'deviceName':deviceName, "controller":controller, "command":cmd, "value":0})
-        this.props.save(this.props.name, actions)
-    }
+
     
     getActionValue = (controller, command) => {
-        
-        var payload=this.props.controllers[controller][command]
+        console.log(controller, command, this.props.controllers)
+
+        var payload=this.state.controllers[controller][command]
         for (var prop in payload) {
             if (payload[prop]=='value') {
                 return prop
@@ -175,28 +109,99 @@ class AutomationEditor extends React.Component {
         return ''
     }
     
-    runAction = (name,index) => {
-        
-        var action=this.props.actions[index]
-        console.log('actions',this.props.actions[index], this.props.actions[index]['value'])
-        this.props.sendAlexaCommand(this.props.actions[index].deviceName, '', this.props.actions[index].controller, this.props.actions[index].command, this.props.actions[index]['value'])
+    deleteAction = (index) => {
+        var actions=this.state.actions
+        actions.splice(index, 1);
+        this.saveAutomationActions(actions)
     }
+
+    moveUp = (index) => {
+        if (index-1>=0) {
+            var actions=this.state.actions
+            var element = actions[index];
+            actions.splice(index, 1);
+            actions.splice(index-1, 0, element);
+            this.saveAutomationActions(actions)
+        }
+    }
+
+    moveDown = (index) => {
+        if (index+1<=this.state.actions.length) {
+            var actions=this.state.actions
+            var element = actions[index];
+            actions.splice(index, 1);
+            actions.splice(index+1, 0, element);
+            this.saveAutomationActions(actions)
+        }
+    }
+    
+    runAction = (name,index) => {
+        var action=this.state.actions[index]
+        console.log('actions',action, action['value'])
+        this.props.sendAlexaCommand(action.deviceName, '', action.controller, action.command, action['value'])
+    }
+    
+    deviceByName = devname => {
+        
+        for (var i = 0; i < this.props.devices.length; i++) {
+            if (this.props.devices[i].friendlyName==devname) {
+                return this.props.devices[i]
+            }
+        }
+    }
+    
+    saveAutomationActions = (actions) => {
+        
+        fetch('/save/logic/automation/'+this.props.name, {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(actions)
+            })
+            .then(res=>console.log(res))
+            .then(this.setState({actions:actions}))
+    } 
+    
+    componentDidMount() {
+  	    fetch('/list/logic/automation/'+this.props.name)
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({actions:result['actions']}));
+
+  	    fetch('/controllercommands')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({controllers:result}));
+
+  	    fetch('/config/areamap')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({areamap:result}));
+
+  	    fetch('/config/scenemap')
+ 		    .then(result=>result.json())
+            .then(data=>this.setState({sceneData: data}));
+
+    }
+
     
     render() {
         
         const { classes } = this.props;
         
         return (
-            <DialogContent className={classes.dialogContent }>
-                { this.props.editMode ?
-                    <DeviceActionSelect select={this.handleActionSelect} devices={this.props.devices} controllers={this.props.controllers} />
-                :null}
-
-                { !this.props.editMode ?
-                <List className={classes.List} >
-                    { this.props.actions.map((action,index) => 
-                        <ListItem className={classes.listItem} key={ action.deviceName+action.command } >
+            <React.Fragment>
+                <DialogContent className={classes.dialogContent }>
+                { this.state.addingAction ?
+                    <DeviceActionSelect select={this.handleActionSelect} devices={this.props.devices} controllers={this.state.controllers} />
+                :  
+                    <List className={classes.listActions}>
+                        {this.state.actions.map((action,index) =>
+                        <ListItem className={classes.listItem} key={ this.props.name+index } >
+                            {this.state.editingActions ?
+                            <ListItemIcon onClick={() => this.deleteAction(index)}><CloseIcon /></ListItemIcon>   
+                            :
                             <ListItemIcon onClick={() => this.runAction(name,index)}><TuneIcon /></ListItemIcon>
+                            }
                             <ListItemText primary={action.deviceName} secondary={action.command} className={classes.deviceName}/>
                                 {this.getActionValue(action.controller, action.command) ?
                                 <TextField
@@ -208,20 +213,36 @@ class AutomationEditor extends React.Component {
                                     onChange={(e) => this.editActionValue(index,e)}
                                 />
                                 : null }
-                            <ListItemSecondaryAction className={classes.listItem}>
-                                { this.state.delSelect ?
-                                <IconButton aria-label="Close" onClick={() => this.handleDelete(name)}>
-                                    <CloseIcon />
-                                </IconButton>
-                                : null }
-
-                            </ListItemSecondaryAction>
+                            {this.state.editingActions ?
+                                <ListItemSecondaryAction className={classes.listItem}>
+                                    <IconButton onClick={() => this.moveUp(index)}><ExpandLessIcon /></IconButton>   
+                                    <IconButton onClick={() => this.moveDown(index)}><ExpandMoreIcon /></IconButton>
+                                </ListItemSecondaryAction>
+                            : null }
                         </ListItem>
-                    )}
-                </List>
-                :null
+                        )}
+                    </List>
                 }
-            </DialogContent>
+                </DialogContent>
+                <Divider />
+            {!this.state.addingAction && !this.state.editingActions ?
+                <DialogActions className={classes.dialogActions} >
+                    <Button onClick={() => this.handleEditActions()} color="primary" autoFocus>EDIT</Button>
+                    <Button onClick={() => this.handleAddAction()} color="primary" autoFocus>ADD</Button>
+                    <Button onClick={() => this.props.doneEditing()} color="primary" autoFocus>DONE</Button>
+                </DialogActions>
+            : null }
+            {this.state.editingActions ?
+                <DialogActions className={classes.dialogActions} >
+                    <Button onClick={() => this.handleDoneAddEdit()} color="primary" autoFocus>DONE</Button>
+                </DialogActions>
+            : null }
+            {this.state.addingAction ?
+                <DialogActions className={classes.dialogActions} >
+                    <Button onClick={() => this.handleDoneAddEdit()} color="primary" autoFocus>CANCEL</Button>
+                </DialogActions>
+            : null }
+            </React.Fragment>
         )
     }
 }

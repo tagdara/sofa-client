@@ -40,6 +40,11 @@ const styles = theme => ({
         padding: "16 0 8 0",
         width: '100%',
     },
+    speedlistItem: {
+        padding: "0 0 8 40",
+        width: '100%',
+    },
+
     cool: {
         backgroundColor: "#00796B"
     },
@@ -52,19 +57,19 @@ const styles = theme => ({
     stack: {
         height: 44,
         display: "flex",
-        flexDirection: "column",
         flexGrow: 1,
         paddingLeft: 16,
-        paddingRight: 16,
-        justifyContent: "center",
-        width: '100%',
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+    },
+    stackLabel: {
+        alignSelf: "center",
     },
     sliderPaper: {
         display: "flex",
         flexDirection: "row",
-        padding: "16 8 16 16",
+        padding: 16,
         alignItems: "center",
-        minWidth: 320,
     },
     stackSlider: {
         marginTop: 4,
@@ -144,7 +149,7 @@ class ThermostatSettable extends React.Component {
     }; 
     
     handlePowerLevelChange = event => {
-        this.props.sendAlexaCommand(this.props.name, '', 'PowerLevelController', 'SetPowerLevel', event)
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, 'PowerLevelController', 'SetPowerLevel', event)
     }; 
 
     handlePreSetPointChange = event => {
@@ -152,15 +157,12 @@ class ThermostatSettable extends React.Component {
     }; 
     
     handleSetPointChange = event => {
-        this.props.sendAlexaCommand(this.props.name, '', 'ThermostatController', 'SetTargetTemperature', event)
-        //var ops={"op":"set", "path":"discovery/"+this.props.name+"/ThermostatController/targetSetPoint", "command":"SetTargetTemperature", "value":event}
-        //this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, 'ThermostatController', 'SetTargetTemperature', event)
     }; 
 
 
     handleSetMode = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/ThermostatController/thermostatMode", "command":"SetThermostatMode", "value":event}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "ThermostatController", "SetThermostatMode", event)
     }; 
 
 
@@ -173,19 +175,16 @@ class ThermostatSettable extends React.Component {
             <ListItem className={classes.listItem}>
                 <Avatar className={this.tempColor(this.props.deviceProperties.temperature)}>{this.props.deviceProperties.temperature}</Avatar>
                     <div className={classes.stack}>
-                        <Typography variant="subheading">{this.props.name}</Typography>
-                        <div className={classes.labeledSlider}>
-                            <Slider min={60} max={90} defaultValue={70} step={1} value={this.state.targetSetPoint}
+                        <Typography variant="subheading" className={classes.stackLabel} gutterBottom>{this.props.name}</Typography>
+                        <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.targetSetPoint+"°"}</Typography>
+                        <Slider min={60} max={90} defaultValue={70} step={1} value={this.state.targetSetPoint}
                                 onChange={this.handlePreSetPointChange} 
                                 onAfterChange={this.handleSetPointChange} 
                                 trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
                                 handleStyle={{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12}}
                                 railStyle={{ height: 3 }}
-                                className={classes.stackSlider}
                                 disabled={this.props.deviceProperties.thermostatMode!='HEAT'}
-                            />
-                            <Typography variant="subheading">{this.state.targetSetPoint}</Typography>
-                        </div>
+                        />
                     </div>
             </ListItem>
             <ListItem className={classes.chipLine}>
@@ -199,20 +198,17 @@ class ThermostatSettable extends React.Component {
                     ))}
             </ListItem>
             { this.state.hasOwnProperty('powerLevel') ?
-            <ListItem className={classes.listItem}>
+            <ListItem className={classes.speedlistItem}>
                     <div className={classes.stack}>
-                        <Typography variant="subheading">Speed</Typography>
-                        <div className={classes.labeledSlider}>
-                            <Slider min={0} max={100} defaultValue={50} step={10} value={this.state.powerLevel}
-                                onChange={this.handlePrePowerLevelChange} 
-                                onAfterChange={this.handlePowerLevelChange} 
-                                trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
-                                handleStyle={{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12}}
-                                railStyle={{ height: 3 }}
-                                className={classes.stackSlider}
-                            />
-                            <Typography variant="subheading">{this.state.powerLevel}</Typography>
-                        </div>
+                        <Typography variant="subheading" className={classes.stackLabel} gutterBottom>Speed</Typography>
+                        <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.powerLevel+"%"}</Typography>
+                        <Slider min={0} max={100} defaultValue={50} step={10} value={this.state.powerLevel}
+                            onChange={this.handlePrePowerLevelChange} 
+                            onAfterChange={this.handlePowerLevelChange} 
+                            trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
+                            handleStyle={{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12}}
+                            railStyle={{ height: 3 }}
+                        />
                     </div>
             </ListItem>
             : null }

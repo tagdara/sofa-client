@@ -14,7 +14,10 @@ import Avatar from '@material-ui/core/Avatar';
 import TuneIcon from '@material-ui/icons/Tune';
 
 import ButtonDialog from './buttonDialog';
-import ScheduleDialog from './scheduleDialog';
+import ScheduleDialog from './schedule/scheduleDialog';
+import EditIcon from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+
 
 const styles = theme => ({
         
@@ -79,11 +82,14 @@ class ButtonHero extends React.Component {
                     <CardContent className={classes.content} >
                         <ListItem className={classes.listItem}>
                             <Avatar onClick={this.handleOverlay}><TuneIcon/></Avatar>
-                            <ListItemText onClick={this.handleSched} primary='Other Devices'/>
+                            <ListItemText primary='Other Devices' onClick={this.handleOverlay}/>
+                            <IconButton aria-label="Close" onClick={this.handleSched} >
+                                <EditIcon />
+                            </IconButton>
                         </ListItem>
                     </CardContent>
-                    <ButtonDialog close={this.closeOverlay} open={this.state.showOverlay} devices={this.props.devices} deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
-                    <ScheduleDialog close={this.closeSched} open={this.state.showSched} devices={this.props.devices} deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
+                    <ButtonDialog sendAlexaCommand={this.props.sendAlexaCommand} close={this.closeOverlay} open={this.state.showOverlay} propertiesFromDevices={this.props.propertiesFromDevices} devicesByCategory={this.props.devicesByCategory} devices={this.props.devices} deviceProperties={ this.props.deviceProperties } />
+                    <ScheduleDialog sendAlexaCommand={this.props.sendAlexaCommand} close={this.closeSched} open={this.state.showSched} devicesByCategory={this.props.devicesByCategory} devices={this.props.devices} deviceProperties={ this.props.deviceProperties } />
                 </Card>
         );
     }

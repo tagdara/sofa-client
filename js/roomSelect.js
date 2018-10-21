@@ -117,8 +117,36 @@ class GroupBuild extends React.Component {
     componentDidMount() {
   	    fetch('/config/areamap')
  		    .then(result=>result.json())
-            .then(result=>this.setState({areamap:result}));
+            .then(result=>this.checkOldFormat(result));
 
+    }
+    
+    checkOldFormat = (areadata) => {
+        console.log('areadata:',areadata)
+        for (var room in areadata) {
+            if (Array.isArray(areadata[room]['lights'])) {
+                console.log('Old format: ',room)
+                var nf={}
+                for (var i = 0; i < areadata[room]['lights'].length; i++) {
+                    nf[areadata[room]['lights'][i]] = { 'endpointId' : this.deviceByName(areadata[room]['lights'][i])['endpointId'] }
+                }
+                areadata[room]['lights']=nf
+            } else {
+                var bf={}
+                for (var dev in areadata[room]['lights']) {
+                    console.log('dev',dev,this.deviceByName(dev))
+                    var devdata=this.deviceByName(dev)
+                    if (devdata) {
+                        bf[dev] = { 'endpointId' : this.deviceByName(dev)['endpointId'] }
+                    }
+                }
+                areadata[room]['lights']=bf
+            }
+
+        }
+        
+        console.log('Formatted areadata:', areadata)
+        this.setState({areamap:areadata})
     }
     
     groupSaveChanges = () => {
@@ -134,9 +162,24 @@ class GroupBuild extends React.Component {
             .then(res=>console.log(res))
     }
     
+    deviceByName = devname => {
+        
+        for (var i = 0; i < this.props.devices.length; i++) {
+            if (this.props.devices[i].friendlyName==devname) {
+                return this.props.devices[i]
+            }
+        }
+    }
+    
     updateList = (areaname,lightlist) => {
         var curmap=this.state.areamap
-        curmap[areaname]['lights']=lightlist
+        var lightdata={}
+        
+        for (var i = 0; i < lightlist.length; i++) {
+            lightdata[lightlist[i]]={ 'endpointId' : this.deviceByName(lightlist[i])['endpointId']}
+        }
+            
+        curmap[areaname]['lights']=lightdata
         this.setState({areamap:curmap})
     }
     
@@ -160,7 +203,7 @@ class GroupBuild extends React.Component {
                 console.log('That area already exists')
             } else {
                 var curmap=this.state.areamap;
-                curmap[this.state.newAreaName]={'lights': []}
+                curmap[this.state.newAreaName]={'lights': {}}
                 this.setState({areamap: curmap})
             }
         }
@@ -178,7 +221,7 @@ class GroupBuild extends React.Component {
     handleClick = (name) => {
         if (!this.state.adding) {
             console.log(name,this.state.areamap[name]['lights'])
-            var slights=this.state.areamap[name]['lights']
+            var slights=Object.keys(this.state.areamap[name]['lights'])
             this.setState( { selectedName: name, selectedDevices:slights, objectBrowser: true} )
         }
     }
@@ -215,7 +258,7 @@ class GroupBuild extends React.Component {
                     Object.keys(this.state.areamap).map(name => 
                         <ListItem className={classes.listItem} key={ name+'-grp' } onClick={() => this.handleClick(name)}>
                             <ListItemIcon><PlaceIcon /></ListItemIcon>
-                            <ListItemText primary={name} secondary={this.state.areamap[name]['lights'].length+' devices'} />
+                            <ListItemText primary={name} secondary={Object.keys(this.state.areamap[name]['lights']).length+' devices'} />
                             {this.state.adding ?
                             <ListItemSecondaryAction>
                                 <IconButton aria-label="Close" onClick={() => this.handleDelete(name)}>

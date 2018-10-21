@@ -82,8 +82,7 @@ class SonosGroupDialog extends React.Component {
         } else {
             var sonosinput=''
         }
-        var ops={"op":"set", "path":"discovery/"+item+"/InputController/input", "command":"SetInput", "value":sonosinput }
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(item, '', 'InputController', "SelectInput", sonosinput )
     }; 
 
     render() {

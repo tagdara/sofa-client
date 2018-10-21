@@ -176,6 +176,10 @@ class RegionBuild extends React.Component {
         this.setState({ roomBrowser: false });
     };
     
+    handleCloseRoomBrowser = () => {
+        this.setState({ roomBrowser: false });
+    };
+    
     handleClick = (name) => {
         if (!this.state.adding) {
             console.log(name,this.state.regions[name])

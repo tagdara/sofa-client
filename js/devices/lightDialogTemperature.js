@@ -124,8 +124,7 @@ class LightDialogTemperature extends React.Component {
 
     handleColorTemperatureChange = event => {
         this.setState({ colorTemperatureInKelvin: event });
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/ColorTemperatureController/colorTemperatureInKelvin", "command":"SetColorTemperature", "value":event}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorTemperatureController", "SetColorTemperature", event)
     }; 
     
     render() {
@@ -142,13 +141,12 @@ class LightDialogTemperature extends React.Component {
                         <Slider min={2000} max={7000} defaultValue={0} step={100} value={this.state.colorTemperatureInKelvin} disabled={!this.props.powerState}
                             onChange={this.handlePreColorTemperatureChange} 
                             onAfterChange={this.handleColorTemperatureChange} 
-                            trackStyle={ this.props.powerState ? { backgroundColor: 'orangeRed', height: 3 } : { backgroundColor: 'silver', height: 3 }}
-                            trackStyle={ this.props.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 10 } : { backgroundColor: 'silver', height: 10 }}
+                            trackStyle={ this.props.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
                             handleStyle={this.props.powerState ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -3, height: 16, width: 16} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: 0, height: 10}
+                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
+                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
                             }
-                            railStyle={{ height: 10 }}
+                            railStyle={{ height: 3 }}
                         />
                     </ListItem>
                     <ListItem>

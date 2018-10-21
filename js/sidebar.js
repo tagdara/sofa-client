@@ -15,7 +15,6 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
-import DeviceDialog from "./deviceDialog"
 import DeviceSelect from "./deviceSelect"
 import GroupBuild from "./groupBuild"
 import RegionBuild from "./regionBuild"
@@ -46,6 +45,7 @@ class Sidebar extends React.Component {
             objectBrowser: false,
             groupBuilder: false,
             autoBuilder: false,
+            computerDialog : false,
         };
     }
     
@@ -57,12 +57,13 @@ class Sidebar extends React.Component {
         this.setState({ objectBrowser: false });
     };
 
-    handleGroupBuilder = () => {
+    handleOpenGroupBuilder = () => {
         this.setState({ groupBuilder: true });
     };
 
     handleCloseGroupBuilder = () => {
         this.setState({ groupBuilder: false });
+        this.props.close()
     };
 
     handleOpenAutomationBuilder = () => {
@@ -71,9 +72,9 @@ class Sidebar extends React.Component {
 
     handleCloseAutomationBuilder = () => {
         this.setState({ autoBuilder: false });
+        this.props.close()
     };
-
-
+    
     render() {
     
         const { classes } = this.props;
@@ -98,17 +99,15 @@ class Sidebar extends React.Component {
                         </ListItemIcon>
                         <ListItemText primary={'Automation builder'} />
                     </ListItem>
-                    <ListItem>
+                    <ListItem onClick={ () => this.handleOpenGroupBuilder()  }>
                         <ListItemIcon>
                             <TuneIcon />
                         </ListItemIcon>
                         <ListItemText primary={'Group Builder'} />
                     </ListItem>
-
                 </List>
-                <AutomationBuilder sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.autoBuilder} close={this.handleCloseAutomationBuilder} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} sendMessage={this.props.sendMessage} />
+                <AutomationBuilder sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.autoBuilder} close={this.handleCloseAutomationBuilder} devicesByCategory={this.props.devicesByCategory} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} sendMessage={this.props.sendMessage} />
                 <RegionBuild open={this.state.groupBuilder} close={this.handleCloseGroupBuilder} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
-
             </Drawer>
         );
     }

@@ -133,14 +133,12 @@ class LightDialogColor extends React.Component {
     handleColorSliderChange = color => {
         var hsb=this.sl2sb(color.hsl)
         this.setState({ color: hsb });
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/ColorController/color", "command":"SetColor", "value":hsb}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorController", "SetColor", hsb)
     }
 
     handleColorChange = hsb => {
         this.setState({ color: hsb });
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/ColorController/color", "command":"SetColor", "value":hsb}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorController", "SetColor", hsb)
     }
 
     render() {

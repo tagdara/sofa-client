@@ -17,9 +17,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import SonosVolume from './sonosvolume';
+import SonosCover from './sonosCover';
 import SonosFavorites from './sonosFavorites';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
 const styles = theme => ({
 
@@ -121,6 +123,11 @@ const styles = theme => ({
         bottom: 20,
         left: 64,
     },
+    dialogCoverButton: {
+        position: "absolute",
+        bottom: 20,
+        left: 112,
+    },
 });
 
 class SonosPlayerCard extends React.Component {
@@ -132,6 +139,8 @@ class SonosPlayerCard extends React.Component {
             playerName: '',
             showOverlay: true,
             mediaSelect: false,
+            coverView: false,
+            coverDefault: '/react/images/receiver.png?v2',
         }
     }
     
@@ -151,15 +160,17 @@ class SonosPlayerCard extends React.Component {
     createLinkVolumes = () => {
         
         let volumes=[];
-        var allvol=[this.props.name]
-        if (this.props.deviceProperties[this.state.playerName].hasOwnProperty('linked')) {
-            allvol=[this.state.playerName, ...this.props.deviceProperties[this.state.playerName].linked];
-        }
+        if (this.props.deviceProperties[this.state.playerName]) {
+            var allvol=[this.props.name]
+            if (this.props.deviceProperties[this.state.playerName].hasOwnProperty('linked')) {
+                allvol=[this.state.playerName, ...this.props.deviceProperties[this.state.playerName].linked];
+            }
         
-        for (var i = 0; i < allvol.length; i++) {
-            volumes.push(
-                <SonosVolume key={ allvol[i] } name={ allvol[i] } deviceProperties={ this.props.deviceProperties[allvol[i]] } sendMessage={ this.props.sendMessage } />
-            )
+            for (var i = 0; i < allvol.length; i++) {
+                volumes.push(
+                    <SonosVolume sendAlexaCommand={this.props.sendAlexaCommand} key={ allvol[i] } name={ allvol[i] } deviceProperties={ this.props.deviceProperties[allvol[i]] } sendMessage={ this.props.sendMessage } />
+                )
+            }
         }
 
         return volumes
@@ -168,25 +179,22 @@ class SonosPlayerCard extends React.Component {
     handlePlayPause = event => {
         event.stopPropagation();
         if (this.props.deviceProperties[this.state.playerName].playbackState=='PLAYING') {
-            var ops={"op":"set", "path":"discovery/"+this.state.playerName+"/MusicController/playbackState", "command":"Pause", "value":true}
+            this.props.sendAlexaCommand(this.state.playerName,'','MusicController',"Pause")
         } else {
-            var ops={"op":"set", "path":"discovery/"+this.state.playerName+"/MusicController/playbackState", "command":"Play", "value":true}
+            this.props.sendAlexaCommand(this.state.playerName,'','MusicController',"Play")
         }
-        this.props.sendMessage(JSON.stringify(ops));
     }; 
 
 
     handleSkip = event => {
         event.stopPropagation();
-        var ops={"op":"set", "path":"discovery/"+this.state.playerName+"/MusicController/playbackState", "command":"Skip", "value":true}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.state.playerName,'','MusicController',"Skip")
     }; 
 
 
     handleStop = event => {
         event.stopPropagation();
-        var ops={"op":"set", "path":"discovery/"+this.state.playerName+"/MusicController/playbackState", "command":"Stop", "value":true}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.state.playerName,'','MusicController',"Stop")
     }; 
     
     toggleOverlay = event => {
@@ -201,29 +209,33 @@ class SonosPlayerCard extends React.Component {
         this.setState({ mediaSelect: false })
     }
 
+    handleCover = event => {
+        var elem = document.documentElement;
+        elem.webkitRequestFullScreen();
+        this.setState({ coverView: true })
+    }
+
+    closeCover = event => {
+        this.setState({ coverView: false })
+        document.webkitExitFullscreen();
+    }
+
+
     render() {
 
         const { classes, theme } = this.props;
 
-        return (     this.state.playerName!='' ?
+        return ( 
                     //&& this.props.deviceProperties[this.state.playerName].hasOwnProperty('input') ?
                     <Card className={classes.card}>
-                        { this.props.deviceProperties[this.state.playerName].playbackState=='STOPPED' ?
-                        <CardContent className={classes.stoppedCover}>
-                            <IconButton color="primary" onClick={ (e) => this.props.handleGrid(e)}>
-                                <ViewModuleIcon />
-                            </IconButton>
-                            <Typography variant="subheading">Select an area</Typography>
-                        </CardContent>
-                        :
                         <CardMedia 
                             className={classes.bigcover}
-                            image={this.props.deviceProperties[this.state.playerName].art}
-                            title={this.props.deviceProperties[this.state.playerName].title}
+                            image={this.props.deviceProperties[this.state.playerName] ? this.props.deviceProperties[this.state.playerName].art : this.state.coverDefault }
+                            title={this.props.deviceProperties[this.state.playerName] ? this.props.deviceProperties[this.state.playerName].title : ''}
                             onClick={ () => this.toggleOverlay()}
                         >
                         { this.state.showOverlay ? <div className={classes.coverDimmer} onClick={ () => this.toggleOverlay()}></div>: null }
-                        { this.state.showOverlay ? 
+                        { this.state.showOverlay && this.props.deviceProperties[this.state.playerName] ? 
                         <div className={classes.dialogSongTextBox}>
                             <div className={classes.songTextHolder}>
                                 <Typography className={classes.dialogSongTitle} variant="display2">{this.props.deviceProperties[this.state.playerName].title}</Typography>
@@ -237,27 +249,32 @@ class SonosPlayerCard extends React.Component {
                         <IconButton color="primary" className={classes.dialogFavButton} onClick={ (e) => this.handleMedia(e)}>
                             <QueueMusicIcon />
                         </IconButton>
+                        <IconButton color="primary" className={classes.dialogCoverButton} onClick={ (e) => this.handleCover(e)}>
+                            <FullscreenIcon />
+                        </IconButton>
 
                         <IconButton className={classes.dialogStopButton} onClick={ (e) => this.handleStop(e)}>
                             <StopIcon />
                         </IconButton>
+                        { this.props.deviceProperties[this.state.playerName] ?
                         <Button variant="fab" color="primary" aria-label="play" className={classes.dialogPlayButton} onClick={ (e) => this.handlePlayPause(e)}>
                             { this.props.deviceProperties[this.state.playerName].playbackState=='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
                         </Button>
+                        : null }
                         <IconButton className={classes.dialogSkipButton} onClick={ (e) => this.handleSkip(e)}>
                             <SkipNextIcon />
                         </IconButton>
                         </CardMedia>
-                        }
                         {this.createLinkVolumes()}
                         { this.state.mediaSelect ?
                             <SonosFavorites open={this.state.mediaSelect} close={ this.closeMediaSelect } />
                             :null
                         }
-                    </Card>
-                    : 
-                    <Card className={classes.card} onClick={ (e) => this.props.handleGrid(e)}>
-                            <Typography className={classes.dialogSongTitle} variant="display2">{this.state.playerName}</Typography>
+                        { this.state.coverView ?
+                            <SonosCover playbackState={this.props.deviceProperties[this.state.playerName].playbackState} handleSkip={ this.handleSkip} handlePlayPause={this.handlePlayPause} title={this.props.deviceProperties[this.state.playerName].title} artist={this.props.deviceProperties[this.state.playerName].artist} src={this.props.deviceProperties[this.state.playerName].art} open={this.state.coverView} close={ this.closeCover } />
+                            :null
+                        }
+
                     </Card>
         );
     }

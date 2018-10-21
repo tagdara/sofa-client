@@ -144,7 +144,7 @@ class AreaSelect extends React.Component {
                     Object.keys(this.props.areas).map(name => 
                         <ListItem className={classes.listItem} key={ name+'-grp' } onClick={() => this.handleClick(name)}>
                             <ListItemIcon><PlaceIcon /></ListItemIcon>
-                            <ListItemText primary={name} secondary={this.props.areas[name]['lights'].length+' devices'} />
+                            <ListItemText primary={name} secondary={Object.keys(this.props.areas[name]['lights']).length+' devices'} />
                             <ListItemSecondaryAction>
                                 <Checkbox
                                     onChange={ this.handleToggle(name) }

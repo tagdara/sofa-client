@@ -221,34 +221,8 @@ class SceneEditor extends React.Component {
     }
     
     runScene = sceneName => {
-        
-        var scene=this.state.sceneData[this.props.area]['scenes'][sceneName]
-        
-        for (var light in scene) {
-            if (scene.hasOwnProperty(light)) {
-                if (scene[light]['set']==0) {
-                    if (scene[light].powerState!='OFF') {
-                        var ops={"op":"set", "path":"discovery/"+light+"/PowerController/powerState", "command":"TurnOff", "value":true}
-                        console.log('Setting',light ,'off')
-                        this.props.sendMessage(JSON.stringify(ops));
-                    }
-                } else if (scene[light]['set']>0) {
-                    if (scene[light].powerState!='ON') {
-                        var ops={"op":"set", "path":"discovery/"+light+"/PowerController/powerState", "command":"TurnOn", "value":true}
-                        console.log('Setting',light ,'on')
-                        this.props.sendMessage(JSON.stringify(ops));
-                    }
-                    if (scene[light].brightness!=scene[light]['set']) {
-                        var ops={"op":"set", "path":"discovery/"+light+"/BrightnessController/brightness", "command":"SetBrightness", "value":scene[light]['set']}
-                        console.log('Setting',light ,'to',scene[light]['set'])
-                        this.props.sendMessage(JSON.stringify(ops));
-                    }
-                }
-            } else {
-                console.log('Light not in device properties',light)
-            }
-        }
-        
+        var fullscene=this.props.name+" "+sceneName
+        this.props.sendAlexaCommand(fullscene, "logic:scene:"+fullscene, "SceneController", "Activate")
     }
     
     levelsSaveChanges = () => {

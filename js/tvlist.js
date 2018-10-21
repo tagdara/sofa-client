@@ -21,7 +21,7 @@ class TvList extends React.Component {
         return (
             <div className={classes.list}>
                 { this.props.devices.map((device) => (
-                    <Tv key={device.endpointId} name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendMessage={ this.props.sendMessage } />
+                    <Tv key={device.endpointId} name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendAlexaCommand={this.props.sendAlexaCommand} />
                     ))
                 }
             </div> 

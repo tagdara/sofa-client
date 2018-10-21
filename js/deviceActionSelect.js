@@ -1,112 +1,101 @@
 import React from "react";
-import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Avatar from '@material-ui/core/Avatar';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Slide from  '@material-ui/core/Slide';
-import Checkbox from  '@material-ui/core/Checkbox';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import IconButton from '@material-ui/core/IconButton';
-import TuneIcon from '@material-ui/icons/Tune';
-
-
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import DataUsageIcon from '@material-ui/icons/DataUsage';
+import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import SpeakerIcon from '@material-ui/icons/Speaker';
+import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
+import TouchAppIcon from '@material-ui/icons/TouchApp';
+import TuneIcon from '@material-ui/icons/Tune';
+import ListIcon from '@material-ui/icons/List';
+import TvIcon from '@material-ui/icons/Tv';
+import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import IconButton from '@material-ui/core/IconButton';
+
 
 const styles = theme => ({
         
-    list: {
-        minWidth: 320,
+    deviceExpand: {
+        padding: "0",
+        marginBottom: 2,
     },
-    content: {
-        minWidth: 0,
-        padding: "0 !important",
-        flexGrow:1,
-        display: "flex",
-        alignItems: "center"
-    },
-    thermostatList: {
-        width: "100%",
-    },
-    tabTitle: {
-        backgroundColor: theme.palette.primary[700],
-        padding: 0,
-        paddingTop: "env(safe-area-inset-top)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
-    },
-    dialogTitle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexGrow: 1,
-        color: theme.palette.primary.contrastText,
-    },
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    listItem: {
-        padding: 16,
-        width: '100%',
+    detailList: {
+        paddingLeft: 24,
     },
     dialogContent: {
         padding: 0,
     },
-    sceneExpand: {
-        padding: "0",
-        marginBottom: 2,
-    }
+    expListItem: {
+        padding: 0,
+        width: '100%',
+    },
+    list: {
+        minWidth: 320,
+        width: "100%",
+    },
+    sumexp: {
+        margin: '0 !important',
+    },
+    chip: {
+        background: "silver",
+        color: "black",
+        margin: theme.spacing.unit,
+    },
+
+    hotchip: {
+        background: "orangeRed",
+        color: "white",
+        margin: theme.spacing.unit,
+    },
+        
 
 });
 
 class DeviceActionSelect extends React.Component {
-    
+
     constructor(props) {
         super(props);
 
         this.state = {
-            selectedDevices: this.props.selectedDevices,
+            actions: [],
+            addingAction: false,
+            addingScene: false,
+            editingActions: false,
+            adding: false,
+            filter: '',
+            caticons: {'SCENE_TRIGGER':<TuneIcon />, 'ACTIVITY_TRIGGER':<ListIcon />, 'LIGHT':<LightbulbOutlineIcon />, 'BUTTON':<TouchAppIcon />, 'SPEAKER':<SpeakerIcon />, 'THERMOSTAT':<DataUsageIcon />, 'RECEIVER':<SpeakerGroupIcon />, 'TV':<TvIcon />}
         }
     }
     
-    actionDevices(devices) {
+    actionDevices = (devices) => {
         var actiondevices=[]
         for (var i = 0; i < devices.length; i++) {
-            var dc=this.getControllers(devices[i])
-            for (var j = 0; j < dc.length; j++) {
-                var cc=this.getControllerCommands(dc[j])
-                if (Object.keys(cc).length>0) {
-                    actiondevices.push(devices[i])
-                    break
+            if (devices[i].displayCategories==this.state.filter || this.state.filter=='') {
+                var dc=this.getControllers(devices[i])
+                for (var j = 0; j < dc.length; j++) {
+                    var cc=this.getControllerCommands(dc[j])
+                    if (Object.keys(cc).length>0) {
+                        actiondevices.push(devices[i])
+                        break
+                    }
                 }
             }
         }
         return actiondevices
     }
 
-    getControllers(device) {
+    getControllers = (device) => {
         var caplist=[]
         for (var cap in device.capabilities) {
             var capi=device.capabilities[cap]['interface'].split(".")[1]
@@ -114,49 +103,68 @@ class DeviceActionSelect extends React.Component {
                 caplist.push(device.capabilities[cap]['interface'].split(".")[1])
             }
         }
-
         return caplist
-        
     }
     
-    getControllerCommands(controller) {
+    getControllerCommands = (controller) => {
         var cmds=[]
         return this.props.controllers[controller]
     }
 
+    getIcon = (category) => {
+        
+        if (this.state.caticons.hasOwnProperty(category)) {
+            return this.state.caticons[category]
+        } 
+        return <DeveloperBoardIcon />
+    }
+    
+    filterIcon = (icon) => {
+        if (this.state.filter==icon) {
+            this.setState({filter:''})
+        } else {
+            this.setState({filter:icon})
+        }
+    }
+
     render() {
         
-        const { classes, fullScreen  } = this.props;
+        const { classes } = this.props;
         
         return (
-            <List className={classes.thermostatList} >
-                    { 
-                    this.actionDevices(this.props.devices).map((device) => (
-                        <ExpansionPanel key={ device.endpointId+'-exp' } elevation={0} CollapseProps={{ unmountOnExit: true }}>
-                            <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} className={classes.summary} >
-                                <ListItem className={classes.listItem} >
-                                    <ListItemIcon><TuneIcon /></ListItemIcon>
-                                    <ListItemText primary={device.friendlyName} secondary={device.displayCategories} />
-                                </ListItem>
-                            </ExpansionPanelSummary>
-                            <ExpansionPanelDetails className={classes.sceneExpand}>
-                                <List>
-                                { this.getControllers(device).map((controller) => {
-                                    return Object.keys(this.getControllerCommands(controller)).map((cmd) => (
-                                        <ListItem key={device.friendlyName+controller+cmd} className={classes.listItem} onClick={() => this.props.select(device.friendlyName, controller, cmd)}>
-                                            <ListItemIcon><TuneIcon /></ListItemIcon>
-                                            <ListItemText primary={cmd} secondary={controller} />
-                                        </ListItem>
-                                    ));
-                                })}
-                                </List>
-                            </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                    ))}
+            <List className={classes.list} >
+                <ListItem className={classes.chipLine}>
+                { Object.keys(this.state.caticons).map((icon) => 
+                    <IconButton onClick={ () => this.filterIcon(icon)} className={ (this.state.filter==icon) ? classes.hotchip : classes.chip }>
+                        {this.state.caticons[icon]}
+                    </IconButton>
+                )}
+                </ListItem>
+                { this.actionDevices(this.props.devices).map((device) => (
+                <ExpansionPanel key={ device.endpointId+'-exp' } elevation={0} CollapseProps={{ unmountOnExit: true }}>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} classes={{ root: classes.summary, expanded: classes.sumexp }}>
+                        <ListItem className={classes.expListItem} >
+                            <ListItemIcon>{this.getIcon(device.displayCategories)}</ListItemIcon>
+                            <ListItemText primary={device.friendlyName} secondary={device.displayCategories} />
+                        </ListItem>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails className={classes.deviceExpand}>
+                        <List className={classes.detailList}>
+                            { this.getControllers(device).map((controller) => {
+                                return Object.keys(this.getControllerCommands(controller)).map((cmd) => (
+                                    <ListItem key={device.friendlyName+controller+cmd} className={classes.listItem} onClick={() => this.props.select(device.friendlyName, device.endpointId, controller, cmd)}>
+                                        <ListItemIcon><TuneIcon /></ListItemIcon>
+                                        <ListItemText primary={cmd} secondary={controller} />
+                                    </ListItem>
+                                ));
+                            })}
+                        </List>
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
+                ))}
             </List>
         )
     }
-
 }
 
 DeviceActionSelect.propTypes = {

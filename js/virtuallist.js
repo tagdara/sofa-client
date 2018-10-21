@@ -44,7 +44,7 @@ class VirtualList extends React.Component {
                 {
                     Object.keys(this.state.devices).map((key, index) => (
                         this.state.devices[key]['type']=='windowshade' ?
-                            <Shade key={ index } name={ key } up={ this.state.devices[key]['commands']['up']['target']  }  stop={ this.state.devices[key]['commands']['stop']['target'] }  down={ this.state.devices[key]['commands']['down']['target']  } sender={this.props.sender}/>
+                            <Shade key={ index } name={ key } up={ this.state.devices[key]['commands']['up']['target']  }  stop={ this.state.devices[key]['commands']['stop']['target'] }  down={ this.state.devices[key]['commands']['down']['target']  } sendAlexaCommand={this.props.sendAlexaCommand} />
                             :null
                     ))
                 }
@@ -52,7 +52,7 @@ class VirtualList extends React.Component {
                 {
                     Object.keys(this.state.devices).map((key, index) => (
                         this.state.devices[key]['type']=='water' ?
-                            <Sprinkler key={ index } name={ key } on={ this.state.devices[key]['commands']['on']['target']  }  off={ this.state.devices[key]['commands']['off']['target']  } sender={this.props.sender}/>
+                            <Sprinkler key={ index } name={ key } on={ this.state.devices[key]['commands']['on']['target']  }  off={ this.state.devices[key]['commands']['off']['target']  } sendAlexaCommand={this.props.sendAlexaCommand} />
                             :null
                     ))
                 }

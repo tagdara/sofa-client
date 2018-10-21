@@ -80,14 +80,15 @@ const styles = theme => ({
 class LightDialogPower extends React.Component {
     
 
+
     handlePowerChange = event => {
-        this.setState({ powerState: event.target.checked, target: this.props.name});
         if (event.target.checked) {
-            var ops={"op":"set", "path":"discovery/"+this.props.name+"/PowerController/powerState", "command":"TurnOn", "value":event.target.checked}
+            this.setState({ powerState: 'ON', target: this.props.name});
+            this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "PowerController", "TurnOn")
         } else {
-            var ops={"op":"set", "path":"discovery/"+this.props.name+"/PowerController/powerState", "command":"TurnOff", "value":event.target.checked}
+            this.setState({ powerState: 'OFF', target: this.props.name});
+            this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "PowerController", "TurnOff")
         }
-        this.props.sendMessage(JSON.stringify(ops));
     }; 
 
 

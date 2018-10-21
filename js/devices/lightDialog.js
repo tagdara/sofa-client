@@ -85,11 +85,10 @@ class LightDialog extends React.Component {
     handlePowerChange = event => {
         this.setState({ powerState: event.target.checked, target: this.props.name});
         if (event.target.checked) {
-            var ops={"op":"set", "path":"discovery/"+this.props.name+"/PowerController/powerState", "command":"TurnOn", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.device.friendlyNamee, this.props.device.endpointId, "PowerController", "TurnOn")
         } else {
-            var ops={"op":"set", "path":"discovery/"+this.props.name+"/PowerController/powerState", "command":"TurnOff", "value":event.target.checked}
+            this.props.sendAlexaCommand(this.props.device.friendlyNamee, this.props.device.endpointId, "PowerController", "TurnOff")
         }
-        this.props.sendMessage(JSON.stringify(ops));
     }; 
 
     handlePreBrightnessChange = event => {
@@ -97,8 +96,7 @@ class LightDialog extends React.Component {
     }; 
 
     handleBrightnessChange = event => {
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/BrightnessController/brightness", "command":"SetBrightness", "value":event}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyNamee, this.props.device.endpointId, "BrightnessController", "SetBrightness", event)
     }; 
 
     handlePreColorTemperatureChange = event => {
@@ -107,8 +105,7 @@ class LightDialog extends React.Component {
 
     handleColorTemperatureChange = event => {
         this.setState({ colorTemperatureInKelvin: event, target:this.props.friendlyName});
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/ColorTemperatureController/colorTemperatureInKelvin", "command":"SetColorTemperature", "value":event}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyNamee, this.props.device.endpointId, "ColorTemperatureController", "SetColorTemperature", event)
     }; 
     
     sb2sl(color) {
@@ -132,14 +129,12 @@ class LightDialog extends React.Component {
     handleColorSliderChange = color => {
         var hsb=this.sl2sb(color.hsl)
         this.setState({ color: hsb, target:this.props.friendlyName});
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/ColorController/color", "command":"SetColor", "value":hsb}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyNamee, this.props.devices.endpointId, "ColorController", "SetColor", hsb)
     }
 
     handleColorChange = hsb => {
         this.setState({ color: hsb, target:this.props.friendlyName});
-        var ops={"op":"set", "path":"discovery/"+this.props.name+"/ColorController/color", "command":"SetColor", "value":hsb}
-        this.props.sendMessage(JSON.stringify(ops));
+        this.props.sendAlexaCommand(this.props.device.friendlyNamee, this.props.devices.endpointId, "ColorController", "SetColor", hsb)
     }
 
  
@@ -158,15 +153,15 @@ class LightDialog extends React.Component {
             <Dialog open={this.props.open} onClose={this.props.handleClose} >
                 <DialogTitle>{this.props.name}</DialogTitle>
                 <DialogContent>
-                    <LightDialogPower name={this.props.name} powerState={this.props.deviceProperties.powerState=='ON'} sendMessage={ this.props.sendMessage} />
+                    <LightDialogPower sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'}/>
                     { this.props.deviceProperties.hasOwnProperty('brightness') ?
-                    <LightDialogBrightness name={this.props.name} powerState={this.props.deviceProperties.powerState=='ON'} brightness={this.props.deviceProperties.brightness} sendMessage={ this.props.sendMessage} />
+                    <LightDialogBrightness sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'} brightness={this.props.deviceProperties.brightness}/>
                     : null }
                     { this.props.deviceProperties.hasOwnProperty('colorTemperatureInKelvin') ?
-                    <LightDialogTemperature name={this.props.name} powerState={this.props.deviceProperties.powerState=='ON'} colorTemperatureInKelvin={this.props.deviceProperties.colorTemperatureInKelvin} sendMessage={ this.props.sendMessage} />
+                    <LightDialogTemperature sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'} colorTemperatureInKelvin={this.props.deviceProperties.colorTemperatureInKelvin}/>
                     : null }
                     { this.props.deviceProperties.hasOwnProperty('color') ?
-                    <LightDialogColor name={this.props.name} color={this.props.deviceProperties.color} sendMessage={ this.props.sendMessage} />
+                    <LightDialogColor sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} color={this.props.deviceProperties.color}/>
                     : null }
                 </DialogContent>
                 <DialogActions>

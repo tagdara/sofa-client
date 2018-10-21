@@ -114,7 +114,7 @@ class SonosGrid extends React.Component {
                 <DialogContent className={classes.dialogContent }>
                     <div className={classes.lGrid }>
                         { this.props.devices.map((device) => (
-                            <Sonos devices={this.props.devices} chooseActivePlayer={this.props.chooseActivePlayer} key={device.endpointId+'sonosgi'} name={ device.friendlyName } filter={ this.props.filter} device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } linkedPlayers={ this.props.deviceProperties } sendMessage={this.props.sendMessage}/>
+                            <Sonos sendAlexaCommand={this.props.sendAlexaCommand} devices={this.props.devices} chooseActivePlayer={this.props.chooseActivePlayer} key={device.endpointId+'sonosgi'} name={ device.friendlyName } filter={ this.props.filter} device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } linkedPlayers={ this.props.deviceProperties } sendMessage={this.props.sendMessage}/>
                             ))
                         }
                         <div className={classes.gridPlaceholder}></div>

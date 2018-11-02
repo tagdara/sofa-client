@@ -64,14 +64,14 @@ const styles = theme => ({
 });
 
 
-class ThermostatDialog extends React.Component {
+class ButtonDialog extends React.Component {
 
     render() {
         
-        const { classes, fullScreen  } = this.props;
+        const { classes } = this.props;
         
         return (
-            <SofaDialog  open={this.props.open} close={this.props.close} title='Other Devices' >
+            <SofaDialog open={this.props.open} close={this.props.close} title='Other Devices' >
                 <Divider />
                 <DialogContent className={classes.dialogContent }>
                     <List className={classes.thermostatList} >
@@ -93,9 +93,8 @@ class ThermostatDialog extends React.Component {
 
 }
 
-ThermostatDialog.propTypes = {
+ButtonDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withData(withStyles(styles)(ThermostatDialog));
+export default withData(withStyles(styles)(ButtonDialog));

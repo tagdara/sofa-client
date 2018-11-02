@@ -204,7 +204,6 @@ export class DataProvider extends Component {
                 return this.state.devices[i]
             } 
         }
-        console.log('Did not find device named', devname, this.state.devices.length)
     }
     
     deviceByEndpointId = endpointId => {

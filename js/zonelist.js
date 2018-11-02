@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
+import SofaCard from './sofaCard';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
@@ -12,6 +13,7 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
 import ZoneGrid from './devices/zoneGrid';
+import { withData } from './dataContext';
 
 const styles = theme => ({
         
@@ -24,7 +26,6 @@ const styles = theme => ({
         justifyContent: "space-between",
     },
     content: {
-        minWidth: 0,
         padding: "0 !important",
         flexGrow:1,
         display: "flex",
@@ -39,9 +40,8 @@ const styles = theme => ({
     notready: {
         backgroundColor: "#ccc",
     },
-
     listItem: {
-        padding: 16,
+        padding: "12 16",
         width: '100%',
     },
 });
@@ -56,6 +56,7 @@ class ZoneList extends React.Component {
             filter: 'open',
             showGrid: false,
         }
+        this.handleGrid = this.handleGrid.bind(this);
     }
 
     zoneReady = () => {
@@ -116,32 +117,25 @@ class ZoneList extends React.Component {
     render() {
     
         const { classes } = this.props;
+        const zoneOpen = this.zoneCount('open')>0;
         
         return (
-                <Card className={classes.card} onClick={ (e) => this.handleGrid(e)}>
-                    <CardContent className={classes.content}>
-                        { this.zoneReady() ?
-                        <ListItem className={classes.listItem}>
-                            { this.zoneCount('open')>0 ? 
-                                <Avatar className={classes.open} ><PriorityHighIcon/></Avatar>
-                            : 
-                                <Avatar className={classes.closed} ><VerifiedUserIcon/></Avatar>
-                            }
-                            { this.zoneCount('open')>0 ? 
-                                <ListItemText primary={this.zoneCount('open')+' zones are not secure'} secondary={this.listOfOpenZones()}/>
-                            : 
-                                <ListItemText primary={'All zones secure'}/>
-                            }
-                        </ListItem>
-                        :
-                        <ListItem className={classes.listItem}>
-                            <Avatar className={classes.notready} ><PriorityHighIcon/></Avatar>
-                            <ListItemText primary={'Waiting for zone data'}/>
-                        </ListItem>
-                        }
-                    </CardContent>
-                <ZoneGrid closeGrid={this.handleCloseGrid} showGrid={this.state.showGrid} zoneCount={this.zoneCount} deviceProperties={this.props.deviceProperties} devices={this.props.devices} />
-            </Card>
+                <SofaCard>
+                    { this.zoneReady() ?
+                    <ListItem className={classes.listItem} onClick={ (e) => this.handleGrid(e)}>
+                        <Avatar className={ (zoneOpen) ? classes.open : classes.closed } >
+                            { zoneOpen ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
+                        </Avatar>
+                        <ListItemText primary={zoneOpen ? this.zoneCount('open')+' zones are not secure' : 'All zones secure' } secondary={this.listOfOpenZones()}/>
+                    </ListItem>
+                    :
+                    <ListItem className={classes.listItem}>
+                        <Avatar className={classes.notready} ><PriorityHighIcon/></Avatar>
+                        <ListItemText primary={'Waiting for zone data'}/>
+                    </ListItem>
+                    }
+                    <ZoneGrid close={this.handleCloseGrid} open={this.state.showGrid} zoneCount={this.zoneCount} deviceProperties={this.props.deviceProperties} devices={this.props.devices} />
+                </SofaCard>
         );
     }
 }
@@ -150,4 +144,4 @@ ZoneList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ZoneList);
+export default withData(withStyles(styles)(ZoneList));

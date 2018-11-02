@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { withTheme } from 'material-ui/styles';
 import { withStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -50,7 +51,7 @@ const styles = theme => ({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: '#eee',
+        backgroundColor: secondary,
         opacity: "0.8",
     },
     dialogSongTextBox: {

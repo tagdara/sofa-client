@@ -8,7 +8,8 @@ import TextField from  '@material-ui/core/TextField';
 
 import Chip from '@material-ui/core/Chip';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-
+import ViewWeekIcon from '@material-ui/icons/ViewWeek';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
         
@@ -17,14 +18,19 @@ const styles = theme => ({
         width: '100%',
     },
     activeIcon: {
-        backgroundColor: "#6666FF",
+        marginRight: 8,
+        backgroundColor: theme.palette.primary.dark,
     },
-    chip: {
-        margin: "0 4",
+    button: {
+        minWidth: 36
     },
-    hotChip: {
-        backgroundColor: "#6666FF",
-        margin: "0 4",
+    hotButton: {
+        minWidth: 36,
+        "&:hover" : {
+            backgroundColor: theme.palette.primary.light,
+        },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
     },
     
 
@@ -40,18 +46,33 @@ class ScheduleDays extends React.Component {
             daysOfTheWeek: ['sun','mon','tue','wed','thu','fri','sat'],
         };
     }
-
+    
+    editDays = (day) => {
+        var sdays=this.props.value
+        if (sdays.includes(day)) {
+            sdays.splice(sdays.indexOf(day),1)
+        } else {
+            sdays.push(day)
+        }
+        this.props.change(this.props.target, sdays)
+    }
+    
     render() {
         
         const { classes } = this.props;
         
         return (
+            <React.Fragment>
             <ListItem className={classes.listItem}> 
-                <Avatar className={ classes.activeIcon }><ScheduleIcon /></Avatar>
+                <Avatar className={ classes.activeIcon }><ViewWeekIcon /></Avatar>
                 { this.state.daysOfTheWeek.map((day) => 
-                    <Chip className={this.props.days.includes(day) ? classes.hotChip : classes.chip } key={day}  label={day} onClick={(e) => this.props.editDays(day)}/>
-                )}
+                    <Button size="small" className={this.props.value.includes(day) ? classes.hotButton : classes.button } key={day} onClick={(e) => this.editDays(day)} >
+                        {day}
+                    </Button>
+                    )
+                }
             </ListItem>
+            </React.Fragment>
         )
     }
 

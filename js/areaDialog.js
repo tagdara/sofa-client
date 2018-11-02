@@ -24,9 +24,10 @@ import Divider from '@material-ui/core/Divider';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
+import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
-
+import SofaDialog from './sofaDialog'
 import GroupLight from './devices/grouplight'
 import Light from './devices/light'
 import SceneEditor from './sceneEditor'
@@ -67,28 +68,35 @@ const styles  = theme =>  ({
         padding: "16px",
         alignItems: "center",
     },
-    tabRow: {
+    tabTitle: {
+        padding: 0,
+        backgroundColor: theme.palette.primary.dark,
+    },
+    xtabTitle: {
+        backgroundColor: theme.palette.primary.dark,
+        width: "100%",
+        padding: 0,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-around",
+    },
+    xtabRow: {
+        padding:0,
+        width: "100%",
+        backgroundColor: theme.palette.primary.dark,
         color: theme.palette.primary.contrastText,
         display: "flex",
         justifyContent: "center",
     },
     tabInfo: {
         color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.primary[500],
+        backgroundColor: theme.palette.primary.dark,
         display: "flex",
         justifyContent: "space-around",
         alignItems: "center",
     },
     baseTitle: {
         minHeight: 48,
-    },
-    tabTitle: {
-        paddingTop: "env(safe-area-inset-top)",
-        backgroundColor: theme.palette.primary[700],
-        padding: 0,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
     },
     dialogTitle: {
         display: "flex",
@@ -109,12 +117,6 @@ const styles  = theme =>  ({
         padding: 0,
     }
 });
-
-
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
 
 
 class AreaDialog extends React.Component {
@@ -342,25 +344,15 @@ class AreaDialog extends React.Component {
         const { classes, fullScreen } = this.props;
         const { devices } = this.state;  
         return (
-            <Dialog
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'sm'}
-                open={this.props.open}
-                onClose={this.props.close}
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
+            <SofaDialog title={this.props.name} open={this.props.open} close={this.props.close} >
+
                 <DialogTitle id="area-dialog-title" className={classes.tabTitle} >
-                    <Toolbar elevation={0} className={classes.baseTitle}>
-                        <Typography variant="title" color="inherit" className={classes.dialogTitle}>
-                            {this.props.name}
-                        </Typography>
-                    </Toolbar>
-                    <Tabs className={classes.tabRow} value={this.state.frontTab} onChange={this.handleTab}>
+                <AppBar>
+                    <Tabs centered className={classes.tabRow} value={this.state.frontTab} onChange={this.handleTab}>
                         <Tab label="Scenes" />
                         <Tab label="Lights" />
                     </Tabs>
+                </AppBar>
                 </DialogTitle>
 
                 { this.props.name!='All' && this.state.frontTab==1 ?
@@ -394,16 +386,15 @@ class AreaDialog extends React.Component {
                         <Button onClick={this.props.close} color="primary" autoFocus>OK</Button>
                     }
                 </DialogActions>
-            </Dialog>
+            </SofaDialog>
         );
     }
 }
 
 AreaDialog.propTypes = {
   classes: PropTypes.object.isRequired,
-  fullScreen: PropTypes.bool.isRequired,
 };
 
 
-export default withStyles(styles)(withMobileDialog()(AreaDialog));
+export default withStyles(styles)(AreaDialog);
 

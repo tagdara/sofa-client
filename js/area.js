@@ -1,60 +1,20 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-
-import Paper from '@material-ui/core/Paper';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import CloseIcon from '@material-ui/icons/Close';
-
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-
-import GroupLight from './devices/grouplight'
-import Light from './devices/light'
-import SceneEditor from './sceneEditor'
-
 const styles  = theme =>  ({
     
-    root: {
-        flexGrow: 1,
-    },
-    flex: {
-        flex: 1,
-    },
-    nogrow: {
-        flex: 1,
-    },
-    slider: {
-        flex: 1,
-        paddingLeft: 16,
-        paddingRight: 16,
-        
-    },
-    touchSized: {
-        height: 72,
-    },
     halves: {
         flexGrow: 1,
         flexBasis: 0,
         boxSizing: "border-box",
-    },
-    flex: {
-        flex: 1,
-    },
-    menuButton: {
-        marginLeft: -12,
-        marginRight: 20,
     },
     areaListItem: {
         display: "flex",
@@ -62,30 +22,6 @@ const styles  = theme =>  ({
         padding: "16 32 16 24",
         alignItems: "center",
     },
-    tabRow: {
-        color: theme.palette.primary.contrastText,
-        display: "flex",
-        justifyContent: "center",
-    },
-    tabInfo: {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.primary[500],
-        display: "flex",
-        justifyContent: "space-around",
-        alignItems: "center",
-    },
-    tabTitle: {
-        backgroundColor: theme.palette.primary[700],
-        padding: 0,
-        paddingTop: "env(safe-area-inset-top)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
-    },
-    groupHead: {
-        backgroundColor: theme.palette.primary[100],
-        padding: 0,
-    }
 });
 
 
@@ -95,19 +31,11 @@ class Area extends React.Component {
         super(props);
 
         this.state = {
-            scenes: {},
-            shortcuts: {},
-            lights: {},
-            frontTab: 0,
-            computedLevel: 0,
-            level: -1,
-            target: null,
-            open: false,
-            areaState: {},
-            edit: false,
-            delaySet: true,
+            level: 0,
+            delaySet: false,
         };
     }
+    
     
     static getDerivedStateFromProps(nextProps, prevState) {
 
@@ -119,26 +47,27 @@ class Area extends React.Component {
             changes.deviceProperties=nextProps.deviceProperties
             if (prevState.hasOwnProperty('delaySet')) {
                 if (!prevState.delaySet) {
-                    changes.level=Area.computeLevels(nextProps.sceneData, data, prevState)
+                    changes.level=Area.computeLevels(nextProps.sceneData, data, nextProps, prevState)
                 }
+            } else {
+                changes.level=Area.computeLevels(nextProps.sceneData, data, nextProps, prevState)
             }
         }
-
         return changes
     }
     
     
-    static computeLevels(sceneData, deviceProperties, prevState) {
+    static computeLevels(sceneData, deviceProperties, nextProps, prevState) {
 
         var highscore=0
         var currentlevel=0
         var scores={}
-
+        
         for (var i = 0; i < 4; i++) {
             var level=i.toString()
-            if (prevState.shortcuts.hasOwnProperty(level)) {
-                var sceneName=prevState.shortcuts[level]
-                var scene=prevState.scenes[sceneName]
+            if (nextProps.shortcuts.hasOwnProperty(level)) {
+                var sceneName=nextProps.shortcuts[level]
+                var scene=nextProps.sceneData[sceneName]
 
                 var levscore=0
                 for (var light in scene) {    
@@ -148,7 +77,7 @@ class Area extends React.Component {
                         } else {
                             var bri=0
                         }
-                        levscore+=(50-Math.abs(bri-scene[light]['set']))
+                        levscore+=(50-Math.abs(bri-scene[light]['brightness']))
                     }
                 }
 
@@ -169,8 +98,7 @@ class Area extends React.Component {
     }; 
 
     runScene = sceneName => {
-        var fullscene=this.props.name+" "+sceneName
-        this.props.sendAlexaCommand(fullscene, "logic:scene:"+fullscene, "SceneController", "Activate")
+        this.props.sendAlexaCommand(sceneName, "logic:scene:"+sceneName, "SceneController", "Activate")
     }
     
     endSliderDelay = () => {
@@ -186,45 +114,19 @@ class Area extends React.Component {
     }
 
     runShortcut = level => {
-        console.log('run shortcut', level, this.state.shortcuts)
-        
-        if (this.state.shortcuts.hasOwnProperty(level.toString())) {
-            var sceneName=this.state.shortcuts[level]
+
+        if (this.props.shortcuts.hasOwnProperty(level.toString())) {
+            var sceneName=this.props.shortcuts[level]
             this.runScene(sceneName)
         } else {
             console.log('No scene shortcut for area level', level)
         }
     }
-    
-    parseAreaScenes = (areascenes) => {
-        var changes={}
-        if (areascenes.hasOwnProperty('lights')) {
-            changes['lights']=areascenes['lights']
-        }
-        if (areascenes.hasOwnProperty('scenes')) {
-            changes['scenes']=areascenes['scenes']
-            changes['delaySet']=false
-        }
-        if (areascenes.hasOwnProperty('shortcuts')) {
-            changes['shortcuts']=areascenes['shortcuts']
-        }
-
-        if (changes) {
-            this.setState(changes,
-                () => Area.computeLevels(this.props.sceneData,this.props.deviceProperties, this.state)
-            );
-        }
-    }
-    
-    componentDidMount() {    
-  	    fetch('/list/logic/areascenes/'+this.props.name)
- 		    .then(result=>result.json())
-            .then(result=>this.parseAreaScenes(result));
-    }
 
     render() {
-        const { classes, fullScreen } = this.props;
-        const { devices } = this.state;  
+        
+        const { classes } = this.props;
+
         return (
             <ListItem className={classes.areaListItem}>
                 <Typography variant="subheading" className={classes.halves} onClick={ () => this.props.selectArea(this.props.name)}>{this.props.name}</Typography>
@@ -242,9 +144,7 @@ class Area extends React.Component {
 
 Area.propTypes = {
   classes: PropTypes.object.isRequired,
-  fullScreen: PropTypes.bool.isRequired,
 };
 
-
-export default withStyles(styles)(withMobileDialog()(Area));
+export default withStyles(styles)(Area);
 

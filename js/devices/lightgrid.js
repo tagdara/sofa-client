@@ -1,16 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';import IconButton from '@material-ui/core/IconButton';
-import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
 import CloseIcon from '@material-ui/icons/Close';
-import Sonos from './sonos';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
+
 import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -24,11 +19,11 @@ import GroupLight from './grouplight'
 import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Slide from  '@material-ui/core/Slide';
 import Divider from '@material-ui/core/Divider';
 import Paper from '@material-ui/core/Paper';
-import CustomScroll from 'react-custom-scroll';
+import SofaDialog from '../sofaDialog'
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
 
 const styles = theme => ({
     
@@ -90,8 +85,7 @@ const styles = theme => ({
     },
     tabRow: {
         color: theme.palette.primary.contrastText,
-        display: "flex",
-        justifyContent: "center",
+
     },
     tabInfo: {
         color: theme.palette.primary.contrastText,
@@ -120,18 +114,29 @@ const styles = theme => ({
     fullDialog: {
         boxSizing: "border-box",
     },
-    dialogContent: {
-        height: "100%",
+    xdialogContent: {
         padding: 8,
+        display: "flex",
+        flexWrap: 'wrap',
+        justifyContent: 'space-around',
+        overflow: 'hidden',
+        flexDirection: "row",
     },
     dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",    
+    },
+    gridList: {
+        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
+        transform: 'translateZ(0)',
+    },
+    dialogContent: {
+        padding: 0,
+        width: '100%',
+        overflowX: "hidden",
     }
+    
 });
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
 
 class LightGrid extends React.Component {
 
@@ -218,64 +223,57 @@ class LightGrid extends React.Component {
     
     render() {
         
-        const { classes, fullScreen  } = this.props;
+        const { classes, theme } = this.props;
         
         return (
-            <Dialog 
-                fullScreen={fullScreen}
-                maxWidth={'md'}
-                open={this.props.showGrid}  
-                onClose={this.props.closeGrid}
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
-                <DialogTitle id="area-dialog-title" className={classes.tabTitle} >
-                    <Paper className={classes.tabInfo} elevation={0}>
-                        { this.props.lightCount('on')>0 ? 
-                            <Typography variant="subheading"  className={classes.gridTitle} >{this.props.lightCount('on')} lights are on</Typography>
-                            : 
-                            <Typography variant="subheading"  className={classes.gridTitle} color="inherit" >All lights off</Typography>
+            <SofaDialog title={ this.props.lightCount('on')>0 ? this.props.lightCount('on')+" lights are on" : "All lights off"} 
+                        maxWidth='md' open={this.props.showGrid} close={this.props.closeGrid} 
+                        tabs={
+                            <Tabs indicatorColor="secondary"
+                                        textColor="secondary"
+                                        centered value={this.state.frontTab} onChange={this.handleTab}>
+                                <Tab label="On" />
+                                <Tab label="All" />
+                            </Tabs>
                         }
-                    </Paper>
-                    <Tabs className={classes.tabRow} value={this.state.frontTab} onChange={this.handleTab}>
-                        <Tab label="On" />
-                        <Tab label="All" />
-                    </Tabs>
-                </DialogTitle>
+            >
                 { this.props.name=='all' ?
                 null
                 :
                 <Card className={classes.card}>
                     <CardContent className={classes.content}>
-                    <GroupLight sendAlexaCommand={this.props.sendAlexaCommand} key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } sendMessage={this.props.sendMessage} />
+                    <GroupLight sendAlexaCommand={this.props.sendAlexaCommand} key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } />
                     </CardContent>
                 </Card>
                 }
                 <Divider />
                 <DialogContent className={classes.dialogContent }>
-                        <div className={classes.lGrid }>
-                { 
-                this.props.devices.map((device) =>
-                    this.state.filter=='all' || String(this.props.deviceProperties[device.friendlyName].powerState).toLowerCase()==this.state.filter.toLowerCase() ?
-                    <Light sendAlexaCommand={this.props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } filter={ this.props.filter} device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendMessage={this.props.sendMessage}  />
-                    : null
-                )}
-                <div className={classes.gridPlaceholder}></div>
-                </div>
+                    <GridList cols={2} cellHeight={10} spacing={1} className={classes.gridList}>
+                        { this.props.name=='all' ? null :
+                            <GridTile cols={2}>
+                                <GroupLight sendAlexaCommand={this.props.sendAlexaCommand} key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } />
+                            </GridTile>
+                        }
+                        { 
+                        this.props.devices.map((device) =>
+                            this.state.filter=='all' || String(this.props.deviceProperties[device.friendlyName].powerState).toLowerCase()==this.state.filter.toLowerCase() ?
+                                <Light sendAlexaCommand={this.props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } filter={ this.props.filter} device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } />
+                            : null
+                        )}
+                    </GridList>
                 </DialogContent>
                 <Divider />
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={(e) => this.props.closeGrid(e)} color="primary" autoFocus>OK</Button>
                 </DialogActions>
-            </Dialog>
+            </SofaDialog>
         )
     }
 };
 
 LightGrid.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(LightGrid));
+export default withStyles(styles)(LightGrid);
 

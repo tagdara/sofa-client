@@ -1,30 +1,27 @@
 import React from "react";
 import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Zone from './devices/zone';
-import Thermostat from './devices/thermostat';
-import ThermostatSettable from './devices/thermostatSettable';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Slide from  '@material-ui/core/Slide';
 
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
+
 import VirtualList from './virtuallist';
 import ComputerList from './computerList';
+import ModeList from './modeList';
 import SmartButton from './devices/smartbutton';
+import { withData } from './dataContext';
+import SofaDialog from './sofaDialog';
 
 const styles = theme => ({
         
@@ -66,9 +63,6 @@ const styles = theme => ({
 
 });
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
 
 class ThermostatDialog extends React.Component {
 
@@ -77,37 +71,23 @@ class ThermostatDialog extends React.Component {
         const { classes, fullScreen  } = this.props;
         
         return (
-            <Dialog 
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'sm'}
-                open={this.props.open}  
-                onClose={this.props.close}
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
-                <DialogTitle className={classes.tabTitle}>
-
-                        <Toolbar className={classes.appBar} elevation={0}>
-                            <Typography variant="title" color="inherit" className={classes.dialogTitle}>
-                                Other Devices
-                            </Typography>
-                        </Toolbar>
-          
-                </DialogTitle>
+            <SofaDialog  open={this.props.open} close={this.props.close} title='Other Devices' >
                 <Divider />
                 <DialogContent className={classes.dialogContent }>
                     <List className={classes.thermostatList} >
                         <VirtualList sendAlexaCommand={this.props.sendAlexaCommand} />
                     </List>
                     <Divider />
-                    <ComputerList sendAlexaCommand={this.props.sendAlexaCommand} devices={ this.props.devicesByCategory('PC') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('PC')) } sendAlexaCommand={this.props.sendAlexaCommand} />
+                    <ComputerList devices={ this.props.devicesByCategory('PC') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('PC')) } sendAlexaCommand={this.props.sendAlexaCommand} />
+                    <Divider />
+                    <ModeList devices={ this.props.devicesByCategory('MODE') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('MODE')) } sendAlexaCommand={this.props.sendAlexaCommand} />
+
                 </DialogContent>
                 <Divider />
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={(e) => this.props.close(e)} color="primary" autoFocus>OK</Button>
                 </DialogActions>
-            </Dialog>
+            </SofaDialog>
         )
     }
 
@@ -118,4 +98,4 @@ ThermostatDialog.propTypes = {
     fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(ThermostatDialog));
+export default withData(withStyles(styles)(ThermostatDialog));

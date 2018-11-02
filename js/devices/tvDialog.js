@@ -1,16 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 
@@ -37,9 +31,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import Toolbar from '@material-ui/core/Toolbar';
-import Slide from  '@material-ui/core/Slide';
-
+import SofaDialog from '../sofaDialog';
 
 const styles = theme => ({
 
@@ -54,24 +46,6 @@ const styles = theme => ({
         background: "orangeRed",
         color: "white",
         margin: theme.spacing.unit,
-    },
-    slider: {
-        paddingTop: 0,
-        paddingRight: 28,
-        paddingLeft: 10,
-    },
-    slidername: {
-        display: "flex",
-        paddingRight: 0,
-        paddingLeft: 10,
-        alignItems: "center",
-    },    
-    cover: {
-        minWidth: 62,
-        height: 62,
-        width: 62,
-        alignSelf: "flex-end",
-        margin: 16,
     },
     chipLine: {
         width: "100%",
@@ -89,29 +63,10 @@ const styles = theme => ({
     remoteButton: {
         height: "100%",
     },
-    tabTitle: {
-        backgroundColor: theme.palette.primary[700],
-        padding: 0,
-        paddingTop: "env(safe-area-inset-top)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
-    },
-    dialogTitle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexGrow: 1,
-        color: theme.palette.primary.contrastText,
-    },
     dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",
     }
 });
-
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
 
 class TVDialog extends React.Component {
     
@@ -160,140 +115,131 @@ class TVDialog extends React.Component {
         this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'InputController', 'SelectInput', inputname)
     };
     
+    processInputs = inputlist => {
+        var inputs=[];
+        var ports=[];
+        for (var i = 0; i < inputlist.length; i++) { 
+            if (!ports.includes(inputlist[i].uri)) {
+                inputs.push(inputlist[i])
+                ports.push(inputlist[i].uri)
+            }
+        }
+        this.setState({inputs:inputs})
+    }
     
     componentDidMount() {
 
   	    fetch('/list/sonybravia/inputs')
  		    .then(result=>result.json())
-            .then(result=>this.setState({inputs:result}));
+            .then(result=>this.processInputs(result));
     }
     
     render() {
 
-        const { classes, theme, fullScreen } = this.props;
+        const { classes } = this.props;
 
         return (
-                <Dialog 
-                    fullScreen={fullScreen}
-                    fullWidth={true}
-                    maxWidth={'sm'}
-                    open={this.props.showdialog}
-                    onClose={() => this.props.closeDialog()}
-                    TransitionComponent={Transition}
-                    className={this.props.classes.dialog}
-                >
-                    <DialogTitle className={classes.tabTitle}>
-                        <Toolbar elevation={0}>
-                            <Typography variant="title" color="inherit" className={classes.dialogTitle}>
-                                TV
-                            </Typography>
-                        </Toolbar>
-                    </DialogTitle>
+                <SofaDialog title='TV' open={this.props.open} close={this.props.close} >
                     <DialogContent>
-                    <List>
-                        <ListItem>
-                            <ListItemText primary="Power"/>
-                            <ListItemSecondaryAction>
-                                <Switch color="primary" checked={this.props.deviceProperties.powerState=='ON'} onChange={this.handlePowerChange} />
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
-                            <Typography variant="subheading" noWrap>Input</Typography>
-                        </ListItem>
-                        <ListItem>
-                            <div className={classes.chipLine}>
-                            <Chip 
-                                key = 'Android TV'
-                                label= 'Android TV'
-                                className={ (this.props.deviceProperties.input=='Android TV') ? classes.hotchip : classes.chip }
-                                onClick={ (e) => this.handleInput(e, 'Home')}
-                            />
-                            { this.state.inputs.map((tvinput) => 
+                        <List>
+                            <ListItem>
+                                <ListItemText primary="Power"/>
+                                <ListItemSecondaryAction>
+                                    <Switch color="primary" checked={this.props.deviceProperties.powerState=='ON'} onChange={this.handlePowerChange} />
+                                </ListItemSecondaryAction>
+                            </ListItem>
+                            <Divider />
+                            <ListItem>
+                                <Typography variant="subheading" noWrap>Input</Typography>
+                            </ListItem>
+                            <ListItem>
+                                <div className={classes.chipLine}>
                                 <Chip 
-                                    key = {tvinput.uri}
-                                    label= {tvinput.label ? tvinput.label : tvinput.title }
-                                    className={ (this.props.deviceProperties.input==tvinput.uri) ? classes.hotchip : classes.chip }
-                                    onClick={ (e) => this.handleInput(e, tvinput.uri)}
+                                    key = 'Android TV'
+                                    label= 'Android TV'
+                                    className={ (this.props.deviceProperties.input=='Android TV') ? classes.hotchip : classes.chip }
+                                    onClick={ (e) => this.handleInput(e, 'Home')}
                                 />
-                            )}
-                            </div>
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
-                            <Typography variant="subheading" noWrap>Remote Control</Typography>
-                        </ListItem>
-                        <ListItem>
-                        <GridList cellHeight={80} className={classes.gridList} cols={3}>
-                        <GridListTile cols={1}>
-                        </GridListTile>
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                        <Button className={classes.remoteButton}>
-                            <ExpandLessIcon />
-                        </Button>
-
-                    </GridListTile>
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                    </GridListTile>
-
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                        <Button className={classes.remoteButton}>
-                            <ChevronLeftIcon />
-                        </Button>
-                    </GridListTile>
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                        <Button className={classes.remoteButton}>
-                            <FullscreenIcon />
-                        </Button>
-                    </GridListTile>
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                        <Button className={classes.remoteButton}>
-                            <ChevronRightIcon />
-                        </Button>
-                    </GridListTile>
-
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                    </GridListTile>
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                        <Button className={classes.remoteButton}>
-                            <ExpandMoreIcon />
-                        </Button>
-                    </GridListTile>
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                    </GridListTile>
-
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                        <Button className={classes.remoteButton}>
-                            <ArrowBackIcon />
-                        </Button>
-                    </GridListTile>
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                    </GridListTile>
-                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                        <Button className={classes.remoteButton}>
-                            <HomeIcon />
-                        </Button>
-                    </GridListTile>
-
-
-                    </GridList>
-                    </ListItem>
-                    </List>
+                                { this.state.inputs.map((tvinput) => 
+                                    <Chip 
+                                        key = {tvinput.uri}
+                                        label= {tvinput.label ? tvinput.label : tvinput.title }
+                                        className={ (this.props.deviceProperties.input==tvinput.uri) ? classes.hotchip : classes.chip }
+                                        onClick={ (e) => this.handleInput(e, tvinput.uri)}
+                                    />
+                                )}
+                                </div>
+                            </ListItem>
+                            <Divider />
+                            <ListItem>
+                                <Typography variant="subheading" noWrap>Remote Control</Typography>
+                            </ListItem>
+                            <ListItem>
+                                <GridList cellHeight={80} className={classes.gridList} cols={3}>
+                                    <GridListTile cols={1}>
+                                    </GridListTile>
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                        <Button className={classes.remoteButton}>
+                                            <ExpandLessIcon />
+                                        </Button>
+                                    </GridListTile>
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                    </GridListTile>
+                
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                        <Button className={classes.remoteButton}>
+                                            <ChevronLeftIcon />
+                                        </Button>
+                                    </GridListTile>
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                        <Button className={classes.remoteButton}>
+                                            <FullscreenIcon />
+                                        </Button>
+                                    </GridListTile>
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                        <Button className={classes.remoteButton}>
+                                            <ChevronRightIcon />
+                                        </Button>
+                                    </GridListTile>
+                
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                    </GridListTile>
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                        <Button className={classes.remoteButton}>
+                                            <ExpandMoreIcon />
+                                        </Button>
+                                    </GridListTile>
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                    </GridListTile>
+                
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                        <Button className={classes.remoteButton}>
+                                            <ArrowBackIcon />
+                                        </Button>
+                                    </GridListTile>
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                    </GridListTile>
+                                    <GridListTile cols={1} className={classes.gridButtonTile}>
+                                        <Button className={classes.remoteButton}>
+                                            <HomeIcon />
+                                        </Button>
+                                    </GridListTile>
+                                </GridList>
+                            </ListItem>
+                        </List>
                     </DialogContent>
                     <DialogActions className={classes.dialogActions} >
-                        <Button  onClick={() => this.props.closeDialog() } color="primary" autoFocus>
+                        <Button  onClick={() => this.props.close() } color="primary" autoFocus>
                             OK
                         </Button>
                     </DialogActions>
-                    
-                </Dialog>
+                </SofaDialog>
         );
     }
 }
 
 TVDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(TVDialog));
+export default withStyles(styles)(TVDialog);

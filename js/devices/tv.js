@@ -93,7 +93,7 @@ class Tv extends React.Component {
                             <Switch color="primary" checked={this.state.powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
                         </ListItem>
                     </CardContent>
-                    <TvDialog sendAlexaCommand={this.props.sendAlexaCommand}  showdialog={this.state.showdialog} closeDialog={this.closeDialog} name={this.props.name} device={ this.props.device } deviceProperties={ this.props.deviceProperties } />
+                    <TvDialog sendAlexaCommand={this.props.sendAlexaCommand}  open={this.state.showdialog} close={this.closeDialog} name={this.props.name} device={ this.props.device } deviceProperties={ this.props.deviceProperties } />
                 </Card>
         );
     }

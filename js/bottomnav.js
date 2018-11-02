@@ -13,14 +13,19 @@ import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
 import SettingsIcon from '@material-ui/icons/Settings';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 
+// Z Index for dialogs is 1300, so this needs to be lower than that, but still very high to avoid glitches with switches showing through
+
 const styles = {
+
     root: {
-        minWidth: 320,
-        width: '100%',
         position: 'fixed',
         bottom: 0,
+        padding: 0,
         paddingBottom: "env(safe-area-inset-bottom)",
-        borderTop: "1px solid #eee"
+        boxSizing: "content-box",
+        minWidth: 320,
+        width: '100%',
+        zIndex: 1200,
     },
 };
 

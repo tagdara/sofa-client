@@ -1,27 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+
 import Paper from '@material-ui/core/Paper';
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
 import Avatar from '@material-ui/core/Avatar';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import SofaSlider from '../sofaSlider'
 
 const styles = theme => ({
 
-    stack: {
-        height: 44,
-        display: "flex",
-        flexGrow: 1,
-        paddingLeft: 16,
-        justifyContent: "space-between",
-        flexWrap: "wrap",
-    },
-    stackLabel: {
-        alignSelf: "center",
-    },
     sliderPaper: {
         display: "flex",
         flexDirection: "row",
@@ -70,17 +58,7 @@ class SonosVolume extends React.Component {
                     <Avatar onClick={ () => this.handleMuteChange()}>
                         {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                     </Avatar>
-                    <div className={classes.stack}>
-                        <Typography variant="subheading" className={classes.stackLabel} gutterBottom>{this.props.name}</Typography>
-                        <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.volume+"%"}</Typography>
-                        <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
-                            onChange={this.handlePreVolumeChange} 
-                            onAfterChange={this.handleVolumeChange} 
-                            trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
-                            handleStyle={{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -7, height: 16, width: 16}}
-                            railStyle={{ height: 3 }}
-                        />
-                    </div>
+                    <SofaSlider name={this.props.name} value={this.state.volume} preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} />
                 </Paper>
         );
     }

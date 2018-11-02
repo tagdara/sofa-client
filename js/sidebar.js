@@ -18,7 +18,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import DeviceSelect from "./deviceSelect"
 import GroupBuild from "./groupBuild"
 import RegionBuild from "./regionBuild"
-import AutomationBuilder from "./automationBuilder"
+import AutomationBuilder from "./automation/automationBuilder"
 import TuneIcon from '@material-ui/icons/Tune';
 
 

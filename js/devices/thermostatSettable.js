@@ -8,6 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
+import Button from '@material-ui/core/Button';
+
 import Typography from '@material-ui/core/Typography';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -95,7 +97,17 @@ const styles = theme => ({
         color: "white",
         margin: theme.spacing.unit,
     },
-
+    button: {
+        minWidth: 36
+    },
+    hotButton: {
+        minWidth: 36,
+        "&:hover" : {
+            backgroundColor: theme.palette.primary.light,
+        },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+    },
 });
 
 class ThermostatSettable extends React.Component {
@@ -189,12 +201,9 @@ class ThermostatSettable extends React.Component {
             </ListItem>
             <ListItem className={classes.chipLine}>
                     { this.supportedModes().map((mode) => (
-                        <Chip 
-                            key = {mode+'-mode'}
-                            label= {mode}
-                            className={ (this.props.deviceProperties.thermostatMode==mode) ? classes.hotchip : classes.chip }
-                            onClick={ (e) => this.handleSetMode(mode)}
-                        />
+                        <Button onClick={ (e) => this.handleSetMode(mode)} size="small" key = {mode+'m'} className={(this.props.deviceProperties.thermostatMode==mode) ? classes.hotButton : classes.button }>
+                        {mode}
+                        </Button>
                     ))}
             </ListItem>
             { this.state.hasOwnProperty('powerLevel') ?

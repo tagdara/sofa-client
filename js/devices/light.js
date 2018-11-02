@@ -16,14 +16,15 @@ import Avatar from '@material-ui/core/Avatar';
 import LightDialog from './lightDialog';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
-import deepOrange from '@material-ui/core/colors/deepOrange';
 import Paper from '@material-ui/core/Paper';
+import GridListTile from '@material-ui/core/GridListTile';
+import SofaSlider from "../sofaSlider"
 
 const styles = theme => ({
  
     litAvatar: {
-        color: '#fff',
-        backgroundColor: deepOrange[500],
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary.main,
     },
 
     stack: {
@@ -37,10 +38,10 @@ const styles = theme => ({
     stackLabel: {
         alignSelf: "center",
     },
-    sliderPaper: {
+    xsliderPaper: {
         display: "flex",
         flexDirection: "row",
-        padding: "16 8 16 16",
+        padding: "16 0 16 16",
         alignItems: "center",
         minWidth: 320,
     },
@@ -48,7 +49,35 @@ const styles = theme => ({
         marginTop: 4,
         marginLeft: 4,
         marginRight: 6,
+    },
+    tile: {
+        display: "flex",
+        flexGrow: 1,
+        height: 90,
+        paddingRight: 8,
+    },
+    sliderPaper: {
+        display: "flex",
+        flexDirection: "row",
+        padding: "16 8 16 16",
+        alignItems: "center",
+    },
+    nostack: {
+        height: 44,
+        display: "flex",
+        flexGrow: 1,
+        paddingLeft: 16,
+        justifyContent: "space-between",
+        alignItems: "center",
+        flexWrap: "wrap",
+        maxWidth: 480,
+        minWidth: 240,
+        boxSizing: "border-box",
+    },
+    lightSwitch: {
+        marginLeft: 8,
     }
+
 });
 
 class Light extends React.Component {
@@ -112,34 +141,21 @@ class Light extends React.Component {
         const { classes } = this.props;
 
         return (
-                <Paper className={classes.sliderPaper} elevation={0}>
+                <GridListTile className={classes.tile} cols={1} rows={1}>
+                    <Paper className={classes.sliderPaper} elevation={0} >
                     <Avatar className={this.state.powerState=="ON" ? classes.litAvatar: classes.avatar} onClick={ () => this.handleClickOpen()}>
                         <LightbulbOutlineIcon />
                     </Avatar>
-                    <div className={classes.stack}>
-                        <Typography variant="subheading" className={classes.stackLabel} gutterBottom>{this.props.name}</Typography>
-                        {this.state.brightness=="no" ?
-                            null :
-                            <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.brightness+"%"}</Typography>
-                        }
-                        {this.state.brightness=="no" ?
-                        null :
-                        <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.brightness}
-                            onChange={this.handlePreBrightnessChange} 
-                            onAfterChange={this.handleBrightnessChange} 
-                            trackStyle={ this.state.powerState=='ON' ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
-                            handleStyle={this.state.powerState=='ON' ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
-                            }
-                            railStyle={{ height: 3 }}
-                            disabled={ !this.state.powerState=='ON' }
-                        />
-                        }
-                    </div>
-                    <Switch color="primary" checked={this.state.powerState=='ON'} onChange={this.handlePowerChange} />
+                    {this.state.brightness=="no" ?
+                        <Typography variant="subheading" className={classes.nostack} gutterBottom>{this.props.name}</Typography>
+                        :
+                        <SofaSlider value={this.state.brightness} preChange={this.handlePreBrightnessChange} change={this.handleBrightnessChange} 
+                                    dis={this.state.powerState=='OFF'} name={this.props.name} />
+                    }
+                    <Switch color="primary" className={classes.lightSwitch} checked={this.state.powerState=='ON'} onChange={this.handlePowerChange} />
                     <LightDialog sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.open} name={ this.props.name } handleClose={this.handleClose} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
                 </Paper>
+                </GridListTile>
 
         );
     }

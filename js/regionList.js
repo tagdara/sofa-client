@@ -172,7 +172,7 @@ class RegionList extends React.Component {
             <DialogContent className={classes.dialogContent }>
                 <List className={classes.List} >
                     { Object.keys(this.state.regions).map(name => 
-                        <ListItem className={classes.listItem} key={ name+'-reg' } onClick={() => this.handleSelect(name)}>
+                        <ListItem className={classes.listItem} key={ name+'-reg' } onClick={ this.props.editMode ?  () => this.props.handleRegionEdit(name) : () => this.props.handleRegionSelect(name)}>
                             <ListItemIcon><PlaceIcon /></ListItemIcon>
                             <ListItemText primary={name} secondary={this.state.regions[name]['rooms'].length+' rooms'} />
                             {this.props.editMode ?

@@ -15,44 +15,20 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 const styles = theme => ({
-    paperLight: {
-        display: "flex",
-        alignItems: "center",
-        padding: "8 16",
-        width: "100%",
-        maxWidth: "480px",
-        boxSizing: "border-box",
-    },        
-    cardtext: {
-        minWidth: 0,
-        flexGrow:1,
-        display: "flex",
-        flexDirection: "column",
-        padding: "0 16",
-    },
-    xclosed: {
-        boxSizing: "border-box",
-        margin: 8,
+
+    closed: {
         backgroundColor: "#6a6",
         color: "#fff",
     },
-    xopen: {
-        boxSizing: "border-box",
-        margin: 8,
+    open: {
         backgroundColor: "#e66",
     },
     listItem: {
-        padding: "8 0",
+        padding: "12 16",
         width: '100%',
     },
 
 });
-
-    const filterShouldRender = filter => element => elseElement => {
-        if (filter==undefined || filter=='open') return element;
-            return elseElement;
-    }
-
 
 class Zone extends React.Component {
     
@@ -62,9 +38,9 @@ class Zone extends React.Component {
         return (
             <ListItem className={classes.listItem}>
                 { this.props.deviceProperties.position=='closed' ?
-                <Avatar className={classes.xclosed} onClick={ () => this.toggleFilter('all') }><DoneIcon className={classes.icon} /></Avatar>
+                <Avatar className={classes.closed} onClick={ () => this.toggleFilter('all') }><DoneIcon  /></Avatar>
                 :
-                <Avatar className={classes.xopen} onClick={ () => this.toggleFilter('all') }><ClearIcon className={classes.icon} /></Avatar>
+                <Avatar className={classes.open} onClick={ () => this.toggleFilter('all') }><ClearIcon /></Avatar>
                 }
                 <ListItemText primary={this.props.name}/>
             </ListItem>

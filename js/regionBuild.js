@@ -5,21 +5,14 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Slide from  '@material-ui/core/Slide';
 import Checkbox from  '@material-ui/core/Checkbox';
 
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import TuneIcon from '@material-ui/icons/Tune';
 import EditIcon from '@material-ui/icons/Edit';
@@ -37,6 +30,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import DeviceSelect from "./deviceSelect"
 import RegionList from "./regionList"
 import RoomSelect from "./roomSelect"
+import SofaDialog from "./sofaDialog"
 
 const styles = theme => ({
         
@@ -52,7 +46,7 @@ const styles = theme => ({
         width: "100%",
     },
     tabTitle: {
-        backgroundColor: theme.palette.primary[700],
+        backgroundColor: theme.palette.primary.main,
         padding: 0,
         paddingTop: "env(safe-area-inset-top)",
         display: "flex",
@@ -87,11 +81,6 @@ const styles = theme => ({
 
 });
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
-
-
 class RegionBuild extends React.Component {
     
     constructor(props) {
@@ -112,7 +101,6 @@ class RegionBuild extends React.Component {
 
     
     handleSave = (e) => {
-        console.log(this.state.regions)
         this.groupSaveChanges()
         this.props.close(e)
     }
@@ -150,7 +138,7 @@ class RegionBuild extends React.Component {
                 },
                 body: JSON.stringify(this.state.regions)
             })
-            .then(res=>console.log(res))
+
     }
     
     updateList = (regionname, roomlist) => {
@@ -182,7 +170,6 @@ class RegionBuild extends React.Component {
     
     handleClick = (name) => {
         if (!this.state.adding) {
-            console.log(name,this.state.regions[name])
             if (!this.state.regions[name].hasOwnProperty('rooms')) {
                 var srooms=[]
             } else {
@@ -192,36 +179,22 @@ class RegionBuild extends React.Component {
         }
     }
     
-    handleRegionSelect = (region) => {
+    handleRegionEdit = (region) => {
         this.setState({roomBrowser:true, selectedRegion: region})
     }
 
+
     render() {
         
-        const { classes, fullScreen  } = this.props;
+        const { classes  } = this.props;
         
         return (
-            <Dialog 
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'sm'}
-                open={this.props.open}  
-                onClose={this.props.close}
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
-                <DialogTitle className={classes.tabTitle}>
-                    <Toolbar className={classes.appBar} elevation={0}>
-                        <Typography variant="title" color="inherit" className={classes.dialogTitle}>Regions</Typography>
-                    </Toolbar>
-                </DialogTitle>
-
+            <SofaDialog open={this.props.open} close={this.props.close} title="Regions" >
                 { this.state.roomBrowser ?
                     <RoomSelect updateList={this.updateList} name={this.state.selectedRegion} selectedRooms={this.state.selectedRooms} open={this.state.roomBrowser} close={this.handleCloseRoomBrowser} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
                 : 
-                    <RegionList editMode={this.state.editMode} doneEditing={this.doneEditing} handleSelect={this.handleRegionSelect} />
+                    <RegionList editMode={this.state.editMode} doneEditing={this.doneEditing} handleRegionEdit={this.handleRegionEdit} handleRegionSelect={this.props.handleRegionSelect} />
                 }
-
                 <Divider />
                 <DialogActions className={classes.dialogActions} >
                     { !this.state.editMode ?
@@ -232,7 +205,7 @@ class RegionBuild extends React.Component {
                     <Button onClick={(e) => this.handleSave(e)} color="primary" autoFocus>OK</Button>
                     : null }
                 </DialogActions>
-            </Dialog>
+            </SofaDialog>
         )
     }
 
@@ -240,7 +213,6 @@ class RegionBuild extends React.Component {
 
 RegionBuild.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(RegionBuild));
+export default withStyles(styles)(RegionBuild);

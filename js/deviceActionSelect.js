@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { withData } from './dataContext';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -21,7 +22,7 @@ import TuneIcon from '@material-ui/icons/Tune';
 import ListIcon from '@material-ui/icons/List';
 import TvIcon from '@material-ui/icons/Tv';
 import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 
 
 const styles = theme => ({
@@ -48,15 +49,14 @@ const styles = theme => ({
         margin: '0 !important',
     },
     chip: {
-        background: "silver",
-        color: "black",
-        margin: theme.spacing.unit,
+        minWidth: 48,
+        color: "silver",
     },
 
     hotchip: {
+        minWidth: 48,
         background: "orangeRed",
         color: "white",
-        margin: theme.spacing.unit,
     },
         
 
@@ -74,7 +74,8 @@ class DeviceActionSelect extends React.Component {
             editingActions: false,
             adding: false,
             filter: '',
-            caticons: {'SCENE_TRIGGER':<TuneIcon />, 'ACTIVITY_TRIGGER':<ListIcon />, 'LIGHT':<LightbulbOutlineIcon />, 'BUTTON':<TouchAppIcon />, 'SPEAKER':<SpeakerIcon />, 'THERMOSTAT':<DataUsageIcon />, 'RECEIVER':<SpeakerGroupIcon />, 'TV':<TvIcon />}
+            icons: {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
+
         }
     }
     
@@ -110,13 +111,17 @@ class DeviceActionSelect extends React.Component {
         var cmds=[]
         return this.props.controllers[controller]
     }
+    
+    getIcon = (category, size='default') => {
 
-    getIcon = (category) => {
+        if (this.state.icons.hasOwnProperty(category)) {
+            var RealIcon=this.state.icons[category]
+        } else {
+            var RealIcon=DeveloperBoardIcon
+        }
         
-        if (this.state.caticons.hasOwnProperty(category)) {
-            return this.state.caticons[category]
-        } 
-        return <DeveloperBoardIcon />
+        return <RealIcon fontSize={size} />
+
     }
     
     filterIcon = (icon) => {
@@ -134,10 +139,10 @@ class DeviceActionSelect extends React.Component {
         return (
             <List className={classes.list} >
                 <ListItem className={classes.chipLine}>
-                { Object.keys(this.state.caticons).map((icon) => 
-                    <IconButton onClick={ () => this.filterIcon(icon)} className={ (this.state.filter==icon) ? classes.hotchip : classes.chip }>
-                        {this.state.caticons[icon]}
-                    </IconButton>
+                { Object.keys(this.state.icons).map((icon) => 
+                    <Button key={icon+"icon"} size="small" onClick={ () => this.filterIcon(icon)} className={ (this.state.filter==icon) ? classes.hotchip : classes.chip }>
+                        {this.getIcon(icon,'small')}
+                    </Button>
                 )}
                 </ListItem>
                 { this.actionDevices(this.props.devices).map((device) => (
@@ -152,7 +157,7 @@ class DeviceActionSelect extends React.Component {
                         <List className={classes.detailList}>
                             { this.getControllers(device).map((controller) => {
                                 return Object.keys(this.getControllerCommands(controller)).map((cmd) => (
-                                    <ListItem key={device.friendlyName+controller+cmd} className={classes.listItem} onClick={() => this.props.select(device.friendlyName, device.endpointId, controller, cmd)}>
+                                    <ListItem key={device.endpointId+controller+cmd} className={classes.listItem} onClick={() => this.props.select(device.friendlyName, device.endpointId, controller, cmd)}>
                                         <ListItemIcon><TuneIcon /></ListItemIcon>
                                         <ListItemText primary={cmd} secondary={controller} />
                                     </ListItem>
@@ -171,4 +176,4 @@ DeviceActionSelect.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(DeviceActionSelect);
+export default withData(withStyles(styles)(DeviceActionSelect));

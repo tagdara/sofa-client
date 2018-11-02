@@ -6,8 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from  '@material-ui/core/TextField';
 
-import Chip from '@material-ui/core/Chip';
-import ScheduleIcon from '@material-ui/icons/Schedule';
+import EventIcon from '@material-ui/icons/Event';
 
 
 const styles = theme => ({
@@ -17,7 +16,7 @@ const styles = theme => ({
         width: '100%',
     },
     activeIcon: {
-        backgroundColor: "#6666FF",
+        backgroundColor: theme.palette.primary.dark,
     },
 
 });
@@ -31,15 +30,15 @@ class ScheduleStart extends React.Component {
         
         return (
             <ListItem className={classes.listItem}> 
-                <Avatar className={ classes.activeIcon }><ScheduleIcon /></Avatar>
+                <Avatar className={ classes.activeIcon }><EventIcon /></Avatar>
                 <ListItemText primary="Starting on" />
                 <TextField
                     className={classes.dataInput}
                     type="datetime-local"
                     id={'specstart'}
                     margin={"normal"}
-                    value={this.props.time}
-                    onChange={(e) => this.props.editTime(e)}
+                    value={this.props.value}
+                    onChange={(e) => this.props.change(this.props.target, e.target.value)}
                 />
             </ListItem>
         )

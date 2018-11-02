@@ -13,20 +13,25 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 const styles = theme => ({
         
     listItem: {
+        display: "flex",
         padding: "16 0",
         width: '100%',
+        alignItems: "center",
     },
+    dataInput: {
+        width: 50,
+        margin:0,
+    },    
     activeIcon: {
-        backgroundColor: "#6666FF",
+        backgroundColor: theme.palette.primary.dark,
     },
     chip: {
         margin: "0 4",
     },
     hotChip: {
-        backgroundColor: "#6666FF",
+        backgroundColor: theme.palette.primary.dark,
         margin: "0 4",
     },
-    
 
 });
 
@@ -37,10 +42,10 @@ class ScheduleInterval extends React.Component {
         super(props);
 
         this.state = {
-            intervalUnits: ['days','hours','minutes'],
+            intervalUnits: ['day','hour','min'],
         };
     }
-
+    
     render() {
         
         const { classes } = this.props;
@@ -52,13 +57,13 @@ class ScheduleInterval extends React.Component {
                 <TextField
                     className={classes.dataInput}
                     id={'specint'}
-                    label={'Interval'}
                     margin={"normal"}
-                    value={this.props.interval}
-                    onChange={(e) => this.props.editInterval(e)}
+                    type="number"
+                    value={this.props.value}
+                    onChange={(e) => this.props.change(this.props.intervalTarget, e.target.value)}
                 />
                 { this.state.intervalUnits.map((unit) => 
-                    <Chip className={this.props.unit==unit ? classes.hotChip : classes.chip } key={unit}  label={unit} onClick={(e) => this.props.editUnit(unit)}/>
+                    <Chip className={this.props.unit==unit ? classes.hotChip : classes.chip } key={unit}  label={unit} onClick={(e) => this.props.change(this.props.unitTarget, unit)}/>
                 )}
             </ListItem>
         )

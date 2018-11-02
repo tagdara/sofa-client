@@ -101,18 +101,13 @@ class CameraDialog extends React.Component {
                 fullScreen={fullScreen}
                 fullWidth={true}
                 maxWidth={'md'}
-                open={this.props.showGrid}
-                onClose={this.props.closeDialog}
+                open={this.props.open}
+                onClose={this.props.close}
                 TransitionComponent={Transition}
                 className={fullScreen ? classes.fullDialog : classes.normalDialog }
                 PaperProps ={{ classes: { root: classes.paper}}}
             >
                 <DialogTitle className={classes.tabTitle}>
-                    <Toolbar className={classes.appBar} elevation={0}>
-                        <Typography variant="title" color="inherit" className={classes.dialogTitle}>
-                            Cameras
-                        </Typography>
-                    </Toolbar>
                     <Tabs className={classes.tabRow} value={this.state.frontTab} onChange={this.handleTab}>
                         <Tab label="Live" />
                         <Tab label="Recorded" />
@@ -133,9 +128,8 @@ class CameraDialog extends React.Component {
                 }
                 <Divider />
                 <DialogActions className={classes.dialogActions} >
-                    <Button onClick={(e) => this.props.closeDialog(e)} color="primary" autoFocus>OK</Button>
+                    <Button onClick={(e) => this.props.close(e)} color="primary" autoFocus>OK</Button>
                 </DialogActions>
-
             </Dialog>
         )
     }

@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import SonosGrid from './devices/sonosGrid';
 import SonosPlayerCard from './devices/sonosPlayerCard';
 import Slide from  '@material-ui/core/Slide';
+import { withData } from './dataContext';
 
 
 const styles = theme => ({
@@ -90,4 +91,4 @@ PlayerList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PlayerList);
+export default withData(withStyles(styles)(PlayerList));

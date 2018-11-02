@@ -17,7 +17,7 @@ const styles = theme => ({
         width: '100%',
     },
     activeIcon: {
-        backgroundColor: "#6666FF",
+        backgroundColor: theme.palette.primary.dark,
     },
     chipPad: {
         margin: "0 4",
@@ -41,14 +41,14 @@ class ScheduleTime extends React.Component {
         
         return (
             <ListItem className={classes.listItem}> 
-                <Avatar className={ classes.activeIcon }><ScheduleIcon /></Avatar>
+                <Avatar className={ classes.activeIcon } onClick={ () => this.props.clear(this.props.target) }><ScheduleIcon /></Avatar>
                 <ListItemText primary="At" />
                 <TextField
                     className={classes.dataInput}
                     type="time"
                     margin={"normal"}
-                    value={this.props.time}
-                    onChange={(e) => this.props.editTime(e)}
+                    value={this.props.value}
+                    onChange={(e) => this.props.change(this.props.target, e.target.value)}
                 />
             </ListItem>
         )

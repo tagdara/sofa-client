@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
+import SofaDialog from "../sofaDialog"
 
 import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
@@ -40,88 +41,19 @@ import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
-import Slide from  '@material-ui/core/Slide';
+import TextField from '@material-ui/core/TextField';
+
 
 const styles = theme => ({
 
-    card: {
-        display: 'flex',
-        maxWidth: '480px',
-        margin: 8,
-        boxSizing: "borderbox",
-        flexDirection: "row",
-        justifyContent: "space-between",
-    },
-    cardname: {
-        display: "flex",
-        flexDirection: "column",
-        paddingBottom: 8,
-    },
     content: {
         minWidth: 0,
         paddingBottom: 16,
     },
-    metadata: {
-        flex: 1,
-        display: "flex",
-        flexDirection: "column",
-    },
-    chip: {
-        background: "silver",
-        color: "black",
-        margin: theme.spacing.unit,
-    },
-
-    hotchip: {
-        background: "orangeRed",
-        color: "white",
-        margin: theme.spacing.unit,
-    },
-    paperLight: {
-        display: "flex",
-        alignItems: "center",
-        paddingLeft: 16,
-    },
-    stackedVolumeControl: {
-        paddingLeft: 16,
-        paddingRight: 16,
-        flex:1,
-    },
-    slider: {
-        paddingTop: 0,
-        paddingRight: 28,
-        paddingLeft: 10,
-    },
-    slidername: {
-        display: "flex",
-        paddingRight: 0,
-        paddingLeft: 10,
-        alignItems: "center",
-    },    
-    dialog: {
-        paddingTop: "env(safe-area-inset-top)",
-        paddingBottom: "env(safe-area-inset-bottom)",
-        maxWidth: '480px',
-        minWidth: '320px',
-        boxSizing: "border-box",
-    },
-    cover: {
-        minWidth: 62,
-        height: 62,
-        width: 62,
-        alignSelf: "flex-end",
-        margin: 16,
-    },
-    embeddedExpansion: {
-        padding:0,
-        display: "block",
-    },
-    chipLine: {
-        width: "100%",
-    },
     gridList: { 
         maxWidth: 320,
         paddingTop: 16,
+        margin: "0 auto !important",
     },
     gridButtonTile: {
         display: 'flex',
@@ -129,16 +61,16 @@ const styles = theme => ({
         justifyContent: 'center',
     },
     gridTitle: {
+        margin: 1,
         alignItems: "center",
         display: "flex",
         paddingBottom: 16,
         justifyContent: "space-around",
+    },
+    bigButton: {
+        height: "100%",
     }
 });
-
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
 
 class PinDialog extends React.Component {
     
@@ -152,6 +84,10 @@ class PinDialog extends React.Component {
     
     addNumberToPin = dig => {
         this.setState({ pin: this.state.pin+dig });
+    };  
+    
+    editPin = pin => {
+        this.setState({ pin: pin });
     };    
     
     submitPin() {
@@ -164,68 +100,67 @@ class PinDialog extends React.Component {
         const { classes, fullScreen } = this.props;
 
         return (
-            <Dialog 
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'xs'}
-                open={this.props.open}  
-                onClose={this.props.close}
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
-                <DialogActions>
-                    <IconButton onClick={() => this.props.close() }>
-                        <CloseIcon />
-                    </IconButton>
-                </DialogActions>
-                <DialogTitle className={classes.gridTitle}>
-                    Enter PIN
-                </DialogTitle>
-                <DialogContent>
+            <SofaDialog title="Enter PIN" open={this.props.open} close={this.props.close} >
+               <DialogContent>
                     <GridList cellHeight={80} className={classes.gridList} cols={3}>
-                        <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('1')}>1</Button>
+                        <GridListTile cols={3} className={classes.gridButtonTile} >
+                            <TextField
+                                className={classes.nameInput}
+                                id="required"
+                                margin="normal"
+                                variant="filled"
+                                value={this.state.pin}
+                                type="password"
+                                onChange={(e) => this.editPin(e.target.value) }
+                            />
+                        </GridListTile>
+                        <GridListTile cols={1} className={classes.gridButtonTile} onClick={() => this.addNumberToPin('1')}>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('1')}>1</Button>
                         </GridListTile>
                         <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('2')}>2</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('2')}>2</Button>
                         </GridListTile>
                         <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('3')}>3</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('3')}>3</Button>
                         </GridListTile>
                         <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('4')}>4</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('4')}>4</Button>
                         </GridListTile>
                         <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('5')}>5</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('5')}>5</Button>
                         </GridListTile>
                         <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('6')}>6</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('6')}>6</Button>
                         </GridListTile>
                         <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('7')}>7</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('7')}>7</Button>
                         </GridListTile>
                         <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('8')}>8</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('8')}>8</Button>
                         </GridListTile>
                         <GridListTile cols={1} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('9')}>9</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('9')}>9</Button>
                         </GridListTile>
                         <GridListTile cols={3} className={classes.gridButtonTile}>
-                            <Button size="small" variant="outlined" onClick={() => this.addNumberToPin('0')}>0</Button>
+                            <Button className={classes.bigButton} variant="outlined" onClick={() => this.addNumberToPin('0')}>0</Button>
                         </GridListTile>
                         <GridListTile cols={3} className={classes.gridButtonTile} >
-                            <Button size="large" onClick={() => this.submitPin()} autoFocus>Go</Button>
+                            <Button className={classes.bigButton} onClick={() => this.submitPin()} autoFocus>Go</Button>
                         </GridListTile>
                     </GridList>
                 </DialogContent>
-            </Dialog>
+                <DialogActions>
+                    <Button onClick={() => this.props.close() }>
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </SofaDialog>
         );
     }
 }
 
 PinDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(PinDialog));
+export default withStyles(styles)(PinDialog);

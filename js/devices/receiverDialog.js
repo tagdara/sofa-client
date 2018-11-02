@@ -8,8 +8,6 @@ import Paper from '@material-ui/core/Paper';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 
@@ -27,9 +25,8 @@ import Button from '@material-ui/core/Button';
 import Switch from '@material-ui/core/Switch';
 import Divider from '@material-ui/core/Divider';
 
-import Toolbar from '@material-ui/core/Toolbar';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Slide from  '@material-ui/core/Slide';
+import SofaDialog from '../sofaDialog';
+
 
 const styles = theme => ({
 
@@ -132,9 +129,7 @@ const styles = theme => ({
 
 });
 
-function Transition(props) {
-  return <Slide direction="up" {...props} />;
-}
+
 
 class ReceiverDialog extends React.Component {
     
@@ -200,22 +195,7 @@ class ReceiverDialog extends React.Component {
         const { classes, fullScreen} = this.props;
 
         return (
-                <Dialog 
-                    fullScreen={fullScreen}
-                    fullWidth={true}
-                    maxWidth={'sm'}
-                    open={this.props.showdialog}
-                    onClose={() => this.props.closeDialog()}
-                    TransitionComponent={Transition}
-                    className={fullScreen ? classes.fullDialog : classes.normalDialog }
-                >
-                    <DialogTitle className={classes.tabTitle}>
-                        <Toolbar elevation={0}>
-                            <Typography variant="title" color="inherit" className={classes.dialogTitle}>
-                                {this.props.name}
-                            </Typography>
-                        </Toolbar>
-                    </DialogTitle>
+                <SofaDialog title={this.props.name} open={this.props.showdialog} close={this.props.closeDialog} >
                     <DialogContent className={classes.content}>
                     <List>
                         <ListItem  className={classes.powerLine}>
@@ -280,14 +260,13 @@ class ReceiverDialog extends React.Component {
                         </Button>
                     </DialogActions>
                     
-                </Dialog>
+                </SofaDialog>
         );
     }
 }
 
 ReceiverDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(ReceiverDialog));
+export default withStyles(styles)(ReceiverDialog);

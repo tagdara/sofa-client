@@ -1,7 +1,9 @@
 import React from "react";
-import Receiver from './devices/receiver';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+
+import { withData } from './dataContext';
+import Receiver from './devices/receiver';
 
 
 const styles = theme => ({
@@ -82,4 +84,4 @@ ReceiverList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ReceiverList);
+export default withData(withStyles(styles)(ReceiverList));

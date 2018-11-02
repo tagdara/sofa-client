@@ -1,27 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, withTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import StopIcon from '@material-ui/icons/Stop';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
+
+import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
+
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import PauseIcon from '@material-ui/icons/Pause';
+import QueueMusicIcon from '@material-ui/icons/QueueMusic';
+import StopIcon from '@material-ui/icons/Stop';
+import SkipNextIcon from '@material-ui/icons/SkipNext';
+import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
+import ViewModuleIcon from '@material-ui/icons/ViewModule';
+
+import { withData } from '../dataContext';
 import SonosVolume from './sonosvolume';
 import SonosCover from './sonosCover';
 import SonosFavorites from './sonosFavorites';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
 
 const styles = theme => ({
 
@@ -65,7 +69,7 @@ const styles = theme => ({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: '#eee',
+        backgroundColor: theme.palette.background.default,
         opacity: "0.8",
     },
     dialogSongTextBox: {
@@ -149,8 +153,10 @@ class SonosPlayerCard extends React.Component {
         // This ensures that if the player selected is not a coordinator, the coordinator is selected instead.
         var changes={}
         
-        if (nextProps.deviceProperties[nextProps.name].hasOwnProperty('input')) {
-            changes.playerName=nextProps.deviceProperties[nextProps.name].input         
+        if (nextProps.deviceProperties.hasOwnProperty(nextProps.name)) {
+            if (nextProps.deviceProperties[nextProps.name].hasOwnProperty('input')) {
+                changes.playerName=nextProps.deviceProperties[nextProps.name].input
+            }
         }
 
         return changes
@@ -179,22 +185,22 @@ class SonosPlayerCard extends React.Component {
     handlePlayPause = event => {
         event.stopPropagation();
         if (this.props.deviceProperties[this.state.playerName].playbackState=='PLAYING') {
-            this.props.sendAlexaCommand(this.state.playerName,'','MusicController',"Pause")
+            this.props.sendAlexaCommand(this.state.playerName, this.props.device.endpointId, 'MusicController', "Pause")
         } else {
-            this.props.sendAlexaCommand(this.state.playerName,'','MusicController',"Play")
+            this.props.sendAlexaCommand(this.state.playerName, this.props.device.endpointId, 'MusicController',"Play")
         }
     }; 
 
 
     handleSkip = event => {
         event.stopPropagation();
-        this.props.sendAlexaCommand(this.state.playerName,'','MusicController',"Skip")
+        this.props.sendAlexaCommand(this.state.playerName, this.props.device.endpointId, 'MusicController', "Skip")
     }; 
 
 
     handleStop = event => {
         event.stopPropagation();
-        this.props.sendAlexaCommand(this.state.playerName,'','MusicController',"Stop")
+        this.props.sendAlexaCommand(this.state.playerName,  this.props.device.endpointId, 'MusicController', "Stop")
     }; 
     
     toggleOverlay = event => {
@@ -223,7 +229,7 @@ class SonosPlayerCard extends React.Component {
 
     render() {
 
-        const { classes, theme } = this.props;
+        const { classes } = this.props;
 
         return ( 
                     //&& this.props.deviceProperties[this.state.playerName].hasOwnProperty('input') ?
@@ -282,7 +288,6 @@ class SonosPlayerCard extends React.Component {
 
 SonosPlayerCard.propTypes = {
     classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(SonosPlayerCard);
+export default withTheme()(withStyles(styles)(SonosPlayerCard));

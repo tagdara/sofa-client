@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
+import { withData } from './dataContext';
 import Tv from './devices/tv';
 
 const styles = theme => ({
@@ -34,4 +35,4 @@ TvList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(TvList);
+export default withData(withStyles(styles)(TvList));

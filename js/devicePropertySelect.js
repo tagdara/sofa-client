@@ -48,16 +48,22 @@ const styles = theme => ({
     sumexp: {
         margin: '0 !important',
     },
-    chip: {
-        minWidth: 48,
-        color: "silver",
+    button: {
+        minWidth: 36,
+        marginRight: 2,
     },
-
-    hotchip: {
-        minWidth: 48,
-        background: "orangeRed",
-        color: "white",
+    hotButton: {
+        marginRight: 2,
+        minWidth: 36,
+        "&:hover" : {
+            backgroundColor: theme.palette.primary.light,
+        },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
     },
+    chipline: {
+        width: "100%",
+    }
         
 
 });
@@ -152,7 +158,7 @@ class DevicePropertySelect extends React.Component {
             <List className={classes.list} >
                 <ListItem className={classes.chipLine}>
                 { Object.keys(this.state.icons).map((icon) => 
-                    <Button key={icon+"icon"} size="small" onClick={ () => this.filterIcon(icon)} className={ (this.state.filter==icon) ? classes.hotchip : classes.chip }>
+                    <Button key={icon+"icon"} size="small" onClick={ () => this.filterIcon(icon)} className={ (this.state.filter==icon) ? classes.hotButton : classes.button }>
                         {this.getIcon(icon,'small')}
                     </Button>
                 )}

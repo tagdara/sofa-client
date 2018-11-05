@@ -58,12 +58,52 @@ class ScheduleDialog extends React.Component {
     openEditor = (item) => {
         this.setState({ builder: true, selectedSchedule: item})
     }
+    
+    toggleSchedule = (scheduleName) => {
+        var scheduledata=this.state.schedule[scheduleName]
+        scheduledata['enabled']=!scheduledata['enabled']
+        
+    }
+    
     closeEditor = (reloadNeeded) => {
         if (reloadNeeded) {
             this.reloadSchedule()
         }
         this.setState({ builder: false })
     }
+    
+    saveSchedule = (scheduleName, savedata) => {
+        
+        var savedata=this.saveScheduleData()
+        if (savedata) {
+            fetch('/save/logic/schedule/'+this.state.scheduleName, {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(savedata)
+            }).then(this.reloadSchedule())
+        } else {
+            console.log('was not ready', this.state)
+        }
+    } 
+    
+    deleteSchedule = (scheduleName) => {
+
+        var schedule=this.state.schedule
+        delete schedule[scheduleName]
+
+        fetch('/del/logic/schedule/'+scheduleName, {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify([])
+            })
+            .then(this.setState({schedule:schedule}));
+    } 
 
     render() {
 
@@ -72,7 +112,7 @@ class ScheduleDialog extends React.Component {
                 { this.state.builder ?
                     <ScheduleEditor selectedSchedule={this.state.selectedSchedule} scheduleData={this.state.schedule[this.state.selectedSchedule]} clear={this.testClear} close={this.closeEditor} devices={this.props.devices} controllers={this.state.controllers} schedule={this.state.schedule} / >
                 :
-                    <ScheduleList schedule={this.state.schedule} openBuilder={this.openEditor} close={this.props.close} />
+                    <ScheduleList schedule={this.state.schedule} openEditor={this.openEditor} close={this.props.close} delete={this.deleteSchedule} toggle={this.toggleSchedule} />
                 }
             </SofaDialog>
         )

@@ -7,7 +7,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
 import Slide from  '@material-ui/core/Slide';
-import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
@@ -49,6 +50,9 @@ const styles = theme => ({
         display: "flex",
         flexGrow: 1,
         flexDirection: "column",
+    },
+    tabs: {
+        color: theme.palette.primary.contrastText,
     }
 
 });
@@ -58,7 +62,7 @@ function Transition(props) {
 }
 
 class SofaDialog extends React.Component {
-    
+
     render() {
         
         const { classes, fullScreen  } = this.props;
@@ -80,8 +84,12 @@ class SofaDialog extends React.Component {
                             </Typography>
                         </Toolbar>
                         {this.props.tabs ?
-                        <Toolbar elevation={0} className={classes.tabBar} >    
-                            {this.props.tabs}
+                        <Toolbar elevation={0} className={classes.tabBar} >
+                            <Tabs centered className={classes.tabs} value={this.props.tabValue} onChange={this.props.tabChange}>
+                                { this.props.tabs.map((name) => 
+                                    <Tab key={name} label={name} />
+                                )}
+                            </Tabs>
                         </Toolbar>
                         : null }
                     </DialogTitle>

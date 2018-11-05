@@ -228,23 +228,15 @@ class LightGrid extends React.Component {
         return (
             <SofaDialog title={ this.props.lightCount('on')>0 ? this.props.lightCount('on')+" lights are on" : "All lights off"} 
                         maxWidth='md' open={this.props.showGrid} close={this.props.closeGrid} 
-                        tabs={
-                            <Tabs indicatorColor="secondary"
-                                        textColor="secondary"
-                                        centered value={this.state.frontTab} onChange={this.handleTab}>
-                                <Tab label="On" />
-                                <Tab label="All" />
-                            </Tabs>
-                        }
-            >
+                        tabValue={this.state.frontTab} tabChange={this.handleTab} tabs={ ["On","All"] } >
                 { this.props.name=='all' ?
-                null
+                    null
                 :
-                <Card className={classes.card}>
-                    <CardContent className={classes.content}>
-                    <GroupLight sendAlexaCommand={this.props.sendAlexaCommand} key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } />
-                    </CardContent>
-                </Card>
+                    <Card className={classes.card}>
+                        <CardContent className={classes.content}>
+                            <GroupLight sendAlexaCommand={this.props.sendAlexaCommand} key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } />
+                        </CardContent>
+                    </Card>
                 }
                 <Divider />
                 <DialogContent className={classes.dialogContent }>

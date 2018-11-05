@@ -7,7 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { withData } from './dataContext';
+import CompareIcon from '@material-ui/icons/Compare';
+import { withThemeChange } from './dataContext';
+
 
 const styles = theme => ({
         
@@ -61,6 +63,9 @@ class SofaAppBar extends React.Component {
                         <Typography variant="title" color="inherit" className={classes.flex}>
                             Home
                         </Typography>
+                        <IconButton onClick={() => this.props.setColorScheme(this.props.colorScheme=='dark' ? 'light' : 'dark')}>
+                            <CompareIcon />
+                        </IconButton>
                         <IconButton onClick={()=> this.otherPort('8443','_editor')}>
                             <EditIcon />
                         </IconButton>
@@ -77,4 +82,4 @@ SofaAppBar.propTypes = {
     
 };
 
-export default withStyles(styles)(SofaAppBar);
+export default withThemeChange(withStyles(styles)(SofaAppBar));

@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from  '@material-ui/core/TextField';
 
-import Chip from '@material-ui/core/Chip';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import ViewWeekIcon from '@material-ui/icons/ViewWeek';
 import Button from '@material-ui/core/Button';
@@ -22,9 +21,11 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.dark,
     },
     button: {
-        minWidth: 36
+        minWidth: 36,
+        marginRight: 2,
     },
     hotButton: {
+        marginRight: 2,
         minWidth: 36,
         "&:hover" : {
             backgroundColor: theme.palette.primary.light,

@@ -19,9 +19,15 @@ const styles = theme => ({
     activeIcon: {
         backgroundColor: theme.palette.primary.dark,
     },
-    chipPad: {
-        margin: "0 4",
-    }
+    shortLabel: {
+        flexGrow:0,
+    },
+    input: {
+        marginTop:0,
+        flexGrow:0,
+        marginBottom:0,
+    },
+
 });
 
 
@@ -42,9 +48,9 @@ class ScheduleTime extends React.Component {
         return (
             <ListItem className={classes.listItem}> 
                 <Avatar className={ classes.activeIcon } onClick={ () => this.props.clear(this.props.target) }><ScheduleIcon /></Avatar>
-                <ListItemText primary="At" />
+                <ListItemText className={ classes.shortLabel} primary="At" />
                 <TextField
-                    className={classes.dataInput}
+                    className={classes.input}
                     type="time"
                     margin={"normal"}
                     value={this.props.value}

@@ -15,10 +15,12 @@ export class DataProvider extends Component {
             devices: [],
             deviceState: {},
             controllers: {},
+            virtualDevices: {},
             
             server: "wss://"+window.location.hostname+"/ws",
             socket: null,
             websocketStatus: 'init',
+            colorScheme: '',
         };
         
         this.pendingDevs=[];
@@ -87,16 +89,19 @@ export class DataProvider extends Component {
 
 
     sendAlexaCommand = (deviceName, endpointId, controller, command, val) => {
-        
         if (endpointId=='') {
             console.log('No endpoint ID was provided for ', deviceName, controller, command, val)
             endpointId=this.deviceByName(deviceName).endpointId
         }
-        
+        console.log('xx',this.state.controllers[controller][command])
         var header={"name": command, "namespace":"Alexa." + controller, "payloadVersion":"3", "messageId": this.uuidv4(), "correlationToken": this.uuidv4()}
         var endpoint={"endpointId": endpointId, "cookie": {}, "scope":{ "type":"BearerToken", "token":"access-token-from-skill" }}
-        var payload=JSON.parse(JSON.stringify(this.state.controllers[controller][command]))
-        
+        if (this.state.controllers[controller][command]) {
+            var payload=JSON.parse(JSON.stringify(this.state.controllers[controller][command]))
+        } else {
+            var payload={}
+        }
+
         for (var prop in payload) {
             if (payload[prop]=='value') {
                 payload[prop]=val
@@ -161,19 +166,6 @@ export class DataProvider extends Component {
         this.setState({devices: devs}, 
             () =>  this.updateMultipleDevices(udl)
         )
-    }
-
-
-    componentDidMount() {
-        console.log('Fetching device info')
-        fetch('/deviceList')
- 		    .then(result=>result.json())
-            .then(data=>this.updateDeviceList(data))
-            //.then(this.setState({devices: data})
-            
-  	    fetch('/controllercommands')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({controllers:result}));
     }
     
     devicesByCategory = category => {
@@ -248,6 +240,10 @@ export class DataProvider extends Component {
         return devstate
         
     }
+
+    setColorScheme = scheme => {
+        this.setState({colorScheme: scheme})
+    }
     
     componentDidMount() {
         window.addEventListener('resize', this.handleWindowSizeChange);
@@ -260,6 +256,10 @@ export class DataProvider extends Component {
   	    fetch('/controllercommands')
  		    .then(result=>result.json())
             .then(result=>this.setState({controllers:result}));
+
+  	    fetch('/list/logic/virtualDevices')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({ virtualDevices:result }))
     }
 
     render() {
@@ -270,6 +270,7 @@ export class DataProvider extends Component {
                 value={{
                     devices: this.state.devices,
                     deviceState: this.state.deviceState,
+                    virtualDevices: this.state.virtualDevices,
                     websocketStatus: this.state.websocketStatus,
                     controllers:this.state.controllers,
                     sendAlexaCommand: this.sendAlexaCommand,
@@ -277,6 +278,8 @@ export class DataProvider extends Component {
                     devicesByCategory: this.devicesByCategory,
                     propertiesFromDevices: this.propertiesFromDevices,
                     deviceByEndpointId: this.deviceByEndpointId,
+                    colorScheme: this.state.colorScheme,
+                    setColorScheme: this.setColorScheme,
                 }}
             >
                 {children}
@@ -296,6 +299,35 @@ export class DataProvider extends Component {
     }
 }
 
+export function withSofaTheme(Component) {
+
+    return function DataComponent(props) {
+        return (
+            <DataContext.Consumer>
+                {
+                    ({colorScheme}) => 
+                        <Component {...props} colorScheme={colorScheme} />
+                }
+            </DataContext.Consumer>
+        );
+    };
+    
+}
+
+export function withThemeChange(Component) {
+
+    return function DataComponent(props) {
+        return (
+            <DataContext.Consumer>
+                {
+                    ({setColorScheme, colorScheme}) => 
+                        <Component {...props} setColorScheme={setColorScheme} colorScheme={colorScheme} />
+                }
+            </DataContext.Consumer>
+        );
+    };
+    
+}
 
 export function withData(Component) {
     // ...and returns another component...
@@ -305,8 +337,8 @@ export function withData(Component) {
         return (
             <DataContext.Consumer>
                 {
-                ({controllers, deviceByEndpointId, devices, deviceState, websocketStatus, deviceByName, devicesByCategory, propertiesFromDevices, sendAlexaCommand}) => 
-                    <Component {...props} deviceByEndpointId={deviceByEndpointId} controllers={controllers} deviceByName={deviceByName} deviceProperties={propertiesFromDevices(devicesByCategory(props.Category))} devicesByCategory={devicesByCategory} propertiesFromDevices={propertiesFromDevices} sendAlexaCommand={sendAlexaCommand} devices={devicesByCategory(props.Category)} />
+                ({controllers, virtualDevices, deviceByEndpointId, devices, deviceState, websocketStatus, deviceByName, devicesByCategory, propertiesFromDevices, sendAlexaCommand}) => 
+                    <Component {...props} deviceByEndpointId={deviceByEndpointId} controllers={controllers} virtualDevices={virtualDevices} deviceByName={deviceByName} deviceProperties={propertiesFromDevices(devicesByCategory(props.Category))} devicesByCategory={devicesByCategory} propertiesFromDevices={propertiesFromDevices} sendAlexaCommand={sendAlexaCommand} devices={devicesByCategory(props.Category)} />
                 }
             </DataContext.Consumer>
         );

@@ -21,13 +21,16 @@ import OperatorButton from "./operatorButton"
 
 const styles = theme => ({
         
-    areaInput: {
+    input: {
         marginTop:0,
         marginLeft: 16,
-        maxWidth: "25%",
+        flexGrow:1,
+        flexBasis:0,
     },
     deviceName: {
         padding: 0,
+        flexGrow:1,
+        flexBasis:0,
     },
     dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",
@@ -90,7 +93,7 @@ class AutomationCondition extends React.Component {
                 <ListItemText primary={name} secondary={condition.controller} className={classes.deviceName}/>
                 <OperatorButton index={index} value={condition.operator} setOperator={ this.editOperatorValue }/>
                 <TextField
-                        className={classes.areaInput}
+                        className={classes.input}
                         id={'condition'+index}
                         label={propertyName}
                         margin="normal"

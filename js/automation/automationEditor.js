@@ -269,7 +269,7 @@ class AutomationEditor extends React.Component {
                         )}
                         <Divider />
                         {this.state.actions.map((action,index) =>
-                            <AutomationAction moveUp={this.moveActionUp} moveDown={this.moveActionDown} save={this.saveAction} edit={this.state.editingActions} action={action} delete={this.deleteAction} actionValue={this.getActionValue(action.controller, action.command)} index={index} name={this.props.deviceByEndpointId(action.endpointId).friendlyName} key={ this.props.name+index } />
+                            <AutomationAction moveUp={this.moveActionUp} moveDown={this.moveActionDown} save={this.saveAction} edit={this.state.editingActions} action={action} delete={this.deleteAction} actionValue={this.getActionValue(action.controller, action.command)} index={index} device={ this.props.deviceByEndpointId(action.endpointId) } name={this.props.deviceByEndpointId(action.endpointId).friendlyName} key={ this.props.name+index } />
                         )}
                     </List>
                 }

@@ -5,8 +5,12 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { withData } from './dataContext';
+
 import Shade from './devices/shade';
 import Sprinkler from './devices/sprinkler';
+import StatusLock from './devices/statusLock';
+
 import Divider from '@material-ui/core/Divider';
 
 const styles = theme => ({
@@ -27,36 +31,49 @@ class VirtualList extends React.Component {
         this.state = {
             devices: {},
         };
-    }   
+    }
     
-    componentDidMount() {
-  	    fetch('/config/virtualDevices')
- 		    .then(result=>result.json())
- 		    .then(data=>this.setState({devices:data}))
+    getStatusProp = statusDef => {
+        var dev=this.props.deviceByEndpointId(statusDef.endpointId)
+        var dp=this.props.propertiesFromDevices(dev)[dev.friendlyName]
+        return dp[statusDef.property]
     }
     
     render() {
     
-        const { classes } = this.props;
+        const { classes, virtualDevices, deviceByEndpointId, propertiesFromDevices } = this.props;
         
         return (
-            <div className={classes.list}>
-                {
-                    Object.keys(this.state.devices).map((key, index) => (
-                        this.state.devices[key]['type']=='windowshade' ?
-                            <Shade key={ index } name={ key } up={ this.state.devices[key]['commands']['up']['target']  }  stop={ this.state.devices[key]['commands']['stop']['target'] }  down={ this.state.devices[key]['commands']['down']['target']  } sendAlexaCommand={this.props.sendAlexaCommand} />
-                            :null
-                    ))
-                }
-                <Divider />
-                {
-                    Object.keys(this.state.devices).map((key, index) => (
-                        this.state.devices[key]['type']=='water' ?
-                            <Sprinkler key={ index } name={ key } on={ this.state.devices[key]['commands']['on']['target']  }  off={ this.state.devices[key]['commands']['off']['target']  } sendAlexaCommand={this.props.sendAlexaCommand} />
-                            :null
-                    ))
-                }
-            </div> 
+            virtualDevices ?
+                <List className={classes.list}>
+                    {
+                        Object.keys(virtualDevices).map((key, index) => (
+                            virtualDevices[key]['type']=='shade' ?
+                                <Shade key={ index } name={ key } endpointId={ virtualDevices[key].endpointId } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
+                                :null
+                        ))
+                    }
+                    <Divider />
+                    {
+                        Object.keys(virtualDevices).map((key, index) => (
+                            virtualDevices[key]['type']=='water' ?
+                                <Sprinkler key={ index } name={ key } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
+                                :null
+                        ))
+                    }
+                    <Divider />
+                    {
+                        Object.keys(virtualDevices).map((key, index) => (
+                            virtualDevices[key]['type']=='lock' ?
+                                <StatusLock key={ index } name={ key }
+                                    status={ this.getStatusProp(virtualDevices[key].status) }
+                                    commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
+                                :null
+                        ))
+                    }
+    
+                </List>
+            : null 
         );
     }
 }
@@ -65,4 +82,4 @@ VirtualList.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(VirtualList);
+export default withData(withStyles(styles)(VirtualList));

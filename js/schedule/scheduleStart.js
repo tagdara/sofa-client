@@ -18,11 +18,32 @@ const styles = theme => ({
     activeIcon: {
         backgroundColor: theme.palette.primary.dark,
     },
-
+    shortLabel: {
+        flexGrow:0,
+    },
+    input: {
+        marginTop:0,
+        flexGrow:0,
+        marginBottom:0,
+    },
 });
 
 
 class ScheduleStart extends React.Component {
+
+    shortTimeFormat = (thisdate) => {
+        if (thisdate) {
+            var longdate=thisdate
+        } else {
+            var longdate=new Date().toISOString().replace('Z','')
+        }
+
+        if (longdate.split(':').length>2) {
+            longdate=longdate.split(':')[0]+":"+longdate.split(':')[1]
+        }
+
+        return longdate
+    }
 
     render() {
         
@@ -31,13 +52,13 @@ class ScheduleStart extends React.Component {
         return (
             <ListItem className={classes.listItem}> 
                 <Avatar className={ classes.activeIcon }><EventIcon /></Avatar>
-                <ListItemText primary="Starting on" />
+                <ListItemText className={classes.shortLabel} primary="Starting on" />
                 <TextField
-                    className={classes.dataInput}
+                    className={classes.input}
                     type="datetime-local"
                     id={'specstart'}
                     margin={"normal"}
-                    value={this.props.value}
+                    value={this.props.value ? this.props.value : this.shortTimeFormat() }
                     onChange={(e) => this.props.change(this.props.target, e.target.value)}
                 />
             </ListItem>

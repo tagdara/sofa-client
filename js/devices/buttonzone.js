@@ -16,6 +16,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import TuneIcon from '@material-ui/icons/Tune';
 
 import PinDialog from './pinDialog';
+import SofaSnackbar from '../sofaSnackbar';
 
 
 const styles = theme => ({
@@ -117,34 +118,10 @@ class ButtonZone extends React.Component {
                         }
                     </ListItem>
                     { this.state.pinDevices.indexOf(this.props.name) > -1 ?
-                    <PinDialog submitPin={this.submitPin} open={this.state.showPinPad} unlocker={ this.handlePinPress } close={ this.closeDialog }/>
+                        <PinDialog submitPin={this.submitPin} open={this.state.showPinPad} unlocker={ this.handlePinPress } close={ this.closeDialog }/>
                     : null}
                     { this.state.pinDevices.indexOf(this.props.name) > -1 ?
-                    <Snackbar
-                        className={classes.snackbar}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        open={this.state.showSnackBar}
-                        autoHideDuration={10000}
-                        onClose={this.handleSnackBarClose}
-                        ContentProps={{
-                            'aria-describedby': 'message-id',
-                        }}
-                        message={<span id="message-id">Invalid PIN</span>}
-                        action={[
-                            <IconButton
-                                key="close"
-                                aria-label="Close"
-                                color="inherit"
-                                className={classes.close}
-                                onClick={this.handleSnackBarClose}
-                            >
-                                <CloseIcon />
-                            </IconButton>,
-                        ]}
-                    />
+                        <SofaSnackbar open={this.state.showSnackBar} close={this.handleSnackBarClose} message={"Invalid PIN"} />
                     : null}
                 </Paper>
         );

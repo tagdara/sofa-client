@@ -20,9 +20,12 @@ const styles = theme => ({
     activeIcon: {
         backgroundColor: theme.palette.primary.dark,
     },
-    chipPad: {
-        margin: "0 4",
-    }
+    input: {
+        marginTop:0,
+        marginLeft: 16,
+        flexGrow:1,
+        flexBasis:0,
+    },
 });
 
 
@@ -35,19 +38,14 @@ class ScheduleName extends React.Component {
         return (
                 <ListItem className={classes.listItem}>
                     <Avatar className={this.props.value ? classes.activeIcon : classes.passiveIcon }><EditIcon /></Avatar>
-                    <ListItemText>
-                        <TextField
-                            className={classes.nameInput}
-                            id="required"
-                            label="Schedule name"
-                            margin="none"
-                            value={this.props.value}
-                            onChange={(e) => this.props.change(this.props.target, e.target.value) }
-                        />
-                    </ListItemText>
-                    <ListItemText>
-                        {this.props.scheduleName}
-                    </ListItemText>
+                    <TextField
+                        className={classes.input}
+                        id="required"
+                        label="Schedule name"
+                        margin="none"
+                        value={this.props.value}
+                        onChange={(e) => this.props.change(this.props.target, e.target.value) }
+                    />
                 </ListItem>
         )
     }

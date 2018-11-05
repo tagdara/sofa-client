@@ -19,9 +19,9 @@ import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
 import { withData } from './dataContext';
 import RegionBuild from "./regionBuild"
-import Area from './area';
+import Area from './area/area';
 import RegionSelect from './regionSelect';
-import AreaDialog from './areaDialog';
+import AreaDialog from './area/areaDialog';
 import LightListDialog from './lightListDialog';
 import LightGrid from './devices/lightgrid'
 import SofaCard from './sofaCard';

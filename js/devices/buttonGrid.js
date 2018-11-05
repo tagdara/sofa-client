@@ -15,13 +15,15 @@ const styles = theme => ({
         flexDirection: "column",
         justifyContent: "space-between",
         padding: 0,
+        backgroundColor: theme.palette.background.default,
     },    
     content: {
         minWidth: 0,
         padding: "0 !important",
         flexGrow:1,
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+        flexWrap: "wrap",
     },
 
 });

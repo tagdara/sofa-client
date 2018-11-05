@@ -16,11 +16,9 @@ import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from  '@material-ui/core/TextField';
 
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Switch from '@material-ui/core/Switch';
 import Chip from '@material-ui/core/Chip';
@@ -44,9 +42,10 @@ const styles = theme => ({
         
     list: {
         minWidth: 320,
+        padding: "0 16",
     },
     dialogContent: {
-        padding: "0 16",
+        padding: 0,
     },
     content: {
         minWidth: 0,
@@ -55,24 +54,7 @@ const styles = theme => ({
         display: "flex",
         alignItems: "center"
     },
-    thermostatList: {
-        width: "100%",
-    },
-    tabTitle: {
-        backgroundColor: theme.palette.primary[700],
-        padding: 0,
-        paddingTop: "env(safe-area-inset-top)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
-    },
-    dialogTitle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexGrow: 1,
-        color: theme.palette.primary.contrastText,
-    },
+
     dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",
     },
@@ -133,13 +115,16 @@ class ScheduleEditor extends React.Component {
         if (this.state.scheduleType=='time') {
             scheduledata['data']
         }
-        console.log(scheduledata);
     }
     
     handleActionSelect = (deviceName, endpointId, controller, cmd) => {
-        console.log(deviceName, endpointId, controller, cmd)
-        this.setState({ scheduleAction: {'deviceName':deviceName, "endpointId":endpointId, "controller":controller, "command":cmd, "value":0}})
-        this.setState({ deviceSelect:false})
+        this.setState({ deviceSelect:false, scheduleAction: {'deviceName':deviceName, "endpointId":endpointId, "controller":controller, "command":cmd, "value":0}}, 
+            () => this.readyToSave()
+        )
+        
+        this.setState({ deviceSelect:false}, 
+            () => this.readyToSave()
+        )
     }
 
     editScheduleDays = (day) => {
@@ -150,34 +135,37 @@ class ScheduleEditor extends React.Component {
         } else {
             sdays.push(day)
         }
-        this.setState({scheduleDays: sdays})
+        this.setState({scheduleDays: sdays}, 
+            () => this.readyToSave()
+        )
     }
 
     changeValue = (name, value) => {
-        console.log(this.state)
-        console.log('change',name,value)
-        this.setState({ [name] : value })
-        this.setState({ready: this.readyToSave()})
+        this.setState({ [name] : value}, 
+            () => this.readyToSave()
+        )
     }
     
     readyToSave = () => {
+        var ready=false
         if (this.state.scheduleName && this.state.scheduleType && this.state.scheduleAction && this.state.scheduleStart) {
             if (this.state.scheduleType=='specificTime' && this.state.scheduleDaysType) {
                 if (this.state.scheduleDaysType=='daysOfTheWeek' && this.state.scheduleDays && this.state.scheduleTime) {
-                    return true
+                    ready=true
                 } else if (this.state.scheduleDaysType=='interval' && parseInt(this.state.scheduleInterval)>0 && this.state.scheduleTime) {
-                    return true
+                    ready=true
                 }
             } else if (this.state.scheduleType=='interval' && parseInt(this.state.scheduleInterval)>0 && this.state.scheduleIntervalUnit) {
-                return true
+                ready=true
             }
         }
-        return false
+        console.log('ready?',ready,' - ', this.state.scheduleName, this.state.scheduleType, this.state.scheduleAction, this.state.scheduleStart, parseInt(this.state.scheduleInterval), this.state.scheduleIntervalUnit)
+        this.setState({ready:ready})
     }
     
     saveScheduleData = () => {
 
-        if (!this.readyToSave ) {
+        if (!this.state.ready ) {
             return {}
         }
         
@@ -226,13 +214,14 @@ class ScheduleEditor extends React.Component {
     }
     
     componentDidMount() {
-        console.log(this.props.scheduleData)
-        console.log(this.props.selectedSchedule)
-        this.setState({scheduleName: this.props.selectedSchedule})
+
+        if (this.props.selectedSchedule) {
+            this.setState({scheduleName: this.props.selectedSchedule})
+        }
+
         if (this.props.scheduleData) {
-            var scheduleData={  enabled: this.props.scheduleData['enabled'],
-                                scheduleName: this.props.selectedSchedule,
-                                scheduleStart: this.props.scheduleData['start'].replace('Z',''),
+            var scheduleData={  scheduleStart:this.props.scheduleData['start'].replace('Z',''),
+                                enabled: this.props.scheduleData['enabled'],
                                 scheduleAction: this.props.scheduleData['action'],
                                 scheduleType: this.props.scheduleData['type']
             }
@@ -256,7 +245,7 @@ class ScheduleEditor extends React.Component {
             
             this.setState(scheduleData)
             this.setState(scheduleDetails)
-        }
+        } 
     }
 
     render() {
@@ -270,7 +259,7 @@ class ScheduleEditor extends React.Component {
                 { this.state.deviceSelect ?
                     <DeviceActionSelect select={this.handleActionSelect} />
                 :
-                    <List>
+                    <List className={classes.list}>
                         <ScheduleName target="scheduleName" change={this.changeValue} value={this.state.scheduleName} />
                         <Divider />
                         { !this.state.scheduleType ?
@@ -323,7 +312,11 @@ class ScheduleEditor extends React.Component {
                     {this.state.ready ?
                     <Button onClick={(e) => this.saveSchedule()} color="primary">SAVE</Button>
                     : null }
-                    <Button onClick={(e) => this.props.close()} color="primary">CANCEL</Button>
+                    {this.state.deviceSelect ?
+                        <Button onClick={() => this.setState({deviceSelect: false})}  color="primary">CANCEL</Button>
+                    :
+                        <Button onClick={(e) => this.props.close()} color="primary">CANCEL</Button>
+                    }
                 </DialogActions>
             </React.Fragment>
         )

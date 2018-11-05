@@ -2,9 +2,8 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import SonosGrid from './devices/sonosGrid';
-import SonosPlayerCard from './devices/sonosPlayerCard';
-import Slide from  '@material-ui/core/Slide';
+import SonosGrid from './sonos/sonosGrid';
+import SonosPlayerCard from './sonos/sonosPlayerCard';
 import { withData } from './dataContext';
 
 
@@ -17,10 +16,6 @@ const styles = theme => ({
         flexDirection: "column",
     },
 });
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
 
 class PlayerList extends React.Component {
 
@@ -73,7 +68,7 @@ class PlayerList extends React.Component {
             <div className={classes.list}>
                 {this.props.devices.map((device) =>
                     (device.friendlyName==this.state.activePlayer ?
-                        <SonosPlayerCard sendAlexaCommand={this.props.sendAlexaCommand} TransitionComponent={Transition} chooseActivePlayer={this.chooseActivePlayer} key={device.endpointId} handleGrid={this.handleGrid} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties } sendMessage={ this.props.sendMessage } />
+                        <SonosPlayerCard sendAlexaCommand={this.props.sendAlexaCommand} chooseActivePlayer={this.chooseActivePlayer} key={device.endpointId} handleGrid={this.handleGrid} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties } sendMessage={ this.props.sendMessage } />
                         :
                         null )
                     )}

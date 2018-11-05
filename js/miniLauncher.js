@@ -20,11 +20,13 @@ const styles = theme => ({
         
     card: {
         display: 'flex',
-        maxWidth: '480px',
+        minWidth: 160,
+        maxWidth: 480,
         flexGrow: 1,
         boxSizing: "border-box",
         justifyContent: "space-between",
         margin: 2,
+        flexBasis: 0
     },
     content: {
         minWidth: 0,
@@ -38,6 +40,9 @@ const styles = theme => ({
         padding: 16,
         width: '100%',
     },
+    name: {
+        flexWrap: "nowrap",
+    }
     
 });
 
@@ -70,7 +75,7 @@ class MiniLauncher extends React.Component {
                 <Paper className={classes.card}>
                     <ListItem className={classes.listItem} onClick={ () => this.openDialog(true)} >
                         <Avatar>{this.props.icon}</Avatar>
-                        <ListItemText primary={this.props.name}/>
+                        <ListItemText className={classes.name} primary={this.props.name}/>
                     </ListItem>
                     {React.cloneElement(this.props.children, { open: this.state.showDialog, close: this.closeDialog })}
                 </Paper>

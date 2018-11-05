@@ -6,33 +6,43 @@ import { withStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import TextField from  '@material-ui/core/TextField';
 
-import Chip from '@material-ui/core/Chip';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import Button from '@material-ui/core/Button';
 
 
 const styles = theme => ({
         
-    listItem: {
-        display: "flex",
+    item: {
         padding: "16 0",
         width: '100%',
-        alignItems: "center",
     },
-    dataInput: {
-        width: 50,
-        margin:0,
-    },    
     activeIcon: {
         backgroundColor: theme.palette.primary.dark,
     },
-    chip: {
-        margin: "0 4",
+    shortLabel: {
+        flexGrow:0,
     },
-    hotChip: {
-        backgroundColor: theme.palette.primary.dark,
-        margin: "0 4",
+    input: {
+        marginTop:0,
+        flexGrow:0,
+        marginBottom:0,
+        maxWidth: 50,
+        marginRight: 16,
     },
-
+    button: {
+        minWidth: 36,
+        marginRight: 2,
+    },
+    hotButton: {
+        marginRight: 2,
+        minWidth: 36,
+        "&:hover" : {
+            backgroundColor: theme.palette.primary.light,
+        },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+    },
+    
 });
 
 
@@ -51,11 +61,11 @@ class ScheduleInterval extends React.Component {
         const { classes } = this.props;
         
         return (
-            <ListItem className={classes.listItem}> 
+            <ListItem className={classes.item}> 
                 <Avatar className={ classes.activeIcon }><ScheduleIcon /></Avatar>
-                <ListItemText primary="Every" />
+                <ListItemText className={ classes.shortLabel} primary="Every" />
                 <TextField
-                    className={classes.dataInput}
+                    className={classes.input}
                     id={'specint'}
                     margin={"normal"}
                     type="number"
@@ -63,7 +73,9 @@ class ScheduleInterval extends React.Component {
                     onChange={(e) => this.props.change(this.props.intervalTarget, e.target.value)}
                 />
                 { this.state.intervalUnits.map((unit) => 
-                    <Chip className={this.props.unit==unit ? classes.hotChip : classes.chip } key={unit}  label={unit} onClick={(e) => this.props.change(this.props.unitTarget, unit)}/>
+                    <Button size="small" className={this.props.unit==unit ? classes.hotButton : classes.button } key={unit} onClick={(e) => this.props.change(this.props.unitTarget, unit)}>
+                        {unit}
+                    </Button>
                 )}
             </ListItem>
         )

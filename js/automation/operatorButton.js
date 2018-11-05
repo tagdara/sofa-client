@@ -6,6 +6,15 @@ import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
+const styles = theme => ({
+        
+    button: {
+        maxWidth: 36,
+        minWidth: 36,
+    },
+    
+});
+
 const operators = [
     '=',
     '!=',
@@ -45,7 +54,7 @@ class OperatorButton extends React.Component {
         
         return (
             <React.Fragment>
-            <Button id={"op"+this.props.index} onClick={this.handleClick}>
+            <Button id={"op"+this.props.index} onClick={this.handleClick} className={classes.button}>
                 {this.props.value}
             </Button>
 
@@ -66,4 +75,4 @@ class OperatorButton extends React.Component {
 }
 
 
-export default OperatorButton;
+export default withStyles(styles)(OperatorButton);

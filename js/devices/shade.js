@@ -64,25 +64,28 @@ class Shade extends React.Component {
         this.setState({ open: true });
     };  
     
-    handlePress = event => {
-        this.props.sendAlexaCommand(event, '', 'ButtonController', 'Press')
+    handlePress = commandName => {
+        console.log(commandName,this.props.commands)
+        var command = this.props.commands[commandName]
+        console.log(commandName,command, this.props.commands)
+        this.props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
     }   
     
     render() {
 
-        const { classes } = this.props;
+        const { classes, name, commands } = this.props;
 
         return (
             <ListItem className={classes.listItem}>
                 <Avatar><TonalityIcon /></Avatar>
-                <ListItemText primary={this.props.name}/>
-                    <IconButton className={classes.button} onClick={ () => this.handlePress(this.props.down) }>
+                <ListItemText primary={name}/>
+                    <IconButton className={classes.button} onClick={ () => this.handlePress('down') }>
                         <ExpandMoreIcon />
                     </IconButton>
-                    <IconButton className={classes.button} onClick={ () => this.handlePress(this.props.stop) }>
+                    <IconButton className={classes.button} onClick={ () => this.handlePress('stop') }>
                         <RemoveIcon />
                     </IconButton>
-                    <IconButton className={classes.button} onClick={ () => this.handlePress(this.props.up) }>
+                    <IconButton className={classes.button} onClick={ () => this.handlePress('up') }>
                         <ExpandLessIcon />
                     </IconButton>
             </ListItem>

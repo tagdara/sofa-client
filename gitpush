@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+git add --all
+git commit -m "Fixes and updates"
+git push

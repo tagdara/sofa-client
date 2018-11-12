@@ -1,7 +1,8 @@
 {
   "name": "sofa",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sofa home automation web client for desktop and mobile.",
+  "repository": "https://github.com/tagdara/sofa",
   "main": "index.js",
   "scripts": {
     "build": "webpack -p --progress --config webpack.config.js",
@@ -12,33 +13,37 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "babel-core": "^6.26.3",
-    "babel-loader": "^7.1.4",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "webpack": "^4.8.3",
-    "webpack-cli": "^2.1.3"
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.0",
+    "webpack": "^4.25.1",
+    "webpack-cli": "^3.1.2"
   },
   "babel": {
     "presets": [
-      "es2015",
-      "react"
+      "@babel/preset-env",
+      "@babel/preset-react"
     ],
     "plugins": [
-      "transform-class-properties",
-      "transform-object-rest-spread"
+      "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-proposal-object-rest-spread"
     ]
   },
   "dependencies": {
-    "@material-ui/core": "^1.0.0",
-    "@material-ui/icons": "^1.0.0",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "rc-slider": "^8.6.1",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@material-ui/core": "^3.4.0",
+    "@material-ui/icons": "^3.0.1",
+    "rc-slider": "^8.6.3",
+    "react": "^16.6.1",
     "react-color": "^2.14.1",
+    "react-dom": "^16.6.1",
+    "react-icons": "^3.2.2",
     "react-prevent-clickthrough": "0.0.3",
     "socket.io-client": "^2.1.1",
-    "sockette": "^2.0.0",
+    "sockette": "^2.0.1",
     "sockette-component": "^1.0.0"
   }
 }

@@ -150,7 +150,7 @@ class TVDialog extends React.Component {
                             </ListItem>
                             <Divider />
                             <ListItem>
-                                <Typography variant="subheading" noWrap>Input</Typography>
+                                <Typography variant="subtitle1" noWrap>Input</Typography>
                             </ListItem>
                             <ListItem>
                                 <div className={classes.chipLine}>
@@ -172,7 +172,7 @@ class TVDialog extends React.Component {
                             </ListItem>
                             <Divider />
                             <ListItem>
-                                <Typography variant="subheading" noWrap>Remote Control</Typography>
+                                <Typography variant="subtitle1" noWrap>Remote Control</Typography>
                             </ListItem>
                             <ListItem>
                                 <GridList cellHeight={80} className={classes.gridList} cols={3}>

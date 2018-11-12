@@ -207,7 +207,7 @@ class ReceiverDialog extends React.Component {
                                 {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                             </Avatar>
                             <div className={classes.stack}>
-                                <Typography variant="subheading" className={classes.stackLabel} gutterBottom>Volume</Typography>
+                                <Typography variant="subtitle1" className={classes.stackLabel} gutterBottom>Volume</Typography>
                                 <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.volume+"%"}</Typography>
                                 <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
                                     onChange={this.handlePreVolumeChange} 
@@ -219,7 +219,7 @@ class ReceiverDialog extends React.Component {
                             </div>
                         </ListItem>
                             <ListItem className={classes.chipListItem}>
-                                <Typography variant="subheading" noWrap className={classes.chipLineLabel}>Input</Typography>
+                                <Typography variant="subtitle1" noWrap className={classes.chipLineLabel}>Input</Typography>
                                 <div className={classes.chipLine}>
                                 { Object.keys(this.props.inputs).map(inp => (
                                     this.state.topInputs.includes(this.props.inputs[inp]) ?
@@ -234,7 +234,7 @@ class ReceiverDialog extends React.Component {
                                 </div>
                             </ListItem>
                             <ListItem className={classes.chipListItem}>
-                                <Typography variant="subheading" noWrap className={classes.chipLineLabel}>Surround Sound</Typography>
+                                <Typography variant="subtitle1" noWrap className={classes.chipLineLabel}>Surround Sound</Typography>
                                 <div className={classes.chipLine}>
                                     <Chip 
                                         key = '7ch Stereo'

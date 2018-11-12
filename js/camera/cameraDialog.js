@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
+import SofaDialog from '../sofaDialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -125,11 +125,11 @@ class CameraDialog extends React.Component {
   
     render() {
         
-        const { classes, theme } = this.props;
+        const { classes } = this.props;
         const { rotation } =  this.state;
         
         return (
-            <Dialog fullScreen open={this.props.showDialog} onClose={() =>  this.closeDialog()} className={classes.bigcamDialog} PaperProps ={{ classes: { root: classes.paper}}}>
+            <SofaDialog open={this.props.showDialog} close={() =>  this.closeDialog()}>
                 <DialogActions>
                     <Button size="small" color="primary" onClick={() => this.props.changeInterval()}>
                         <TimerIcon />{this.props.refreshInterval/1000}
@@ -142,14 +142,13 @@ class CameraDialog extends React.Component {
                     </IconButton>
                 </DialogActions>
                 <img className={this.state.rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} src={this.props.src}/>
-            </Dialog>
+            </SofaDialog>
         )
     }
 };
 
 CameraDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles, { withTheme: true })(CameraDialog);
+export default withStyles(styles)(CameraDialog);

@@ -76,7 +76,7 @@ class ComputerDialog extends React.Component {
                 <DialogTitle className={classes.tabTitle}>
 
                         <Toolbar className={classes.appBar} elevation={0}>
-                            <Typography variant="title" color="inherit" className={classes.dialogTitle}>
+                            <Typography variant="h6" color="inherit" className={classes.dialogTitle}>
                                 Computers
                             </Typography>
                         </Toolbar>

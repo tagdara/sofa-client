@@ -40,13 +40,8 @@ const styles = theme => ({
     },
     CameraRecordingList: {
         width: "100%",
-        color: "#eee",
-    },
-    camListItem: {
-        color: "#eee",
     },
     im: {
-        backgroundColor: '#111',
         width: "100%",
     },    
     stackedImageLabel: {
@@ -59,19 +54,24 @@ const styles = theme => ({
         display: "flex",
     },
     crumbItem: {
-        color: "#eee",
         padding: 8,
-        borderLeft: "1px solid #aaa",
     },
     dialogContent: {
-        backgroundColor: '#111',
         height: "100%",
         padding: 8,
     },
     dialogMaxWidth: {
-        backgroundColor: '#111',
         height: "100%",
         padding: "8 0",
+    },
+    hotButton: {
+        marginRight: 2,
+        minWidth: 36,
+        "&:hover" : {
+            backgroundColor: theme.palette.primary.light,
+        },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
     },
 });
 
@@ -129,25 +129,23 @@ class CameraRecordingList extends React.Component {
         return (
                 <React.Fragment>
                     <DialogTitle disableTypography className={classes.breadcrumbs}>
-                        { this.state.selectedCamera ?
-                        <Typography variant="subheading" className={classes.crumbItem} onClick={() => this.setState({level:'camera', selectedImage:'', selectedHour:'', selectedDate:'', selectedCamera:''})} >
+                        <Button onClick={() => this.setState({level:'camera', selectedImage:'', selectedHour:'', selectedDate:'', selectedCamera:''})} size="small" className={classes.hotButton }>
                             Cameras
-                        </Typography>
-                        : null }
+                        </Button>
                         { this.state.selectedCamera ?
-                        <Typography variant="subheading" className={classes.crumbItem} onClick={() => this.setState({level:'dates', selectedImage:'', selectedHour:'', selectedDate:''})} >
+                        <Button onClick={() => this.setState({level:'dates', selectedImage:'', selectedHour:'', selectedDate:''})} size="small" className={classes.hotButton }>
                             {this.state.selectedCamera}
-                        </Typography>
+                        </Button>
                         : null }
                         { this.state.selectedDate ?
-                        <Typography variant="subheading" className={classes.crumbItem} onClick={() => this.setState({level:'hours', selectedImage:'', selectedHour:''})} >
+                        <Button onClick={() => this.setState({level:'hours', selectedImage:'', selectedHour:''})} size="small" className={classes.hotButton }>
                             {this.state.selectedDate}
-                        </Typography>
+                        </Button>
                         : null }
                         { this.state.selectedHour ?
-                        <Typography variant="subheading" className={classes.crumbItem} onClick={() => this.setState({level:'pics', selectedImage:''})} >
+                        <Button onClick={() => this.setState({level:'pics', selectedImage:''})} size="small" className={classes.hotButton }>
                             {this.state.selectedHour}
-                        </Typography>
+                        </Button>
                         : null }
                     </DialogTitle>
                     <DialogContent className={ classes.dialogContent }>
@@ -193,7 +191,7 @@ class CameraRecordingList extends React.Component {
                             src={this.state.imageurl}
                             onClick={ () => this.startOver()}
                         />
-                        <Typography variant="subheading">{this.state.selectedImage}</Typography>
+                        <Typography variant="subtitle1">{this.state.selectedImage}</Typography>
                         </ListItem>
                     :null    
                     }

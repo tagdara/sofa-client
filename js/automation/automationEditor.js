@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withData } from '../dataContext';
+import { withData } from '../DataContext/withData';
 
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,6 +10,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 import DeviceActionSelect from "../deviceActionSelect"
 import DevicePropertySelect from "../devicePropertySelect"
@@ -263,15 +264,21 @@ class AutomationEditor extends React.Component {
                         <DevicePropertySelect select={this.handlePropertySelect} />
                     )
                 :  
+                    <React.Fragment>
                     <List className={classes.listActions}>
+                        <ListSubheader>Conditions</ListSubheader>
                         {this.state.conditions.map((condition,index) =>
                             <AutomationCondition moveUp={this.moveConditionUp} moveDown={this.moveConditionDown} save={this.saveCondition} edit={this.state.editingActions} delete={this.deleteCondition} condition={condition} index={index} name={this.props.deviceByEndpointId(condition.endpointId).friendlyName} key={ this.props.name+index } />
                         )}
+                    </List>
+                    <List className={classes.listActions}>
+                        <ListSubheader>Conditions</ListSubheader>
                         <Divider />
                         {this.state.actions.map((action,index) =>
                             <AutomationAction moveUp={this.moveActionUp} moveDown={this.moveActionDown} save={this.saveAction} edit={this.state.editingActions} action={action} delete={this.deleteAction} actionValue={this.getActionValue(action.controller, action.command)} index={index} device={ this.props.deviceByEndpointId(action.endpointId) } name={this.props.deviceByEndpointId(action.endpointId).friendlyName} key={ this.props.name+index } />
                         )}
                     </List>
+                    </React.Fragment>
                 }
                 </DialogContent>
                 <Divider />

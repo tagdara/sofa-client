@@ -24,7 +24,8 @@ import TouchAppIcon from '@material-ui/icons/TouchApp';
 import TuneIcon from '@material-ui/icons/Tune';
 import ListIcon from '@material-ui/icons/List';
 import TvIcon from '@material-ui/icons/Tv';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 
 const styles = theme => ({
         

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withData } from '../dataContext';
+import { withData } from '../DataContext/withData';
 
 import List from '@material-ui/core/List';
 

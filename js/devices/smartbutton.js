@@ -1,20 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import TuneIcon from '@material-ui/icons/Tune';
 import Avatar from '@material-ui/core/Avatar';
-import deepOrange from '@material-ui/core/colors/deepOrange';
+
 import PinDialog from './pinDialog';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 
 const styles = theme => ({
@@ -55,7 +51,7 @@ const styles = theme => ({
     avatar: {
         margin: 10,
         color: '#fff',
-        backgroundColor: deepOrange[200],
+        backgroundColor: theme.palette.primary.main,
     },
     snackBar: {
         marginBottom: "env(safe-area-inset-bottom)",
@@ -129,32 +125,17 @@ class SmartButton extends React.Component {
             <ListItem className={classes.listItem}>
                 <Avatar onClick={ () => this.handlePress(true) }><TuneIcon/></Avatar>
                 <ListItemText primary={this.props.name}/>
-                
                 { this.state.pinDevices.indexOf(this.props.name) > -1 ?
                     <PinDialog submitPin={this.submitPin} showPinPad={this.state.showPinPad} unlocker={ this.handlePinPress } closeDialog={ this.closeDialog }/>
                 : null}
                 { this.state.pinDevices.indexOf(this.props.name) > -1 ?
                     <Snackbar
-                        className={classes.snackbar}
-                        anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'left',
-                        }}
-                        open={this.state.showSnackBar}
-                        autoHideDuration={10000}
-                        onClose={this.handleSnackBarClose}
-                        ContentProps={{
-                            'aria-describedby': 'message-id',
-                        }}
+                        className={classes.snackbar} anchorOrigin={{vertical: 'bottom',horizontal: 'left',}}
+                        open={this.state.showSnackBar} autoHideDuration={10000} onClose={this.handleSnackBarClose}
+                        ContentProps={{ 'aria-describedby': 'message-id',}}
                         message={<span id="message-id">Invalid PIN</span>}
                         action={[
-                            <IconButton
-                                key="close"
-                                aria-label="Close"
-                                color="inherit"
-                                className={classes.close}
-                                onClick={this.handleSnackBarClose}
-                            >
+                            <IconButton key="close" aria-label="Close" color="inherit" className={classes.close} onClick={this.handleSnackBarClose}>
                                 <CloseIcon />
                             </IconButton>,
                         ]}

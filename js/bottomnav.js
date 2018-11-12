@@ -6,7 +6,8 @@ import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Icon from '@material-ui/core/Icon';
 
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline'
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import MusicVideoIcon from '@material-ui/icons/MusicVideo';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
@@ -46,16 +47,16 @@ class BottomNav extends React.Component {
 
     return (
         <BottomNavigation value={value} onChange={this.handleChange} className={classes.root}>
-            <BottomNavigationAction label="AV" value="Audio Video" icon={<SubscriptionsIcon />} />
-            <BottomNavigationAction label="Lights" value="Lights" icon={<LightbulbOutlineIcon />} />
-            <BottomNavigationAction label="Security" value="Security" icon={<VerifiedUserIcon />} />
+            <BottomNavigationAction value="Audio Video" icon={<SubscriptionsIcon />} />
+            <BottomNavigationAction value="Lights" icon={<LightbulbOutlineIcon size={24} />} />
+            <BottomNavigationAction value="Security" icon={<VerifiedUserIcon />} />
         </BottomNavigation>
     );
   }
 }
 
 BottomNav.propTypes = {
-  classes: PropTypes.object.isRequired,
+    classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(BottomNav);

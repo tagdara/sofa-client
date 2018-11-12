@@ -16,17 +16,19 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import Paper from '@material-ui/core/Paper';
+
 import CloseIcon from '@material-ui/icons/Close';
-import Divider from '@material-ui/core/Divider';
-import { HuePicker } from 'react-color';
-import Avatar from '@material-ui/core/Avatar';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import PlaceIcon from '@material-ui/icons/Place';
-import deepOrange from '@material-ui/core/colors/deepOrange';
+
+import { HuePicker } from 'react-color';
 
 const styles = theme => ({
         
@@ -88,8 +90,8 @@ const styles = theme => ({
         minWidth: 320,
     },
     litAvatar: {
-        color: '#fff',
-        backgroundColor: deepOrange[500],
+        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.primary.main,
     },
     stack: {
         height: 44,
@@ -290,7 +292,7 @@ class GroupLight extends React.Component {
                     <PlaceIcon />
                 </Avatar>
                 <div className={classes.stack}>
-                    <Typography variant="subheading" gutterBottom>{this.props.name+' Lights'}</Typography>
+                    <Typography variant="subtitle1" gutterBottom>{this.props.name+' Lights'}</Typography>
                     {this.state.brightness=="no" ?
                     null :
                     <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.brightness}

@@ -8,8 +8,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import CompareIcon from '@material-ui/icons/Compare';
-import { withThemeChange } from './dataContext';
-
+import { withThemeChange } from './DataContext/withThemeChange';
 
 const styles = theme => ({
         
@@ -54,13 +53,13 @@ class SofaAppBar extends React.Component {
         return (
                 <AppBar className={this.props.mobile ? classes.miniTop: classes.phoneTop}>
                     { this.props.mobile ?
-                    null
+                    <div></div>
                     :
                     <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu"  onClick={ ()=> this.props.open() }>
+                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={ ()=> this.props.open() }>
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant="title" color="inherit" className={classes.flex}>
+                        <Typography variant="h6" color="inherit" className={classes.flex}>
                             Home
                         </Typography>
                         <IconButton onClick={() => this.props.setColorScheme(this.props.colorScheme=='dark' ? 'light' : 'dark')}>
@@ -76,10 +75,8 @@ class SofaAppBar extends React.Component {
     }
 }
 
-    
 SofaAppBar.propTypes = {
     classes: PropTypes.object.isRequired,
-    
 };
 
 export default withThemeChange(withStyles(styles)(SofaAppBar));

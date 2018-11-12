@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactDOM from "react-dom";
 import SofaApp from './sofaApp';
-import { DataProvider } from './dataContext';
-import { ThemeWrapper } from './themeWrapper';
+import { DataProvider } from './DataContext/DataProvider';
+import { ThemeWrapper } from './theme/themeWrapper';
 
 const rootElement = document.querySelector('#root');
 

@@ -13,7 +13,7 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
 import ZoneGrid from './devices/zoneGrid';
-import { withData } from './dataContext';
+import { withData } from './DataContext/withData';
 
 const styles = theme => ({
         
@@ -32,12 +32,15 @@ const styles = theme => ({
         alignItems: "center"
     },
     closed: {
+        color: theme.palette.primary.contrastText,
         backgroundColor: "#6a6",
     },
     open: {
+        color: theme.palette.primary.contrastText,
         backgroundColor: "#e66",
     },
     notready: {
+        color: theme.palette.primary.contrastText,
         backgroundColor: "#ccc",
     },
     listItem: {
@@ -113,7 +116,7 @@ class ZoneList extends React.Component {
         }
         return openzones
     }
- 
+
     render() {
     
         const { classes } = this.props;

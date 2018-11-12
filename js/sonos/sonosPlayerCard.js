@@ -22,7 +22,7 @@ import SkipNextIcon from '@material-ui/icons/SkipNext';
 import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
-import { withData } from '../dataContext';
+import { withData } from '../DataContext/withData';
 import SonosVolume from './sonosvolume';
 import SonosCover from './sonosCover';
 import SonosFavorites from './sonosFavorites';
@@ -252,8 +252,8 @@ class SonosPlayerCard extends React.Component {
                         { this.state.showOverlay && this.props.deviceProperties[this.state.playerName] ? 
                         <div className={classes.dialogSongTextBox}>
                             <div className={classes.songTextHolder}>
-                                <Typography className={classes.dialogSongTitle} variant="display2">{this.props.deviceProperties[this.state.playerName].title}</Typography>
-                                <Typography className={classes.dialogSongArtist} variant="display1">{this.props.deviceProperties[this.state.playerName].artist}</Typography>
+                                <Typography className={classes.dialogSongTitle} variant="h3">{this.props.deviceProperties[this.state.playerName].title}</Typography>
+                                <Typography className={classes.dialogSongArtist} variant="h4">{this.props.deviceProperties[this.state.playerName].artist}</Typography>
                             </div>
                         </div>
                         : null }

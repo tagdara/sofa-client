@@ -100,8 +100,8 @@ class SonosCover extends React.Component {
                     </div>
                     <div className={classes.contentRight}>
                         <div className={classes.contentText} >
-                            <Typography className={classes.titleText} variant="display4" >{title}</Typography>
-                            <Typography className={classes.artistText} variant="display3" >{artist}</Typography>
+                            <Typography className={classes.titleText} variant="h1" >{title}</Typography>
+                            <Typography className={classes.artistText} variant="h2" >{artist}</Typography>
                         </div>
                     </div>
                 </DialogContent>

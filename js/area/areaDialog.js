@@ -1,27 +1,21 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
 
-import Typography from '@material-ui/core/Typography';
-import List from '@material-ui/core/List';
-
+import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
+import List from '@material-ui/core/List';
 
 import CloseIcon from '@material-ui/icons/Close';
 
-import Button from '@material-ui/core/Button';
-import Divider from '@material-ui/core/Divider';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-
 import SofaDialog from '../sofaDialog'
-import GroupLight from '../devices/grouplight'
-import Light from '../devices/light'
-import SceneEditor from '../sceneEditor'
+import GroupLight from '../light/grouplight'
+import Light from '../light/light'
+import SceneEditorArea from '../sceneEditorArea'
 
 const styles  = theme =>  ({
     
@@ -132,6 +126,8 @@ class AreaDialog extends React.Component {
             updates: {},
             areaState: {},
             edit: false,
+            delaySet: false,
+
         };
         this.avgState = this.avgState.bind(this);
 
@@ -141,13 +137,13 @@ class AreaDialog extends React.Component {
 
         var data=nextProps.deviceProperties
         var changes={}
-        
+
         if (nextProps.hasOwnProperty('deviceProperties')) {
             changes.devices=nextProps.devices
             changes.deviceProperties=nextProps.deviceProperties
             if (prevState.hasOwnProperty('delaySet')) {
                 if (!prevState.delaySet) {
-                    changes.level=AreaDialog.computeLevels(nextProps.sceneData, data, prevState)
+                    changes.level=AreaDialog.computeLevels(nextProps, nextProps.sceneData, data, prevState)
                 }
             }
         }
@@ -155,8 +151,16 @@ class AreaDialog extends React.Component {
         return changes
     }
     
+    static nameByEndpointId = (endpointId, devices) => {
+        var fn=[]
+        for (var i = 0; i < devices.length; i++) {
+            if (devices[i]['endpointId']==endpointId) {
+                return devices[i].friendlyName
+            } 
+        }
+    }
     
-    static computeLevels(sceneData, deviceProperties, prevState) {
+    static computeLevels(nextProps, sceneData, deviceProperties, prevState) {
 
         var highscore=0
         var currentlevel=0
@@ -164,19 +168,19 @@ class AreaDialog extends React.Component {
 
         for (var i = 0; i < 4; i++) {
             var level=i.toString()
-            if (prevState.shortcuts.hasOwnProperty(level)) {
-                var sceneName=prevState.shortcuts[level]
-                var scene=prevState.scenes[sceneName]
-
+            if (nextProps.shortcuts.hasOwnProperty(level)) {
+                var sceneName=nextProps.shortcuts[level]
+                var scene=nextProps.sceneData[sceneName]
                 var levscore=0
-                for (var light in scene) {    
-                    if (deviceProperties.hasOwnProperty(light)) {
-                        if (deviceProperties[light]['powerState']=='ON') {
-                            var bri=deviceProperties[light]['brightness']
+                for (var light in scene) {
+                    var lightname=AreaDialog.nameByEndpointId(light,nextProps.devices)
+                    if (deviceProperties.hasOwnProperty(lightname)) {
+                         if (deviceProperties[lightname]['powerState']=='ON') {
+                            var bri=deviceProperties[lightname]['brightness']
                         } else {
                             var bri=0
                         }
-                        levscore+=(50-Math.abs(bri-scene[light]['set']))
+                        levscore+=(50-Math.abs(bri-scene[light]['brightness']))
                     }
                 }
 
@@ -304,36 +308,16 @@ class AreaDialog extends React.Component {
         this.setState({edit:false})
     }
     
-
-    parseAreaScenes = (areascenes) => {
-        var changes={}
-        if (areascenes.hasOwnProperty('lights')) {
-            changes['lights']=areascenes['lights']
-        }
-        if (areascenes.hasOwnProperty('scenes')) {
-            changes['scenes']=areascenes['scenes']
-            changes['delaySet']=false
-        }
-        if (areascenes.hasOwnProperty('shortcuts')) {
-            changes['shortcuts']=areascenes['shortcuts']
-        }
-
-        if (changes) {
-            this.setState(changes,
-                () => AreaDialog.computeLevels(this.props.sceneData,this.props.deviceProperties, this.state)
-            );
-        }
-    }
-    
     componentDidMount() {    
-  	    fetch('/list/logic/areascenes/'+this.props.name)
+  	    fetch('/list/logic/area/'+this.props.name)
  		    .then(result=>result.json())
-            .then(result=>this.parseAreaScenes(result));
+            .then(result=>this.setState(result))
     }
     
     render() {
         const { classes, fullScreen } = this.props;
         const { devices } = this.state;  
+        
         return (
             <SofaDialog title={this.props.name} open={this.props.open} close={this.props.close} tabChange={this.handleTab} tabValue={this.state.frontTab}
                         tabs={ ['Scenes','Lights']} >
@@ -348,14 +332,13 @@ class AreaDialog extends React.Component {
                 { this.state.frontTab==1 ?
                 <DialogContent className={classes.dialogContent }>
                     <List className={classes.root}>
-                    {
-                        Object.keys(this.props.devices).sort().map(c => (
-                            this.renderSwitch(this.props.devices[c])))
-                    }
+                    { Object.keys(this.props.devices).sort().map(c => (
+                            this.renderSwitch(this.props.devices[c])
+                    ))}
                   </List>
                 </DialogContent>
                 :
-                <SceneEditor sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} computedLevel={this.state.computedLevel} edit={this.state.edit} editFinished={this.editFinished} lightList={this.lightList()} area={this.props.name} />
+                <SceneEditorArea sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} computedLevel={this.state.level} edit={this.state.edit} editFinished={this.editFinished} lightList={this.lightList()} area={this.props.name} />
                 }
                 <Divider />
                 <DialogActions className={classes.dialogActions}>

@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
@@ -64,33 +63,44 @@ class AreaList extends React.Component {
             arealist: {},
             regionlist: {},
             regionData: {},
-            areamap: {},
-            sceneData: {},
             showdialog: false,
             showEditor: false,
             showAraDialog: false,
             selectedAreas: [],
-            region: 'main',
+            regionName: 'main',
+            region: {},
+            scenes: {},
+            
             selectedArea: '',
         };
     }
     
     sceneDataByArea = area => {
-        if (this.state.sceneData.hasOwnProperty(area)) {
-            return this.state.sceneData[area]
-        } else {
-            return {}
-        }
+        
+        console.log('tss',this.state.scenes)
+        
+        var areascenes={}
+        if (this.state.region.hasOwnProperty(area)) {
+            for (var scene in this.state.region[area].scenes) {
+                if (this.state.scenes.hasOwnProperty(scene)) {
+                    areascenes[scene]=this.state.scenes[scene]
+                }
+        return areascenes
+
+    }
+    
+    areasByRegion = region => {
+        
     }
     
     devicesByArea = area => {
 
         var ads=[]
         if (this.state.arealist.hasOwnProperty(area)) {
-            for (var dev in this.state.arealist[area].lights) {
+            for (var dev in this.state.region[area].lights) {
             //for (var i = 0; i < this.state.arealist[area].lights.length; i++) {
                // var dbn=this.props.deviceByName(this.state.arealist[area].lights)
-                var dbn=this.props.deviceByName(dev)
+                var dbn=this.props.deviceByEndpointId(this.state.region[area].lights[dev].endpointId)
                 if (dbn) {
                     ads.push(dbn)
                 }
@@ -149,15 +159,7 @@ class AreaList extends React.Component {
         this.setState({regionData: data });
     }
 
-    confirmRegionRooms = (data) => {
-        
-        if (!Array.isArray(data)) {
-            data=[]
-        }
-        this.setState({regionrooms: data });
-    }
 
-    
     saveRegion = (name, data) => {
         
         var rdata=this.state.regionData
@@ -178,20 +180,22 @@ class AreaList extends React.Component {
             })
     }
     
-    changeRegion = (region) => {
-        fetch('/list/logic/region/'+region)
+    changeRegion = (regionName) => {
+        fetch('/list/logic/region/'+regionName)
             .then(result=>result.json())
-            .then(data=>this.confirmRegionRooms(data));
+            .then(data=>this.setState({region:result}));
     }
     
     componentDidMount() {
         
-  	    fetch('/list/logic/region/'+this.state.region)
+  	    fetch('/list/logic/region/'+this.state.regionName)
  		    .then(result=>result.json())
-            .then(data=>this.confirmRegionRooms(data));
-  	    fetch('/list/logic/arealist')
+            .then(data=>this.setState({region:result}));
+
+  	    fetch('/list/logic/scenes')
  		    .then(result=>result.json())
-            .then(result=>this.setState({arealist:result}));
+            .then(result=>this.setState({scenes:result}));
+
     }
     
     render() {
@@ -212,14 +216,14 @@ class AreaList extends React.Component {
                                 </IconButton>
                             </ListItemSecondaryAction>
                         </ListItem>
-                        { this.state.regionrooms.map((name) => 
-                            <Area sendAlexaCommand={this.props.sendAlexaCommand} key={ name } name={ name }  devices={ this.devicesByArea(name)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(name)) } selectArea={this.selectArea} sendMessage={this.props.sendMessage} ></Area>
+                        { this.state.region.map((name) => 
+                            <Area sendAlexaCommand={this.props.sendAlexaCommand} key={ name } name={ name } scenes={this.sceneDataByArea(name)} devices={ this.devicesByArea(name)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(name)) } selectArea={this.selectArea} ></Area>
                         )}
                     </List>
                     <RegionBuild handleRegionSelect={this.handleRegionSelect} open={this.state.showEditor} close={this.closeRegionSelect} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
                     
                     {this.state.regionData.hasOwnProperty(this.state.region) ?
-                        <AreaSelect name={this.state.region} updateList={this.saveRegion} open={this.state.showEditor} close={this.closeEditor} areas={this.state.areamap} selectedAreas={this.state.regionData[this.state.region] } />
+                        <AreaSelect name={this.state.region} updateList={this.saveRegion} open={this.state.showEditor} close={this.closeEditor} areas={this.state.region.areas} selectedAreas={this.state.region.areas} />
                     : null }
                     { this.state.showdialog ?
                         <LightGrid sendAlexaCommand={this.props.sendAlexaCommand} name={'all'} lightCount={this.lightCount} closeGrid={this.closeDialog} showGrid={this.state.showdialog} key='lightlist' filter='ON' Category='Light' devices={ this.props.devices } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />

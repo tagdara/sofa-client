@@ -1,11 +1,7 @@
 import React from "react";
 import List from '@material-ui/core/List';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -20,7 +16,7 @@ import VirtualList from './virtuallist';
 import ComputerList from './computerList';
 import ModeList from './modeList';
 import SmartButton from './devices/smartbutton';
-import { withData } from './dataContext';
+import { withData } from './DataContext/withData';
 import SofaDialog from './sofaDialog';
 
 const styles = theme => ({
@@ -81,7 +77,6 @@ class ButtonDialog extends React.Component {
                     <ComputerList devices={ this.props.devicesByCategory('PC') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('PC')) } sendAlexaCommand={this.props.sendAlexaCommand} />
                     <Divider />
                     <ModeList devices={ this.props.devicesByCategory('MODE') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('MODE')) } sendAlexaCommand={this.props.sendAlexaCommand} />
-
                 </DialogContent>
                 <Divider />
                 <DialogActions className={classes.dialogActions} >

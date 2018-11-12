@@ -2,14 +2,9 @@ import React from "react";
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -33,7 +28,7 @@ import ScheduleStart from './scheduleStart'
 import ScheduleTime from './scheduleTime'
 import ScheduleDays from './scheduleDays'
 import ScheduleDaysInterval from './scheduleDaysInterval'
-
+import ScheduleAction from './scheduleAction'
 import ScheduleName from './scheduleName'
 import ScheduleChoice from './scheduleChoice'
 
@@ -100,7 +95,18 @@ class ScheduleEditor extends React.Component {
             scheduleAction: false,
             ready: false,
             enabled: true,
+            controllers: {},
         };
+    }
+    
+    selectDevice = () => {
+        this.setState({deviceSelect: true})
+    }
+    
+    editActionValue = (actionval) => {
+        var cursa=this.state.scheduleAction
+        cursa['value']=actionval
+        this.setState({scheduleAction: cursa})
     }
     
     saveSchedule = () => {
@@ -214,6 +220,10 @@ class ScheduleEditor extends React.Component {
     }
     
     componentDidMount() {
+        
+  	    fetch('/controllercommands')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({controllers:result}));
 
         if (this.props.selectedSchedule) {
             this.setState({scheduleName: this.props.selectedSchedule})
@@ -297,14 +307,7 @@ class ScheduleEditor extends React.Component {
                         <Divider />
                         <ScheduleStart target="scheduleStart" change={this.changeValue} value={this.state.scheduleStart} />
                         <Divider />
-                        <ListItem className={classes.listItem} >
-                            <Avatar className={this.state.scheduleAction ? classes.activeIcon : classes.passiveIcon }><TuneIcon /></Avatar>
-                            { this.state.scheduleAction ?
-                            <ListItemText onClick={() => this.setState({deviceSelect: true})} primary={this.state.scheduleAction['deviceName']} secondary={this.state.scheduleAction['command']} />
-                            :
-                            <ListItemText onClick={() => this.setState({deviceSelect: true})} primary={"Action"} secondary={"Click Here to Select Scheduled Action"} />
-                            }
-                        </ListItem>
+                        <ScheduleAction action={this.state.scheduleAction} deviceSelect={this.selectDevice} edit={this.editActionValue} />
                     </List>
                 }
                 </DialogContent>

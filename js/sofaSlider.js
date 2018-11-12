@@ -4,7 +4,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
@@ -32,7 +31,20 @@ const styles = theme => ({
         marginLeft: 4,
         marginRight: 6,
     },
-
+    sliderTrackHot: {
+        borderColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.main, 
+        marginTop: -5, 
+        height: 12, 
+        width: 12,
+    },
+    sliderTrack: {
+        borderColor: 'silver', 
+        backgroundColor: 'silver', 
+        marginTop: -5, 
+        height: 12, 
+        width: 12,
+    }
 
 });
 
@@ -46,6 +58,7 @@ class SofaSlider extends React.Component {
         };
     }
 
+    
     static getDerivedStateFromProps(nextProps, prevState) {
 
         var data=nextProps.deviceProperties
@@ -67,22 +80,21 @@ class SofaSlider extends React.Component {
    
     render() {
 
-        const { classes } = this.props;
+        const { classes, dis } = this.props;
 
         return (
                     <div className={classes.stack}>
-                        <Typography variant="subheading" className={classes.stackLabel} gutterBottom>{this.props.name}</Typography>
+                        <Typography variant="subtitle1" className={classes.stackLabel} gutterBottom>{this.props.name}</Typography>
                         <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.value+this.props.unit}</Typography>
                         <Slider min={this.props.min} max={this.props.max} defaultValue={this.props.default} step={this.props.step} value={this.state.value}
                             onChange={this.props.preChange} 
                             onAfterChange={this.props.change} 
-                            trackStyle={ this.props.dis ? { backgroundColor: 'silver', height: 3 }: { backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
-                            handleStyle={ this.props.dis ?
+                            trackStyle={ dis ? { backgroundColor: 'silver', height: 3 }: { backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
+                            handleStyle={ dis ?
                                 { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12} :
                                 { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} 
-                            }
-                            railStyle={{ height: 3 }}
-                            disabled={ this.props.dis }
+                            }                            railStyle={{ height: 3 }}
+                            disabled={ dis }
                         />
                     </div>
 

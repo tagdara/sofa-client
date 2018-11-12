@@ -5,6 +5,9 @@ import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
 export default createMuiTheme({
+    typography: {
+        useNextVariants: true,
+    },
     palette: {
         primary: {
             light: deepOrange[300],
@@ -15,6 +18,9 @@ export default createMuiTheme({
             light: yellow[300],
             main: yellow[500],
             dark: yellow[700]
+        },
+        text: {
+            primary: "#e0e0e0",
         },
         type: "dark"
     }

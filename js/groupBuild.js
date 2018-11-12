@@ -1,12 +1,7 @@
 import React from "react";
 import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -15,11 +10,9 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 import Slide from  '@material-ui/core/Slide';
 import Checkbox from  '@material-ui/core/Checkbox';
 
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import TuneIcon from '@material-ui/icons/Tune';
 import EditIcon from '@material-ui/icons/Edit';
@@ -34,7 +27,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import DeviceSelect from "./deviceSelect"
+import DeviceSelect from "./deviceSelect";
+import SofaDialog from "./sofaDialog";
 
 const styles = theme => ({
         
@@ -188,26 +182,7 @@ class GroupBuild extends React.Component {
         const { classes, fullScreen  } = this.props;
         
         return (
-            <Dialog 
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'sm'}
-                open={this.props.open}  
-                onClose={this.props.close}
-
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
-                <DialogTitle className={classes.tabTitle}>
-
-                        <Toolbar className={classes.appBar} elevation={0}>
-                            <Typography variant="title" color="inherit" className={classes.dialogTitle}>
-                                Areas
-                            </Typography>
-                        </Toolbar>
-          
-                </DialogTitle>
-                <Divider />
+            <SofaDialog open={this.props.open} onClose={this.props.close} title={"Areas"} >
                 <DialogContent className={classes.dialogContent }>
                         <List className={classes.thermostatList} >
                     { 
@@ -263,7 +238,7 @@ class GroupBuild extends React.Component {
                 <DeviceSelect updateList={this.updateList} name={this.state.selectedName} selectedDevices={this.state.selectedDevices} open={this.state.objectBrowser} close={this.handleCloseObjectBrowser} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
                     : null
                 }
-            </Dialog>
+            </SofaDialog>
         )
     }
 
@@ -271,7 +246,6 @@ class GroupBuild extends React.Component {
 
 GroupBuild.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(GroupBuild));
+export default withStyles(styles)(GroupBuild);

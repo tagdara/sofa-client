@@ -1,10 +1,7 @@
 import React, { Component, createElement  } from 'react';
-
 import createSocket from "sockette-component";
-
-const DataContext = React.createContext();
-
 const Sockette = createSocket({ Component, createElement });
+
 
 export class DataProvider extends Component {
   
@@ -25,6 +22,7 @@ export class DataProvider extends Component {
         
         this.pendingDevs=[];
         this.deviceByName = this.deviceByName.bind(this);
+        this.devicesByCategory = this.devicesByCategory.bind(this);
     }
     
     uuidv4  = ()  => {
@@ -74,28 +72,22 @@ export class DataProvider extends Component {
         console.log('Sending', ev)
         this.state.socket.send(ev);
     }
-    postAlexaCommand = (data) => {
-        
-        fetch('/command/stateChange', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(res=>console.log('Alexa command response:',res))
-    }
 
-
+    
     sendAlexaCommand = (deviceName, endpointId, controller, command, val) => {
+        
+        // value is optional for some alexa commands.  The original sofa2 implementation tried to take a string value and then map it to 
+        // a value name, but underestimated the requirement for some commands to pass multiple values and needs to be adjusted.
+        
         if (endpointId=='') {
             console.log('No endpoint ID was provided for ', deviceName, controller, command, val)
             endpointId=this.deviceByName(deviceName).endpointId
         }
-        console.log('xx',this.state.controllers[controller][command])
+
         var header={"name": command, "namespace":"Alexa." + controller, "payloadVersion":"3", "messageId": this.uuidv4(), "correlationToken": this.uuidv4()}
         var endpoint={"endpointId": endpointId, "cookie": {}, "scope":{ "type":"BearerToken", "token":"access-token-from-skill" }}
+
+
         if (this.state.controllers[controller][command]) {
             var payload=JSON.parse(JSON.stringify(this.state.controllers[controller][command]))
         } else {
@@ -110,7 +102,16 @@ export class DataProvider extends Component {
         }
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
         console.log('Sending alexa command:',data)
-        this.postAlexaCommand(data)
+        //this.postAlexaCommand(data)
+        fetch('/directive', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res=>console.log('Alexa command response:',res))
     }
     
     mergeState = (dev,change) => {
@@ -159,6 +160,7 @@ export class DataProvider extends Component {
     }
 
     updateDeviceList = (devs) => {
+        console.log('updating devices', devs)
         var udl=[]
         for (var i = 0; i < devs.length; i++) {
             udl.push(devs[i].friendlyName)
@@ -184,7 +186,7 @@ export class DataProvider extends Component {
 			y=b['friendlyName'].toLowerCase();
 		    return x<y ? -1 : x>y ? 1 : 0;
 	    });    
-	    
+	    console.log('cat devs for', category, categoryDevices)
         return categoryDevices
         
     }
@@ -209,8 +211,7 @@ export class DataProvider extends Component {
     }
 
     propertiesFromDevices = devs => {
-        
-        //console.log('startig pfd')
+
         var devstate={}
         var nostate=[]
         if (devs==null) {
@@ -242,6 +243,8 @@ export class DataProvider extends Component {
     }
 
     setColorScheme = scheme => {
+        console.log('set color scheme', scheme)
+        console.log('this',this)
         this.setState({colorScheme: scheme})
     }
     
@@ -268,6 +271,7 @@ export class DataProvider extends Component {
         return (
             <DataContext.Provider
                 value={{
+                    state: this.state,
                     devices: this.state.devices,
                     deviceState: this.state.deviceState,
                     virtualDevices: this.state.virtualDevices,
@@ -293,20 +297,33 @@ export class DataProvider extends Component {
                     onmessage={this.onMessage}
                     onreconnect={this.onReconnect}
                 />
-
             </DataContext.Provider>
         );
     }
 }
+
+export const DataContext = React.createContext(DataProvider);
 
 export function withSofaTheme(Component) {
 
     return function DataComponent(props) {
         return (
             <DataContext.Consumer>
-                {
-                    ({colorScheme}) => 
-                        <Component {...props} colorScheme={colorScheme} />
+                { ({colorScheme}) => 
+                    <Component {...props} colorScheme={colorScheme} />
+                }
+            </DataContext.Consumer>
+        );
+    };
+    
+}
+
+export function realwithThemeChange(Component) {
+    return function DataComponent(props) {
+        return (
+            <DataContext.Consumer>
+                { ({ setColorScheme, colorScheme}) => 
+                    <Component {...props} setColorScheme={setColorScheme} colorScheme={colorScheme} />
                 }
             </DataContext.Consumer>
         );
@@ -315,13 +332,11 @@ export function withSofaTheme(Component) {
 }
 
 export function withThemeChange(Component) {
-
     return function DataComponent(props) {
         return (
             <DataContext.Consumer>
-                {
-                    ({setColorScheme, colorScheme}) => 
-                        <Component {...props} setColorScheme={setColorScheme} colorScheme={colorScheme} />
+                { (context) => 
+                    <Component {...props} context={context} setColorScheme={context.setColorScheme} colorScheme={context.colorScheme} />
                 }
             </DataContext.Consumer>
         );
@@ -329,21 +344,20 @@ export function withThemeChange(Component) {
     
 }
 
+
 export function withData(Component) {
-    // ...and returns another component...
     return function DataComponent(props) {
-        // ... and renders the wrapped component with the context theme!
-        // Notice that we pass through any additional props as well
         return (
             <DataContext.Consumer>
                 {
-                ({controllers, virtualDevices, deviceByEndpointId, devices, deviceState, websocketStatus, deviceByName, devicesByCategory, propertiesFromDevices, sendAlexaCommand}) => 
-                    <Component {...props} deviceByEndpointId={deviceByEndpointId} controllers={controllers} virtualDevices={virtualDevices} deviceByName={deviceByName} deviceProperties={propertiesFromDevices(devicesByCategory(props.Category))} devicesByCategory={devicesByCategory} propertiesFromDevices={propertiesFromDevices} sendAlexaCommand={sendAlexaCommand} devices={devicesByCategory(props.Category)} />
+                ({controllers, virtualDevices, deviceByEndpointId, devices, deviceState, websocketStatus,
+                    deviceByName, devicesByCategory, propertiesFromDevices, sendAlexaCommand}) => 
+                    <Component {...props} cat={websocketStatus} deviceByEndpointId={deviceByEndpointId} controllers={controllers} virtualDevices={virtualDevices} 
+                                deviceByName={deviceByName} deviceProperties={propertiesFromDevices(devicesByCategory(props.Category))} 
+                                devicesByCategory={devicesByCategory} propertiesFromDevices={propertiesFromDevices} sendAlexaCommand={sendAlexaCommand} 
+                                devices={devicesByCategory(props.Category)} />
                 }
             </DataContext.Consumer>
         );
     };
 }
-
-
-export const DataConsumer = DataContext.Consumer;

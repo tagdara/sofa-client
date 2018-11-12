@@ -1,28 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Slide from  '@material-ui/core/Slide';
 
 import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Divider from '@material-ui/core/Divider';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 
 import SecurityCamera from './securitycamera';
 import CameraRecordingList from './cameraRecordingList';
+import SofaDialog from '../sofaDialog';
 
 const styles = theme => ({
     
-    
-
     lGrid: {
         display: "flex",
         flexWrap: "wrap",
@@ -30,19 +21,6 @@ const styles = theme => ({
         flex: "auto",
         flexGrow: 0,
         margin: "0 0 auto 0",
-    },
-    paper: {
-        backgroundColor: "#424242",
-        boxShadow: "none",
-        overflow: "hidden"
-    },
-    tabTitle: {
-        backgroundColor: '#424242',
-        padding: 0,
-        paddingTop: "env(safe-area-inset-top)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
     },
     dialogTitle: {
         display: "flex",
@@ -52,7 +30,6 @@ const styles = theme => ({
         color: theme.palette.primary.contrastText,
     },
     dialogActions: {
-        backgroundColor: '#424242',
         paddingBottom: "env(safe-area-inset-bottom)",
     },
     gridPlaceholder: {
@@ -61,21 +38,15 @@ const styles = theme => ({
         flexGrow: 1,
     },
     dialogContent: {
-        backgroundColor: '#111',
         height: "100%",
         padding: 8,
     },
     dialogMaxWidth: {
-        backgroundColor: '#111',
         height: "100%",
         padding: "8 0",
     },
 
 });
-
-function Transition(props) {
-    return <Slide direction="up" {...props} />;
-}
 
 class CameraDialog extends React.Component {
 
@@ -94,27 +65,13 @@ class CameraDialog extends React.Component {
 
     render() {
         
-        const { classes, fullScreen } = this.props;
+        const { classes } = this.props;
         
         return (
-            <Dialog 
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'md'}
-                open={this.props.open}
-                onClose={this.props.close}
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-                PaperProps ={{ classes: { root: classes.paper}}}
-            >
-                <DialogTitle className={classes.tabTitle}>
-                    <Tabs className={classes.tabRow} value={this.state.frontTab} onChange={this.handleTab}>
-                        <Tab label="Live" />
-                        <Tab label="Recorded" />
-                    </Tabs>
-                </DialogTitle>
+            <SofaDialog title={this.props.name} open={this.props.open} close={this.props.close} tabChange={this.handleTab} tabValue={this.state.frontTab}
+                        tabs={ ['Live','Recorded']} >
                 { this.state.frontTab==0 ?
-                    <DialogContent className={fullScreen ? classes.dialogMaxWidth : classes.dialogContent }>
+                    <DialogContent className={classes.dialogMaxWidth}>
                         <div className={classes.lGrid}>
                         {
                         this.props.cameras.map((name) => 
@@ -130,14 +87,13 @@ class CameraDialog extends React.Component {
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={(e) => this.props.close(e)} color="primary" autoFocus>OK</Button>
                 </DialogActions>
-            </Dialog>
+            </SofaDialog>
         )
     }
 }
 
 CameraDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired
 };
 
-export default withStyles(styles)(withMobileDialog()(CameraDialog));
+export default withStyles(styles)(CameraDialog);

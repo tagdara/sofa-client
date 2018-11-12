@@ -1,25 +1,17 @@
 import React from "react";
 import List from '@material-ui/core/List';
 import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
-import Slide from  '@material-ui/core/Slide';
 import Checkbox from  '@material-ui/core/Checkbox';
 
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import TuneIcon from '@material-ui/icons/Tune';
 
@@ -33,6 +25,8 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+import SofaDialog from './sofaDialog';
 
 const styles = theme => ({
         
@@ -128,25 +122,7 @@ class DeviceSelect extends React.Component {
         const { classes, fullScreen  } = this.props;
         
         return (
-            <Dialog 
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'sm'}
-                open={this.props.open}  
-                onClose={this.props.close}
-
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
-                <DialogTitle className={classes.tabTitle}>
-
-                        <Toolbar className={classes.appBar} elevation={0}>
-                            <Typography variant="title" color="inherit" className={classes.dialogTitle}>
-                                {this.props.name}
-                            </Typography>
-                        </Toolbar>
-          
-                </DialogTitle>
+            <SofaDialog open={this.props.open} close={this.props.close} title={this.props.name} >
                 <Divider />
                 <DialogContent className={classes.dialogContent }>
                         <List className={classes.thermostatList} >
@@ -169,7 +145,7 @@ class DeviceSelect extends React.Component {
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={(e) => this.handleSave(e)} color="primary" autoFocus>OK</Button>
                 </DialogActions>
-            </Dialog>
+            </SofaDialog>
         )
     }
 
@@ -180,4 +156,4 @@ DeviceSelect.propTypes = {
     fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(DeviceSelect));
+export default withStyles(styles)(DeviceSelect);

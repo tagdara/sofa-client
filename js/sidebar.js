@@ -8,7 +8,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Drawer from '@material-ui/core/Drawer';
-import Typography from '@material-ui/core/Typography';
+
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -17,7 +17,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import DeviceSelect from "./deviceSelect"
 import GroupBuild from "./groupBuild"
-import RegionBuild from "./regionBuild"
+import RegionBuild from "./region/regionBuild"
 import AutomationBuilder from "./automation/automationBuilder"
 import TuneIcon from '@material-ui/icons/Tune';
 

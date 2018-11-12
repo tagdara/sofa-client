@@ -8,7 +8,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
-
+import Typography from '@material-ui/core/Typography';
 import SonosGroupDialog from './sonosGroupDialog';
 
 const styles = theme => ({
@@ -46,7 +46,7 @@ class Sonos extends React.Component {
         
         let links=[]
         for (var i = 0; i < this.props.deviceProperties.linked.length; i++) {
-            links.push(<Typography  key={ this.props.deviceProperties.linked[i]+"link" } variant="body2">{this.props.deviceProperties.linked[i]}</Typography>)
+            links.push(<Typography  key={ this.props.deviceProperties.linked[i]+"link" } variant="body1">{this.props.deviceProperties.linked[i]}</Typography>)
         }
         return links
     }

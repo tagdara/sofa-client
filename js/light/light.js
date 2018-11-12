@@ -1,23 +1,25 @@
 import React, { Component } from "react";
-import Switch from '@material-ui/core/Switch';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+
+import Avatar from '@material-ui/core/Avatar';
+import Card from '@material-ui/core/Card';
+import CardContent from '@material-ui/core/CardContent';
+import GridListTile from '@material-ui/core/GridListTile';
+import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
-import Icon from '@material-ui/core/Icon';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
-import Avatar from '@material-ui/core/Avatar';
-import LightDialog from './lightDialog';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Paper from '@material-ui/core/Paper';
-import GridListTile from '@material-ui/core/GridListTile';
+import Switch from '@material-ui/core/Switch';
+import Typography from '@material-ui/core/Typography';
+
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+
+import LightDialog from './lightDialog';
 import SofaSlider from "../sofaSlider"
 
 const styles = theme => ({
@@ -147,7 +149,7 @@ class Light extends React.Component {
                         <LightbulbOutlineIcon />
                     </Avatar>
                     {this.state.brightness=="no" ?
-                        <Typography variant="subheading" className={classes.nostack} gutterBottom>{this.props.name}</Typography>
+                        <Typography variant="subtitle1" className={classes.nostack} gutterBottom>{this.props.name}</Typography>
                         :
                         <SofaSlider value={this.state.brightness} preChange={this.handlePreBrightnessChange} change={this.handleBrightnessChange} 
                                     dis={this.state.powerState=='OFF'} name={this.props.name} />

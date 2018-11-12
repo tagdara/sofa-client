@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withData } from './dataContext';
+import { withData } from './DataContext/withData';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -21,7 +21,8 @@ import TouchAppIcon from '@material-ui/icons/TouchApp';
 import TuneIcon from '@material-ui/icons/Tune';
 import ListIcon from '@material-ui/icons/List';
 import TvIcon from '@material-ui/icons/Tv';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import Button from '@material-ui/core/Button';
 
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import { withData } from '../dataContext';
+import { withData } from '../DataContext/withData';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';

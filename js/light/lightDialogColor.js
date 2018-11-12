@@ -1,26 +1,18 @@
 import React, { Component } from "react";
-import Switch from '@material-ui/core/Switch';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
 import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
-import Divider from '@material-ui/core/Divider';
-import Avatar from '@material-ui/core/Avatar';
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import { HuePicker } from 'react-color';
-import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
         
@@ -158,10 +150,7 @@ class LightDialogColor extends React.Component {
                     </ListItem>
                     <ListItem className={classes.chipLine}>
                         <Paper elevation={0}>
-                            <Chip 
-                                key = 'reveal'
-                                label= "reveal" 
-                                className={ classes.chip }
+                            <Chip key = 'reveal' label= "reveal" className={ classes.chip }
                                 onClick={ () => this.handleColorChange({hue: 43.5, saturation:0.27, brightness: 1}) }
                             />
                         </Paper>

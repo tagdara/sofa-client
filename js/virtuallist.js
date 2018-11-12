@@ -1,11 +1,8 @@
-
 import React from "react";
 import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { withData } from './dataContext';
+import { withData } from './DataContext/withData';
 
 import Shade from './devices/shade';
 import Sprinkler from './devices/sprinkler';
@@ -46,32 +43,24 @@ class VirtualList extends React.Component {
         return (
             virtualDevices ?
                 <List className={classes.list}>
-                    {
-                        Object.keys(virtualDevices).map((key, index) => (
-                            virtualDevices[key]['type']=='shade' ?
-                                <Shade key={ index } name={ key } endpointId={ virtualDevices[key].endpointId } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
-                                :null
-                        ))
-                    }
+                    { Object.keys(virtualDevices).map((key, index) => (
+                        virtualDevices[key]['type']=='shade' ?
+                            <Shade key={ index } name={ key } endpointId={ virtualDevices[key].endpointId } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
+                            :null
+                    ))}
                     <Divider />
-                    {
-                        Object.keys(virtualDevices).map((key, index) => (
-                            virtualDevices[key]['type']=='water' ?
-                                <Sprinkler key={ index } name={ key } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
-                                :null
-                        ))
-                    }
+                    { Object.keys(virtualDevices).map((key, index) => (
+                        virtualDevices[key]['type']=='water' ?
+                            <Sprinkler key={ index } name={ key } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
+                            :null
+                    ))}
                     <Divider />
-                    {
-                        Object.keys(virtualDevices).map((key, index) => (
-                            virtualDevices[key]['type']=='lock' ?
-                                <StatusLock key={ index } name={ key }
-                                    status={ this.getStatusProp(virtualDevices[key].status) }
-                                    commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
-                                :null
-                        ))
-                    }
-    
+                    { Object.keys(virtualDevices).map((key, index) => (
+                        virtualDevices[key]['type']=='lock' ?
+                            <StatusLock key={ index } name={ key } status={ this.getStatusProp(virtualDevices[key].status) }
+                                        commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
+                            :null
+                        ))}
                 </List>
             : null 
         );

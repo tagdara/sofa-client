@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import { withData } from '../dataContext';
+import { withData } from '../DataContext/withData';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
@@ -50,7 +50,7 @@ class EventDialog extends React.Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(savedata)
-            }).then(this.reloadEvents())
+            }).then(this.loadEvents())
         } else {
             console.log('was not ready', this.state)
         }
@@ -72,10 +72,15 @@ class EventDialog extends React.Component {
             .then(this.setState({events:events}));
     } 
     
-    componentDidMount() {  
+    loadEvents = () => {
   	    fetch('/list/logic/events')
  		    .then(result=>result.json())
-            .then(data=>this.setState({events:data}))
+            .then(data=>this.setState(data, () => console.log(this.state)))
+
+    }
+    
+    componentDidMount() {  
+  	    this.loadEvents()
     }
 
     render() {

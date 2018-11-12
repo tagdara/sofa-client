@@ -6,7 +6,8 @@ import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -17,14 +18,14 @@ import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 
-import { withData } from './dataContext';
+import { withData } from '../DataContext/withData';
 import RegionBuild from "./regionBuild"
-import Area from './area/area';
-import RegionSelect from './regionSelect';
-import AreaDialog from './area/areaDialog';
-import LightListDialog from './lightListDialog';
-import LightGrid from './devices/lightgrid'
-import SofaCard from './sofaCard';
+import Area from '../area/area';
+import RegionDialog from './regionDialog';
+import AreaDialog from '../area/areaDialog';
+import LightListDialog from '../light/lightListDialog';
+import LightGrid from '../light/lightgrid'
+import SofaCard from '../sofaCard';
 
 const styles = theme => ({
         
@@ -61,8 +62,7 @@ class RegionCard extends React.Component {
         super(props);
 
         this.state = {
-            regionName: "main",
-            regionrooms: [],
+            regionName: "Main",
             arealist: {},
             regionlist: {},
             regionData: {},
@@ -75,17 +75,22 @@ class RegionCard extends React.Component {
             selectedArea: '',
             region: {},
             areas: {},
-            rooms: [],
             scenes: [],
+            regionSelect: false,
         };
     }
     
     sceneDataByArea = area => {
-        if (this.state.sceneData.hasOwnProperty(area)) {
-            return this.state.sceneData[area]
-        } else {
-            return {}
-        }
+        
+        var areascenes={}
+        if (this.state.areas.hasOwnProperty(area)) {
+            for (var scene in this.state.areas[area].scenes) {
+                if (this.state.scenes.hasOwnProperty(scene)) {
+                    areascenes[scene]=this.state.scenes[scene]
+                }
+            }
+        }   
+        return areascenes
     }
     
     areaSceneList = area => {
@@ -121,6 +126,17 @@ class RegionCard extends React.Component {
         return areascenes
     }
 
+    shortcutsByArea = area => {
+
+        if (this.state.areas.hasOwnProperty(area)) {
+            if (this.state.areas[area].hasOwnProperty('shortcuts')) {
+                return this.state.areas[area].shortcuts
+            }
+        }
+        return {}
+    }
+
+
     devicesByArea = area => {
 
         var ads=[]
@@ -142,8 +158,10 @@ class RegionCard extends React.Component {
 
         for (var dev in this.props.deviceProperties) {
             if (this.props.deviceProperties[dev].hasOwnProperty('powerState')) {
-                if (condition.toLowerCase()=='all' || this.props.deviceProperties[dev].powerState.toLowerCase()==condition.toLowerCase()) {
-                    count=count+1
+                if (this.props.deviceProperties[dev].powerState) {
+                    if (condition.toLowerCase()=='all' || this.props.deviceProperties[dev].powerState.toLowerCase()==condition.toLowerCase()) {
+                        count=count+1
+                    }
                 }
             }
         }
@@ -154,13 +172,22 @@ class RegionCard extends React.Component {
         this.setState({ showEditor: true} )
     }
 
-    handleRegionSelect = (region) => {
-        this.setState({ showEditor: false, region: region},
-            () => this.changeRegion(region))
+    selectRegion = (region) => {
+        
+        this.setState({ regionSelect: false })
+        if (region) { 
+            this.setState({ region: region}) 
+        } else {
+            region = this.state.region
+        }
+        
+        fetch('/list/logic/region/'+region)
+            .then(result=>result.json())
+            .then(result=>this.setState(result))
     }
     
     closeRegionSelect = () => {
-        this.setState({ showEditor: false} )
+        this.setState({ regionSelect: false} )
     }
 
     selectArea = (name) => {
@@ -188,15 +215,6 @@ class RegionCard extends React.Component {
         this.setState({regionData: data });
     }
 
-    confirmRegionRooms = (data) => {
-        
-        if (!Array.isArray(data)) {
-            data=[]
-        }
-        this.setState({regionrooms: data });
-    }
-
-    
     saveRegion = (name, data) => {
         
         var rdata=this.state.regionData
@@ -216,17 +234,9 @@ class RegionCard extends React.Component {
                 body: JSON.stringify(this.state.region)
             })
     }
-    
-    changeRegion = (regionName) => {
-        console.log('changing region to ',regionName)
-        fetch('/list/logic/region/'+regionName)
-            .then(result=>result.json())
-            .then(result=>this.setState(result))
 
-    }
-    
     componentDidMount() {
-        
+        console.log('regioncard',this)
   	    fetch('/list/logic/region/'+this.state.regionName)
  		    .then(result=>result.json())
  		    .then(result=> this.setState(result));
@@ -235,7 +245,7 @@ class RegionCard extends React.Component {
     render() {
         
         const { classes } = this.props;
-        const { areas } = this.state;
+        const { areas, regionSelect } = this.state;
         const lightsOn = this.lightCount('on')>0;
 
         return (
@@ -245,23 +255,26 @@ class RegionCard extends React.Component {
                             <Avatar className={lightsOn ?classes.on : classes.off} onClick={ () => this.handleClickOpen() }><LightbulbOutlineIcon/></Avatar>
                             <ListItemText primary={lightsOn ? this.lightCount('on')+" lights are on" : "All lights off" } onClick={ () => this.handleClickOpen() } />
                             <ListItemSecondaryAction>
-                                <IconButton onClick={(e) => this.handleEdit()}>
+                                <IconButton onClick={(e) => this.setState({regionSelect:true})}>
                                     <ViewModuleIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>
                         </ListItem>
-                        { this.state.rooms.map((name) => 
+                        { Object.keys(areas).map((name) => 
                             <Area sendAlexaCommand={this.props.sendAlexaCommand} key={ name } name={ name } shortcuts={this.areaShortcuts(name)} scenes={this.areaSceneList(name)} sceneData={this.scenesByArea(name)} devices={ this.devicesByArea(name)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(name)) } selectArea={this.selectArea} ></Area>
                         )}
                     </List>
-                    { this.state.showEditor ?
-                        <RegionBuild handleRegionSelect={this.handleRegionSelect} open={this.state.showEditor} close={this.closeRegionSelect} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
+                    { this.state.regionSelect ?
+                        <RegionDialog selectRegion={this.selectRegion} open={this.state.regionSelect} close={this.closeRegionSelect} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
                     : null }
                     { this.state.showdialog ?
                         <LightGrid sendAlexaCommand={this.props.sendAlexaCommand} name={'all'} lightCount={this.lightCount} closeGrid={this.closeDialog} showGrid={this.state.showdialog} key='lightlist' filter='ON' Category='Light' devices={ this.props.devicesByCategory('LIGHT') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('LIGHT')) } />
                     : null }
                     { this.state.selectedArea ?
-                        <AreaDialog sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.showAreaDialog} close={this.closeAreaDialog} name={this.state.selectedArea} sceneData={this.sceneDataByArea(this.state.selectedArea)} devices={ this.devicesByArea(this.state.selectedArea)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(this.state.selectedArea)) } sendMessage={this.props.sendMessage} />
+                        <AreaDialog shortcuts={this.shortcutsByArea(this.state.selectedArea)} sendAlexaCommand={this.props.sendAlexaCommand} 
+                                    open={this.state.showAreaDialog} close={this.closeAreaDialog} name={this.state.selectedArea} 
+                                    sceneData={this.sceneDataByArea(this.state.selectedArea)} devices={ this.devicesByArea(this.state.selectedArea)} 
+                                    deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(this.state.selectedArea)) }  />
                     : null }
                 </SofaCard>
         );

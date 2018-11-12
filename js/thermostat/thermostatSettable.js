@@ -22,12 +22,15 @@ const styles = theme => ({
         width: '100%',
     },
     cool: {
+        color: theme.palette.primary.contrastText,
         backgroundColor: "#00796B"
     },
     mid: {
+        color: theme.palette.primary.contrastText,
         backgroundColor: "#558B2F"
     },
     hot: {
+        color: theme.palette.primary.contrastText,
         backgroundColor: "#E65100"
     },
     buttonLine: {

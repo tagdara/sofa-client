@@ -5,8 +5,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import CloseIcon from '@material-ui/icons/Close';
-
-import Typography from '@material-ui/core/Typography';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
@@ -16,7 +14,8 @@ import WarningIcon from '@material-ui/icons/Warning';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import Button from '@material-ui/core/Button';
 import GroupLight from './grouplight'
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Divider from '@material-ui/core/Divider';

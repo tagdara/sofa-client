@@ -6,7 +6,8 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Avatar from '@material-ui/core/Avatar';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import Typography from '@material-ui/core/Typography';
 import deepOrange from '@material-ui/core/colors/deepOrange';
 
@@ -106,9 +107,9 @@ class LightList extends React.Component {
                         <Avatar className={classes.off} onClick={ () => this.toggleFilter('all') }><LightbulbOutlineIcon/></Avatar>
                         }
                         { this.lightCount('on')>0 ? 
-                            <Typography className={classes.countLabel} variant="subheading">{this.lightCount('on')} lights are on</Typography>
+                            <Typography className={classes.countLabel} variant="subtitle1">{this.lightCount('on')} lights are on</Typography>
                             : 
-                            <Typography className={classes.countLabel} variant="subheading">All lights off</Typography>
+                            <Typography className={classes.countLabel} variant="subtitle1">All lights off</Typography>
                         }
                     </CardContent>
                 </Card>

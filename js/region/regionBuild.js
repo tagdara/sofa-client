@@ -1,7 +1,4 @@
 import React from "react";
-import List from '@material-ui/core/List';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -20,82 +17,31 @@ import PlaceIcon from '@material-ui/icons/Place';
 import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 
-import TextField from '@material-ui/core/TextField';
-
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-
-import DeviceSelect from "./deviceSelect"
 import RegionList from "./regionList"
-import RoomSelect from "./roomSelect"
-import SofaDialog from "./sofaDialog"
+import AreaSelect from "./areaSelect"
+import SofaDialog from "../sofaDialog"
 
 const styles = theme => ({
         
-    content: {
-        minWidth: 0,
-        padding: "0 !important",
-        flexGrow:1,
-        display: "flex",
-        alignItems: "center"
-    },
-    list: {
-        minWidth: 320,
-        width: "100%",
-    },
-    tabTitle: {
-        backgroundColor: theme.palette.primary.main,
-        padding: 0,
-        paddingTop: "env(safe-area-inset-top)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-around",
-    },
-    dialogTitle: {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexGrow: 1,
-        color: theme.palette.primary.contrastText,
-    },
     dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",
     },
-    listItem: {
-        padding: 16,
-        width: '100%',
-    },
-    dialogContent: {
-        padding: 0,
-    },
-    sceneExpand: {
-        padding: "0",
-        marginBottom: 2,
-    },
-    areaInput: {
-        marginTop:0,
-        marginLeft: 16,
-    }
-
 });
 
-class RegionBuild extends React.Component {
+class RegionSelect extends React.Component {
     
     constructor(props) {
         super(props);
 
         this.state = {
-            adding: false,
+            edit: false,
+            add: false,
             selectedName: '',
             selectedDevices: [],
             areamap: {},
             regions: {},
             roomBrowser: false,
             objectBrowser: false,
-            newRegionName: '',
-            editMode: false,
         }
     }
 
@@ -147,15 +93,7 @@ class RegionBuild extends React.Component {
         this.setState({regions:curmap})
     }
 
-    enableEditMode = () => {
-        this.setState({ editMode: true})
-    }
-    
-    disableEditMode = () => {
-        this.setState({ editMode: false})
-    }
-     
-     
+
     handleObjectBrowser = () => {
         this.setState({ roomBrowser: true });
     };
@@ -180,6 +118,7 @@ class RegionBuild extends React.Component {
     }
     
     handleRegionEdit = (region) => {
+        console.log('hre',region)
         this.setState({roomBrowser:true, selectedRegion: region})
     }
 
@@ -191,19 +130,21 @@ class RegionBuild extends React.Component {
         return (
             <SofaDialog open={this.props.open} close={this.props.close} title="Regions" >
                 { this.state.roomBrowser ?
-                    <RoomSelect updateList={this.updateList} name={this.state.selectedRegion} selectedRooms={this.state.selectedRooms} open={this.state.roomBrowser} close={this.handleCloseRoomBrowser} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
+                    <AreaSelect name={this.state.selectedRegion} close={this.handleCloseRoomBrowser} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
                 : 
-                    <RegionList editMode={this.state.editMode} doneEditing={this.doneEditing} handleRegionEdit={this.handleRegionEdit} handleRegionSelect={this.props.handleRegionSelect} />
+                    <RegionList edit={this.state.edit} add={this.state.add} doneEditing={this.doneEditing} handleRegionEdit={this.handleRegionEdit} handleRegionSelect={this.props.handleRegionSelect} />
                 }
                 <Divider />
                 <DialogActions className={classes.dialogActions} >
-                    { !this.state.editMode ?
-                    <Button onClick={(e) => this.enableEditMode(e)} color="primary" autoFocus>EDIT</Button>
-                    : <Button onClick={(e) => this.disableEditMode(e)} color="primary" autoFocus>DONE</Button> }
-                    
-                    { !this.state.editMode ?
-                    <Button onClick={(e) => this.handleSave(e)} color="primary" autoFocus>OK</Button>
-                    : null }
+                    { !this.state.edit && !this.state.add ?
+                        <React.Fragment>
+                            <Button onClick={(e) => this.setState({ add: true}) } color="primary" autoFocus>ADD</Button>
+                            <Button onClick={(e) => this.setState({ edit: true}) } color="primary" autoFocus>EDIT</Button>
+                            <Button onClick={(e) => this.handleSave(e)} color="primary" autoFocus>OK</Button>
+                        </React.Fragment>
+                    : 
+                        <Button onClick={(e) => this.setState({ add: false, edit: false}) } color="primary" autoFocus>DONE</Button> 
+                    }
                 </DialogActions>
             </SofaDialog>
         )
@@ -211,8 +152,8 @@ class RegionBuild extends React.Component {
 
 }
 
-RegionBuild.propTypes = {
+RegionSelect.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(RegionBuild);
+export default withStyles(styles)(RegionSelect);

@@ -2,20 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
-import Snackbar from '@material-ui/core/Snackbar';
-import Typography from '@material-ui/core/Typography';
-
-import CloseIcon from '@material-ui/icons/Close';
-import DialpadIcon from '@material-ui/icons/Dialpad';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import TuneIcon from '@material-ui/icons/Tune';
-import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
-import { withData } from './dataContext';
+import { withData } from './DataContext/withData';
 import StatusLock from './devices/statusLock';
 
 const styles = theme => ({
@@ -57,7 +45,7 @@ class MiniCard extends React.Component {
         var dev=this.props.deviceByEndpointId(statusDef.endpointId)
         if (dev) {
             var dp=this.props.propertiesFromDevices(dev)
-            if (dp) {
+            if (dp.hasOwnProperty(dev.friendlyName)) {
                 dp=dp[dev.friendlyName]
                 return dp[statusDef.property]
             }
@@ -67,19 +55,14 @@ class MiniCard extends React.Component {
     }
 
     render() {
-
         const { classes, virtualDevices, name } = this.props;
-
 
         return (
                 <Paper className={classes.card}>
-
-                { virtualDevices.hasOwnProperty(name) ? 
-                    <StatusLock name={ name } secondIcon={false}
-                        status={ this.getStatusProp(virtualDevices[name].status) }
-                        commands={ virtualDevices[name].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
-                : null }
-
+                    { virtualDevices.hasOwnProperty(name) ? 
+                        <StatusLock name={ name } secondIcon={false} status={ this.getStatusProp(virtualDevices[name].status) }
+                            commands={ virtualDevices[name].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
+                    : null }
                 </Paper>
         );
     }

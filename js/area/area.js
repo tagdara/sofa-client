@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import SofaSlider from '../sofaSlider';
 
 import Slider, { Range } from 'rc-slider';
 import 'rc-slider/assets/index.css';
@@ -62,6 +63,7 @@ class Area extends React.Component {
         var highscore=0
         var currentlevel=0
         var scores={}
+        var devices=nextProps.devices
         
         for (var i = 0; i < 4; i++) {
             var level=i.toString()
@@ -71,13 +73,19 @@ class Area extends React.Component {
 
                 var levscore=0
                 for (var light in scene) {    
-                    if (deviceProperties.hasOwnProperty(light)) {
-                        if (deviceProperties[light]['powerState']=='ON') {
-                            var bri=deviceProperties[light]['brightness']
-                        } else {
-                            var bri=0
+                    // This is a hack to switch from endpointId to friendlyname
+                    for (var j = 0; j < devices.length; j++) {
+                        if (devices[j].endpointId==light) {
+                            var lightname=devices[j].friendlyName
+
+                            if (deviceProperties[lightname]['powerState']=='ON') {
+                                var bri=deviceProperties[lightname]['brightness']
+                            } else {
+                                var bri=0
+                            }
+                            levscore+=(50-Math.abs(bri-scene[light]['brightness']))
+                            break
                         }
-                        levscore+=(50-Math.abs(bri-scene[light]['brightness']))
                     }
                 }
 
@@ -88,7 +96,6 @@ class Area extends React.Component {
                 }
             }
         }
-
         return currentlevel
     }
 
@@ -129,7 +136,7 @@ class Area extends React.Component {
 
         return (
             <ListItem className={classes.areaListItem}>
-                <Typography variant="subheading" className={classes.halves} onClick={ () => this.props.selectArea(this.props.name)}>{this.props.name}</Typography>
+                <Typography variant="subtitle1" className={classes.halves} onClick={ () => this.props.selectArea(this.props.name)}>{this.props.name}</Typography>
                 <Slider className={classes.halves} min={0} max={3} defaultValue={this.state.level} value={this.state.level}
                     trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
                     handleStyle={{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -7, height: 16, width: 16}}

@@ -6,6 +6,9 @@ import yellow from '@material-ui/core/colors/yellow';
 
 
 export default createMuiTheme({
+    typography: {
+        useNextVariants: true,
+    },
     palette: {
         primary: {
             light: deepOrange[300],

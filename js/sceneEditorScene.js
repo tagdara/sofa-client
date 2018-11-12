@@ -16,9 +16,11 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Avatar from '@material-ui/core/Avatar';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import ListIcon from '@material-ui/icons/List';
 import CloseIcon from '@material-ui/icons/Close';
+import StarIcon from '@material-ui/icons/Star';
 
 const styles = theme => ({
         
@@ -37,10 +39,24 @@ const styles = theme => ({
         alignSelf: "center",
         padding: "0 16",
     },
+    avatar: {
+        color: theme.palette.primary.contrastText,    
+    },
     hotAvatar: {
-        background: "orangeRed",
-    }
-    
+        color: theme.palette.primary.contrastText,
+        background: theme.palette.primary.main,
+    },
+    button: {
+        minWidth: 36
+    },
+    hotButton: {
+        minWidth: 36,
+        "&:hover" : {
+            backgroundColor: theme.palette.primary.light,
+        },
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+    },    
 });
 
 
@@ -51,43 +67,100 @@ class SceneEditorScene extends React.Component {
 
         this.state = {
             expansionPanelOpen: false,
+            shortcutIds: ['x','0','1','2','3'],
         }
+    }
+    
+    nameByEndpointId = endpointId => {
+        var fn=[]
+        for (var i = 0; i < this.props.devices.length; i++) {
+            if (this.props.devices[i]['endpointId']==endpointId) {
+                return this.props.devices[i].friendlyName
+            } 
+        }
+        console.log('Did not find device named', endpointId, this.props.devices.length)
+    }
+    
+    endpointIdByName = name => {
+
+        for (var i = 0; i < this.props.devices.length; i++) {
+            if (this.props.devices[i]['friendlyName']==name) {
+                return this.props.devices[i].endpointId
+            } 
+        }
+        console.log('Did not find device named', name, this.props.devices.length)
+    }
+    
+    sceneLevelChange = (endpointId, brightness) => {
+        var curscene=this.props.scene
+        curscene[endpointId]={'brightness':brightness}
+        this.saveScene(curscene)
+    }
+    
+    saveScene = (data) => {
+
+        fetch('/save/logic/scene/'+this.props.name, {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+
+    }
+    
+    brightnessIflightInScene = light => {
+        var endpointId=this.endpointIdByName(light)
+        if (this.props.scene) {
+            if (this.props.scene.hasOwnProperty(endpointId)) {
+                if (this.props.scene[endpointId].hasOwnProperty('brightness')) {
+                    return this.props.scene[endpointId].brightness
+                }
+            }
+        }
+        return 0
     }
 
     render() {
 
-        const { classes } = this.props;
-       
+        const { classes, scene, name, edit, area, lights, shortcut } = this.props;
+        const { shortcutIds } = this.state;
         return (
             <ExpansionPanel elevation={0} expanded={this.state.expansionPanelOpen}>
                 <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon onClick={() => {
-                        this.setState({ expansionPanelOpen: !this.state.expansionPanelOpen });
-                    }}/>}
-                >
-                    { this.props.edit ?
-                    <Avatar onClick={ () => this.props.deleteScene(this.props.scene)} >
+                        this.setState({ expansionPanelOpen: !this.state.expansionPanelOpen }); }}/>} >
+                    { edit ?
+                    <Avatar onClick={ () => this.props.deleteScene(name)} >
                         <CloseIcon/>
                     </Avatar>
                     :
-                    <Avatar onClick={ () => this.props.runScene(this.props.scene)} className={this.props.shortcut==this.props.computedLevel.toString() ? classes.hotAvatar : classes.avatar}>
+                    <Avatar className={this.props.shortcut==this.props.computedLevel.toString() ? classes.hotAvatar : classes.avatar}
+                            onClick={ () => this.props.runScene(name)}>
                         {this.props.shortcut=='x' ? <ListIcon /> : this.props.shortcut }
                     </Avatar>
                     }
-                    <Typography variant="subheading" className={classes.summaryLabel} >{this.props.scene}</Typography>
+                    <Typography variant="subtitle1" className={classes.summaryLabel} >{name}</Typography>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.sceneExpand}>
                     <List className={classes.sceneList}>
-                {
-                    Object.keys(this.props.scenedata).map(light => 
-                        <SceneEditorLine key={'scene-line-'+light} levelsChange={this.props.levelsChange} light={light} scene={this.props.scene} area={this.props.area} lightdata={this.props.scenedata[light]} />
-                )}
+                        { Object.keys(lights).map(light => 
+                            <SceneEditorLine brightness={ this.brightnessIflightInScene(light) } 
+                                                key={'scene-line-'+light} levelsChange={this.sceneLevelChange} name={light} endpointId={this.endpointIdByName(light)} 
+                                                scenename={name} scene={scene} area={this.props.area} />
+                        )}
                         <ListItem>
-                            <Button color={this.props.shortcut=="x" ? "primary" : "default"}>-</Button>
-                            <Button color={this.props.shortcut=="0" ? "primary" : "default"} onClick={ () => this.props.setShortcut(this.props.area, this.props.scene, "0")}>0</Button>
-                            <Button color={this.props.shortcut=="1" ? "primary" : "default"} onClick={ () => this.props.setShortcut(this.props.area, this.props.scene, "1")}>1</Button>
-                            <Button color={this.props.shortcut=="2" ? "primary" : "default"} onClick={ () => this.props.setShortcut(this.props.area, this.props.scene, "2")}>2</Button>
-                            <Button color={this.props.shortcut=="3" ? "primary" : "default"} onClick={ () => this.props.setShortcut(this.props.area, this.props.scene, "3")}>3</Button>
-                        </ListItem>
+                            <ListItemIcon>
+                                <StarIcon />
+                            </ListItemIcon>
+
+                        {   shortcutIds.map(sc => 
+                            <Button onClick={ () => this.props.setShortcut(area, name, sc)} size="small" key = {sc+'m'} 
+                                    className={( shortcut==sc ) ? classes.hotButton : classes.button }>
+                            {sc}
+                            </Button>
+                        )}
+                        </ListItem>                        
                     </List>
                 </ExpansionPanelDetails>
             </ExpansionPanel>

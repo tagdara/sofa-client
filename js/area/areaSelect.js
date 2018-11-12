@@ -5,21 +5,15 @@ import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
 import Slide from  '@material-ui/core/Slide';
 import Checkbox from  '@material-ui/core/Checkbox';
 
-import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import PlaceIcon from '@material-ui/icons/Tune';
 
@@ -27,6 +21,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
+import SofaDialog from '../sofaDialog';
 
 const styles = theme => ({
         
@@ -117,25 +113,7 @@ class AreaSelect extends React.Component {
         const { classes, fullScreen  } = this.props;
         
         return (
-            <Dialog 
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={'sm'}
-                open={this.props.open}  
-                onClose={this.props.close}
-
-                TransitionComponent={Transition}
-                className={fullScreen ? classes.fullDialog : classes.normalDialog }
-            >
-                <DialogTitle className={classes.tabTitle}>
-
-                        <Toolbar className={classes.appBar} elevation={0}>
-                            <Typography variant="title" color="inherit" className={classes.dialogTitle}>
-                                {this.props.name}
-                            </Typography>
-                        </Toolbar>
-          
-                </DialogTitle>
+            <SofaDialog open={this.props.open} close={this.props.close} title={this.props.name} >
                 <Divider />
                 <DialogContent className={classes.dialogContent }>
                     <List className={classes.thermostatList} >
@@ -161,7 +139,7 @@ class AreaSelect extends React.Component {
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={(e) => this.handleSave(e)} color="primary" autoFocus>OK</Button>
                 </DialogActions>
-            </Dialog>
+            </SofaDialog>
         )
     }
 
@@ -169,7 +147,6 @@ class AreaSelect extends React.Component {
 
 AreaSelect.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(AreaSelect));
+export default withStyles(styles)(AreaSelect);

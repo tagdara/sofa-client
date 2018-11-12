@@ -69,24 +69,24 @@ class ThermostatDialog extends React.Component {
     render() {
         
         const { classes } = this.props;
+        const settable = this.settableDevices();
+        const nonSettable = this.nonSettableDevices();
         
         return (
             <SofaDialog title={'Temperatures'} open={this.props.open} close={this.props.close} >
                 <DialogContent className={classes.dialogContent }>
-                        <List className={classes.thermostatList} >
-                    { 
-                    this.settableDevices().map((device) => (
-                        <ThermostatSettable sendAlexaCommand={this.props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendMessage={this.props.sendMessage} />
-                        :
-                        null
-                    ))}
+                    <List className={classes.thermostatList} >
+
+                    { settable.map(device => 
+                        <ThermostatSettable sendAlexaCommand={this.props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
+                                            device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } />
+                    )}
                         <Divider />
-                    { 
-                    this.nonSettableDevices().map((device) => (
-                        <Thermostat key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] }  />
-                        : null
-                    ))}
-                        </List>
+                    { nonSettable.map(device => 
+                        <Thermostat key={ device.endpointId } name={ device.friendlyName } device={ device } 
+                                    deviceProperties={ this.props.deviceProperties[device.friendlyName] }  />
+                    )}
+                    </List>
                 </DialogContent>
                 <Divider />
                 <DialogActions className={classes.dialogActions} >
@@ -95,7 +95,6 @@ class ThermostatDialog extends React.Component {
             </SofaDialog>
         )
     }
-
 }
 
 ThermostatDialog.propTypes = {

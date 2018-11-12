@@ -4,8 +4,7 @@ import PropTypes from 'prop-types';
 import AutomationList from './automationList';
 import AutomationEditor from './automationEditor';
 import SofaDialog from '../sofaDialog';
-
-import { withData } from '../dataContext';
+import { withData } from '../DataContext/withData';
 
 class AutomationDialog extends React.Component {
     

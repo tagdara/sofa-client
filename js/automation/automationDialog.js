@@ -5,7 +5,7 @@ import AutomationList from './automationList';
 import AutomationEditor from './automationEditor';
 import SofaDialog from '../sofaDialog';
 
-import { withData } from '../dataContext';
+import { withData } from '../DataContext/withData';
 
 class AutomationBuilder extends React.Component {
     

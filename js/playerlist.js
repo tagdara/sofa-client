@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 
 import SonosGrid from './sonos/sonosGrid';
 import SonosPlayerCard from './sonos/sonosPlayerCard';
-import { withData } from './dataContext';
+import { withData } from './DataContext/withData';
 
 
 const styles = theme => ({
@@ -66,19 +66,16 @@ class PlayerList extends React.Component {
 
         return (
             <div className={classes.list}>
-                {this.props.devices.map((device) =>
+                { this.props.devices.map((device) =>
                     (device.friendlyName==this.state.activePlayer ?
-                        <SonosPlayerCard sendAlexaCommand={this.props.sendAlexaCommand} chooseActivePlayer={this.chooseActivePlayer} key={device.endpointId} handleGrid={this.handleGrid} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties } sendMessage={ this.props.sendMessage } />
-                        :
-                        null )
+                        <SonosPlayerCard sendAlexaCommand={this.props.sendAlexaCommand} chooseActivePlayer={this.chooseActivePlayer} key={device.endpointId} handleGrid={this.handleGrid} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties } />
+                    : null )
                     )}
-                {   this.state.showGrid ?
+                { this.state.showGrid ?
                     <SonosGrid sendAlexaCommand={this.props.sendAlexaCommand} closeGrid={this.handleCloseGrid} showGrid={this.state.showGrid} chooseActivePlayer={this.chooseActivePlayer} devices={this.props.devices} deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage}/>
-                    : null
-                }
+                : null }
             </div> 
         );
-
     }
 }
 

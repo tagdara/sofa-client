@@ -1,24 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+
+import Avatar from '@material-ui/core/Avatar';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-import Light from './devices/light';
-import Avatar from '@material-ui/core/Avatar';
-import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+
+import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 import Paper from '@material-ui/core/Paper';
 
-const styles = {
+import Light from './light';
+import SofaDialog from '../sofaDialog'
+
+const styles  = theme =>  ({
 
     dialog: {
         paddingTop: "env(safe-area-inset-top)",
@@ -68,9 +71,9 @@ const styles = {
         backgroundColor: "#777",
     },
     on: {
-        backgroundColor: deepOrange[500],
+        backgroundColor: theme.palette.primary.dark,
     },    
-}
+})
 
 class LightListDialog extends React.Component {
     
@@ -98,14 +101,7 @@ class LightListDialog extends React.Component {
         const { classes, fullScreen } = this.props;
 
         return (
-                <Dialog 
-                    fullScreen={fullScreen}
-                    fullWidth={true}
-                    maxWidth={'sm'}
-                    open={this.props.showdialog}
-                    onClose={() => this.props.closeDialog()}  
-                    className={this.props.classes.dialog}
-                    >
+                <SofaDialog open={this.props.showdialog} close={() => this.props.closeDialog()} >
                     <DialogTitle elevation={1} disableTypography={true} className={classes.titleControls}>
                         <Paper className={classes.titleContent} onClick={ () => this.toggleFilter('all') } >
                             { this.props.lightCount('on')>0 ? 
@@ -114,18 +110,17 @@ class LightListDialog extends React.Component {
                             <Avatar className={classes.off} ><LightbulbOutlineIcon/></Avatar>
                             }
                             { this.props.lightCount('on')>0 ? 
-                                <Typography className={classes.countLabel} variant="subheading">{this.props.lightCount('on')} lights are on</Typography>
+                                <Typography className={classes.countLabel} variant="subtitle1">{this.props.lightCount('on')} lights are on</Typography>
                                 : 
-                                <Typography className={classes.countLabel} variant="subheading">All lights off</Typography>
+                                <Typography className={classes.countLabel} variant="subtitle1">All lights off</Typography>
                             }
                         </Paper>
                     </DialogTitle>
                     <DialogContent className={classes.dialogContent}>
-                        { 
-                        this.props.devices.map((device) =>
+                        { this.props.devices.map((device) => (
                             this.state.filter=='all' || String(this.props.deviceProperties[device.friendlyName].powerState).toLowerCase()==this.state.filter.toLowerCase() ?
                             <Light key={ device.endpointId } name={ device.friendlyName } filter={ this.props.filter} device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendMessage={this.props.sendMessage} />
-                            : null
+                            : null )
                         )}                    
                     </DialogContent>
                     <DialogActions>
@@ -133,17 +128,13 @@ class LightListDialog extends React.Component {
                             OK
                         </Button>
                     </DialogActions>
-                </Dialog>
-
-            : null
-           
+                </SofaDialog>
         );
     }
 }
 
 LightListDialog.propTypes = {
     classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
 };
 
-export default withStyles(styles)(withMobileDialog()(LightListDialog));
+export default withStyles(styles)(LightListDialog);

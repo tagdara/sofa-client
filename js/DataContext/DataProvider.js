@@ -293,3 +293,4 @@ export class DataProvider extends Component {
     }
 }
 
+export default DataProvider;

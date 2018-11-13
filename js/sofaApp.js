@@ -107,6 +107,17 @@ class SofaApp extends Component {
                     {this.state.page == 'Lights' || !isMobile ?
                         <Grid item xs={isMobile ? 12 : 4 } className={classes.gridColumn}>
                             <RegionCard region="main" />
+                            <ThermostatHero Category="THERMOSTAT" />           
+                        </Grid>
+                    : null }
+                    {this.state.page == 'Security' || !isMobile ?
+                        <Grid item xs={isMobile ? 12 : 4 } className={classes.gridColumn}>
+                            <ZoneList filter='open' Category='ZONE' />
+                            <CameraSelect />
+                            <ButtonGrid>
+                                <MiniCard name={'Front Gate'} />
+                                <MiniCard name={'Garage Door'} />
+                            </ButtonGrid>
                             <ButtonGrid>
                                 <MiniLauncher icon={<TuneIcon />} name={'Automations'}>
                                     <AutomationDialog />
@@ -121,18 +132,7 @@ class SofaApp extends Component {
                                     <EventDialog />
                                 </MiniLauncher>
                             </ButtonGrid>
-                        </Grid>
-                    : null }
-                    {this.state.page == 'Security' || !isMobile ?
-                        <Grid item xs={isMobile ? 12 : 4 } className={classes.gridColumn}>
-                            <ZoneList filter='open' Category='ZONE' />
-                            <CameraSelect />
-                            <ButtonGrid>
-                                <MiniCard name={'Front Gate'} />
-                                <MiniCard name={'Garage Door'} />
-                            </ButtonGrid>
-                            <ThermostatHero Category="THERMOSTAT" />                        
-                        </Grid>
+                         </Grid>
                     : null }
                 </Grid>
                 

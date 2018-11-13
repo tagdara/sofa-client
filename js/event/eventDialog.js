@@ -75,7 +75,7 @@ class EventDialog extends React.Component {
     loadEvents = () => {
   	    fetch('/list/logic/events')
  		    .then(result=>result.json())
-            .then(data=>this.setState(data, () => console.log(this.state)))
+            .then(data=>this.setState(data))
 
     }
     

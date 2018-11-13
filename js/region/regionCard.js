@@ -236,7 +236,6 @@ class RegionCard extends React.Component {
     }
 
     componentDidMount() {
-        console.log('regioncard',this)
   	    fetch('/list/logic/region/'+this.state.regionName)
  		    .then(result=>result.json())
  		    .then(result=> this.setState(result));

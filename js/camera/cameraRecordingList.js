@@ -8,11 +8,16 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import ListSubheader from '@material-ui/core/ListSubheader';
 
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
+
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
 
 const styles = theme => ({
         
@@ -73,6 +78,9 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
     },
+    thumbbar: {
+        height: 20,
+    }
 });
 
 
@@ -173,17 +181,17 @@ class CameraRecordingList extends React.Component {
                             <ListItemText primary={pichour} classes={{ primary: classes.camListItem}}  />
                         </ListItem>
                     )
-                    :null    
-                    }
+                    : null }
                     { this.state.level=='pics' ?
-                    this.state.pics.map((pic) =>
-                        <ListItem key={ pic+'sel' } onClick={() => this.choosePic(pic)} >
-                            <Avatar src={"/thumbnail/dlink/captures/"+this.state.selectedCamera+"/Picture/"+this.state.selectedDate+"/"+this.state.selectedHour+"/"+pic} />
-                            <ListItemText primary={pic} classes={{ primary: classes.camListItem}}  />
-                        </ListItem>
-                    )
-                    :null    
-                    }
+                        <GridList>
+                            { Object.keys(this.state.pics).map((pic) =>
+                                <GridListTile key={pic} onClick={() => this.choosePic(pic)} >
+                                    <img src={"/thumbnail/dlink/captures/"+this.state.selectedCamera+"/Picture/"+this.state.selectedDate+"/"+this.state.selectedHour+"/"+pic} />
+                                    <GridListTileBar subtitle={this.state.pics[pic].date} className={classes.thumbbar} />
+                                </GridListTile>
+                            )}
+                        </GridList>
+                    : null }
                     { this.state.level=='image' ?
                         <ListItem className={classes.stackedImageLabel}>
                         <img

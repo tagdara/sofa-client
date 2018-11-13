@@ -68,7 +68,7 @@ class PlayerList extends React.Component {
             <div className={classes.list}>
                 { this.props.devices.map((device) =>
                     (device.friendlyName==this.state.activePlayer ?
-                        <SonosPlayerCard sendAlexaCommand={this.props.sendAlexaCommand} chooseActivePlayer={this.chooseActivePlayer} key={device.endpointId} handleGrid={this.handleGrid} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties } />
+                        <SonosPlayerCard sendAlexaCommand={this.props.sendAlexaCommand} deviceByName={this.props.deviceByName} chooseActivePlayer={this.chooseActivePlayer} key={device.endpointId} handleGrid={this.handleGrid} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties } />
                     : null )
                     )}
                 { this.state.showGrid ?

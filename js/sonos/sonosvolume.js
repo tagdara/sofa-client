@@ -26,6 +26,7 @@ class SonosVolume extends React.Component {
         this.state = {
             volume: 0,
         };
+
     }    
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -42,11 +43,11 @@ class SonosVolume extends React.Component {
     }; 
 
     handleVolumeChange = event => {
-        this.props.sendAlexaCommand(this.props.name,'','SpeakerController',"SetVolume",event)
+        this.props.sendAlexaCommand(this.props.name,this.props.endpointId,'SpeakerController',"SetVolume",event)
     }; 
 
     handleMuteChange = event => {
-        this.props.sendAlexaCommand(this.props.name,'','SpeakerController',"SetMute",!this.props.deviceProperties.muted)
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, 'SpeakerController',"SetMute",!this.props.deviceProperties.muted)
     }; 
 
     render() {

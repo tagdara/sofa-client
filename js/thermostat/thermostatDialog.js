@@ -22,7 +22,7 @@ const styles = theme => ({
         display: "flex",
         alignItems: "center"
     },
-    thermostatList: {
+    list: {
         width: "100%",
     },
     dialogActions: {
@@ -75,7 +75,7 @@ class ThermostatDialog extends React.Component {
         return (
             <SofaDialog title={'Temperatures'} open={this.props.open} close={this.props.close} >
                 <DialogContent className={classes.dialogContent }>
-                    <List className={classes.thermostatList} >
+                    <List  >
 
                     { settable.map(device => 
                         <ThermostatSettable sendAlexaCommand={this.props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 

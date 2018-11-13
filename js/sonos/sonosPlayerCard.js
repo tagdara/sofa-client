@@ -175,7 +175,7 @@ class SonosPlayerCard extends React.Component {
         
             for (var i = 0; i < allvol.length; i++) {
                 volumes.push(
-                    <SonosVolume sendAlexaCommand={this.props.sendAlexaCommand} key={ allvol[i] } name={ allvol[i] } deviceProperties={ this.props.deviceProperties[allvol[i]] } sendMessage={ this.props.sendMessage } />
+                    <SonosVolume sendAlexaCommand={this.props.sendAlexaCommand} key={ allvol[i] } name={ allvol[i] } endpointId={ this.props.deviceByName(allvol[i]).endpointId } deviceProperties={ this.props.deviceProperties[allvol[i]] } sendMessage={ this.props.sendMessage } />
                 )
             }
         }

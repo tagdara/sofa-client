@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import Slider from '@material-ui/lab/Slider';
 import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
@@ -13,7 +12,7 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.main,
     },
     stack: {
-        height: 44,
+        height: 48,
         display: "flex",
         flexGrow: 1,
         paddingLeft: 16,
@@ -21,10 +20,12 @@ const styles = theme => ({
         flexWrap: "wrap",
         maxWidth: 480,
         minWidth: 240,
+        width: "100%",
         boxSizing: "border-box",
+        overflowX: "hidden",
     },
     stackLabel: {
-        alignSelf: "center",
+        alignSelf: "flex-end",
     },
     stackSlider: {
         marginTop: 4,
@@ -55,6 +56,7 @@ class SofaSlider extends React.Component {
 
         this.state = {
             value: 0,
+            delaySet: false,
         };
     }
 
@@ -64,19 +66,34 @@ class SofaSlider extends React.Component {
         var data=nextProps.deviceProperties
         var changes={}
 
-        if (nextProps.hasOwnProperty('value')) {
-            changes.value=nextProps.value
+        if (!prevState.delaySet) {
+            if (nextProps.hasOwnProperty('value')) {
+                changes.value=nextProps.value
+            }
         }
         return changes
     }
 
-    handlePreChange = event => {
-        this.setState({ value: event });
+    handlePreChange = (event,value) => {
+        console.log(value)
+        this.setState({ value: value, delaySet: true});
+        this.props.preChange(event);
     }; 
 
-    handleChange = event => {
-        this.props.onChange(event);
+    handleChange = (event,value) => {
+        console.log(value)
+        this.props.change(this.state.value);
     }; 
+    
+    delaySliderUpdates = () => {
+        this.setState({ delaySet: true},
+            () =>  setTimeout(() => endSliderDelay(), 1000)
+        )
+    }
+    
+    endSliderDelay = () => {
+        this.setState({ delaySet: false});
+    }
    
     render() {
 
@@ -86,15 +103,12 @@ class SofaSlider extends React.Component {
                     <div className={classes.stack}>
                         <Typography variant="subtitle1" className={classes.stackLabel} gutterBottom>{this.props.name}</Typography>
                         <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.value+this.props.unit}</Typography>
-                        <Slider min={this.props.min} max={this.props.max} defaultValue={this.props.default} step={this.props.step} value={this.state.value}
-                            onChange={this.props.preChange} 
-                            onAfterChange={this.props.change} 
-                            trackStyle={ dis ? { backgroundColor: 'silver', height: 3 }: { backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
-                            handleStyle={ dis ?
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12} :
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} 
-                            }                            railStyle={{ height: 3 }}
-                            disabled={ dis }
+                        <Slider
+                            classes={{ container: classes.slider }}
+                            value={this.state.value} step={this.props.step} 
+                            min={this.props.min} max={this.props.max}
+                            onChange={this.handlePreChange}
+                            onDragEnd={this.handleChange}
                         />
                     </div>
 

@@ -5,10 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import SofaSlider from '../sofaSlider';
 
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import Slider from '@material-ui/lab/Slider';
 
 const styles  = theme =>  ({
     
@@ -99,9 +97,9 @@ class Area extends React.Component {
         return currentlevel
     }
 
-    handlePreLevelChange = event => {
-        
-        this.setState({ level: event, delaySet: true});
+    handlePreLevelChange = (event, level) => {
+        console.log(level)
+        this.setState({ level: level, delaySet: true});
     }; 
 
     runScene = sceneName => {
@@ -120,13 +118,13 @@ class Area extends React.Component {
         )
     }
 
-    runShortcut = level => {
-
-        if (this.props.shortcuts.hasOwnProperty(level.toString())) {
-            var sceneName=this.props.shortcuts[level]
+    runShortcut = (event) => {
+        console.log(event,this.state.level)
+        if (this.props.shortcuts.hasOwnProperty(this.state.level.toString())) {
+            var sceneName=this.props.shortcuts[this.state.level]
             this.runScene(sceneName)
         } else {
-            console.log('No scene shortcut for area level', level)
+            console.log('No scene shortcut for area level', this.state.level)
         }
     }
 
@@ -137,13 +135,8 @@ class Area extends React.Component {
         return (
             <ListItem className={classes.areaListItem}>
                 <Typography variant="subtitle1" className={classes.halves} onClick={ () => this.props.selectArea(this.props.name)}>{this.props.name}</Typography>
-                <Slider className={classes.halves} min={0} max={3} defaultValue={this.state.level} value={this.state.level}
-                    trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }}
-                    handleStyle={{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -7, height: 16, width: 16}}
-                    railStyle={{ height: 3 }}
-                    onChange={this.handlePreLevelChange} 
-                    onAfterChange={this.runShortcut} 
-                />
+                <Slider className={classes.halves} value={this.state.level} step={1} min={0} max={3} 
+                        onChange={this.handlePreLevelChange} onDragEnd={this.runShortcut} />
             </ListItem>
         );
     }

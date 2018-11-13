@@ -5,8 +5,7 @@ import Typography from '@material-ui/core/Typography';
 import Chip from '@material-ui/core/Chip';
 
 import Paper from '@material-ui/core/Paper';
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import SofaSlider from '../sofaSlider'
 
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -206,17 +205,8 @@ class ReceiverDialog extends React.Component {
                             <Avatar onClick={ () => this.handleMuteChange()} >
                                 {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                             </Avatar>
-                            <div className={classes.stack}>
-                                <Typography variant="subtitle1" className={classes.stackLabel} gutterBottom>Volume</Typography>
-                                <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.volume+"%"}</Typography>
-                                <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
-                                    onChange={this.handlePreVolumeChange} 
-                                    onAfterChange={this.handleVolumeChange} 
-                                    trackStyle={{ backgroundColor: 'orangeRed', opacity: .5, height: 3 }} 
-                                    handleStyle= {{ borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -7, height: 16, width: 16} }
-                                    railStyle={{ height: 3 }}
-                                />
-                            </div>
+                            <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
+                                        preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} />
                         </ListItem>
                             <ListItem className={classes.chipListItem}>
                                 <Typography variant="subtitle1" noWrap className={classes.chipLineLabel}>Input</Typography>

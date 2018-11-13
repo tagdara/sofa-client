@@ -8,6 +8,9 @@ import Slide from  '@material-ui/core/Slide';
 import SofaDialogTitle from './sofaDialogTitle';
 
 const styles = theme => ({
+    dialog: {
+        overflowX: "hidden",
+    }
 
 
 });
@@ -23,7 +26,7 @@ class SofaDialog extends React.Component {
         const { classes, fullScreen, maxWidth, open, close, title, tabs, tabValue, tabChange } = this.props;
         
         return (
-            <Dialog 
+            <Dialog className={classes.dialog}
                 fullScreen={fullScreen}
                 fullWidth={true}
                 maxWidth={maxWidth}

@@ -9,8 +9,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Slider, { Range } from 'rc-slider';
-import 'rc-slider/assets/index.css';
+import SofaSlider from '../sofaSlider';
+
 import Chip from '@material-ui/core/Chip';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -29,6 +29,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import PlaceIcon from '@material-ui/icons/Place';
 
 import { HuePicker } from 'react-color';
+import GroupDialog from './groupDialog';
 
 const styles = theme => ({
         
@@ -137,54 +138,6 @@ class GroupLight extends React.Component {
         };
     }
 
-    static getDerivedStateFromProps(nextProps, prevState) {
-        
-        var changes={}
-        changes.brightness=nextProps.avgState('brightness')
-        return changes
-    }
-
-    static parseState(data) {
-        
-        
-        var changes={}
-        if (data===undefined) {
-            return changes
-        }
-        
-        var brightnessCount=0;
-        var totalbrightness=0;
-        var temperatureCount=0;
-        var totaltemperature=0;
-
-
-        changes.areaState=data;
-        changes.powerState=false;
-        
-        for (var dev in data) {
-            if (data[dev].hasOwnProperty('context')) {
-                for (var i = 0; i < data[dev].context.properties.length; i++) {
-                    if (data[dev].context.properties[i].name=='powerState') {
-                        if (data[dev].context.properties[i].value=='ON') {
-                            changes.powerState=true;
-                        }
-                    } else if (data[dev].context.properties[i].name=='brightness') {
-                        brightnessCount=brightnessCount+1;
-                        totalbrightness=totalbrightness+data[dev].context.properties[i].value;
-                        changes.brightness=totalbrightness/brightnessCount;
-                    } else if (data[dev].context.properties[i].name=='colorTemperatureInKelvin') {
-                        temperatureCount=temperatureCount+1;
-                        totaltemperature=totaltemperature+data[dev].context.properties[i].value;
-                        changes.colorTemperatureInKelvin=totaltemperature/temperatureCount;
-                    }
-                }
-            }
-        } 
-        return changes;
-    }
-
-
-
     componentDidMount() {
         var controllermap={ 'ColorController': [], 'ColorTemperatureController': [], 'BrightnessController':[], 'PowerController':[] }
         for (var dev in this.props.devices) {
@@ -202,6 +155,53 @@ class GroupLight extends React.Component {
   	    this.setState({ 'controllermap': controllermap })
     }
 
+    avgState(prop) {
+        
+        if (prop=='on') {
+            for (var dev in this.props.deviceProperties) {
+                if (this.props.deviceProperties[dev].hasOwnProperty('powerState')) {
+                    if (this.props.deviceProperties[dev].powerState=='ON') {
+                        return true
+                    }
+                }
+            }
+            return false
+            
+        } else if (prop=='brightness') {
+            var brightnessCount=0;
+            var totalbrightness=0;
+            for (var dev in this.props.deviceProperties) {
+                if (this.props.deviceProperties[dev].hasOwnProperty('brightness')) {
+                    brightnessCount=brightnessCount+1;
+                    if (this.props.deviceProperties[dev].powerState=='ON') {
+                        totalbrightness=totalbrightness+this.props.deviceProperties[dev].brightness;
+                    }
+                }
+            }
+            if (brightnessCount==0) { return 0 }
+            var avgb=totalbrightness/brightnessCount
+            return avgb;
+        
+        } else if (prop=='temperature') {
+            var temperatureCount=0;
+            var totaltemperature=0;
+            for (var dev in this.props.deviceProperties) {
+                if (this.props.deviceProperties[dev].hasOwnProperty('colorTemperatureInKelvin')) {
+                    temperatureCount=temperatureCount+1;
+                    if (this.props.deviceProperties[dev].powerState=='ON') {
+                        totaltemperature=totaltemperature+this.props.deviceProperties[dev].colorTemperatureInKelvin;
+                    }
+                }
+            }
+            if (temperatureCount==0) { return 0 }
+            var avgb=totaltemperature/temperatureCount
+            return avgb;
+        
+        } else {
+            return 0;
+        }
+        
+    }
     
     handlePowerChange = event => {
         
@@ -229,200 +229,32 @@ class GroupLight extends React.Component {
         }
     }; 
 
-    handlePreColorTemperatureChange = event => {
-        this.setState({ colorTemperatureInKelvin: event, target:this.props.friendlyName});
-    }; 
-
-    handleColorTemperatureChange = event => {
-        for (var i = 0; i < this.state.controllermap['ColorTemperatureController'].length; i++) {
-            this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "ColorTemperatureController", "SetColorTemperature", event)
-        }
-    }; 
-
-
-    sb2sl(color) {
-
-        var SB = {hue:color.hue, saturation:color.saturation, brightness:color.brightness};
-        var SL = {h:color.hue, s:0, l:0};
-        SL.l = (2 - SB.saturation) * SB.brightness / 2;
-        SL.s = SL.l&&SL.l<1 ? SB.saturation*SB.brightness/(SL.l<0.5 ? SL.l*2 : 2-SL.l*2) : SL.s;
-        return SL
-    }
-        
-    sl2sb(color) {
-        var SL = {h:color.h, s:color.s, l:color.l};
-        var SB = {hue:color.h, saturation:0, brightness:0};
-        var t = SL.s * (SL.l<0.5 ? SL.l : 1-SL.l);
-        SB.brightness = SL.l+t;
-        SB.saturation = SL.l>0 ? 2*t/SB.brightness : SB.saturation ;
-        return SB
-    }
-    
-    handleColorSliderChange = color => {
-        var hsb=this.sl2sb(color.hsl)
-        this.setState({ color: hsb, target:this.props.friendlyName});
-        for (var i = 0; i < this.state.controllermap['ColorController'].length; i++) {
-            this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "ColorController", "SetColor", hsb)
-        }
-
-    }
-
-    handleColorChange = hsb => {
-        this.setState({ color: hsb, target:this.props.friendlyName});
-        for (var i = 0; i < this.state.controllermap['ColorController'].length; i++) {
-            this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "ColorController", "SetColor", hsb)
-        }
-    }
-
- 
     handleClickOpen = () => {
         this.setState({ open: true });
     };  
     
     handleClose = () => {
         this.setState({ open: false });
-    };    
+    };  
+    
     render() {
 
-        const { classes } = this.props;
+        const { classes,  } = this.props;
 
         return (
             <Paper className={classes.sliderPaper} elevation={0}>
-                <Avatar className={ this.props.avgState('on') ? classes.litAvatar: classes.avatar} onClick={ () => this.handleClickOpen()}>
+                <Avatar className={ this.avgState('on') ? classes.litAvatar: classes.avatar} onClick={ () => this.handleClickOpen()}>
                     <PlaceIcon />
                 </Avatar>
-                <div className={classes.stack}>
-                    <Typography variant="subtitle1" gutterBottom>{this.props.name+' Lights'}</Typography>
-                    {this.state.brightness=="no" ?
-                    null :
-                    <Slider min={0} max={100} defaultValue={0} step={1} value={this.state.brightness}
-                        onChange={this.handlePreBrightnessChange} 
-                        onAfterChange={this.handleBrightnessChange} 
-                        trackStyle={ this.props.avgState('on')  ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
-                        handleStyle={ this.props.avgState('on')  ? 
-                            { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
-                            { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
-                        }
-                        railStyle={{ height: 3 }}
-                        className={classes.stackSlider}
-                        disabled={ !this.props.avgState('on') }
+                <SofaSlider name={this.props.name+' Lights'} min={0} max={100} step={1} value={this.avgState('brightness')}
+                        preChange={this.handlePreBrightnessChange} change={this.handleBrightnessChange} 
+                        disabled={ !this.avgState('on') && !(this.brightness=='no') } padLeft={true}
                     />
-                    }
-                </div>
-                <Switch color="primary" checked={ this.props.avgState('on') } onChange={this.handlePowerChange} />
-            <Dialog open={this.state.open} onClose={this.handleClose} >
-                <DialogTitle >{this.props.name}</DialogTitle>
-                <DialogContent>
-                <List>
-                    <ListItem>
-                        <ListItemText primary="Power" onClick={ () => this.handleClickOpen()}/>
-                        <ListItemSecondaryAction>
-                            <Switch color="primary" checked={ this.props.avgState('on') } onChange={this.handlePowerChange} />
-                        </ListItemSecondaryAction>
-                    </ListItem>
-                    <Divider />
-                    <ListItem className={classes.listItemLabel}>
-                        <ListItemText primary="Brightness" />
-                    </ListItem>
-                    <ListItem>
-                        <Slider min={0} max={100} defaultValue={0} step={10} value={this.state.brightness}
-                            onChange={this.handlePreBrightnessChange} 
-                            onAfterChange={this.handleBrightnessChange} 
-                            trackStyle={ this.state.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
-                            handleStyle={this.state.powerState ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
-                            }
-                            railStyle={{ height: 3 }}
-                            disabled={ !this.props.avgState('on') }
-                        />
-                    </ListItem>
-                    <Divider />
-                    <ListItem className={classes.listItemLabel}>
-                        <ListItemText primary="White Color Temperature" />
-                    </ListItem>
-                    <ListItem>
-                        <Slider min={2000} max={7000} defaultValue={0} step={100} value={this.state.colorTemperatureInKelvin}
-                            onChange={this.handlePreColorTemperatureChange} 
-                            onAfterChange={this.handleColorTemperatureChange} 
-                            trackStyle={ this.state.powerState ? { backgroundColor: 'orangeRed', opacity: .5, height: 3 } : { backgroundColor: 'silver', height: 3 }}
-                            handleStyle={this.state.powerState ? 
-                                { borderColor: 'orangeRed', backgroundColor: 'orangeRed', marginTop: -5, height: 12, width: 12} :
-                                { borderColor: 'silver', backgroundColor: 'silver', marginTop: -5, height: 12, width: 12}
-                            }
-                            railStyle={{ height: 3 }}
-                            disabled={ !this.props.avgState('on') }
-                        />
-                    </ListItem>
-                    <ListItem>
-                    <Paper elevation={0}>
-                    <Chip 
-                        key = 'warm'
-                        label= "warm" 
-                        className={  (this.state.colorTemperatureInKelvin==2200) ? classes.hotchip : classes.chip }
-                        onClick={ () => this.handleColorTemperatureChange(2200)}
-                    />
-                    <Chip 
-                        key = 'soft'
-                        label= "soft" 
-                        className={ (this.state.colorTemperatureInKelvin==2700) ? classes.hotchip : classes.chip}
-                        onClick={ () => this.handleColorTemperatureChange(2700)}
-                    />
-                    <Chip 
-                        key = 'white'
-                        label= "white" 
-                        className={  (this.state.colorTemperatureInKelvin==4000) ? classes.hotchip : classes.chip }
-                        onClick={ () => this.handleColorTemperatureChange(4000)}
-                    />
-                    <Chip 
-                        key = 'day'
-                        label= "day" 
-                        className={  (this.state.colorTemperatureInKelvin==5500) ? classes.hotchip : classes.chip }
-                        onClick={ () => this.handleColorTemperatureChange(5500)}
-                    />
-                    <Chip 
-                        key = 'cool'
-                        label= "cool" 
-                        className={  (this.state.colorTemperatureInKelvin==7000) ? classes.hotchip : classes.chip }
-                        onClick={ () => this.handleColorTemperatureChange(7000)}
-                    />
-                    </Paper>
-                    </ListItem>
-                    <Divider />
-                    <ListItem className={classes.listItemLabel}>
-                        <ListItemText primary="Color" />
-                    </ListItem>
-                    <ListItem>
-                        <HuePicker
-                            color={ this.sb2sl(this.state.color) }
-                            onChangeComplete={ this.handleColorSliderChange }
-                        />
-                    </ListItem>
-                    <ListItem className={classes.chipLine}>
-                    <Paper elevation={0}>
-                    <Chip 
-                        key = 'reveal'
-                        label= "reveal" 
-                        className={ classes.chip }
-                        onClick={ () => this.handleColorChange({hue: 43.5, saturation:0.27, brightness: 1}) }
-                    />
-
-                    </Paper>
-                    </ListItem>
-
-
-                </List>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.handleClose} color="primary" autoFocus>
-                        OK
-                    </Button>
-                </DialogActions>
-            </Dialog>
+                <Switch color="primary" checked={ this.avgState('on') } onChange={this.handlePowerChange} />
+                <GroupDialog    powerState={this.avgState('on')} brightness={this.avgState('brightness')} open={this.state.open} close={this.handleClose}
+                                color={this.avgState('color')} colorTemperatureInKelvin={this.avgState('colorTemperatureInKelvin')} 
+                                controllermap={this.state.controllermap} devices={this.props.devices} sendAlexaCommand={this.props.sendAlexaCommand}  />
             </Paper>
-                
-
-            
         );
     }
 }

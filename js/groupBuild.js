@@ -27,8 +27,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import DeviceSelect from "./deviceSelect";
-import SofaDialog from "./sofaDialog";
+import DeviceGroupSelect from "./deviceSelect/deviceGroupSelect";
+import SofaDialog from "../sofaDialog";
 
 const styles = theme => ({
         
@@ -84,7 +84,6 @@ const styles = theme => ({
 function Transition(props) {
   return <Slide direction="up" {...props} />;
 }
-
 
 class GroupBuild extends React.Component {
     

@@ -152,7 +152,7 @@ class Light extends React.Component {
                         <Typography variant="subtitle1" className={classes.nostack} gutterBottom>{this.props.name}</Typography>
                         :
                         <SofaSlider value={this.state.brightness} preChange={this.handlePreBrightnessChange} change={this.handleBrightnessChange} 
-                                    dis={this.state.powerState=='OFF'} name={this.props.name} />
+                                    disabled={this.state.powerState=='OFF'} name={this.props.name} padLeft={true} />
                     }
                     <Switch color="primary" className={classes.lightSwitch} checked={this.state.powerState=='ON'} onChange={this.handlePowerChange} />
                     <LightDialog sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.open} name={ this.props.name } handleClose={this.handleClose} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />

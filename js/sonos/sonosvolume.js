@@ -56,10 +56,10 @@ class SonosVolume extends React.Component {
 
         return (
                 <Paper className={classes.sliderPaper} >
-                    <Avatar onClick={ () => this.handleMuteChange()}>
+                    <Avatar onClick={ () => this.handleMuteChange()} >
                         {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                     </Avatar>
-                    <SofaSlider name={this.props.name} value={this.state.volume} preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} />
+                    <SofaSlider padLeft={true} unit={"%"} name={this.props.name} value={this.state.volume} preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} />
                 </Paper>
         );
     }

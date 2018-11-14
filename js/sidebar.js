@@ -15,10 +15,6 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
-import DeviceSelect from "./deviceSelect"
-import GroupBuild from "./groupBuild"
-import RegionBuild from "./region/regionBuild"
-import AutomationBuilder from "./automation/automationBuilder"
 import TuneIcon from '@material-ui/icons/Tune';
 
 
@@ -106,8 +102,6 @@ class Sidebar extends React.Component {
                         <ListItemText primary={'Group Builder'} />
                     </ListItem>
                 </List>
-                <AutomationBuilder sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.autoBuilder} close={this.handleCloseAutomationBuilder} devicesByCategory={this.props.devicesByCategory} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} sendMessage={this.props.sendMessage} />
-                <RegionBuild open={this.state.groupBuilder} close={this.handleCloseGroupBuilder} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
             </Drawer>
         );
     }

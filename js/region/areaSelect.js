@@ -26,7 +26,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import DeviceSelect from "../deviceSelect"
+import DeviceGroupSelect from "../deviceSelect/deviceGroupSelect"
 import AreaLine from "./areaLine"
 import AreaAdd from "./areaAdd"
 import AreaEditor from "./areaEditor"
@@ -314,7 +314,7 @@ class AreaSelect extends React.Component {
                 </DialogActions>
 
                 { this.state.objectBrowser ?
-                <DeviceSelect updateList={this.updateList} name={this.state.selectedName} selectedDevices={this.state.selectedDevices} open={this.state.objectBrowser} close={this.handleCloseObjectBrowser} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
+                <DeviceGroupSelect updateList={this.updateList} name={this.state.selectedName} selectedDevices={this.state.selectedDevices} open={this.state.objectBrowser} close={this.handleCloseObjectBrowser} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
                     : null
                 }
             </React.Fragment>

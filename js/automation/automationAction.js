@@ -78,7 +78,7 @@ class AutomationAction extends React.Component {
         } else {
             var RealIcon=DeveloperBoardIcon
         }
-        return <RealIcon fontSize={size} />
+        return <RealIcon size={24} fontSize={size} />
     }
 
     editValue = (value) => {

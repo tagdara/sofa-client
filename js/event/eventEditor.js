@@ -23,7 +23,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import TuneIcon from '@material-ui/icons/Tune';
 
-import DeviceActionSelect from "../deviceActionSelect"
+import DeviceSelect from "../deviceSelect/deviceSelect"
 import EventTrigger from "./eventTrigger"
 import EventAction from "./eventAction"
 
@@ -118,7 +118,7 @@ class EventEditor extends React.Component {
             <React.Fragment>
                 <DialogContent className={classes.dialogContent }>
                 { this.state.deviceSelect ?
-                    <DeviceActionSelect select={this.handleActionSelect} />
+                    <DeviceSelect mode="action" select={this.handleActionSelect} />
                 :
                     <List className={classes.list}>
                         <ListItemText primary={name} />

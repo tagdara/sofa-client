@@ -27,7 +27,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import TuneIcon from '@material-ui/icons/Tune';
 
-import DeviceActionSelect from "../deviceActionSelect"
 import ScheduleInterval from './scheduleInterval'
 import ScheduleStart from './scheduleStart'
 import ScheduleTime from './scheduleTime'

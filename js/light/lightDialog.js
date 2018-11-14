@@ -1,15 +1,19 @@
 import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+
+
 import LightDialogPower from './lightDialogPower';
 import LightDialogBrightness from './lightDialogBrightness';
 import LightDialogTemperature from './lightDialogTemperature';
 import LightDialogColor from './lightDialogColor';
+
+import SofaDialog from '../sofaDialog';
 
 const styles = theme => ({
         
@@ -77,7 +81,14 @@ const styles = theme => ({
         paddingTop:0,
         paddingLeft:8,
         paddingRight:8,
-    }
+    },
+    dialogContent: {
+        height: "100%",
+        padding: 0,
+    },
+    list: {
+        flexGrow: 1,
+    },
 });
 
 class LightDialog extends React.Component {
@@ -150,26 +161,27 @@ class LightDialog extends React.Component {
         const { classes } = this.props;
 
         return (
-            <Dialog open={this.props.open} onClose={this.props.handleClose} >
-                <DialogTitle>{this.props.name}</DialogTitle>
-                <DialogContent>
-                    <LightDialogPower sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'}/>
-                    { this.props.deviceProperties.hasOwnProperty('brightness') ?
-                    <LightDialogBrightness sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'} brightness={this.props.deviceProperties.brightness}/>
-                    : null }
-                    { this.props.deviceProperties.hasOwnProperty('colorTemperatureInKelvin') ?
-                    <LightDialogTemperature sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'} colorTemperatureInKelvin={this.props.deviceProperties.colorTemperatureInKelvin}/>
-                    : null }
-                    { this.props.deviceProperties.hasOwnProperty('color') ?
-                    <LightDialogColor sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} color={this.props.deviceProperties.color}/>
-                    : null }
+            <SofaDialog title={this.props.name} open={this.props.open} close={this.props.handleClose} fullWidth={true} >
+                <DialogContent className={classes.dialogContent}>
+                    <List className={classes.list} >
+                        <LightDialogPower sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'}/>
+                        { this.props.deviceProperties.hasOwnProperty('brightness') ?
+                        <LightDialogBrightness sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'} brightness={this.props.deviceProperties.brightness}/>
+                        : null }
+                        { this.props.deviceProperties.hasOwnProperty('colorTemperatureInKelvin') ?
+                        <LightDialogTemperature sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} powerState={this.props.deviceProperties.powerState=='ON'} colorTemperatureInKelvin={this.props.deviceProperties.colorTemperatureInKelvin}/>
+                        : null }
+                        { this.props.deviceProperties.hasOwnProperty('color') ?
+                        <LightDialogColor sendAlexaCommand={this.props.sendAlexaCommand} name={this.props.name} endpointId={this.props.device.endpointId} color={this.props.deviceProperties.color}/>
+                        : null }
+                    </List>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={this.props.handleClose} color="primary" autoFocus>
                         OK
                     </Button>
                 </DialogActions>
-            </Dialog>
+            </SofaDialog>
         );
     }
 }

@@ -73,12 +73,12 @@ class ScheduleItem extends React.Component {
                 }
                 { schedule.type=='specificTime' ?
                     ( schedule['schedule']['daysType']=='daysOfTheWeek' ?
-                        <ListItemText primary={name} secondary={"At "+this.timeOnly(schedule['schedule']['at'])+" on "+schedule['schedule']['days']+this.dateIfFuture(schedule['start'])+" / next: "+this.dateOnly(schedule['nextrun'])} />
+                        <ListItemText onClick={ () => this.props.open(name) }primary={name} secondary={"At "+this.timeOnly(schedule['schedule']['at'])+" on "+schedule['schedule']['days']+this.dateIfFuture(schedule['start'])+" / next: "+this.dateOnly(schedule['nextrun'])} />
                     :
-                        <ListItemText primary={name} secondary={"At "+this.timeOnly(schedule['schedule']['at'])+" every "+schedule['schedule']['interval']+" days starting "+schedule['start']} />
+                        <ListItemText onClick={ () => this.props.open(name) }primary={name} secondary={"At "+this.timeOnly(schedule['schedule']['at'])+" every "+schedule['schedule']['interval']+" days "+this.dateIfFuture(schedule['start'])+" / next: "+this.dateOnly(schedule['nextrun'])}/>
                     )
                 :
-                    <ListItemText primary={name} secondary={"Every "+schedule['schedule']['interval']+" "+schedule['schedule']['unit']+" starting "+this.dateOnly(schedule['start'])+" "+this.timeOnly(schedule['start'])+" / next: "+this.dateOnly(schedule['nextrun'])+" "+this.timeOnly(schedule['nextrun'])} />
+                    <ListItemText onClick={ () => this.props.open(name) } primary={name} secondary={"Every "+schedule['schedule']['interval']+" "+schedule['schedule']['unit']+" starting "+this.dateOnly(schedule['start'])+" "+this.timeOnly(schedule['start'])+" / next: "+this.dateOnly(schedule['nextrun'])+" "+this.timeOnly(schedule['nextrun'])} />
                 }
                 <Switch color="primary" disabled={edit} checked={schedule['enabled']} onChange={ (e) => this.props.toggleSchedule(e) } />
 

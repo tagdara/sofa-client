@@ -8,9 +8,6 @@ import Slide from  '@material-ui/core/Slide';
 import SofaDialogTitle from './sofaDialogTitle';
 
 const styles = theme => ({
-    dialog: {
-        overflowX: "hidden",
-    }
 
 
 });

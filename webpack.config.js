@@ -1,4 +1,6 @@
 const webpack = require('webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 const config = {
     entry:  __dirname + '/js/index.jsx',
     output: {
@@ -21,6 +23,13 @@ const config = {
         }
       ]
     },
-
+    plugins : [ 
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'disabled',
+            generateStatsFile: true,
+            statsOptions: { source: false }
+        }),
+    ],  
 };
+
 module.exports = config;

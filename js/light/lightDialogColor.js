@@ -149,11 +149,9 @@ class LightDialogColor extends React.Component {
                         />
                     </ListItem>
                     <ListItem className={classes.chipLine}>
-                        <Paper elevation={0}>
-                            <Chip key = 'reveal' label= "reveal" className={ classes.chip }
-                                onClick={ () => this.handleColorChange({hue: 43.5, saturation:0.27, brightness: 1}) }
-                            />
-                        </Paper>
+                        <Chip key = 'reveal' label= "reveal" className={ classes.chip }
+                            onClick={ () => this.handleColorChange({hue: 43.5, saturation:0.27, brightness: 1}) }
+                        />
                     </ListItem>
                 </List>
         );

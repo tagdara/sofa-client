@@ -8,6 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import ToysIcon from '@material-ui/icons/Toys';
 
 import SofaSlider from '../sofaSlider'
 
@@ -129,7 +130,7 @@ class ThermostatSettable extends React.Component {
             <React.Fragment>
                 <ListItem className={classes.listItem}>
                     <Avatar className={ this.tempColor(deviceProperties.temperature) }>{ deviceProperties.temperature }</Avatar>
-                    <SofaSlider min={60} max={90} defaultValue={70} value={targetSetPoint} unit={"°"} name={name}
+                    <SofaSlider min={60} max={90} defaultValue={70} value={targetSetPoint} unit={"°"} name={name} padLeft={true}
                                 preChange={this.handlePreSetPointChange} change={this.handleSetPointChange} 
                                 dis={ deviceProperties.thermostatMode!='HEAT' } />
                 </ListItem>
@@ -141,8 +142,9 @@ class ThermostatSettable extends React.Component {
                         ))}
                 </ListItem>
                 { this.state.hasOwnProperty('powerLevel') ?
-                <ListItem className={classes.speedlistItem}>
-                    <SofaSlider value={powerLevel} unit={"%"} name={"Speed"}
+                <ListItem className={classes.listItem}>
+                    <Avatar><ToysIcon /></Avatar>
+                    <SofaSlider value={powerLevel} unit={"%"} name={"Fan Speed"} padLeft={true}
                                 preChange={this.handlePrePowerLevelChange} change={this.handlePowerLevelChange} />
                 </ListItem>
                 : null }

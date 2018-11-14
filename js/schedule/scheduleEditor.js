@@ -22,7 +22,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import CheckIcon from '@material-ui/icons/Check';
 import TuneIcon from '@material-ui/icons/Tune';
 
-import DeviceActionSelect from "../deviceActionSelect"
+import DeviceSelect from "../deviceSelect/deviceSelect"
 import ScheduleInterval from './scheduleInterval'
 import ScheduleStart from './scheduleStart'
 import ScheduleTime from './scheduleTime'
@@ -230,6 +230,7 @@ class ScheduleEditor extends React.Component {
         }
 
         if (this.props.scheduleData) {
+            console.log(this.props.scheduleData)
             var scheduleData={  scheduleStart:this.props.scheduleData['start'].replace('Z',''),
                                 enabled: this.props.scheduleData['enabled'],
                                 scheduleAction: this.props.scheduleData['action'],
@@ -243,7 +244,8 @@ class ScheduleEditor extends React.Component {
                                             scheduleDaysType: this.props.scheduleData.schedule['daysType']
                     }
                 } else if (this.props.scheduleData.schedule['daysType']=='interval') {
-                    var scheduleDetails={   scheduleTime: this.props.scheduleData.schedule['at'],
+                    var scheduleDetails={   scheduleDaysType: this.props.scheduleData.schedule['daysType'],
+                                            scheduleTime: this.props.scheduleData.schedule['at'],
                                             scheduleInterval: this.props.scheduleData.schedule['interval'],
                     }
                 }
@@ -267,7 +269,7 @@ class ScheduleEditor extends React.Component {
             <React.Fragment>
                 <DialogContent className={classes.dialogContent }>
                 { this.state.deviceSelect ?
-                    <DeviceActionSelect select={this.handleActionSelect} />
+                    <DeviceSelect mode="action" select={this.handleActionSelect} />
                 :
                     <List className={classes.list}>
                         <ScheduleName target="scheduleName" change={this.changeValue} value={this.state.scheduleName} />

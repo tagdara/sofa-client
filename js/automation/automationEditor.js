@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { withData } from '../DataContext/withData';
 
 import Button from '@material-ui/core/Button';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -12,14 +13,25 @@ import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListSubheader from '@material-ui/core/ListSubheader';
 
-import DeviceActionSelect from "../deviceActionSelect"
-import DevicePropertySelect from "../devicePropertySelect"
-
-import SceneActionSelect from "../sceneActionSelect"
+import DeviceSelect from "../deviceSelect/deviceSelect"
 
 import AutomationAction from "./automationAction"
 import AutomationCondition from "./automationCondition"
 import OperatorButton from "./operatorButton"
+
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import FileCopyIcon from '@material-ui/icons/FileCopyOutlined';
+import SaveIcon from '@material-ui/icons/Save';
+import PrintIcon from '@material-ui/icons/Print';
+import ShareIcon from '@material-ui/icons/Share';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+
+import AnnouncementIcon from '@material-ui/icons/Announcement';
+import ShuffleIcon from '@material-ui/icons/Shuffle';
+import TuneIcon from '@material-ui/icons/Tune';
 
 const styles = theme => ({
         
@@ -40,6 +52,7 @@ const styles = theme => ({
     listActions: {
         minWidth: 320,
         width: "100%",
+        backgroundColor: theme.palette.background.paper,
     },
     listItem: {
         padding: 16,
@@ -47,10 +60,23 @@ const styles = theme => ({
     conditionItem: {
         padding: 16,
         backgroundColor: theme.palette.grey[200]
-        },
-
+    },
+    speedDial: {
+        position: 'absolute',
+        bottom: theme.spacing.unit * 4,
+        right: theme.spacing.unit * 6,
+    },
+    editorTitle: {
+        padding: "16 16 4 16",
+    }
 });
 
+const actions = [
+  { icon: <TuneIcon />, name: 'Action' },
+  { icon: <ShuffleIcon />, name: 'Condition' },
+  { icon: <AnnouncementIcon />, name: 'Trigger' },
+
+];
 
 class AutomationEditor extends React.Component {
     
@@ -63,10 +89,11 @@ class AutomationEditor extends React.Component {
             addingAction: false,
             addingCondition: false,
 
-            addingScene: false,
             editingActions: false,
             adding: false,
-
+            
+            open: false,
+            hidden: false,
         }
     }
 
@@ -77,23 +104,19 @@ class AutomationEditor extends React.Component {
     }
     
     handleAddAction = () => {
-        this.setState({addingAction: true})
+        this.setState({addingAction: true, hidden: true})
     }  
     
     handleAddCondition = () => {
-        this.setState({addingCondition: true})
-    }  
-    
-    handleAddSceneAction = () => {
-        this.setState({addingScene: true})
+        this.setState({addingCondition: true, hidden: true})
     }  
 
     handleEditActions = () => {
-        this.setState({editingActions: true})
+        this.setState({editingActions: true, hidden: true})
     }  
     
     handleDoneAddEdit = () => {
-        this.setState({addingAction: false, editingActions: false, addingScene: false})
+        this.setState({addingAction: false, editingActions: false, addingCondition: false, hidden: false})
     }  
     
     handleActionSelect = (deviceName, endpointId, controller, cmd) => {
@@ -102,7 +125,7 @@ class AutomationEditor extends React.Component {
         this.setState({actions : actions},
             () => this.saveAutomation()
         );
-        this.setState({addingAction: false, editingActions: false, addingScene: false})
+        this.setState({addingAction: false, editingActions: false, addingCondition: false})
     }
 
     handlePropertySelect = (deviceName, endpointId, controller, prop) => {
@@ -111,7 +134,7 @@ class AutomationEditor extends React.Component {
         this.setState({conditions : conditions},
             () => this.saveAutomation()
         );
-        this.setState({addingAction: false, editingActions: false, addingScene: false})
+        this.setState({addingAction: false, editingActions: false, addingCondition: false})
     }
 
     
@@ -248,31 +271,63 @@ class AutomationEditor extends React.Component {
  		    .then(result=>result.json())
             .then(result=>this.setState({controllers:result}));
     }
+    
+    handleVisibility = () => {
+        this.setState(state => ({ open: false, hidden: !state.hidden,}));
+    };
 
+    handleClick = () => { 
+        this.setState(state => ({open: !state.open,}));
+    };
+
+    handleOpen = () => {
+        if (!this.state.hidden) { 
+            this.setState({open: true,});
+        }
+    };
+
+    handleClose = () => { 
+        this.setState({open: false,});
+    };
+    
+    handleDialClick = (addtype) => {
+        this.setState({ open: false })
+        if (addtype=="Trigger") {
+            console.log('not implementted')
+        } else if (addtype=="Condition") {
+            this.handleAddCondition()
+        } else if (addtype=="Action") {
+            this.handleAddAction()
+        }
+    }
+    
     render() {
         
-        const { classes } = this.props;
+        const { classes, name } = this.props;
+        const { open, hidden, addingAction, addingCondition, conditions } = this.state;
         
         return (
             <React.Fragment>
+                <DialogTitle className={classes.editorTitle}>
+                    {name}
+                    {addingCondition ? " / Add Condition" : null}
+                    {addingAction ? " / Add Action" : null}
+                </DialogTitle>
                 <DialogContent className={classes.dialogContent }>
                 { this.state.addingAction || this.state.addingCondition ?
-                
-                    (this.state.addingAction ?
-                        <DeviceActionSelect select={this.handleActionSelect} />
-                        :
-                        <DevicePropertySelect select={this.handlePropertySelect} />
-                    )
+                    <DeviceSelect mode={this.state.addingAction ? "action" : "property"} select={this.handleActionSelect} />
                 :  
                     <React.Fragment>
+                    { conditions.length > 0 ?
                     <List className={classes.listActions}>
                         <ListSubheader>Conditions</ListSubheader>
-                        {this.state.conditions.map((condition,index) =>
+                        { conditions.map((condition,index) =>
                             <AutomationCondition moveUp={this.moveConditionUp} moveDown={this.moveConditionDown} save={this.saveCondition} edit={this.state.editingActions} delete={this.deleteCondition} condition={condition} index={index} name={this.props.deviceByEndpointId(condition.endpointId).friendlyName} key={ this.props.name+index } />
                         )}
                     </List>
+                    : null }
                     <List className={classes.listActions}>
-                        <ListSubheader>Conditions</ListSubheader>
+                        <ListSubheader>Actions</ListSubheader>
                         <Divider />
                         {this.state.actions.map((action,index) =>
                             <AutomationAction moveUp={this.moveActionUp} moveDown={this.moveActionDown} save={this.saveAction} edit={this.state.editingActions} action={action} delete={this.deleteAction} actionValue={this.getActionValue(action.controller, action.command)} index={index} device={ this.props.deviceByEndpointId(action.endpointId) } name={this.props.deviceByEndpointId(action.endpointId).friendlyName} key={ this.props.name+index } />
@@ -282,25 +337,25 @@ class AutomationEditor extends React.Component {
                 }
                 </DialogContent>
                 <Divider />
-            {!this.state.addingAction && !this.state.editingActions ?
+            {!addingAction && !this.state.editingActions && !addingCondition ?
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={() => this.handleEditActions()} color="primary">EDIT</Button>
-                    <Button onClick={() => this.handleAddAction()} color="primary">ADD</Button>
-                    <Button onClick={() => this.handleAddCondition()} color="primary">COND</Button>
-
-                    <Button onClick={() => this.props.doneEditing()} color="primary" autoFocus>DONE</Button>
+                    <Button onClick={() => this.props.doneEditing()} color="primary" autoFocus>OK</Button>
                 </DialogActions>
             : null }
-            {this.state.editingActions ?
+            {this.state.editingActions || addingAction || addingCondition ?
                 <DialogActions className={classes.dialogActions} >
                     <Button onClick={() => this.handleDoneAddEdit()} color="primary" autoFocus>DONE</Button>
                 </DialogActions>
             : null }
-            {this.state.addingAction ?
-                <DialogActions className={classes.dialogActions} >
-                    <Button onClick={() => this.handleDoneAddEdit()} color="primary" autoFocus>CANCEL</Button>
-                </DialogActions>
-            : null }
+                    <SpeedDial className={classes.speedDial} hidden={hidden} icon={<SpeedDialIcon openIcon={<EditIcon />} />} onBlur={this.handleClose}
+                                onClick={this.handleClick} onClose={this.handleClose} onFocus={this.handleOpen} onMouseEnter={this.handleOpen}
+                                onMouseLeave={this.handleClose} open={open} ariaLabel="Add">
+                            {actions.map(action => (
+                                <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} onClick={() => this.handleDialClick(action.name)} />
+                            ))}
+                    </SpeedDial>
+
             </React.Fragment>
         )
     }

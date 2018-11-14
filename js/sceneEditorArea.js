@@ -54,8 +54,6 @@ class SceneEditorArea extends React.Component {
     }
     
     componentDidMount() {
-        
-        console.log(this.props.name, this.props.computedLevel)
 
         fetch('/list/logic/scenes')
  		    .then(result=>result.json())
@@ -69,9 +67,7 @@ class SceneEditorArea extends React.Component {
     
     sortByShortcuts = () => {
         var sortlist=Object.keys(this.state.scenes).sort().reverse();
-        console.log('starting sort',sortlist)
         var sc=Object.keys(this.state.shortcuts).sort();
-        console.log('sc',sc)
         for (var i = 0; i < sc.length; i++) {
             if (sortlist.indexOf(this.state.shortcuts[sc[i]])>0) {
                 sortlist.splice(sortlist.indexOf(this.state.shortcuts[sc[i]]),1);

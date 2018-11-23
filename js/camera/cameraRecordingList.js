@@ -168,9 +168,10 @@ class CameraRecordingList extends React.Component {
                     :null    
                     }
                     { this.state.level=='dates' ?
-                    this.state.dates.map((picdate) =>
+                    
+                    Object.keys(this.state.dates).sort().reverse().map((picdate) =>
                         <ListItem key={ picdate+'sel' } onClick={() => this.chooseDate(picdate)} >
-                            <ListItemText primary={picdate} classes={{ primary: classes.camListItem}}  />
+                            <ListItemText primary={this.state.dates[picdate].date} classes={{ primary: classes.camListItem}}  />
                         </ListItem>
                     )
                     :null    
@@ -184,7 +185,7 @@ class CameraRecordingList extends React.Component {
                     : null }
                     { this.state.level=='pics' ?
                         <GridList>
-                            { Object.keys(this.state.pics).map((pic) =>
+                            { Object.keys(this.state.pics).sort().map((pic) =>
                                 <GridListTile key={pic} onClick={() => this.choosePic(pic)} >
                                     <img src={"/thumbnail/dlink/captures/"+this.state.selectedCamera+"/Picture/"+this.state.selectedDate+"/"+this.state.selectedHour+"/"+pic} />
                                     <GridListTileBar subtitle={this.state.pics[pic].date} className={classes.thumbbar} />

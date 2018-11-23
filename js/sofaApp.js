@@ -107,7 +107,13 @@ class SofaApp extends Component {
                     {this.state.page == 'Lights' || !isMobile ?
                         <Grid item xs={isMobile ? 12 : 4 } className={classes.gridColumn}>
                             <RegionCard region="main" />
+                            <ButtonGrid>
+                                <MiniLauncher icon={<DevicesOtherIcon />} name={'More Devices'}>
+                                    <ButtonDialog />
+                                </MiniLauncher>
+                            </ButtonGrid>
                             <ThermostatHero Category="THERMOSTAT" />           
+
                         </Grid>
                     : null }
                     {this.state.page == 'Security' || !isMobile ?
@@ -122,14 +128,8 @@ class SofaApp extends Component {
                                 <MiniLauncher icon={<TuneIcon />} name={'Automations'}>
                                     <AutomationDialog />
                                 </MiniLauncher>
-                                <MiniLauncher icon={<DevicesOtherIcon />} name={'Devices'}>
-                                    <ButtonDialog />
-                                </MiniLauncher>
                                 <MiniLauncher icon={<TuneIcon />} name={'Schedule'}>
                                     <ScheduleDialog />
-                                </MiniLauncher>
-                                <MiniLauncher icon={<TuneIcon />} name={'Events'}>
-                                    <EventDialog />
                                 </MiniLauncher>
                             </ButtonGrid>
                          </Grid>

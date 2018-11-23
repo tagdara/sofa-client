@@ -47,7 +47,7 @@ class DeviceExpandProperties extends React.Component {
         
         return (
             <List className={classes.detailList}>
-                { controllers.map(controller => {
+                { Object.keys(controllers).sort().map(controller => {
                     return this.getProperties(device,controller).map(prop => 
                         <ListItem key={controller+prop} onClick={() => this.props.select(device.friendlyName, device.endpointId, controller, prop)}>
                             <ListItemIcon><TuneIcon /></ListItemIcon>

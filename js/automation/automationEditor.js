@@ -17,6 +17,8 @@ import DeviceSelect from "../deviceSelect/deviceSelect"
 
 import AutomationAction from "./automationAction"
 import AutomationCondition from "./automationCondition"
+import AutomationTrigger from "./automationTrigger"
+
 import OperatorButton from "./operatorButton"
 
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -47,6 +49,7 @@ const styles = theme => ({
         paddingBottom: "env(safe-area-inset-bottom)",
     },
     dialogContent: {
+        height: "100%",
         padding: 0,
     },
     listActions: {
@@ -63,15 +66,15 @@ const styles = theme => ({
     },
     speedDial: {
         position: 'absolute',
-        bottom: theme.spacing.unit * 4,
-        right: theme.spacing.unit * 6,
+        bottom: theme.spacing.unit * 3,
+        right: "50%",
     },
     editorTitle: {
         padding: "16 16 4 16",
     }
 });
 
-const actions = [
+const dialActions = [
   { icon: <TuneIcon />, name: 'Action' },
   { icon: <ShuffleIcon />, name: 'Condition' },
   { icon: <AnnouncementIcon />, name: 'Trigger' },
@@ -84,14 +87,11 @@ class AutomationEditor extends React.Component {
         super(props);
 
         this.state = {
+            addmode: null,
             actions: [],
             conditions: [],
-            addingAction: false,
-            addingCondition: false,
-
-            editingActions: false,
-            adding: false,
-            
+            triggers: [],
+            edit: false,
             open: false,
             hidden: false,
         }
@@ -103,39 +103,38 @@ class AutomationEditor extends React.Component {
         this.saveAction(index, action)
     }
     
-    handleAddAction = () => {
-        this.setState({addingAction: true, hidden: true})
-    }  
-    
-    handleAddCondition = () => {
-        this.setState({addingCondition: true, hidden: true})
-    }  
-
     handleEditActions = () => {
-        this.setState({editingActions: true, hidden: true})
+        this.setState({edit: true, hidden: true})
     }  
     
     handleDoneAddEdit = () => {
-        this.setState({addingAction: false, editingActions: false, addingCondition: false, hidden: false})
+        this.setState({addmode: false, edit: false, hidden: false})
     }  
     
     handleActionSelect = (deviceName, endpointId, controller, cmd) => {
         var actions=this.state.actions
         actions.push({'deviceName':deviceName, "endpointId":endpointId, "controller":controller, "command":cmd, "value":0})
-        this.setState({actions : actions},
+        this.setState({actions : actions, addmode: false, hidden: false},
             () => this.saveAutomation()
         );
-        this.setState({addingAction: false, editingActions: false, addingCondition: false})
     }
 
     handlePropertySelect = (deviceName, endpointId, controller, prop) => {
         var conditions=this.state.conditions
         conditions.push({'deviceName':deviceName, "endpointId":endpointId, "controller":controller, "propertyName":prop, "operator": "=", "value":0})
-        this.setState({conditions : conditions},
+        this.setState({conditions : conditions, addmode: false, hidden: false},
             () => this.saveAutomation()
         );
-        this.setState({addingAction: false, editingActions: false, addingCondition: false})
     }
+
+    handleTriggerSelect = (deviceName, endpointId, controller, prop) => {
+        var triggers=this.state.triggers
+        triggers.push({'deviceName':deviceName, "endpointId":endpointId, "controller":controller, "propertyName":prop, "operator": "=", "value":0})
+        this.setState({triggers : triggers, addmode: false, hidden: false},
+            () => this.saveAutomation()
+        );
+    }
+
 
     
     getActionValue = (controller, command) => {
@@ -149,10 +148,10 @@ class AutomationEditor extends React.Component {
         return ''
     }
     
-    deleteAction = (index) => {
-        var actions=this.state.actions
-        actions.splice(index, 1);
-        this.setState({actions : actions},
+    deleteTrigger = (index) => {
+        var triggers=this.state.triggers
+        triggers.splice(index, 1);
+        this.setState({triggers : triggers},
             () => this.saveAutomation()
         );
     }
@@ -163,6 +162,38 @@ class AutomationEditor extends React.Component {
         this.setState({conditions : conditions},
             () => this.saveAutomation()
         );
+    }
+    
+    deleteAction = (index) => {
+        var actions=this.state.actions
+        actions.splice(index, 1);
+        this.setState({actions : actions},
+            () => this.saveAutomation()
+        );
+    }
+    
+    moveTriggerUp = (index) => {
+        if (index-1>=0) {
+            var triggers=this.state.triggers
+            var element = triggers[index];
+            triggers.splice(index, 1);
+            triggers.splice(index-1, 0, element);
+            this.setState({triggers : triggers},
+                () => this.saveAutomation()
+            );
+        }
+    }
+
+    moveTriggerDown = (index) => {
+        if (index+1<=this.state.triggers.length) {
+            var triggers=this.state.triggers
+            var element = triggers[index];
+            triggers.splice(index, 1);
+            triggers.splice(index+1, 0, element);
+            this.setState({triggers : triggers},
+                () => this.saveAutomation()
+            );
+        }
     }
     
     moveConditionUp = (index) => {
@@ -218,6 +249,14 @@ class AutomationEditor extends React.Component {
         var action=this.state.actions[index]
         this.props.sendAlexaCommand(action.deviceName, action.endpointId, action.controller, action.command, action['value'])
     }
+
+    saveTrigger = (index, trigger) => {
+        var triggers=this.state.triggers
+        triggers[index]=trigger
+        this.setState({triggers : triggers},
+            () => this.saveAutomation()
+        );
+    }
     
     saveCondition = (index, condition) => {
         var conditions=this.state.conditions
@@ -243,7 +282,7 @@ class AutomationEditor extends React.Component {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"conditions": this.state.conditions, "actions": this.state.actions})
+                body: JSON.stringify({"conditions": this.state.conditions, "actions": this.state.actions, "triggers": this.state.triggers})
             });
     } 
 
@@ -260,6 +299,13 @@ class AutomationEditor extends React.Component {
         } else {
             this.setState({ conditions : [] });
         }
+        if (automation.hasOwnProperty('triggers')) {
+            this.setState({ triggers:automation['triggers']})
+        } else {
+            this.setState({ triggerss : [] });
+        }
+
+
     }
     
     componentDidMount() {
@@ -291,68 +337,83 @@ class AutomationEditor extends React.Component {
     };
     
     handleDialClick = (addtype) => {
-        this.setState({ open: false })
-        if (addtype=="Trigger") {
-            console.log('not implementted')
-        } else if (addtype=="Condition") {
-            this.handleAddCondition()
-        } else if (addtype=="Action") {
-            this.handleAddAction()
+        this.setState({ open: false, addmode: addtype, hidden: true, edit: false})
+    }
+    
+    renderSelect(param) {
+        switch(this.state.addmode) {
+            case 'Action':
+                return <DeviceSelect mode={"action"} select={this.handleActionSelect} />
+            case 'Condition':
+                return <DeviceSelect mode={"property"} select={this.handlePropertySelect} />
+            case 'Trigger':
+                return <DeviceSelect mode={"property"} select={this.handleTriggerSelect} />
+
+            default:
+                return null;
         }
     }
     
     render() {
         
         const { classes, name } = this.props;
-        const { open, hidden, addingAction, addingCondition, conditions } = this.state;
+        const { open, hidden, edit, addmode, conditions, triggers, actions } = this.state;
         
         return (
             <React.Fragment>
                 <DialogTitle className={classes.editorTitle}>
                     {name}
-                    {addingCondition ? " / Add Condition" : null}
-                    {addingAction ? " / Add Action" : null}
+                    {addmode ? " / Add "+ addmode : null}
                 </DialogTitle>
                 <DialogContent className={classes.dialogContent }>
-                { this.state.addingAction || this.state.addingCondition ?
-                    <DeviceSelect mode={this.state.addingAction ? "action" : "property"} select={this.handleActionSelect} />
+                { addmode ? 
+                    this.renderSelect()
                 :  
                     <React.Fragment>
-                    { conditions.length > 0 ?
+                    { triggers.length > 0 &&
                     <List className={classes.listActions}>
+                        <Divider />
+                        <ListSubheader>Triggers</ListSubheader>
+                        { triggers.map((trigger,index) =>
+                            <AutomationTrigger moveUp={this.moveTriggerUp} moveDown={this.moveTriggerDown} save={this.saveTrigger} edit={edit} delete={this.deleteTrigger} trigger={trigger} index={index} name={this.props.deviceByEndpointId(trigger.endpointId).friendlyName} key={ name+index } />
+                        )}
+                    </List> }
+                    { conditions.length > 0 &&
+                    <List className={classes.listActions}>
+                        <Divider />
                         <ListSubheader>Conditions</ListSubheader>
                         { conditions.map((condition,index) =>
-                            <AutomationCondition moveUp={this.moveConditionUp} moveDown={this.moveConditionDown} save={this.saveCondition} edit={this.state.editingActions} delete={this.deleteCondition} condition={condition} index={index} name={this.props.deviceByEndpointId(condition.endpointId).friendlyName} key={ this.props.name+index } />
+                            <AutomationCondition moveUp={this.moveConditionUp} moveDown={this.moveConditionDown} save={this.saveCondition} edit={edit} delete={this.deleteCondition} condition={condition} index={index} name={this.props.deviceByEndpointId(condition.endpointId).friendlyName} key={ name+index } />
                         )}
-                    </List>
-                    : null }
+                    </List> }
+                    { actions.length > 0 &&
                     <List className={classes.listActions}>
-                        <ListSubheader>Actions</ListSubheader>
                         <Divider />
-                        {this.state.actions.map((action,index) =>
-                            <AutomationAction moveUp={this.moveActionUp} moveDown={this.moveActionDown} save={this.saveAction} edit={this.state.editingActions} action={action} delete={this.deleteAction} actionValue={this.getActionValue(action.controller, action.command)} index={index} device={ this.props.deviceByEndpointId(action.endpointId) } name={this.props.deviceByEndpointId(action.endpointId).friendlyName} key={ this.props.name+index } />
+                        <ListSubheader>Actions</ListSubheader>
+                        { actions.map((action,index) =>
+                            <AutomationAction moveUp={this.moveActionUp} moveDown={this.moveActionDown} save={this.saveAction} edit={edit} action={action} delete={this.deleteAction} actionValue={this.getActionValue(action.controller, action.command)} index={index} device={ this.props.deviceByEndpointId(action.endpointId) } name={this.props.deviceByEndpointId(action.endpointId).friendlyName} key={ name+index } />
                         )}
                     </List>
+                    }
                     </React.Fragment>
                 }
                 </DialogContent>
                 <Divider />
-            {!addingAction && !this.state.editingActions && !addingCondition ?
-                <DialogActions className={classes.dialogActions} >
-                    <Button onClick={() => this.handleEditActions()} color="primary">EDIT</Button>
-                    <Button onClick={() => this.props.doneEditing()} color="primary" autoFocus>OK</Button>
-                </DialogActions>
-            : null }
-            {this.state.editingActions || addingAction || addingCondition ?
-                <DialogActions className={classes.dialogActions} >
-                    <Button onClick={() => this.handleDoneAddEdit()} color="primary" autoFocus>DONE</Button>
-                </DialogActions>
-            : null }
+                {!addmode && !edit ?
+                    <DialogActions className={classes.dialogActions} >
+                        <Button onClick={() => this.handleEditActions()} color="primary">EDIT</Button>
+                        <Button onClick={() => this.props.doneEditing()} color="primary" autoFocus>OK</Button>
+                    </DialogActions>
+                : 
+                    <DialogActions className={classes.dialogActions} >
+                        <Button onClick={() => this.handleDoneAddEdit()} color="primary" autoFocus>DONE</Button>
+                    </DialogActions>
+                }
                     <SpeedDial className={classes.speedDial} hidden={hidden} icon={<SpeedDialIcon openIcon={<EditIcon />} />} onBlur={this.handleClose}
                                 onClick={this.handleClick} onClose={this.handleClose} onFocus={this.handleOpen} onMouseEnter={this.handleOpen}
                                 onMouseLeave={this.handleClose} open={open} ariaLabel="Add">
-                            {actions.map(action => (
-                                <SpeedDialAction key={action.name} icon={action.icon} tooltipTitle={action.name} onClick={() => this.handleDialClick(action.name)} />
+                            {dialActions.map(dialAction => (
+                                <SpeedDialAction key={dialAction.name} icon={dialAction.icon} tooltipTitle={dialAction.name} onClick={() => this.handleDialClick(dialAction.name)} />
                             ))}
                     </SpeedDial>
 

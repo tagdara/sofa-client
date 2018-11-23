@@ -26,6 +26,7 @@ const styles = theme => ({
     input: {
         marginTop:0,
         marginLeft: 16,
+        flexGrow: 1,
     },
 
 });
@@ -61,15 +62,12 @@ class AutomationItem extends React.Component {
                         value={this.state.name}
                         onChange={(e) => this.edit(e.target.value)}
                     />
-                    <ListItemSecondaryAction className={classes.sec}>
                         <IconButton aria-label="Confirm" onClick={(e) => this.props.add(this.state.name)}>
                             <CheckIcon />
                         </IconButton>
                         <IconButton aria-label="Cancel" onClick={(e) => this.props.cancel()}>
                             <CloseIcon />
                         </IconButton>
-
-                    </ListItemSecondaryAction>
                 </ListItem>
         )
     }

@@ -12,6 +12,7 @@ export class DataProvider extends Component {
             devices: [],
             deviceState: {},
             controllers: {},
+            directives: {},
             virtualDevices: {},
             
             server: "wss://"+window.location.hostname+"/ws",
@@ -260,6 +261,11 @@ export class DataProvider extends Component {
  		    .then(result=>result.json())
             .then(result=>this.setState({controllers:result}));
 
+  	    fetch('/directives')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({directives:result}));
+
+
   	    fetch('/list/logic/virtualDevices')
  		    .then(result=>result.json())
             .then(result=>this.setState({ virtualDevices:result }))
@@ -269,8 +275,12 @@ export class DataProvider extends Component {
         return (
             <DataContext.Provider
                 value={{
+                    colorScheme: this.state.colorScheme,
+                    setColorScheme: this.setColorScheme,
+                    
                     devices: this.state.devices,
                     deviceState: this.state.deviceState,
+                    directives: this.state.directives,
                     virtualDevices: this.state.virtualDevices,
                     websocketStatus: this.state.websocketStatus,
                     controllers:this.state.controllers,
@@ -279,10 +289,6 @@ export class DataProvider extends Component {
                     devicesByCategory: this.devicesByCategory,
                     propertiesFromDevices: this.propertiesFromDevices,
                     deviceByEndpointId: this.deviceByEndpointId,
-                    colorScheme: this.state.colorScheme,
-                    setColorScheme: this.setColorScheme,
-                    updateMultipleDevices: this.updateMultipleDevices,
-                    mergeStates: this.mergeStates,
                 }}
             >
                 {this.props.children}

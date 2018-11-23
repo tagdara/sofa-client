@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import { withData } from './DataContext/withData';
 import StatusLock from './devices/statusLock';
+import PinDialog from './devices/pinDialog'
 
 const styles = theme => ({
         
@@ -30,6 +31,8 @@ class MiniCard extends React.Component {
 
         this.state = {
             showDialog: false,
+            pin: '7818',
+            command: '',
         }
     }
     
@@ -53,7 +56,25 @@ class MiniCard extends React.Component {
     
         return ''
     }
-
+    
+    pinCheck = (pin) => {
+        this.setState({showDialog: false})
+        if (pin==this.state.pin) {
+            this.sendCommand()
+        }
+    }
+    
+    handlePress = commandName => {
+        this.setState({ showDialog: true, command: commandName })
+    }
+        
+    sendCommand = () => {
+        var commands=this.props.virtualDevices[this.props.name].commands 
+        console.log(this.state.command, commands)
+        var command = commands[this.state.command]
+        this.props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
+    }   
+ 
     render() {
         const { classes, virtualDevices, name } = this.props;
 
@@ -61,8 +82,9 @@ class MiniCard extends React.Component {
                 <Paper className={classes.card}>
                     { virtualDevices.hasOwnProperty(name) ? 
                         <StatusLock name={ name } secondIcon={false} status={ this.getStatusProp(virtualDevices[name].status) }
-                            commands={ virtualDevices[name].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
+                            commands={ virtualDevices[name].commands } handlePress={this.handlePress} />
                     : null }
+                <PinDialog submitPin={this.pinCheck} open={this.state.showDialog} close={this.closeDialog} />
                 </Paper>
         );
     }

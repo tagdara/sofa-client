@@ -25,13 +25,6 @@ const styles = theme => ({
 
 class StatusLock extends React.Component {
 
-    handlePress = commandName => {
-        console.log(commandName,this.props.commands)
-        var command = this.props.commands[commandName]
-        console.log(commandName,command, this.props.commands)
-        this.props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
-    }   
-    
     render() {
 
         const { classes, name, commands, status } = this.props;
@@ -39,9 +32,9 @@ class StatusLock extends React.Component {
         return (
             <ListItem className={classes.listItem}>
                 { status=='closed' ?
-                    <Avatar onClick={ () => this.handlePress(commands.hasOwnProperty('toggle') ? 'toggle':'unlock') }><DialpadIcon /></Avatar>
+                    <Avatar onClick={ () => this.props.handlePress(commands.hasOwnProperty('toggle') ? 'toggle':'unlock') }><DialpadIcon /></Avatar>
                 :
-                    <Avatar onClick={ () => this.handlePress(commands.hasOwnProperty('toggle') ? 'toggle':'lock') }> <DialpadIcon /></Avatar>
+                    <Avatar onClick={ () => this.props.handlePress(commands.hasOwnProperty('toggle') ? 'toggle':'lock') }> <DialpadIcon /></Avatar>
                 }                
                 <ListItemText primary={name} secondary={ status } />
 

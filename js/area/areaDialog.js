@@ -315,7 +315,7 @@ class AreaDialog extends React.Component {
     }
     
     render() {
-        const { classes, fullScreen } = this.props;
+        const { classes } = this.props;
         const { devices } = this.state;  
         
         return (

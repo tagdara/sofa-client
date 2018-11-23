@@ -47,8 +47,7 @@ const styles = theme => ({
     },
     conditionItem: {
         padding: 16,
-        backgroundColor: theme.palette.grey[200]
-        },
+    },
 
 });
 

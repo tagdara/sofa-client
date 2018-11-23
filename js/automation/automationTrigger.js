@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import TextField from '@material-ui/core/TextField';
 
-import ShuffleIcon from '@material-ui/icons/Shuffle';
+import AnnouncementIcon from '@material-ui/icons/Announcement';
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -45,9 +45,8 @@ const styles = theme => ({
     listItem: {
         padding: 16,
     },
-    conditionItem: {
+    triggerItem: {
         padding: 16,
-        backgroundColor: theme.palette.grey[200]
         },
 
 });
@@ -59,46 +58,46 @@ class AutomationTrigger extends React.Component {
         super(props);
 
         this.state = {
-            condition: {},
+            trigger: {},
         }
     }
 
-    editConditionValue = (value) => {
-        var condition=this.props.condition
-        condition.value=value
-        this.saveCondition(condition)
+    editTriggerValue = (value) => {
+        var trigger=this.props.trigger
+        trigger.value=value
+        this.saveTrigger(trigger)
     }
     
     editOperatorValue = (value) => {
-        var condition=this.props.condition
-        condition.operator=value
-        this.saveCondition(condition)
+        var trigger=this.props.trigger
+        trigger.operator=value
+        this.saveTrigger(trigger)
     }
     
-    saveCondition = (condition) => {
-        this.props.save(this.props.index, condition)
+    saveTrigger = (trigger) => {
+        this.props.save(this.props.index, trigger)
     }
     
     render() {
         
-        const { classes, index, name, condition, propertyName} = this.props;
+        const { classes, index, name, trigger, propertyName} = this.props;
         
         return (
-            <ListItem className={classes.conditionItem} >
+            <ListItem className={classes.triggerItem} >
                 {this.props.edit ?
                 <ListItemIcon onClick={() => this.props.delete(index)}><CloseIcon /></ListItemIcon>   
                 :
-                <ListItemIcon><ShuffleIcon /></ListItemIcon>
+                <ListItemIcon><AnnouncementIcon /></ListItemIcon>
                 }
-                <ListItemText primary={name} secondary={condition.controller} className={classes.deviceName}/>
-                <OperatorButton index={index} value={condition.operator} setOperator={ this.editOperatorValue }/>
+                <ListItemText primary={name} secondary={trigger.controller} className={classes.deviceName}/>
+                <OperatorButton index={index} value={trigger.operator} setOperator={ this.editOperatorValue }/>
                 <TextField
                         className={classes.input}
-                        id={'condition'+index}
+                        id={'trigger'+index}
                         label={propertyName}
                         margin="normal"
-                        value={condition.value}
-                        onChange={(e) => this.editConditionValue(e.target.value)}
+                        value={trigger.value}
+                        onChange={(e) => this.editTriggerValue(e.target.value)}
                 />
                 {this.props.edit ?
                     <ListItemSecondaryAction className={classes.listItem}>

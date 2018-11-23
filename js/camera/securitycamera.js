@@ -23,7 +23,7 @@ const styles = theme => ({
         flexBasis: 0,
         flexGrow: 1,
         minWidth: "320px",
-        margin: "1px"
+        margin: 0,
     },
     nextbutton: {
         position: "absolute",

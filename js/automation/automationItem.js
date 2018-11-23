@@ -21,7 +21,7 @@ class AutomationItem extends React.Component {
 
     render() {
         
-        const { classes, name, edit, actionCount, conditionCount } = this.props;
+        const { classes, name, edit, actionCount, conditionCount, triggerCount } = this.props;
         
         return (
             <ListItem className={classes.item} key={ name+'-reg' }>
@@ -30,7 +30,7 @@ class AutomationItem extends React.Component {
             :
                 <Avatar onClick={ () => this.props.run(name)}><ListIcon /></Avatar>
             }
-                <ListItemText primary={name} secondary={conditionCount+" conditions / "+actionCount+' actions'}  onClick={() => this.props.select(name)}/>
+                <ListItemText primary={name} secondary={triggerCount+" triggers / "+conditionCount+" conditions / "+actionCount+' actions'}  onClick={() => this.props.select(name)}/>
             </ListItem>
 
         )

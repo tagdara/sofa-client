@@ -66,6 +66,7 @@ class DeviceSelect extends React.Component {
         return propertydevices
     }
     
+    
     getProperties = (device, controller) => {
         var proplist=[]
         for (var i = 0; i < device.capabilities.length; i++) {
@@ -98,18 +99,14 @@ class DeviceSelect extends React.Component {
         return this.props.controllers[controller]
     }
     
-    getIcon = (category, size='default') => {
-
-        if (this.state.icons.hasOwnProperty(category)) {
-            var RealIcon=this.state.icons[category]
+    getControllerDirectives = (controller) => {
+        if (this.props.directives.hasOwnProperty(controller)) {
+            return this.props.directives[controller]
         } else {
-            var RealIcon=DeveloperBoardIcon
+            return {}
         }
-        
-        return <RealIcon fontSize={size} />
-
     }
-
+    
     applyFilter = filter => {
         console.log('applying filter',filter)
         this.setState({filter: filter})

@@ -13,7 +13,7 @@ const styles = theme => ({
 });
 
 function Transition(props) {
-    return <Slide direction="up" {...props} />;
+    return <Slide direction="down" {...props} />;
 }
 
 class SofaDialog extends React.Component {

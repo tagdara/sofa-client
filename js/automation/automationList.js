@@ -17,6 +17,7 @@ const styles = theme => ({
         paddingBottom: "env(safe-area-inset-bottom)",
     },
     dialogContent: {
+        height: "100%",
         padding: 0,
     },
 });
@@ -43,7 +44,9 @@ class AutomationList extends React.Component {
     }
     
     handleAddAutomation = () => {
-        this.setState({ adding: true, editing: false})
+        this.setState({ adding: true, editing: false}, () => 
+            this.end.scrollIntoView({ behavior: "smooth" })
+        )
     }
 
     handleEditAutomations = () => {
@@ -107,21 +110,23 @@ class AutomationList extends React.Component {
             .then(result=>this.setState({automations:result}));
     }
     
+    
     render() {
         
         const { classes, fullScreen  } = this.props;
-        const { editing, adding } = this.state
+        const { editing, adding, automations } = this.state
         
         return (
             <React.Fragment>
                 <DialogContent className={classes.dialogContent }>
-                    <List>
-                        { Object.keys(this.state.automations).sort().map(automation => 
-                            <AutomationItem select={this.handleSelect} edit={editing} actionCount={this.state.automations[automation].actionCount} conditionCount={this.state.automations[automation].conditionCount } name={automation} delete={this.deleteAutomation} run={this.runAutomation} key={ automation+'-reg' } />
+                    <List ref={(element) => { this.listContainer = element; }}>
+                        { Object.keys(automations).sort().map(automation => 
+                            <AutomationItem select={this.handleSelect} edit={editing} triggerCount={automations[automation].triggerCount } actionCount={automations[automation].actionCount} conditionCount={automations[automation].conditionCount } name={automation} delete={this.deleteAutomation} run={this.runAutomation} key={ automation+'-reg' } />
                         )}
                         { adding ? 
-                            <AutomationAdd add={this.addAutomation} cancel={this.handleDoneAddEdit} />
+                            <AutomationAdd  add={this.addAutomation} cancel={this.handleDoneAddEdit} />
                         : null }
+                        <div ref={(el) => { this.end = el; }} />
                     </List>
                 </DialogContent>
                 <Divider />

@@ -9,6 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import Slide from  '@material-ui/core/Slide';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 
@@ -62,14 +63,14 @@ class SofaDialogTitle extends React.Component {
         return (
             <DialogTitle className={this.props.tabs ? classes.bigBar: classes.smallBar}>
                 { title ?
-                <Toolbar elevation={0} className={classes.titleBar}>
+                <Toolbar elevation={1} className={classes.titleBar}>
                     <Typography variant="subtitle1" className={classes.dialogTitleText}>
                         {title}
                     </Typography>
                 </Toolbar>
                 : null }
                 { tabs ?
-                <Toolbar elevation={0} className={classes.tabBar} >
+                <Toolbar elevation={1} className={classes.tabBar} >
                     <Tabs centered className={classes.tabs} value={tabValue} onChange={this.props.tabChange}>
                         { this.props.tabs.map((name) => 
                             <Tab key={name} label={name} />

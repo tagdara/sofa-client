@@ -66,7 +66,17 @@ class DeviceExpand extends React.Component {
         return caplist
     }
 
-    
+    getPropertyControllers = (device) => {
+        var caplist={}
+        for (var cap in device.capabilities) {
+            var capi=device.capabilities[cap]['interface'].split(".")[1]
+            if (device.capabilities[cap].properties.hasOwnProperty('supported')) {
+                caplist[capi]=device.capabilities[cap].properties.supported
+            }
+        }
+        return caplist
+    }
+
     getControllerActions = (controller) => {
         
         var cmds=[]
@@ -92,7 +102,7 @@ class DeviceExpand extends React.Component {
                         { mode=='action' ?
                             <DeviceExpandActions device={device} controllers={this.getActionControllers(device)} select={this.props.select} />
                         :
-                            <DeviceExpandProperties device={device} controllers={this.getControllers(device)} select={this.props.select} />
+                            <DeviceExpandProperties device={device} controllers={this.getPropertyControllers(device)} select={this.props.select} />
                         }
                     </ExpansionPanelDetails>
                 </ExpansionPanel>

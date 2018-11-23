@@ -35,6 +35,7 @@ const styles = theme => ({
     },
     line: {
         width: "100%",
+        backgroundColor: theme.palette.background.paper,
     }
         
 

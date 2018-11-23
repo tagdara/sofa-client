@@ -11,6 +11,7 @@ import Divider from '@material-ui/core/Divider';
 import SecurityCamera from './securitycamera';
 import CameraRecordingList from './cameraRecordingList';
 import SofaDialog from '../sofaDialog';
+import Card from '@material-ui/core/Card';
 
 const styles = theme => ({
     
@@ -43,9 +44,13 @@ const styles = theme => ({
     },
     dialogMaxWidth: {
         height: "100%",
-        padding: "8 0",
+        padding:  0,
     },
-
+    cameraSelect: {
+        margin: 4,
+        padding: 0,
+        minWidth: 320,
+    },
 });
 
 class CameraDialog extends React.Component {
@@ -75,7 +80,9 @@ class CameraDialog extends React.Component {
                         <div className={classes.lGrid}>
                         {
                         this.props.cameras.map((name) => 
-                            <SecurityCamera key={ name } name={ name } sender={this.props.sender} ></SecurityCamera>
+                            <Card className={classes.cameraSelect}>
+                                <SecurityCamera key={ name } name={ name } sender={this.props.sender} ></SecurityCamera>
+                            </Card>
                         )}
                             <div className={classes.gridPlaceholder}></div>
                         </div>

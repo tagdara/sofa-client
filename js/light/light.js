@@ -127,7 +127,7 @@ class Light extends React.Component {
     }; 
 
     handleBrightnessChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "BrightnessController", "SetBrightness", event)
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "BrightnessController", "SetBrightness", { "brightness" : event } )
     }; 
 
     handleClickOpen = () => {

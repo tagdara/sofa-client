@@ -9,6 +9,7 @@ const styles = theme => ({
         
     card: {
         display: 'flex',
+        minHeight: 64,
         maxWidth: '480px',
         margin: 8,
         boxSizing: "border-box",

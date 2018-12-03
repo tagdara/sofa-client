@@ -80,9 +80,9 @@ class DeviceExpand extends React.Component {
     getControllerActions = (controller) => {
         
         var cmds=[]
-        if (this.props.controllers) {
-            if (this.props.controllers.hasOwnProperty(controller)) {
-                return this.props.controllers[controller]
+        if (this.props.directives) {
+            if (this.props.directives.hasOwnProperty(controller)) {
+                return this.props.directives[controller]
             } 
         }
         return {}

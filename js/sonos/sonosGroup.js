@@ -21,7 +21,7 @@ class SonosGroup extends React.Component {
     
     render() {
         
-        const { classes, fullScreen, name, coordinator, linked  } = this.props;
+        const { classes, fullScreen, name, endpointId, coordinator, linked  } = this.props;
         
         return (
             <ListItem>
@@ -30,7 +30,7 @@ class SonosGroup extends React.Component {
                 <ListItemSecondaryAction>
                     <Checkbox color="primary"
                         checked={coordinator==name || linked.includes(name)}
-                        onClick={event => this.props.handleCheck(event, name)}
+                        onClick={event => this.props.handleCheck(event, name, endpointId)}
                     />
                 </ListItemSecondaryAction>
             </ListItem>

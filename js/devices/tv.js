@@ -7,11 +7,16 @@ import Switch from '@material-ui/core/Switch';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
+import TvIcon from '@material-ui/icons/Tv';
 
 import TvDialog from './tvDialog';
 
 const styles = theme => ({
-
+    
+    hotAvatar: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+    },
     icon: {
         minWidth: 62,
         height: 62,
@@ -48,7 +53,6 @@ class Tv extends React.Component {
         this.state = {
             powerState: 'OFF',
             showdialog: false,
-            icon: '/react/images/tv.jpg?v2',
         };
     }    
 
@@ -67,33 +71,33 @@ class Tv extends React.Component {
     
     closeDialog = () => { 
         this.setState({ showdialog: false})
-        console.log(this)
     }   
  
     handlePowerChange = event => {
         this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
         if (event.target.checked) {
-            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOn')
+            this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'PowerController', 'TurnOn')
         } else {
-            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOff')
+            this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'PowerController', 'TurnOff')
         }
     }; 
     
     
     render() {
 
-        const { classes } = this.props;
+        const { classes, name, device, deviceProperties } = this.props;
+        const { powerState, showdialog } = this.state;
 
         return (
                 <Card className={classes.card}>
                     <CardContent className={classes.content}>
                         <ListItem className={classes.listItem}>
-                            <Avatar src={this.state.icon} onClick={ () => this.handleClickOpen()} />
-                            <ListItemText primary={this.props.name} secondary={this.props.deviceProperties.input} onClick={ () => this.handleClickOpen()}/>
-                            <Switch color="primary" checked={this.state.powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
+                            <Avatar onClick={ () => this.handleClickOpen()} className={ powerState=='ON' ? classes.hotAvatar : classes.normalAvatar } ><TvIcon /></Avatar>
+                            <ListItemText primary={name} secondary={deviceProperties.input} onClick={ () => this.handleClickOpen()}/>
+                            <Switch color="primary" checked={powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
                         </ListItem>
                     </CardContent>
-                    <TvDialog sendAlexaCommand={this.props.sendAlexaCommand}  open={this.state.showdialog} close={this.closeDialog} name={this.props.name} device={ this.props.device } deviceProperties={ this.props.deviceProperties } />
+                    <TvDialog sendAlexaCommand={this.props.sendAlexaCommand} open={showdialog} close={this.closeDialog} name={name} device={ device } deviceProperties={ deviceProperties } />
                 </Card>
         );
     }

@@ -80,8 +80,8 @@ class CameraDialog extends React.Component {
                         <div className={classes.lGrid}>
                         {
                         this.props.cameras.map((name) => 
-                            <Card className={classes.cameraSelect}>
-                                <SecurityCamera key={ name } name={ name } sender={this.props.sender} ></SecurityCamera>
+                            <Card key={name} className={classes.cameraSelect}>
+                                <SecurityCamera name={ name } sender={this.props.sender} ></SecurityCamera>
                             </Card>
                         )}
                             <div className={classes.gridPlaceholder}></div>

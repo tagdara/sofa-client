@@ -144,7 +144,6 @@ class ReceiverDialog extends React.Component {
             input: '',
             volume: 0,
             powerState: false,
-            icon: '/react/images/receiver.png?v2',
         };
     }    
     
@@ -163,9 +162,9 @@ class ReceiverDialog extends React.Component {
     handlePowerChange = event => {
         this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
         if (event.target.checked) {
-            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOn')
+            this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'PowerController', 'TurnOn')
         } else {
-            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOff')
+            this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'PowerController', 'TurnOff')
         }
     }; 
     
@@ -174,19 +173,19 @@ class ReceiverDialog extends React.Component {
     }; 
 
     handleVolumeChange = event => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SpeakerController', 'SetVolume', event)
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
     }; 
 
     handleMuteChange = event => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SpeakerController', 'SetMute', !this.state.muted)
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'SpeakerController', 'SetMute', { "muted" : !this.state.muted} )
     }; 
     
     handleSurround = (event, surroundmode) => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SurroundController', 'SetSurround', surroundmode)
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'SurroundController', 'SetSurround', {"surround": surroundmode } )
     }; 
 
     handleInput = (event, inputname) => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'InputController', 'SelectInput', inputname)
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
     }; 
     
     render() {
@@ -206,7 +205,7 @@ class ReceiverDialog extends React.Component {
                                 {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                             </Avatar>
                             <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
-                                        preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} />
+                                        preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} padLeft={true} />
                         </ListItem>
                             <ListItem className={classes.chipListItem}>
                                 <Typography variant="subtitle1" noWrap className={classes.chipLineLabel}>Input</Typography>

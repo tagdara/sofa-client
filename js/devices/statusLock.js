@@ -15,9 +15,18 @@ import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 const styles = theme => ({
+    
+    closed: {
+        backgroundColor: "#6a6",
+        color: theme.palette.primary.contrastText,
+    },
+    open: {
+        backgroundColor: "#e66",
+        color: theme.palette.primary.contrastText,
+    },
 
     listItem: {
-        padding: "8 0",
+        padding: "8 16",
         width: '100%',
     },
 
@@ -32,9 +41,9 @@ class StatusLock extends React.Component {
         return (
             <ListItem className={classes.listItem}>
                 { status=='closed' ?
-                    <Avatar onClick={ () => this.props.handlePress(commands.hasOwnProperty('toggle') ? 'toggle':'unlock') }><DialpadIcon /></Avatar>
+                    <Avatar className={ classes.closed} onClick={ () => this.props.handlePress(commands.hasOwnProperty('toggle') ? 'toggle':'unlock') }><DialpadIcon /></Avatar>
                 :
-                    <Avatar onClick={ () => this.props.handlePress(commands.hasOwnProperty('toggle') ? 'toggle':'lock') }> <DialpadIcon /></Avatar>
+                    <Avatar className={ classes.open} onClick={ () => this.props.handlePress(commands.hasOwnProperty('toggle') ? 'toggle':'lock') }> <DialpadIcon /></Avatar>
                 }                
                 <ListItemText primary={name} secondary={ status } />
 

@@ -59,7 +59,7 @@ class ThermostatSettable extends React.Component {
         super(props);
 
         this.state = {
-            targetSetPoint: 70,
+            targetSetpoint: 70,
         };
 
     }
@@ -69,8 +69,8 @@ class ThermostatSettable extends React.Component {
         var data=nextProps.deviceProperties
         var changes={}
         
-        if (data.hasOwnProperty('targetSetPoint')) {
-            changes.targetSetPoint=data.targetSetPoint
+        if (data.hasOwnProperty('targetSetpoint')) {
+            changes.targetSetpoint=data.targetSetpoint
         }
         if (data.hasOwnProperty('powerLevel')) {
             changes.powerLevel=data.powerLevel
@@ -104,34 +104,33 @@ class ThermostatSettable extends React.Component {
     }; 
     
     handlePowerLevelChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, 'PowerLevelController', 'SetPowerLevel', event)
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
     }; 
 
-    handlePreSetPointChange = event => {
-        this.setState({ targetSetPoint: event });
+    handlePreSetpointChange = event => {
+        this.setState({ targetSetpoint: event });
     }; 
     
-    handleSetPointChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, 'ThermostatController', 'SetTargetTemperature', event)
+    handleSetpointChange = event => {
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
     }; 
 
 
     handleSetMode = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "ThermostatController", "SetThermostatMode", event)
+        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
     }; 
-
 
     render() {
 
         const { classes, name, deviceProperties } = this.props;
-        const { targetSetPoint, powerLevel } = this.state;
+        const { targetSetpoint, powerLevel } = this.state;
 
         return (
             <React.Fragment>
                 <ListItem className={classes.listItem}>
                     <Avatar className={ this.tempColor(deviceProperties.temperature) }>{ deviceProperties.temperature }</Avatar>
-                    <SofaSlider min={60} max={90} defaultValue={70} value={targetSetPoint} unit={"°"} name={name} padLeft={true}
-                                preChange={this.handlePreSetPointChange} change={this.handleSetPointChange} 
+                    <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint} unit={"°"} name={name} padLeft={true}
+                                preChange={this.handlePreSetpointChange} change={this.handleSetpointChange} 
                                 dis={ deviceProperties.thermostatMode!='HEAT' } />
                 </ListItem>
                 <ListItem className={classes.buttonLine}>
@@ -144,7 +143,7 @@ class ThermostatSettable extends React.Component {
                 { this.state.hasOwnProperty('powerLevel') ?
                 <ListItem className={classes.listItem}>
                     <Avatar><ToysIcon /></Avatar>
-                    <SofaSlider value={powerLevel} unit={"%"} name={"Fan Speed"} padLeft={true}
+                    <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={true}
                                 preChange={this.handlePrePowerLevelChange} change={this.handlePowerLevelChange} />
                 </ListItem>
                 : null }

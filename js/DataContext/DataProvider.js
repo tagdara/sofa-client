@@ -11,7 +11,7 @@ export class DataProvider extends Component {
         this.state = {
             devices: [],
             deviceState: {},
-            controllers: {},
+            controllerProperties: {},
             directives: {},
             virtualDevices: {},
             
@@ -74,7 +74,7 @@ export class DataProvider extends Component {
     }
 
     
-    sendAlexaCommand = (deviceName, endpointId, controller, command, val) => {
+    sendAlexaCommand = (deviceName, endpointId, controller, command, payload) => {
         
         // value is optional for some alexa commands.  The original sofa2 implementation tried to take a string value and then map it to 
         // a value name, but underestimated the requirement for some commands to pass multiple values and needs to be adjusted.
@@ -87,19 +87,27 @@ export class DataProvider extends Component {
         var header={"name": command, "namespace":"Alexa." + controller, "payloadVersion":"3", "messageId": this.uuidv4(), "correlationToken": this.uuidv4()}
         var endpoint={"endpointId": endpointId, "cookie": {}, "scope":{ "type":"BearerToken", "token":"access-token-from-skill" }}
 
+        if (payload===undefined) { payload={} }
+        console.log('Payload',payload, typeof payload)
+        if (typeof payload != 'object' ) {
+            
+            // This is the old way and needs to be deprecated
+            val=payload
 
-        if (this.state.controllers[controller][command]) {
-            var payload=JSON.parse(JSON.stringify(this.state.controllers[controller][command]))
-        } else {
-            var payload={}
-        }
+            if (this.state.directives[controller][command]) {
+                var payload=this.state.directives[controller][command]
+            } else {
+                var payload={}
+            }
 
-        for (var prop in payload) {
-            if (payload[prop]=='value') {
-                payload[prop]=val
-                break
+            for (var prop in payload) {
+                if (payload[prop].hasOwnProperty('value')) {
+                    payload[prop]['value']=val
+                    break
+                }
             }
         }
+        
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
         console.log('Sending alexa command:',data)
         //this.postAlexaCommand(data)
@@ -256,14 +264,14 @@ export class DataProvider extends Component {
  		    .then(result=>result.json())
             .then(data=>this.updateDeviceList(data))
             //.then(this.setState({devices: data})
-            
-  	    fetch('/controllercommands')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({controllers:result}));
 
   	    fetch('/directives')
  		    .then(result=>result.json())
             .then(result=>this.setState({directives:result}));
+
+  	    fetch('/properties')
+ 		    .then(result=>result.json())
+            .then(result=>this.setState({controllerProperties:result}));
 
 
   	    fetch('/list/logic/virtualDevices')
@@ -283,7 +291,7 @@ export class DataProvider extends Component {
                     directives: this.state.directives,
                     virtualDevices: this.state.virtualDevices,
                     websocketStatus: this.state.websocketStatus,
-                    controllers:this.state.controllers,
+                    controllerProperties:this.state.controllerProperties,
                     sendAlexaCommand: this.sendAlexaCommand,
                     deviceByName: this.deviceByName,
                     devicesByCategory: this.devicesByCategory,

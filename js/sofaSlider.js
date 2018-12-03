@@ -6,9 +6,16 @@ import Slider from '@material-ui/lab/Slider';;
 
 const styles = theme => ({
  
-
+    half: {
+        alignItems: "center",
+        display: "flex",
+        height: 42,
+        flexGrow: 1,
+        flexBasis: 0,
+        boxSizing: "border-box",
+    },
     stack: {
-        height: 48,
+        height: 42,
         display: "flex",
         flexGrow: 1,
         justifyContent: "space-between",
@@ -22,7 +29,7 @@ const styles = theme => ({
     padLeft: {
         paddingLeft: 16,
     },
-    stackLabel: {
+    xstackLabel: {
         alignSelf: "flex-end",
     },
 
@@ -37,6 +44,9 @@ class SofaSlider extends React.Component {
         this.state = {
             value: 0,
             delaySet: false,
+            drag: false,
+            prechange: false,
+            sendPrechange: false,
         };
     }
 
@@ -54,16 +64,37 @@ class SofaSlider extends React.Component {
         return changes
     }
 
-    handlePreChange = (event,value) => {
-        this.setState({ value: value, delaySet: true});
+    handleDrag = (event,value) => {
+        console.log('handledrag',event.target, value, this.state.drag)
+        this.setState({prechange:false})
+    }
+
+    handlePostPreChange = (event) => {
         this.props.preChange(event);
+        if (this.state.sendPrechange) {
+            this.props.change(this.state.value)
+            this.setState({sendPrechange:false})
+        }
+    }
+
+    handlePreChange = (event,value) => {
+        console.log('handleprechange',value, this.state.drag)
+        this.setState({ value: value, delaySet: true, prechange:true}, () => this.handlePostPreChange(event));
     }; 
 
     handleChange = (event,value) => {
-        this.props.change(this.state.value);
+        console.log('handlechange',value, this.state.drag)
+        this.setState({drag: false})
+        if (this.state.prechange) {
+            this.props.change(this.state.value);
+        } else {
+            this.setState({sendPrechange: true})
+            console.log('change called before prechange')
+        }
     }; 
     
     delaySliderUpdates = () => {
+        console.log('dsu')
         this.setState({ delaySet: true},
             () =>  setTimeout(() => endSliderDelay(), 1000)
         )
@@ -75,15 +106,15 @@ class SofaSlider extends React.Component {
    
     render() {
 
-        const { classes, disabled, name, unit, padLeft } = this.props;
+        const { classes, disabled, name, unit, padLeft, half } = this.props;
 
         return (
-                    <div className={ padLeft ? classes.stack+" "+classes.padLeft: classes.stack } >
+                    <div className={ padLeft ? classes.stack+" "+classes.padLeft: ( half ? classes.half : classes.stack) } >
                     { name ?
-                        <Typography variant="subtitle1" className={classes.stackLabel} gutterBottom>{this.props.name}</Typography>
+                        <Typography variant="subtitle1" className={classes.stackLabel} >{this.props.name}</Typography>
                     : null }
                     { unit ?
-                        <Typography variant="caption" className={classes.stackLabel} gutterBottom>{this.state.value+this.props.unit}</Typography>
+                        <Typography variant="caption" className={classes.stackLabel} >{Math.floor(this.state.value)+this.props.unit}</Typography>
                     : null }
                         <Slider
                             classes={{ container: classes.slider }}
@@ -91,6 +122,7 @@ class SofaSlider extends React.Component {
                             min={this.props.min} max={this.props.max}
                             onChange={this.handlePreChange}
                             onDragEnd={this.handleChange}
+                            onDragStart={this.handleDrag}
                             disabled={this.props.disabled}
                         />
                     </div>
@@ -110,6 +142,7 @@ SofaSlider.defaultProps = {
     tabs: '',
     disabled: false,
     padLeft: false,
+    half: false,
 }
 
 SofaSlider.propTypes = {

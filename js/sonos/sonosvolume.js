@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Paper from '@material-ui/core/Paper';
+import ListItem from '@material-ui/core/ListItem';
 import Avatar from '@material-ui/core/Avatar';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
@@ -10,6 +10,10 @@ import SofaSlider from '../sofaSlider'
 
 const styles = theme => ({
 
+    hotAvatar: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+    },
     sliderPaper: {
         display: "flex",
         flexDirection: "row",
@@ -43,24 +47,24 @@ class SonosVolume extends React.Component {
     }; 
 
     handleVolumeChange = event => {
-        this.props.sendAlexaCommand(this.props.name,this.props.endpointId,'SpeakerController',"SetVolume",event)
+        this.props.sendAlexaCommand(this.props.name,this.props.endpointId,'SpeakerController',"SetVolume", { "volume" : event} )
     }; 
 
     handleMuteChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, 'SpeakerController',"SetMute",!this.props.deviceProperties.muted)
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, 'SpeakerController',"SetMute", { "muted" : !this.props.deviceProperties.muted } )
     }; 
 
     render() {
 
-        const { classes } = this.props;
+        const { classes, deviceProperties } = this.props;
 
         return (
-                <Paper className={classes.sliderPaper} >
-                    <Avatar onClick={ () => this.handleMuteChange()} >
-                        {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
+                <ListItem className={classes.sliderPaper} >
+                    <Avatar onClick={ () => this.handleMuteChange()} className={ (!deviceProperties.muted && deviceProperties.playbackState=='PLAYING') ? classes.hotAvatar : classes.normalAvatar }>
+                        { deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                     </Avatar>
                     <SofaSlider padLeft={true} unit={"%"} name={this.props.name} value={this.state.volume} preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} />
-                </Paper>
+                </ListItem>
         );
     }
 }

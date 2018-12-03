@@ -91,11 +91,9 @@ class ScheduleEditor extends React.Component {
             intervalUnits: ['days','hours','minutes'],
             builder: false,
             deviceSelect: false,
-            controllers: [],
             scheduleAction: false,
             ready: false,
             enabled: true,
-            controllers: {},
         };
     }
     
@@ -221,10 +219,6 @@ class ScheduleEditor extends React.Component {
     
     componentDidMount() {
         
-  	    fetch('/controllercommands')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({controllers:result}));
-
         if (this.props.selectedSchedule) {
             this.setState({scheduleName: this.props.selectedSchedule})
         }
@@ -263,7 +257,7 @@ class ScheduleEditor extends React.Component {
     render() {
 
         
-        const { classes } = this.props;
+        const { classes, directives } = this.props;
         
         return (
             <React.Fragment>
@@ -309,7 +303,7 @@ class ScheduleEditor extends React.Component {
                         <Divider />
                         <ScheduleStart target="scheduleStart" change={this.changeValue} value={this.state.scheduleStart} />
                         <Divider />
-                        <ScheduleAction action={this.state.scheduleAction} deviceSelect={this.selectDevice} edit={this.editActionValue} />
+                        <ScheduleAction directives={directives} action={this.state.scheduleAction} deviceSelect={this.selectDevice} edit={this.editActionValue} />
                     </List>
                 }
                 </DialogContent>

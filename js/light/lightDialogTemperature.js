@@ -54,7 +54,7 @@ class LightDialogTemperature extends React.Component {
     }; 
 
     handleColorTemperatureChange = value => {
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorTemperatureController", "SetColorTemperature", value)
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorTemperatureController", "SetColorTemperature", { "colorTemperatureInKelvin": value} )
     }; 
     
     render() {

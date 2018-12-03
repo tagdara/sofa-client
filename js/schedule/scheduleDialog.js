@@ -24,7 +24,6 @@ class ScheduleDialog extends React.Component {
             intervalUnits: ['days','hours','minutes'],
             builder: false,
             deviceSelect: false,
-            controllers: [],
             schedAction: false,
             scheduleData: {}
         };
@@ -36,19 +35,14 @@ class ScheduleDialog extends React.Component {
         this.setState({ deviceSelect:false})
     }
     
-    reloadSchedule = () => {
+    loadSchedule = () => {
   	    fetch('/list/logic/schedule')
  		    .then(result=>result.json())
             .then(data=>this.setState({schedule:data}))
     }
     
     componentDidMount() {  
-  	    fetch('/list/logic/schedule')
- 		    .then(result=>result.json())
-            .then(data=>this.setState({schedule:data}))
-  	    fetch('/controllercommands')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({controllers:result}));
+        this.loadSchedule()
     }
 
     testClear = () => {
@@ -67,7 +61,7 @@ class ScheduleDialog extends React.Component {
     
     closeEditor = (reloadNeeded) => {
         if (reloadNeeded) {
-            this.reloadSchedule()
+            this.loadSchedule()
         }
         this.setState({ builder: false })
     }
@@ -83,7 +77,7 @@ class ScheduleDialog extends React.Component {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(savedata)
-            }).then(this.reloadSchedule())
+            }).then(this.loadSchedule())
         } else {
             console.log('was not ready', this.state)
         }
@@ -106,13 +100,16 @@ class ScheduleDialog extends React.Component {
     } 
 
     render() {
+        
+        const { directives, open, devices } = this.props;
+        const { builder, schedule, selectedSchedule } = this.state;
 
         return (
-            <SofaDialog title="Schedule" open={this.props.open} close={this.props.close} >
-                { this.state.builder ?
-                    <ScheduleEditor selectedSchedule={this.state.selectedSchedule} scheduleData={this.state.schedule[this.state.selectedSchedule]} clear={this.testClear} close={this.closeEditor} devices={this.props.devices} controllers={this.state.controllers} schedule={this.state.schedule} / >
+            <SofaDialog title="Schedule" open={open} close={this.props.close} >
+                { builder ?
+                    <ScheduleEditor directives={directives} selectedSchedule={selectedSchedule} scheduleData={schedule[selectedSchedule]} clear={this.testClear} close={this.closeEditor} devices={devices} schedule={schedule} / >
                 :
-                    <ScheduleList schedule={this.state.schedule} openEditor={this.openEditor} close={this.props.close} delete={this.deleteSchedule} toggle={this.toggleSchedule} />
+                    <ScheduleList schedule={schedule} openEditor={this.openEditor} close={this.props.close} delete={this.deleteSchedule} toggle={this.toggleSchedule} />
                 }
             </SofaDialog>
         )

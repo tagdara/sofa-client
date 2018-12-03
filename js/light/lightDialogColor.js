@@ -80,6 +80,9 @@ const styles = theme => ({
         paddingTop:0,
         paddingLeft:8,
         paddingRight:8,
+    },
+    wide: {
+        width: "100%",
     }
 });
 
@@ -89,7 +92,9 @@ class LightDialogColor extends React.Component {
         super(props);
 
         this.state = {
-            color: "no",
+            delaySet: false,
+            prevcolor: {},
+            color: {hue: 43.5, saturation:0.27, brightness: 1},
         };
     } 
     
@@ -99,38 +104,54 @@ class LightDialogColor extends React.Component {
         var changes={}
         
         if (data.hasOwnProperty('color')) {
-            changes.color=data.color
+            console.log('gdspcolor',LightDialogColor.sb2sl(data.color),'compare',prevState.prevcolor)
+            if (!prevState.delaySet) {
+                changes.color=LightDialogColor.sb2sl(data.color)
+            }
         }
 
         return changes
     }
     
-    sb2sl(color) {
-        var SB = {hue:color.hue, saturation:color.saturation, brightness:color.brightness};
-        var SL = {h:color.hue, s:0, l:0};
-        SL.l = (2 - SB.saturation) * SB.brightness / 2;
-        SL.s = SL.l&&SL.l<1 ? SB.saturation*SB.brightness/(SL.l<0.5 ? SL.l*2 : 2-SL.l*2) : SL.s;
-        return SL
-    }
-        
-    sl2sb(color) {
+    static sl2sb(color) {
         var SL = {h:color.h, s:color.s, l:color.l};
         var SB = {hue:color.h, saturation:0, brightness:0};
         var t = SL.s * (SL.l<0.5 ? SL.l : 1-SL.l);
         SB.brightness = SL.l+t;
         SB.saturation = SL.l>0 ? 2*t/SB.brightness : SB.saturation ;
         return SB
+    }    
+    
+    static sb2sl(color) {
+        var SB = {hue:color.hue, saturation:color.saturation, brightness:color.brightness};
+        var SL = {h:color.hue, s:0, l:0};
+        SL.l = (2 - SB.saturation) * SB.brightness / 2;
+        SL.s = SL.l&&SL.l<1 ? SB.saturation*SB.brightness/(SL.l<0.5 ? SL.l*2 : 2-SL.l*2) : SL.s;
+        return SL
     }
     
-    handleColorSliderChange = color => {
-        var hsb=this.sl2sb(color.hsl)
-        this.setState({ color: hsb });
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorController", "SetColor", hsb)
+    handleColorSliderChange = (color, event) => {
+        this.delaySliderUpdates()    // hue bulbs are slow on HSB
+        this.setState({ color: color.hsl });
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorController", "SetColor", { "color": LightDialogColor.sl2sb(color.hsl) } )
     }
 
     handleColorChange = hsb => {
-        this.setState({ color: hsb });
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorController", "SetColor", hsb)
+        this.delaySliderUpdates()   // hue bulbs are slow on HSB
+        console.log('colorchange', hsb)
+        this.setState({ color: LightDialogColor.sb2sl(hsb) });
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorController", "SetColor", {"color":hsb} )
+    }
+    
+    delaySliderUpdates = () => {
+        console.log('dsu')
+        this.setState({ delaySet: true},
+            () =>  setTimeout(() => this.endSliderDelay(), 30000)
+        )
+    }
+    
+    endSliderDelay = () => {
+        this.setState({ delaySet: false});
     }
 
     render() {
@@ -144,7 +165,8 @@ class LightDialogColor extends React.Component {
                     </ListItem>
                     <ListItem>
                         <HuePicker
-                            color={ this.sb2sl(this.state.color) }
+                            className={classes.wide}
+                            color={ this.state.color }
                             onChangeComplete={ this.handleColorSliderChange }
                         />
                     </ListItem>

@@ -35,6 +35,31 @@ const styles = theme => ({
         flexGrow:1,
         flexBasis:0,
     },
+    areaInputstring: {
+        marginTop:0,
+        marginLeft: 16,
+        flexGrow:1,
+        flexBasis:0,
+    },
+    areaInputdecimal: {
+        marginTop:0,
+        marginLeft: 16,
+        width: 40,
+        overflowX: "hidden",
+    },
+    areaInputpercentage: {
+        marginTop:0,
+        marginLeft: 16,
+        width: 40,
+        overflowX: "hidden",
+    },
+    areaInputinteger: {
+        marginTop:0,
+        marginLeft: 16,
+        width: 40,
+        overflowX: "hidden",
+    },
+
     deviceName: {
         padding: 0,
         flexGrow:1,
@@ -67,6 +92,9 @@ class AutomationAction extends React.Component {
         super(props);
 
         this.state = {
+            parentField: "",
+            fields: [],
+            editVal: {},
             icons: {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
         }
     }
@@ -87,13 +115,60 @@ class AutomationAction extends React.Component {
         this.save(action)
     }
     
+    editValues = (action, value) => {
+        var edval=this.state.editVal
+        edval[action]=value     
+        
+        if (this.state.parentField) {
+            var parval={}
+            parval[this.state.parentField]=edval
+            this.setState({editVal:edval}, () => this.editValue(parval))
+        } else {
+            this.setState({editVal:edval}, () => this.editValue(edval))
+        }
+        console.log(action, value)
+        
+    }
+    
     save = (action) => {
         this.props.save(this.props.index, action)
+    }
+    
+    componentDidMount() {
+        var subfields=[]
+        var edval={}
+        var parent=""
+
+        for (var av in this.props.actionValues) {
+            if (typeof this.props.actionValues[av] === 'object') {
+                parent=av
+                for (var avsub in this.props.actionValues[av]) {
+                    //console.log(av,avsub,this.props.actionValues[av][avsub])
+                    subfields.push({ 'name':avsub, 'type': this.props.actionValues[av][avsub] })
+                    edval[avsub]=''
+                    if (this.props.action.value.hasOwnProperty(av)) {
+                        if (this.props.action.value[av].hasOwnProperty(avsub)) {
+                            console.log(this.props.action.value[av][avsub])
+                            edval[avsub]=this.props.action.value[av][avsub]
+                        }
+                    }
+                }
+            } else {
+                console.log('not an object',this.props.actionValues[av])
+                subfields= [{ "name":av, "type": this.props.actionValues[av] }]
+                edval[av]=''
+                if (this.props.action.value.hasOwnProperty(av)) {
+                    edval[av]=this.props.action.value[av]
+                }
+            }
+        }
+        this.setState({fields: subfields, editVal:edval, parentField: parent})
     }
 
     render() {
         
         const { classes, index, name, action, propertyName, device} = this.props;
+        const { editVal, fields } = this.state;
         
         return (
             <ListItem className={classes.item} >
@@ -103,16 +178,16 @@ class AutomationAction extends React.Component {
                 <ListItemIcon onClick={() => this.props.run(name,index)}>{this.getIcon(device.displayCategories[0])}</ListItemIcon>
                 }
                 <ListItemText primary={device.friendlyName} secondary={action.controller.replace('Controller','')+" / "+action.command} className={classes.deviceName}/>
-                {this.props.actionValue ?
+                { fields.map((action,index) =>
                     <TextField
-                        className={classes.areaInput}
+                        className={classes['areaInput'+action.type]}
                         id={'action'+index}
-                        label={propertyName}
-                        margin="normal"
-                        value={action.value}
-                        onChange={(e) => this.editValue(e.target.value)}
+                        label={action.name}
+                        margin="dense"
+                        value={editVal[action.name]}
+                        onChange={(e) => this.editValues(action.name, e.target.value)}
                     />
-                : null }
+                )}
                 {this.props.edit ?
                     <ListItemSecondaryAction className={classes.listItem}>
                         <IconButton onClick={() => this.props.moveUp(index)}><ExpandLessIcon /></IconButton>   

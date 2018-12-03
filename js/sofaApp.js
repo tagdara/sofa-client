@@ -2,11 +2,13 @@ import React, { Component, createElement  } from 'react';
 import { PropTypes } from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import { withTheme } from '@material-ui/core/styles';
+import Loadable from 'react-loadable';
 
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import HistoryIcon from '@material-ui/icons/History';
@@ -18,23 +20,13 @@ import Sidebar from './sidebar';
 import BottomNav from './bottomnav';
 import SofaAppBar from "./sofaAppBar";
 
-import PlayerList from './playerlist';
-import ReceiverList from './receiverlist';
-import TvList from './tvlist';
-
-import RegionCard from './region/regionCard'
 import ButtonGrid from './devices/buttonGrid';
 import AutomationDialog from "./automation/automationDialog"
 import ButtonDialog from './buttonDialog';
-import MiniLauncher from './miniLauncher';
 import ScheduleDialog from './schedule/scheduleDialog';
 import EventDialog from './event/eventDialog';
 
-import ButtonZone from './devices/buttonzone';
-import CameraSelect from './camera/cameraselect';
-import ZoneList from './zonelist';
-import ThermostatHero from './thermostat/thermostatHero';
-import MiniCard from './miniCard';
+import PlaceholderCard from './PlaceholderCard';
 
 const styles = {
     
@@ -47,6 +39,17 @@ const styles = {
     },
 };
 
+function cardLoading(props) {
+    
+    if (props.error) {
+        console.log(props)
+        return <div>Error</div>;
+    } else if (props.pastDelay) {
+        return <PlaceholderCard />;
+    } else {
+        return null;
+    }
+}
 
 class SofaApp extends Component {
 
@@ -57,11 +60,30 @@ class SofaApp extends Component {
             width: window.innerWidth,
             page: 'Audio Video',
             drawerOpen: false,
+            modules: [],
+            moduleLayout: { "Audio Video": [    {"module": "PlayerList", "file": "./PlayerList", "props": { "Category" : "SPEAKER" } },
+                                                {"module": "ReceiverList", "file": "./ReceiverList", "props": { "Category" : "RECEIVER" } },
+                                                {"module": "TvList", "file": "./TvList", "props": { "Category" : "TV"} }
+                                            ],
+                            "Lights":       [   {"module": "RegionCard", "file": "region/RegionCard", "props": { "region" : "main" } },
+                                                {"module": "ThermostatHero", "file": "thermostat/ThermostatHero", "props": { "Category" : "THERMOSTAT" } },
+                                                {"module": "MiniLauncher", "file": "./MiniLauncher", "props": { "icon": <DevicesOtherIcon />, "name":"More Devices", "dialog": <ButtonDialog/> } },
+                                            ],
+                            "Security":     [   {"module": "ZoneList", "file": "./ZoneList", "props": { "Category":"ZONE" } },
+                                                {"module": "CameraSelect", "file": "./CameraSelect", "props": {} },
+                                                {"module": "MiniCard", "file": "./MiniCard", "props": { "name":"Front Gate" } },
+                                                {"module": "MiniCard", "file": "./MiniCard", "props": { "name":"Garage Door" } },
+                                                {"module": "MiniLauncher", "file": "./MiniLauncher", "props": { "icon": <TuneIcon />, "name":"Automations", "dialog": <AutomationDialog/> } },
+                                                {"module": "MiniLauncher", "file": "./MiniLauncher", "props": { "icon": <HistoryIcon />, "name":"Schedule", "dialog": <ScheduleDialog/> } },
+
+                                            ]
+            },
         };
 
         this.pageChange = this.pageChange.bind(this);
-    }    
+    } 
     
+      
     pageChange = page => {
         this.setState({page:page.value})
     }
@@ -78,16 +100,46 @@ class SofaApp extends Component {
         this.setState({ width: window.innerWidth });
     };
 
+    addModules = () => {
+        
+        const { active } = this.state, modules = {};
+        // Create loadables. THIS IS THE MAGIC!
+        Object.keys(this.state.moduleLayout).map(page =>
+            this.state.moduleLayout[page].map( item => {
+                if (modules.hasOwnProperty(item['module'])) {
+                    return modules[item['module']]
+                } else {
 
-    componentDidMount() {
-        window.addEventListener('resize', this.handleWindowSizeChange);
+                return modules[item['module']]=(Loadable({
+                    //loader: () => import(item['file']), // Here can be any component!
+                    loader: () => import('./'+item['module']), // Here can be any component!
+                    loading: cardLoading,
+                }));
+                }
+            }));
+        this.setState({ ...this.state, modules, active });
     }
 
+    componentDidMount() {
+        this.addModules()
+        window.addEventListener('resize', this.handleWindowSizeChange);
+    }
+    
+    renderMod = ( item, page, index ) => {
 
+        if (Object.keys(this.state.modules).includes(item['module'])) {
+            let Module = this.state.modules[item['module']]
+            return <Module key={ page+index } {...item['props']} />
+        } else {
+            return null
+        }
+
+    }
+    
     render() {
 
         const { classes } = this.props;
-        const { width } = this.state;
+        const { width, modules, categories, active, moduleLayout } = this.state;
         const isMobile = width <= 800;
 
         return (
@@ -97,43 +149,16 @@ class SofaApp extends Component {
                 { isMobile ? null : <Toolbar /> }
 
                 <Grid container spacing={0} className={classes.controlArea}>
-                    {this.state.page == 'Audio Video' || !isMobile ?
-                        <Grid item xs={isMobile ? 12 : 4 } className={classes.gridColumn}>
-                            <PlayerList Category='SPEAKER' defaultPlayer={'Office'} />
-                            <ReceiverList Category='RECEIVER' />
-                            <TvList Category='TV' />
-                        </Grid>
-                    : null }
-                    {this.state.page == 'Lights' || !isMobile ?
-                        <Grid item xs={isMobile ? 12 : 4 } className={classes.gridColumn}>
-                            <RegionCard region="main" />
-                            <ButtonGrid>
-                                <MiniLauncher icon={<DevicesOtherIcon />} name={'More Devices'}>
-                                    <ButtonDialog />
-                                </MiniLauncher>
-                            </ButtonGrid>
-                            <ThermostatHero Category="THERMOSTAT" />           
+                    { Object.keys(moduleLayout).map(page => {
+                        return (this.state.page==page || !isMobile) ?
 
+                        <Grid key={page} item xs={ isMobile ? 12 : 4 } className={classes.gridColumn}>
+                            { moduleLayout[page].map( (item, i) => 
+                                this.renderMod(item, page, i)
+                            )}
                         </Grid>
-                    : null }
-                    {this.state.page == 'Security' || !isMobile ?
-                        <Grid item xs={isMobile ? 12 : 4 } className={classes.gridColumn}>
-                            <ZoneList filter='open' Category='ZONE' />
-                            <CameraSelect />
-                            <ButtonGrid>
-                                <MiniCard name={'Front Gate'} />
-                                <MiniCard name={'Garage Door'} />
-                            </ButtonGrid>
-                            <ButtonGrid>
-                                <MiniLauncher icon={<TuneIcon />} name={'Automations'}>
-                                    <AutomationDialog />
-                                </MiniLauncher>
-                                <MiniLauncher icon={<TuneIcon />} name={'Schedule'}>
-                                    <ScheduleDialog />
-                                </MiniLauncher>
-                            </ButtonGrid>
-                         </Grid>
-                    : null }
+                        : null 
+                    })}
                 </Grid>
                 
                 { isMobile ?

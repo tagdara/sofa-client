@@ -224,7 +224,7 @@ class GroupLight extends React.Component {
     handleBrightnessChange = event => {
         for (var i = 0; i < this.props.devices.length; i++) {
             if (this.props.deviceProperties[this.props.devices[i].friendlyName].hasOwnProperty('brightness')) {
-                this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "BrightnessController", "SetBrightness", event)
+                this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, "BrightnessController", "SetBrightness", { "brightness" : event } )
             }
         }
     }; 

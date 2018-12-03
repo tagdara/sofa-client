@@ -57,13 +57,13 @@ const styles = theme => ({
 
 class SonosGroupDialog extends React.Component {
     
-    handleCheckClick = (event,item) => {
+    handleCheckClick = (event, name, endpointId) => {
         if (event.target.checked) {
             var sonosinput=this.props.coordinator
         } else {
             var sonosinput=''
         }
-        this.props.sendAlexaCommand(item, '', 'InputController', "SelectInput", sonosinput )
+        this.props.sendAlexaCommand(name, endpointId, 'InputController', "SelectInput", { "input": sonosinput } )
     }; 
 
     render() {
@@ -75,7 +75,7 @@ class SonosGroupDialog extends React.Component {
                 <DialogContent className={classes.dialogContent }>
                     <List className={classes.thermostatList} >
                         { devices.map(device => 
-                            <SonosGroup key={device.friendlyName} name={device.friendlyName} coordinator={coordinator} linked={linked} handleCheck={this.handleCheckClick} />
+                            <SonosGroup key={device.endpointId} name={device.friendlyName} endpointId={device.endpointId} coordinator={coordinator} linked={linked} handleCheck={this.handleCheckClick} />
                         )}
                     </List>
                 </DialogContent>

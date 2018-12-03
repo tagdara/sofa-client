@@ -23,12 +23,6 @@ import SofaDialog from '../sofaDialog'
 
 const styles  = theme =>  ({
 
-    dialog: {
-        paddingTop: "env(safe-area-inset-top)",
-        paddingBottom: "env(safe-area-inset-bottom)",
-        minWidth: '320px',
-        boxSizing: "border-box",
-    },
     titleControls: {
         padding: 0,
     },

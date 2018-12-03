@@ -37,13 +37,11 @@ const styles = theme => ({
 
 
     chip: {
-        background: "silver",
-        color: "black",
         margin: theme.spacing.unit,
     },
 
     hotchip: {
-        background: "orangeRed",
+        background: theme.palette.primary.main,
         color: "white",
         margin: theme.spacing.unit,
     },
@@ -53,7 +51,7 @@ const styles = theme => ({
     gridList: { 
         maxWidth: 320,
         margin: "0 auto !important",
-        backgroundColor: "#eee",
+        backgroundColor: theme.palette.background.default,
     },
     gridButtonTile: {
         display: 'flex',
@@ -74,14 +72,7 @@ class TVDialog extends React.Component {
         super(props);
 
         this.state = {
-            tracked: ['surround','decoder','input','volume','powerState'],
-            endpointId: '',
-            surround: '',
-            decoder: '',
-            input: '',
-            volume: 0,
             powerState: false,
-            icon: '/react/images/tv.jpg?v2',
             inputs: [],
         };
     }    
@@ -136,7 +127,7 @@ class TVDialog extends React.Component {
     
     render() {
 
-        const { classes } = this.props;
+        const { classes, deviceProperties } = this.props;
 
         return (
                 <SofaDialog title='TV' open={this.props.open} close={this.props.close} >
@@ -164,7 +155,7 @@ class TVDialog extends React.Component {
                                     <Chip 
                                         key = {tvinput.uri}
                                         label= {tvinput.label ? tvinput.label : tvinput.title }
-                                        className={ (this.props.deviceProperties.input==tvinput.uri) ? classes.hotchip : classes.chip }
+                                        className={ (deviceProperties.input==tvinput.label || deviceProperties.input==tvinput.title) ? classes.hotchip : classes.chip }
                                         onClick={ (e) => this.handleInput(e, tvinput.uri)}
                                     />
                                 )}

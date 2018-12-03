@@ -41,7 +41,7 @@ class LightDialogBrightness extends React.Component {
     }; 
 
     handleBrightnessChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "BrightnessController", "SetBrightness", this.state.brightness)
+        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "BrightnessController", "SetBrightness", { "brightness" : this.state.brightness } )
     }; 
 
     render() {

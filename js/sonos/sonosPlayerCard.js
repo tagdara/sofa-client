@@ -12,6 +12,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
+import List from '@material-ui/core/List';
 
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
@@ -175,7 +176,7 @@ class SonosPlayerCard extends React.Component {
         
             for (var i = 0; i < allvol.length; i++) {
                 volumes.push(
-                    <SonosVolume sendAlexaCommand={this.props.sendAlexaCommand} key={ allvol[i] } name={ allvol[i] } endpointId={ this.props.deviceByName(allvol[i]).endpointId } deviceProperties={ this.props.deviceProperties[allvol[i]] } sendMessage={ this.props.sendMessage } />
+                    <SonosVolume sendAlexaCommand={this.props.sendAlexaCommand} key={ allvol[i] } name={ allvol[i] } endpointId={ this.props.deviceByName(allvol[i]).endpointId } deviceProperties={ this.props.deviceProperties[allvol[i]] } />
                 )
             }
         }
@@ -279,7 +280,9 @@ class SonosPlayerCard extends React.Component {
                             <SkipNextIcon />
                         </IconButton>
                         </CardMedia>
+                        <List>
                         {this.createLinkVolumes()}
+                        </List>
                         { this.state.mediaSelect ?
                             <SonosFavorites open={this.state.mediaSelect} close={ this.closeMediaSelect } />
                             :null

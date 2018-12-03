@@ -15,6 +15,8 @@ import IconButton from '@material-ui/core/IconButton';
 import VirtualList from './virtuallist';
 import ComputerList from './computerList';
 import ModeList from './modeList';
+import DeviceList from './DeviceList';
+
 import SmartButton from './devices/smartbutton';
 import { withData } from './DataContext/withData';
 import SofaDialog from './sofaDialog';
@@ -73,6 +75,7 @@ class ButtonDialog extends React.Component {
                     <List className={classes.thermostatList} >
                         <VirtualList sendAlexaCommand={this.props.sendAlexaCommand} />
                     </List>
+                    <DeviceList devices={ this.props.devicesByCategory('DEVICE') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('DEVICE')) } sendAlexaCommand={this.props.sendAlexaCommand} />
                     <Divider />
                     <ComputerList devices={ this.props.devicesByCategory('PC') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('PC')) } sendAlexaCommand={this.props.sendAlexaCommand} />
                     <Divider />

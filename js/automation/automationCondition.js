@@ -27,6 +27,37 @@ const styles = theme => ({
         flexGrow:1,
         flexBasis:0,
     },
+    input: {
+        marginTop:0,
+        marginLeft: 16,
+        flexGrow:1,
+        flexBasis:0,
+    },
+    inputstring: {
+        marginTop:0,
+        marginLeft: 16,
+        flexGrow:1,
+        flexBasis:0,
+    },
+    inputdecimal: {
+        marginTop:0,
+        marginLeft: 16,
+        width: 40,
+        overflowX: "hidden",
+    },
+    inputpercentage: {
+        marginTop:0,
+        marginLeft: 16,
+        width: 40,
+        overflowX: "hidden",
+    },
+    inputinteger: {
+        marginTop:0,
+        marginLeft: 16,
+        width: 40,
+        overflowX: "hidden",
+    },
+
     deviceName: {
         padding: 0,
         flexGrow:1,
@@ -58,6 +89,10 @@ class AutomationCondition extends React.Component {
         super(props);
 
         this.state = {
+            parentField: "",
+            fields: [],
+            editVal: {},
+
             condition: {},
         }
     }
@@ -78,9 +113,80 @@ class AutomationCondition extends React.Component {
         this.props.save(this.props.index, condition)
     }
     
+    componentDidMount() {
+        var subfields=[]
+        var edval={}
+        var parent=""
+
+        for (var av in this.props.conditionProperties.value) {
+            if (typeof this.props.actionValues[av] === 'object') {
+                parent=av
+                for (var avsub in this.props.actionValues[av]) {
+                    //console.log(av,avsub,this.props.actionValues[av][avsub])
+                    subfields.push({ 'name':avsub, 'type': this.props.actionValues[av][avsub] })
+                    edval[avsub]=''
+                    if (this.props.action.value.hasOwnProperty(av)) {
+                        if (this.props.action.value[av].hasOwnProperty(avsub)) {
+                            console.log(this.props.action.value[av][avsub])
+                            edval[avsub]=this.props.action.value[av][avsub]
+                        }
+                    }
+                }
+            } else {
+                console.log('not an object',this.props.actionValues[av])
+                subfields= [{ "name":av, "type": this.props.actionValues[av] }]
+                edval[av]=''
+                if (this.props.action.value.hasOwnProperty(av)) {
+                    edval[av]=this.props.action.value[av]
+                }
+            }
+        }
+        this.setState({fields: subfields, editVal:edval, parentField: parent})
+    }
+    
+    editValue = (val) => {
+        console.log('ev',val)
+    }
+    
+    editValues = (conval, value) => {
+        var edval=this.state.editVal
+        edval[conval]=value     
+        this.setState({editVal:edval}, () => this.editConditionValue(edval))
+    }
+    
+    componentDidMount() {
+
+        var subfields=[]
+        var edval={}
+        console.log('conprops',this.props.controllerProperties)
+        for (var cp in this.props.controllerProperties) {
+            //console.log(av,avsub,this.props.actionValues[av][avsub])
+            subfields.push({ 'name':cp, 'type': this.props.controllerProperties[cp] })
+            edval[cp]=''
+            if (this.props.condition.value.hasOwnProperty(cp)) {
+                edval[cp]=this.props.condition.value[cp]
+            }
+        }
+        this.setState({ fields: subfields, editVal:edval })
+
+    }
+    
+    typeFromType = (vartype) => {
+        if (vartype=="time") {
+            return "time"
+        } else if  (vartype=="percentage") {
+            return "number"
+        } else if  (vartype=="integer") {
+            return "number"
+        } else {
+            return "text"
+        }
+    }
+    
     render() {
         
         const { classes, index, name, condition, propertyName} = this.props;
+        const { editVal, fields } = this.state;
         
         return (
             <ListItem className={classes.conditionItem} >
@@ -89,16 +195,20 @@ class AutomationCondition extends React.Component {
                 :
                 <ListItemIcon><ShuffleIcon /></ListItemIcon>
                 }
-                <ListItemText primary={name} secondary={condition.controller} className={classes.deviceName}/>
+                <ListItemText primary={name} secondary={condition.controller+" "+condition.propertyName} className={classes.deviceName}/>
                 <OperatorButton index={index} value={condition.operator} setOperator={ this.editOperatorValue }/>
-                <TextField
-                        className={classes.input}
-                        id={'condition'+index}
-                        label={propertyName}
-                        margin="normal"
-                        value={condition.value}
-                        onChange={(e) => this.editConditionValue(e.target.value)}
-                />
+                { fields.map((conval,index) =>
+                    <TextField
+                        className={classes['input'+conval.type]}
+                        id={'conval'+index}
+                        label={conval.name}
+                        margin="dense"
+                        value={editVal[conval.name]}
+                        onChange={(e) => this.editValues(conval.name, e.target.value)}
+                        type={this.typeFromType(conval.type)}
+                    />
+                )}
+
                 {this.props.edit ?
                     <ListItemSecondaryAction className={classes.listItem}>
                         <IconButton onClick={() => this.props.moveUp(index)}><ExpandLessIcon /></IconButton>   

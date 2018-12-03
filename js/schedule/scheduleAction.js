@@ -70,32 +70,14 @@ const styles = theme => ({
 });
 
 
-class ScheduleEditor extends React.Component {
+class ScheduleAction extends React.Component {
 
     constructor(props) {
         super(props);
 
         this.state = {
-            scheduleName: "",
-            scheduleType: "",
-            
-            scheduleStart: "",
-            scheduleInterval: 1,
-            scheduleIntervalUnit: 'hours',
-            scheduleDaysType: "",
-            
-            actionValue: "",
-            
-            scheduleTime: "09:00:00",
-            scheduleDays: [],
-            schedule: {},
 
-            daysType:"",
-            daysOfTheWeek: ['sun','mon','tue','wed','thu','fri','sat'],
-            intervalUnits: ['days','hours','minutes'],
-            builder: false,
-            deviceSelect: false,
-            controllers: [],
+            actionValue: "",
             scheduleAction: false,
             ready: false,
             enabled: true,
@@ -105,8 +87,8 @@ class ScheduleEditor extends React.Component {
 
     getActionValue = (controller, command) => {
 
-        if (this.state.controllers.hasOwnProperty(controller)) {
-            var payload=this.state.controllers[controller][command]
+        if (this.props.directives.hasOwnProperty(controller)) {
+            var payload=this.props.directives[controller][command]
             for (var prop in payload) {
                 if (payload[prop]=='value') {
                     return prop
@@ -116,23 +98,6 @@ class ScheduleEditor extends React.Component {
         return ''
     }  
     
-    handleActionSelect = (deviceName, endpointId, controller, cmd) => {
-        this.setState({ deviceSelect:false, scheduleAction: {'deviceName':deviceName, "endpointId":endpointId, "controller":controller, "command":cmd, "value":0}}, 
-            () => this.readyToSave()
-        )
-        
-        this.setState({ deviceSelect:false}, 
-            () => this.readyToSave()
-        )
-    }
-
-    componentDidMount() {
-        
-  	    fetch('/controllercommands')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({controllers:result}));
-    }
-
     render() {
 
         
@@ -163,8 +128,8 @@ class ScheduleEditor extends React.Component {
 
 }
 
-ScheduleEditor.propTypes = {
+ScheduleAction.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(ScheduleEditor);
+export default withStyles(styles)(ScheduleAction);

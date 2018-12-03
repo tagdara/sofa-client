@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Slider from '@material-ui/lab/Slider';
+import SofaSlider from '../sofaSlider';
 
 const styles  = theme =>  ({
     
@@ -118,13 +118,12 @@ class Area extends React.Component {
         )
     }
 
-    runShortcut = (event) => {
-        console.log(event,this.state.level)
-        if (this.props.shortcuts.hasOwnProperty(this.state.level.toString())) {
-            var sceneName=this.props.shortcuts[this.state.level]
+    runShortcut = (level) => {
+        if (this.props.shortcuts.hasOwnProperty(level.toString())) {
+            var sceneName=this.props.shortcuts[level]
             this.runScene(sceneName)
         } else {
-            console.log('No scene shortcut for area level', this.state.level)
+            console.log('No scene shortcut for area level', level)
         }
     }
 
@@ -135,8 +134,8 @@ class Area extends React.Component {
         return (
             <ListItem className={classes.areaListItem}>
                 <Typography variant="subtitle1" className={classes.halves} onClick={ () => this.props.selectArea(this.props.name)}>{this.props.name}</Typography>
-                <Slider className={classes.halves} value={this.state.level} step={1} min={0} max={3} 
-                        onChange={this.handlePreLevelChange} onDragEnd={this.runShortcut} />
+                <SofaSlider half={true} value={this.state.level} step={1} min={0} max={3} 
+                        preChange={this.handlePreLevelChange} change={this.runShortcut} />
             </ListItem>
         );
     }

@@ -34,11 +34,21 @@ class GroupDialog extends React.Component {
             brightness: 50,
         };
     }
-
+    
+    deviceByName = devname => {
+        var fn=[]
+        for (var i = 0; i < this.props.devices.length; i++) {
+            if (this.props.devices[i]['friendlyName']==devname) {
+                return this.props.devices[i]
+            } 
+        }
+    }
+ 
     sendGroupAlexaCommand = (devicename, fakeEndpointId, controller, directive, value) => {
-        console.log('cm',this.props.controllermap)
+        console.log('cm',controller,this.props.controllermap)
         for (var i = 0; i < this.props.controllermap[controller].length; i++) {
-            this.props.sendAlexaCommand(this.props.devices[i].friendlyNamee, this.props.devices[i].endpointId, controller, directive, value)
+            var dev=this.deviceByName(this.props.controllermap[controller][i])
+            this.props.sendAlexaCommand(dev.friendlyName, dev.endpointId, controller, directive, value)
         }
     }
  

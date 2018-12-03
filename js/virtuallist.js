@@ -54,13 +54,6 @@ class VirtualList extends React.Component {
                             <Sprinkler key={ index } name={ key } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
                             :null
                     ))}
-                    <Divider />
-                    { Object.keys(virtualDevices).map((key, index) => (
-                        virtualDevices[key]['type']=='lock' ?
-                            <StatusLock key={ index } name={ key } status={ this.getStatusProp(virtualDevices[key].status) }
-                                        commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
-                            :null
-                        ))}
                 </List>
             : null 
         );

@@ -96,7 +96,7 @@ class DeviceSelect extends React.Component {
     
     getControllerCommands = (controller) => {
         var cmds=[]
-        return this.props.controllers[controller]
+        return this.props.directives[controller]
     }
     
     getControllerDirectives = (controller) => {
@@ -114,14 +114,14 @@ class DeviceSelect extends React.Component {
 
     render() {
         
-        const { classes, mode, devices, controllers} = this.props;
+        const { classes, mode, devices, controllers, directives} = this.props;
         const { filter } = this.state;
         
         return (
             <List className={classes.list} >
                 <SofaCategoryFilter applyFilter={this.applyFilter} />
                 { this.filterDevices(mode, filter, devices).map((device) => (
-                    <DeviceExpand key={ device.endpointId+'-exp' } device={device} mode={mode} controllers={controllers} select={this.props.select}  />
+                    <DeviceExpand key={ device.endpointId+'-exp' } device={device} mode={mode} controllers={controllers} select={this.props.select} directives={directives}  />
                 ))}
             </List>
         )

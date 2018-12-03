@@ -23,11 +23,15 @@ class DeviceExpandActions extends React.Component {
 
     getControllerCommands = (controller) => {
         var cmds=[]
-        if (this.props.controllers.hasOwnProperty(controller)) {
-            return Object.keys(this.props.controllers[controller])
+        if (this.props.directives.hasOwnProperty(controller)) {
+            return Object.keys(this.props.directives[controller])
         }
-        console.log('Did not find',controller,'in',this.props.controllers)
+        console.log('Did not find',controller,'in',this.props.directives)
         return []
+    }
+    
+    componentDidMount() {
+        console.log(this.props.controllers)
     }
     
     render() {

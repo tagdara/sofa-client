@@ -57,9 +57,9 @@ class Computer extends React.Component {
         this.setState({ powerState: event.target.checked });
         console.log('power change on ', this.props.name)
         if (event.target.checked) {
-            this.props.sendAlexaCommand(this.props.name, '', 'PowerController', 'TurnOn')
+            this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, 'PowerController', 'TurnOn')
         } else {
-            this.props.sendAlexaCommand(this.props.name, '', 'PowerController', 'TurnOff')
+            this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, 'PowerController', 'TurnOff')
         }
     }; 
     

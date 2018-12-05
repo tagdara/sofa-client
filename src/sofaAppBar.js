@@ -62,12 +62,6 @@ class SofaAppBar extends React.Component {
                         <Typography variant="h6" color="inherit" className={classes.flex}>
                             Home
                         </Typography>
-                        <IconButton onClick={() => this.props.setColorScheme(this.props.colorScheme=='dark' ? 'light' : 'dark')}>
-                            <CompareIcon />
-                        </IconButton>
-                        <IconButton onClick={()=> this.otherPort('8443','_editor')}>
-                            <EditIcon />
-                        </IconButton>
                     </Toolbar>
                     }
                 </AppBar>

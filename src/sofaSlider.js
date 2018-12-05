@@ -142,7 +142,7 @@ SofaSlider.defaultProps = {
     disabled: false,
     padLeft: false,
     half: false,
-    minWidth: 140,
+    minWidth: 240,
 }
 
 SofaSlider.propTypes = {

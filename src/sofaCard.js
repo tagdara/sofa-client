@@ -22,7 +22,8 @@ const styles = theme => ({
         padding: "0 !important",
         flexGrow:1,
         display: "flex",
-        alignItems: "center"
+        alignItems: "center",
+				flexDirection: "column",
     },
 });
 

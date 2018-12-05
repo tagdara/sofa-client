@@ -52,6 +52,7 @@ const styles = theme => ({
         flexDirection: "column",
         flexGrow: 1,
         padding: 0,
+        width: "100%",
     }
 });
 

@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 const config = {
-    entry:  __dirname + '/js/index.jsx',
+    entry:  __dirname + '/src/index.jsx',
     output: {
         path: __dirname + '/dist',
         filename: 'bundle.js',

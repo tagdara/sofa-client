@@ -147,7 +147,7 @@ class ThermostatSettable extends React.Component {
                 { this.state.hasOwnProperty('powerLevel') ?
                 <ListItem className={classes.listItemIndent}>
                     <ListItemIcon><ToysIcon /></ListItemIcon>
-                    <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={false}
+                    <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={false} minWidth={100}
                                 preChange={this.handlePrePowerLevelChange} change={this.handlePowerLevelChange} />
                 </ListItem>
                 : null }

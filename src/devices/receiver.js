@@ -25,6 +25,9 @@ const styles = theme => ({
         minHeight: 48,
         padding: 0,
     },
+		listItemBottom: {
+				padding: "32 0 0 0",
+		}
 });
 
 class Receiver extends React.Component {
@@ -118,12 +121,12 @@ class Receiver extends React.Component {
                         <Switch color="primary" checked={powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
                     </ListItem>
                 { this.getYamahaInput(deviceProperties.input)=='Sonos' || powerState!='ON' ? null :
-                    <ListItem className={classes.listItem}>
+                    <ListItem className={classes.listItemBottom}>
                         <Avatar onClick={ () => this.handleMuteChange()} >
                             {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                         </Avatar>
                         <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
-                                    preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} padLeft={true} />
+                                    minWidth={240} preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} padLeft={true} />
                     </ListItem>
                 }
                     <ReceiverDialog input={this.getYamahaInput(deviceProperties.input)} inputs={inputs} sendAlexaCommand={this.props.sendAlexaCommand} showdialog={this.state.showdialog} closeDialog={this.closeDialog} name={name} device={ device } deviceProperties={ deviceProperties } sendMessage={ this.props.sendMessage } />

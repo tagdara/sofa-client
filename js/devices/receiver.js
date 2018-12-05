@@ -1,18 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+
 import Avatar from '@material-ui/core/Avatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Switch from '@material-ui/core/Switch';
 import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
+import VolumeUpIcon from '@material-ui/icons/VolumeUp';
+import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 
 import ReceiverDialog from './receiverDialog';
 import SofaSlider from '../sofaSlider'
-import VolumeUpIcon from '@material-ui/icons/VolumeUp';
-import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import SofaCard from '../sofaCard'
 
 const styles = theme => ({
     
@@ -20,38 +20,11 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
     },
-    icon: {
-        minWidth: 62,
-        height: 62,
-        width: 62,
-        alignSelf: "flex-end",
-    },
     listItem: {
-        padding: "16 0",
         width: '100%',
+        minHeight: 48,
+        padding: 0,
     },
-    card: {
-        display: 'flex',
-        maxWidth: '480px',
-        margin: "0 8",
-        boxSizing: "border-box",
-        justifyContent: "space-between",
-        padding: "4 16",
-    },
-    xcontent: {
-        minWidth: 0,
-        padding: "0 !important",
-        flexGrow:1,
-        display: "flex",
-        alignItems: "center"
-    },
-    content: {
-        width: "100%",
-        padding: "0 !important",
-        display: "flex",
-        flexDirection: "column",
-    }, 
-
 });
 
 class Receiver extends React.Component {
@@ -138,26 +111,23 @@ class Receiver extends React.Component {
         const { powerState, inputs } = this.state;
         
         return (
-                <Card className={classes.card}>
-                    <CardContent className={classes.content}>
-                        <ListItem className={classes.listItem}>
-                            <Avatar onClick={ () => this.handleClickOpen() } className={ powerState=='ON' ? classes.hotAvatar : classes.normalAvatar } ><SpeakerGroupIcon /></Avatar>
-                            <ListItemText onClick={ () => this.handleClickOpen()} primary={name} secondary={this.getYamahaInput(deviceProperties.input) + " / "+ deviceProperties.surround}/>
-                            <Switch color="primary" checked={powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
-                        </ListItem>
-                    { this.getYamahaInput(deviceProperties.input)=='Sonos' || powerState=='OFF' ? null :
-                        <ListItem className={classes.listItem}>
-                            <Avatar onClick={ () => this.handleMuteChange()} >
-                                {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
-                            </Avatar>
-                            <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
-                                        preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} padLeft={true} />
-                        </ListItem>
-                    }
-
-                    </CardContent>
+                <SofaCard>
+                    <ListItem className={classes.listItem}>
+                        <Avatar onClick={ () => this.handleClickOpen() } className={ powerState=='ON' ? classes.hotAvatar : classes.normalAvatar } ><SpeakerGroupIcon /></Avatar>
+                        <ListItemText onClick={ () => this.handleClickOpen()} primary={name} secondary={deviceProperties.input ? this.getYamahaInput(deviceProperties.input) + " / "+ deviceProperties.surround : null}/>
+                        <Switch color="primary" checked={powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
+                    </ListItem>
+                { this.getYamahaInput(deviceProperties.input)=='Sonos' || powerState!='ON' ? null :
+                    <ListItem className={classes.listItem}>
+                        <Avatar onClick={ () => this.handleMuteChange()} >
+                            {this.props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
+                        </Avatar>
+                        <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={this.state.volume}
+                                    preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} padLeft={true} />
+                    </ListItem>
+                }
                     <ReceiverDialog input={this.getYamahaInput(deviceProperties.input)} inputs={inputs} sendAlexaCommand={this.props.sendAlexaCommand} showdialog={this.state.showdialog} closeDialog={this.closeDialog} name={name} device={ device } deviceProperties={ deviceProperties } sendMessage={ this.props.sendMessage } />
-                </Card>
+                </SofaCard>
         );
     }
 }

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import { withThemeChange } from './DataContext/withThemeChange';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -16,10 +17,16 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import TuneIcon from '@material-ui/icons/Tune';
+import HistoryIcon from '@material-ui/icons/History';
+import CompareIcon from '@material-ui/icons/Compare';
+import PersonIcon from '@material-ui/icons/Person';
+import EditIcon from '@material-ui/icons/Edit';
 
 
 const styles = theme => ({
         
+    listItem: { minHeight: 48,
+    },
     list: {
         minWidth: 320,
     },
@@ -38,38 +45,18 @@ class Sidebar extends React.Component {
 
         this.state = {
             width: window.innerWidth,
-            objectBrowser: false,
-            groupBuilder: false,
-            autoBuilder: false,
-            computerDialog : false,
         };
     }
     
-    handleObjectBrowser = () => {
-        this.setState({ objectBrowser: true });
-    };
-
-    handleCloseObjectBrowser = () => {
-        this.setState({ objectBrowser: false });
-    };
-
-    handleOpenGroupBuilder = () => {
-        this.setState({ groupBuilder: true });
-    };
-
-    handleCloseGroupBuilder = () => {
-        this.setState({ groupBuilder: false });
+    handleDialog = ( dialog ) => {
+        this.props.handleDialog(dialog)
         this.props.close()
-    };
-
-    handleOpenAutomationBuilder = () => {
-        this.setState({ autoBuilder: true });
-    };
-
-    handleCloseAutomationBuilder = () => {
-        this.setState({ autoBuilder: false });
-        this.props.close()
-    };
+    }
+    
+    otherPort = (portnumber, tabname) => {
+        var newurl=window.location.protocol+"//"+window.location.hostname+":"+portnumber;
+        window.open(newurl,tabname);
+    }
     
     render() {
     
@@ -89,17 +76,39 @@ class Sidebar extends React.Component {
                 </div>
                 <Divider />
                 <List>
-                    <ListItem onClick={() => this.handleOpenAutomationBuilder()}>
+                    <ListItem onClick={() => this.handleDialog('Automation')}>
                         <ListItemIcon>
                             <TuneIcon />
                         </ListItemIcon>
-                        <ListItemText primary={'Automation builder'} />
+                        <ListItemText primary={'Automation'} />
                     </ListItem>
-                    <ListItem onClick={ () => this.handleOpenGroupBuilder()  }>
+                    <ListItem onClick={() => this.handleDialog('Schedule')}>
                         <ListItemIcon>
-                            <TuneIcon />
+                            <HistoryIcon />
                         </ListItemIcon>
-                        <ListItemText primary={'Group Builder'} />
+                        <ListItemText primary={'Scheduler'} />
+                    </ListItem>
+                    <ListItem className={classes.listItem} />
+                    <Divider />
+                    <ListItem onClick={()=> this.otherPort('8443','_editor')}>
+                        <ListItemIcon>
+                            <EditIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'Editor'} />
+                    </ListItem>
+                    <ListItem className={classes.listItem} />
+                    <Divider />
+                    <ListItem onClick={() => this.props.setColorScheme(this.props.colorScheme=='dark' ? 'light' : 'dark')}>
+                        <ListItemIcon>
+                            <CompareIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={this.props.colorScheme=='dark' ? 'Light Mode' : 'Dark Mode'} />
+                    </ListItem>
+                    <ListItem >
+                        <ListItemIcon>
+                            <PersonIcon />
+                        </ListItemIcon>
+                        <ListItemText primary={'User Options'} />
                     </ListItem>
                 </List>
             </Drawer>
@@ -113,4 +122,5 @@ Sidebar.propTypes = {
     
 };
 
-export default withStyles(styles)(Sidebar);
+export default withThemeChange(withStyles(styles)(Sidebar));
+

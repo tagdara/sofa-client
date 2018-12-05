@@ -17,20 +17,6 @@ import { withData } from './DataContext/withData';
 
 const styles = theme => ({
         
-    card: {
-        display: 'flex',
-        maxWidth: '480px',
-        margin: 8,
-        boxSizing: "border-box",
-        flexDirection: "column",
-        justifyContent: "space-between",
-    },
-    content: {
-        padding: "0 !important",
-        flexGrow:1,
-        display: "flex",
-        alignItems: "center"
-    },
     closed: {
         color: theme.palette.primary.contrastText,
         backgroundColor: "#6a6",
@@ -44,8 +30,9 @@ const styles = theme => ({
         backgroundColor: "#ccc",
     },
     listItem: {
-        padding: "12 16",
+        padding: 0,
         width: '100%',
+        minHeight: 48,
     },
 });
 

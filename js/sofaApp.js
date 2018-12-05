@@ -33,10 +33,15 @@ const styles = {
     controlArea: {
         margin: "0 auto",
         maxWidth: 1440,
+        width: "100%",
         paddingTop: "env(safe-area-inset-top)",
-        height: "100%",
         boxSizing: "border-box",
+        overflowY: "auto",
+        height: "100%",
     },
+    gridColumn: {
+        overflowX: "hidden",
+    }
 };
 
 function cardLoading(props) {
@@ -60,6 +65,8 @@ class SofaApp extends Component {
             width: window.innerWidth,
             page: 'Audio Video',
             drawerOpen: false,
+            automationOpen: false,
+            scheduleOpen: false,
             modules: [],
             moduleLayout: { "Audio Video": [    {"module": "PlayerList", "file": "./PlayerList", "props": { "Category" : "SPEAKER" } },
                                                 {"module": "ReceiverList", "file": "./ReceiverList", "props": { "Category" : "RECEIVER" } },
@@ -72,14 +79,11 @@ class SofaApp extends Component {
                             "Security":     [   {"module": "ZoneList", "file": "./ZoneList", "props": { "Category":"ZONE" } },
                                                 {"module": "CameraSelect", "file": "./CameraSelect", "props": {} },
                                                 {"module": "MiniCard", "file": "./MiniCard", "props": { "name":"Front Gate" } },
-                                                {"module": "MiniCard", "file": "./MiniCard", "props": { "name":"Garage Door" } },
-                                                {"module": "MiniLauncher", "file": "./MiniLauncher", "props": { "icon": <TuneIcon />, "name":"Automations", "dialog": <AutomationDialog/> } },
-                                                {"module": "MiniLauncher", "file": "./MiniLauncher", "props": { "icon": <HistoryIcon />, "name":"Schedule", "dialog": <ScheduleDialog/> } },
-
+                                                {"module": "MiniCard", "file": "./MiniCard", "props": { "name":"Garage Door" } }
                                             ]
             },
         };
-
+        this.handleDrawerOpen = this.handleDrawerOpen.bind(this);
         this.pageChange = this.pageChange.bind(this);
     } 
     
@@ -87,9 +91,22 @@ class SofaApp extends Component {
     pageChange = page => {
         this.setState({page:page.value})
     }
+
+    handleDialogOpen = (dialog) => {
+        if (dialog=='Automation') {
+            this.setState({ automationOpen: true})
+        } else if (dialog=='Schedule') {
+            this.setState({ scheduleOpen: true})
+        }
+    }
+
+    handleDialogClose = () => {
+        this.setState({ automationOpen: false, scheduleOpen: false})
+    }
+
     
     handleDrawerOpen = () => {
-        this.setState({ drawerOpen: true });
+        this.setState({ drawerOpen: !this.state.drawerOpen });
     };
 
     handleDrawerClose = () => {
@@ -139,13 +156,13 @@ class SofaApp extends Component {
     render() {
 
         const { classes } = this.props;
-        const { width, modules, categories, active, moduleLayout } = this.state;
+        const { width, modules, categories, active, moduleLayout, automationOpen, scheduleOpen } = this.state;
         const isMobile = width <= 800;
 
         return (
             <React.Fragment>
                 <SofaAppBar open={this.handleDrawerOpen} mobile={isMobile}/>
-                <Sidebar open={this.state.drawerOpen} close={this.handleDrawerClose} />
+                <Sidebar open={this.state.drawerOpen} close={this.handleDrawerClose} handleDialog={this.handleDialogOpen} />
                 { isMobile ? null : <Toolbar /> }
 
                 <Grid container spacing={0} className={classes.controlArea}>
@@ -160,11 +177,17 @@ class SofaApp extends Component {
                         : null 
                     })}
                 </Grid>
-                
+                { automationOpen ?
+                    <AutomationDialog open={automationOpen} close={this.handleDialogClose} />
+                : null }
+                { scheduleOpen ?
+                    <ScheduleDialog open={scheduleOpen} close={this.handleDialogClose} />
+                : null }
+
                 { isMobile ?
                 <React.Fragment>
                     <Toolbar />
-                    <BottomNav className={classes.phoneBottom} pageChange={this.pageChange} />
+                    <BottomNav pageChange={this.pageChange} toggleSidebar={this.handleDrawerOpen} closeSidebar={this.handleDrawerClose}/>
                 </React.Fragment>
                 : null }
             </React.Fragment>

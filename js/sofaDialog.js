@@ -9,6 +9,7 @@ import SofaDialogTitle from './sofaDialogTitle';
 
 const styles = theme => ({
 
+    dialog: { height : "100%", },
 
 });
 

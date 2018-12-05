@@ -26,8 +26,9 @@ const styles = theme => ({
     },
 
     listItem: {
-        padding: "8 16",
+        padding: 0,
         width: '100%',
+        minHeight: 48,
     },
 
 });

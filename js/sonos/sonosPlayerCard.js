@@ -258,7 +258,7 @@ class SonosPlayerCard extends React.Component {
                             </div>
                         </div>
                         : null }
-                        <IconButton color="primary" className={classes.dialogGridButton} onClick={ (e) => this.props.handleGrid(e)}>
+                        <IconButton color="primary" className={classes.dialogGridButton} onClick={ (e) => this.props.selectPlayer(e)}>
                             <ViewModuleIcon />
                         </IconButton>
                         <IconButton color="primary" className={classes.dialogFavButton} onClick={ (e) => this.handleMedia(e)}>

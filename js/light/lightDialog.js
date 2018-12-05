@@ -9,6 +9,8 @@ import List from '@material-ui/core/List';
 
 import LightDialogPower from './lightDialogPower';
 import LightDialogBrightness from './lightDialogBrightness';
+import LightDialogOnLevel from './lightDialogOnLevel';
+
 import LightDialogTemperature from './lightDialogTemperature';
 import LightDialogColor from './lightDialogColor';
 
@@ -45,6 +47,9 @@ class LightDialog extends React.Component {
                         <LightDialogPower sendAlexaCommand={this.props.sendAlexaCommand} name={name} endpointId={device.endpointId} powerState={deviceProperties.powerState=='ON'}/>
                         { deviceProperties.hasOwnProperty('brightness') ?
                         <LightDialogBrightness sendAlexaCommand={this.props.sendAlexaCommand} name={name} endpointId={device.endpointId} powerState={deviceProperties.powerState=='ON'} brightness={deviceProperties.brightness}/>
+                        : null }
+                        { deviceProperties.hasOwnProperty('onLevel') ?
+                        <LightDialogOnLevel sendAlexaCommand={this.props.sendAlexaCommand} name={name} endpointId={device.endpointId} powerState={deviceProperties.powerState=='ON'} onLevel={deviceProperties.onLevel}/>
                         : null }
                         { deviceProperties.hasOwnProperty('colorTemperatureInKelvin') ?
                         <LightDialogTemperature sendAlexaCommand={this.props.sendAlexaCommand} name={name} endpointId={device.endpointId} powerState={deviceProperties.powerState=='ON'} colorTemperatureInKelvin={deviceProperties.colorTemperatureInKelvin}/>

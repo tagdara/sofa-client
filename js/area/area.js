@@ -18,7 +18,7 @@ const styles  = theme =>  ({
     areaListItem: {
         display: "flex",
         height: 64,
-        padding: "16 32 16 24",
+        padding: "0 4",
         alignItems: "center",
     },
 });

@@ -28,6 +28,9 @@ const styles = theme => ({
     dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",
     },
+    bottomList: {
+        padding: "16 0"
+    }
 
 });
 
@@ -75,13 +78,15 @@ class ThermostatDialog extends React.Component {
         return (
             <SofaDialog title={'Temperatures'} open={this.props.open} close={this.props.close} >
                 <DialogContent className={classes.dialogContent }>
-                    <List  >
+                    <List>
 
                     { settable.map(device => 
                         <ThermostatSettable sendAlexaCommand={this.props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
                                             device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } />
                     )}
-                        <Divider />
+                    </List>
+                    <Divider />
+                    <List className={classes.bottomList} >
                     { nonSettable.map(device => 
                         <Thermostat key={ device.endpointId } name={ device.friendlyName } device={ device } 
                                     deviceProperties={ this.props.deviceProperties[device.friendlyName] }  />

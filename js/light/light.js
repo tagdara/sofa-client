@@ -25,10 +25,12 @@ import SofaSlider from "../sofaSlider"
 const styles = theme => ({
  
     litAvatar: {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
     },
-
+    iconSize: {
+        height: 24,
+        width: 24,
+    },
     stack: {
         height: 44,
         display: "flex",
@@ -68,13 +70,13 @@ const styles = theme => ({
         height: 44,
         display: "flex",
         flexGrow: 1,
-        paddingLeft: 16,
         justifyContent: "space-between",
         alignItems: "center",
         flexWrap: "wrap",
         maxWidth: 480,
         minWidth: 240,
         boxSizing: "border-box",
+        marginRight: 8,
     },
     lightSwitch: {
         marginLeft: 8,
@@ -145,14 +147,14 @@ class Light extends React.Component {
         return (
                 <GridListTile className={classes.tile} cols={1} rows={1}>
                     <Paper className={classes.sliderPaper} elevation={0} >
-                    <Avatar className={this.state.powerState=="ON" ? classes.litAvatar: classes.avatar} onClick={ () => this.handleClickOpen()}>
-                        <LightbulbOutlineIcon />
-                    </Avatar>
+                    <ListItemIcon className={this.state.powerState=="ON" ? classes.litAvatar: classes.avatar} onClick={ () => this.handleClickOpen()}>
+                        <LightbulbOutlineIcon className={classes.iconSize} />
+                    </ListItemIcon>
                     {this.state.brightness=="no" ?
                         <Typography variant="subtitle1" className={classes.nostack} gutterBottom>{this.props.name}</Typography>
                         :
                         <SofaSlider value={this.state.brightness} preChange={this.handlePreBrightnessChange} change={this.handleBrightnessChange} 
-                                    disabled={this.state.powerState=='OFF'} name={this.props.name} padLeft={true} />
+                                    disabled={this.state.powerState=='OFF'} name={this.props.name} padLeft={false} minWidth={240} />
                     }
                     <Switch color="primary" className={classes.lightSwitch} checked={this.state.powerState=='ON'} onChange={this.handlePowerChange} />
                     <LightDialog sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.open} name={ this.props.name } handleClose={this.handleClose} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />

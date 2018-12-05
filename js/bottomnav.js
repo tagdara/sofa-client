@@ -8,6 +8,7 @@ import Icon from '@material-ui/core/Icon';
 
 import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
 //import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import MenuIcon from '@material-ui/icons/Menu';
 import MusicNoteIcon from '@material-ui/icons/MusicNote';
 import MusicVideoIcon from '@material-ui/icons/MusicVideo';
 import SubscriptionsIcon from '@material-ui/icons/Subscriptions';
@@ -33,11 +34,19 @@ const styles = {
 class BottomNav extends React.Component {
     state = {
         value: 'Audio Video',
+        oldvalue: '',
     };
 
     handleChange = (event, value) => {
-        this.setState({ value });
-        this.props.pageChange({ value });
+        if (value=="Menu") {
+            this.setState({ oldvalue: value });
+            this.props.toggleSidebar()
+            console.log('opensidebar')
+        } else {
+            this.props.closeSidebar()
+            this.setState({ value });
+            this.props.pageChange({ value });
+        }
     };
 
     render() {
@@ -47,6 +56,7 @@ class BottomNav extends React.Component {
 
     return (
         <BottomNavigation value={value} onChange={this.handleChange} className={classes.root}>
+            <BottomNavigationAction value="Menu" icon={<MenuIcon />} />
             <BottomNavigationAction value="Audio Video" icon={<SubscriptionsIcon />} />
             <BottomNavigationAction value="Lights" icon={<LightbulbOutlineIcon size={24} />} />
             <BottomNavigationAction value="Security" icon={<VerifiedUserIcon />} />

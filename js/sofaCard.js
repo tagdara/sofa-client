@@ -15,7 +15,7 @@ const styles = theme => ({
         boxSizing: "border-box",
         flexDirection: "column",
         justifyContent: "space-between",
-        padding: "0",
+        padding: "16",
     },
     content: {
         minWidth: 0,

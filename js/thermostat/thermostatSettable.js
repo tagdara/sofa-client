@@ -18,6 +18,10 @@ const styles = theme => ({
         padding: "16 0 8 0",
         width: '100%',
     },
+    listItemIndent: {
+        padding: "16 0 8 64",
+        width: '100%',
+    },
     speedlistItem: {
         padding: "0 0 8 40",
         width: '100%',
@@ -38,7 +42,7 @@ const styles = theme => ({
         display: "flex",
         flexGrow: 1,
         justifyContent: "flex-end",
-        padding: "0 32 8 0",
+        padding: "0 8 8 0",
     },
     button: {
         minWidth: 36
@@ -141,9 +145,9 @@ class ThermostatSettable extends React.Component {
                         ))}
                 </ListItem>
                 { this.state.hasOwnProperty('powerLevel') ?
-                <ListItem className={classes.listItem}>
-                    <Avatar><ToysIcon /></Avatar>
-                    <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={true}
+                <ListItem className={classes.listItemIndent}>
+                    <ListItemIcon><ToysIcon /></ListItemIcon>
+                    <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={false}
                                 preChange={this.handlePrePowerLevelChange} change={this.handlePowerLevelChange} />
                 </ListItem>
                 : null }

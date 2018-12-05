@@ -41,7 +41,6 @@ class Sonos extends React.Component {
         };
     }    
 
-
     createLinks = () => {
         
         let links=[]

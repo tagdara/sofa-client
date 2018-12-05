@@ -20,7 +20,6 @@ const styles = theme => ({
         flexGrow: 1,
         justifyContent: "space-between",
         flexWrap: "wrap",
-        minWidth: 240,
         width: "100%",
         boxSizing: "border-box",
         marginRight: 8,
@@ -106,10 +105,10 @@ class SofaSlider extends React.Component {
    
     render() {
 
-        const { classes, disabled, name, unit, padLeft, half } = this.props;
+        const { classes, disabled, name, unit, padLeft, half, minWidth } = this.props;
 
         return (
-                    <div className={ padLeft ? classes.stack+" "+classes.padLeft: ( half ? classes.half : classes.stack) } >
+                    <div style={{ "minWidth": minWidth }} className={ padLeft ? classes.stack+" "+classes.padLeft: ( half ? classes.half : classes.stack) } >
                     { name ?
                         <Typography variant="subtitle1" className={classes.stackLabel} >{this.props.name}</Typography>
                     : null }
@@ -143,6 +142,7 @@ SofaSlider.defaultProps = {
     disabled: false,
     padLeft: false,
     half: false,
+    minWidth: 140,
 }
 
 SofaSlider.propTypes = {

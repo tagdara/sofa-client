@@ -10,8 +10,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 const styles = theme => ({
         
     listItem: {
-        padding: "8 0",
         width: '100%',
+        minHeight: 48,
+        padding: 0,
     },
     cool: {
         color: theme.palette.primary.contrastText,

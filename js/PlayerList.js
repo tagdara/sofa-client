@@ -2,8 +2,10 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import SonosGrid from './sonos/sonosGrid';
+import SelectPlayer from './sonos/SelectPlayer';
 import SonosPlayerCard from './sonos/sonosPlayerCard';
+import NoPlayer from './sonos/NoPlayer';
+
 import { withData } from './DataContext/withData';
 
 
@@ -25,12 +27,9 @@ class PlayerList extends React.Component {
         this.state = {
             defaultPlayer: "Office",
             activePlayer: "",
-            showGrid: false,
+            userPlayer: "",
+            selectPlayer: false,
         }
-        
-        this.chooseActivePlayer = this.chooseActivePlayer.bind(this);
-        this.handleGrid = this.handleGrid.bind(this);
-
     }
 
     static getDerivedStateFromProps(nextProps, prevState) {
@@ -38,14 +37,12 @@ class PlayerList extends React.Component {
         var data=nextProps.deviceProperties
         var changes={}
         
-        if (nextProps.hasOwnProperty('devices')) {
+        if (!prevState.userPlayer && nextProps.hasOwnProperty('devices')) {
             var hotplayer='';
             for (var s = 0; s < nextProps.devices.length; s++) {
-                console.log('name')
                 var name=nextProps.devices[s].friendlyName
                 if (data.hasOwnProperty(name)) {
                     var dev=data[name]
-                    console.log(name,dev)
                     if (dev.hasOwnProperty("playbackState")) {
                         if (dev.playbackState=='PLAYING') {
                             if (hotplayer=="" || name==prevState.defaultPlayer) {
@@ -61,62 +58,72 @@ class PlayerList extends React.Component {
             }
             
             if (hotplayer) {
-                console.log('chose',hotplayer)
                 changes.activePlayer=hotplayer
             } else {
-                console.log('fallback', prevState.defaultPlayer)
                 changes.activePlayer=prevState.defaultPlayer
             }
-            
-            return changes
+        } else {
+            if (prevState.activePlayer!=prevState.userPlayer) {
+                changes.activePlayer=prevState.userPlayer
+            }
         }
+        
+        return changes
     }
 
     
-    handleGrid = (e) => {
-        e.stopPropagation();
-        this.setState({showGrid:true})
+    handleSelectPlayer = (e) => {
+        this.setState({selectPlayer:true})
     }
     
-    handleCloseGrid = (e) => {
-        e.stopPropagation();
-        this.setState({showGrid:false})
+    handleCloseSelectPlayer = (e) => {
+        this.setState({selectPlayer:false})
     }
 
     chooseActivePlayer = (player) => {
-        this.setState({activePlayer:player, showGrid: false})
+        this.setState({activePlayer:player, selectPlayer: false})
     }
-    
-    isPlayerActive = (player) => {
-        
-        if (this.props.deviceProperties[player].hasOwnProperty("playbackState")) {
-            if (this.props.deviceProperties[player].playbackState=='STOPPED') {
-                return false
-            } else {
-                return true
+
+    chooseUserPlayer = (player) => {
+        this.setState({userPlayer:player, selectPlayer: false})
+    }
+
+    playerDeviceByName = (player) => {
+        for (var s = 0; s < this.props.devices.length; s++) {
+            if (this.props.devices[s].friendlyName==player) {
+                return this.props.devices[s]
             }
         }
-        
-        return false
+    }
+    
+    isPlayerStopped = (player) => {
+        if (this.props.deviceProperties.hasOwnProperty(player)) {
+            if (this.props.deviceProperties[player].hasOwnProperty("playbackState")) {
+                if (this.props.deviceProperties[player].playbackState!='STOPPED') {
+                    return false
+                } 
+            }
+        }
+        return true
 
     }
     
     render() {
         
-        const { classes, devices } = this.props;
-        const { activePlayer, showGrid } = this.state;
+        const { classes, devices, deviceProperties} = this.props;
+        const { activePlayer, selectPlayer, userPlayer } = this.state;
 
         return (
-            <div className={classes.list}>
-                { devices.map((device) =>
-                    (device.friendlyName==activePlayer ?
-                        <SonosPlayerCard sendAlexaCommand={this.props.sendAlexaCommand} deviceByName={this.props.deviceByName} chooseActivePlayer={this.chooseActivePlayer} key={device.endpointId} handleGrid={this.handleGrid} key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties } />
-                    : null )
-                    )}
-                { showGrid ?
-                    <SonosGrid sendAlexaCommand={this.props.sendAlexaCommand} closeGrid={this.handleCloseGrid} showGrid={showGrid} chooseActivePlayer={this.chooseActivePlayer} devices={this.props.devices} deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage}/>
+            <React.Fragment>
+                { !this.isPlayerStopped(activePlayer) || userPlayer!=="" ?
+                <SonosPlayerCard name={activePlayer} sendAlexaCommand={this.props.sendAlexaCommand} deviceByName={this.props.deviceByName} selectPlayer={this.handleSelectPlayer} device={ this.playerDeviceByName(activePlayer) } deviceProperties={ deviceProperties } />
+                :
+                <NoPlayer choose={this.handleSelectPlayer} />
+                }
+                { selectPlayer ?
+                    <SelectPlayer sendAlexaCommand={this.props.sendAlexaCommand} close={this.handleCloseSelectPlayer} open={selectPlayer} chooseActivePlayer={this.chooseUserPlayer} devices={devices} deviceProperties={ deviceProperties } />
                 : null }
-            </div> 
+            </React.Fragment> 
         );
     }
 }

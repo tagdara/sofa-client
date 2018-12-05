@@ -320,16 +320,16 @@ class AreaDialog extends React.Component {
         
         return (
             <SofaDialog title={this.props.name} open={this.props.open} close={this.props.close} tabChange={this.handleTab} tabValue={this.state.frontTab}
-                        tabs={ ['Scenes','Lights']} >
+                        tabs={ ['Lights','Scenes']} >
                                 
-                { this.props.name!='All' && this.state.frontTab==1 ?
+                { this.props.name!='All' && this.state.frontTab==0 ?
                 <DialogTitle className={classes.groupHead}>
                     <GroupLight sendAlexaCommand={this.props.sendAlexaCommand} key={ this.props.name } name={ this.props.name } deviceProperties={ this.props.deviceProperties } devices={ this.props.devices } avgState={ this.avgState } />
                     <Divider />                
                 </DialogTitle>
                 : null
                 }
-                { this.state.frontTab==1 ?
+                { this.state.frontTab==0 ?
                 <DialogContent className={classes.dialogContent }>
                     <List className={classes.root}>
                     { Object.keys(this.props.devices).sort().map(c => (

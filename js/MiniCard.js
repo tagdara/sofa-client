@@ -1,29 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 
-import Paper from '@material-ui/core/Paper';
 import { withData } from './DataContext/withData';
 import StatusLock from './devices/statusLock';
 import PinDialog from './devices/pinDialog'
 import SofaCard from './sofaCard';
-
-const styles = theme => ({
-        
-    card: {
-        display: 'flex',
-        minWidth: 160,
-        maxWidth: 480,
-        flexGrow: 1,
-        boxSizing: "border-box",
-        justifyContent: "space-between",
-        margin: 2,
-        flexBasis: 0,
-        padding: "8 16",
-    },
-
-});
-
 
 class MiniCard extends React.Component {
     
@@ -54,7 +35,6 @@ class MiniCard extends React.Component {
                 return dp[statusDef.property]
             }
         }
-    
         return ''
     }
     
@@ -77,7 +57,7 @@ class MiniCard extends React.Component {
     }   
  
     render() {
-        const { classes, virtualDevices, name } = this.props;
+        const { virtualDevices, name } = this.props;
 
         return (
                 <SofaCard>
@@ -91,9 +71,5 @@ class MiniCard extends React.Component {
     }
 }
 
-MiniCard.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withData(withStyles(styles)(MiniCard));
+export default withData(MiniCard);
 

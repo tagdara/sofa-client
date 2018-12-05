@@ -132,6 +132,7 @@ const styles = theme => ({
         padding: 0,
         width: '100%',
         overflowX: "hidden",
+        height : "100%", 
     }
     
 });

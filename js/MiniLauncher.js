@@ -34,8 +34,9 @@ const styles = theme => ({
         alignItems: "center",
     },
     listItem: {
-        padding: 16,
+        padding: 0,
         width: '100%',
+        minHeight: 48,
     },
     name: {
         flexWrap: "nowrap",
@@ -69,13 +70,13 @@ class MiniLauncher extends React.Component {
 
 
         return (
-                <SofaCard>
-                    <ListItem className={classes.listItem} onClick={ () => this.openDialog(true)} >
-                        <Avatar>{this.props.icon}</Avatar>
-                        <ListItemText className={classes.name} primary={this.props.name}/>
-                    </ListItem>
-                    {React.cloneElement(this.props.dialog, { open: this.state.showDialog, close: this.closeDialog })}
-                </SofaCard>
+            <SofaCard>
+                <ListItem className={classes.listItem} onClick={ () => this.openDialog(true)} >
+                    <Avatar>{this.props.icon}</Avatar>
+                    <ListItemText className={classes.name} primary={this.props.name}/>
+                </ListItem>
+                {React.cloneElement(this.props.dialog, { open: this.state.showDialog, close: this.closeDialog })}
+            </SofaCard>
         );
     }
 }

@@ -13,7 +13,7 @@ import ThermostatDialog from './thermostat/thermostatDialog';
 const styles = theme => ({
         
     list: {
-        padding: "4 16",
+        padding: 0,
         width: '100%',
     },
     
@@ -37,19 +37,19 @@ class ThermostatHero extends React.Component {
         this.setState({open: false})
     }
 
-    
     render() {
     
-        const { classes } = this.props;
+        const { classes, devices, deviceProperties } = this.props;
+        const { open } = this.state;   
         
         return (
             <SofaCard>
                 <List className={classes.list} onClick={ (e) => this.openDialog(e)}>
-                    { this.props.devices.map((device) => (device.friendlyName=='Main Thermostat' ?
-                        <Thermostat key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } />
+                    { devices.map((device) => (device.friendlyName=='Main Thermostat' ?
+                        <Thermostat key={ device.endpointId } name={ device.friendlyName } device={ device } deviceProperties={ deviceProperties[device.friendlyName] } />
                     : null ))}
                 </List>
-                <ThermostatDialog sendAlexaCommand={this.props.sendAlexaCommand} close={this.closeDialog} open={this.state.open} devices={this.props.devices} deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
+                <ThermostatDialog sendAlexaCommand={this.props.sendAlexaCommand} close={this.closeDialog} open={open} devices={devices} deviceProperties={ deviceProperties } />
             </SofaCard>
         );
     }

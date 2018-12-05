@@ -2,12 +2,8 @@ import React from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import Typography from '@material-ui/core/Typography';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
 import Avatar from '@material-ui/core/Avatar';
 import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
-//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -46,13 +42,16 @@ const styles = theme => ({
         backgroundColor: theme.palette.primary.main,
     },
     listItem: {
-        padding: 16,
+        padding: 0,
+        marginBottom: 8,
+        minHeight: 48,
         width: '100%',
     },
     list: {
         display: "flex",
         flexDirection: "column",
         flexGrow: 1,
+        padding: 0,
     }
 });
 
@@ -155,11 +154,11 @@ class RegionCard extends React.Component {
  
     lightCount = condition => {
         var count=0;
-
-        for (var dev in this.props.deviceProperties) {
-            if (this.props.deviceProperties[dev].hasOwnProperty('powerState')) {
-                if (this.props.deviceProperties[dev].powerState) {
-                    if (condition.toLowerCase()=='all' || this.props.deviceProperties[dev].powerState.toLowerCase()==condition.toLowerCase()) {
+        for (var i = 0; i < this.props.devices.length; i++) {
+            var dev=this.props.devices[i]
+            if (dev.hasOwnProperty('displayCategories') && this.props.deviceProperties[dev.friendlyName].hasOwnProperty('powerState')) {
+                if (this.props.deviceProperties[dev.friendlyName].powerState && dev.displayCategories[0]=='LIGHT') {
+                    if (condition.toLowerCase()=='all' || this.props.deviceProperties[dev.friendlyName].powerState.toLowerCase()==condition.toLowerCase()) {
                         count=count+1
                     }
                 }
@@ -243,39 +242,39 @@ class RegionCard extends React.Component {
     
     render() {
         
-        const { classes } = this.props;
-        const { areas, regionSelect } = this.state;
+        const { classes, devices, deviceProperties, propertiesFromDevices } = this.props;
+        const { areas, regionSelect, selectedArea, showdialog } = this.state;
         const lightsOn = this.lightCount('on')>0;
 
         return (
-                <SofaCard>
-                    <List className={classes.list}>
-                        <ListItem className={classes.listItem}>
-                            <Avatar className={lightsOn ?classes.on : classes.off} onClick={ () => this.handleClickOpen() }><LightbulbOutlineIcon/></Avatar>
-                            <ListItemText primary={lightsOn ? this.lightCount('on')+" lights are on" : "All lights off" } onClick={ () => this.handleClickOpen() } />
-                            <ListItemSecondaryAction>
-                                <IconButton onClick={(e) => this.setState({regionSelect:true})}>
-                                    <ViewModuleIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                        { Object.keys(areas).map((name) => 
-                            <Area sendAlexaCommand={this.props.sendAlexaCommand} key={ name } name={ name } shortcuts={this.areaShortcuts(name)} scenes={this.areaSceneList(name)} sceneData={this.scenesByArea(name)} devices={ this.devicesByArea(name)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(name)) } selectArea={this.selectArea} ></Area>
-                        )}
-                    </List>
-                    { this.state.regionSelect ?
-                        <RegionDialog selectRegion={this.selectRegion} open={this.state.regionSelect} close={this.closeRegionSelect} devices={this.props.devices} propertiesFromDevices={this.props.propertiesFromDevices} />
-                    : null }
-                    { this.state.showdialog ?
-                        <LightGrid sendAlexaCommand={this.props.sendAlexaCommand} name={'all'} lightCount={this.lightCount} closeGrid={this.closeDialog} showGrid={this.state.showdialog} key='lightlist' filter='ON' Category='Light' devices={ this.props.devicesByCategory('LIGHT') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('LIGHT')) } />
-                    : null }
-                    { this.state.selectedArea ?
-                        <AreaDialog shortcuts={this.shortcutsByArea(this.state.selectedArea)} sendAlexaCommand={this.props.sendAlexaCommand} 
-                                    open={this.state.showAreaDialog} close={this.closeAreaDialog} name={this.state.selectedArea} 
-                                    sceneData={this.sceneDataByArea(this.state.selectedArea)} devices={ this.devicesByArea(this.state.selectedArea)} 
-                                    deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(this.state.selectedArea)) }  />
-                    : null }
-                </SofaCard>
+            <SofaCard>
+                <List className={classes.list}>
+                    <ListItem className={classes.listItem}>
+                        <Avatar className={lightsOn ?classes.on : classes.off} onClick={ () => this.handleClickOpen() }><LightbulbOutlineIcon/></Avatar>
+                        <ListItemText primary={lightsOn ? this.lightCount('on')+" lights are on" : "All lights off" } onClick={ () => this.handleClickOpen() } />
+                        <ListItemSecondaryAction>
+                            <IconButton onClick={(e) => this.setState({ regionSelect:true })}>
+                                <ViewModuleIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    </ListItem>
+                    { Object.keys(areas).map((name) => 
+                        <Area sendAlexaCommand={this.props.sendAlexaCommand} key={ name } name={ name } shortcuts={this.areaShortcuts(name)} scenes={this.areaSceneList(name)} sceneData={this.scenesByArea(name)} devices={ this.devicesByArea(name)} deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(name)) } selectArea={this.selectArea} ></Area>
+                    )}
+                </List>
+                { regionSelect ?
+                    <RegionDialog selectRegion={this.selectRegion} open={regionSelect} close={this.closeRegionSelect} devices={devices} propertiesFromDevices={propertiesFromDevices} />
+                : null }
+                { showdialog ?
+                    <LightGrid sendAlexaCommand={this.props.sendAlexaCommand} name={'all'} lightCount={this.lightCount} closeGrid={this.closeDialog} showGrid={this.state.showdialog} key='lightlist' filter='ON' Category='Light' devices={ this.props.devicesByCategory('LIGHT') } deviceProperties={ this.props.propertiesFromDevices(this.props.devicesByCategory('LIGHT')) } />
+                : null }
+                { selectedArea ?
+                    <AreaDialog shortcuts={this.shortcutsByArea(selectedArea)} sendAlexaCommand={this.props.sendAlexaCommand} 
+                                open={this.state.showAreaDialog} close={this.closeAreaDialog} name={selectedArea} 
+                                sceneData={this.sceneDataByArea(selectedArea)} devices={ this.devicesByArea(selectedArea)} 
+                                deviceProperties={ this.props.propertiesFromDevices(this.devicesByArea(selectedArea)) }  />
+                : null }
+            </SofaCard>
         );
     }
 }

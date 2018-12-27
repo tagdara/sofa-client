@@ -1,11 +1,8 @@
-import React, { Component } from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from "react";
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import GridListTile from '@material-ui/core/GridListTile';
+import ToggleAvatar from '../ToggleAvatar';
 import Icon from '@material-ui/core/Icon';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -16,17 +13,19 @@ import Paper from '@material-ui/core/Paper';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 
+import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
 //import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
 
 import LightDialog from './lightDialog';
 import SofaSlider from "../sofaSlider"
+import LightSliderBrightness from "./LightSliderBrightness"
+import LightSliderTemperature from "./LightSliderTemperature"
+import LightSliderColor from "./LightSliderColor"
+import GridItem from "../GridItem"
 
-const styles = theme => ({
+const useStyles = makeStyles({
  
-    litAvatar: {
-        color: theme.palette.primary.main,
-    },
     iconSize: {
         height: 24,
         width: 24,
@@ -38,21 +37,6 @@ const styles = theme => ({
         paddingLeft: 16,
         justifyContent: "space-between",
         flexWrap: "wrap",
-    },
-    stackLabel: {
-        alignSelf: "center",
-    },
-    xsliderPaper: {
-        display: "flex",
-        flexDirection: "row",
-        padding: "16 0 16 16",
-        alignItems: "center",
-        minWidth: 320,
-    },
-    stackSlider: {
-        marginTop: 4,
-        marginLeft: 4,
-        marginRight: 6,
     },
     tile: {
         display: "flex",
@@ -80,94 +64,67 @@ const styles = theme => ({
     },
     lightSwitch: {
         marginLeft: 8,
+    },
+    lightbar: {
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+    },
+    placeholder: {
+        height: 57,
+        width: "100%",
+    },
+    listItem: {
+        padding: "8 24px",
     }
-
 });
 
-class Light extends React.Component {
+export default function Light(props) {
     
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            open: false,
-            powerState: "OFF",
-            brightness: "no",
-        };
-        this.handleClose = this.handleClose.bind(this);
-
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-
-        var data=nextProps.deviceProperties
-        var changes={}
-        
-        if (data.hasOwnProperty('powerState')) {
-            changes.powerState=data.powerState
-        }
-        if (data.hasOwnProperty('brightness')) {
-            changes.brightness=data.brightness
-        }
-        return changes
-    }
-
-
-
-    handlePowerChange = event => {
+    const classes = useStyles();
+    const [showAll, setShowAll] = useState(false)
+    
+    function handlePowerChange(event){
         if (event.target.checked) {
-            this.setState({ powerState: 'ON', target: this.props.name});
-            this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "PowerController", "TurnOn")
+            props.sendAlexaCommand(props.name, props.device.endpointId, "PowerController", "TurnOn")
         } else {
-            this.setState({ powerState: 'OFF', target: this.props.name});
-            this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "PowerController", "TurnOff")
+            props.sendAlexaCommand(props.name, props.device.endpointId, "PowerController", "TurnOff")
         }
     }; 
-
-    handlePreBrightnessChange = event => {
-        this.setState({ brightness: event, target:this.props.device.name});
-    }; 
-
-    handleBrightnessChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "BrightnessController", "SetBrightness", { "brightness" : event } )
-    }; 
-
-    handleClickOpen = () => {
-        this.setState({ open: true });
-    };  
     
-    handleClose = () => {
-        this.setState({ open: false });
-    };    
-    
-    render() {
-
-        const { classes } = this.props;
-
-        return (
-                <GridListTile className={classes.tile} cols={1} rows={1}>
-                    <Paper className={classes.sliderPaper} elevation={0} >
-                    <ListItemIcon className={this.state.powerState=="ON" ? classes.litAvatar: classes.avatar} onClick={ () => this.handleClickOpen()}>
-                        <LightbulbOutlineIcon className={classes.iconSize} />
-                    </ListItemIcon>
-                    {this.state.brightness=="no" ?
-                        <Typography variant="subtitle1" className={classes.nostack} gutterBottom>{this.props.name}</Typography>
-                        :
-                        <SofaSlider value={this.state.brightness} preChange={this.handlePreBrightnessChange} change={this.handleBrightnessChange} 
-                                    disabled={this.state.powerState=='OFF'} name={this.props.name} padLeft={false} minWidth={240} />
-                    }
-                    <Switch color="primary" className={classes.lightSwitch} checked={this.state.powerState=='ON'} onChange={this.handlePowerChange} />
-                    <LightDialog sendAlexaCommand={this.props.sendAlexaCommand} open={this.state.open} name={ this.props.name } handleClose={this.handleClose} device={ this.props.device } deviceProperties={ this.props.deviceProperties } sendMessage={this.props.sendMessage} />
-                </Paper>
-                </GridListTile>
-
-        );
-    }
+    return (
+        <GridItem >
+            <ListItem className={classes.listItem} >
+                <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
+                    <LightbulbOutlineIcon className={classes.iconSize} />
+                </ToggleAvatar>
+                <ListItemText onClick={() => setShowAll(!showAll) }>{props.name}</ListItemText>
+                <Switch color="primary" className={classes.lightSwitch} checked={props.deviceProperties.powerState=='ON'} onChange={handlePowerChange} />
+            </ListItem>
+            { !props.brightControl && !showAll ? null :
+                ( props.deviceProperties.brightness===undefined ?
+                    <ListItem className={classes.placeholder} />
+                :
+                    <LightSliderBrightness sendAlexaCommand={props.sendAlexaCommand} name={props.name} endpointId={props.device.endpointId} powerState={props.deviceProperties.powerState=='ON'} brightness={props.deviceProperties.brightness}/>
+                )
+            }
+            { !props.tempControl && !showAll ? null :
+                ( props.deviceProperties.colorTemperatureInKelvin===undefined ?
+                    <ListItem className={classes.placeholder} />
+                :
+                <LightSliderTemperature sendAlexaCommand={props.sendAlexaCommand} name={props.name} endpointId={props.device.endpointId} powerState={props.deviceProperties.powerState=='ON'} colorTemperatureInKelvin={props.deviceProperties.colorTemperatureInKelvin}/>
+                )
+            }
+            { !props.colorControl && !showAll ? null :
+                ( props.deviceProperties.color===undefined ?
+                    <ListItem className={classes.placeholder} />
+                :
+                    <LightSliderColor sendAlexaCommand={props.sendAlexaCommand} name={props.name} endpointId={props.device.endpointId} color={props.deviceProperties.color}/>
+                )
+            }
+        </GridItem>
+    );
 }
 
-Light.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Light);
 

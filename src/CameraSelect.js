@@ -1,101 +1,63 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-
-import Card from '@material-ui/core/Card';
-
+import React, { memo } from "react";
+import { useState, useEffect } from 'react';
+import { withLayout } from './DataContext/withLayout';
 import SecurityCamera from './camera/securitycamera';
-import CameraGrid from './camera/cameraGrid';
 
+function CameraSelect(props) {
 
-const styles = theme => ({
-        
-    CameraSelect: {
-        margin: 8,
-        padding: 0,
-        minWidth: 320,
-    },
-});
+    const [cameras, setCameras] = useState([]);
+    const [currentCamera, setCurrentCamera] = useState(null);
+    const [currentCameraNumber, setCurrentCameraNumber] = useState(0);
 
-class CameraSelect extends React.Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            cameras: [],
-            currentCamera: null,
-            currentCameraNumber: 0,
-            showGrid: false,
-        };
-        this.nextCamera = this.nextCamera.bind(this);
-        this.prevCamera = this.prevCamera.bind(this);
-        this.handleGridOpen = this.handleGridOpen.bind(this);
-        this.handleGridClose = this.handleGridClose.bind(this);
-    }
-    
-    setCurrentCamera = (data) => {
-        this.setState({cameras:data})
+    function selectCurrentCamera(data) {
+        setCameras(data)
         if (data.length>0) {
-            this.setState( {currentCamera:data[0]} )
+            setCurrentCamera(data[0])
         } else {
-            this.setState( {currentCamera:null} )
+            setCurrentCamera(null)
         }
     }
     
-    nextCamera = () => {
-        var nextcam=this.state.currentCameraNumber+1
-        if (nextcam>this.state.cameras.length-1) { nextcam=0; }
-        if (nextcam<0) {nextcam=this.state.cameras.length-1; }
+    function nextCamera() {
+        var nextcam=currentCameraNumber+1
+        if (nextcam>cameras.length-1) { nextcam=0; }
+        if (nextcam<0) {nextcam=cameras.length-1; }
         
-        this.setState({currentCameraNumber: nextcam, currentCamera:this.state.cameras[nextcam]})
+        setCurrentCameraNumber(nextcam)
+        setCurrentCamera(cameras[nextcam])
     }
     
-    prevCamera = () => {
-        var nextcam=this.state.currentCameraNumber-1
-        if (nextcam>this.state.cameras.length-1) { nextcam=0; }
-        if (nextcam<0) {nextcam=this.state.cameras.length-1; }
+    function prevCamera() {
+        var nextcam=currentCameraNumber-1
+        if (nextcam>cameras.length-1) { nextcam=0; }
+        if (nextcam<0) {nextcam=cameras.length-1; }
         
-        this.setState({currentCameraNumber: nextcam, currentCamera:this.state.cameras[nextcam]})
+        setCurrentCameraNumber(nextcam)
+        setCurrentCamera(cameras[nextcam])
     }
     
-    handleGridOpen = () => {
-        this.setState({ showGrid: true });
+    function handleGridOpen() {
+        setShowGrid(true);
     };  
 
-    handleGridClose = () => {
-        this.setState({ showGrid: false });
+    function handleGridClose() {
+        setShowGrid(false);
     };  
     
-    componentDidMount() {
+    useEffect(() => {
   	    fetch('/data/cameras')
  		    .then(result=>result.json())
- 		    .then(data=>this.setCurrentCamera(data))
-    }
-
+ 		    .then(data=>selectCurrentCamera(data))
+    },[])
     
-    render() {
-        
-        const { classes } = this.props;
-
-        return (
-
-            <Card className={classes.CameraSelect}>
-                { this.state.currentCamera!=null ?
-                <SecurityCamera selectButtons={true} openGrid={ this.handleGridOpen } key={ this.state.currentCamera } name={ this.state.currentCamera } sender={this.props.sender} nextCamera={this.nextCamera} prevCamera={this.prevCamera}></SecurityCamera>
-                :null
-                }
-                { this.state.showGrid ?
-                <CameraGrid open={this.state.showGrid} close={this.handleGridClose} cameras={this.state.cameras} />
-                :null
-                }
-            </Card> 
-        );
-    }
+    return (
+        <React.Fragment>
+            { currentCamera!=null ?
+            <SecurityCamera wide={props.wide} setLayoutCard={props.setLayoutCard} cameraSource={"dlink"} selectButtons={true} openGrid={ handleGridOpen } key={ currentCamera } 
+                            name={ currentCamera } nextCamera={nextCamera} prevCamera={prevCamera} />
+            :null }
+        </React.Fragment> 
+    );
 }
 
-CameraSelect.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(CameraSelect);
+export default withLayout(memo(CameraSelect));

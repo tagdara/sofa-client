@@ -1,67 +1,40 @@
-import React from "react";
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 import List from '@material-ui/core/List';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
 import { withData } from './DataContext/withData';
 
 import Shade from './devices/shade';
 import Sprinkler from './devices/sprinkler';
 import StatusLock from './devices/statusLock';
+import GridBreak from './GridBreak';
 
-import Divider from '@material-ui/core/Divider';
+function VirtualList(props) {
 
-const styles = theme => ({
-        
-    list: {
-        paddingBottom: 4,
-        minWidth: 320,
-    },
-});
-
-
-
-class VirtualList extends React.Component {
-    
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            devices: {},
-        };
-    }
-    
-    getStatusProp = statusDef => {
-        var dev=this.props.deviceByEndpointId(statusDef.endpointId)
-        var dp=this.props.propertiesFromDevices(dev)[dev.friendlyName]
+    function getStatusProp(statusDef) {
+        var dev=props.deviceByEndpointId(statusDef.endpointId)
+        var dp=props.propertiesFromDevices(dev)[dev.friendlyName]
         return dp[statusDef.property]
     }
     
-    render() {
-    
-        const { classes, virtualDevices, deviceByEndpointId, propertiesFromDevices } = this.props;
-        
-        return (
-            virtualDevices ?
-                <List className={classes.list}>
-                    { Object.keys(virtualDevices).map((key, index) => (
-                        virtualDevices[key]['type']=='shade' ?
-                            <Shade key={ index } name={ key } endpointId={ virtualDevices[key].endpointId } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
-                            :null
-                    ))}
-                    <Divider />
-                    { Object.keys(virtualDevices).map((key, index) => (
-                        virtualDevices[key]['type']=='water' ?
-                            <Sprinkler key={ index } name={ key } commands={ virtualDevices[key].commands } sendAlexaCommand={this.props.sendAlexaCommand} />
-                            :null
-                    ))}
-                </List>
-            : null 
-        );
-    }
+    return (
+        props.virtualDevices ?
+            <React.Fragment>
+                <GridBreak label={"Shades"} />
+                { Object.keys(props.virtualDevices).map((key, index) => (
+                    props.virtualDevices[key]['type']=='shade' ?
+                        <Shade key={ index } name={ key } endpointId={ props.virtualDevices[key].endpointId } commands={ props.virtualDevices[key].commands } sendAlexaCommand={props.sendAlexaCommand} />
+                        :null
+                ))}
+                <GridBreak label={"Sprinklers"} />
+                { Object.keys(props.virtualDevices).map((key, index) => (
+                    props.virtualDevices[key]['type']=='water' ?
+                        <Sprinkler key={ index } name={ key } commands={ props.virtualDevices[key].commands } sendAlexaCommand={props.sendAlexaCommand} />
+                        :null
+                ))}
+            </React.Fragment>
+        : null 
+    );
 }
 
-VirtualList.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withData(withStyles(styles)(VirtualList));
+export default withData(VirtualList);

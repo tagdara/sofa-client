@@ -1,35 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 
 import { withData } from './DataContext/withData';
 import StatusLock from './devices/statusLock';
 import PinDialog from './devices/pinDialog'
-import SofaCard from './sofaCard';
+import GridItem from './GridItem';
 
-class MiniCard extends React.Component {
+function MiniCard(props) {
     
-    constructor(props) {
-        super(props);
+    const pin= "7818";
+    const [showDialog, setShowDialog] = useState(false);
+    const [command, setCommand] = useState('');
 
-        this.state = {
-            showDialog: false,
-            pin: '7818',
-            command: '',
-        }
+    function openDialog() {
+        setShowDialog(true)
     }
     
-    openDialog = () => {
-        this.setState({ showDialog: true})
-    }
-    
-    closeDialog = () => {
-        this.setState({ showDialog: false });
+    function closeDialog() {
+        setShowDialog(false);
     };  
     
-    getStatusProp = statusDef => {
-        var dev=this.props.deviceByEndpointId(statusDef.endpointId)
+    function getStatusProp(statusDef) {
+        var dev=props.deviceByEndpointId(statusDef.endpointId)
         if (dev) {
-            var dp=this.props.propertiesFromDevices(dev)
+            var dp=props.propertiesFromDevices(dev)
             if (dp.hasOwnProperty(dev.friendlyName)) {
                 dp=dp[dev.friendlyName]
                 return dp[statusDef.property]
@@ -38,37 +33,34 @@ class MiniCard extends React.Component {
         return ''
     }
     
-    pinCheck = (pin) => {
-        this.setState({showDialog: false})
-        if (pin==this.state.pin) {
-            this.sendCommand()
+    function pinCheck(trypin) {
+        setShowDialog(false)
+        if (trypin==pin) {
+            sendCommand()
         }
     }
     
-    handlePress = commandName => {
-        this.setState({ showDialog: true, command: commandName })
+    function handlePress(commandName) {
+        setShowDialog(true)
+        setCommand(commandName)
     }
         
-    sendCommand = () => {
-        var commands=this.props.virtualDevices[this.props.name].commands 
-        console.log(this.state.command, commands)
-        var command = commands[this.state.command]
-        this.props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
+    function sendCommand(){
+        var commands=props.virtualDevices[props.name].commands 
+        console.log(command, commands)
+        var command = commands[command]
+        props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
     }   
  
-    render() {
-        const { virtualDevices, name } = this.props;
+    return (
+            <React.Fragment>
+                <StatusLock wide={ props.wide} name={ props.name } secondIcon={false} status={ getStatusProp(props.virtualDevices[props.name].status) }
+                    commands={ props.virtualDevices[props.name].commands } handlePress={handlePress} />
+                <PinDialog submitPin={pinCheck} open={showDialog} close={closeDialog} />
+            </React.Fragment>
 
-        return (
-                <SofaCard>
-                    { virtualDevices.hasOwnProperty(name) ? 
-                        <StatusLock name={ name } secondIcon={false} status={ this.getStatusProp(virtualDevices[name].status) }
-                            commands={ virtualDevices[name].commands } handlePress={this.handlePress} />
-                    : null }
-                <PinDialog submitPin={this.pinCheck} open={this.state.showDialog} close={this.closeDialog} />
-                </SofaCard>
-        );
-    }
+    );
+
 }
 
 export default withData(MiniCard);

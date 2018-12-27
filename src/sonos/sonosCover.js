@@ -1,23 +1,22 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React, {memo} from 'react';
+import { makeStyles } from '@material-ui/styles';
 
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 import CloseIcon from '@material-ui/icons/Close';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
-import StopIcon from '@material-ui/icons/Stop';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Slide from '@material-ui/core/Slide';
 
-const styles = theme => ({
+import GridItem from '../GridItem';
+
+const useStyles = makeStyles({
 
     bigDialog: {
         backgroundColor: "#222",
@@ -34,38 +33,13 @@ const styles = theme => ({
         boxShadow: "none",
         overflow: "hidden"
     },
-
     coverArt: {
         width: "100%",
         maxWidth: "100%",
         background: "#222",
         opacity: "1.0", 
         margin: "auto auto",
-    },
-    content: {
-        boxSizing: "border-box",
-        display: "flex",
-        padding: "0 48 48 48",
-    },
-    contentLeft: {
-        flexGrow: 1,
-        flexBasis: 0,
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-    },
-    contentRight: {
-        flexGrow: 1,
-        flexBasis: 0,
-        display: "flex",
-        justifyContent: "center",
-        flexDirection: "column",
-    },
-    contentText: {
-        flexGrow: 1,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
+        borderRadius: 4,
     },
     titleText: {
         padding: "0 24 0 24",
@@ -75,52 +49,83 @@ const styles = theme => ({
         padding: "0 24 0 24",
         color: "#999",
     },
+    maingrid: {
+        padding: 24,
+        height: "100%",
+        display: "flex",
+        alignItems: "center",
+    },
+    nopad: {
+        display: 'flex',
+        margin: 0,
+        boxSizing: "border-box",
+        padding: 0,
+        flexWrap: 'wrap',
+        alignItems: "center",
+        flexGrow: 1,
+        minWidth: "320px",
+        flexBasis: 0,
+        position: "relative",
+    },
+    textbox: {
+        justifyContent: "center",
+        display: "flex",
+        flexDirection: "column",
+    },
+    closebutton: {
+        position: "fixed",
+        top: 8,
+        right: 8,
+    },
+    pausebutton: {
+        position: "fixed",
+        bottom: 8,
+        right: 8,
+    },
+    skipbutton: {
+        position: "fixed",
+        bottom: 8,
+        right: 72,
+    }
 });
 
-class SonosCover extends React.Component {
+function SonosCover(props) {
+    
+    const classes = useStyles();
+    const mobileBreakpoint = 800
+    const isMobile = window.innerWidth <= mobileBreakpoint;
 
-    addDefaultSrc(ev){
+    function addDefaultSrc(ev) {
         ev.target.src = '/image/sonos/darklogo'
     }
-  
-    render() {
-        
-        const { classes, open, title, artist, src, playbackState } = this.props;
-        
-        return (
-            <Dialog fullScreen open={open} onClose={() => this.props.close()} className={classes.bigDialog} PaperProps ={{ classes: { root: classes.paper}}}>
-                <DialogTitle className={classes.title}>
-                    <IconButton onClick={() => this.props.close()} aria-label="Close" color="primary" autoFocus>
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle> 
-                <DialogContent className={classes.content}>
-                    <div className={classes.contentLeft}>
-                        <img onError={this.addDefaultSrc} className={classes.coverArt} src={src}/>
-                    </div>
-                    <div className={classes.contentRight}>
-                        <div className={classes.contentText} >
-                            <Typography className={classes.titleText} variant="h1" >{title}</Typography>
-                            <Typography className={classes.artistText} variant="h2" >{artist}</Typography>
-                        </div>
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={ (e) => this.props.handlePlayPause(e) } aria-label="Close" color="primary" autoFocus>
-                        { playbackState=='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
-                    </Button>
-                    <Button onClick={ (e) => this.props.handleSkip(e) } aria-label="Close" color="primary" autoFocus>
-                        <SkipNextIcon />
-                    </Button>
-                </DialogActions>
-            </Dialog>
-        )
-    }
+
+    return (
+        <Dialog fullScreen open={props.open} onClose={() => props.close()} className={classes.bigDialog} PaperProps ={{ classes: { root: classes.paper}}}>
+            <Grid container spacing={8} className={classes.maingrid}>
+                <Grid item xs={isMobile ? 12 : 6}>
+                <Slide direction="right" in={true} mountOnEnter unmountOnExit>
+                    <Paper elevation={1} className={ classes.nopad} >
+                        <img onError={addDefaultSrc} className={classes.coverArt} src={props.src}/>
+                    </Paper>
+                </Slide>
+                </Grid>
+                <Grid item xs={isMobile ? 12 : 6} className={classes.textbox} >
+                    <Typography className={classes.titleText} variant="h1" >{props.title}</Typography>
+                    <Typography className={classes.artistText} variant="h2" >{props.artist}</Typography>
+                </Grid>
+            </Grid>
+            <IconButton className={classes.skipbutton} onClick={ (e) => props.handlePlayPause(e) } color="primary">
+                { props.playbackState=='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
+            </IconButton>
+            <IconButton className={classes.pausebutton} onClick={ (e) => props.handleSkip(e) } color="primary">
+                <SkipNextIcon />
+            </IconButton>
+            <IconButton className={classes.closebutton} onClick={() => props.close()} aria-label="Close" color="primary" autoFocus>
+                <CloseIcon />
+            </IconButton>
+        </Dialog>
+    )
+    
 };
 
-SonosCover.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-
-export default withStyles(styles)(SonosCover);
+export default memo(SonosCover);

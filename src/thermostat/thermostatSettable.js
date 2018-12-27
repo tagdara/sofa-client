@@ -2,21 +2,27 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 import ToysIcon from '@material-ui/icons/Toys';
 
+import GridItem from '../GridItem'
 import SofaSlider from '../sofaSlider'
 
 const styles = theme => ({
 
     listItem: {
-        padding: "16 0 8 0",
+        padding: "0 0 16 24",
         width: '100%',
+    },
+    xlistItem: {
+        padding: "16px 16px 8px 16px",
     },
     listItemIndent: {
         padding: "16 0 8 64",
@@ -42,7 +48,7 @@ const styles = theme => ({
         display: "flex",
         flexGrow: 1,
         justifyContent: "flex-end",
-        padding: "0 8 8 0",
+        padding: "0 16 8 0",
     },
     button: {
         minWidth: 36
@@ -54,6 +60,12 @@ const styles = theme => ({
         },
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
+    },
+    list: {
+        width: "100%",
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
     },
 });
 
@@ -130,7 +142,8 @@ class ThermostatSettable extends React.Component {
         const { targetSetpoint, powerLevel } = this.state;
 
         return (
-            <React.Fragment>
+            <GridItem>
+                <List className={classes.list} >
                 <ListItem className={classes.listItem}>
                     <Avatar className={ this.tempColor(deviceProperties.temperature) }>{ deviceProperties.temperature }</Avatar>
                     <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint} unit={"°"} name={name} padLeft={true}
@@ -151,7 +164,8 @@ class ThermostatSettable extends React.Component {
                                 preChange={this.handlePrePowerLevelChange} change={this.handlePowerLevelChange} />
                 </ListItem>
                 : null }
-            </React.Fragment>
+                </List>
+            </GridItem>
         );
     }
 }

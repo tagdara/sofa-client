@@ -32,6 +32,7 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
 import SofaDialog from '../sofaDialog';
+import TvRemote from './TvRemote';
 
 const styles = theme => ({
 
@@ -80,9 +81,9 @@ class TVDialog extends React.Component {
     handlePowerChange = event => {
         this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
         if (event.target.checked) {
-            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOn')
+            this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'PowerController', 'TurnOn')
         } else {
-            this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'PowerController', 'TurnOff')
+            this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'PowerController', 'TurnOff')
         }
     }; 
     
@@ -91,20 +92,27 @@ class TVDialog extends React.Component {
     }; 
 
     handleVolumeChange = event => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SpeakerController', 'SetVolume', event )
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'SpeakerController', 'SetVolume', event )
     }; 
 
     handleMuteChange = event => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SpeakerController', 'SetMute', !this.state.muted )
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'SpeakerController', 'SetMute', !this.state.muted )
     }; 
     
     handleSurround = surroundmode => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'SurroundController', 'SetSurround', surroundmode )
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'SurroundController', 'SetSurround', surroundmode )
     }; 
 
     handleInput = (event, inputname) => {
-        this.props.sendAlexaCommand(this.props.device.friendlyName, '', 'InputController', 'SelectInput', inputname)
+        console.log('setting input', inputname)
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'InputController', 'SelectInput', { 'input' : inputname })
     };
+
+    handleRemoteButton = (buttonName) => {
+        console.log('sending button',  buttonName)
+        this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'RemoteController', 'PressRemoteButton', { 'buttonName' : buttonName })
+    };
+
     
     processInputs = inputlist => {
         var inputs=[];
@@ -127,7 +135,7 @@ class TVDialog extends React.Component {
     
     render() {
 
-        const { classes, deviceProperties } = this.props;
+        const { classes, deviceProperties, device } = this.props;
 
         return (
                 <SofaDialog title='TV' open={this.props.open} close={this.props.close} >
@@ -136,7 +144,7 @@ class TVDialog extends React.Component {
                             <ListItem>
                                 <ListItemText primary="Power"/>
                                 <ListItemSecondaryAction>
-                                    <Switch color="primary" checked={this.props.deviceProperties.powerState=='ON'} onChange={this.handlePowerChange} />
+                                    <Switch color="primary" checked={deviceProperties.powerState=='ON'} onChange={this.handlePowerChange} />
                                 </ListItemSecondaryAction>
                             </ListItem>
                             <Divider />
@@ -163,64 +171,12 @@ class TVDialog extends React.Component {
                             </ListItem>
                             <Divider />
                             <ListItem>
-                                <Typography variant="subtitle1" noWrap>Remote Control</Typography>
-                            </ListItem>
-                            <ListItem>
-                                <GridList cellHeight={80} className={classes.gridList} cols={3}>
-                                    <GridListTile cols={1}>
-                                    </GridListTile>
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                        <Button className={classes.remoteButton}>
-                                            <ExpandLessIcon />
-                                        </Button>
-                                    </GridListTile>
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                    </GridListTile>
-                
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                        <Button className={classes.remoteButton}>
-                                            <ChevronLeftIcon />
-                                        </Button>
-                                    </GridListTile>
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                        <Button className={classes.remoteButton}>
-                                            <FullscreenIcon />
-                                        </Button>
-                                    </GridListTile>
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                        <Button className={classes.remoteButton}>
-                                            <ChevronRightIcon />
-                                        </Button>
-                                    </GridListTile>
-                
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                    </GridListTile>
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                        <Button className={classes.remoteButton}>
-                                            <ExpandMoreIcon />
-                                        </Button>
-                                    </GridListTile>
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                    </GridListTile>
-                
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                        <Button className={classes.remoteButton}>
-                                            <ArrowBackIcon />
-                                        </Button>
-                                    </GridListTile>
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                    </GridListTile>
-                                    <GridListTile cols={1} className={classes.gridButtonTile}>
-                                        <Button className={classes.remoteButton}>
-                                            <HomeIcon />
-                                        </Button>
-                                    </GridListTile>
-                                </GridList>
+                                <TvRemote endpointId={device.endpointId} name={device.friendlyName} sendAlexaCommand={this.props.sendAlexaCommand}/>
                             </ListItem>
                         </List>
                     </DialogContent>
                     <DialogActions className={classes.dialogActions} >
-                        <Button  onClick={() => this.props.close() } color="primary" autoFocus>
+                        <Button onClick={() => this.props.close() } color="primary" autoFocus>
                             OK
                         </Button>
                     </DialogActions>

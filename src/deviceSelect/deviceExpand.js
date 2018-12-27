@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React, { memo } from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -13,8 +13,9 @@ import Button from '@material-ui/core/Button';
 import DeviceItem from './deviceItem'
 import DeviceExpandActions from './deviceExpandActions'
 import DeviceExpandProperties from './deviceExpandProperties'
+import GridItem from '../GridItem';
 
-const styles = theme => ({
+const useStyles = makeStyles({
         
     deviceExpand: {
         padding: "0",
@@ -32,86 +33,90 @@ const styles = theme => ({
         width: "100%",
     },
     summary: {
-        paddingLeft: 16,
-        paddingRight: 16,
+        margin: '0 !important',
+        padding: 0,
     },
     sumexp: {
         margin: '0 !important',
+        padding: 0,
     },
-
-
 });
 
-class DeviceExpand extends React.Component {
+export default function DeviceExpand(props) {
 
-    getControllers = (device) => {
+    const classes = useStyles();
+    const [propertyControllers, setPropertyControllers] = useState({});
+    const [isPropertyController, setIsPropertyController] = useState(false);
+    
+    useEffect(() => {
+        getPropertyControllers(props.device)
+    }, []);
+
+    function getControllers(device) {
         var caplist=[]
         for (var cap in device.capabilities) {
             var capi=device.capabilities[cap]['interface'].split(".")[1]
-            if (this.getControllerCommands(capi)) {
+            if (getControllerCommands(capi)) {
                 caplist.push(device.capabilities[cap]['interface'].split(".")[1])
             }
         }
         return caplist
     }
 
-    getActionControllers = (device) => {
+    function getActionControllers(device) {
         var caplist={}
         for (var cap in device.capabilities) {
             var capi=device.capabilities[cap]['interface'].split(".")[1]
-            if (this.getControllerActions(capi)) {
-                caplist[capi]=this.getControllerActions(capi)
+            if (getControllerActions(capi)) {
+                caplist[capi]=getControllerActions(capi)
             }
         }
         return caplist
     }
 
-    getPropertyControllers = (device) => {
+    function getPropertyControllers(device) {
         var caplist={}
+        var hasprops=false
         for (var cap in device.capabilities) {
-            var capi=device.capabilities[cap]['interface'].split(".")[1]
-            if (device.capabilities[cap].properties.hasOwnProperty('supported')) {
-                caplist[capi]=device.capabilities[cap].properties.supported
+            if (device.capabilities[cap]['interface']=='Alexa') {
+            } else {
+                var capi=device.capabilities[cap]['interface'].split(".")[1]
+                if (device.capabilities[cap].properties.hasOwnProperty('supported') && device.capabilities[cap].properties.supported.length>0) {
+                    caplist[capi]=device.capabilities[cap].properties.supported
+                    hasprops=true
+                }
             }
         }
         return caplist
     }
 
-    getControllerActions = (controller) => {
+    function getControllerActions(controller) {
         
         var cmds=[]
-        if (this.props.directives) {
-            if (this.props.directives.hasOwnProperty(controller)) {
-                return this.props.directives[controller]
+        if (props.directives) {
+            if (props.directives.hasOwnProperty(controller)) {
+                return props.directives[controller]
             } 
         }
         return {}
     }
     
-
-    render() {
-        
-        const { classes, device, mode } = this.props;
-        
-        return (
-                <ExpansionPanel elevation={0} CollapseProps={{ unmountOnExit: true }}>
-                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} classes={{ root: classes.summary, expanded: classes.sumexp }}>
-                        <DeviceItem categories={device.displayCategories} name={device.friendlyName} />
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails className={classes.deviceExpand}>
-                        { mode=='action' ?
-                            <DeviceExpandActions device={device} controllers={this.getActionControllers(device)} select={this.props.select} />
-                        :
-                            <DeviceExpandProperties device={device} controllers={this.getPropertyControllers(device)} select={this.props.select} />
-                        }
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
-        )
-    }
+    return (
+        (props.mode=='action' || (getPropertyControllers(props.device) && Object.keys(getPropertyControllers(props.device)).length>0)) &&
+        <GridItem nopad={true}>
+            <ExpansionPanel elevation={0} CollapseProps={{ unmountOnExit: true }}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} classes={{ content: classes.summary, root: classes.summary, }}>
+                    <DeviceItem categories={props.device.displayCategories} name={props.device.friendlyName} />
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.deviceExpand}>
+                    { props.mode=='action' ?
+                        <DeviceExpandActions device={props.device} controllers={getActionControllers(props.device)} select={props.select} />
+                    :
+                        <DeviceExpandProperties device={props.device} controllers={getPropertyControllers(props.device)} select={props.select} />
+                    }
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
+        </GridItem>
+    )
 }
 
-DeviceExpand.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(DeviceExpand);

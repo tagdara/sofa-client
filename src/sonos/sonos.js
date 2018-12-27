@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -9,111 +10,88 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import SonosGroupDialog from './sonosGroupDialog';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-const styles = theme => ({
-    content: {
-        display: 'flex',
-        margin: "2 2",
-        boxSizing: "border-box",
-        padding: "8 16",
-        flexWrap: 'wrap',
-        alignItems: "center",
-        flexGrow: 1,
-        minWidth: "320px",
-        flexBasis: 0,
-    },
-    linklist: {
+import IconButton from '@material-ui/core/IconButton';
+import ViewModuleIcon from '@material-ui/icons/ViewModule';
+
+import GridItem from "../GridItem"
+
+const useStyles = makeStyles({
+
+    list: {
         width: "100%",
+        minHeight: 72,
     },
-    listItem: {
-        padding: 0,
+    topListItem: {
+        minHeight: 8,
+        padding: "0 24px",
+    },
+    bottomListItem: {
+        minHeight: 72,
+    },
+
+    cornerChip: {
+        position: "absolute",
+        top: 16,
+        right: 16,
     }
 });
 
-class Sonos extends React.Component {
+
+export default function Sonos(props) {
     
-    constructor(props) {
-        super(props);
+    const classes = useStyles();
+    const [showDialog, setShowDialog] = useState(false);
 
-        this.state = {
-            showdialog: false,
-        };
-    }    
-
-    createLinks = () => {
-        
-        let links=[]
-        for (var i = 0; i < this.props.deviceProperties.linked.length; i++) {
-            links.push(<Typography  key={ this.props.deviceProperties.linked[i]+"link" } variant="body1">{this.props.deviceProperties.linked[i]}</Typography>)
-        }
-        return links
+    function closeDialog() {
+        setShowDialog(false)
     }
-
-    createListLinks = () => {
-        
-        let links=[]
-        for (var i = 0; i < this.props.deviceProperties.linked.length; i++) {
-            links.push(<ListItem className={this.props.classes.listItem} key={ this.props.deviceProperties.linked[i]+"link" }><ListItemText variant="body2" primary={this.props.deviceProperties.linked[i]} /></ListItem>)
-        }
-        return links
-    }
-
     
-    handleClickOpen = () => {
-        this.setState({ showdialog: true });
-    };  
-    
-    closeDialog = () => {
-        this.setState({ showdialog: false });
-    };    
-    
-
-    addDefaultSrc(ev){
+    function addDefaultSrc(ev){
         ev.target.src = '/image/sonos/logo'
     }
     
-    render() {
-
-        const { classes, theme, name, devices, deviceProperties, linkedPlayers } = this.props;
-        
-        return (
-            name===deviceProperties.input || deviceProperties.input==''? 
-
-                <Paper elevation={1} className={classes.content} >
-                    <List className={classes.linklist} >
-                        <ListItem className={classes.listItem}> 
-                            <ListItemText variant="body2" primary={name}  onClick={ () => this.props.chooseActivePlayer(name) }/>
-                            <Chip 
-                                label={ 'Group' } 
-                                className={ classes.chip }
-                                onClick={ () => this.handleClickOpen()}
-                            />
-
-                        </ListItem>
-                        {this.createListLinks()}
-                    </List>
-
-                    <List onClick={ () => this.props.chooseActivePlayer(name) } >
-                        <ListItem className={classes.listItem}>
-                            <Avatar onError={this.addDefaultSrc} src={deviceProperties.art} />
-                            { deviceProperties.title!='' ?
-                                <ListItemText primary={deviceProperties.title} secondary={deviceProperties.artist}/>
-                                :
-                                <ListItemText primary='No music selected.'/>
-                            }
-                        </ListItem>
-                    </List>
-                    <SonosGroupDialog sendAlexaCommand={this.props.sendAlexaCommand} key={name+'grp'} open={this.state.showdialog} close={this.closeDialog} coordinator={name} devices={devices} players={linkedPlayers} linked={deviceProperties.linked} />
-                </Paper>
-            : null
-        );
+    function setGroupPlayer(thisplayer) {
+        props.setPlayer(thisplayer)
+        props.setLayoutCard('PlayerGroup')
     }
+ 
+    return (
+        props.name===props.deviceProperties.input || props.deviceProperties.input==''? 
+            <GridItem wide={props.wide}>
+                { props.small ? null :
+                    <React.Fragment>
+                        <List className={classes.list} >
+                        <ListItem className={classes.topListItem}> 
+                            <ListItemText variant="body2" primary={props.name}  onClick={ () => {  props.setPlayer(props.name)} }/>
+                        </ListItem>
+                        {props.deviceProperties.linked.map(link =>
+                            <ListItem className={classes.topListItem} key={ link+"link" }>
+                                <ListItemText variant="body2" primary={link} />
+                            </ListItem>)
+                        }
+                        </List>
+                        <Chip label={ 'Group' } className={ classes.cornerChip } onClick={ () => setGroupPlayer(props.name)} />
+                    </React.Fragment>
+                }
+                <ListItem className={classes.bottomListItem} onClick={ () => props.setPlayer(props.name)} >
+                    <Avatar onError={addDefaultSrc} src={props.deviceProperties.art} />
+                    { props.deviceProperties.title!='' ?
+                        <ListItemText primary={ props.small ? props.name : props.deviceProperties.title } 
+                                        secondary={props.small ? props.deviceProperties.title+" - "+props.deviceProperties.artist : props.deviceProperties.artist }/>
+                        :
+                        <ListItemText primary={ props.small ? props.name : 'No music selected.'} secondary={ props.small ? 'No music selected.' : null } />
+                    }
+                    { !props.small ? null : 
+                        <ListItemSecondaryAction>
+                            <IconButton onClick={(e) => props.setLayoutCard('PlayersLayout',{'player':props.name})} >
+                                <ViewModuleIcon />
+                            </IconButton>
+                        </ListItemSecondaryAction>
+                    }
+                </ListItem>
+            </GridItem>
+        : null
+    );
 }
-
-Sonos.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, { withTheme: true })(Sonos);

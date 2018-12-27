@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from "react-dom";
-import SofaApp from './sofaApp';
+import SofaApp from './SofaApp';
 import DataProvider from './DataContext/DataProvider';
 import ThemeWrapper from './theme/themeWrapper';
 

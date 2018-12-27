@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import Avatar from '@material-ui/core/Avatar';
 import ListItem from '@material-ui/core/ListItem';
@@ -8,37 +8,28 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import ListIcon from '@material-ui/icons/List';
 import CloseIcon from '@material-ui/icons/Close';
+import GridItem from '../GridItem';
 
-const styles = theme => ({
+const useStyles = makeStyles({
         
-    item: {
-        padding: 16,
-    },
 
 });
 
-class AutomationItem extends React.Component {
-
-    render() {
-        
-        const { classes, name, edit, actionCount, conditionCount, triggerCount } = this.props;
-        
-        return (
-            <ListItem className={classes.item} key={ name+'-reg' }>
-            { edit ?
-                <Avatar onClick={ () => this.props.delete(name)}><CloseIcon /></Avatar>
-            :
-                <Avatar onClick={ () => this.props.run(name)}><ListIcon /></Avatar>
-            }
-                <ListItemText primary={name} secondary={triggerCount+" triggers / "+conditionCount+" conditions / "+actionCount+' actions'}  onClick={() => this.props.select(name)}/>
-            </ListItem>
-
-        )
-    }
+export default function AutomationItem(props) {
+    
+    const classes = useStyles();
+    
+    return (
+        <GridItem wide={props.wide}>
+        <ListItem>
+        { props.edit ?
+            <Avatar onClick={ () => props.delete(props.name)}><CloseIcon /></Avatar>
+        :
+            <Avatar onClick={ () => props.run(props.name)}><ListIcon /></Avatar>
+        }
+            <ListItemText primary={props.name} secondary={props.triggerCount+" triggers / "+props.conditionCount+" conditions / "+props.actionCount+' actions'}  onClick={() => props.select(props.name)}/>
+        </ListItem>
+        </GridItem>
+    )
 }
 
-AutomationItem.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(AutomationItem);

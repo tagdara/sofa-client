@@ -383,7 +383,7 @@ class AutomationEditor extends React.Component {
                         <Divider />
                         <ListSubheader>Triggers</ListSubheader>
                         { triggers.map((trigger,index) =>
-                            <AutomationTrigger moveUp={this.moveTriggerUp} moveDown={this.moveTriggerDown} save={this.saveTrigger} edit={edit} delete={this.deleteTrigger} trigger={trigger} index={index} name={this.props.deviceByEndpointId(trigger.endpointId).friendlyName} key={ name+index } />
+                            <AutomationTrigger key={'at'+index} moveUp={this.moveTriggerUp} moveDown={this.moveTriggerDown} save={this.saveTrigger} edit={edit} delete={this.deleteTrigger} trigger={trigger} index={index} name={this.props.deviceByEndpointId(trigger.endpointId).friendlyName} key={ name+index } />
                         )}
                     </List> }
                     { conditions.length > 0 &&
@@ -391,7 +391,7 @@ class AutomationEditor extends React.Component {
                         <Divider />
                         <ListSubheader>Conditions</ListSubheader>
                         { conditions.map((condition,index) =>
-                            <AutomationCondition controllerProperties={this.getControllerProperties(condition.controller, condition.propertyName)} moveUp={this.moveConditionUp} moveDown={this.moveConditionDown} save={this.saveCondition} edit={edit} delete={this.deleteCondition} condition={condition} index={index} name={this.props.deviceByEndpointId(condition.endpointId).friendlyName} key={ name+index } />
+                            <AutomationCondition key={'ac'+index} controllerProperties={this.getControllerProperties(condition.controller, condition.propertyName)} moveUp={this.moveConditionUp} moveDown={this.moveConditionDown} save={this.saveCondition} edit={edit} delete={this.deleteCondition} condition={condition} index={index} name={this.props.deviceByEndpointId(condition.endpointId).friendlyName} key={ name+index } />
                         )}
                     </List> }
                     { actions.length > 0 &&
@@ -399,7 +399,7 @@ class AutomationEditor extends React.Component {
                         <Divider />
                         <ListSubheader>Actions</ListSubheader>
                         { actions.map((action,index) =>
-                            <AutomationAction moveUp={this.moveActionUp} moveDown={this.moveActionDown} save={this.saveAction} edit={edit} action={action} delete={this.deleteAction} actionValues={this.getActionValues(action.controller, action.command)} actionValue={this.getActionValue(action.controller, action.command)} index={index} device={ this.props.deviceByEndpointId(action.endpointId) } name={this.props.deviceByEndpointId(action.endpointId).friendlyName} key={ name+index } />
+                            <AutomationAction key={'aa'+index} moveUp={this.moveActionUp} moveDown={this.moveActionDown} save={this.saveAction} edit={edit} action={action} delete={this.deleteAction} actionValues={this.getActionValues(action.controller, action.command)} actionValue={this.getActionValue(action.controller, action.command)} index={index} device={ this.props.deviceByEndpointId(action.endpointId) } name={this.props.deviceByEndpointId(action.endpointId).friendlyName} key={ name+index } />
                         )}
                     </List>
                     }

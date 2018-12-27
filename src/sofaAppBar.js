@@ -1,16 +1,19 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+import { withLayout } from './DataContext/withLayout';
+
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import HomeIcon from '@material-ui/icons/Home';
 import CompareIcon from '@material-ui/icons/Compare';
-import { withThemeChange } from './DataContext/withThemeChange';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
-const styles = theme => ({
+const useStyles = makeStyles({
         
     list: {
         minWidth: 320,
@@ -31,46 +34,37 @@ const styles = theme => ({
     }
 }); 
 
-class SofaAppBar extends React.Component {
+function SofaAppBar(props) {
     
-    constructor(props) {
-        super(props);
+    const classes = useStyles();
 
-        this.state = {
-            width: window.innerWidth,
-        };
-    }
-    
-    otherPort = (portnumber, tabname) => {
-        var newurl=window.location.protocol+"//"+window.location.hostname+":"+portnumber;
-        window.open(newurl,tabname);
-    }
-    
-    render() {
-    
-        const { classes } = this.props;
-        
-        return (
-                <AppBar className={this.props.mobile ? classes.miniTop: classes.phoneTop}>
-                    { this.props.mobile ?
-                    <div></div>
-                    :
-                    <Toolbar>
-                        <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={ ()=> this.props.open() }>
-                            <MenuIcon />
-                        </IconButton>
-                        <Typography variant="h6" color="inherit" className={classes.flex}>
-                            Home
-                        </Typography>
-                    </Toolbar>
+    return (
+            <AppBar className={props.mobile ? classes.miniTop: classes.phoneTop}>
+                { props.mobile ?
+                <div></div>
+                :
+                <Toolbar>
+                    <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={ ()=> props.open() }>
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" color="inherit" className={classes.flex}>
+                        Home
+                    </Typography>
+                    { props.layoutName!='Home' &&
+                    <IconButton color="inherit" aria-label="Home" onClick={ ()=> props.setLayout('Home') }>
+                        <HomeIcon />
+                    </IconButton>
                     }
-                </AppBar>
-        );
-    }
+                    { props.backName &&
+                    <IconButton color="inherit" aria-label="Home" onClick={ ()=>  props.goBack() }>
+                        <ArrowBackIcon />
+                    </IconButton>
+                    }
+                </Toolbar>
+                }
+            </AppBar>
+    );
 }
 
-SofaAppBar.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
-export default withThemeChange(withStyles(styles)(SofaAppBar));
+export default withLayout(SofaAppBar)

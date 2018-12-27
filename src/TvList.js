@@ -11,7 +11,7 @@ class TvList extends React.Component {
         return (
             <React.Fragment>
                 { this.props.devices.map(device => 
-                    <Tv key={device.endpointId} name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendAlexaCommand={this.props.sendAlexaCommand} />
+                    <Tv wide={this.props.wide} key={device.endpointId} name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendAlexaCommand={this.props.sendAlexaCommand} />
                 )}
             </React.Fragment>
         );

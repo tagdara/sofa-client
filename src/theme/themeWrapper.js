@@ -17,8 +17,10 @@ export class ThemeWrapper extends Component {
         // You can't set the color scheme from here because it's a render function, but for right now its not breaking anything
 
         if (themeName=='dark') {
+            this.props.setTheme(darkTheme)
             return darkTheme
         } else if (themeName=='light') {
+            this.props.setTheme(lightTheme)
             return lightTheme
         }  
         
@@ -26,9 +28,11 @@ export class ThemeWrapper extends Component {
         var n = d.getHours();
         if (n>17 || n<8) {
             this.props.setColorScheme('dark')
+            this.props.setTheme(darkTheme)
             return darkTheme
         } else {
             this.props.setColorScheme('light')
+            this.props.setTheme(lightTheme)
             return lightTheme
         }
     }

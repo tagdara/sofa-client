@@ -15,7 +15,7 @@ const styles = theme => ({
         boxSizing: "border-box",
     },
     stack: {
-        height: 42,
+        height: "auto",
         display: "flex",
         flexGrow: 1,
         justifyContent: "space-between",
@@ -24,6 +24,8 @@ const styles = theme => ({
         boxSizing: "border-box",
         marginRight: 8,
         overflowX: "hidden",
+        alignItems: "center",
+        paddingRight: 8,
     },
     padLeft: {
         paddingLeft: 16,
@@ -31,7 +33,9 @@ const styles = theme => ({
     xstackLabel: {
         alignSelf: "flex-end",
     },
-
+    slider: {
+        padding: "8px 0",
+    }
 
 });
 
@@ -64,7 +68,7 @@ class SofaSlider extends React.Component {
     }
 
     handleDrag = (event,value) => {
-        console.log('handledrag',event.target, value, this.state.drag)
+        //console.log('handledrag',event.target, value, this.state.drag)
         this.setState({prechange:false})
     }
 
@@ -77,12 +81,12 @@ class SofaSlider extends React.Component {
     }
 
     handlePreChange = (event,value) => {
-        console.log('handleprechange',value, this.state.drag)
+        //console.log('handleprechange',value, this.state.drag)
         this.setState({ value: value, delaySet: true, prechange:true}, () => this.handlePostPreChange(event));
     }; 
 
     handleChange = (event,value) => {
-        console.log('handlechange',value, this.state.drag)
+        //console.log('handlechange',value, this.state.drag)
         this.setState({drag: false})
         if (this.state.prechange) {
             this.props.change(this.state.value);
@@ -93,7 +97,7 @@ class SofaSlider extends React.Component {
     }; 
     
     delaySliderUpdates = () => {
-        console.log('dsu')
+        //console.log('dsu')
         this.setState({ delaySet: true},
             () =>  setTimeout(() => endSliderDelay(), 1000)
         )
@@ -105,13 +109,13 @@ class SofaSlider extends React.Component {
    
     render() {
 
-        const { classes, disabled, name, unit, padLeft, half, minWidth } = this.props;
+        const { classes, disabled, name, unit, padLeft, half, minWidth, smallText } = this.props;
 
         return (
                     <div style={{ "minWidth": minWidth }} className={ padLeft ? classes.stack+" "+classes.padLeft: ( half ? classes.half : classes.stack) } >
                     { name ?
-                        <Typography variant="subtitle1" className={classes.stackLabel} >{this.props.name}</Typography>
-                    : null }
+                        <Typography variant={ smallText ? "caption" : "subtitle1" } className={classes.stackLabel} >{this.props.name}</Typography>
+                    :   null }
                     { unit ?
                         <Typography variant="caption" className={classes.stackLabel} >{Math.floor(this.state.value)+this.props.unit}</Typography>
                     : null }
@@ -143,6 +147,7 @@ SofaSlider.defaultProps = {
     padLeft: false,
     half: false,
     minWidth: 240,
+    smallText: false,
 }
 
 SofaSlider.propTypes = {

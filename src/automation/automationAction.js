@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -16,18 +16,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
-import DataUsageIcon from '@material-ui/icons/DataUsage';
-import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
-import SpeakerIcon from '@material-ui/icons/Speaker';
-import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
-import TouchAppIcon from '@material-ui/icons/TouchApp';
-import TuneIcon from '@material-ui/icons/Tune';
-import ListIcon from '@material-ui/icons/List';
-import TvIcon from '@material-ui/icons/Tv';
-import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
-//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import GridItem from '../GridItem';
+import DeviceIcon from '../DeviceIcon';
 
-const styles = theme => ({
+const useStyles = makeStyles({
         
     areaInput: {
         marginTop:0,
@@ -60,11 +52,6 @@ const styles = theme => ({
         overflowX: "hidden",
     },
 
-    deviceName: {
-        padding: 0,
-        flexGrow:1,
-        flexBasis:0,
-    },
     dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",
     },
@@ -75,132 +62,130 @@ const styles = theme => ({
         minWidth: 320,
         width: "100%",
     },
-    listItem: {
-        padding: 16,
-
-    },
-    item: {
-        padding: 16,
-    },
-
+    spacer: {
+        maxWidth: 40,
+        minWidth: 40,
+        minHeight: 42,
+    }
 });
 
 
-class AutomationAction extends React.Component {
+export default function AutomationAction(props) {
 
-    constructor(props) {
-        super(props);
+    const classes = useStyles();
+    const [parentField, setParentField] = useState({})
+    const [fields, setFields] = useState([])
+    const [editVal, setEditVal] = useState({})
+    const actionValues = getActionValues(props.item.controller, props.item.command)
+    const actionValue = getActionValue(props.item.controller, props.item.command)
+    
+    useEffect(() => {
+        parseActionValues()
+    }, []);
 
-        this.state = {
-            parentField: "",
-            fields: [],
-            editVal: {},
-            icons: {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
-        }
+    function getActionValues(controller, command) {
+        return props.directives[controller][command]
+
+    }
+
+    function getActionValue(controller, command) {
+        var payload=props.directives[controller][command]
+        for (var prop in payload) {
+            if (payload[prop].hasOwnProperty('value')) {
+                return prop
+            }
+        } 
+        return ''
+    }
+
+    function editValue(value) {
+        var newitem=props.item
+        newitem.value=value
+        props.save(props.index, item)
     }
     
-    getIcon = (category, size='default') => {
-
-        if (this.state.icons.hasOwnProperty(category)) {
-            var RealIcon=this.state.icons[category]
-        } else {
-            var RealIcon=DeveloperBoardIcon
-        }
-        return <RealIcon size={24} fontSize={size} />
-    }
-
-    editValue = (value) => {
-        var action=this.props.action
-        action.value=value
-        this.save(action)
-    }
-    
-    editValues = (action, value) => {
-        var edval=this.state.editVal
+    function editValues(action, value) {
+        var edval=editVal
         edval[action]=value     
         
-        if (this.state.parentField) {
+        if (parentField) {
             var parval={}
-            parval[this.state.parentField]=edval
-            this.setState({editVal:edval}, () => this.editValue(parval))
+            parval[parentField]=edval
+            setEditVal(edval)
+            editValue(parval)
         } else {
-            this.setState({editVal:edval}, () => this.editValue(edval))
+            setEditVal(edval)
+            editValue(edval)
         }
         console.log(action, value)
-        
     }
-    
-    save = (action) => {
-        this.props.save(this.props.index, action)
-    }
-    
-    componentDidMount() {
+
+    function parseActionValues() {
+
         var subfields=[]
         var edval={}
         var parent=""
 
-        for (var av in this.props.actionValues) {
-            if (typeof this.props.actionValues[av] === 'object') {
+        for (var av in actionValues) {
+            if (typeof actionValues[av] === 'object') {
                 parent=av
-                for (var avsub in this.props.actionValues[av]) {
-                    //console.log(av,avsub,this.props.actionValues[av][avsub])
-                    subfields.push({ 'name':avsub, 'type': this.props.actionValues[av][avsub] })
+                for (var avsub in actionValues[av]) {
+                    subfields.push({ 'name':avsub, 'type': actionValues[av][avsub] })
                     edval[avsub]=''
-                    if (this.props.action.value.hasOwnProperty(av)) {
-                        if (this.props.action.value[av].hasOwnProperty(avsub)) {
-                            console.log(this.props.action.value[av][avsub])
-                            edval[avsub]=this.props.action.value[av][avsub]
+                    if (props.item.value.hasOwnProperty(av)) {
+                        if (props.item.value[av].hasOwnProperty(avsub)) {
+                            edval[avsub]=props.item.value[av][avsub]
                         }
                     }
                 }
             } else {
-                console.log('not an object',this.props.actionValues[av])
-                subfields= [{ "name":av, "type": this.props.actionValues[av] }]
+                //console.log('not an object',actionValues[av])
+                subfields= [{ "name":av, "type":actionValues[av] }]
                 edval[av]=''
-                if (this.props.action.value.hasOwnProperty(av)) {
-                    edval[av]=this.props.action.value[av]
+                if (props.item.hasOwnProperty('value')) {
+                    if (props.item.value.hasOwnProperty(av)) {
+                        edval[av]=props.item.value[av]
+                    }
                 }
             }
         }
-        this.setState({fields: subfields, editVal:edval, parentField: parent})
+        setFields(subfields)
+        setEditVal(edval)
+        setParentField(parent)
     }
 
-    render() {
-        
-        const { classes, index, name, action, propertyName, device} = this.props;
-        const { editVal, fields } = this.state;
-        
-        return (
-            <ListItem className={classes.item} >
-                {this.props.edit ?
-                <ListItemIcon onClick={() => this.props.delete(index)}><CloseIcon /></ListItemIcon>   
-                :
-                <ListItemIcon onClick={() => this.props.run(name,index)}>{this.getIcon(device.displayCategories[0])}</ListItemIcon>
-                }
-                <ListItemText primary={device.friendlyName} secondary={action.controller.replace('Controller','')+" / "+action.command} className={classes.deviceName}/>
-                { fields.map((action,index) =>
-                    <TextField
-                        className={classes['areaInput'+action.type]}
-                        id={'action'+index}
-                        label={action.name}
-                        margin="dense"
-                        value={editVal[action.name]}
-                        onChange={(e) => this.editValues(action.name, e.target.value)}
-                    />
-                )}
-                {this.props.edit ?
-                    <ListItemSecondaryAction className={classes.listItem}>
-                        <IconButton onClick={() => this.props.moveUp(index)}><ExpandLessIcon /></IconButton>   
-                        <IconButton onClick={() => this.props.moveDown(index)}><ExpandMoreIcon /></IconButton>
-                    </ListItemSecondaryAction>
-                : null }
-            </ListItem>
-        )
-    }
+    return (
+        <GridItem wide={props.wide} nopad={true}>
+        <ListItem>
+            <ListItemIcon onClick={() => props.run(name,index)}><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
+            <ListItemText primary={props.name} secondary={props.item.controller.replace('Controller','')+" / "+props.item.command} />
+            { props.remove ?
+                <ListItemSecondaryAction>
+                    <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
+                </ListItemSecondaryAction>
+                : null
+            }
+            { props.reorder &&
+                <ListItemSecondaryAction>
+                    <IconButton disabled={ props.index==0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></IconButton>
+                    <IconButton onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></IconButton>
+                </ListItemSecondaryAction>
+            }
+        </ListItem>
+        <ListItem>
+            <Button className={classes.spacer}>{" "}</Button>
+            { fields.map((action,index) =>
+                <TextField
+                    key={"aat"+index}
+                    className={classes['areaInput'+action.type]}
+                    id={'action'+index}
+                    label={action.name}
+                    margin="dense"
+                    value={editVal[action.name]}
+                    onChange={(e) => editValues(action.name, e.target.value)}
+                />
+            )}
+        </ListItem>
+        </GridItem>
+    )
 }
-
-AutomationAction.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(AutomationAction);

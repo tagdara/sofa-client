@@ -1,6 +1,4 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -17,23 +15,14 @@ import ListIcon from '@material-ui/icons/List';
 import TvIcon from '@material-ui/icons/Tv';
 import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
 //import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import GridItem from '../GridItem'
 
 
-const styles = theme => ({
-        
-    expListItem: {
-        padding: 0,
-        width: '100%',
-    },
- 
+export default function DeviceItem(props) {
+    
+    const icons = {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
 
-});
-
-const icons = {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
-
-class DeviceItem extends React.Component {
-
-    getIcon = (category, size='default') => {
+    function getIcon(category, size='default') {
             
         var pxSize=24;
         if (size=='small') {
@@ -48,21 +37,10 @@ class DeviceItem extends React.Component {
         return <RealIcon size={pxSize} fontSize={size} />
     }
 
-    render() {
-        
-        const { classes, categories, name } = this.props;
-        
-        return (
-            <ListItem className={classes.expListItem} >
-                <ListItemIcon>{this.getIcon(categories)}</ListItemIcon>
-                <ListItemText primary={name} secondary={categories} />
-            </ListItem>
-        )
-    }
+    return (
+        <ListItem>
+            <ListItemIcon>{getIcon(props.categories)}</ListItemIcon>
+            <ListItemText primary={props.name} secondary={props.categories} />
+        </ListItem>
+    )
 }
-
-DeviceItem.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(DeviceItem);

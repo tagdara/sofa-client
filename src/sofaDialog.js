@@ -1,13 +1,12 @@
 import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import Dialog from '@material-ui/core/Dialog';
 import Slide from  '@material-ui/core/Slide';
 import SofaDialogTitle from './sofaDialogTitle';
 
-const styles = theme => ({
+const useStyles = makeStyles({
 
     dialog: { height : "100%", },
 
@@ -17,28 +16,22 @@ function Transition(props) {
     return <Slide direction="down" {...props} />;
 }
 
-class SofaDialog extends React.Component {
+function SofaDialog(props) {
 
-    render() {
-        
-        const { classes, fullScreen, maxWidth, open, close, title, tabs, tabValue, tabChange } = this.props;
-        
-        return (
-            <Dialog className={classes.dialog}
-                fullScreen={fullScreen}
-                fullWidth={true}
-                maxWidth={maxWidth}
-                open={open}  
-                onClose={close}
-                TransitionComponent={Transition}
-            >
-                <SofaDialogTitle title={title} tabs={tabs} tabValue={tabValue} tabChange={tabChange} />
-
-                {this.props.children}
-            </Dialog>
-        )
-    }
-
+    const classes = useStyles();
+    return (
+        <Dialog className={classes.dialog}
+            fullScreen={props.fullScreen}
+            fullWidth={true}
+            maxWidth={props.maxWidth}
+            open={props.open}  
+            onClose={props.close}
+            TransitionComponent={Transition}
+        >
+            <SofaDialogTitle title={props.title} tabs={props.tabs} tabValue={props.tabValue} tabChange={props.tabChange} />
+            {props.children}
+        </Dialog>
+    )
 }
 
 SofaDialog.defaultProps = {
@@ -48,9 +41,4 @@ SofaDialog.defaultProps = {
     tabChange: '',
 }
 
-SofaDialog.propTypes = {
-    classes: PropTypes.object.isRequired,
-    fullScreen: PropTypes.bool.isRequired,
-};
-
-export default withStyles(styles)(withMobileDialog()(SofaDialog));
+export default withMobileDialog()(SofaDialog);

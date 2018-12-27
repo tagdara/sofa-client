@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,12 +15,13 @@ import CloseIcon from '@material-ui/icons/Close';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
+import DeviceIcon from '../DeviceIcon';
+import OperatorButton from "./operatorButton";
+import GridItem from '../GridItem';
 
-import OperatorButton from "./operatorButton"
+const useStyles = makeStyles({
 
-
-const styles = theme => ({
-        
+      
     input: {
         marginTop:0,
         marginLeft: 16,
@@ -32,86 +33,61 @@ const styles = theme => ({
         flexGrow:1,
         flexBasis:0,
     },
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    dialogContent: {
-        padding: 0,
-    },
     listActions: {
         minWidth: 320,
         width: "100%",
     },
     listItem: {
-        padding: 16,
+        padding: "8 16",
     },
-    triggerItem: {
-        padding: 16,
-        },
 
 });
 
 
-class AutomationTrigger extends React.Component {
+export default function AutomationTrigger(props) {
     
-    constructor(props) {
-        super(props);
+    const classes = useStyles();
 
-        this.state = {
-            trigger: {},
-        }
-    }
-
-    editTriggerValue = (value) => {
-        var trigger=this.props.trigger
+    function editTriggerValue(value) {
+        var trigger=props.item
         trigger.value=value
-        this.saveTrigger(trigger)
+        saveTrigger(trigger)
     }
     
-    editOperatorValue = (value) => {
-        var trigger=this.props.trigger
+    function editOperatorValue(value) {
+        var trigger=props.item
         trigger.operator=value
-        this.saveTrigger(trigger)
+        saveTrigger(trigger)
     }
     
-    saveTrigger = (trigger) => {
-        this.props.save(this.props.index, trigger)
+    function saveTrigger(trigger) {
+        props.save(props.index, trigger)
     }
     
-    render() {
-        
-        const { classes, index, name, trigger, propertyName} = this.props;
-        
-        return (
-            <ListItem className={classes.triggerItem} >
-                {this.props.edit ?
-                <ListItemIcon onClick={() => this.props.delete(index)}><CloseIcon /></ListItemIcon>   
-                :
-                <ListItemIcon><AnnouncementIcon /></ListItemIcon>
+    return (
+        <GridItem wide={props.wide}  nopad={true}>
+            <ListItem className={classes.listItem} >
+                <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
+                <ListItemText primary={props.name} secondary={props.item.controller} className={classes.deviceName}/>
+                { props.remove &&
+                    <ListItemSecondaryAction className={classes.listItem}>
+                        <ListItemIcon onClick={() => props.delete(props.index)}><CloseIcon /></ListItemIcon>   
+                    </ListItemSecondaryAction>
                 }
-                <ListItemText primary={name} secondary={trigger.controller} className={classes.deviceName}/>
-                <OperatorButton index={index} value={trigger.operator} setOperator={ this.editOperatorValue }/>
+            </ListItem>
+            <ListItem>
+                <OperatorButton index={props.index} value={props.item.operator} setOperator={ editOperatorValue }/>
                 <TextField
                         className={classes.input}
-                        id={'trigger'+index}
-                        label={propertyName}
-                        margin="normal"
-                        value={trigger.value}
-                        onChange={(e) => this.editTriggerValue(e.target.value)}
+                        id={'trigger'+props.index}
+                        label={props.item.propertyName}
+                        value={props.item.value}
+                        onChange={(e) => editTriggerValue(e.target.value)}
                 />
-                {this.props.edit ?
-                    <ListItemSecondaryAction className={classes.listItem}>
-                        <IconButton onClick={() => this.props.moveUp(index)}><ExpandLessIcon /></IconButton>   
-                        <IconButton onClick={() => this.props.moveDown(index)}><ExpandMoreIcon /></IconButton>
-                    </ListItemSecondaryAction>
-                : null }
             </ListItem>
-        )
-    }
+        </GridItem>
+
+    )
 }
 
-AutomationTrigger.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
-export default withStyles(styles)(AutomationTrigger);

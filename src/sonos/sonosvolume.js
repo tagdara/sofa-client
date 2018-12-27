@@ -1,76 +1,36 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
-import Avatar from '@material-ui/core/Avatar';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import SofaSlider from '../sofaSlider'
+import ToggleAvatar from '../ToggleAvatar'
 
-const styles = theme => ({
-
-    hotAvatar: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-    },
-    sliderPaper: {
-        display: "flex",
-        flexDirection: "row",
-        padding: 16,
-        alignItems: "center",
-    },
-});
-
-class SonosVolume extends React.Component {
+export default function SonosVolume(props) {
     
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            volume: 0,
-        };
-
-    }    
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        
-        var changes={}
-        if (nextProps.deviceProperties.volume !== prevState.volume) {
-            changes['volume']=nextProps.deviceProperties.volume
-        }  
-        return changes
-    }
-
-    handlePreVolumeChange = event => {
-        this.setState({ volume: event, target:this.props.name});
+    const [volume, setVolume] = useState(props.deviceProperties.volume);
+ 
+    function handlePreVolumeChange(event) {
+        setVolume(event);
     }; 
 
-    handleVolumeChange = event => {
-        this.props.sendAlexaCommand(this.props.name,this.props.endpointId,'SpeakerController',"SetVolume", { "volume" : event} )
+    function handleVolumeChange(event) {
+        props.sendAlexaCommand(props.name, props.endpointId, 'SpeakerController', "SetVolume", { "volume" : event} )
     }; 
 
-    handleMuteChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, 'SpeakerController',"SetMute", { "muted" : !this.props.deviceProperties.muted } )
+    function handleMuteChange(event) {
+        props.sendAlexaCommand(props.name, props.endpointId, 'SpeakerController',"SetMute", { "muted" : !props.deviceProperties.muted } )
     }; 
 
-    render() {
+    return (
+        <ListItem >
+            <ToggleAvatar onClick={ () => handleMuteChange()} avatarState={ (!props.deviceProperties.muted && props.deviceProperties.playbackState=='PLAYING') ? 'on': 'off'}>
+                { props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
+            </ToggleAvatar>
+            <SofaSlider padLeft={true} unit={"%"} name={props.name} value={props.deviceProperties.volume} preChange={handlePreVolumeChange} change={handleVolumeChange} />
+        </ListItem>
+    );
 
-        const { classes, deviceProperties } = this.props;
-
-        return (
-                <ListItem className={classes.sliderPaper} >
-                    <Avatar onClick={ () => this.handleMuteChange()} className={ (!deviceProperties.muted && deviceProperties.playbackState=='PLAYING') ? classes.hotAvatar : classes.normalAvatar }>
-                        { deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
-                    </Avatar>
-                    <SofaSlider padLeft={true} unit={"%"} name={this.props.name} value={this.state.volume} preChange={this.handlePreVolumeChange} change={this.handleVolumeChange} />
-                </ListItem>
-        );
-    }
 }
 
-SonosVolume.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(SonosVolume);

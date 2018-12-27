@@ -1,21 +1,19 @@
 import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 
-
-const styles = theme => ({
+const useStyles = makeStyles({
         
     card: {
         display: 'flex',
         minHeight: 64,
         maxWidth: '480px',
-        margin: 8,
+        margin: 0,
         boxSizing: "border-box",
-        flexDirection: "column",
-        justifyContent: "space-between",
+
         padding: "16",
+        flexGrow: 1,
     },
     content: {
         minWidth: 0,
@@ -23,29 +21,19 @@ const styles = theme => ({
         flexGrow:1,
         display: "flex",
         alignItems: "center",
-				flexDirection: "column",
+		flexDirection: "column",
     },
+
 });
 
-
-class SofaCard extends React.Component {
+export default function SofaCard(props) {
     
-    render() {
-    
-        const { classes } = this.props;
-        
-        return (
-            <Card className={classes.card}>
-                <CardContent className={classes.content} >
-                    {this.props.children}
-                </CardContent>
-            </Card>
-        );
-    }
+    const classes = useStyles();
+    return (
+        <Card className={classes.card}>
+            <CardContent className={classes.content} >
+                {props.children}
+            </CardContent>
+        </Card>
+    );
 }
-
-SofaCard.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(SofaCard);

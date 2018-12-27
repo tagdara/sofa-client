@@ -1,30 +1,21 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
-import Button from '@material-ui/core/Button';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import Card from '@material-ui/core/Card';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
-import Paper from '@material-ui/core/Paper';
+
+import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
-
+import HistoryIcon from '@material-ui/icons/History';
 import CameraDialog from './cameraDialog';
+import ListItem from '@material-ui/core/ListItem';
+import GridItem from '../GridItem';
 
-const styles = theme => ({
+const useStyles = makeStyles({    
     
-    card: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column',
-        position: 'relative',
-        flexBasis: 0,
-        flexGrow: 1,
-        minWidth: "320px",
-        margin: 0,
-    },
     nextbutton: {
         position: "absolute",
         right: 8,
@@ -38,25 +29,25 @@ const styles = theme => ({
         left: 8,
         bottom: 8,
     },
+    newgridbutton: {
+        position: "absolute",
+        right: 8,
+        bottom: 8,
+    },
+
     im: {
         width: "100%",
         height: "auto",
+        borderRadius: 4,
     },
     hiddenimage: {
         height: 0,
     },
     hidden: {
-        backgroundColor: "#777",
+        borderRadius: 4,
         position: "relative",
         width: "100%",
         paddingTop: '56.25%', // 16:9
-    },
-    coverx: {
-        height: "240",
-        width: "480",
-    },
-    cover: {
-        display: "none",
     },
     spinner: {
         position: "absolute",
@@ -65,111 +56,95 @@ const styles = theme => ({
         left: 0,
         right: 0,
         bottom: 0,
-    }
-    
-
+    },
 });
 
-class SecurityCamera extends React.Component {
+export default function SecurityCamera(props) {
 
-    constructor(props) {
-        super(props);
+    const classes = useStyles();
+    const intervals = [1000, 500, 5000, 3000]
+    const thumbnailBasePath="/thumbnail/"+props.cameraSource+"/camera";
+    const cameraBasePath="/image/"+props.cameraSource+"/camera";
+    const [camera, setCamera] = useState(thumbnailBasePath+"/"+props.name);
+    const [updateUrl, setUpdateUrl] = useState(camera+"?"+Date.now());
+    const [currentUrl, setCurrentUrl] = useState("");
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const [showDialog, setShowDialog] = useState(false);
+    const [refreshInterval, setRefreshInterval] = useState(3000);
 
-        this.state = {
-            camera: "",
-            camerabasepath: "/thumbnail/dlink/camera/",
-            updateurl: "",
-            currenturl: "",
-            imageloaded: false,
-            showDialog: false,
-            refreshInterval: 3000,
-        };
-        this.changeInterval = this.changeInterval.bind(this);
-    }    
     
-    componentDidMount() {
-        this.setState({'camera': this.state.camerabasepath+this.props.name})
-        this.setState({'updateurl':this.state.camerabasepath+this.props.name+'?'+Date.now()})
-        this.interval = setInterval(() => this.setState({'updateurl':this.state.camera+'?'+Date.now()}), this.state.refreshInterval);
-    }
-    
-    imageFinished() {
-        this.setState( {'imageloaded': true})
-        this.setState( {'currenturl':this.state.updateurl})
-    }
-
-    changeInterval() {
-        
-        var refreshInterval=this.state.refreshInterval
-        
-        if (refreshInterval==500) { 
-            refreshInterval=5000
-        } else if (refreshInterval==1000) { 
-            refreshInterval=500
-        } else if (refreshInterval==3000) { 
-            refreshInterval=1000
-        } else if (refreshInterval==5000) { 
-            refreshInterval=3000
+    useEffect(() => {
+        const interval = setInterval(() => { setUpdateUrl(camera+"?"+Date.now()) }, refreshInterval)
+        return () => {
+            clearInterval(interval);
         }
-        clearInterval(this.interval);
-        this.interval = setInterval(() => this.setState({'updateurl':this.state.camera+'?'+Date.now()}), refreshInterval);
-        this.setState({refreshInterval:refreshInterval})
-         
+    });
+    
+    function imageFinished() {
+        if (!imageLoaded) {
+            setImageLoaded(true);
+        }
+        setCurrentUrl(updateUrl)
+    }
+    
+    function changeInterval() {
+        setRefreshInterval(intervals.shift())
+        const interval = setInterval(() => setUpdateUrl(camera+"?"+Date.now()), refreshInterval)
+        intervals.push(refreshInterval)
+    }
+    
+    function closeDialog() {
+        setCamera(thumbnailBasePath+"/"+props.name)
+        setShowDialog(false)
+    }
+    
+    function handleClickOpen() {
+        setCamera(cameraBasePath+"/"+props.name)
+        setShowDialog(true)
     }
 
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
-
-    closeDialog = () => {
-        this.setState({ 'camera': "/thumbnail/dlink/camera/"+this.props.name, showDialog: false });
-    };  
-    
-    handleClickOpen = () => {
-        this.setState({ 'camera': "/image/dlink/camera/"+this.props.name, showDialog: true });
-    };  
-    
-    render() {
-
-        const { classes, theme } = this.props;
-
-        return (
-                <Paper elevation={0} className={classes.card} >
-                    <img
-                        className={this.state.imageloaded ? classes.im : classes.hiddenimage}
-                        src={this.state.updateurl}
-                        onLoad={ () => this.imageFinished() }
-                        onClick={ () => this.handleClickOpen()}
-                    />
-                    {this.state.imageloaded ? null :
-                    <div className={classes.hidden}>
-                        <CircularProgress  className={classes.spinner} size={50} />
-                    </div>
+    return (
+        <GridItem wide={props.wide} nopad={true} >
+            
+            <img
+                className={imageLoaded ? classes.im : classes.hiddenimage}
+                src={updateUrl}
+                onLoad={ () => imageFinished() }
+                onClick={ () => handleClickOpen()}
+            />
+            {imageLoaded ?
+                <React.Fragment>
+                    { props.prevCamera &&
+                        <IconButton color="primary" className={classes.prevbutton} onClick={ () => props.prevCamera()}>
+                            <ChevronLeftIcon />
+                        </IconButton>
                     }
-                    {this.state.imageloaded && this.props.selectButtons ?
-                    <IconButton color="primary" className={classes.prevbutton} onClick={ () => this.props.nextCamera()}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                    : null }
-                    {this.state.imageloaded && this.props.selectButtons ?
-                    <IconButton color="primary" className={classes.nextbutton} onClick={ () => this.props.nextCamera()}>
-                        <ChevronRightIcon />
-                    </IconButton>
-                    : null }
-                    {this.props.selectButtons ?
-                    <IconButton color="primary" className={classes.gridbutton} onClick={ () => this.props.openGrid()}>
-                        <ViewModuleIcon />
-                    </IconButton>
-                    : null }                    
-                    <CameraDialog refreshInterval={this.state.refreshInterval} changeInterval={this.changeInterval} showDialog={this.state.showDialog} closeDialog={this.closeDialog} src={this.state.currenturl} />
-                </Paper>
-        );
-    }
+                    { props.nextCamera &&
+                        <IconButton color="primary" className={classes.nextbutton} onClick={ () => props.nextCamera()}>
+                            <ChevronRightIcon />
+                        </IconButton>
+                    }
+                    { props.selectButtons &&
+                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => props.setLayoutCard('CameraLayout')}>
+                            <ViewModuleIcon />
+                        </IconButton>
+                    }
+                    { props.historyButton &&
+                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => props.setLayoutCard('CameraHistory', {'name': props.name})}>
+                            <HistoryIcon />
+                        </IconButton>
+                    }
+                    
+                </React.Fragment>
+            :
+                <div className={classes.hidden}>
+                    <CircularProgress className={classes.spinner} size={50} />
+                </div>
+            }
+             
+            <CameraDialog refreshInterval={refreshInterval} changeInterval={changeInterval} showDialog={showDialog} closeDialog={closeDialog} src={currentUrl} />
+
+        </GridItem>
+    );
+
 }
-
-SecurityCamera.propTypes = {
-    classes: PropTypes.object.isRequired,
-    theme: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles, { withTheme: true })(SecurityCamera);

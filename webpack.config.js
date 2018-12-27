@@ -26,7 +26,7 @@ const config = {
     plugins : [ 
         new BundleAnalyzerPlugin({
             analyzerMode: 'disabled',
-            generateStatsFile: true,
+            generateStatsFile: false,
             statsOptions: { source: false }
         }),
     ],  

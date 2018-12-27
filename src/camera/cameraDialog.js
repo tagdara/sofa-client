@@ -77,7 +77,6 @@ const styles = theme => ({
         margin: "auto auto",
         marginTop: "calc((100vh - 100vw) / 2.5)",
         marginLeft: "calc((100vw * -1) /2.5) !important",
-        zIndex: "-99"
     }    
     
 });

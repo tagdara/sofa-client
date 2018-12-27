@@ -1,86 +1,88 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+
 import Switch from '@material-ui/core/Switch';
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
 import Avatar from '@material-ui/core/Avatar';
 import TvIcon from '@material-ui/icons/Tv';
+import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
+import TvRemote from './TvRemote';
 import TvDialog from './tvDialog';
-import SofaCard from '../sofaCard'
+import SofaCard from '../sofaCard';
+import ToggleAvatar from '../ToggleAvatar'
+import GridItem from '../GridItem'
 
-const styles = theme => ({
+const useStyles = makeStyles({
     
-    hotAvatar: {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
+    list: {
+        width: "100%"
     },
-    listItem: {
+    xlistItem: {
         width: '100%',
         minHeight: 48,
-        padding: 0,
+        padding: "8 0",
+    },
+    xremoteListItem: {
+        width: '100%',
+        minHeight: 48,
+        padding: 16,
     },
 });
 
-class Tv extends React.Component {
-    
-    constructor(props) {
-        super(props);
+export default function Tv(props) {
 
-        this.state = {
-            powerState: 'OFF',
-            showdialog: false,
-        };
-    }    
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-        
-        var changes={}
-        if (nextProps.deviceProperties.powerState !== prevState.powerState) {
-            changes['powerState']=nextProps.deviceProperties.powerState
-        }  
-        return changes
+    const classes = useStyles();
+    const [powerState, setPowerState] = useState(props.deviceProperties.powerState);
+    const [showDialog, setShowDialog] = useState(false)
+    const [showRemote, setShowRemote] = useState(false)
+ 
+    function toggleRemote() {
+        setShowRemote(!showRemote)
     }
-    
-    handleClickOpen = () => {
-        this.setState({ showdialog: true });
+    function handleClickOpen() {
+        setShowDialog(true);
     };  
     
-    closeDialog = () => { 
-        this.setState({ showdialog: false})
+    function closeDialog() { 
+        setShowDialog(false)
     }   
  
-    handlePowerChange = event => {
-        this.setState({ powerState: event.target.checked, target: this.props.device.friendlyName});
+    function handlePowerChange(event) {
+        setPowerState(event.target.checked)
         if (event.target.checked) {
-            this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'PowerController', 'TurnOn')
+            props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'PowerController', 'TurnOn')
         } else {
-            this.props.sendAlexaCommand(this.props.device.friendlyName, this.props.device.endpointId, 'PowerController', 'TurnOff')
+            props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'PowerController', 'TurnOff')
         }
     }; 
     
-    
-    render() {
+    return (
+        <GridItem wide={props.wide} >
+            <ListItem>
+                <ToggleAvatar onClick={ () => handleClickOpen()} avatarState={ props.deviceProperties.powerState=='ON' ? 'on' : 'off' } ><TvIcon /></ToggleAvatar>
+                <ListItemText primary={props.device.friendlyName} secondary={ props.deviceProperties.input } onClick={ () => handleClickOpen()}/>
+                <ListItemSecondaryAction>
+                    { props.deviceProperties.powerState!='ON' ? null :
+                    <IconButton onClick={ () => toggleRemote() } >
+                        <ControlCameraIcon />
+                    </IconButton>
+                    }
+                    <Switch color="primary" checked={props.deviceProperties.powerState=='ON'} onChange={ (e) => handlePowerChange(e) } />
+                </ListItemSecondaryAction>
+            </ListItem>
+            { showRemote ?
+            <ListItem className={classes.remoteListItem}>
+                <TvRemote endpointId={props.device.endpointId} name={props.device.friendlyName} sendAlexaCommand={props.sendAlexaCommand} />
+            </ListItem>
+            : null }
+            <TvDialog sendAlexaCommand={props.sendAlexaCommand} open={showDialog} close={closeDialog} name={props.device.friendlyName} device={ props.device } deviceProperties={ props.deviceProperties } />
+        </GridItem>
+    );
 
-        const { classes, name, device, deviceProperties } = this.props;
-        const { powerState, showdialog } = this.state;
-
-        return (
-                <SofaCard>
-                    <ListItem className={classes.listItem}>
-                        <Avatar onClick={ () => this.handleClickOpen()} className={ powerState=='ON' ? classes.hotAvatar : classes.normalAvatar } ><TvIcon /></Avatar>
-                        <ListItemText primary={name} secondary={deviceProperties.input} onClick={ () => this.handleClickOpen()}/>
-                        <Switch color="primary" checked={powerState=='ON'} onChange={ (e) => this.handlePowerChange(e) } />
-                    </ListItem>
-                    <TvDialog sendAlexaCommand={this.props.sendAlexaCommand} open={showdialog} close={this.closeDialog} name={name} device={ device } deviceProperties={ deviceProperties } />
-                </SofaCard>
-        );
-    }
 }
-
-Tv.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Tv);

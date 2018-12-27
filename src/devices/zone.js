@@ -1,6 +1,9 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+
+import Moment from 'react-moment';
+import 'moment-timezone';
 
 import ClearIcon from '@material-ui/icons/Clear';
 import DoneIcon from '@material-ui/icons/Done';
@@ -8,44 +11,37 @@ import DoneIcon from '@material-ui/icons/Done';
 import Avatar from '@material-ui/core/Avatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Paper from '@material-ui/core/Paper';
+import GridItem from '../GridItem';
 
-const styles = theme => ({
+const useStyles = makeStyles({
 
     closed: {
         backgroundColor: "#6a6",
         color: "#fff",
     },
     open: {
+        color: "#fff",
         backgroundColor: "#e66",
-    },
-    listItem: {
-        padding: "12 16",
-        width: '100%',
     },
 
 });
 
-class Zone extends React.Component {
+
+export default function Zone(props) {    
     
-    render() {
+    const classes = useStyles();
 
-        const { classes } = this.props;
-        return (
-            <ListItem className={classes.listItem}>
-                { this.props.deviceProperties.position=='closed' ?
-                <Avatar className={classes.closed} onClick={ () => this.toggleFilter('all') }><DoneIcon  /></Avatar>
+    return (
+        <GridItem>
+            <ListItem>
+                { props.deviceProperties.position=='closed' ?
+                    <Avatar className={classes.closed} ><DoneIcon /></Avatar>
                 :
-                <Avatar className={classes.open} onClick={ () => this.toggleFilter('all') }><ClearIcon /></Avatar>
+                    <Avatar className={classes.open} ><ClearIcon /></Avatar>
                 }
-                <ListItemText primary={this.props.name}/>
+                <ListItemText primary={props.name} secondary={props.changeTime=='Unknown' ? 'Unknown':<Moment format="ddd MMM D h:mm:sa">{props.changeTime}</Moment>} />
             </ListItem>
-        );
-    }
+        </GridItem>
+    );
 }
-
-Zone.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Zone);
-

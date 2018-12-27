@@ -1,6 +1,6 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 import { withThemeChange } from './DataContext/withThemeChange';
 
 import List from '@material-ui/core/List';
@@ -23,7 +23,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import EditIcon from '@material-ui/icons/Edit';
 
 
-const styles = theme => ({
+const useStyles = makeStyles({
         
     listItem: { minHeight: 48,
     },
@@ -34,93 +34,83 @@ const styles = theme => ({
         paddingTop: "env(safe-area-inset-top)",
     },
 
-   
 });    
 
 
-class Sidebar extends React.Component {
+function Sidebar(props) {
     
-    constructor(props) {
-        super(props);
+    const classes = useStyles();
 
-        this.state = {
-            width: window.innerWidth,
-        };
+    function handleDialog(dialog) {
+        props.handleDialog(dialog)
+        props.close()
     }
     
-    handleDialog = ( dialog ) => {
-        this.props.handleDialog(dialog)
-        this.props.close()
+    function selectLayoutCard(layout, cardprops) {
+        props.setLayoutCard(layout, cardprops)
+        props.close()
     }
     
-    otherPort = (portnumber, tabname) => {
+    function otherPort(portnumber, tabname) {
         var newurl=window.location.protocol+"//"+window.location.hostname+":"+portnumber;
         window.open(newurl,tabname);
     }
     
-    render() {
-    
-        const { classes } = this.props;
-        
-        return (
+    return (
 
-            <Drawer
-                variant="persistent"
-                open={this.props.open}
-                classes={{ paper: classes.drawerPaper,}}
-            >
-                <div className={classes.drawerHeader}>
-                    <IconButton onClick={this.props.close}>
-                        <ChevronLeftIcon />
-                    </IconButton>
-                </div>
+        <Drawer variant="persistent" open={props.open} classes={{ paper: classes.drawerPaper,}} >
+            <div className={classes.drawerHeader}>
+                <IconButton onClick={props.close}>
+                    <ChevronLeftIcon />
+                </IconButton>
+            </div>
+            <Divider />
+            <List>
+                <ListItem button onClick={() => handleDialog('Automation')}>
+                    <ListItemIcon>
+                        <TuneIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Automation'} />
+                </ListItem>
+                <ListItem button onClick={() => selectLayoutCard('AutomationsLayout')}>
+                    <ListItemIcon>
+                        <TuneIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'* Automation'} />
+                </ListItem>
+
+                <ListItem button onClick={() => handleDialog('Schedule')}>
+                    <ListItemIcon>
+                        <HistoryIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Scheduler'} />
+                </ListItem>
+                <ListItem className={classes.listItem} />
                 <Divider />
-                <List>
-                    <ListItem onClick={() => this.handleDialog('Automation')}>
-                        <ListItemIcon>
-                            <TuneIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'Automation'} />
-                    </ListItem>
-                    <ListItem onClick={() => this.handleDialog('Schedule')}>
-                        <ListItemIcon>
-                            <HistoryIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'Scheduler'} />
-                    </ListItem>
-                    <ListItem className={classes.listItem} />
-                    <Divider />
-                    <ListItem onClick={()=> this.otherPort('8443','_editor')}>
-                        <ListItemIcon>
-                            <EditIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'Editor'} />
-                    </ListItem>
-                    <ListItem className={classes.listItem} />
-                    <Divider />
-                    <ListItem onClick={() => this.props.setColorScheme(this.props.colorScheme=='dark' ? 'light' : 'dark')}>
-                        <ListItemIcon>
-                            <CompareIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={this.props.colorScheme=='dark' ? 'Light Mode' : 'Dark Mode'} />
-                    </ListItem>
-                    <ListItem >
-                        <ListItemIcon>
-                            <PersonIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={'User Options'} />
-                    </ListItem>
-                </List>
-            </Drawer>
-        );
-    }
+                <ListItem button onClick={()=> otherPort('8443','_editor')}>
+                    <ListItemIcon>
+                        <EditIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Editor'} />
+                </ListItem>
+                <ListItem className={classes.listItem} />
+                <Divider />
+                <ListItem button onClick={() => props.setColorScheme(props.colorScheme=='dark' ? 'light' : 'dark')}>
+                    <ListItemIcon>
+                        <CompareIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={props.colorScheme=='dark' ? 'Light Mode' : 'Dark Mode'} />
+                </ListItem>
+                <ListItem button >
+                    <ListItemIcon>
+                        <PersonIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'User Options'} />
+                </ListItem>
+            </List>
+        </Drawer>
+    );
 }
 
-    
-Sidebar.propTypes = {
-    classes: PropTypes.object.isRequired,
-    
-};
-
-export default withThemeChange(withStyles(styles)(Sidebar));
+export default withThemeChange(Sidebar);
 

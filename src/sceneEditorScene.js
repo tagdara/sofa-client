@@ -23,7 +23,12 @@ import CloseIcon from '@material-ui/icons/Close';
 import StarIcon from '@material-ui/icons/Star';
 
 const styles = theme => ({
-        
+    
+    root: {
+        minHeight: 72,
+        display: "flex",
+        width: "100%",
+    },
     sceneExpand: {
         padding: 0,
         margin: 0,
@@ -32,7 +37,8 @@ const styles = theme => ({
         width: "100%",
     },
     summary: {
-        padding: "0 8",
+        margin: "0 !important",
+        padding: 0,
         alignItems: "center",
     },
     summaryLabel: {
@@ -56,7 +62,10 @@ const styles = theme => ({
         },
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
-    },    
+    },   
+    expander: {
+        padding: 16,
+    }
 });
 
 
@@ -127,8 +136,9 @@ class SceneEditorScene extends React.Component {
         const { classes, scene, name, edit, area, lights, shortcut } = this.props;
         const { shortcutIds } = this.state;
         return (
-            <ExpansionPanel elevation={0} expanded={this.state.expansionPanelOpen}>
-                <ExpansionPanelSummary className={classes.summary} expandIcon={<ExpandMoreIcon onClick={() => {
+            <Paper className={classes.root} >
+            <ExpansionPanel elevation={0} expanded={this.state.expansionPanelOpen} className={classes.expander}>
+                <ExpansionPanelSummary className={classes.summary} classes={{expanded: classes.summary}} expandIcon={<ExpandMoreIcon onClick={() => {
                         this.setState({ expansionPanelOpen: !this.state.expansionPanelOpen }); }}/>} >
                     { edit ?
                     <Avatar onClick={ () => this.props.deleteScene(name)} >
@@ -164,6 +174,7 @@ class SceneEditorScene extends React.Component {
                     </List>
                 </ExpansionPanelDetails>
             </ExpansionPanel>
+            </Paper>
         )
     }
 };

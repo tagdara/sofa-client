@@ -1,63 +1,30 @@
-import React, { Component } from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
 
-import Avatar from '@material-ui/core/Avatar';
+import ToggleAvatar from '../ToggleAvatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import GridItem from '../GridItem'
 
-
-const styles = theme => ({
-        
-    listItem: {
-        width: '100%',
-        minHeight: 48,
-        padding: 0,
-    },
-    cool: {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: "#00796B"
-    },
-    mid: {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: "#558B2F"
-    },
-    hot: {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: "#E65100"
-    }
-});
-
-class Thermostat extends React.Component {
+export default function Thermostat(props) { 
     
-    tempColor = (temp) => {
-        if (temp>=74) { return this.props.classes.hot }
-        if (temp<70) { return this.props.classes.cool }
-        return this.props.classes.mid;
+    function tempColor(temp) {
+        if (temp>=74) { return "hot" }
+        if (temp<70) { return "cool" }
+        return "mid";
     }
-    
 
-    render() {
+    return (
 
-        const { classes } = this.props;
-
-        return (
-            <ListItem className={classes.listItem}>
-                <Avatar className={this.tempColor(this.props.deviceProperties.temperature)}>{this.props.deviceProperties.temperature}</Avatar>
-                { this.props.deviceProperties.hasOwnProperty('targetSetpoint') ?
-                    <ListItemText primary={this.props.name} secondary={this.props.deviceProperties.thermostatMode=='OFF' ? 'Off' : 'Heat set to '+this.props.deviceProperties.targetSetpoint}/>
+        <GridItem wide={props.wide} >
+            <ListItem onClick={props.onClick}>
+                <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature)}>{props.deviceProperties.temperature}</ToggleAvatar>
+                { props.deviceProperties.hasOwnProperty('targetSetpoint') ?
+                    <ListItemText primary={props.name} secondary={props.deviceProperties.thermostatMode=='OFF' ? 'Off' : 'Heat set to '+props.deviceProperties.targetSetpoint}/>
                     :
-                    <ListItemText primary={this.props.name} />
+                    <ListItemText primary={props.name} />
                 }
            </ListItem>
-            
-        );
-    }
+       </GridItem>
+    );
 }
-
-Thermostat.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Thermostat);
 

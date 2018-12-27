@@ -1,9 +1,11 @@
-import React, { Component } from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
 import Avatar from '@material-ui/core/Avatar';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -11,48 +13,40 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import InvertColorsIcon from '@material-ui/icons/InvertColors';
 
-const styles = theme => ({
+import GridItem from '../GridItem';
 
-    listItem: {
-        padding: "8 0",
-        width: '100%',
-    },
+const useStyles = makeStyles({
+    
     waterIcon: {
         backgroundColor: "#6666FF",
     }
 });
 
-class Sprinkler extends React.Component {
+export default function Sprinkler(props) {
 
-    handlePress = commandName => {
-        console.log(commandName,this.props.commands)
-        var command = this.props.commands[commandName]
-        console.log(commandName,command, this.props.commands)
-        this.props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
+    const classes = useStyles();
+
+    function handlePress(commandName) {
+        var command = props.commands[commandName]
+        props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
     }   
-    
-    render() {
 
-        const { classes, name, commands } = this.props;
-
-        return (
-            <ListItem className={classes.listItem}>
+    return (
+        <GridItem>
+            <ListItem>
                 <Avatar className={classes.waterIcon}><InvertColorsIcon /></Avatar>
-                <ListItemText primary={name}/>
-                <IconButton className={classes.button} onClick={ () => this.handlePress('on') }>
-                    <CheckIcon />
-                </IconButton>
-                <IconButton className={classes.button} onClick={ () => this.handlePress('off') }>
-                    <CloseIcon />
-                </IconButton>
+                <ListItemText primary={props.name}/>
+                <ListItemSecondaryAction>
+                    <IconButton className={classes.button} onClick={ () => handlePress('on') }>
+                        <CheckIcon />
+                    </IconButton>
+                    <IconButton className={classes.button} onClick={ () => handlePress('off') }>
+                        <CloseIcon />
+                    </IconButton>
+                </ListItemSecondaryAction>
             </ListItem>
-        );
-    }
+        </GridItem>
+
+    );
+
 }
-
-Sprinkler.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Sprinkler);
-

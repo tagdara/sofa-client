@@ -24,7 +24,7 @@ class DeviceExpandProperties extends React.Component {
     getProperties = (device, controller) => {
         var proplist=[]
         for (var i = 0; i < device.capabilities.length; i++) {
-            if (device.capabilities[i].properties.hasOwnProperty('supported')) {
+            if (device.capabilities[i].hasOwnProperty('properties') && device.capabilities[i].properties.hasOwnProperty('supported')) {
                 for (var j = 0; j < device.capabilities[i].properties.supported.length; j++) {
                     if (device.capabilities[i].interface.split(".")[1]==controller || controller==null) {
                         proplist.push(device.capabilities[i].properties.supported[j].name)

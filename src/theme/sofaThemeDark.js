@@ -5,6 +5,7 @@ import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
 export default createMuiTheme({
+    direction: "ltr",
     typography: {
         useNextVariants: true,
     },

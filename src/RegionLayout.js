@@ -77,7 +77,7 @@ function RegionLayout(props) {
     }
 
     function viewArea(name) {
-        props.setLayout('Area',{"name": name})
+        props.setLayoutCard('AreaLayout',{"name": name})
     }
 
     

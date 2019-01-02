@@ -116,10 +116,10 @@ function SofaAppContent(props) {
                 </React.Fragment>
             : null }
             { props.layout.type=='single' ?
-						<ErrorBoundary>
-							{ renderModule(props.layoutName, props.layoutProps) }
-            </ErrorBoundary>
-						: null }
+				<ErrorBoundary>
+				{ renderModule(props.layoutName, props.layoutProps) }
+                </ErrorBoundary>
+			: null }
         </Grid>
     );
 }

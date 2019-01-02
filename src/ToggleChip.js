@@ -6,11 +6,11 @@ import Chip from '@material-ui/core/Chip';
 const styles = theme => ({
 
     off: {
-        marginLeft: 4,
+        margin: 4,
         color: theme.palette.primary.contrastText, 
     },
     on: {
-        marginLeft: 4,
+        margin: 4,
         color: theme.palette.primary.contrastText,
         background: theme.palette.primary.main,
     },

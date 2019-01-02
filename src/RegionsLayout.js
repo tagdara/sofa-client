@@ -38,6 +38,7 @@ function RegionsLayout(props) {
     
     function setRegionLayout(name) {
         props.setRegion(name);
+        console.log('Setting layout to Home')
         props.setLayout('Home');
     }
 
@@ -45,7 +46,7 @@ function RegionsLayout(props) {
         <React.Fragment>
             <GridBreak label={"Regions"} />
             { Object.keys(regions).map((region) =>
-                <Region key={ region } setRegion={setRegionLayout} setLayout={props.setLayout} current={ props.region==region } name={ region } />
+                <Region key={ region } setRegion={setRegionLayout} setLayoutCard={props.setLayoutCard} current={ props.region==region } name={ region } />
             )}
         </React.Fragment>
     )

@@ -19,6 +19,8 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import LensIcon from '@material-ui/icons/Lens';
 
+import GridItem from './GridItem'
+
 const useStyles = makeStyles({
  
     root: {
@@ -102,7 +104,7 @@ export default function Area(props) {
     }
         
     return (
-        <Paper className={classes.root} >
+        <GridItem wide={props.wide} >
             <ListItem className={classes.listItem}>
                 <ToggleAvatar avatarState={props.current==true ? "on" : "off"} onClick={() => props.setRegion(props.name) } >
                     <RoomIcon className={classes.iconSize} />
@@ -121,7 +123,7 @@ export default function Area(props) {
                     }
                 </IconButton>
             </ListItem>
-        </Paper>
+        </GridItem>
         
     );
 }

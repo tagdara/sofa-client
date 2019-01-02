@@ -97,7 +97,7 @@ function AreaLayout(props) {
     }
     
     function sortByShortcuts() {
-        if (areaData.hasOwnProperty('scenes')) {
+        if (areaData.hasOwnProperty('scenes') && areaData.hasOwnProperty('shortcuts')) {
             var sortlist=Object.keys(areaData.scenes).sort().reverse();
             var sc=Object.keys(areaData.shortcuts).sort();
             for (var i = 0; i < sc.length; i++) {

@@ -104,14 +104,8 @@ function SofaPage(props) {
 
         if (modules.hasOwnProperty(item['module'])) {
             let Module = modules[item['module']]
-            if (item.hasOwnProperty('grid')) { 
-                item['props']['wide']=true
-                return <Module key={ page+index } {...item['props']} />
-            } else {
-                return <Grid key={'gi'+index} item className={classes.gridItem}>
-                            <Module key={ page+index } {...item['props']} />
-                        </Grid>
-            }
+            item['props']['wide']=true
+            return <Module key={ page+index } {...item['props']} />
         } else {
             //console.log('Did not find',item['module'],'in',modules)
             return null
@@ -122,9 +116,9 @@ function SofaPage(props) {
         <Grid container item spacing={8} key={props.name} xs={ isMobile ? 12 : 4 } 
             className={ classes.gridColumn}>
             { props.page.map( (item, i) => 
-							<ErrorBoundary>
-								{ renderLayoutModule(item, props.name, i) }
-							</ErrorBoundary>
+				<ErrorBoundary key={props.name+i} >
+					{ renderLayoutModule(item, props.name, i) }
+				</ErrorBoundary>
             )}
             {isMobile &&
                 <Toolbar className={classes.paddedToolbar}/>

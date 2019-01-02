@@ -83,7 +83,7 @@ export default function Region(props) {
                 </ToggleAvatar>
                 <ListItemText onClick={() => props.setRegion(props.name) } >{props.name}</ListItemText>
                 <IconButton>
-                    <MoreHorizIcon className={classes.iconSize} onClick={() => props.setLayout('Region', {"name": props.name })}/>
+                    <MoreHorizIcon className={classes.iconSize} onClick={() => props.setLayoutCard('RegionLayout', {"name": props.name })}/>
                 </IconButton>
             </ListItem>
         </GridItem>

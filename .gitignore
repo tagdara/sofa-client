@@ -1,4 +1,5 @@
 node_modules
 gitpush
-dist/*bundle*
+dist/bundle.js
+dist/*.bundle.js
 retired

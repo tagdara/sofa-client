@@ -1,0 +1,11 @@
+CACHE MANIFEST
+# v-auto
+# The previous line is changed at runtime by the webserver and should not be modified
+
+https://home.dayton.home
+
+/index.html
+
+NETWORK:
+*
+

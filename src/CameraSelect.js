@@ -6,33 +6,32 @@ import SecurityCamera from './camera/securitycamera';
 function CameraSelect(props) {
 
     const [cameras, setCameras] = useState([]);
-    const [currentCamera, setCurrentCamera] = useState(null);
-    const [currentCameraNumber, setCurrentCameraNumber] = useState(0);
+    const [currentCamera, setCurrentCamera] = useState(props.default);
 
     function selectCurrentCamera(data) {
         setCameras(data)
         if (data.length>0) {
-            setCurrentCamera(data[0])
+            if (props.default && data.includes(props.default)) {
+                setCurrentCamera(props.default)
+            } else {
+                setCurrentCamera(data[0])
+            }
         } else {
             setCurrentCamera(null)
         }
     }
     
     function nextCamera() {
-        var nextcam=currentCameraNumber+1
+        var nextcam=cameras.indexOf(currentCamera)+1
         if (nextcam>cameras.length-1) { nextcam=0; }
         if (nextcam<0) {nextcam=cameras.length-1; }
-        
-        setCurrentCameraNumber(nextcam)
         setCurrentCamera(cameras[nextcam])
     }
     
     function prevCamera() {
-        var nextcam=currentCameraNumber-1
+        var nextcam=cameras.indexOf(currentCamera)-1
         if (nextcam>cameras.length-1) { nextcam=0; }
         if (nextcam<0) {nextcam=cameras.length-1; }
-        
-        setCurrentCameraNumber(nextcam)
         setCurrentCamera(cameras[nextcam])
     }
     

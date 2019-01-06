@@ -18,10 +18,12 @@ const useStyles = makeStyles({
     
     nextbutton: {
         position: "absolute",
+        top: "40%",
         right: 8,
     },
     prevbutton: {
         position: "absolute",
+        top: "40%",
         left: 8,
     },
     gridbutton: {

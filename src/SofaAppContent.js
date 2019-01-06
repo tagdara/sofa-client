@@ -23,7 +23,8 @@ const useStyles = makeStyles({
         margin: "8 auto",
         maxWidth: 600,
         width: "100%",
-        paddingTop: "env(safe-area-inset-top)",
+        marginTop: "env(safe-area-inset-top)",
+        paddingTop: 8,
         boxSizing: "border-box",
         overflowY: "auto",
         minHeight: "100%",
@@ -88,7 +89,7 @@ function SofaAppContent(props) {
             }
         })
         if (changes) {
-            console.log('setting',newmodules)
+            //console.log('setting',newmodules)
             setModules(newmodules);
         }
     }
@@ -99,7 +100,7 @@ function SofaAppContent(props) {
             let Module = modules[modulename]
             return <Module key={ modulename } {...moduleprops} />
         } else {
-            console.log('Did not find',modulename,'in',modules)
+            //console.log('Did not find',modulename,'in',modules)
             return null
         }
     }

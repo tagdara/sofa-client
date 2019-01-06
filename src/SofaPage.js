@@ -31,6 +31,7 @@ const useStyles = makeStyles({
         minHeight: "100%",
     },
     gridColumn: {
+        margin: 0,
         overflowX: "hidden",
         overflowY: "hidden",
         alignContent: "start",

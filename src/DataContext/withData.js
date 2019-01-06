@@ -11,7 +11,7 @@ export function withData(Component) {
                                 directives={context.directives} deviceProperties={context.propertiesFromDevices(context.devicesByCategory(props.Category))} 
                                 propertiesFromDevices={context.propertiesFromDevices} sendAlexaCommand={context.sendAlexaCommand} 
                                 devices={context.devicesByCategory(props.Category)} changeTimesFromDevices={context.changeTimesFromDevices(context.devicesByCategory(props.Category))}
-                                getChangeTimesForDevices={context.getChangeTimesForDevices}
+                                getChangeTimesForDevices={context.getChangeTimesForDevices} getHistoryForDevice={context.getHistoryForDevice}
                                 setLayout={context.setLayout} setLayoutCard={context.setLayoutCard} 
                                 layout={context.layout} layoutName={context.layoutName} layoutProps={context.layoutProps} fullLayout={context.fullLayout} 
                                 region={context.region} setRegion={context.setRegion}

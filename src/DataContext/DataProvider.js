@@ -301,6 +301,18 @@ export class DataProvider extends PureComponent {
             .then(res=> { return(res.json())})
     }
 
+    getHistoryForDevice = (dev, prop, page) => {
+        
+        var url="/list/influx/history/"+dev+"/"+prop
+        if (page) {
+            url=url+"/"+page
+        }
+
+        return fetch(url)
+            .then(res=> { return(res.json())})
+    }
+
+
     changeTimesFromDevices = devs => {
 
         var devstate={}
@@ -423,6 +435,7 @@ export class DataProvider extends PureComponent {
                     propertiesFromDevices: this.propertiesFromDevices,
                     getChangeTimesForDevices: this.getChangeTimesForDevices,
                     changeTimesFromDevices: this.changeTimesFromDevices,
+                    getHistoryForDevice: this.getHistoryForDevice,
                     deviceByEndpointId: this.deviceByEndpointId,
                     fullLayout: this.state.fullLayout,
                     layout: this.state.layout,

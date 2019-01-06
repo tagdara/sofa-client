@@ -15,7 +15,6 @@ import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 
 import ReceiverDialog from './receiverDialog';
 import SofaSlider from '../sofaSlider'
-import SofaCard from '../sofaCard'
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 import ToggleChip from '../ToggleChip'

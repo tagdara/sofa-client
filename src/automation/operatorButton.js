@@ -1,12 +1,12 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 
-const styles = theme => ({
+const useStyles = makeStyles({
         
     button: {
         maxWidth: 36,
@@ -24,55 +24,44 @@ const operators = [
     '=<',
 ];
 
-class OperatorButton extends React.Component {
-    
-    constructor(props) {
-        super(props);
+export default function OperatorButton(props) {
 
-        this.state = {
-            value: "=",
-            anchor: null,
-        }
-    }
-    handleClick = event => {
-        this.setState({  anchor: event.currentTarget });
+    const classes = useStyles();
+    const [value, setValue] = useState("=")
+    const [anchor, setAnchor] = useState(null)
+
+
+    function handleClick(event) {
+        setAnchor(event.currentTarget);
     };
     
-    handleClose = event => {
-        this.setState({ anchor:null });
+    function handleClose(event) {
+        setAnchor(null)
     };
     
-    handleMenuSelect = (event, item) => {
-        this.setState({ value: item, anchor:null });
-        this.props.setOperator(operators[item])
+    function handleMenuSelect(event, item) {
+        setValue(item)
+        setAnchor(null)
+        props.setOperator(operators[item])
     };
 
-    
-    render() {
-        
-        const { classes } = this.props;
-        
-        return (
-            <React.Fragment>
-            <Button id={"op"+this.props.index} onClick={this.handleClick} className={classes.button}>
-                {this.props.value}
+    return (
+        <React.Fragment>
+            <Button id={"op"+props.index} onClick={handleClick} className={classes.button}>
+                {props.value ? props.value : "="}
             </Button>
-
-            <Menu id="lock-menu" anchorEl={this.state.anchor} open={Boolean(this.state.anchor)} onClose={this.handleClose}>
+    
+            <Menu id="lock-menu" anchorEl={anchor} open={Boolean(anchor)} onClose={handleClose}>
                 {operators.map((option, index) => (
                     <MenuItem
                         key={option}
-                        selected={index === operators.indexOf(this.props.value)}
-                        onClick={event => this.handleMenuSelect(event, index)}
+                        selected={index === operators.indexOf(props.value)}
+                        onClick={event => handleMenuSelect(event, index)}
                     >
                         {option}
                     </MenuItem>
                 ))}
             </Menu>
-            </React.Fragment>
-        )
-    }
+        </React.Fragment>
+    )
 }
-
-
-export default withStyles(styles)(OperatorButton);

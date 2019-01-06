@@ -14,7 +14,6 @@ import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
 import TvRemote from './TvRemote';
 import TvDialog from './tvDialog';
-import SofaCard from '../sofaCard';
 import ToggleAvatar from '../ToggleAvatar'
 import GridItem from '../GridItem'
 

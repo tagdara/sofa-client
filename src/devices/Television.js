@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import Avatar from '@material-ui/core/Avatar';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -14,13 +13,9 @@ import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 
 import SofaSlider from '../sofaSlider'
-import SofaCard from '../sofaCard'
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 import ToggleChip from '../ToggleChip'
-
-import Typography from '@material-ui/core/Typography';
-
 
 const useStyles = makeStyles({
     list: {

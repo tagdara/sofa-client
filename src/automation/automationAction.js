@@ -51,7 +51,11 @@ const useStyles = makeStyles({
         width: 40,
         overflowX: "hidden",
     },
-
+    deviceName: {
+        flexGrow:1,
+        flexBasis:0,
+        padding: 0,
+    },
     dialogActions: {
         paddingBottom: "env(safe-area-inset-bottom)",
     },
@@ -66,7 +70,13 @@ const useStyles = makeStyles({
         maxWidth: 40,
         minWidth: 40,
         minHeight: 42,
-    }
+    },
+    listItem: {
+        padding: "12 16",
+    },
+    bottomListItem: {
+        padding: "4 16 12 40",
+    },
 });
 
 
@@ -156,9 +166,9 @@ export default function AutomationAction(props) {
 
     return (
         <GridItem wide={props.wide} nopad={true}>
-        <ListItem>
+        <ListItem className={classes.listItem} >
             <ListItemIcon onClick={() => props.run(name,index)}><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-            <ListItemText primary={props.name} secondary={props.item.controller.replace('Controller','')+" / "+props.item.command} />
+            <ListItemText className={classes.deviceName} primary={props.name} secondary={props.item.controller.replace('Controller','')+" / "+props.item.command} />
             { props.remove ?
                 <ListItemSecondaryAction>
                     <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
@@ -172,8 +182,7 @@ export default function AutomationAction(props) {
                 </ListItemSecondaryAction>
             }
         </ListItem>
-        <ListItem>
-            <Button className={classes.spacer}>{" "}</Button>
+        <ListItem className={classes.bottomListItem} >
             { fields.map((action,index) =>
                 <TextField
                     key={"aat"+index}

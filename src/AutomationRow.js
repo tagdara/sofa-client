@@ -103,20 +103,41 @@ function AutomationRow(props) {
             props.save(props.itemtype, newitems)
         }
     }
+    
+    function shortTimeFormat(thisdate) {
+        if (thisdate) {
+            var longdate=thisdate
+        } else {
+            var longdate=new Date().toISOString().replace('Z','')
+        }
+
+        if (longdate.split(':').length>2) {
+            longdate=longdate.split(':')[0]+":"+longdate.split(':')[1]
+        }
+
+        return longdate
+    }
 
     function addItem() {
         setRemove(false); 
         setReorder(false) 
         props.setReturn('AutomationLayout', {'name': props.automationName, 'type':props.itemtype })
         props.setBack('AutomationLayout', {'name': props.automationName } )
-        props.setLayoutCard(props.selector)
+        props.setLayoutCard(props.selector, {'name': props.automationName} )
+    }
+    
+    function addInPlace() {
+        var newItem={'type':'interval', 'interval':1, 'unit':'days', 'start':shortTimeFormat()}
+        setRemove(false); 
+        setReorder(false)
+        props.save(props.itemtype,[...props.items, newItem])
     }
 
 
     return (    
         <GridPage wide={true}>
             <GridBreak label={props.name} size="h6" >
-                <IconButton onClick={ () => addItem() }>
+                <IconButton onClick={ () => addInPlace() }>
                     <AddIcon fontSize="small" />
                 </IconButton>
                 { Object.keys(props.items).length>0 &&

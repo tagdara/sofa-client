@@ -17,7 +17,6 @@ function ThermostatHero(props) {
     
     const classes = useStyles();
     const device = props.deviceByName(props.Primary)
-    console.log(props.Primary)
         
     return (
         <Thermostat onClick={ () => props.setLayoutCard('ThermostatLayout') } key={ device.endpointId } name={ device.friendlyName } device={ device } 

@@ -9,6 +9,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import Drawer from '@material-ui/core/Drawer';
+import Toolbar from '@material-ui/core/Toolbar';
 
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
@@ -30,9 +31,15 @@ const useStyles = makeStyles({
     list: {
         minWidth: 320,
     },
-    drawerHeader: {
+    top: {
         paddingTop: "env(safe-area-inset-top)",
+        display: 'flex',
+        alignItems: 'center',
+        padding: '0 8px',
+        justifyContent: 'flex-end',
     },
+    
+    
 
 });    
 
@@ -58,43 +65,19 @@ function Sidebar(props) {
     
     return (
 
-        <Drawer variant="persistent" open={props.open} classes={{ paper: classes.drawerPaper,}} >
-            <div className={classes.drawerHeader}>
-                <IconButton onClick={props.close}>
-                    <ChevronLeftIcon />
-                </IconButton>
-            </div>
-            <Divider />
-            <List>
-                <ListItem button onClick={() => handleDialog('Automation')}>
+        <Drawer open={props.open} onClose={props.close} classes={{ paper: classes.drawerPaper,}} >
+            <Toolbar className={classes.top} >
+            <IconButton onClick={props.close}>
+                <ChevronLeftIcon />
+            </IconButton>
+            </Toolbar>
+            <List role="button" onClick={props.close} onKeyDown={props.close}>
+                <ListItem button onClick={() => selectLayoutCard('AutomationsLayout')}>
                     <ListItemIcon>
                         <TuneIcon />
                     </ListItemIcon>
                     <ListItemText primary={'Automation'} />
                 </ListItem>
-                <ListItem button onClick={() => selectLayoutCard('AutomationsLayout')}>
-                    <ListItemIcon>
-                        <TuneIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={'* Automation'} />
-                </ListItem>
-
-                <ListItem button onClick={() => handleDialog('Schedule')}>
-                    <ListItemIcon>
-                        <HistoryIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={'Scheduler'} />
-                </ListItem>
-                <ListItem className={classes.listItem} />
-                <Divider />
-                <ListItem button onClick={()=> otherPort('8443','_editor')}>
-                    <ListItemIcon>
-                        <EditIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={'Editor'} />
-                </ListItem>
-                <ListItem className={classes.listItem} />
-                <Divider />
                 <ListItem button onClick={() => props.setColorScheme(props.colorScheme=='dark' ? 'light' : 'dark')}>
                     <ListItemIcon>
                         <CompareIcon />
@@ -107,6 +90,14 @@ function Sidebar(props) {
                     </ListItemIcon>
                     <ListItemText primary={'User Options'} />
                 </ListItem>
+                <ListItem className={classes.listItem} />
+                <ListItem button onClick={()=> otherPort('8443','_editor')}>
+                    <ListItemIcon>
+                        <EditIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Editor'} />
+                </ListItem>
+
             </List>
         </Drawer>
     );

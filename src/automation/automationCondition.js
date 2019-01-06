@@ -24,37 +24,37 @@ const useStyles = makeStyles({
         
     input: {
         marginTop:0,
-        marginLeft: 20,
+        marginLeft: 8,
         flexGrow:1,
         flexBasis:0,
     },
     inputstring: {
         marginTop:0,
-        marginLeft: 20,
+        marginLeft: 8,
         flexGrow:1,
         flexBasis:0,
     },
     inputtime: {
         marginTop:0,
-        marginLeft: 20,
+        marginLeft: 8,
         flexGrow:1,
         flexBasis:0,
     },
     inputdecimal: {
         marginTop:0,
-        marginLeft: 20,
+        marginLeft: 8,
         width: 40,
         overflowX: "hidden",
     },
     inputpercentage: {
         marginTop:0,
-        marginLeft: 20,
+        marginLeft: 8,
         width: 40,
         overflowX: "hidden",
     },
     inputinteger: {
         marginTop:0,
-        marginLeft: 20,
+        marginLeft: 8,
         width: 40,
         overflowX: "hidden",
     },
@@ -77,8 +77,12 @@ const useStyles = makeStyles({
         width: "100%",
     },
     listItem: {
-        padding: "8 16",
+        padding: "12 16",
     },
+    reducedButtonPad: {
+        padding: "4 16 12 10",
+        alignItems: "flex-end",
+    }
 });
 
 
@@ -175,7 +179,7 @@ export default function AutomationCondition(props) {
                 </ListItemSecondaryAction>
             }
         </ListItem>
-        <ListItem>
+        <ListItem className={classes.reducedButtonPad} >
             <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
             { fields.map((conval,i) =>
                 <TextField

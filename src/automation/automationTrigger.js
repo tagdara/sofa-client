@@ -24,7 +24,7 @@ const useStyles = makeStyles({
       
     input: {
         marginTop:0,
-        marginLeft: 16,
+        marginLeft: 8,
         flexGrow:1,
         flexBasis:0,
     },
@@ -38,8 +38,12 @@ const useStyles = makeStyles({
         width: "100%",
     },
     listItem: {
-        padding: "8 16",
+        padding: "12 16",
     },
+    reducedButtonPad: {
+        padding: "4 16 12 10",
+        alignItems: "flex-end",
+    }
 
 });
 
@@ -75,7 +79,7 @@ export default function AutomationTrigger(props) {
                     </ListItemSecondaryAction>
                 }
             </ListItem>
-            <ListItem>
+            <ListItem className={classes.reducedButtonPad} >
                 <OperatorButton index={props.index} value={props.item.operator} setOperator={ editOperatorValue }/>
                 <TextField
                         className={classes.input}

@@ -7,7 +7,7 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     
     root: {
-        alignItems: "baseline",
+        alignItems: "flex-end",
         padding: "16px 16px 0px 16px !important",
         height: 64,
         display: "flex",

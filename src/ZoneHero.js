@@ -4,10 +4,6 @@ import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
 
-import SofaCard from './sofaCard';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';

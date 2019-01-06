@@ -4,12 +4,14 @@ import { withData } from './DataContext/withData';
 
 import AutomationColumn from "./AutomationColumn"
 import AutomationRow from "./AutomationRow"
-
+import ToggleButton from './ToggleButton'
 import GridBreak from './GridBreak';
+import FavoriteIcon from '@material-ui/icons/Favorite';
 
 function AutomationLayout(props) {
 
     const [automation, setAutomation] = useState({})
+    const [favorite, setFavorite] = useState(false)
     const [actions, setActions] = useState([])
     const [conditions, setConditions] = useState([])
     const [triggers, setTriggers] = useState([])
@@ -29,8 +31,6 @@ function AutomationLayout(props) {
     }
 
     function getAutomation() {
-        props.setBack('AutomationsLayout', {} )
-        console.log('Retrieving automation',props.name)
   	    fetch('/list/logic/automation/'+props.name)
  		    .then(result=>result.json())
             .then(result=>loadAutomation(result));
@@ -39,6 +39,13 @@ function AutomationLayout(props) {
     function loadAutomation(automation) {
         var newactions=[]
         var changes=false
+        
+        if (automation.hasOwnProperty('favorite')) {
+            setFavorite(automation['favorite'])
+        } else {
+            setFavorite(false)
+        }
+        
         if (automation.hasOwnProperty('actions')) {
             newactions=automation['actions']
         } 
@@ -94,6 +101,11 @@ function AutomationLayout(props) {
     
     function saveType(itemtype, items) {
 
+        if (itemtype=='favorite') {
+            var newfavorite=items
+        } else {
+            var newfavorite=favorite
+        }
         if (itemtype=='action') {
             var newactions=items
         } else {
@@ -118,10 +130,10 @@ function AutomationLayout(props) {
             var newschedules=schedules
         }
         
-        saveAutomation( newactions, newconditions, newtriggers, newschedules)
+        saveAutomation( newactions, newconditions, newtriggers, newschedules, newfavorite)
     }
     
-    function saveAutomation(newactions, newconditions, newtriggers, newschedules) {
+    function saveAutomation(newactions, newconditions, newtriggers, newschedules, newfavorite) {
         
         fetch('/save/logic/automation/'+props.name, {
                 method: 'post',
@@ -129,14 +141,19 @@ function AutomationLayout(props) {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"conditions": newconditions, "actions": newactions, "triggers": newtriggers})
+                body: JSON.stringify({"conditions": newconditions, "actions": newactions, "triggers": newtriggers, "schedules": newschedules, "favorite": newfavorite})
             })
                 .then(result =>setActions(newactions))
                 .then(result =>setConditions(newconditions))
                 .then(result =>setTriggers(newtriggers))
-                .then(result =>setTriggers(newschedules))
+                .then(result =>setSchedules(newschedules))
+                .then(result =>setFavorite(newfavorite))
 
-    } 
+    }
+    
+    function saveFavorite(newfavorite) {
+        saveType('favorite',newfavorite)
+    }
 
     function saveStub(a,c,t) {
         console.log('Blocked Save',a,c,t)
@@ -144,8 +161,12 @@ function AutomationLayout(props) {
 
     return (    
         <React.Fragment>
-            <GridBreak label={props.name} />
-            <AutomationRow items={schedules} save={saveType} automationName={props.name} name={"Schedules"} selector={'ScheduleLayout'} itemModule={'automationSchedule'} itemtype={"schedule"} />
+            <GridBreak label={props.name} >
+                <ToggleButton buttonState={favorite? "on": "off"} onClick={ () => saveFavorite(!favorite) }>
+                    <FavoriteIcon fontSize="small" />
+                </ToggleButton>
+            </GridBreak>
+            <AutomationRow items={schedules} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
             <AutomationColumn items={triggers} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'automationTrigger'} itemtype={"trigger"} />
             <AutomationColumn items={conditions} save={saveType} automationName={props.name} name={"Conditions"} selector={'DevicePropertyLayout'} itemModule={'automationCondition'} itemtype={"condition"} />
             <AutomationColumn items={actions} save={saveType} automationName={props.name} name={"Actions"} selector={'DeviceDirectiveLayout'} itemModule={'automationAction'} itemtype={"action"} />

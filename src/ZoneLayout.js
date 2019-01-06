@@ -64,17 +64,22 @@ function ZoneLayout(props) {
         return typezones
             
     }
+    
+    function historyZone(name, endpointId) {
+        props.setBack('ZoneLayout', {} )
+        props.setLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"position"})
+    }
 
     return (    
         <React.Fragment>
             <GridBreak label={"Security Zones"} />
 
             { filterByType('Alarm').map((device) =>
-                <Zone key={ device.endpointId } name={ device.friendlyName } filter={ filter} device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.friendlyName] } />
+                <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } filter={ filter} device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.friendlyName] } />
             )}
             <GridBreak label={"Automation Zones"} />
             { filterByType('Automation').map((device) =>
-                <Zone key={ device.endpointId } name={ device.friendlyName } filter={ filter} device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.friendlyName] } />
+                <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } filter={ filter} device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.friendlyName] } />
             )}
         </React.Fragment>
     )

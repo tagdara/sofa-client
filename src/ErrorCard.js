@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from 'prop-types';
 
-import SofaCard from './sofaCard';
+import GridItem from './GridItem';
 import ToggleAvatar from './ToggleAvatar';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -11,12 +11,12 @@ import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
 export default function ErrorCard(props) {
 
     return (
-        <SofaCard>
+        <GridItem>
             <ListItem>
                 <ToggleAvatar avatarState={"open"}><SentimentDissatisfiedIcon /></ToggleAvatar>
                 <ListItemText primary={props.name} secondary={props.message} />
             </ListItem>
-        </SofaCard>
+        </GridItem>
     );
 
 }

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles, withTheme } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -25,9 +24,5 @@ class CoverDimmer extends React.Component {
         );
     }
 }
-
-CoverDimmer.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withTheme()(withStyles(styles)(CoverDimmer));

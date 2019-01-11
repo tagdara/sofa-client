@@ -39,7 +39,7 @@ export default function HistoryLine(props) {
                 :
                     <Avatar className={classes.open} ><ClearIcon /></Avatar>
                 }
-                <ListItemText primary={<Moment format="ddd MMM D h:mm:ssa">{props.time}</Moment>} secondary={props.val} />
+                <ListItemText primary={<Moment format={props.justTime ? "h:mm:ssa" : "ddd MMM D h:mm:ssa"}>{props.time}</Moment>} secondary={props.val} />
             </ListItem>
         </GridItem>
     );

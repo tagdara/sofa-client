@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from "react-dom";
+import "./bootstrapStyles"
 import SofaApp from './SofaApp';
 import DataProvider from './DataContext/DataProvider';
 import ThemeWrapper from './theme/themeWrapper';

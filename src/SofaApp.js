@@ -5,6 +5,11 @@ import BottomNav from './bottomnav';
 import SofaAppBar from "./sofaAppBar";
 import SofaAppContent from "./SofaAppContent";
 import ErrorBoundary from './ErrorBoundary'
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+})
 
 class SofaApp extends Component {
 
@@ -47,9 +52,11 @@ class SofaApp extends Component {
                     <SofaAppContent />
                 </ErrorBoundary>    
                 { isMobile && <BottomNav toggleSidebar={this.handleDrawerOpen} closeSidebar={this.handleDrawerClose}/> }
+                <CssBaseline />
+
             </React.Fragment>
         );
     }
 }
 
-export default SofaApp;
+export default withStyles(styles)(SofaApp);

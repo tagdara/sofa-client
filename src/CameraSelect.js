@@ -5,16 +5,24 @@ import SecurityCamera from './camera/securitycamera';
 
 function CameraSelect(props) {
 
-    const [cameras, setCameras] = useState([]);
-    const [currentCamera, setCurrentCamera] = useState(props.default);
+    const [cameras, setCameras] = useState({});
+    const [cameraData, setCameraData] = useState({});
+    const [currentCamera, setCurrentCamera] = useState(null);
+    
+    useEffect(() => {
+  	    fetch('/data/cameras')
+ 		    .then(result=>result.json())
+ 		    .then(data=>initialSetup(data))
+    },[])
 
-    function selectCurrentCamera(data) {
-        setCameras(data)
-        if (data.length>0) {
-            if (props.default && data.includes(props.default)) {
+    function initialSetup(data) {
+        setCameras(Object.keys(data))
+        setCameraData(data)
+        if (Object.keys(data).length>0) {
+            if (props.default && Object.keys(data).includes(props.default)) {
                 setCurrentCamera(props.default)
             } else {
-                setCurrentCamera(data[0])
+                setCurrentCamera(Object.keys(data)[0])
             }
         } else {
             setCurrentCamera(null)
@@ -32,27 +40,13 @@ function CameraSelect(props) {
         var nextcam=cameras.indexOf(currentCamera)-1
         if (nextcam>cameras.length-1) { nextcam=0; }
         if (nextcam<0) {nextcam=cameras.length-1; }
-        setCurrentCamera(cameras[nextcam])
+        setCurrentCamera(camera[nextcam])
     }
-    
-    function handleGridOpen() {
-        setShowGrid(true);
-    };  
 
-    function handleGridClose() {
-        setShowGrid(false);
-    };  
-    
-    useEffect(() => {
-  	    fetch('/data/cameras')
- 		    .then(result=>result.json())
- 		    .then(data=>selectCurrentCamera(data))
-    },[])
-    
     return (
         <React.Fragment>
             { currentCamera!=null ?
-            <SecurityCamera wide={props.wide} setLayoutCard={props.setLayoutCard} cameraSource={"dlink"} selectButtons={true} openGrid={ handleGridOpen } key={ currentCamera } 
+            <SecurityCamera wide={props.wide} setLayoutCard={props.setLayoutCard} cameraSource={cameraData[currentCamera].source} selectButtons={true} key={ currentCamera } 
                             name={ currentCamera } nextCamera={nextCamera} prevCamera={prevCamera} />
             :null }
         </React.Fragment> 

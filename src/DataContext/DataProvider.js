@@ -3,6 +3,9 @@ import React, { PureComponent, Component, createElement  } from 'react';
 import createSocket from "sockette-component";
 const Sockette = createSocket({ Component, createElement });
 
+import lightTheme from '../theme/sofaThemeLight';
+import darkTheme from '../theme/sofaThemeDark';
+
 export class DataProvider extends PureComponent {
   
     constructor(props) {
@@ -30,7 +33,7 @@ export class DataProvider extends PureComponent {
             socket: null,
             websocketStatus: 'init',
             colorScheme: '',
-            theme: {},
+            sofaTheme: {},
             region: "Main",
             player: "",
         };
@@ -346,8 +349,39 @@ export class DataProvider extends PureComponent {
         
     }
     
-    setTheme = theme => {
-        this.setState({theme: theme})
+    getTheme = () => {
+        if (this.state.sofaTheme.hasOwnProperty('palette')) { 
+            return this.state.sofaTheme 
+        }
+        var d = new Date();
+        var n = d.getHours();
+        if (n>17 || n<8) {
+            return darkTheme
+        } else {
+            return lightTheme
+        }
+         
+    }
+    
+    setTheme = themeName => {
+        
+        if (themeName=='dark') {
+            this.setState({colorScheme: 'dark', sofaTheme: darkTheme})
+            return darkTheme
+        } else if (themeName=='light') {
+            this.setState({colorScheme: 'light', sofaTheme: lightTheme})
+            return lightTheme
+        }  
+        
+        var d = new Date();
+        var n = d.getHours();
+        if (n>17 || n<8) {
+            this.setState({colorScheme: 'dark', sofaTheme: darkTheme})
+            return darkTheme
+        } else {
+            this.setState({colorScheme: 'light', sofaTheme: lightTheme})
+            return lightTheme
+        }
     }
 
     setRegion = region => {
@@ -360,6 +394,7 @@ export class DataProvider extends PureComponent {
 
     setColorScheme = scheme => {
         this.setState({colorScheme: scheme})
+        this.setTheme(scheme)
     }
 
     setLayout = (layoutName, layoutProps) => {
@@ -391,6 +426,8 @@ export class DataProvider extends PureComponent {
     
     componentDidMount() {
         //window.addEventListener('resize', this.handleWindowSizeChange);
+        console.log('setting theme')
+        this.setTheme()
         console.log('Fetching device info')
         fetch('/deviceList')
  		    .then(result=>result.json())
@@ -421,8 +458,9 @@ export class DataProvider extends PureComponent {
                 value={{
                     colorScheme: this.state.colorScheme,
                     setColorScheme: this.setColorScheme,
-                    theme: this.state.theme,
+                    sofaTheme: this.state.sofaTheme,
                     setTheme: this.setTheme,
+                    getTheme: this.getTheme,
                     devices: this.state.devices,
                     deviceState: this.state.deviceState,
                     directives: this.state.directives,

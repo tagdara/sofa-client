@@ -107,9 +107,9 @@ function SofaAppContent(props) {
 
     return (
         <Grid container spacing={8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
-            { props.layout.type=='narrow' ? 
+            { props.layout.type=='pages' ? 
                 <React.Fragment>
-                    { Object.keys(props.layout.pages).map( page => {
+                    { props.layout.order.map( page => {
                         return (page==props.layoutPage || !isMobile ) ?
                         <SofaPage key={page} name={page} page={props.layout.pages[page]} />
                         : null

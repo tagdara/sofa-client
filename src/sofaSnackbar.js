@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -51,10 +50,6 @@ class SofaSnackbar extends React.Component {
 SofaSnackbar.defaultProps = {
     duration: 10000,
 }
-
-SofaSnackbar.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(SofaSnackbar);
 

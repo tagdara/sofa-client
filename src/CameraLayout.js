@@ -6,18 +6,20 @@ import SecurityCamera from './camera/securitycamera';
 
 function CameraLayout(props) {
 
-    const [cameras, setCameraList] = useState([]);
+    const [cameras, setCameraList] = useState({});
     
     useEffect(() => {
         fetch('/data/cameras')
             .then(result=>result.json())
             .then(data=>setCameraList(data))
     }, []);
+    
+    console.log(cameras)
 
     return (
         <React.Fragment>
-            { cameras.map(name => 
-                <SecurityCamera key={name} name={ name } cameraSource={"dlink"} historyButton={true} setLayoutCard={props.setLayoutCard} />
+            { Object.keys(cameras).map(name => 
+                <SecurityCamera key={name} name={ name } cameraSource={cameras[name].source} historyButton={true} setLayoutCard={props.setLayoutCard} />
             )}
         </React.Fragment>
     )

@@ -1,6 +1,4 @@
 import React from "react";
-import PropTypes from 'prop-types';
-
 import GridItem from './GridItem';
 import ToggleAvatar from './ToggleAvatar';
 

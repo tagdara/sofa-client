@@ -104,7 +104,7 @@ export default function SecurityCamera(props) {
         setCamera(cameraBasePath+"/"+props.name)
         setShowDialog(true)
     }
-
+    
     return (
         <GridItem wide={props.wide} nopad={true} >
             

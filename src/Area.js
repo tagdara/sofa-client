@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 
 import ToggleAvatar from './ToggleAvatar';
@@ -110,7 +109,9 @@ export default function Area(props) {
                     <RoomIcon className={classes.iconSize} />
                 </ToggleAvatar>
                 <ListItemText onClick={() => props.setRegion(props.name) } >{props.name}</ListItemText>
+                { props.mode=="add" || props.mode=="remove" ? null :
                 <DotLevel level={0} select={runShortcut} />
+                }
                 <IconButton>
                     { props.mode!="add" ? null :
                     <AddIcon className={classes.iconSize} onClick={() => props.addArea(props.name) }/>

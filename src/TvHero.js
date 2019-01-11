@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from 'prop-types';
 import { withData } from './DataContext/withData';
 
 import Television from './devices/Television';

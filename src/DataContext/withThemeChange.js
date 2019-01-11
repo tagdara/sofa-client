@@ -7,10 +7,9 @@ export function withThemeChange(Component) {
             <DataContext.Consumer>
                 { context => <Component {...props} {...context} context={context} 
                                 setColorScheme={context.setColorScheme} colorScheme={context.colorScheme} 
-                                setTheme={context.setTheme} theme={context.theme}
+                                setTheme={context.setTheme} sofaTheme={context.sofaTheme} getTheme={context.getTheme}
                                 setLayout={context.setLayout} layout={context.layout} layoutName={context.layoutName} setLayoutCard={context.setLayoutCard}
                                 fullLayout={context.fullLayout} /> }
-
             </DataContext.Consumer>
         );
     };

@@ -117,7 +117,7 @@ function SofaPage(props) {
         <Grid container item spacing={8} key={props.name} xs={ isMobile ? 12 : 4 } 
             className={ classes.gridColumn}>
             { props.page.map( (item, i) => 
-				<ErrorBoundary key={props.name+i} >
+				<ErrorBoundary wide={true} key={props.name+i} >
 					{ renderLayoutModule(item, props.name, i) }
 				</ErrorBoundary>
             )}

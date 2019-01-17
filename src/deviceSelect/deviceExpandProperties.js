@@ -30,7 +30,7 @@ class DeviceExpandProperties extends React.Component {
                         proplist.push(device.capabilities[i].properties.supported[j].name)
                     }
                 }
-            }
+            } 
         }
         //console.log('proplist',device.friendlyName,proplist)
         return proplist
@@ -49,7 +49,7 @@ class DeviceExpandProperties extends React.Component {
             <List className={classes.detailList}>
                 { Object.keys(controllers).sort().map(controller => {
                     return this.getProperties(device,controller).map(prop => 
-                        <ListItem key={controller+prop} onClick={() => this.props.select(device.friendlyName, device.endpointId, controller, prop)}>
+                        <ListItem key={controller+prop} onClick={() => this.props.select('property',device.friendlyName, device.endpointId, controller, prop)}>
                             <ListItemIcon><TuneIcon /></ListItemIcon>
                             <ListItemText primary={prop} secondary={controller} />
                         </ListItem>

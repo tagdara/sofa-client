@@ -25,6 +25,7 @@ import GridItem from './GridItem';
 import GridPage from './GridPage';
 import GridBreak from './GridBreak';
 import PlaceholderCard from './PlaceholderCard';
+import ErrorBoundary from './ErrorBoundary'
 
 const useStyles = makeStyles({
     
@@ -57,12 +58,25 @@ function AutomationColumn(props) {
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
     const [module, setModule] = useState(null)
-
-    const AutomationProperty = Loadable({ loader: () => import('./automation/'+props.itemModule), loading: cardLoading,});
-
+    const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
+    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationAction}
+    const AutomationProperty = modmap[props.name]
+    
     function getControllerProperties(item) {
-        if (item.hasOwnProperty('propertyName')) {
-            return props.controllerProperties[item.controller][item.propertyName]
+        try {
+            if (item.hasOwnProperty('propertyName')) {
+                if (props.controllerProperties[item.controller].hasOwnProperty(item.propertyName)) {
+                    item.type="property"
+                    return props.controllerProperties[item.controller][item.propertyName]
+                } else if (eventSources.hasOwnProperty(item.propertyName)) {
+                    item.type="event"
+                    return eventSources[item.propertyName]
+                }
+            }
+        }
+        catch(err) {
+            console.log('Error getting properties for',item)
+            return {'error': 'Invalid property: '+item.controller+"/"+item.propertyName}
         }
         return {}
     }    
@@ -127,9 +141,11 @@ function AutomationColumn(props) {
     return (    
         <GridPage>
             <GridBreak label={props.name} size="h6" >
-                <IconButton onClick={ () => addItem() } className={classes.button }>
-                    <AddIcon fontSize="small" />
-                </IconButton>
+                { props.saved &&
+                    <IconButton onClick={ () => addItem() } className={classes.button }>
+                        <AddIcon fontSize="small" />
+                    </IconButton>
+                }
                 { Object.keys(props.items).length>0 &&
                 <IconButton onClick={ () => { setRemove(!remove); setReorder(false); }} className={classes.button }>
                     <RemoveIcon fontSize="small" />
@@ -143,11 +159,13 @@ function AutomationColumn(props) {
             </GridBreak>
             { Object.keys(props.items).length>0 ?
                 <React.Fragment>
-                    { props.items.map((item,index) => 
-                        <AutomationProperty key={props.itemtype+index} moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
+                    { props.items.map((item,index) =>
+                        <ErrorBoundary key={props.itemtype+index} >
+                        <AutomationProperty moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
                                 index={index} item={item} device={ props.deviceByEndpointId(item.endpointId) } name={props.deviceByEndpointId(item.endpointId).friendlyName} 
                                 directives={props.directives} controllerProperties={ getControllerProperties(item)} wide={true} 
                                 />
+                        </ErrorBoundary>
                     )}
                 </React.Fragment>
                 :

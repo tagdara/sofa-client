@@ -145,8 +145,8 @@ class ThermostatSettable extends React.Component {
             <GridItem>
                 <List className={classes.list} >
                 <ListItem className={classes.listItem}>
-                    <Avatar className={ this.tempColor(deviceProperties.temperature) }>{ deviceProperties.temperature }</Avatar>
-                    <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint} unit={"°"} name={name} padLeft={true}
+                    <Avatar className={ this.tempColor(deviceProperties.temperature.value) }>{ deviceProperties.temperature.value }</Avatar>
+                    <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint.value} unit={"°"} name={name} padLeft={true}
                                 preChange={this.handlePreSetpointChange} change={this.handleSetpointChange} 
                                 dis={ deviceProperties.thermostatMode!='HEAT' } />
                 </ListItem>

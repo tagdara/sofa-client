@@ -7,8 +7,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Switch from '@material-ui/core/Switch';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import TuneIcon from '@material-ui/icons/Tune';
+
 import CloseIcon from '@material-ui/icons/Close';
 import GridItem from '../GridItem'
+import ToggleAvatar from '../ToggleAvatar'
 
 function ScheduleItem(props) {
 
@@ -49,13 +52,27 @@ function ScheduleItem(props) {
         } 
         return ""
     }
+    
+    function textSched(sched) {
+        if (sched.type=='interval') {
+            return 'Every '+sched.interval+" "+sched.unit+" at "+timeOnly(sched.start)
+        } else {
+            return 'On '+sched.days.join(' ')+" at "+timeOnly(sched.start)
+        }
+    }
 
     return (
         <GridItem>
             <ListItem>
-                <Avatar onClick={ () => props.select(props.name) }><ScheduleIcon /></Avatar>
-                <ListItemText onClick={ () => props.select(props.name) } primary={props.name} secondary={"Next: "+dateOnly(props.next)+" "+timeOnly(props.next)} />
+                <ToggleAvatar avatarState={'on'} onClick={ () => props.select(props.name) }><TuneIcon /></ToggleAvatar>
+                <ListItemText onClick={ () => props.select(props.name) } primary={props.name} secondary={"Last: "+dateOnly(props.last)+" "+timeOnly(props.last)} />
             </ListItem>
+            { props.schedule.map( sched =>
+            <ListItem>
+                <Avatar onClick={ () => props.select(props.name) }><ScheduleIcon /></Avatar>
+                <ListItemText onClick={ () => props.select(props.name) } primary={textSched(sched)} secondary={"Next: "+dateOnly(props.next)+" "+timeOnly(props.next)} />
+            </ListItem>
+            )}
         </GridItem>
     )
 }

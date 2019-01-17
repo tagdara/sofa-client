@@ -50,7 +50,7 @@ function SchedulesLayout(props) {
         <React.Fragment>
             <GridBreak label={"Scheduled Activities"} />
             { schedules.map(schedule => 
-                <ScheduleItem select={selectSchedule} edit={false} name={schedule.name} next={schedule.nextrun} run={runSchedule} key={ schedule.name+'-reg' } />
+                <ScheduleItem select={selectSchedule} edit={false} name={schedule.name} schedule={schedule.schedule} next={schedule.nextrun} last={schedule.lastrun} run={runSchedule} key={ schedule.name+'-reg' } />
             )}
         </React.Fragment>
     )

@@ -12,14 +12,14 @@ export default function Thermostat(props) {
         if (temp<70) { return "cool" }
         return "mid";
     }
-
+    
     return (
-
+        props.deviceProperties.hasOwnProperty('temperature') &&
         <GridItem wide={props.wide} >
             <ListItem onClick={props.onClick}>
-                <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature)}>{props.deviceProperties.temperature}</ToggleAvatar>
+                <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature.value)}>{props.deviceProperties.temperature.value}</ToggleAvatar>
                 { props.deviceProperties.hasOwnProperty('targetSetpoint') ?
-                    <ListItemText primary={props.name} secondary={props.deviceProperties.thermostatMode=='OFF' ? 'Off' : 'Heat set to '+props.deviceProperties.targetSetpoint}/>
+                    <ListItemText primary={props.name} secondary={props.deviceProperties.thermostatMode=='OFF' ? 'Off' : 'Heat set to '+props.deviceProperties.targetSetpoint.value}/>
                     :
                     <ListItemText primary={props.name} />
                 }

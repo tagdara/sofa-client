@@ -117,7 +117,7 @@ function SofaAppContent(props) {
                 </React.Fragment>
             : null }
             { props.layout.type=='single' ?
-				<ErrorBoundary>
+				<ErrorBoundary wide={props.wide}>
 				{ renderModule(props.layoutName, props.layoutProps) }
                 </ErrorBoundary>
 			: null }

@@ -9,7 +9,7 @@ import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
 export default function ErrorCard(props) {
 
     return (
-        <GridItem>
+        <GridItem wide={props.wide}>
             <ListItem>
                 <ToggleAvatar avatarState={"open"}><SentimentDissatisfiedIcon /></ToggleAvatar>
                 <ListItemText primary={props.name} secondary={props.message} />

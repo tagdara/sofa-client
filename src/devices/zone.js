@@ -35,7 +35,7 @@ export default function Zone(props) {
     return (
         <GridItem>
             <ListItem onClick={() => props.history(props.name, props.endpointId)}>
-                { props.deviceProperties.position=='closed' ?
+                { props.deviceProperties.detectionState=='NOT_DETECTED' ?
                     <Avatar className={classes.closed} ><DoneIcon /></Avatar>
                 :
                     <Avatar className={classes.open} ><ClearIcon /></Avatar>

@@ -47,7 +47,7 @@ export default function OperatorButton(props) {
 
     return (
         <React.Fragment>
-            <Button id={"op"+props.index} onClick={handleClick} className={classes.button}>
+            <Button id={"op"+props.index} onClick={handleClick} className={classes.button} disabled={props.disabled}>
                 {props.value ? props.value : "="}
             </Button>
     

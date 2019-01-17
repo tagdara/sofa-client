@@ -42,7 +42,7 @@ class DeviceExpandActions extends React.Component {
             <List className={classes.detailList}>
                 { Object.keys(controllers).sort().map((controller) => {
                     return Object.keys(controllers[controller]).sort().map((action) => (
-                        <ListItem key={controller+action} onClick={() => this.props.select(device.friendlyName, device.endpointId, controller, action)}>
+                        <ListItem key={controller+action} onClick={() => this.props.select('command', device.friendlyName, device.endpointId, controller, action)}>
                             <ListItemIcon><TuneIcon /></ListItemIcon>
                             <ListItemText primary={action} secondary={controller} />
                         </ListItem>

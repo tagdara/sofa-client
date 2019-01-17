@@ -136,8 +136,6 @@ export default function AutomationCondition(props) {
         var subfields=[]
         var edval={}
         for (var cp in props.controllerProperties) {
-            //console.log(av,avsub,props.actionValues[av][avsub])
-            //console.log(props.controllerProperties[cp])
             subfields.push({ 'name':cp, 'type': props.controllerProperties[cp] })
             edval[cp]=''
             if (props.item.hasOwnProperty('value') && props.item.value.hasOwnProperty(cp)) {
@@ -183,9 +181,9 @@ export default function AutomationCondition(props) {
             <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
             { fields.map((conval,i) =>
                 <TextField
-                    key={'actf'+i}
+                    key={'cdf'+i}
                     className={classes['input'+conval.type]}
-                    id={'conval'+i}
+                    id={'cdf'+i}
                     label={conval.name}
                     value={editVal[conval.name]}
                     onChange={(e) => editValues(conval.name, e.target.value)}

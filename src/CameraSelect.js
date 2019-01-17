@@ -40,7 +40,7 @@ function CameraSelect(props) {
         var nextcam=cameras.indexOf(currentCamera)-1
         if (nextcam>cameras.length-1) { nextcam=0; }
         if (nextcam<0) {nextcam=cameras.length-1; }
-        setCurrentCamera(camera[nextcam])
+        setCurrentCamera(cameras[nextcam])
     }
 
     return (

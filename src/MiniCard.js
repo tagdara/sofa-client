@@ -53,6 +53,7 @@ function MiniCard(props) {
     }   
  
     return (
+            props.virtualDevices.hasOwnProperty(props.name) &&
             <React.Fragment>
                 <StatusLock wide={ props.wide} name={ props.name } secondIcon={false} status={ getStatusProp(props.virtualDevices[props.name].status) }
                     commands={ props.virtualDevices[props.name].commands } handlePress={handlePress} />

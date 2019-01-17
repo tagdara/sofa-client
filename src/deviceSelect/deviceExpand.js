@@ -13,6 +13,8 @@ import Button from '@material-ui/core/Button';
 import DeviceItem from './deviceItem'
 import DeviceExpandActions from './deviceExpandActions'
 import DeviceExpandProperties from './deviceExpandProperties'
+import DeviceExpandEvents from './deviceExpandEvents'
+
 import GridItem from '../GridItem';
 
 const useStyles = makeStyles({
@@ -47,6 +49,8 @@ export default function DeviceExpand(props) {
     const classes = useStyles();
     const [propertyControllers, setPropertyControllers] = useState({});
     const [isPropertyController, setIsPropertyController] = useState(false);
+    const [isEventSource, setIsEventSource] = useState(false);
+    const eventSources={ 'DoorbellEventSource': [{"name": "DoorbellPress"}] }
     
     useEffect(() => {
         getPropertyControllers(props.device)
@@ -77,17 +81,31 @@ export default function DeviceExpand(props) {
     function getPropertyControllers(device) {
         var caplist={}
         var hasprops=false
+        
         for (var cap in device.capabilities) {
             if (device.capabilities[cap]['interface']=='Alexa') {
             } else {
                 var capi=device.capabilities[cap]['interface'].split(".")[1]
-                if (device.capabilities[cap].properties.hasOwnProperty('supported') && device.capabilities[cap].properties.supported.length>0) {
+                if (device.capabilities[cap].hasOwnProperty('properties') && device.capabilities[cap].properties.hasOwnProperty('supported') && device.capabilities[cap].properties.supported.length>0) {
                     caplist[capi]=device.capabilities[cap].properties.supported
                     hasprops=true
-                }
+                } 
             }
         }
         return caplist
+    }
+    
+    function getEventSources(device) {
+        var eslist={}
+        for (var i = 0; i < device.capabilities.length; i++) {   
+            if (device.capabilities[i]['interface']!='Alexa') {
+                var capi=device.capabilities[i]['interface'].split(".")[1]
+                if (Object.keys(eventSources).includes(capi)) {
+                    eslist[capi]=eventSources[capi]
+                }
+            }
+        }
+        return eslist
     }
 
     function getControllerActions(controller) {
@@ -102,17 +120,21 @@ export default function DeviceExpand(props) {
     }
     
     return (
-        (props.mode=='action' || (getPropertyControllers(props.device) && Object.keys(getPropertyControllers(props.device)).length>0)) &&
+        (props.mode=='action' || (getEventSources(props.device) || (getPropertyControllers(props.device) && Object.keys(getPropertyControllers(props.device)).length>0))) &&
         <GridItem nopad={true}>
             <ExpansionPanel elevation={0} CollapseProps={{ unmountOnExit: true }}>
                 <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} classes={{ content: classes.summary, root: classes.summary, }}>
                     <DeviceItem categories={props.device.displayCategories} name={props.device.friendlyName} />
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails className={classes.deviceExpand}>
-                    { props.mode=='action' ?
+                    { props.mode=='action' &&
                         <DeviceExpandActions device={props.device} controllers={getActionControllers(props.device)} select={props.select} />
-                    :
-                        <DeviceExpandProperties device={props.device} controllers={getPropertyControllers(props.device)} select={props.select} />
+                    }
+                    { props.mode=='property' && 
+                        <DeviceExpandProperties device={props.device} controllers={getPropertyControllers(props.device)} select={props.select} isEventSource={isEventSource} />
+                    }
+                    { (props.mode=='property' && getEventSources(props.device)) &&
+                        <DeviceExpandEvents device={props.device} eventSources={getEventSources(props.device)} select={props.select} />
                     }
                 </ExpansionPanelDetails>
             </ExpansionPanel>

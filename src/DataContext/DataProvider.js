@@ -15,6 +15,7 @@ export class DataProvider extends PureComponent {
             devices: [],
             deviceState: {},
             controllerProperties: {},
+            controllerEvents: {},
             directives: {},
             virtualDevices: {},
             drafts: {},
@@ -56,7 +57,10 @@ export class DataProvider extends PureComponent {
     onMessage = ev => {
         var jsondata=JSON.parse(ev.data)
         if (jsondata.hasOwnProperty('event')) {
-            if ((jsondata.event.header.name="ChangeReport") && jsondata.payload.hasOwnProperty('change')) {
+            if (jsondata.event.header.name=="Response" || jsondata.event.header.name=='StateReport') {
+                this.mergeState(this.nameByEndPointId(jsondata.event.endpoint.endpointId), jsondata)
+
+            } else if ((jsondata.event.header.name="ChangeReport") && jsondata.payload.hasOwnProperty('change')) {
                 //console.log('payload',jsondata.payload)
                 for (var j = 0; j < jsondata.payload.change.properties.length; j++) {
                     jsondata.context.properties.push(jsondata.payload.change.properties[j])
@@ -203,23 +207,30 @@ export class DataProvider extends PureComponent {
         )
     }
     
-    devicesByCategory = category => {
-        
-        if (!category) {
-            category='ALL'
+    devicesByCategory = (categories, searchterm) => {
+
+        if (!categories) {
+            categories=['ALL']
+        }
+        if (!Array.isArray(categories)) {
+            categories=[categories]
         }
         var categoryDevices=[]
-        for (var i = 0; i < this.state.devices.length; i++) {
-            if (this.state.devices[i].displayCategories.includes(category) || category=='ALL') {
-                categoryDevices.push(this.state.devices[i])
-            } 
+        for (var j = 0; j < categories.length; j++) {
+            var category=categories[j]
+            for (var i = 0; i < this.state.devices.length; i++) {
+                if (this.state.devices[i].displayCategories.includes(category) || category=='ALL') {
+                    if (!searchterm || this.state.devices[i].friendlyName.toLowerCase().startsWith(searchterm.toLowerCase())) {
+                        categoryDevices.push(this.state.devices[i])
+                    }
+                } 
+            }
         }
         categoryDevices.sort(function(a, b)  {
 		    var x=a['friendlyName'].toLowerCase(),
 			y=b['friendlyName'].toLowerCase();
 		    return x<y ? -1 : x>y ? 1 : 0;
 	    });    
-
         return categoryDevices
         
     }
@@ -426,7 +437,6 @@ export class DataProvider extends PureComponent {
     
     componentDidMount() {
         //window.addEventListener('resize', this.handleWindowSizeChange);
-        console.log('setting theme')
         this.setTheme()
         console.log('Fetching device info')
         fetch('/deviceList')
@@ -467,6 +477,7 @@ export class DataProvider extends PureComponent {
                     virtualDevices: this.state.virtualDevices,
                     websocketStatus: this.state.websocketStatus,
                     controllerProperties:this.state.controllerProperties,
+                    controllerEvents:this.state.controllerEvents,
                     sendAlexaCommand: this.sendAlexaCommand,
                     deviceByName: this.deviceByName,
                     devicesByCategory: this.devicesByCategory,

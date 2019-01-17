@@ -29,41 +29,19 @@ function ThermostatLayout(props) {
     const isMobile = window.innerWidth <= 800;
     const [changeTimes, setChangeTimes] = useState({})
     const thermostats=props.devicesByCategory('THERMOSTAT')
+    const temperatureSensors=props.devicesByCategory('TEMPERATURE_SENSOR')
 
-    function isSettable(device) {
-        
-        for (var j = 0; j < device.capabilities.length; j++) {
-            if (device.capabilities[j].interface=="Alexa.ThermostatController") {
-                return true
-            }
-        }
-        return false;
-    }; 
-    
-    function filterBySettable(settable) {
-        var filtered=[]
-        var all=props.devicesByCategory('THERMOSTAT')
-        
-        for (var j = 0; j < all.length; j++) {
-            if (isSettable(all[j])==settable) {
-                filtered.push(all[j])
-            }
-        }
-
-        return filtered
-            
-    }
 
     return (    
         <React.Fragment>
             <GridBreak label={"Thermostats"} />
 
-            { filterBySettable(true).map((device) =>
+            { thermostats.map((device) =>
                 <ThermostatSettable sendAlexaCommand={props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
                                     device={ device } deviceProperties={ props.deviceProperties[device.friendlyName] } />
             )}
             <GridBreak label={"Temperatures"} />
-            { filterBySettable(false).map((device) =>
+            { temperatureSensors.map((device) =>
                 <Thermostat key={ device.endpointId } name={ device.friendlyName } device={ device } 
                              deviceProperties={ props.deviceProperties[device.friendlyName] }  />
             )}

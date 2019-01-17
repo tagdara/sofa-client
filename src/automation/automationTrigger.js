@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo }  from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
@@ -43,55 +43,67 @@ const useStyles = makeStyles({
     reducedButtonPad: {
         padding: "4 16 12 10",
         alignItems: "flex-end",
+    },
+    eventName: {
+        padding: "8 8 8 64",
     }
 
 });
 
 
-export default function AutomationTrigger(props) {
+function AutomationTrigger(props) {
     
     const classes = useStyles();
+    const [value, setValue] = useState('')
+    //const [propertyName, setPropertyName] = useState('')
+    const [op, setOp] = useState('=')
+    const [controller, setController] = useState('')
 
-    function editTriggerValue(value) {
+    function editTriggerValue(newvalue) {
         var trigger=props.item
-        trigger.value=value
-        saveTrigger(trigger)
-    }
-    
-    function editOperatorValue(value) {
-        var trigger=props.item
-        trigger.operator=value
-        saveTrigger(trigger)
-    }
-    
-    function saveTrigger(trigger) {
+        setValue(newvalue)
+        trigger.value=newvalue
         props.save(props.index, trigger)
     }
     
+    function editOperatorValue(newvalue) {
+        var trigger=props.item
+        trigger.operator=newvalue
+        props.save(props.index, trigger)
+    }
+
     return (
         <GridItem wide={props.wide}  nopad={true}>
             <ListItem className={classes.listItem} >
-                <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-                <ListItemText primary={props.name} secondary={props.item.controller} className={classes.deviceName}/>
+                <ListItemIcon>{ props.controllerProperties.hasOwnProperty('error') ? <CloseIcon/> : <DeviceIcon name={props.device.displayCategories[0]} />}</ListItemIcon>
+                <ListItemText primary={props.name} secondary={ props.controllerProperties.hasOwnProperty('error') ? props.controllerProperties.error : props.item.controller} className={classes.deviceName}/>
                 { props.remove &&
                     <ListItemSecondaryAction className={classes.listItem}>
                         <ListItemIcon onClick={() => props.delete(props.index)}><CloseIcon /></ListItemIcon>   
                     </ListItemSecondaryAction>
                 }
             </ListItem>
-            <ListItem className={classes.reducedButtonPad} >
-                <OperatorButton index={props.index} value={props.item.operator} setOperator={ editOperatorValue }/>
-                <TextField
-                        className={classes.input}
-                        id={'trigger'+props.index}
-                        label={props.item.propertyName}
-                        value={props.item.value}
-                        onChange={(e) => editTriggerValue(e.target.value)}
-                />
-            </ListItem>
+            { props.item.type=="property" ?
+                <ListItem className={classes.reducedButtonPad} >
+                    <OperatorButton disabled={ props.item.type=='event' } index={props.index} value={ props.item.operator } setOperator={ editOperatorValue }/>
+                    <TextField
+                            className={classes.input}
+                            id={'trigger'+props.index}
+                            label={props.item.propertyName}
+                            value={props.item.value ? props.item.value : ''}
+                            onChange={(e) => editTriggerValue(e.target.value)}
+                            disabled={props.controllerProperties.hasOwnProperty('error')}
+                    />
+                </ListItem>
+            :
+                <ListItem>
+                    <ListItemIcon><AnnouncementIcon /></ListItemIcon>
+                    <ListItemText primary={props.item.propertyName} className={classes.deviceName}/>
+                </ListItem>
+            }
         </GridItem>
 
     )
 }
 
-
+export default memo(AutomationTrigger)

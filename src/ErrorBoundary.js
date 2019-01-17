@@ -13,14 +13,13 @@ class ErrorBoundary extends Component {
     }
         
     componentDidCatch (error, info) {
-        console.log('XXXXXXXX',error, info)
+        //console.log('Error',error, info)
         this.setState({ hasError: true, error: error, info: info})
-
     }
     
     render () {
         if (this.state.hasError) {
-            return  <ErrorCard name={this.state.error.name} message={this.state.error.message} />
+            return  <ErrorCard wide={this.props.wide} name={this.state.error.name} message={this.state.error.message} />
         }
         return this.props.children
     }

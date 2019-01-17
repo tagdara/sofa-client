@@ -25,17 +25,25 @@ const useStyles = makeStyles({
 function ZoneList(props) {
     
     const classes = useStyles();
-    const zoneOpen = zoneCount('open')>0;
+    const zoneOpen = zoneCount('DETECTED')>0;
     const [filter, setFilter] = useState('open');
-    
+    const [securityZones, setSecurityZones] = useState([])
+    const [automationZones, setAutomationZones] = useState([])
+
+    useEffect(() => {
+  	    fetch('/list/logic/security')
+ 		    .then(result=>result.json())
+            .then(result=>{ setSecurityZones(result['Security']); setAutomationZones(result['Automation']); })
+    }, []);
 
     function zoneReady() {
         
-        if (Object.keys(props.deviceProperties).length==0) {
+        if (!securityZones || Object.keys(props.deviceProperties).length==0) {
+            console.log('not ready', securityZones, Object.keys(props.deviceProperties))
             return false
         } else {
             for (var dev in props.deviceProperties) {
-                if (props.deviceProperties[dev].position==undefined) {
+                if (props.deviceProperties[dev].detectionState==undefined) {
                     return false
                 }
             }
@@ -46,23 +54,23 @@ function ZoneList(props) {
     function zoneCount(condition) {
         var count=0;
         for (var dev in props.deviceProperties) {
-            if (condition=='all' || props.deviceProperties[dev].position==condition) {
-                if (props.deviceProperties[dev].type=='Alarm') {
+            if (condition=='all' || props.deviceProperties[dev].detectionState==condition) {
+                if (securityZones && securityZones.includes(dev)) {
                     count=count+1
                 }
             }
         }
         return count
     }
-    
+
 
     function listOfOpenZones() {
         var openzones=''
         for (var dev in props.devices) {
             var device=props.devices[dev]
-            if (props.deviceProperties[device.friendlyName].hasOwnProperty('position')) {
-                if (props.deviceProperties[device.friendlyName].position=='open') {
-                    if (props.deviceProperties[device.friendlyName].type=='Alarm') {
+            if (props.deviceProperties[device.friendlyName].hasOwnProperty('detectionState')) {
+                if (props.deviceProperties[device.friendlyName].detectionState=='open') {
+                    if (securityZones.includes(device.friendlyName)) {
                         if (openzones) {
                             openzones=openzones+", "+device.friendlyName
                         } else {

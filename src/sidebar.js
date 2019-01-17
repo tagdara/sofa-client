@@ -90,6 +90,12 @@ function Sidebar(props) {
                     </ListItemIcon>
                     <ListItemText primary={'User Options'} />
                 </ListItem>
+                <ListItem button onClick={() => selectLayoutCard('AdapterLayout')}>
+                    <ListItemIcon>
+                        <TuneIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Adapters'} />
+                </ListItem>
                 <ListItem className={classes.listItem} />
                 <ListItem button onClick={()=> otherPort('8443','_editor')}>
                     <ListItemIcon>

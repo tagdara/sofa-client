@@ -2,6 +2,8 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { withData } from './DataContext/withData';
 
+import AutomationSave from "./automation/automationSave"
+import AutomationTitle from "./automation/automationTitle"
 import AutomationColumn from "./AutomationColumn"
 import AutomationRow from "./AutomationRow"
 import ToggleButton from './ToggleButton'
@@ -18,6 +20,8 @@ function AutomationLayout(props) {
     const [schedules, setSchedules] = useState([])
     const [edit,setEdit] = useState(false)
     const [gotReturn,setGotReturn] = useState(false)
+    const [saved, setSaved] = useState(true)
+    const [title, setTitle] = useState(props.name)
 
     useEffect(() => {
         getAutomation();
@@ -53,9 +57,10 @@ function AutomationLayout(props) {
         var addaction=checkCallbackItems('action')
         if (addaction) {
             newactions=[...newactions,addaction]
-            changes=true
+            saveType('action',newactions)
+        } else {
+            setActions(newactions)
         }
-        setActions(newactions)
         
         var newconditions=[]
         if (automation.hasOwnProperty('conditions')) {
@@ -64,9 +69,10 @@ function AutomationLayout(props) {
         var addcondition=checkCallbackItems('condition')
         if (addcondition) {
             newconditions=[...newconditions,addcondition]
-            changes=true
+            saveType('condition',newconditions)
+        } else {
+            setConditions(newconditions);
         }
-        setConditions(newconditions);
         
         var newtriggers=[]
         if (automation.hasOwnProperty('triggers')) {
@@ -75,9 +81,10 @@ function AutomationLayout(props) {
         var addtrigger=checkCallbackItems('trigger')
         if (addtrigger) {
             newtriggers=[...newtriggers, addtrigger]
-            changes=true
+            saveType('trigger',newtriggers)
+        } else {
+            setTriggers(newtriggers);
         }
-        setTriggers(newtriggers);
         
         var newschedules=[]
         if (automation.hasOwnProperty('schedules')) {
@@ -86,12 +93,14 @@ function AutomationLayout(props) {
         var addschedule=checkCallbackItems('schedule')
         if (addschedule) {
             newschedules=[...newschedules, addschedule]
-            changes=true
+            saveType('schedule', newschedules)
+        } else {
+            setSchedules(newschedules);
         }
-        setSchedules(newschedules);
-       
+        
         if (changes) {
-            saveAutomation(newactions, newconditions, newtriggers, newschedules)
+            setSaved(false)
+            //saveAutomation(newactions, newconditions, newtriggers, newschedules)
         }
     }
        
@@ -100,37 +109,22 @@ function AutomationLayout(props) {
     }
     
     function saveType(itemtype, items) {
-
-        if (itemtype=='favorite') {
-            var newfavorite=items
-        } else {
-            var newfavorite=favorite
+        console.log('savetype', itemtype, items)
+        if (itemtype=='title') {
+            setTitle(items)
+        } else if (itemtype=='favorite') {
+            setFavorite(items)
+        } else if (itemtype=='action') {
+            setActions(items)
+        } else if (itemtype=='trigger') {
+            setTriggers(items)
+        } else if (itemtype=='condition') {
+            setConditions(items)
+        } else if (itemtype=='schedule') {
+            setSchedules(items)
         }
-        if (itemtype=='action') {
-            var newactions=items
-        } else {
-            var newactions=actions
-        }
-        
-        if (itemtype=='triggen') {
-            var newtriggers=items
-        } else {
-            var newtriggers=triggers
-        }
-
-        if (itemtype=='condition') {
-            var newconditions=items
-        } else {
-            var newconditions=conditions
-        }
-        
-        if (itemtype=='schedule') {
-            var newschedules=items
-        } else {
-            var newschedules=schedules
-        }
-        
-        saveAutomation( newactions, newconditions, newtriggers, newschedules, newfavorite)
+        setSaved(false)
+        //saveAutomation( newactions, newconditions, newtriggers, newschedules, newfavorite)
     }
     
     function saveAutomation(newactions, newconditions, newtriggers, newschedules, newfavorite) {
@@ -148,8 +142,21 @@ function AutomationLayout(props) {
                 .then(result =>setTriggers(newtriggers))
                 .then(result =>setSchedules(newschedules))
                 .then(result =>setFavorite(newfavorite))
-
     }
+
+    function newSaveAutomation() {
+        
+        fetch('/save/logic/automation/'+title, {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules, "favorite": favorite})
+            })
+                .then(setSaved(true))
+    }
+
     
     function saveFavorite(newfavorite) {
         saveType('favorite',newfavorite)
@@ -158,21 +165,25 @@ function AutomationLayout(props) {
     function saveStub(a,c,t) {
         console.log('Blocked Save',a,c,t)
     }
+    
+    function goBack() {
+        props.setLayoutCard('AutomationsLayout')
+    }
 
     return (    
         <React.Fragment>
-            <GridBreak label={props.name} >
+            <AutomationTitle name={title} save={saveType} >
                 <ToggleButton buttonState={favorite? "on": "off"} onClick={ () => saveFavorite(!favorite) }>
                     <FavoriteIcon fontSize="small" />
                 </ToggleButton>
-            </GridBreak>
-            <AutomationRow items={schedules} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
-            <AutomationColumn items={triggers} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'automationTrigger'} itemtype={"trigger"} />
-            <AutomationColumn items={conditions} save={saveType} automationName={props.name} name={"Conditions"} selector={'DevicePropertyLayout'} itemModule={'automationCondition'} itemtype={"condition"} />
-            <AutomationColumn items={actions} save={saveType} automationName={props.name} name={"Actions"} selector={'DeviceDirectiveLayout'} itemModule={'automationAction'} itemtype={"action"} />
+            </AutomationTitle>
+            <AutomationRow items={schedules} saved={saved} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
+            <AutomationColumn items={triggers} saved={saved} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'AutomationTrigger'} itemtype={"trigger"} />
+            <AutomationColumn items={conditions} saved={saved} save={saveType} automationName={props.name} name={"Conditions"} selector={'DevicePropertyLayout'} itemModule={'AutomationCondition'} itemtype={"condition"} />
+            <AutomationColumn items={actions} saved={saved} save={saveType} automationName={props.name} name={"Actions"} selector={'DeviceDirectiveLayout'} itemModule={'AutomationAction'} itemtype={"action"} />
+            <AutomationSave name={title} saved={saved} save={newSaveAutomation} goBack={goBack} />
         </React.Fragment>
     )
-
 };
 
 export default withData(AutomationLayout);

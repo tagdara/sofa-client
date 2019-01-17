@@ -45,8 +45,8 @@ function AutomationRow(props) {
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
     const [module, setModule] = useState(null)
-
-    const AutomationProperty = Loadable({ loader: () => import('./automation/'+props.itemModule), loading: cardLoading,});
+    const modmap={'Schedules':AutomationSchedule}
+    const AutomationProperty = modmap[props.name]
 
     function getControllerProperties(item) {
         if (item.hasOwnProperty('propertyName')) {
@@ -137,9 +137,11 @@ function AutomationRow(props) {
     return (    
         <GridPage wide={true}>
             <GridBreak label={props.name} size="h6" >
-                <IconButton onClick={ () => addInPlace() }>
-                    <AddIcon fontSize="small" />
-                </IconButton>
+                {props.save && 
+                    <IconButton onClick={ () => addInPlace() }>
+                        <AddIcon fontSize="small" />
+                    </IconButton>
+                }
                 { Object.keys(props.items).length>0 &&
                 <IconButton onClick={ () => { setRemove(!remove); setReorder(false); }}>
                     <RemoveIcon fontSize="small" />

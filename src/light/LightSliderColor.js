@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,13 +8,12 @@ import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import Icon from '@material-ui/core/Icon';
 import IconButton from '@material-ui/core/IconButton';
+
 import CloseIcon from '@material-ui/icons/Close';
 import ColorLensIcon from '@material-ui/icons/ColorLens';
-
-import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
-//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
-import { HuePicker } from 'react-color';
 import LensIcon from '@material-ui/icons/Lens';
+
+import { HuePicker } from 'react-color';
 
 const styles = theme => ({
         
@@ -185,11 +183,6 @@ class LightSliderColor extends React.Component {
         );
     }
 }
-
-
-LightSliderColor.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(LightSliderColor);
 

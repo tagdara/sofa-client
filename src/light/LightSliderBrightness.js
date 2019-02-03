@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import ListItem from '@material-ui/core/ListItem';
-import SofaSlider from '../sofaSlider';
 import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+
+import SofaSlider from '../SofaSlider';
 
 const styles = theme => ({
         
@@ -67,10 +67,6 @@ class LightSliderBrightness extends React.Component {
         );
     }
 }
-
-LightSliderBrightness.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(LightSliderBrightness);
 

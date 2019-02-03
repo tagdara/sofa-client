@@ -9,6 +9,8 @@ import ErrorCard from './ErrorCard';
 import ErrorBoundary from './ErrorBoundary';
 import PlaceholderCard from './PlaceholderCard';
 import SofaPage from './SofaPage';
+import BottomNav from './BottomNav';
+import BottomButtons from './BottomButtons';
 
 const useStyles = makeStyles({
     
@@ -30,15 +32,7 @@ const useStyles = makeStyles({
         minHeight: "100%",
         alignContent: "flex-start",
     },
-    gridColumn: {
-        overflowX: "hidden",
-        overflowY: "hidden",
-        alignContent: "start",
-    },
-    gridItem: {
-        overflowX: "hidden",
-        width: "100%",
-    }    
+ 
 });
 
 function cardLoading(props) {
@@ -70,9 +64,7 @@ function SofaAppContent(props) {
     
     function addModule(modulename) {
         
-        return (Loadable( {
-            loader: () => import('./'+modulename), // Here can be any component!
-            loading: cardLoading, }))
+        return (Loadable( { loader: () => import('./'+modulename), loading: cardLoading, }))
     }
     
     function addModules(modulelist) {
@@ -89,7 +81,6 @@ function SofaAppContent(props) {
             }
         })
         if (changes) {
-            //console.log('setting',newmodules)
             setModules(newmodules);
         }
     }
@@ -100,11 +91,10 @@ function SofaAppContent(props) {
             let Module = modules[modulename]
             return <Module key={ modulename } {...moduleprops} />
         } else {
-            //console.log('Did not find',modulename,'in',modules)
             return null
         }
     }
-
+    
     return (
         <Grid container spacing={8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
             { props.layout.type=='pages' ? 
@@ -114,12 +104,16 @@ function SofaAppContent(props) {
                         <SofaPage key={page} name={page} page={props.layout.pages[page]} />
                         : null
                     })}
+                { isMobile && <BottomNav toggleSidebar={props.toggleSidebar} closeSidebar={props.closeSidebar}/> }
                 </React.Fragment>
             : null }
             { props.layout.type=='single' ?
-				<ErrorBoundary wide={props.wide}>
-				{ renderModule(props.layoutName, props.layoutProps) }
-                </ErrorBoundary>
+                <React.Fragment>
+    				<ErrorBoundary wide={props.wide}>
+    				{ renderModule(props.layoutName, props.layoutProps) }
+                    </ErrorBoundary>
+                    { (props.layoutProps && props.layoutProps.noBottom ) ? null : <BottomButtons /> }
+                </React.Fragment>
 			: null }
         </Grid>
     );

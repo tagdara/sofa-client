@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import List from '@material-ui/core/List';
@@ -7,7 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import ListItemText from '@material-ui/core/ListItemText';
-import SofaSlider from '../sofaSlider';
+import SofaSlider from '../SofaSlider';
 import Chip from '@material-ui/core/Chip';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
 
@@ -82,10 +81,6 @@ class LightSliderTemperature extends React.Component {
         );
     }
 }
-
-LightSliderTemperature.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(LightSliderTemperature);
 

@@ -21,7 +21,7 @@ const useStyles = makeStyles({
         width: "100%",
     },
     listItem: {
-        padding: "12px 8px",
+        padding: "8 24px",
     }
 });
 
@@ -36,7 +36,7 @@ export default function Scene(props) {
     
     return (
         <GridItem >
-            <ListItem className={classes.listItem} >
+            <ListItem >
                 <ToggleAvatar avatarState={props.shortcut==props.computedLevel.toString() ? "on" : "off"} onClick={ () => runScene(name)}>
                     {props.shortcut=='x' ? <ListIcon /> : props.shortcut }
                 </ToggleAvatar>

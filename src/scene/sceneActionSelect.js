@@ -12,8 +12,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
-//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import LightbulbOutlineIcon from '../LightbulbOutline';
 
 
 const styles = theme => ({

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
 import List from '@material-ui/core/List';
@@ -13,7 +12,7 @@ import Paper from '@material-ui/core/Paper';
 import ToysIcon from '@material-ui/icons/Toys';
 
 import GridItem from '../GridItem'
-import SofaSlider from '../sofaSlider'
+import SofaSlider from '../SofaSlider'
 
 const styles = theme => ({
 
@@ -69,7 +68,7 @@ const styles = theme => ({
     },
 });
 
-class ThermostatSettable extends React.Component {
+class Thermostat extends React.Component {
 
     constructor(props) {
         super(props);
@@ -170,9 +169,5 @@ class ThermostatSettable extends React.Component {
     }
 }
 
-ThermostatSettable.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(ThermostatSettable);
+export default withStyles(styles)(Thermostat);
 

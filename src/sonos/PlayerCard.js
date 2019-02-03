@@ -8,9 +8,9 @@ import List from '@material-ui/core/List';
 import PlayerArtOverlay from './PlayerArtOverlay';
 import PlayerArtOverlayButtons from './PlayerArtOverlayButtons';
 
-import SonosVolume from './sonosvolume';
-import SonosCover from './sonosCover';
-import SonosFavorites from './sonosFavorites';
+import SonosVolume from './SonosVolume';
+import SonosCover from './SonosCover';
+import SonosFavorites from './SonosFavorites';
 import GridItem from '../GridItem';
 
 const useStyles = makeStyles({
@@ -26,6 +26,8 @@ const useStyles = makeStyles({
 function PlayerCard(props) {
     
     const classes = useStyles();
+    const spkset = JSON.stringify(props.devicesByCategory('SPEAKER'))
+
     const speakers = props.devicesByCategory('SPEAKER')
     const isMobile = window.innerWidth <= 800;
     const [mini, setMini] = useState(false);
@@ -40,7 +42,7 @@ function PlayerCard(props) {
 
     useEffect(() => {
         setPlayerName(bestPlayer())
-    },[]);
+    },[spkset]);
 
 
     function endpointId(playername) {
@@ -179,7 +181,7 @@ function PlayerCard(props) {
                                 title={props.deviceProperties[playerName] ? props.deviceProperties[playerName].title : ''}
                                 artist={props.deviceProperties[playerName] ? props.deviceProperties[playerName].artist : ''}
                         >
-                <PlayerArtOverlayButtons min={setMini} media={handleMedia} cover={handleCover} stop={handleStop} players={handlePlayers}
+                <PlayerArtOverlayButtons min={props.setMini} media={handleMedia} cover={handleCover} stop={handleStop} players={handlePlayers}
                                             playPause={handlePlayPause} skip={handleSkip} 
                                             playbackState={ props.deviceProperties[playerName] ? props.deviceProperties[playerName].playbackState : 'Unknown'} />
             </PlayerArtOverlay>

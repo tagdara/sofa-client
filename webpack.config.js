@@ -9,7 +9,7 @@ const config = {
         publicPath: "/bundle/",
     },
     resolve: {
-        extensions: ['.js', '.jsx', '.css']
+        extensions: ['.mjs', '.js', '.jsx', '.css']
     },
     module: {
       rules: [
@@ -27,7 +27,7 @@ const config = {
     plugins : [ 
         new BundleAnalyzerPlugin({
             analyzerMode: 'disabled',
-            generateStatsFile: false,
+            generateStatsFile: true,
             statsOptions: { source: false }
         }),
     ],  

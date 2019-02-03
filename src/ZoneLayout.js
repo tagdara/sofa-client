@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
-import Zone from './devices/zone';
+import Zone from './devices/Zone';
 import GridBreak from './GridBreak';
 
 const useStyles = makeStyles({
@@ -32,13 +32,18 @@ function ZoneLayout(props) {
     const allzones=props.devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
 
     useEffect(() => {
-  	    fetch('/list/logic/security')
- 		    .then(result=>result.json())
-            .then(result=>{ console.log('res',result)
-                            setSecurityZones(result['Security']); 
-                            setAutomationZones(result['Automation']); 
-                        })
-            
+        if (props.securityZones && props.automationZones) {
+            setSecurityZones(props.securityZones)
+            setAutomationZones(props.automationZones) 
+        } else {
+      	    fetch('/data/security')
+     		    .then(result=>result.json())
+                .then(result=>{ console.log('res',result)
+                                setSecurityZones(result['Security']); 
+                                setAutomationZones(result['Automation']); 
+                            })
+        }
+    
         props.getChangeTimesForDevices('detectionState',allzones).then(result => setChangeTimes(result))
     }, []);
 
@@ -64,7 +69,7 @@ function ZoneLayout(props) {
     
     function historyZone(name, endpointId) {
         props.setBack('ZoneLayout', {} )
-        props.setLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"position"})
+        props.setLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"detectionState"})
     }
 
     return (    

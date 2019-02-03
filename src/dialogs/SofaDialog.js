@@ -4,7 +4,7 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import Dialog from '@material-ui/core/Dialog';
 import Slide from  '@material-ui/core/Slide';
-import SofaDialogTitle from './sofaDialogTitle';
+import SofaDialogTitle from './SofaDialogTitle';
 
 const useStyles = makeStyles({
 

@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
 
 import List from '@material-ui/core/List';
-import Thermostat from './thermostat/thermostat';
+import TemperatureSensor from './thermostat/TemperatureSensor';
 
 const useStyles = makeStyles({
         
@@ -20,7 +20,7 @@ function ThermostatHero(props) {
         
     return (
         !device ? null :
-        <Thermostat onClick={ () => props.setLayoutCard('ThermostatLayout') } key={ device.endpointId } name={ device.friendlyName } device={ device } 
+        <TemperatureSensor onClick={ () => props.setLayoutCard('ThermostatLayout') } key={ device.endpointId } name={ device.friendlyName } device={ device } 
                     deviceProperties={ props.deviceProperties[device.friendlyName] } wide={props.wide } />
     );
 }

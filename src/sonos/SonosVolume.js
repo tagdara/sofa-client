@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
-import SofaSlider from '../sofaSlider'
+import SofaSlider from '../SofaSlider'
 import ToggleAvatar from '../ToggleAvatar'
 
 export default function SonosVolume(props) {

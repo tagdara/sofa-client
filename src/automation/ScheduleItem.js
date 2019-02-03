@@ -19,6 +19,9 @@ function ScheduleItem(props) {
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];  
    
     function dateOnly(full) {
+        if (full=='never') {
+            return 'never'
+        }
         var donly=full.replace('Z','').split('T')[0]
         var ymd=donly.split('-')
         var monthname=monthNames[parseInt(ymd[1])-1]
@@ -26,6 +29,9 @@ function ScheduleItem(props) {
     }
 
     function timeOnly(full) {
+        if (full=='never') {
+            return ''
+        }
         
         if (full.includes('T')) {
             var tonly=full.replace('Z','').split('T')[1]

@@ -1,5 +1,4 @@
 import React, { Component, createElement  } from 'react';
-import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';

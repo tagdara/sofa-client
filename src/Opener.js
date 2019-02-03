@@ -4,10 +4,10 @@ import { useState, useEffect } from 'react';
 
 import { withData } from './DataContext/withData';
 import StatusLock from './devices/statusLock';
-import PinDialog from './devices/pinDialog'
+import PinDialog from './dialogs/PinDialog'
 import GridItem from './GridItem';
 
-function MiniCard(props) {
+function Opener(props) {
     
     const pin= "7818";
     const [showDialog, setShowDialog] = useState(false);
@@ -34,8 +34,9 @@ function MiniCard(props) {
     }
     
     function pinCheck(trypin) {
-        setShowDialog(false)
+
         if (trypin==pin) {
+            setShowDialog(false)
             sendCommand()
         }
     }
@@ -59,10 +60,9 @@ function MiniCard(props) {
                     commands={ props.virtualDevices[props.name].commands } handlePress={handlePress} />
                 <PinDialog submitPin={pinCheck} open={showDialog} close={closeDialog} />
             </React.Fragment>
-
     );
 
 }
 
-export default withData(MiniCard);
+export default withData(Opener);
 

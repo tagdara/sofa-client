@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
 
-import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
+import LightbulbOutlineIcon from './LightbulbOutline';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -13,8 +13,9 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
-import AreaLine from './area/areaLine';
+import AreaLine from './region/AreaLine';
 import ToggleAvatar from './ToggleAvatar';
 import GridItem from './GridItem';
 
@@ -197,15 +198,22 @@ function RegionHero(props) {
 
     return (
         <GridItem wide={props.wide}>
-            <ListItem className={classes.topSplit} >
-                <ToggleAvatar avatarState={lightsOn ? "on" : "off"} onClick={ () => props.setLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
-                <ListItemText primary={lightsOn ? lightCount('on')+" lights are on" : "All lights off" } onClick={ () => props.setLayoutCard('LightLayout') } />
-                <ListItemSecondaryAction>
-                    <IconButton onClick={(e) => props.setLayoutCard('RegionsLayout')}>
-                        <ViewModuleIcon />
-                    </IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
+            { lightCount('all') ?
+                <ListItem className={classes.topSplit} >
+                    <ToggleAvatar avatarState={lightsOn ? "on" : "off"} onClick={ () => props.setLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
+                    <ListItemText primary={lightsOn ? lightCount('on')+" lights are on" : "All lights off" } onClick={ () => props.setLayoutCard('LightLayout') } />
+                    <ListItemSecondaryAction>
+                        <IconButton onClick={(e) => props.setLayoutCard('RegionsLayout')}>
+                            <ViewModuleIcon />
+                        </IconButton>
+                    </ListItemSecondaryAction>
+                </ListItem>
+            :
+                <ListItem>
+                    <ToggleAvatar avatarState={"notready"} ><PriorityHighIcon/></ToggleAvatar>
+                    <ListItemText primary={'Waiting for light data'}/>
+                </ListItem>
+            }
             { Object.keys(areas).map((name) => 
                 <AreaLine theme={props.theme} sendAlexaCommand={props.sendAlexaCommand} key={ name } name={ name } shortcuts={areaShortcuts(name)} scenes={areaSceneList(name)} sceneData={scenesByArea(name)} devices={ devicesByArea(name)} deviceProperties={ props.propertiesFromDevices(devicesByArea(name)) } selectArea={selectArea} ></AreaLine>
             )}

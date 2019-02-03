@@ -7,7 +7,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
-import SofaSlider from '../sofaSlider';
+import SofaSlider from '../SofaSlider';
 import DotLevel from '../DotLevel';
 
 const useStyles = makeStyles({

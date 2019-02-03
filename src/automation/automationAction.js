@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -18,6 +19,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import GridItem from '../GridItem';
 import DeviceIcon from '../DeviceIcon';
+import GridPage from '../GridPage';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
         
@@ -108,24 +111,23 @@ export default function AutomationAction(props) {
         return ''
     }
 
-    function editValue(value) {
-        var newitem=props.item
-        newitem.value=value
-        props.save(props.index, item)
-    }
     
     function editValues(action, value) {
+        var newitem=props.item // working copy of props
         var edval=editVal
+
         edval[action]=value     
         
         if (parentField) {
             var parval={}
             parval[parentField]=edval
             setEditVal(edval)
-            editValue(parval)
+            newitem.value=edval
+            props.save(props.index, newitem)
         } else {
             setEditVal(edval)
-            editValue(edval)
+            newitem.value=edval
+            props.save(props.index, newitem)
         }
         console.log(action, value)
     }
@@ -165,36 +167,48 @@ export default function AutomationAction(props) {
     }
 
     return (
-        <GridItem wide={props.wide} nopad={true}>
-        <ListItem className={classes.listItem} >
-            <ListItemIcon onClick={() => props.run(name,index)}><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-            <ListItemText className={classes.deviceName} primary={props.name} secondary={props.item.controller.replace('Controller','')+" / "+props.item.command} />
-            { props.remove ?
-                <ListItemSecondaryAction>
-                    <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
-                </ListItemSecondaryAction>
-                : null
-            }
-            { props.reorder &&
-                <ListItemSecondaryAction>
-                    <IconButton disabled={ props.index==0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></IconButton>
-                    <IconButton onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></IconButton>
-                </ListItemSecondaryAction>
-            }
-        </ListItem>
-        <ListItem className={classes.bottomListItem} >
-            { fields.map((action,index) =>
-                <TextField
-                    key={"aat"+index}
-                    className={classes['areaInput'+action.type]}
-                    id={'action'+index}
-                    label={action.name}
-                    margin="dense"
-                    value={editVal[action.name]}
-                    onChange={(e) => editValues(action.name, e.target.value)}
-                />
-            )}
-        </ListItem>
+        <GridItem nolist={true} elevation={0} wide={true}>
+            <Grid item xs={props.wide ? 12 : 6 } >
+                <List>
+                <ListItem className={classes.listItem} >
+                    <ListItemIcon onClick={() => props.run(name,index)}><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
+                    <ListItemText className={classes.deviceName} primary={props.name} secondary={props.item.controller.replace('Controller','')+" / "+props.item.command} />
+                </ListItem>
+                </List>
+            </Grid>
+            <Grid item xs={props.wide ? 12 : 6 } >
+                <List>
+                <ListItem className={classes.bottomListItem} >
+                { fields.length>0 &&
+                    <React.Fragment>
+                    { fields.map((action,index) =>
+                        <TextField
+                            key={"aat"+index}
+                            className={classes['areaInput'+action.type]}
+                            id={'action'+index}
+                            label={action.name}
+                            margin="dense"
+                            value={editVal[action.name]}
+                            onChange={(e) => editValues(action.name, e.target.value)}
+                        />
+                    )}
+                    </React.Fragment>
+                }
+                    { props.remove ?
+                        <ListItemSecondaryAction>
+                            <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
+                        </ListItemSecondaryAction>
+                        : null
+                    }
+                    { props.reorder &&
+                        <ListItemSecondaryAction>
+                            <IconButton disabled={ props.index==0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></IconButton>
+                            <IconButton onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></IconButton>
+                        </ListItemSecondaryAction>
+                    }
+                </ListItem>
+                </List>
+            </Grid>
         </GridItem>
     )
 }

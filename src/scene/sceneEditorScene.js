@@ -16,8 +16,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Avatar from '@material-ui/core/Avatar';
-import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
-//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import LightbulbOutlineIcon from '../LightbulbOutline';
+
 import ListIcon from '@material-ui/icons/List';
 import CloseIcon from '@material-ui/icons/Close';
 import StarIcon from '@material-ui/icons/Star';

@@ -18,7 +18,6 @@ export class DataProvider extends PureComponent {
             controllerEvents: {},
             directives: {},
             virtualDevices: {},
-            drafts: {},
             layout: {},
             fullLayout: {},
             layoutName: "Home",
@@ -54,27 +53,6 @@ export class DataProvider extends PureComponent {
         console.log("Websocket connected.");
     }
  
-    onMessage = ev => {
-        var jsondata=JSON.parse(ev.data)
-        if (jsondata.hasOwnProperty('event')) {
-            if (jsondata.event.header.name=="Response" || jsondata.event.header.name=='StateReport') {
-                this.mergeState(this.nameByEndPointId(jsondata.event.endpoint.endpointId), jsondata)
-
-            } else if ((jsondata.event.header.name="ChangeReport") && jsondata.payload.hasOwnProperty('change')) {
-                //console.log('payload',jsondata.payload)
-                for (var j = 0; j < jsondata.payload.change.properties.length; j++) {
-                    jsondata.context.properties.push(jsondata.payload.change.properties[j])
-                    // TODO: check drafts here
-                }
-                jsondata.payload={}
-                jsondata.event.header.name="StateReport"
-                this.mergeState(this.nameByEndPointId(jsondata.event.endpoint.endpointId), jsondata)
-            } else {
-                console.log('was not changereport', jsondata.event.header.name, jsondata)
-            }
-        }
-    }
- 
     onReconnect = ev => {
         console.log("> Reconnecting...", ev);
     }
@@ -88,40 +66,25 @@ export class DataProvider extends PureComponent {
         console.log('Sending', ev)
         this.state.socket.send(ev);
     }
+ 
+    onMessage = ev => {
+        var jsondata=JSON.parse(ev.data)
+        if (jsondata.hasOwnProperty('event')) {
+            if (jsondata.event.header.name=="Response" || jsondata.event.header.name=='StateReport') {
+                this.mergeState(this.nameByEndPointId(jsondata.event.endpoint.endpointId), jsondata)
 
-    
-    sendAlexaCommand = (deviceName, endpointId, controller, command, payload) => {
-        
-        // value is optional for some alexa commands.  The original sofa2 implementation tried to take a string value and then map it to 
-        // a value name, but underestimated the requirement for some commands to pass multiple values and needs to be adjusted.
-        
-        if (endpointId=='') {
-            console.log('No endpoint ID was provided for ', deviceName, controller, command, payload)
-            endpointId=this.deviceByName(deviceName).endpointId
+            } else if ((jsondata.event.header.name="ChangeReport") && jsondata.event.payload.hasOwnProperty('change')) {
+                //console.log('payload',jsondata.payload)
+                for (var j = 0; j < jsondata.event.payload.change.properties.length; j++) {
+                    jsondata.context.properties.push(jsondata.event.payload.change.properties[j])
+                }
+                jsondata.payload={}
+                jsondata.event.header.name="StateReport"
+                this.mergeState(this.nameByEndPointId(jsondata.event.endpoint.endpointId), jsondata)
+            } else {
+                console.log('was not changereport', jsondata.event.header.name, jsondata)
+            }
         }
-
-        var header={"name": command, "namespace":"Alexa." + controller, "payloadVersion":"3", "messageId": this.uuidv4(), "correlationToken": this.uuidv4()}
-        var endpoint={"endpointId": endpointId, "cookie": {}, "scope":{ "type":"BearerToken", "token":"access-token-from-skill" }}
-
-        if (payload===undefined) { payload={} }
-        //console.log('Payload',payload, typeof payload)
-        if (typeof payload != 'object' ) {
-            console.log('old payload format is deprecated, include the name of the value', deviceName, controller, command, payload)
-            return false
-        }
-        
-        var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
-        console.log('Sending alexa command:',data)
-        //this.postAlexaCommand(data)
-        fetch('/directive', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(res=>console.log('Alexa command response:',res))
     }
     
     mergeState = (dev,change) => {
@@ -149,58 +112,38 @@ export class DataProvider extends PureComponent {
     
     updateDevice = dev => {
         if (!this.pendingDevs.includes(dev)) {
-            //var prestate={...this.state.deviceState}
-            //console.log('update prestate',dev,prestate)
             this.pendingDevs.push(dev)
-            //prestate[dev]={}
-            //this.setState({deviceState:prestate})
             fetch('/data/devices/'+dev+'?stateReport')
                 .then(result=>result.json())
                 .then(data=>this.mergeState(dev,data))
         }
     }
-    
-    draftVal = (dev, controller, val, defaultVal) => {
-        
-        var drafts=this.state.drafts
-        if (!drafts.hasOwnProperty(dev)) {
-            drafts[dev]={}
-        }
-        if (!drafts[dev].hasOwnProperty(controller)) {
-            drafts[dev][controller]={}
-        }
-        if (!drafts[dev][controller].hasOwnProperty(val)) {
-            drafts[dev][controller][val]={}
-            if (this.state.deviceProperties.hasOwnProperty(dev)) {
-                if (this.state.deviceProperties[dev].hasOwnProperty(controller)) {
-                    if (this.state.deviceProperties[dev][controller].hasOwnProperty(val)) {
-                        drafts[dev][controller][val]=this.state.deviceProperties[dev][controller][val]
-                    }
-                }
-            }
-        }
-    }
 
     updateMultipleDevices = (devs) => {
+        
+        if (devs.length>0) {
 
-        console.log('getting updates for multiple devices', devs.length)
-        fetch('/deviceState', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(devs)
-            })
-            .then(res=>res.json())
-            .then(res =>this.mergeStates(res))    
+            console.log('getting updates for multiple devices', devs.length)
+            fetch('/deviceState', {
+                    method: 'post',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(devs)
+                })
+                .then(res=>res.json())
+                .then(res =>this.mergeStates(res))    
+        }
     }
 
     updateDeviceList = (devs) => {
 
         var udl=[]
         for (var i = 0; i < devs.length; i++) {
-            udl.push(devs[i].friendlyName)
+            if (!this.state.deviceState.hasOwnProperty(devs[i].friendlyName)) {
+                udl.push(devs[i].friendlyName)
+            } 
         }
         this.setState({devices: devs}, 
             () =>  this.updateMultipleDevices(udl)
@@ -429,20 +372,52 @@ export class DataProvider extends PureComponent {
         this.setLayoutCard(this.state.backName, this.state.backProps)
         this.setState({ backName: '', backProps: {}})
     }
-
     
     setLayoutPage = (newPage) => {
         this.setState({ layoutPage : newPage })
+    }
+    
+    sendAlexaCommand = (deviceName, endpointId, controller, command, payload={}) => {
+        
+        // value is optional for some alexa commands.  The original sofa2 implementation tried to take a string value and then map it to 
+        // a value name, but underestimated the requirement for some commands to pass multiple values and needs to be adjusted.
+        
+        if (endpointId=='') {
+            console.log('No endpoint ID was provided for ', deviceName, controller, command, payload)
+            endpointId=this.deviceByName(deviceName).endpointId
+        }
+
+        var header={"name": command, "namespace":"Alexa." + controller, "payloadVersion":"3", "messageId": this.uuidv4(), "correlationToken": this.uuidv4()}
+        var endpoint={"endpointId": endpointId, "cookie": {}, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
+        var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
+        
+        console.log('Sending alexa command:',data)
+
+        fetch('/directive', {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res=>console.log('Alexa command response:',res.json()))
     }
     
     componentDidMount() {
         //window.addEventListener('resize', this.handleWindowSizeChange);
         this.setTheme()
         console.log('Fetching device info')
-        fetch('/deviceList')
+        fetch('/deviceListWithData')
  		    .then(result=>result.json())
-            .then(data=>this.updateDeviceList(data))
-            //.then(this.setState({devices: data})
+            .then(data=>{   this.mergeStates(data['state']);
+                            this.updateDeviceList(data['devices'], true);
+                            
+            })
+
+        //fetch('/deviceList')
+ 		//    .then(result=>result.json())
+        //    .then(data=>this.updateDeviceList(data))
 
   	    fetch('/layout')
  		    .then(result=>result.json())

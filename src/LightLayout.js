@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
-import Light from './light/light';
+import Light from './light/Light';
 import GridBreak from './GridBreak';
 
 const useStyles = makeStyles({

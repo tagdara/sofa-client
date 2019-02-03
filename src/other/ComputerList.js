@@ -1,5 +1,5 @@
 import React from "react";
-import Computer from './devices/computer';
+import Computer from './Computer';
 
 export default function ComputerList(props) {
 

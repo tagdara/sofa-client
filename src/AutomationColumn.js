@@ -16,6 +16,7 @@ import AutomationAction from "./automation/automationAction"
 import AutomationCondition from "./automation/automationCondition"
 import AutomationTrigger from "./automation/automationTrigger"
 import AutomationSchedule from "./automation/automationSchedule"
+import AutomationItemBase from "./automation/AutomationItemBase"
 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -59,7 +60,7 @@ function AutomationColumn(props) {
     const [remove, setRemove] = useState(false)
     const [module, setModule] = useState(null)
     const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
-    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationAction}
+    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
     const AutomationProperty = modmap[props.name]
     
     function getControllerProperties(item) {
@@ -129,17 +130,45 @@ function AutomationColumn(props) {
             props.save(props.itemtype, newitems)
         }
     }
+    
+    function shortTimeFormat(thisdate) {
+        if (thisdate) {
+            var longdate=thisdate
+        } else {
+            var longdate=new Date().toISOString().replace('Z','')
+        }
 
-    function addItem() {
-        setRemove(false); 
-        setReorder(false) 
-        props.setReturn('AutomationLayout', {'name': props.automationName, 'type':props.itemtype })
-        props.setBack('AutomationLayout', {'name': props.automationName } )
-        props.setLayoutCard(props.selector)
+        if (longdate.split(':').length>2) {
+            longdate=longdate.split(':')[0]+":"+longdate.split(':')[1]
+        }
+
+        return longdate
     }
 
+    function addItem() {
+        if (props.itemtype=='schedule') {
+            addInPlace()
+        } else {
+            setRemove(false); 
+            setReorder(false) 
+            props.setReturn('AutomationLayout', {'name': props.automationName, 'type':props.itemtype })
+            props.setBack('AutomationLayout', {'name': props.automationName } )
+            props.setLayoutCard(props.selector)
+        }
+    }
+    
+    function addInPlace() {
+        var newItem={'type':'interval', 'interval':1, 'unit':'days', 'start':shortTimeFormat()}
+        setRemove(false); 
+        setReorder(false)
+        props.save(props.itemtype,[...props.items, newItem])
+    }   
+    
+    const mobileBreakpoint = 800
+    const isMobile = window.innerWidth <= mobileBreakpoint;
+    
     return (    
-        <GridPage>
+        <GridPage wide={true} >
             <GridBreak label={props.name} size="h6" >
                 { props.saved &&
                     <IconButton onClick={ () => addItem() } className={classes.button }>
@@ -161,10 +190,16 @@ function AutomationColumn(props) {
                 <React.Fragment>
                     { props.items.map((item,index) =>
                         <ErrorBoundary key={props.itemtype+index} >
-                        <AutomationProperty moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
+                        { props.itemtype=='schedule' ?
+                            <AutomationProperty key={props.itemtype+index} save={save} remove={remove} delete={deleteItem} 
+                                index={index} item={item} />
+                        
+                        :
+                            <AutomationProperty moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
                                 index={index} item={item} device={ props.deviceByEndpointId(item.endpointId) } name={props.deviceByEndpointId(item.endpointId).friendlyName} 
-                                directives={props.directives} controllerProperties={ getControllerProperties(item)} wide={true} 
+                                directives={props.directives} controllerProperties={ getControllerProperties(item)} wide={isMobile} 
                                 />
+                        }
                         </ErrorBoundary>
                     )}
                 </React.Fragment>

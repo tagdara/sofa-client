@@ -8,7 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
 import GridBreak from './GridBreak';
-import Sonos from "./sonos/sonos";
+import Sonos from "./sonos/Sonos";
 
 const useStyles = makeStyles({
     

@@ -11,12 +11,11 @@ import IconButton from '@material-ui/core/IconButton';
 
 import List from '@material-ui/core/List';
 
-import VirtualList from './virtuallist';
-import ComputerList from './computerList';
-import ModeList from './modeList';
-import DeviceList from './DeviceList';
+import VirtualList from './other/VirtualList';
+import ComputerList from './other/ComputerList';
+import ModeList from './other/ModeList';
+import DeviceList from './other/DeviceList';
 
-import SmartButton from './devices/smartbutton';
 import GridBreak from './GridBreak';
 
 const useStyles = makeStyles({

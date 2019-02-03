@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import Toolbar from '@material-ui/core/Toolbar';
-import Sidebar from './sidebar';
-import BottomNav from './bottomnav';
-import SofaAppBar from "./sofaAppBar";
+import Sidebar from './Sidebar';
+import SofaAppBar from "./SofaAppBar";
 import SofaAppContent from "./SofaAppContent";
 import ErrorBoundary from './ErrorBoundary'
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -49,11 +48,9 @@ class SofaApp extends Component {
                 <Sidebar open={drawerOpen} close={this.handleDrawerClose} />
                 { !isMobile && <Toolbar /> }
                 <ErrorBoundary>
-                    <SofaAppContent />
+                    <SofaAppContent toggleSidebar={this.handleDrawerOpen} closeSidebar={this.handleDrawerClose}/>
                 </ErrorBoundary>    
-                { isMobile && <BottomNav toggleSidebar={this.handleDrawerOpen} closeSidebar={this.handleDrawerClose}/> }
-                <CssBaseline />
-
+               <CssBaseline />
             </React.Fragment>
         );
     }

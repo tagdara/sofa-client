@@ -18,6 +18,8 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import DeviceIcon from '../DeviceIcon';
 import GridItem from '../GridItem';
 import OperatorButton from "./operatorButton"
+import Grid from '@material-ui/core/Grid';
+
 
 
 const useStyles = makeStyles({
@@ -108,12 +110,6 @@ export default function AutomationCondition(props) {
         return <RealIcon size={24} fontSize={size} />
     }
 
-    function editConditionValue(value) {
-        var condition=props.item
-        condition.value=value
-        props.save(props.index, condition)
-    }
-    
     function editOperatorValue(value) {
         var condition=props.item
         condition.operator=value
@@ -125,10 +121,12 @@ export default function AutomationCondition(props) {
     }
     
     function editValues(conval, value) {
+        var condition=props.item
         var edval=editVal
         edval[conval]=value     
         setEditVal(edval)
-        editConditionValue(edval)
+        condition.value=edval
+        props.save(props.index, condition)
     }
     
     function parseControllerProperties() {
@@ -160,37 +158,41 @@ export default function AutomationCondition(props) {
     }
     
     return (
-        <GridItem wide={props.wide} nopad={true}>
-        <ListItem className={classes.listItem} >
-            <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-            <ListItemText primary={props.name} secondary={props.item.controller+" "+props.item.propertyName} className={classes.deviceName}/>
-            { props.remove ?
-                <ListItemSecondaryAction>
-                    <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
-                </ListItemSecondaryAction>
-                : null
-            }
-            { props.reorder &&
-                <ListItemSecondaryAction>
-                    <IconButton onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></IconButton>   
-                    <IconButton onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></IconButton>
-                </ListItemSecondaryAction>
-            }
-        </ListItem>
-        <ListItem className={classes.reducedButtonPad} >
-            <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
-            { fields.map((conval,i) =>
-                <TextField
-                    key={'cdf'+i}
-                    className={classes['input'+conval.type]}
-                    id={'cdf'+i}
-                    label={conval.name}
-                    value={editVal[conval.name]}
-                    onChange={(e) => editValues(conval.name, e.target.value)}
-                    type={typeFromType(conval.type)}
-                />
-            )}
-        </ListItem>
+        <GridItem nolist={true} elevation={0} wide={true}>
+            <Grid item xs={props.wide ? 12 : 6 } >
+                <ListItem className={classes.listItem} >
+                    <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
+                    <ListItemText primary={props.name} secondary={props.item.controller+" "+props.item.propertyName} className={classes.deviceName}/>
+                    { props.remove ?
+                        <ListItemSecondaryAction>
+                            <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
+                        </ListItemSecondaryAction>
+                        : null
+                    }
+                    { props.reorder &&
+                        <ListItemSecondaryAction>
+                            <IconButton onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></IconButton>   
+                            <IconButton onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></IconButton>
+                        </ListItemSecondaryAction>
+                    }
+                </ListItem>
+            </Grid>
+            <Grid item xs={props.wide ? 12 : 6 } >
+                <ListItem className={classes.reducedButtonPad} >
+                    <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
+                    { fields.map((conval,i) =>
+                        <TextField
+                            key={'cdf'+i}
+                            className={classes['input'+conval.type]}
+                            id={'cdf'+i}
+                            label={conval.name}
+                            value={editVal[conval.name]}
+                            onChange={(e) => editValues(conval.name, e.target.value)}
+                            type={typeFromType(conval.type)}
+                        />
+                    )}
+                </ListItem>
+            </Grid>
         </GridItem>
 
     )

@@ -6,16 +6,19 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@material-ui/core/IconButton';
 
 import Switch from '@material-ui/core/Switch';
-import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
+import TvIcon from '@material-ui/icons/Tv';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
-import SofaSlider from '../sofaSlider'
+import SofaSlider from '../SofaSlider'
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 import ToggleChip from '../ToggleChip'
+import TvRemote from './TvRemote';
 
 const useStyles = makeStyles({
     list: {
@@ -51,13 +54,14 @@ export default function Television(props) {
     const [powerState, setPowerState] = useState(props.deviceProperties.powerState);
     const [volume, setVolume] = useState(props.deviceProperties.volume);
     const [muted, setMuted] = useState(props.deviceProperties.muted);
-
+    const [showRemote, setShowRemote] = useState(false)
     const [showDetail, setShowDetail] = useState(false);
     const [avinput, setInput] = useState(props.deviceProperties.input);
     const [inputs, setInputs] = useState({});
     
     useEffect(() => {
-  	    fetch('/list/vizio/inputs')
+        var adapter=props.device.endpointId.split(':')[0]
+  	    fetch('/list/'+adapter+'/inputs')
  		    .then(result=>result.json())
             .then(result=>setInputs(result));
     }, []);
@@ -82,20 +86,28 @@ export default function Television(props) {
     function handleInput(event, inputname) {
         props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
     }; 
-
+    function toggleRemote() {
+        setShowRemote(!showRemote)
+    }
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
                 <ToggleAvatar onClick={ () => setShowDetail(!showDetail) } avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
-                    <SpeakerGroupIcon />
+                    <TvIcon />
                 </ToggleAvatar>
                 <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.name} secondary={props.deviceProperties.input ? props.deviceProperties.input : null}/>
                 <ListItemSecondaryAction>
+                    { props.deviceProperties.powerState!='ON' ? null :
+                    <IconButton onClick={ () => toggleRemote() } >
+                        <ControlCameraIcon />
+                    </IconButton>
+                    }
+
                     <Switch color="primary" checked={props.deviceProperties.powerState=='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
 
             </ListItem>
-        { props.deviceProperties.powerState!='ON' && !showDetail ? null :
+        { 1==2 && props.deviceProperties.powerState=='ON' && showDetail ?
             <ListItem className={classes.listItemBottom}>
                 <ToggleAvatar onClick={ () => setMuted(!muted)} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
                     {props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
@@ -103,17 +115,22 @@ export default function Television(props) {
                 <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={props.deviceProperties.volume}
                             minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={true} />
             </ListItem>
+            : null
         }
-        { !showDetail ? null :
-            <React.Fragment>
-                <ListItem className={classes.bottomListItem}>
-                    <ListItemText primary={"Input"} />
-                    { Object.keys(inputs).map(inp => 
-                        <ToggleChip key = {inp} label = { inputs[inp] } chipState={ props.deviceProperties.input==inputs[inp] ? "on" : "off" } onClick={ (e) => handleInput(e, inputs[inp])} />
-                    )}
-                </ListItem>
-            </React.Fragment>
+        { showDetail &&
+            <ListItem className={classes.bottomListItem}>
+                <ListItemText primary={"Input"} />
+                { Object.keys(inputs).map(inp => 
+                    <ToggleChip key = {inp} label = { inputs[inp] } chipState={ props.deviceProperties.input==inputs[inp] ? "on" : "off" } onClick={ (e) => handleInput(e, inputs[inp])} />
+                )}
+            </ListItem>
         }
+        { showRemote &&
+            <ListItem className={classes.remoteListItem}>
+                <TvRemote endpointId={props.device.endpointId} name={props.device.friendlyName} sendAlexaCommand={props.sendAlexaCommand} />
+            </ListItem>
+        }
+
         </GridItem>
     );
 }

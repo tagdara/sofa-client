@@ -8,8 +8,10 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
 import GridBreak from './GridBreak';
-import Thermostat from './thermostat/thermostat';
-import ThermostatSettable from './thermostat/thermostatSettable';
+import TemperatureSensor from './thermostat/TemperatureSensor';
+import Thermostat from './thermostat/Thermostat';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles({
     
@@ -31,18 +33,26 @@ function ThermostatLayout(props) {
     const thermostats=props.devicesByCategory('THERMOSTAT')
     const temperatureSensors=props.devicesByCategory('TEMPERATURE_SENSOR')
 
+    function switchToHistory() {
+        props.setBack('ThermostatLayout',{})
+        props.setLayoutCard('ThermostatHistory', {})
+    }
 
     return (    
         <React.Fragment>
-            <GridBreak label={"Thermostats"} />
+            <GridBreak label={"Thermostats"} >
+                <IconButton onClick={ () => switchToHistory() } className={classes.button }>
+                    <ScheduleIcon fontSize="small" />
+                </IconButton>            
+            </GridBreak>
 
             { thermostats.map((device) =>
-                <ThermostatSettable sendAlexaCommand={props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
+                <Thermostat sendAlexaCommand={props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
                                     device={ device } deviceProperties={ props.deviceProperties[device.friendlyName] } />
             )}
             <GridBreak label={"Temperatures"} />
             { temperatureSensors.map((device) =>
-                <Thermostat key={ device.endpointId } name={ device.friendlyName } device={ device } 
+                <TemperatureSensor key={ device.endpointId } name={ device.friendlyName } device={ device } 
                              deviceProperties={ props.deviceProperties[device.friendlyName] }  />
             )}
         </React.Fragment>

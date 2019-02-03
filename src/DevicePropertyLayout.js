@@ -76,7 +76,7 @@ function DevicePropertyLayout(props) {
             }
         }
 
-        props.setLayoutCard(props.returnName, {...props.returnProps, 'item':item } )
+        props.setLayoutCard(props.returnName, {...props.returnProps, 'item':item, 'noBottom':'true'} )
 
     }
     

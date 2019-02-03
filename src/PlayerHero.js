@@ -3,13 +3,15 @@ import { useState, useEffect } from 'react';
 import { withData } from './DataContext/withData';
 
 import PlayerCard from './sonos/PlayerCard';
-import Sonos from './sonos/sonos';
+import Sonos from './sonos/Sonos';
 import GridItem from './GridItem';
 import NoPlayer from './sonos/NoPlayer';
 
 function PlayerHero(props) {
     
+    const spkset = JSON.stringify(props.devicesByCategory('SPEAKER'))
     const speakers = props.devicesByCategory('SPEAKER')
+    //const [speakers, setSpeakers] = useState([])
     const isMobile = window.innerWidth <= 800;
     const [mini, setMini] = useState(false);
     const [playerName, setPlayerName] = useState("");
@@ -18,7 +20,7 @@ function PlayerHero(props) {
 
     useEffect(() => {
         setPlayerName(bestPlayer())
-    },[]);
+    },[spkset]);
 
 
     function endpointId(playername) {
@@ -72,11 +74,30 @@ function PlayerHero(props) {
         }
     }
     
+    function bigCard() {
+
+        if (mini || !playerName || !playerProps(playerName) || !props.player) {
+            return false
+        }
+        if (playerName) {
+            return true
+        }
+        if (playerProps(playerName).hasOwnProperty('playbackState')) {
+            if (playerProps(playerName).playbackState && playerProps(playerName).playbackState!='STOPPED') {
+                return true
+            }
+        }
+        return false
+    }
+    
     return ( 
-        ( mini || !playerName || !playerProps(playerName) || (playerProps(playerName).playbackState=='STOPPED' && !props.player)) ?
-        <Sonos setPlayer={setPlayerAndMini} wide={props.wide} small={true} setLayoutCard={props.setLayoutCard} name={playerName} deviceProperties={playerProps(playerName)} />
-        :
-        <PlayerCard wide={props.wide} name={playerName} />
+        <React.Fragment>
+            { bigCard()==false ?
+                <Sonos setPlayer={setPlayerAndMini} wide={props.wide} small={true} setLayoutCard={props.setLayoutCard} name={playerName} deviceProperties={playerProps(playerName)} />
+            :
+                <PlayerCard wide={props.wide} name={playerName} setMini={setMini} />
+            }
+        </React.Fragment>
     );
 }
 

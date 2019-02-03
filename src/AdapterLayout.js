@@ -4,6 +4,7 @@ import { withLayout } from './DataContext/withLayout';
 
 import AdapterItem from './AdapterItem';
 import AdapterStatus from './AdapterStatus';
+import GridBreak from './GridBreak';
 
 function AdapterLayout(props) {
 
@@ -28,10 +29,17 @@ function AdapterLayout(props) {
             .then(data=>setAdapterStatus(data))
     }
     
+    function clearAdapterStatus() {
+        setAdapterStatus("")
+    }
+    
     return (
         <React.Fragment>
-            <AdapterStatus status={adapterStatus} name={adapterName} />
-            { Object.keys(adapters).map(name => 
+            <GridBreak label={"Adapters"}/>
+            { adapterStatus &&
+                <AdapterStatus status={adapterStatus} name={adapterName} clear={clearAdapterStatus} />
+            }
+            { Object.keys(adapters).sort().map(name => 
                 <AdapterItem key={name} name={ name } address={ adapters[name]['address'] } port={ adapters[name]['port'] } 
                     startup={ adapters[name]['startup'] } setLayoutCard={props.setLayoutCard} url={ adapters[name]['url'] } 
                     open={open} restart={restart} />

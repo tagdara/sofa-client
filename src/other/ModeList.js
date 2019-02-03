@@ -1,5 +1,5 @@
 import React from "react";
-import Mode from './devices/mode';
+import Mode from './Mode';
 
 export default function ModeList(props) {
 

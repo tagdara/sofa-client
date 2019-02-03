@@ -2,21 +2,15 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import List from '@material-ui/core/List';
-import { withData } from './DataContext/withData';
 
-import Shade from './devices/shade';
-import Sprinkler from './devices/sprinkler';
-import StatusLock from './devices/statusLock';
-import GridBreak from './GridBreak';
+import { withData } from '../DataContext/withData';
+
+import Shade from './Shade';
+import Sprinkler from './Sprinkler';
+import GridBreak from '../GridBreak';
 
 function VirtualList(props) {
 
-    function getStatusProp(statusDef) {
-        var dev=props.deviceByEndpointId(statusDef.endpointId)
-        var dp=props.propertiesFromDevices(dev)[dev.friendlyName]
-        return dp[statusDef.property]
-    }
-    
     return (
         props.virtualDevices ?
             <React.Fragment>

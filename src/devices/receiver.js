@@ -13,8 +13,7 @@ import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 
-import ReceiverDialog from './receiverDialog';
-import SofaSlider from '../sofaSlider'
+import SofaSlider from '../SofaSlider'
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 import ToggleChip from '../ToggleChip'

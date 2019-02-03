@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
-import { withData } from './DataContext/withData';
+import { withData } from '../DataContext/withData';
 import SceneEditorScene from './sceneEditorScene';
 import SceneAdd from './sceneAdd';
 import DialogContent from '@material-ui/core/DialogContent';

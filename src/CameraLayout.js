@@ -14,8 +14,6 @@ function CameraLayout(props) {
             .then(data=>setCameraList(data))
     }, []);
     
-    console.log(cameras)
-
     return (
         <React.Fragment>
             { Object.keys(cameras).map(name => 

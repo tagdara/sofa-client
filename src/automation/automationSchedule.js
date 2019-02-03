@@ -23,8 +23,27 @@ const useStyles = makeStyles({
 export default function AutomationSchedule(props) {
     
     const classes = useStyles();
-    const [schedule, setSchedule] = useState(props.item)
+    const [schedule, setSchedule] = useState({})
     const scheduleTypes=['days','interval']
+
+    useEffect(() => {
+        parseSchedule()
+    }, []);
+    
+    function parseSchedule() {
+        setSchedule(props.item)
+    }
+    
+    function editValues(action, value) {
+        var newitem=props.item // working copy of props
+        var edsc=schedule
+
+        edsc[action]=value
+        setSchedule(edsc)
+        props.save(props.index, edsc)
+        console.log(props.index, edsc)
+        console.log(action, value)
+    }
 
     function changeValue(aspect, value) {
         console.log('changevalue',aspect, value)
@@ -63,13 +82,14 @@ export default function AutomationSchedule(props) {
         return longdate
     }
 
+    
     return (
-        <GridItem>
-            <ScheduleStart delete={props.delete} remove={props.remove} target="start" change={changeValue} value={schedule.start} />
+        <GridItem elevation={0}>
+            <ScheduleStart delete={props.delete} remove={props.remove} target="start" change={editValues} value={schedule.start} />
             { schedule.hasOwnProperty('type') && schedule.type=='interval' ?
-                <ScheduleInterval toggle={toggleType} change={changeValue} unit={schedule.unit} value={schedule.interval} />
+                <ScheduleInterval toggle={toggleType} change={editValues} unit={schedule.unit} value={schedule.interval} />
             :
-                <ScheduleDays toggle={toggleType} change={changeValue} value={schedule.days} />
+                <ScheduleDays toggle={toggleType} change={editValues} value={schedule.days} />
             }
         </GridItem>
     )

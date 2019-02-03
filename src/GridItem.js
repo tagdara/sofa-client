@@ -47,9 +47,15 @@ export default function GridItem(props) {
     return (
         <Grid item xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 4) } >
             <Paper elevation={props.elevation} className={classNames(props.content, props.nopad && classes.nopad, props.colorband && classes.colorband)}  >
-                <List className={ props.nopad ? classes.nopadlist : classes.list} >
+                { !props.nolist ?
+                    <List className={ props.nopad ? classes.nopadlist : classes.list} >
+                        {props.children}
+                    </List>
+                :
+                <Grid container >
                     {props.children}
-                </List>
+                </Grid>
+                }
             </Paper>
         </Grid>
     );

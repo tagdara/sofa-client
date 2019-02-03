@@ -14,11 +14,9 @@ import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 
 import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
-import { MdLightbulbOutline as LightbulbOutlineIcon} from "react-icons/md";
-//import LightbulbOutlineIcon from '@material-ui/icons/LightbulbOutline';
+import LightbulbOutlineIcon from '../LightbulbOutline';
 
-import LightDialog from './lightDialog';
-import SofaSlider from "../sofaSlider"
+import SofaSlider from "../SofaSlider"
 import LightSliderBrightness from "./LightSliderBrightness"
 import LightSliderTemperature from "./LightSliderTemperature"
 import LightSliderColor from "./LightSliderColor"
@@ -95,7 +93,7 @@ export default function Light(props) {
     
     return (
         <GridItem >
-            <ListItem className={classes.listItem} >
+            <ListItem >
                 <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
                     <LightbulbOutlineIcon className={classes.iconSize} />
                 </ToggleAvatar>

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Device from './devices/device';
+import Device from './Device';
 
 export default function DeviceList(props) {
 

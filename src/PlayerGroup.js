@@ -19,7 +19,7 @@ import GridBreak from './GridBreak';
 import GridItem from './GridItem';
 import ToggleAvatar from './ToggleAvatar';
 
-import Sonos from "./sonos/sonos";
+import Sonos from "./sonos/Sonos";
 
 const useStyles = makeStyles({
     

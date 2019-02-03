@@ -45,12 +45,11 @@ function AutomationsLayout(props) {
         fetch('/list/logic/automationlist')
             .then(result=>result.json())
             .then(result=>setAutomations(result))
-            .then(console.log(automations));
     }
     
     function selectAutomation(automation) {
         props.setBack('AutomationsLayout',{})
-        props.setLayoutCard('AutomationLayout', {'name':automation} )
+        props.setLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
     }    
     
     function addAutomation(automationName) {
@@ -97,7 +96,7 @@ function AutomationsLayout(props) {
 
     function newAutomation() {
         props.setBack('AutomationsLayout',{})
-        props.setLayoutCard('AutomationLayout', {})        
+        props.setLayoutCard('AutomationLayout', {'noBottom':true})        
     }
     
     function switchToSchedule() {

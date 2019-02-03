@@ -36,6 +36,7 @@ export default function ScheduleInterval(props) {
     function changeUnit(newunit) {
         props.change('unit', newunit)    
     }
+    
 
     return (
         <ListItem> 

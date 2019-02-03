@@ -9,9 +9,6 @@ import Typography from '@material-ui/core/Typography';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import HomeIcon from '@material-ui/icons/Home';
-import CompareIcon from '@material-ui/icons/Compare';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 const useStyles = makeStyles({
         
@@ -50,16 +47,6 @@ function SofaAppBar(props) {
                     <Typography variant="h6" color="inherit" className={classes.flex}>
                         Home
                     </Typography>
-                    { props.layoutName!='Home' &&
-                    <IconButton color="inherit" aria-label="Home" onClick={ ()=> props.setLayout('Home') }>
-                        <HomeIcon />
-                    </IconButton>
-                    }
-                    { props.backName &&
-                    <IconButton color="inherit" aria-label="Home" onClick={ ()=>  props.goBack() }>
-                        <ArrowBackIcon />
-                    </IconButton>
-                    }
                 </Toolbar>
                 }
             </AppBar>

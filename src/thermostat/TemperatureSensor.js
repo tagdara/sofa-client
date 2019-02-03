@@ -1,11 +1,11 @@
 import React from 'react';
-
-import ToggleAvatar from '../ToggleAvatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import GridItem from '../GridItem'
 
-export default function Thermostat(props) { 
+import GridItem from '../GridItem'
+import ToggleAvatar from '../ToggleAvatar';
+
+export default function TemperatureSensor(props) { 
     
     function tempColor(temp) {
         if (temp>=74) { return "hot" }

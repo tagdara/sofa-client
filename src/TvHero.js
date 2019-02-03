@@ -3,18 +3,15 @@ import { withData } from './DataContext/withData';
 
 import Television from './devices/Television';
 
-class TvHero extends React.Component {
+function TvHero(props) {
 
-    render() {
-
-        return (
-            <React.Fragment>
-                { this.props.devices.map(device => 
-                    <Television wide={this.props.wide} key={device.endpointId} name={ device.friendlyName } device={ device } deviceProperties={ this.props.deviceProperties[device.friendlyName] } sendAlexaCommand={this.props.sendAlexaCommand} />
-                )}
-            </React.Fragment>
-        );
-    }
+    return (
+        <React.Fragment>
+            { props.devices.map(device => 
+                <Television wide={props.wide} key={device.endpointId} name={ device.friendlyName } device={ device } deviceProperties={ props.deviceProperties[device.friendlyName] } sendAlexaCommand={props.sendAlexaCommand} />
+            )}
+        </React.Fragment>
+    );
 }
 
 export default withData(TvHero);

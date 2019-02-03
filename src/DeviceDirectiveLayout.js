@@ -49,15 +49,18 @@ function DeviceDirectiveLayout(props) {
         return props.devicesByCategory(devtype)
     }
     
-    function select(deviceName, endpointId, controller, directive) { 
-        
-        var item={  "endpointId": endpointId,
-                    "command": directive,
-                    "controller": controller,
-                    "deviceName": deviceName
-        }
+    function select(itemtype, deviceName, endpointId, controller, directive) { 
 
-        props.setLayoutCard(props.returnName, {...props.returnProps, 'item':item } )
+        if (mode=='action') {
+            var item={  "type": itemtype,
+                        "endpointId": endpointId,
+                        "command": directive,
+                        "controller": controller,
+                        "deviceName": deviceName
+            }
+        }
+        
+        props.setLayoutCard(props.returnName, {...props.returnProps, 'item':item, 'noBottom':'true'} )
 
 
     }

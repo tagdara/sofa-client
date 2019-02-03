@@ -10,8 +10,8 @@ import Divider from '@material-ui/core/Divider';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
-import SofaDialog from '../sofaDialog';
-import SonosFavorite from './sonosFavorite';
+import SofaDialog from '../dialogs/SofaDialog';
+import SonosFavorite from './SonosFavorite';
 
 const styles = theme => ({
     

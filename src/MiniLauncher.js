@@ -1,5 +1,5 @@
 import React from 'react';
-import { withThemeChange } from './DataContext/withThemeChange';
+import { withLayout} from './DataContext/withLayout';
 
 import Avatar from '@material-ui/core/Avatar';
 import ListItem from '@material-ui/core/ListItem';
@@ -25,4 +25,4 @@ function MiniLauncher(props) {
     );
 }
 
-export default withThemeChange(MiniLauncher);
+export default withLayout(MiniLauncher);

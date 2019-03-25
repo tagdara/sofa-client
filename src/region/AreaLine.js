@@ -48,7 +48,7 @@ export default function AreaLine(props) {
                 for (var light in scene) {    
                     // This is a hack to switch from endpointId to friendlyname
                     for (var j = 0; j < props.devices.length; j++) {
-                        if (props.devices[j].endpointId==light) {
+                        if (props.devices[j].friendlyName==light) {
                             var lightname=props.devices[j].friendlyName
 
                             if (props.deviceProperties[lightname]['powerState']=='ON') {

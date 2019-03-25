@@ -82,8 +82,6 @@ function AutomationTrigger(props) {
         props.save(props.index, trigger)
     }
     
-    console.log('Trigger:',props.item)
-
     return (
         <GridItem nolist={true} elevation={0} wide={true}>
             <Grid item xs={props.wide ? 12 : 6 } >

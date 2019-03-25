@@ -20,7 +20,7 @@ export default function AutomationItem(props) {
     const classes = useStyles();
 
     return (
-        <GridItem wide={props.wide}>
+        <GridItem wide={props.wide} nopaper={true} >
         <ListItem>
         { props.edit ?
             <ToggleAvatar avatarState={"off"} onClick={ () => props.delete(props.name)}><CloseIcon /></ToggleAvatar>

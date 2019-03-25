@@ -37,7 +37,7 @@ function Opener(props) {
 
         if (trypin==pin) {
             setShowDialog(false)
-            sendCommand()
+            sendCommand('toggle')
         }
     }
     
@@ -46,7 +46,7 @@ function Opener(props) {
         setCommand(commandName)
     }
         
-    function sendCommand(){
+    function sendCommand(command){
         var commands=props.virtualDevices[props.name].commands 
         console.log(command, commands)
         var command = commands[command]

@@ -23,7 +23,7 @@ export default function Shade(props) {
     }   
 
     return (
-        <GridItem>
+        <GridItem nopaper={true} >
         <ListItem>
             <Avatar><TonalityIcon /></Avatar>
             <ListItemText primary={props.name}/>

@@ -2,31 +2,20 @@ import React, { memo } from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import Button from '@material-ui/core/Button';
 
+import DeviceItem from './deviceItem'
 import DeviceExpandActions from './deviceExpandActions'
 import DeviceExpandProperties from './deviceExpandProperties'
 import DeviceExpandEvents from './deviceExpandEvents'
 
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Collapse from '@material-ui/core/Collapse';
-
 import GridItem from '../GridItem';
-
-import DataUsageIcon from '@material-ui/icons/DataUsage';
-import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
-import SpeakerIcon from '@material-ui/icons/Speaker';
-import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
-import TouchAppIcon from '@material-ui/icons/TouchApp';
-import TuneIcon from '@material-ui/icons/Tune';
-import ListIcon from '@material-ui/icons/List';
-import TvIcon from '@material-ui/icons/Tv';
-import LightbulbOutlineIcon from '../LightbulbOutline';
 
 const useStyles = makeStyles({
         
@@ -61,29 +50,11 @@ export default function DeviceExpand(props) {
     const [propertyControllers, setPropertyControllers] = useState({});
     const [isPropertyController, setIsPropertyController] = useState(false);
     const [isEventSource, setIsEventSource] = useState(false);
-    const [open, setOpen] = useState(false);
     const eventSources={ 'DoorbellEventSource': [{"name": "DoorbellPress"}] }
-    const icons = {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
-
+    
     useEffect(() => {
         getPropertyControllers(props.device)
     }, []);
-
-    function getIcon(category, size='default') {
-            
-        var pxSize=24;
-        if (size=='small') {
-            pxSize=16
-        }
-        if (icons.hasOwnProperty(category)) {
-            var RealIcon=icons[category]
-        } else {
-            var RealIcon=DeveloperBoardIcon
-        }
-        
-        return <RealIcon size={pxSize} fontSize={size} />
-    }
-
 
     function getControllers(device) {
         var caplist=[]
@@ -152,13 +123,12 @@ export default function DeviceExpand(props) {
     return (
         (props.mode=='action' || (getEventSources(props.device) || (getPropertyControllers(props.device) && Object.keys(getPropertyControllers(props.device)).length>0))) &&
         <GridItem nopad={true}>
-            <ListItem button onClick={() => setOpen(!open)}>
-                <ListItemIcon>{getIcon(props.device.displayCategories)}</ListItemIcon>
-                <ListItemText primary={props.device.friendlyName} secondary={props.device.displayCategories} />
-                {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-            </ListItem>
-            <Collapse in={open} timeout="auto" unmountOnExit>
-                    { (open && props.mode=='action') &&
+            <ExpansionPanel elevation={0} CollapseProps={{ unmountOnExit: true }}>
+                <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />} classes={{ content: classes.summary, root: classes.summary, }}>
+                    <DeviceItem categories={props.device.displayCategories} name={props.device.friendlyName} />
+                </ExpansionPanelSummary>
+                <ExpansionPanelDetails className={classes.deviceExpand}>
+                    { props.mode=='action' &&
                         <DeviceExpandActions device={props.device} controllers={getActionControllers(props.device)} select={props.select} />
                     }
                     { props.mode=='property' && 
@@ -167,7 +137,8 @@ export default function DeviceExpand(props) {
                     { (props.mode=='property' && getEventSources(props.device)) &&
                         <DeviceExpandEvents device={props.device} eventSources={getEventSources(props.device)} select={props.select} />
                     }
-            </Collapse>
+                </ExpansionPanelDetails>
+            </ExpansionPanel>
         </GridItem>
     )
 }

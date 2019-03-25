@@ -32,7 +32,7 @@ export default function GridPage(props) {
     const isMobile = window.innerWidth <= mobileBreakpoint;
 
     return (
-        <Grid container item spacing={8} key={props.name} xs={ isMobile || props.wide ? 12 : 4 } className={ props.bgc ? classes.gridColumnColor : classes.gridColumn}>
+        <Grid container item spacing={isMobile ? 2 : 8} key={props.name} xs={ isMobile || props.wide ? 12 : 4 } className={ props.bgc ? classes.gridColumnColor : classes.gridColumn}>
             { React.Children.map(props.children, child =>  React.cloneElement(child, { wide: true }))
             }
         </Grid>

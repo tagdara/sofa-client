@@ -1,0 +1,26 @@
+<HTML>
+    <body>
+        <script src="/jsmpeg.min.js"></script>
+        <canvas id="canvas" width="200" height="100"></canvas>
+        <canvas id="canvas2" width="200" height="100"></canvas>
+        <canvas id="canvas3" width="200" height="100"></canvas>
+        <canvas id="canvas4" width="200" height="100"></canvas>
+
+        <script>
+            //client = new WebSocket('ws://cam.dayton.home:9999');
+            player = new JSMpeg.Player('ws://cam.dayton.home:9999', {
+                canvas: canvas // Canvas should be a canvas DOM element
+            });
+            
+            player = new JSMpeg.Player('ws://cam.dayton.home:9998', {
+                canvas: canvas2 // Canvas should be a canvas DOM element
+            });
+            
+            player = new JSMpeg.Player('ws://cam.dayton.home:9997', {
+                canvas: canvas3 // Canvas should be a canvas DOM element
+            });
+
+
+        </script>
+    </body>
+</HTML>

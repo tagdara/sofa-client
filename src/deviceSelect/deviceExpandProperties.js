@@ -1,6 +1,4 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React, { memo } from 'react';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,19 +7,9 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import TuneIcon from '@material-ui/icons/Tune';
 
-const styles = theme => ({
-        
-    detailList: {
-        paddingLeft: 24,
-    },
+export default function DeviceExpandProperties(props) {
 
-
-
-});
-
-class DeviceExpandProperties extends React.Component {
-
-    getProperties = (device, controller) => {
+    function getProperties(device, controller) {
         var proplist=[]
         for (var i = 0; i < device.capabilities.length; i++) {
             if (device.capabilities[i].hasOwnProperty('properties') && device.capabilities[i].properties.hasOwnProperty('supported')) {
@@ -36,32 +24,21 @@ class DeviceExpandProperties extends React.Component {
         return proplist
     }
 
-    getControllerCommands = (controller) => {
+    function getControllerCommands(controller) {
         var cmds=[]
-        return this.props.controllers[controller]
+        return props.controllers[controller]
     }
     
-    render() {
-        
-        const { classes, device, controllers } = this.props;
-        
-        return (
-            <List className={classes.detailList}>
-                { Object.keys(controllers).sort().map(controller => {
-                    return this.getProperties(device,controller).map(prop => 
-                        <ListItem key={controller+prop} onClick={() => this.props.select('property',device.friendlyName, device.endpointId, controller, prop)}>
-                            <ListItemIcon><TuneIcon /></ListItemIcon>
-                            <ListItemText primary={prop} secondary={controller} />
-                        </ListItem>
-                    );
-                })}
-            </List>
-        )
-    }
+    return (
+        <List>
+            { Object.keys(props.controllers).sort().map(controller => {
+                return getProperties(props.device,controller).map(prop => 
+                    <ListItem key={controller+prop} onClick={() => props.select('property',props.device.friendlyName, props.device.endpointId, controller, prop)}>
+                        <ListItemIcon><TuneIcon /></ListItemIcon>
+                        <ListItemText primary={prop} secondary={controller} />
+                    </ListItem>
+                );
+            })}
+        </List>
+    )
 }
-
-DeviceExpandProperties.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(DeviceExpandProperties);

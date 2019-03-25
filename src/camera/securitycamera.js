@@ -9,6 +9,8 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import SlideshowIcon from '@material-ui/icons/Slideshow';
+
 import HistoryIcon from '@material-ui/icons/History';
 import CameraDialog from './cameraDialog';
 import ListItem from '@material-ui/core/ListItem';
@@ -73,7 +75,7 @@ export default function SecurityCamera(props) {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const [refreshInterval, setRefreshInterval] = useState(3000);
-
+    const [live, setLive] = useState(true);
     
     useEffect(() => {
         const interval = setInterval(() => { setUpdateUrl(camera+"?"+Date.now()) }, refreshInterval)
@@ -126,6 +128,11 @@ export default function SecurityCamera(props) {
                             <ChevronRightIcon />
                         </IconButton>
                     }
+                    { props.historyButton &&
+                        <IconButton color="primary" className={classes.gridbutton} onClick={ () => props.setLayoutCard('VideoLayout', {'name': props.name})}>
+                            <SlideshowIcon />
+                        </IconButton>
+                    }
                     { props.selectButtons &&
                         <IconButton color="primary" className={classes.newgridbutton} onClick={ () => props.setLayoutCard('CameraLayout')}>
                             <ViewModuleIcon />
@@ -143,9 +150,9 @@ export default function SecurityCamera(props) {
                     <CircularProgress className={classes.spinner} size={50} />
                 </div>
             }
-             
-            <CameraDialog refreshInterval={refreshInterval} changeInterval={changeInterval} showDialog={showDialog} closeDialog={closeDialog} src={currentUrl} />
-
+            { showDialog &&
+                <CameraDialog live={live} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} showDialog={showDialog} closeDialog={closeDialog} src={currentUrl} />
+            }
         </GridItem>
     );
 

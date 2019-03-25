@@ -33,7 +33,7 @@ export default function Zone(props) {
     const classes = useStyles();
 
     return (
-        <GridItem>
+        <GridItem nopaper={true} >
             <ListItem onClick={() => props.history(props.name, props.endpointId)}>
                 { props.deviceProperties.detectionState=='NOT_DETECTED' ?
                     <Avatar className={classes.closed} ><DoneIcon /></Avatar>

@@ -25,7 +25,7 @@ export default function Mode(props) {
     }; 
     
     return (
-        <GridItem>
+        <GridItem nopaper={true} >
             <ListItem>
                 <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? 'on' : 'off'}><TuneIcon /></ToggleAvatar>
                 <ListItemText primary={props.name}/>

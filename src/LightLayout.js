@@ -58,7 +58,7 @@ function LightLayout(props) {
                     On
                 </Button>
             </GridBreak>
-            <GridBreak >
+            <GridBreak>
                 <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
                     Bright
                 </Button>

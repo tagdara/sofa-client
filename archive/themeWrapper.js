@@ -1,5 +1,5 @@
 import React, {Component} from "react";
-import { withThemeChange } from '../DataContext/withThemeChange';
+import { withThemeChange } from './withThemeChange';
 import { ThemeProvider } from "@material-ui/styles";
 
 export class ThemeWrapper extends Component {

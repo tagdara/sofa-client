@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DataContext } from "./DataContext";
+import { DataContext } from "./DataProvider";
 
 export function withDevices(Component) {
     return function DataComponent(props) {

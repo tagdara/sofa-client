@@ -1,59 +1,84 @@
-import React, { Component } from 'react';
+import React, { Component, memo } from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+
 import Toolbar from '@material-ui/core/Toolbar';
 import Sidebar from './Sidebar';
 import SofaAppBar from "./SofaAppBar";
 import SofaAppContent from "./SofaAppContent";
 import ErrorBoundary from './ErrorBoundary'
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { withStyles } from '@material-ui/core/styles';
+import DataProvider from './DataContext/DataProvider';
+import SofaLogin from './SofaLogin';
+import { Redirect, Route } from 'react-router-dom';
+import { AuthConsumer } from './auth/AuthContext';
 
-const styles = theme => ({
-})
-
-class SofaApp extends Component {
-
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            width: window.innerWidth,
-            drawerOpen: false,
-        };
-    } 
+const ProtectedRoute = ({ component: Component, ...rest }) => (
     
-    handleDrawerOpen = () => {
-        this.setState({ drawerOpen: !this.state.drawerOpen });
+    <AuthConsumer>
+        { ({ isAuth }) => (
+            <Route render={ props => isAuth() 
+                ? <Component {...props} /> 
+                : <Redirect to="/login" />
+            } {...rest} />
+        )}
+    </AuthConsumer>
+    
+);
+
+function MainApp(props) {
+    
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+    const isMobile = screenWidth <= 800;
+
+    useEffect(() => {
+        window.addEventListener('resize', handleWindowSizeChange);
+    }, []);
+    
+    function handleDrawerOpen() {
+        setDrawerOpen(!drawerOpen);
     };
 
-    handleDrawerClose = () => {
-        this.setState({ drawerOpen: false });
+    function handleDrawerClose() {
+        setDrawerOpen(false);
     };
     
-    handleWindowSizeChange = () => {
-        this.setState({ width: window.innerWidth });
+    function handleWindowSizeChange() {
+        setScreenWidth(window.innerWidth);
     };
-    
-    componentDidMount() {
-        window.addEventListener('resize', this.handleWindowSizeChange);
-    }
-    
-    render() {
 
-        const { width, drawerOpen } = this.state;
-        const isMobile = width <= 800;
-        
-        return (
-            <React.Fragment>
-                <SofaAppBar open={this.handleDrawerOpen} mobile={isMobile}/>
-                <Sidebar open={drawerOpen} close={this.handleDrawerClose} />
-                { !isMobile && <Toolbar /> }
-                <ErrorBoundary>
-                    <SofaAppContent toggleSidebar={this.handleDrawerOpen} closeSidebar={this.handleDrawerClose}/>
-                </ErrorBoundary>    
-               <CssBaseline />
-            </React.Fragment>
-        );
-    }
+    return (
+        <DataProvider>
+            <SofaAppBar open={handleDrawerOpen} mobile={isMobile}/>
+            <Sidebar open={drawerOpen} close={handleDrawerClose} />
+            { !isMobile && <Toolbar /> }
+            <ErrorBoundary>
+                <SofaAppContent toggleSidebar={handleDrawerOpen} closeSidebar={handleDrawerClose}/>
+            </ErrorBoundary>    
+           <CssBaseline />
+        </DataProvider>
+    )
 }
 
-export default withStyles(styles)(SofaApp);
+function LoginRouter(props) {
+    
+    return (
+        <React.Fragment>
+            <Route exact path="/" render={( () => (1==1 ? <MainApp /> : <SofaLogin setLoggedIn={setLoggedIn} />))} />
+            <Route exact path="/login" render={(props) => <SofaLogin { ...props} setLoggedIn={setLoggedIn} />} />
+        </React.Fragment>
+    )
+}
+
+export default function SofaApp(props) {
+
+    return (
+            <React.Fragment>
+                <ProtectedRoute exact path="/" component={MainApp} />
+                <Route exact path="/login" component={SofaLogin} />
+            </React.Fragment>
+    );
+
+}
+

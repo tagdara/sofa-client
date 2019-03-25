@@ -1,16 +1,16 @@
 import * as React from "react";
-import { DataContext } from "./DataContext";
+import { ThemeContext } from "./SofaTheme"
 
 export function withThemeChange(Component) {
-    return function DataComponent(props) {
+    
+    return function ThemeComponent(props) {
         return (
-            <DataContext.Consumer>
+            <ThemeContext.Consumer>
                 { context => <Component {...props} {...context} context={context} 
                                 setColorScheme={context.setColorScheme} colorScheme={context.colorScheme} 
                                 setTheme={context.setTheme} sofaTheme={context.sofaTheme} getTheme={context.getTheme}
-                                setLayout={context.setLayout} layout={context.layout} layoutName={context.layoutName} setLayoutCard={context.setLayoutCard}
-                                fullLayout={context.fullLayout} /> }
-            </DataContext.Consumer>
+                            /> }
+            </ThemeContext.Consumer>
         );
     };
 }

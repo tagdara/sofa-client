@@ -32,7 +32,7 @@ export default function Sprinkler(props) {
     }   
 
     return (
-        <GridItem>
+        <GridItem nopaper={true} >
             <ListItem>
                 <Avatar className={classes.waterIcon}><InvertColorsIcon /></Avatar>
                 <ListItemText primary={props.name}/>

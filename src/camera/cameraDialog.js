@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
 import CloseIcon from '@material-ui/icons/Close';
 import TimerIcon from '@material-ui/icons/Timer';
-
+import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
     bigcamholder: {
@@ -54,6 +54,7 @@ const styles = theme => ({
         opacity: "1.0", 
         margin: "auto auto",
         padding: 0,
+        borderRadius: 4,
     },
 
     bigcamRotatedworks: {
@@ -77,7 +78,14 @@ const styles = theme => ({
         margin: "auto auto",
         marginTop: "calc((100vh - 100vw) / 2.5)",
         marginLeft: "calc((100vw * -1) /2.5) !important",
-    }    
+        borderRadius: 4,
+    },
+    bcp: {
+        margin: 4,
+    },
+    topbutton: {
+        zIndex: 2000,
+    }
     
 });
 
@@ -86,7 +94,8 @@ class CameraDialog extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            rotation: 0
+            rotation: 0,
+            loaded: false
         }
         this.rotate = this.rotate.bind(this);
         
@@ -109,8 +118,27 @@ class CameraDialog extends React.Component {
     
     componentDidMount() {
         this.enableScaling()
+        if( this.props.live && Hls.isSupported() ) {
+            var hls = new Hls();
+            var video=this.videoRef;
+            hls.loadSource('https://home.dayton.home:4443/hls/'+this.props.name+'.m3u8');
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED,function() { video.play(); });
+        } 
     }
-    
+
+    componentDidUpdate() {
+        if( this.props.live && Hls.isSupported() && !this.state.loaded ) {
+            var hls = new Hls();
+            var video=this.videoRef;
+            hls.loadSource('https://home.dayton.home:4443/hls/'+this.props.name+'.m3u8');
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED,function() { video.play(); });
+            this.setState({loaded: true})
+        }
+
+    }
+   
 
     rotate() {
         var newRotation=0;
@@ -125,27 +153,39 @@ class CameraDialog extends React.Component {
   
     render() {
         
-        const { classes } = this.props;
+        const { classes, live } = this.props;
         const { rotation } =  this.state;
+        const srcurl="https://home.dayton.home:4443/hls/"+this.props.name+".m3u8"
         
         return (
             <Dialog fullScreen open={this.props.showDialog} onClose={() =>  this.closeDialog()} className={classes.bigcamDialog} PaperProps ={{ classes: { root: classes.paper}}}>
                 <DialogActions>
-                    <Button size="small" color="primary" onClick={() => this.props.changeInterval()}>
+                    { !live && 
+                    <Button size="small" color="primary" onClick={() => this.props.changeInterval()} className={classes.topbutton}>
                         <TimerIcon />{this.props.refreshInterval/1000}
                     </Button>
-                    <IconButton onClick={() => this.rotate()} aria-label="Rotate" color="primary" >
+                    }
+                    <IconButton onClick={() => this.rotate()} aria-label="Rotate" color="primary" className={classes.topbutton}>
                         <ScreenRotationIcon />
                     </IconButton>
-                    <IconButton onClick={() => this.closeDialog()} aria-label="Close" color="primary" autoFocus>
+                    <IconButton onClick={() => this.closeDialog()} aria-label="Close" color="primary" className={classes.topbutton} autoFocus>
                         <CloseIcon />
                     </IconButton>
                 </DialogActions>
-                <img className={this.state.rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} src={this.props.src}/>
+                <Paper className={classes.bcp} >
+                    { live ?
+                    <video controls muted autoPlay playsInline id="video" className={this.state.rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} ref={video => this.videoRef = video}>
+                        <source src={srcurl} type="application/x-mpegURL" />
+                    </video>
+                    :
+                    <img className={this.state.rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} src={this.props.src}/>
+                    }
+                </Paper>
             </Dialog>
         )
     }
 };
+
 CameraDialog.propTypes = {
     classes: PropTypes.object.isRequired,
     theme: PropTypes.object.isRequired,

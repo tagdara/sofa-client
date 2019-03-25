@@ -1,7 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withThemeChange } from './DataContext/withThemeChange';
+import { withThemeChange } from './theme/withThemeChange';
+import { withLayout} from './DataContext/withLayout';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -23,7 +24,6 @@ import CompareIcon from '@material-ui/icons/Compare';
 import PersonIcon from '@material-ui/icons/Person';
 import EditIcon from '@material-ui/icons/Edit';
 
-
 const useStyles = makeStyles({
         
     listItem: { minHeight: 48,
@@ -38,9 +38,6 @@ const useStyles = makeStyles({
         padding: '0 8px',
         justifyContent: 'flex-end',
     },
-    
-    
-
 });    
 
 
@@ -109,5 +106,5 @@ function Sidebar(props) {
     );
 }
 
-export default withThemeChange(Sidebar);
+export default withLayout(withThemeChange(Sidebar));
 

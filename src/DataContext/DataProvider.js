@@ -1,10 +1,11 @@
-import { DataContext } from "./DataContext";
 import React, { PureComponent, Component, createElement  } from 'react';
 import createSocket from "sockette-component";
 const Sockette = createSocket({ Component, createElement });
 
 import lightTheme from '../theme/sofaThemeLight';
 import darkTheme from '../theme/sofaThemeDark';
+
+export const DataContext = React.createContext();
 
 export class DataProvider extends PureComponent {
   
@@ -32,8 +33,6 @@ export class DataProvider extends PureComponent {
             server: "wss://"+window.location.hostname+"/ws",
             socket: null,
             websocketStatus: 'init',
-            colorScheme: '',
-            sofaTheme: {},
             region: "Main",
             player: "",
         };
@@ -303,52 +302,12 @@ export class DataProvider extends PureComponent {
         
     }
     
-    getTheme = () => {
-        if (this.state.sofaTheme.hasOwnProperty('palette')) { 
-            return this.state.sofaTheme 
-        }
-        var d = new Date();
-        var n = d.getHours();
-        if (n>17 || n<8) {
-            return darkTheme
-        } else {
-            return lightTheme
-        }
-         
-    }
-    
-    setTheme = themeName => {
-        
-        if (themeName=='dark') {
-            this.setState({colorScheme: 'dark', sofaTheme: darkTheme})
-            return darkTheme
-        } else if (themeName=='light') {
-            this.setState({colorScheme: 'light', sofaTheme: lightTheme})
-            return lightTheme
-        }  
-        
-        var d = new Date();
-        var n = d.getHours();
-        if (n>17 || n<8) {
-            this.setState({colorScheme: 'dark', sofaTheme: darkTheme})
-            return darkTheme
-        } else {
-            this.setState({colorScheme: 'light', sofaTheme: lightTheme})
-            return lightTheme
-        }
-    }
-
     setRegion = region => {
         this.setState({region: region})
     }
 
     setPlayer = player => {
         this.setState({player: player})
-    }
-
-    setColorScheme = scheme => {
-        this.setState({colorScheme: scheme})
-        this.setTheme(scheme)
     }
 
     setLayout = (layoutName, layoutProps) => {
@@ -403,13 +362,30 @@ export class DataProvider extends PureComponent {
             })
             .then(res=>console.log('Alexa command response:',res.json()))
     }
-    
+
+    catchError = ( error ) => {
+        console.log( error );
+    }
+
+
+    restGet = (url) => {
+
+        fetch('/deviceListWithData')
+            .then(response => {
+                if ( !response.ok ) {
+                    this.catchError( response );
+                } else {
+                    return response.json()
+                }
+            }).catch( this.catchError );
+    }
+
     componentDidMount() {
         //window.addEventListener('resize', this.handleWindowSizeChange);
-        this.setTheme()
+
         console.log('Fetching device info')
         fetch('/deviceListWithData')
- 		    .then(result=>result.json())
+            .then(result=>result.json())
             .then(data=>{   this.mergeStates(data['state']);
                             this.updateDeviceList(data['devices'], true);
                             
@@ -441,11 +417,6 @@ export class DataProvider extends PureComponent {
         return (
             <DataContext.Provider
                 value={{
-                    colorScheme: this.state.colorScheme,
-                    setColorScheme: this.setColorScheme,
-                    sofaTheme: this.state.sofaTheme,
-                    setTheme: this.setTheme,
-                    getTheme: this.getTheme,
                     devices: this.state.devices,
                     deviceState: this.state.deviceState,
                     directives: this.state.directives,

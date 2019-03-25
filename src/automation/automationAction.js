@@ -98,7 +98,6 @@ export default function AutomationAction(props) {
 
     function getActionValues(controller, command) {
         return props.directives[controller][command]
-
     }
 
     function getActionValue(controller, command) {
@@ -122,7 +121,7 @@ export default function AutomationAction(props) {
             var parval={}
             parval[parentField]=edval
             setEditVal(edval)
-            newitem.value=edval
+            newitem.value=parval
             props.save(props.index, newitem)
         } else {
             setEditVal(edval)
@@ -137,21 +136,23 @@ export default function AutomationAction(props) {
         var subfields=[]
         var edval={}
         var parent=""
-
+        
         for (var av in actionValues) {
             if (typeof actionValues[av] === 'object') {
                 parent=av
                 for (var avsub in actionValues[av]) {
                     subfields.push({ 'name':avsub, 'type': actionValues[av][avsub] })
                     edval[avsub]=''
-                    if (props.item.value.hasOwnProperty(av)) {
-                        if (props.item.value[av].hasOwnProperty(avsub)) {
-                            edval[avsub]=props.item.value[av][avsub]
+                    if (props.item.hasOwnProperty('value')) {
+                        if (props.item.value.hasOwnProperty(av)) {
+                            if (props.item.value[av].hasOwnProperty(avsub)) {
+                                edval[avsub]=props.item.value[av][avsub]
+                            } 
                         }
                     }
                 }
             } else {
-                //console.log('not an object',actionValues[av])
+                console.log('not an object',actionValues[av])
                 subfields= [{ "name":av, "type":actionValues[av] }]
                 edval[av]=''
                 if (props.item.hasOwnProperty('value')) {

@@ -25,7 +25,7 @@ export default function Device(props) {
     }   
 
     return (
-        <GridItem>
+        <GridItem nopaper={true} >
             <ListItem>
                 <ToggleAvatar avatarState={"on"}><TuneIcon /></ToggleAvatar>
                 <ListItemText primary={props.name}/>

@@ -35,7 +35,7 @@ export default function Scene(props) {
     }
     
     return (
-        <GridItem >
+        <GridItem  nopaper={true}>
             <ListItem >
                 <ToggleAvatar avatarState={props.shortcut==props.computedLevel.toString() ? "on" : "off"} onClick={ () => runScene(name)}>
                     {props.shortcut=='x' ? <ListIcon /> : props.shortcut }

@@ -4,6 +4,8 @@ import { withData } from './DataContext/withData';
 
 import AutomationSave from "./automation/automationSave"
 import AutomationTitle from "./automation/automationTitle"
+import AutomationDetails from "./automation/automationDetails"
+
 import AutomationColumn from "./AutomationColumn"
 import AutomationRow from "./AutomationRow"
 import ToggleButton from './ToggleButton'
@@ -40,18 +42,20 @@ function AutomationLayout(props) {
             .then(result=>loadAutomation(result));
     }
     
-    function loadAutomation(automation) {
+    function loadAutomation(newauto) {
         var newactions=[]
         var changes=false
         
-        if (automation.hasOwnProperty('favorite')) {
-            setFavorite(automation['favorite'])
+        setAutomation(newauto)
+        
+        if (newauto.hasOwnProperty('favorite')) {
+            setFavorite(newauto['favorite'])
         } else {
             setFavorite(false)
         }
         
-        if (automation.hasOwnProperty('actions')) {
-            newactions=automation['actions']
+        if (newauto.hasOwnProperty('actions')) {
+            newactions=newauto['actions']
         } 
         
         var addaction=checkCallbackItems('action')
@@ -63,8 +67,8 @@ function AutomationLayout(props) {
         }
         
         var newconditions=[]
-        if (automation.hasOwnProperty('conditions')) {
-            newconditions = automation['conditions']
+        if (newauto.hasOwnProperty('conditions')) {
+            newconditions = newauto['conditions']
         } 
         var addcondition=checkCallbackItems('condition')
         if (addcondition) {
@@ -75,8 +79,8 @@ function AutomationLayout(props) {
         }
         
         var newtriggers=[]
-        if (automation.hasOwnProperty('triggers')) {
-            newtriggers=automation['triggers']
+        if (newauto.hasOwnProperty('triggers')) {
+            newtriggers=newauto['triggers']
         }
         var addtrigger=checkCallbackItems('trigger')
         if (addtrigger) {
@@ -87,8 +91,8 @@ function AutomationLayout(props) {
         }
         
         var newschedules=[]
-        if (automation.hasOwnProperty('schedules')) {
-            newschedules=automation['schedules']
+        if (newauto.hasOwnProperty('schedules')) {
+            newschedules=newauto['schedules']
         }
         var addschedule=checkCallbackItems('schedule')
         if (addschedule) {
@@ -177,6 +181,7 @@ function AutomationLayout(props) {
                     <FavoriteIcon fontSize="small" />
                 </ToggleButton>
             </AutomationTitle>
+            <AutomationDetails automation={automation} />
             <AutomationColumn items={schedules} saved={saved} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
             <AutomationColumn items={triggers} saved={saved} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'AutomationTrigger'} itemtype={"trigger"} />
             <AutomationColumn items={conditions} saved={saved} save={saveType} automationName={props.name} name={"Conditions"} selector={'DevicePropertyLayout'} itemModule={'AutomationCondition'} itemtype={"condition"} />

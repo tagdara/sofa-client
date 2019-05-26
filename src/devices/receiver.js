@@ -132,8 +132,8 @@ export default function Receiver(props) {
                         (props.deviceProperties.muted) ? <VolumeOffIcon /> :  volume
                     }
                 </ToggleAvatar>
-                <SofaAvatarSlider name="Volume" min={0} max={100} defaultValue={0} step={1} value={volume}
-                            disabled={ props.deviceProperties.powerState=='OFF' } minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={true} />
+                <SofaSlider name="Volume" min={0} max={100} defaultValue={0} step={1} value={volume}
+                            disabled={ props.deviceProperties.powerState=='OFF' } minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} />
             </ListItem>
         }
         { !showDetail || props.deviceProperties.powerState=='OFF' ? null :

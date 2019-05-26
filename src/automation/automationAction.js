@@ -94,7 +94,7 @@ export default function AutomationAction(props) {
     
     useEffect(() => {
         parseActionValues()
-    }, []);
+    }, [props.item]);
 
     function getActionValues(controller, command) {
         return props.directives[controller][command]

@@ -19,6 +19,7 @@ function Transition(props) {
 function SofaDialog(props) {
 
     const classes = useStyles();
+    
     return (
         <Dialog className={classes.dialog}
             fullScreen={props.fullScreen}
@@ -37,7 +38,7 @@ function SofaDialog(props) {
 SofaDialog.defaultProps = {
     maxWidth: 'sm',
     tabs: '',
-    tabVale: '',
+    tabValue: '',
     tabChange: '',
 }
 

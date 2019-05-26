@@ -1,6 +1,7 @@
 import React, { Component, createElement  } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import List from '@material-ui/core/List';
 import TemperatureSensor from './thermostat/TemperatureSensor';
@@ -20,9 +21,9 @@ function ThermostatHero(props) {
         
     return (
         !device ? null :
-        <TemperatureSensor onClick={ () => props.setLayoutCard('ThermostatLayout') } key={ device.endpointId } name={ device.friendlyName } device={ device } 
-                    deviceProperties={ props.deviceProperties[device.friendlyName] } wide={props.wide } />
+        <TemperatureSensor onClick={ () => props.applyLayoutCard('ThermostatLayout') } key={ device.endpointId } name={ device.friendlyName } device={ device } 
+                    deviceProperties={ props.deviceProperties[device.endpointId] } wide={props.wide } />
     );
 }
 
-export default withData(ThermostatHero);
+export default withData(withLayout(ThermostatHero));

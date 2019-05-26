@@ -1,9 +1,8 @@
 import React, { memo } from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from './DataContext/withLayout';
+import { withLayout } from './layout/NewLayoutProvider';
 
-import Loadable from 'react-loadable';
 import Grid from '@material-ui/core/Grid';
 import ErrorCard from './ErrorCard';
 import ErrorBoundary from './ErrorBoundary';
@@ -50,33 +49,45 @@ function cardLoading(props) {
 function SofaAppContent(props) {
     
     const classes = useStyles();
-    const mobileBreakpoint = 800
-    const isMobile = window.innerWidth <= mobileBreakpoint;
     const [modules, setModules] = useState([]);
-    const [layout, setLayout] = useState({});
     const [module, setModule] = useState(null);
 
     useEffect(() => {
-        if (!props.layout.hasOwnProperty('pages')) {
-            addModules([props.layoutName])
+        console.log('propslayout',props.layout)
+        if (!props.layout.data.hasOwnProperty('pages')) {
+            addModules([props.layout.name])
         }
-    });
+    },[props.layout]);
     
-    function addModule(modulename) {
+
+    function addSuspenseModule(modulename) {
         
-        return (Loadable( { loader: () => import('./'+modulename), loading: cardLoading, }))
+        return ( React.lazy(() => import('./'+modulename)))
+    }
+
+    function renderSuspenseModule( modulename, moduleprops ) {
+
+        if (modules.hasOwnProperty(modulename)) {
+            let Module = modules[modulename]
+            return <React.Suspense fallback={<PlaceholderCard />}>
+                        <Module key={ modulename } {...moduleprops} />
+                    </React.Suspense>
+        } else {
+            return null
+        }
     }
     
     function addModules(modulelist) {
         
         var changes=false;
         var newmodules = {}
-
         modulelist.map( item => {
             if (modules.hasOwnProperty(item)) {
                 newmodules[item]=modules[item]
             } else {
-                newmodules[item]=addModule(item)
+                console.log('adding module',item)
+                //newmodules[item]=addModule(item)
+                newmodules[item]=addSuspenseModule(item)
                 changes=true
             }
         })
@@ -85,38 +96,28 @@ function SofaAppContent(props) {
         }
     }
 
-    function renderModule( modulename, moduleprops ) {
-
-        if (modules.hasOwnProperty(modulename)) {
-            let Module = modules[modulename]
-            return <Module key={ modulename } {...moduleprops} />
-        } else {
-            return null
-        }
-    }
-    
     return (
-        <Grid container spacing={ isMobile && props.layout.type=='single' ? 0: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
-            { props.layout.type=='pages' ? 
+        <Grid container spacing={ props.isMobile && props.layout.data.type=='single' ? 2: 8} className={ props.isMobile ? classes.mobileControlArea : classes.controlArea} >
+            { props.layout.data.type=='pages' ? 
                 <React.Fragment>
-                    { props.layout.order.map( page => {
-                        return (page==props.layoutPage || !isMobile ) ?
-                        <SofaPage key={page} name={page} page={props.layout.pages[page]} />
+                    { props.layout.data.order.map( page => {
+                        return (page==props.layout.page || !props.isMobile ) ?
+                        <SofaPage key={page} name={page} page={props.layout.data.pages[page]} />
                         : null
                     })}
-                { isMobile && <BottomNav toggleSidebar={props.toggleSidebar} closeSidebar={props.closeSidebar}/> }
+                { props.isMobile && <BottomNav toggleSidebar={props.toggleSidebar} closeSidebar={props.closeSidebar}/> }
                 </React.Fragment>
             : null }
-            { props.layout.type=='single' ?
+            { props.layout.data.type=='single' ?
                 <React.Fragment>
     				<ErrorBoundary wide={props.wide}>
-    				{ renderModule(props.layoutName, props.layoutProps) }
+    				{ renderSuspenseModule(props.layout.name, props.layout.props) }
                     </ErrorBoundary>
-                    { (props.layoutProps && props.layoutProps.noBottom ) ? null : <BottomButtons /> }
+                    { (props.layout.props && props.layout.props.noBottom ) ? null : <BottomButtons /> }
                 </React.Fragment>
 			: null }
         </Grid>
     );
 }
 
-export default memo(withLayout(SofaAppContent))
+export default withLayout(SofaAppContent)

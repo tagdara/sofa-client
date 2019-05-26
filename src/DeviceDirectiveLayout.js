@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withDevices } from './DataContext/withDevices';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -59,8 +60,8 @@ function DeviceDirectiveLayout(props) {
                         "deviceName": deviceName
             }
         }
-        
-        props.setLayoutCard(props.returnName, {...props.returnProps, 'item':item, 'noBottom':'true'} )
+        console.log('props.return',props.returnPage.name, props.returnPage.props, item)
+        props.applyLayoutCard(props.returnPage.name, {...props.returnPage.props, 'item':item, 'noBottom':'true'} )
 
 
     }
@@ -77,4 +78,4 @@ function DeviceDirectiveLayout(props) {
 
 };
 
-export default withDevices(memo(DeviceDirectiveLayout));
+export default withDevices(withLayout(memo(DeviceDirectiveLayout)));

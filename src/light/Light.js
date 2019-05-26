@@ -93,7 +93,7 @@ export default function Light(props) {
     
     return (
         <GridItem nopaper={true} >
-            <ListItem >
+            <ListItem button>
                 <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
                     <LightbulbOutlineIcon className={classes.iconSize} />
                 </ToggleAvatar>
@@ -118,7 +118,7 @@ export default function Light(props) {
                 ( props.deviceProperties.color===undefined ?
                     <ListItem className={classes.placeholder} />
                 :
-                    <LightSliderColor sendAlexaCommand={props.sendAlexaCommand} name={props.name} endpointId={props.device.endpointId} color={props.deviceProperties.color}/>
+                    <LightSliderColor sendAlexaCommand={props.sendAlexaCommand} name={props.name} endpointId={props.device.endpointId} brightness={props.deviceProperties.brightness} color={props.deviceProperties.color}/>
                 )
             }
         </GridItem>

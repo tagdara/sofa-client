@@ -30,11 +30,15 @@ const useStyles = makeStyles({
 });
 
 function PlayerGroup(props) {
+    
+    console.log('group', props, props.player, props.deviceProperties)
 
     const classes = useStyles();
     const isMobile = window.innerWidth <= 800;
     const speakers = props.devicesByCategory('SPEAKER')
-    const device = props.deviceByName(props.player)
+    const device = props.deviceByEndpointId(props.player)
+    
+    console.log('group device', device)
     
     function isLinked(name) {
 
@@ -64,11 +68,11 @@ function PlayerGroup(props) {
             <GridBreak label={"Playing"} />
             { props.deviceProperties.hasOwnProperty(props.player) &&
                 <Sonos small={true} setLayoutCard={props.setLayoutCard} setPlayer={props.setPlayer} sendAlexaCommand={props.sendAlexaCommand} 
-                        devices={speakers} name={ device.friendlyName } device={ device } deviceProperties={ props.deviceProperties[device.friendlyName] } linkedPlayers={ props.deviceProperties }/>
+                        devices={speakers} name={ device.friendlyName } player={ device } deviceProperties={ props.deviceProperties[device.endpointId] } linkedPlayers={ props.deviceProperties }/>
             }
             <GridBreak label={"In Group"} />
             { speakers.map(speaker =>
-                isLinked(speaker.friendlyName) &&
+                isLinked(speaker.endpointId) &&
                     <GridItem key={speaker.endpointId} >
                         <ListItem>
                             <ToggleAvatar avatarState={"on"}><SpeakerIcon /></ToggleAvatar>
@@ -83,7 +87,7 @@ function PlayerGroup(props) {
             )}
             <GridBreak label={"Other Players"} />
             { speakers.map(speaker =>
-                !isLinked(speaker.friendlyName) &&
+                !isLinked(speaker.endpointId) &&
                     <GridItem key={speaker.endpointId} >
                         <ListItem>
                             <ToggleAvatar avatarState={"off"}><SpeakerIcon /></ToggleAvatar>

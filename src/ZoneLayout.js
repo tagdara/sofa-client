@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -68,8 +69,8 @@ function ZoneLayout(props) {
     }
     
     function historyZone(name, endpointId) {
-        props.setBack('ZoneLayout', {} )
-        props.setLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"detectionState"})
+        props.applyBackPage('ZoneLayout', {} )
+        props.applyLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"detectionState"})
     }
 
     return (    
@@ -77,15 +78,15 @@ function ZoneLayout(props) {
             <GridBreak label={"Security Zones"} />
 
             { filterByType(securityZones).map((device) =>
-                <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.friendlyName] } />
+                <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.endpointId] } />
             )}
             <GridBreak label={"Automation Zones"} />
             { filterByType(automationZones).map((device) =>
-                <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.friendlyName] } />
+                <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.endpointId] } />
             )}
         </React.Fragment>
     )
 
 };
 
-export default withData(ZoneLayout);
+export default withData(withLayout(ZoneLayout));

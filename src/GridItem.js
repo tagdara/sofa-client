@@ -33,6 +33,13 @@ const useStyles = makeStyles({
     },
     colorband: {
         borderLeft: "solid 5px #44F",
+    },
+    thinmargin: {
+        margin: 2,
+        padding: "4px !important",
+    },
+    normal: {
+        padding: "4px !important",
     }
 });
 
@@ -59,7 +66,7 @@ export default function GridItem(props) {
     )
 
     return (
-        <Grid item xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 4) } >
+        <Grid item xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 4) } className={ props.thinmargin ? classes.thinmargin: classes.normal}>
             { !props.nopaper ?
             <Paper elevation={props.elevation} className={classNames(props.content, props.nopad && classes.nopad, props.colorband && classes.colorband)}  >
                 { itemdata }
@@ -76,4 +83,5 @@ export default function GridItem(props) {
 GridItem.defaultProps = {
     elevation: 1,
     wide: false,
+    thinmargin: false
 }

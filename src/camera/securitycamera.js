@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { withLayout } from '../layout/NewLayoutProvider';
 
 import Card from '@material-ui/core/Card';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -63,7 +64,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function SecurityCamera(props) {
+function SecurityCamera(props) {
 
     const classes = useStyles();
     const intervals = [1000, 500, 5000, 3000]
@@ -108,7 +109,7 @@ export default function SecurityCamera(props) {
     }
     
     return (
-        <GridItem wide={props.wide} nopad={true} >
+        <GridItem wide={props.wide} nopad={true} thinmargin={props.isMobile}>
             
             <img
                 className={imageLoaded ? classes.im : classes.hiddenimage}
@@ -128,22 +129,12 @@ export default function SecurityCamera(props) {
                             <ChevronRightIcon />
                         </IconButton>
                     }
-                    { props.historyButton &&
-                        <IconButton color="primary" className={classes.gridbutton} onClick={ () => props.setLayoutCard('VideoLayout', {'name': props.name})}>
-                            <SlideshowIcon />
-                        </IconButton>
-                    }
                     { props.selectButtons &&
-                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => props.setLayoutCard('CameraLayout')}>
+                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => props.applyLayoutCard('CameraLayout')}>
                             <ViewModuleIcon />
                         </IconButton>
                     }
-                    { props.historyButton &&
-                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => props.setLayoutCard('CameraHistory', {'name': props.name})}>
-                            <HistoryIcon />
-                        </IconButton>
-                    }
-                    
+
                 </React.Fragment>
             :
                 <div className={classes.hidden}>
@@ -157,3 +148,5 @@ export default function SecurityCamera(props) {
     );
 
 }
+
+export default withLayout(SecurityCamera)

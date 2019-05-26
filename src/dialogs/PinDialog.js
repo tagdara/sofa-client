@@ -8,7 +8,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-
+import SecurityCamera from '../camera/securitycamera'
 import SofaDialog from "./SofaDialog"
 
 const useStyles = makeStyles({
@@ -39,7 +39,7 @@ const useStyles = makeStyles({
         height: 72,
     },
     nameInput: {
-        height: 96,
+        height: 72,
         alignItems: "flex-end",
         display: "flex",
     }
@@ -65,9 +65,11 @@ export default function PinDialog(props) {
     }
 
     return (
-        <SofaDialog maxWidth={'xs'} title="Enter PIN" open={props.open} close={clearAndClose} >
-           <DialogContent>
-                <Grid container item spacing={8}  xs={12} >
+        <SofaDialog maxWidth={'xs'} open={props.open} close={clearAndClose} >
+            <DialogContent>
+                <Grid container item spacing={8} xs={12} >
+                    <Grid item xs={12} />
+                    <SecurityCamera wide={true} cameraSource={"unifivideo"} name={props.camera} selectButtons={false} />
                     <Grid item xs={12} className={classes.nameInput}>
                         <TextField
                             id="required"

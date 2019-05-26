@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -34,8 +35,8 @@ function ThermostatLayout(props) {
     const temperatureSensors=props.devicesByCategory('TEMPERATURE_SENSOR')
 
     function switchToHistory() {
-        props.setBack('ThermostatLayout',{})
-        props.setLayoutCard('ThermostatHistory', {})
+        props.applyBackPage('ThermostatLayout',{})
+        props.applyLayoutCard('ThermostatHistory', {})
     }
 
     return (    
@@ -48,16 +49,16 @@ function ThermostatLayout(props) {
 
             { thermostats.map((device) =>
                 <Thermostat sendAlexaCommand={props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
-                                    device={ device } deviceProperties={ props.deviceProperties[device.friendlyName] } />
+                                    device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } />
             )}
             <GridBreak label={"Temperatures"} />
             { temperatureSensors.map((device) =>
                 <TemperatureSensor key={ device.endpointId } name={ device.friendlyName } device={ device } 
-                             deviceProperties={ props.deviceProperties[device.friendlyName] }  />
+                             deviceProperties={ props.deviceProperties[device.endpointId] }  />
             )}
         </React.Fragment>
     )
 
 };
 
-export default withData(ThermostatLayout);
+export default withData(withLayout(ThermostatLayout));

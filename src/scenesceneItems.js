@@ -1,8 +1,9 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
-import Loadable from 'react-loadable';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -15,6 +16,7 @@ import AutomationAction from "./automation/automationAction"
 import AutomationCondition from "./automation/automationCondition"
 import AutomationTrigger from "./automation/automationTrigger"
 import AutomationSchedule from "./automation/automationSchedule"
+import AutomationItemBase from "./automation/AutomationItemBase"
 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -24,7 +26,18 @@ import GridItem from './GridItem';
 import GridPage from './GridPage';
 import GridBreak from './GridBreak';
 import PlaceholderCard from './PlaceholderCard';
+import ErrorBoundary from './ErrorBoundary'
 
+const useStyles = makeStyles({
+    
+    dialogActions: {
+        paddingBottom: "env(safe-area-inset-bottom)",
+    },
+    listDialogContent: {
+        padding: 0,
+    }
+
+});
 
 function cardLoading(props) {
     
@@ -38,19 +51,33 @@ function cardLoading(props) {
     }
 }
 
-function AutomationRow(props) {
+function AutomationColumn(props) {
 
+    const classes = useStyles();
     const [actions, setActions] = useState([])
     const [edit, setEdit] = useState(false)
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
     const [module, setModule] = useState(null)
-    const modmap={'Schedules':AutomationSchedule}
+    const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
+    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
     const AutomationProperty = modmap[props.name]
-
+    
     function getControllerProperties(item) {
-        if (item.hasOwnProperty('propertyName')) {
-            return props.controllerProperties[item.controller][item.propertyName]
+        try {
+            if (item.hasOwnProperty('propertyName')) {
+                if (props.controllerProperties[item.controller].hasOwnProperty(item.propertyName)) {
+                    item.type="property"
+                    return props.controllerProperties[item.controller][item.propertyName]
+                } else if (eventSources.hasOwnProperty(item.propertyName)) {
+                    item.type="event"
+                    return eventSources[item.propertyName]
+                }
+            }
+        }
+        catch(err) {
+            console.log('Error getting properties for',item)
+            return {'error': 'Invalid property: '+item.controller+"/"+item.propertyName}
         }
         return {}
     }    
@@ -119,11 +146,15 @@ function AutomationRow(props) {
     }
 
     function addItem() {
-        setRemove(false); 
-        setReorder(false) 
-        props.setReturn('AutomationLayout', {'name': props.automationName, 'type':props.itemtype })
-        props.setBack('AutomationLayout', {'name': props.automationName } )
-        props.setLayoutCard(props.selector, {'name': props.automationName} )
+        if (props.itemtype=='schedule') {
+            addInPlace()
+        } else {
+            setRemove(false); 
+            setReorder(false) 
+            props.applyReturnPage("AutomationLayout", {'name': props.automationName, 'type':props.itemtype })
+            props.applyBackPage("AutomationLayout",{'name': props.automationName })
+            props.applyLayoutCard(props.selector)
+        }
     }
     
     function addInPlace() {
@@ -131,28 +162,45 @@ function AutomationRow(props) {
         setRemove(false); 
         setReorder(false)
         props.save(props.itemtype,[...props.items, newItem])
-    }
-
-
+    }   
+    
+    const mobileBreakpoint = 800
+    const isMobile = window.innerWidth <= mobileBreakpoint;
+    
     return (    
-        <GridPage wide={true}>
+        <GridPage wide={true} >
             <GridBreak label={props.name} size="h6" >
-                {props.save && 
-                    <IconButton onClick={ () => addInPlace() }>
+                { props.saved &&
+                    <IconButton onClick={ () => addItem() } className={classes.button }>
                         <AddIcon fontSize="small" />
                     </IconButton>
                 }
                 { Object.keys(props.items).length>0 &&
-                <IconButton onClick={ () => { setRemove(!remove); setReorder(false); }}>
+                <IconButton onClick={ () => { setRemove(!remove); setReorder(false); }} className={classes.button }>
                     <RemoveIcon fontSize="small" />
+                </IconButton>
+                }
+                { (props.itemtype!='trigger' && Object.keys(props.items).length>1) &&
+                <IconButton onClick={ () => { setRemove(false); setReorder(!reorder) }} className={classes.button }>
+                    <UnfoldMoreIcon fontSize="small" />
                 </IconButton>
                 }
             </GridBreak>
             { Object.keys(props.items).length>0 ?
                 <React.Fragment>
-                    { props.items.map((item,index) => 
-                        <AutomationProperty key={props.itemtype+index} save={save} remove={remove} delete={deleteItem} 
+                    { props.items.map((item,index) =>
+                        <ErrorBoundary key={props.itemtype+index} >
+                        { props.itemtype=='schedule' ?
+                            <AutomationProperty key={props.itemtype+index} save={save} remove={remove} delete={deleteItem} 
                                 index={index} item={item} />
+                        
+                        :
+                            <AutomationProperty moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
+                                index={index} item={item} device={ props.deviceByEndpointId(item.endpointId) } name={props.deviceByEndpointId(item.endpointId).friendlyName} 
+                                directives={props.directives} controllerProperties={ getControllerProperties(item)} wide={isMobile} 
+                                />
+                        }
+                        </ErrorBoundary>
                     )}
                 </React.Fragment>
                 :
@@ -167,4 +215,4 @@ function AutomationRow(props) {
 
 };
 
-export default withData(AutomationRow);
+export default withData(withLayout(AutomationColumn));

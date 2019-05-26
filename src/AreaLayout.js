@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -12,6 +13,9 @@ import Typography from '@material-ui/core/Typography';
 import Light from './light/Light';
 import GridBreak from './GridBreak';
 import Scene from './Scene'
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
+
 
 const useStyles = makeStyles({
     
@@ -40,14 +44,32 @@ function AreaLayout(props) {
     const [colorControl, setColorControl] = useState(false)
 
     useEffect(() => {
-        fetch('/list/logic/area/'+props.layoutProps.name)
-            .then(result=>result.json())
-            .then(data=>setAreaData(data))
-        fetch('/list/logic/scenes/')
-            .then(result=>result.json())
-            .then(data=>setSceneData(data))
+        console.log('layoutprops',props.layout.props)
+        //fetch('/list/logic/area/'+props.layout.props.name)
+        //    .then(result=>result.json())
+        //    .then(data=>setAreaData(data))
+        //fetch('/list/logic/scenes/')
+        //    .then(result=>result.json())
+        //    .then(data=>setSceneData(data))
 
     }, []);
+
+    function childrenByArea(filter) {
+
+        var ads=[]
+        var devs=props.deviceProperties['logic:area:'+props.layout.props.name].children
+        for (var i = 0; i < devs.length; i++) {
+            var dev=props.deviceByEndpointId(devs[i])
+            if (!filter || filter=='ALL' || dev.displayCategories.includes(filter)) {
+                var dbe=props.deviceByEndpointId(devs[i])
+                if (dbe) {
+                    ads.push(dbe)
+                }
+            }
+        }
+        return ads
+    }
+
 
     function nameSort(a,b) {
       if (a.friendlyName < b.friendlyName)
@@ -57,18 +79,32 @@ function AreaLayout(props) {
       return 0;
     }
 
-    function filterByType(filter) {
+    function OldfilterByType(filter) {
         var lights=[]
-        var all=devicesByArea(props.layoutProps.name)
+        var all=devicesByArea(props.layout.props.name)
         if (filter=="ALL") { return all.sort(nameSort) }
         for (var j = 0; j < all.length; j++) {
-            if (props.deviceProperties[all[j].friendlyName].powerState==filter) {
+            if (props.deviceProperties[all[j].endpointId].powerState==filter) {
                 lights.push(all[j])
             }
         }
         return lights.sort(nameSort)
             
     }
+
+    function filterByType(filter) {
+        var lights=[]
+        var all=childrenByArea('LIGHT')
+        if (filter=="ALL") { return all.sort(nameSort) }
+        for (var j = 0; j < all.length; j++) {
+            if (props.deviceProperties[all[j].endpointId].powerState==filter) {
+                lights.push(all[j])
+            }
+        }
+        return lights.sort(nameSort)
+            
+    }
+
     
     function devicesByArea() {
 
@@ -87,7 +123,7 @@ function AreaLayout(props) {
         return ads
     }
     
-    function isAShortcut(scene) {
+    function OldisAShortcut(scene) {
         for (var shortcut in areaData.shortcuts) {
             if (areaData.shortcuts[shortcut]==scene) {
                 return shortcut
@@ -95,8 +131,38 @@ function AreaLayout(props) {
         }
         return 'x'
     }
+
+    function isAShortcut(scene) {
+        if (props.deviceProperties['logic:area:'+props.layout.props.name].shortcuts.indexOf(scene) >= 0) {
+            return props.deviceProperties['logic:area:'+props.layout.props.name].shortcuts.indexOf(scene)
+        } else {
+            return 'x'
+        }
+
+    }
+
     
     function sortByShortcuts() {
+
+        var outscenes=[]
+        var allscenes=childrenByArea('SCENE_TRIGGER')
+        var shortcutlist=[...props.deviceProperties['logic:area:'+props.layout.props.name].shortcuts].reverse()
+        for (var j = 0; j < shortcutlist.length; j++) {
+            outscenes.push(props.deviceByEndpointId(shortcutlist[j]))
+        }
+        
+        for (var j = 0; j < allscenes.length; j++) {
+            if (!shortcutlist.includes(allscenes[j].endpointId)) {
+                outscenes.push(allscenes[j])
+            }
+        }
+        
+        return outscenes
+            
+    }
+
+    function oldsortByShortcuts() {
+
         if (areaData.hasOwnProperty('scenes') && areaData.hasOwnProperty('shortcuts')) {
             var sortlist=Object.keys(areaData.scenes).sort().reverse();
             var sc=Object.keys(areaData.shortcuts).sort();
@@ -124,7 +190,7 @@ function AreaLayout(props) {
     
     return (    
         <React.Fragment>
-            <GridBreak label={props.layoutProps.name}>
+            <GridBreak label={props.layout.props.name}>
                 <Button onClick={ () => setFilter('ALL')} color={ filter=='ALL' ? "primary" : "default"} className={classes.button }>
                     All
                 </Button>
@@ -146,18 +212,23 @@ function AreaLayout(props) {
 
             { filterByType(filter).map((device) =>
                 <Light key={ device.endpointId } sendAlexaCommand={props.sendAlexaCommand} name={ device.friendlyName }
-                    device={ device } deviceProperties={ props.deviceProperties[device.friendlyName] } 
+                    device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } 
                     brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
                     />
             )}
             
-            <GridBreak label={"Scenes"} />
+            <GridBreak label={"Scenes"}>
+                <IconButton onClick={ () => addScene() } className={classes.button }>
+                    <AddIcon fontSize="small" />
+                </IconButton>
+            </GridBreak>
+
             { sortByShortcuts().map(scene => 
-                <Scene key={scene} shortcut={isAShortcut(scene)} sendAlexaCommand={props.sendAlexaCommand} name={scene} computedLevel={computedLevel} />
+                <Scene key={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} sendAlexaCommand={props.sendAlexaCommand} name={scene.friendlyName} computedLevel={computedLevel} />
             )}
 
         </React.Fragment>
     )
 };
 
-export default withData(AreaLayout);
+export default withData(withLayout(AreaLayout));

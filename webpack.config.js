@@ -24,13 +24,7 @@ const config = {
         }
       ]
     },
-    plugins : [ 
-        new BundleAnalyzerPlugin({
-            analyzerMode: 'disabled',
-            generateStatsFile: true,
-            statsOptions: { source: false }
-        }),
-    ],  
+    plugins : [],  
 };
 
 module.exports = config;

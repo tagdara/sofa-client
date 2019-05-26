@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from './DataContext/withLayout';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
@@ -61,22 +61,22 @@ function BottomNav(props) {
     const icons = {'Audio Video':MusicVideoIcon, 'Security':VerifiedUserIcon, 'Lights':LightbulbOutlineIcon}
     
     useEffect( () => {
-        if (props.layout.hasOwnProperty('pages')) {
-            if (props.layoutPage=="" && props.layout.pages) {
-                props.setLayoutPage(Object.keys(props.layout.pages)[0])
+        if (props.layout.data.hasOwnProperty('pages')) {
+            if (props.layout.page=="" && props.layout.data.pages) {
+                props.applyLayoutPage(Object.keys(props.layout.data.pages)[0])
             }
         }
     })
 
     function handleChange(event, value) {
-
+        
         if (value=="Menu") {
             props.toggleSidebar()
         } else if (value=="Home") {
-            props.setLayout('Home');
+            props.applyLayout('Home');
         } else {
             props.closeSidebar()
-            props.setLayoutPage(value);
+            props.applyLayoutPage(value);
         }
     };
     
@@ -93,9 +93,9 @@ function BottomNav(props) {
     return (
         <React.Fragment>
             <Toolbar className={classes.bottomSpacer} />
-            <BottomNavigation value={props.layoutPage} onChange={handleChange} className={classes.root}>
+            <BottomNavigation value={props.layout.page} onChange={handleChange} className={classes.root}>
                 <BottomNavigationAction value="Menu" icon={<MenuIcon />} />
-                { Object.keys(props.layout.pages).map( page => 
+                { Object.keys(props.layout.data.pages).map( page => 
                     <BottomNavigationAction key={page+'bn'} value={page} icon={getIcon(page)} />
                 )}
             </BottomNavigation>

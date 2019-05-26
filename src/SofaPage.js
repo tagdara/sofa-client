@@ -1,9 +1,8 @@
-import React, { Component, createElement  } from 'react';
+import React, { Component, createElement, memo  } from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
+import { withHeartbeat } from './DataContext/withData';
 
-import Loadable from 'react-loadable';
 import Grid from '@material-ui/core/Grid';
 import ErrorCard from './ErrorCard';
 import PlaceholderCard from './PlaceholderCard';
@@ -11,33 +10,13 @@ import ErrorBoundary from './ErrorBoundary';
 import Toolbar from '@material-ui/core/Toolbar';
 
 const useStyles = makeStyles({
-    
-    controlArea: {
-        margin: "8 auto",
-        maxWidth: 1440,
-        width: "100%",
-        boxSizing: "border-box",
-        overflowY: "auto",
-        justifyContent: "center",
-    },
-    mobileControlArea: {
-        margin: "8 auto",
-        maxWidth: 600,
-        width: "100%",
-        paddingTop: "env(safe-area-inset-top)",
-        boxSizing: "border-box",
-        overflowY: "auto",
-        minHeight: "100%",
-    },
+
     gridColumn: {
         margin: 0,
         overflowX: "hidden",
         overflowY: "hidden",
         alignContent: "start",
-    },
-    gridItem: {
-        overflowX: "hidden",
-        width: "100%",
+        padding: "4 !important",
     },
     paddedToolbar: {
         paddingBottom: "env(safe-area-inset-bottom)",
@@ -52,7 +31,7 @@ function cardLoading(props) {
     } else if (props.pastDelay) {
         return <PlaceholderCard />;
     } else {
-        return null;
+        return <ErrorCard />;
     }
 }
 
@@ -65,10 +44,13 @@ function SofaPage(props) {
     const [layout, setLayout] = useState({});
 
     useEffect(() => {
+        console.log('page data', props.page)
+        //props.getLastUpdate()
+        if (props.timedOut()) { props.refreshData() }
         if (props.page) {
             addPageModules(props.page)
         }
-    });
+    },[]);
 
     function addModules(modulelist) {
         
@@ -79,9 +61,8 @@ function SofaPage(props) {
             if (modules.hasOwnProperty(item)) {
                 newmodules[item]=modules[item]
             } else {
-                newmodules[item]=( Loadable({
-                    loader: () => import('./'+item), // Here can be any component!
-                    loading: cardLoading, }));
+                console.log('Loading module',item)
+                newmodules[item]= React.lazy( () => import('./'+item) )
                 changes=true
             }
         })
@@ -94,30 +75,33 @@ function SofaPage(props) {
     function addPageModules(layout) {
         
         var newmodules = []
-            props.page.map( item => 
+            layout.map( item => 
                 newmodules.push(item['module'])
             );
         addModules(newmodules)
     }
 
-    function renderLayoutModule( item, page, index ) {
-
+    
+    function renderSuspenseLayoutModule( item, page, index ) {
+        
         if (modules.hasOwnProperty(item['module'])) {
             let Module = modules[item['module']]
             item['props']['wide']=true
-            return <Module key={ page+index } {...item['props']} />
+            let moduleprops=item['props']
+            return  <React.Suspense fallback={<PlaceholderCard />}>
+                        <Module key={ item['module'] } {...item['props']} />
+                    </React.Suspense>
+
         } else {
-            //console.log('Did not find',item['module'],'in',modules)
             return null
         }
     }
 
     return (
-        <Grid container item spacing={8} key={props.name} xs={ isMobile ? 12 : 4 } 
-            className={ classes.gridColumn}>
+        <Grid container item spacing={1} key={props.name} xs={ isMobile ? 12 : 4 } className={ classes.gridColumn}>
             { props.page.map( (item, i) => 
 				<ErrorBoundary wide={true} key={props.name+i} >
-					{ renderLayoutModule(item, props.name, i) }
+					{ renderSuspenseLayoutModule(item, props.name, i) }
 				</ErrorBoundary>
             )}
             {isMobile &&
@@ -127,4 +111,4 @@ function SofaPage(props) {
     );
 }
 
-export default withData(SofaPage)
+export default withHeartbeat(SofaPage)

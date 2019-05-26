@@ -20,9 +20,9 @@ export default function NoPlayer(props) {
     const classes = useStyles();
     return (
             <GridItem wide={props.wide} >
-                <ListItem className={classes.listItem} onClick={ () => props.setLayoutCard('PlayersLayout',{})}>
+                <ListItem onClick={ () => props.setLayoutCard('PlayersLayout',{})}>
                     <Avatar ><QueueMusicIcon /></Avatar>
-                    <ListItemText primary={"No music playing"} />
+                    <ListItemText primary={"Waiting for player data"} />
                 </ListItem>
             </GridItem>
     );

@@ -29,7 +29,7 @@ export default function AreaLine(props) {
 
     useEffect(() => {
         computeLevels()
-    })
+    }, [props.deviceProperties])
    
     function computeLevels() {
 
@@ -51,8 +51,8 @@ export default function AreaLine(props) {
                         if (props.devices[j].friendlyName==light) {
                             var lightname=props.devices[j].friendlyName
 
-                            if (props.deviceProperties[lightname]['powerState']=='ON') {
-                                var bri=props.deviceProperties[lightname]['brightness']
+                            if (props.deviceProperties[props.devices[j].endpointId]['powerState']=='ON') {
+                                var bri=props.deviceProperties[props.devices[j].endpointId]['brightness']
                             } else {
                                 var bri=0
                             }

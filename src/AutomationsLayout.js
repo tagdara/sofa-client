@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -48,8 +49,8 @@ function AutomationsLayout(props) {
     }
     
     function selectAutomation(automation) {
-        props.setBack('AutomationsLayout',{})
-        props.setLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
+        props.applyBackPage('AutomationsLayout',{})
+        props.applyLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
     }    
     
     function addAutomation(automationName) {
@@ -95,13 +96,13 @@ function AutomationsLayout(props) {
     }
 
     function newAutomation() {
-        props.setBack('AutomationsLayout',{})
-        props.setLayoutCard('AutomationLayout', {'noBottom':true})        
+        props.applyBackPage('AutomationsLayout',{})
+        props.applyLayoutCard('AutomationLayout', {'noBottom':true})        
     }
     
     function switchToSchedule() {
-        props.setBack('AutomationsLayout',{})
-        props.setLayoutCard('SchedulesLayout', {})
+        props.applyBackPage('AutomationsLayout',{})
+        props.applyLayoutCard('SchedulesLayout', {})
     }
 
     return (    
@@ -142,4 +143,4 @@ function AutomationsLayout(props) {
 
 };
 
-export default withData(AutomationsLayout);
+export default withData(withLayout(AutomationsLayout));

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withThemeChange } from './theme/withThemeChange';
-import { withLayout} from './DataContext/withLayout';
+import { withThemeChange } from './theme/SofaTheme';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -51,7 +51,7 @@ function Sidebar(props) {
     }
     
     function selectLayoutCard(layout, cardprops) {
-        props.setLayoutCard(layout, cardprops)
+        props.applyLayoutCard(layout, cardprops)
         props.close()
     }
     
@@ -75,7 +75,7 @@ function Sidebar(props) {
                     </ListItemIcon>
                     <ListItemText primary={'Automation'} />
                 </ListItem>
-                <ListItem button onClick={() => props.setColorScheme(props.colorScheme=='dark' ? 'light' : 'dark')}>
+                <ListItem button onClick={() => props.applyTheme(props.colorScheme=='dark' ? 'light' : 'dark')}>
                     <ListItemIcon>
                         <CompareIcon />
                     </ListItemIcon>

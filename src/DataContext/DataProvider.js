@@ -1,9 +1,4 @@
 import React, { PureComponent, Component, createElement  } from 'react';
-import createSocket from "sockette-component";
-const Sockette = createSocket({ Component, createElement });
-
-import lightTheme from '../theme/sofaThemeLight';
-import darkTheme from '../theme/sofaThemeDark';
 
 export const DataContext = React.createContext();
 
@@ -19,25 +14,14 @@ export class DataProvider extends PureComponent {
             controllerEvents: {},
             directives: {},
             virtualDevices: {},
-            layout: {},
-            fullLayout: {},
-            layoutName: "Home",
-            layoutProps: {},
-            layoutPage: "",
-            
-            returnName: "",
-            returnProps: {},
-            backName: "",
-            backProps: {},
-            
-            server: "wss://"+window.location.hostname+"/ws",
-            socket: null,
-            websocketStatus: 'init',
             region: "Main",
             player: "",
+            heartbeat: Date.now(),
+            lastUpdate: null,
         };
         
         this.pendingDevs=[];
+        this.eventSource = new EventSource("sse");
 
     }
     
@@ -46,34 +30,43 @@ export class DataProvider extends PureComponent {
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         )
     }
-
-    onOpen = ev => {
-        this.setState({websocketStatus:"connected"})
-        console.log("Websocket connected.");
-    }
  
-    onReconnect = ev => {
-        console.log("> Reconnecting...", ev);
+    timedOut = () => {
+        if (((new Date) - this.heartbeat) > 15000) {
+            return true
+        } 
+        return false
     }
-
-    onClose = ev => {
-        console.log("> Websocket closed.", ev);
+    
+    checkUpdate = (serverUpdate) => {
+        var serverdate = new Date(serverUpdate.lastupdate)
+        if (this.state.lastUpdate && (serverdate > this.state.lastUpdate)) {
+            this.refreshData()   
+        }
     }
-
-    sendMessage = ev => {
-        // WebSocket available in state!
-        console.log('Sending', ev)
-        this.state.socket.send(ev);
+    
+    getLastUpdate = () => {
+  	    fetch('/lastupdate')
+ 		    .then(result=>result.json())
+            .then(result=>this.checkUpdate(result))   
     }
  
     onMessage = ev => {
         var jsondata=JSON.parse(ev.data)
+        this.setState({'heartbeat':Date.now()})
+        
+        if (jsondata.hasOwnProperty('heartbeat')) {
+            this.checkUpdate(jsondata)
+        }
+
         if (jsondata.hasOwnProperty('event')) {
+            this.setState({lastUpdate:Date.now()})
+            console.log('SSE update', jsondata)
             if (jsondata.event.header.name=="Response" || jsondata.event.header.name=='StateReport') {
                 this.mergeState(this.nameByEndPointId(jsondata.event.endpoint.endpointId), jsondata)
 
             } else if ((jsondata.event.header.name="ChangeReport") && jsondata.event.payload.hasOwnProperty('change')) {
-                //console.log('payload',jsondata.payload)
+
                 for (var j = 0; j < jsondata.event.payload.change.properties.length; j++) {
                     jsondata.context.properties.push(jsondata.event.payload.change.properties[j])
                 }
@@ -194,6 +187,7 @@ export class DataProvider extends PureComponent {
                 return this.state.devices[i]
             } 
         }
+        return {}
     }
     
     deviceByEndpointId = endpointId => {
@@ -309,33 +303,7 @@ export class DataProvider extends PureComponent {
     setPlayer = player => {
         this.setState({player: player})
     }
-
-    setLayout = (layoutName, layoutProps) => {
-        this.setState({ layoutName : layoutName, layoutProps: layoutProps, layout : this.state.fullLayout[layoutName] })
-    }
-    
-    setLayoutCard = (layoutName, layoutProps) => {
-        this.setState({ layoutName : layoutName, layoutProps: layoutProps, layout : { type: "single" } })
-    }
-
-    setReturn = (returnName, returnProps) => {
-        console.log('setting return',returnName, returnProps)
-        this.setState({ returnName : returnName, returnProps: returnProps })
-    }
-
-    setBack = (backName, backProps) => {
-        this.setState({ backName : backName, backProps: backProps })
-    }
-    
-    goBack = (backName, backProps) => {
-        this.setLayoutCard(this.state.backName, this.state.backProps)
-        this.setState({ backName: '', backProps: {}})
-    }
-    
-    setLayoutPage = (newPage) => {
-        this.setState({ layoutPage : newPage })
-    }
-    
+ 
     sendAlexaCommand = (deviceName, endpointId, controller, command, payload={}) => {
         
         // value is optional for some alexa commands.  The original sofa2 implementation tried to take a string value and then map it to 
@@ -379,26 +347,26 @@ export class DataProvider extends PureComponent {
                 }
             }).catch( this.catchError );
     }
-
-    componentDidMount() {
-        //window.addEventListener('resize', this.handleWindowSizeChange);
-
-        console.log('Fetching device info')
+    
+    refreshData = () => {
+        console.log('Refreshing device data')
+        var newlu = new Date()
         fetch('/deviceListWithData')
             .then(result=>result.json())
             .then(data=>{   this.mergeStates(data['state']);
                             this.updateDeviceList(data['devices'], true);
-                            
-            })
+                            this.setState({lastUpdate : newlu});
+            })        
+    }
 
-        //fetch('/deviceList')
- 		//    .then(result=>result.json())
-        //    .then(data=>this.updateDeviceList(data))
+    componentDidMount() {
+        //window.addEventListener('resize', this.handleWindowSizeChange);
 
-  	    fetch('/layout')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({ fullLayout : result, layout : result[this.state.layoutName]}));
+        this.eventSource.onmessage = e =>
+            this.onMessage(e);
 
+        console.log('Fetching device info')
+        this.refreshData()
 
   	    fetch('/directives')
  		    .then(result=>result.json())
@@ -421,7 +389,6 @@ export class DataProvider extends PureComponent {
                     deviceState: this.state.deviceState,
                     directives: this.state.directives,
                     virtualDevices: this.state.virtualDevices,
-                    websocketStatus: this.state.websocketStatus,
                     controllerProperties:this.state.controllerProperties,
                     controllerEvents:this.state.controllerEvents,
                     sendAlexaCommand: this.sendAlexaCommand,
@@ -432,30 +399,20 @@ export class DataProvider extends PureComponent {
                     changeTimesFromDevices: this.changeTimesFromDevices,
                     getHistoryForDevice: this.getHistoryForDevice,
                     deviceByEndpointId: this.deviceByEndpointId,
-                    fullLayout: this.state.fullLayout,
-                    layout: this.state.layout,
-                    layoutName: this.state.layoutName,
-                    layoutProps: this.state.layoutProps,
-                    layoutPage: this.state.layoutPage,
-                    setLayout: this.setLayout,
-                    setLayoutCard: this.setLayoutCard,
-                    setLayoutPage: this.setLayoutPage,
-                    returnName: this.state.returnName,
-                    returnProps: this.state.returnProps,
-                    setReturn: this.setReturn,
-                    goBack: this.goBack,
-                    backName: this.state.backName,
-                    backProps: this.state.backProps,
-                    setBack: this.setBack,
                     setRegion: this.setRegion,
                     region: this.state.region,
                     setPlayer: this.setPlayer,
                     player: this.state.player,
+                    heartbeat: this.state.heartbeat,
+                    timedOut: this.timedOut,
+                    refreshData: this.refreshData,
+                    eventSource: this.eventSource,
+                    getLastUpdate: this.getLastUpdate,
+                    lastUpdate: this.state.lastUpdate,
+                    checkUpdate: this.checkUpdate,
                 }}
             >
                 {this.props.children}
-                <Sockette url={this.state.server} getSocket={socket => {this.setState({socket});}}
-                    maxAttempts={25} onclose={this.onClose} onopen={this.onOpen} onmessage={this.onMessage} onreconnect={this.onReconnect} />
             </DataContext.Provider>
         );
     }

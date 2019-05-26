@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import Avatar from '@material-ui/core/Avatar';
 
 const styles = theme => ({
@@ -46,9 +47,12 @@ class ToggleAvatar extends React.Component {
         const avclass=this.props.classes[this.props.avatarState]
         
         return (
-            <Avatar className={ avclass} onClick={this.props.onClick}>
-                {this.props.children}
-            </Avatar>
+            <ListItemAvatar>
+                <Avatar className={ avclass} onClick={this.props.onClick}>
+                    {this.props.children}
+                </Avatar>
+            </ListItemAvatar>
+
         )
     }
 };

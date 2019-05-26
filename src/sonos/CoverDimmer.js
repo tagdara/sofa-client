@@ -1,28 +1,31 @@
 import React from 'react';
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+import Paper from '@material-ui/core/Paper';
 
-const styles = theme => ({
 
-    coverDimmer: {
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: theme.palette.background.default,
-        opacity: "0.8",
-    },
+//  theme.palette.background.default,
+const useStyles = makeStyles(theme => {
+    return {
+        coverDimmer: {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: theme.palette.background.default,
+            opacity: "0.8",
+        },
+    }
 
 });
 
-class CoverDimmer extends React.Component {
+export default function CoverDimmer(props) {
+
+    const classes = useStyles();
     
-    render() {
-        const { classes } = this.props;
-        return ( 
-            <div className={classes.coverDimmer} {...this.props}></div>
-        );
-    }
+    return ( 
+        <Paper elevation={0} className={classes.coverDimmer} {...props} />
+    );
 }
 
-export default withTheme()(withStyles(styles)(CoverDimmer));

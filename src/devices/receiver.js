@@ -12,13 +12,17 @@ import Switch from '@material-ui/core/Switch';
 import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
 import VolumeUpIcon from '@material-ui/icons/VolumeUp';
 import VolumeOffIcon from '@material-ui/icons/VolumeOff';
+import VolumeMuteIcon from '@material-ui/icons/VolumeMute';
 
 import SofaSlider from '../SofaSlider'
+import SofaAvatarSlider from '../SofaAvatarSlider'
+
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 import ToggleChip from '../ToggleChip'
 
 import Typography from '@material-ui/core/Typography';
+
 
 
 const useStyles = makeStyles({
@@ -43,7 +47,10 @@ const useStyles = makeStyles({
     },
 		xlistItemBottom: {
 				padding: "16 0 0 0",
-		}
+		},
+	extendedIcon: {
+        marginRight: 8,
+    },
 });
 
 export default function Receiver(props) {
@@ -58,18 +65,21 @@ export default function Receiver(props) {
     const [inputs, setInputs] = useState({});
     const [topInputs, setTopInputs] = useState(['TV','Sonos']);
     
+    
     useEffect(() => {
-  	    fetch('/list/yamaha/inputs')
- 		    .then(result=>result.json())
-            .then(result=>setInputs(result));
-    }, []);
+        setVolume(props.deviceProperties.volume)
+      	    fetch('/list/yamaha/inputs')
+     		    .then(result=>result.json())
+                .then(result=>setInputs(result));
+        }, [props.deviceProperties.volume]);
 
     function handlePreVolumeChange(event) {
         setVolume(event);
     }; 
 
     function handleVolumeChange(event) {
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
+        console.log(event, volume)
+        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : volume} )
     }; 
 
     function handleMuteChange(event) {
@@ -109,22 +119,24 @@ export default function Receiver(props) {
                 <ToggleAvatar onClick={ () => setShowDetail(!showDetail) } avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
                     <SpeakerGroupIcon />
                 </ToggleAvatar>
-                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.name} secondary={props.deviceProperties.input ? getYamahaInput(props.deviceProperties.input) + " / "+ props.deviceProperties.surround : null}/>
+                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.name} secondary={ props.deviceProperties.powerState=='OFF' ? 'Off' : (props.deviceProperties.input) ? getYamahaInput(props.deviceProperties.input) + " / "+ props.deviceProperties.surround : null}/>
                 <ListItemSecondaryAction>
                     <Switch color="primary" checked={props.deviceProperties.powerState=='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
 
             </ListItem>
-        { (getYamahaInput(props.deviceProperties.input)=='Sonos' || props.deviceProperties.powerState!='ON') && !showDetail ? null :
+        { (getYamahaInput(props.deviceProperties.input)=='Sonos' && !showDetail) || props.deviceProperties.powerState=='OFF'  ? null :
             <ListItem className={classes.listItemBottom}>
                 <ToggleAvatar onClick={ () => setMuted(!muted)} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
-                    {props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
+                    { props.deviceProperties.powerState!='ON' ? <VolumeMuteIcon /> :
+                        (props.deviceProperties.muted) ? <VolumeOffIcon /> :  volume
+                    }
                 </ToggleAvatar>
-                <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={props.deviceProperties.volume}
-                            minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={true} />
+                <SofaAvatarSlider name="Volume" min={0} max={100} defaultValue={0} step={1} value={volume}
+                            disabled={ props.deviceProperties.powerState=='OFF' } minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={true} />
             </ListItem>
         }
-        { !showDetail ? null :
+        { !showDetail || props.deviceProperties.powerState=='OFF' ? null :
             <React.Fragment>
                 <ListItem className={classes.bottomListItem}>
                     <ListItemText primary={"Input"} />

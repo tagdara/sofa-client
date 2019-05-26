@@ -55,8 +55,10 @@ function MoreDevicesLayout(props) {
             <GridBreak label={"Computers"} />
             <ComputerList devices={ props.devicesByCategory('PC') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('PC')) } sendAlexaCommand={props.sendAlexaCommand} />
 
-            <GridBreak label={"Modes"} />
+            <GridBreak label={"Services"} />
+            <DeviceList devices={ props.devicesByCategory('OTHER') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('OTHER')) } sendAlexaCommand={props.sendAlexaCommand} />
 
+            <GridBreak label={"Modes"} />
             <ModeList devices={ props.devicesByCategory('MODE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('MODE')) } sendAlexaCommand={props.sendAlexaCommand} />
 
         </React.Fragment>

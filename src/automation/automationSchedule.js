@@ -28,7 +28,7 @@ export default function AutomationSchedule(props) {
 
     useEffect(() => {
         parseSchedule()
-    }, []);
+    }, [props.item]);
     
     function parseSchedule() {
         setSchedule(props.item)

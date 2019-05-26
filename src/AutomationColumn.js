@@ -2,8 +2,8 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
-import Loadable from 'react-loadable';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -100,20 +100,21 @@ function AutomationColumn(props) {
     
     function deleteItem(index) {
         console.log('deleting item',index,'from',props.name)
-        var newitems=props.items
+        var newitems=[...props.items]
         newitems.splice(index, 1);
         props.save(props.itemtype,newitems)
     }
 
     function save(index, item) {
-        var newitems=props.items
+        console.log
+        var newitems=[...props.items]
         newitems[index]=item
         props.save(props.itemtype, newitems)
     }
     
     function moveUp(index) {
         if (index-1>=0) {
-            var newitems=props.items
+            var newitems=[...props.items]
             var element = newitems[index];
             newitems.splice(index, 1);
             newitems.splice(index-1, 0, element);
@@ -123,7 +124,7 @@ function AutomationColumn(props) {
 
     function moveDown(index) {
         if (index+1<=props.items.length) {
-            var newitems=props.items
+            var newitems=[...props.items]
             var element = newitems[index];
             newitems.splice(index, 1);
             newitems.splice(index+1, 0, element);
@@ -151,9 +152,9 @@ function AutomationColumn(props) {
         } else {
             setRemove(false); 
             setReorder(false) 
-            props.setReturn('AutomationLayout', {'name': props.automationName, 'type':props.itemtype })
-            props.setBack('AutomationLayout', {'name': props.automationName } )
-            props.setLayoutCard(props.selector)
+            props.applyReturnPage("AutomationLayout", {'name': props.automationName, 'type':props.itemtype })
+            props.applyBackPage("AutomationLayout",{'name': props.automationName })
+            props.applyLayoutCard(props.selector)
         }
     }
     
@@ -215,4 +216,4 @@ function AutomationColumn(props) {
 
 };
 
-export default withData(AutomationColumn);
+export default withData(withLayout(AutomationColumn));

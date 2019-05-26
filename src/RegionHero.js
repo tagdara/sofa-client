@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import LightbulbOutlineIcon from './LightbulbOutline';
 
@@ -106,16 +107,18 @@ function RegionHero(props) {
                 }
             }
         }
+
         return ads
     }
  
     function lightCount(condition) {
         var count=0;
-        for (var i = 0; i < props.devices.length; i++) {
-            var dev=props.devices[i]
-            if (dev.hasOwnProperty('displayCategories') && props.deviceProperties[dev.friendlyName].hasOwnProperty('powerState')) {
-                if (props.deviceProperties[dev.friendlyName].powerState && dev.displayCategories[0]=='LIGHT') {
-                    if (condition.toLowerCase()=='all' || props.deviceProperties[dev.friendlyName].powerState.toLowerCase()==condition.toLowerCase()) {
+        var lights=props.devicesByCategory('LIGHT')
+
+        for (var i = 0; i < lights.length; i++) {
+            if (lights[i].hasOwnProperty('displayCategories') && props.deviceProperties.hasOwnProperty(lights[i].endpointId) && props.deviceProperties[lights[i].endpointId].hasOwnProperty('powerState')) {
+                if (props.deviceProperties[lights[i].endpointId].powerState && lights[i].displayCategories[0]=='LIGHT') {
+                    if (condition.toLowerCase()=='all' || props.deviceProperties[lights[i].endpointId].powerState.toLowerCase()==condition.toLowerCase()) {
                         count=count+1
                     }
                 }
@@ -149,7 +152,7 @@ function RegionHero(props) {
 
     function selectArea(name) {
         setSelectedArea(name)
-        props.setLayoutCard('AreaLayout',{"name": name})
+        props.applyLayoutCard('AreaLayout',{"name": name})
         //this.setState({ selectedArea: name, showAreaDialog: true} )
     }
     
@@ -200,8 +203,8 @@ function RegionHero(props) {
         <GridItem wide={props.wide}>
             { lightCount('all') ?
                 <ListItem className={classes.topSplit} >
-                    <ToggleAvatar avatarState={lightsOn ? "on" : "off"} onClick={ () => props.setLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
-                    <ListItemText primary={lightsOn ? lightCount('on')+" lights are on" : "All lights off" } onClick={ () => props.setLayoutCard('LightLayout') } />
+                    <ToggleAvatar avatarState={lightsOn ? "on" : "off"} onClick={ () => props.applyLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
+                    <ListItemText primary={lightsOn ? lightCount('on')+" lights are on" : "All lights off" } onClick={ () => props.applyLayoutCard('LightLayout') } />
                     <ListItemSecondaryAction>
                         <IconButton onClick={(e) => props.setLayoutCard('RegionsLayout')}>
                             <ViewModuleIcon />
@@ -221,4 +224,4 @@ function RegionHero(props) {
     );
 }
 
-export default withData(RegionHero);
+export default React.memo(withData(withLayout(RegionHero)));

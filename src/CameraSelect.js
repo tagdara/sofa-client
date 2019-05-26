@@ -1,6 +1,5 @@
 import React, { memo } from "react";
 import { useState, useEffect } from 'react';
-import { withLayout } from './DataContext/withLayout';
 import SecurityCamera from './camera/securitycamera';
 
 function CameraSelect(props) {
@@ -46,11 +45,11 @@ function CameraSelect(props) {
     return (
         <React.Fragment>
             { currentCamera!=null ?
-            <SecurityCamera wide={props.wide} setLayoutCard={props.setLayoutCard} cameraSource={cameraData[currentCamera].source} selectButtons={true} key={ currentCamera } 
+            <SecurityCamera wide={props.wide} cameraSource={cameraData[currentCamera].source} selectButtons={true} key={ currentCamera } 
                             name={ currentCamera } nextCamera={nextCamera} prevCamera={prevCamera} />
             :null }
         </React.Fragment> 
     );
 }
 
-export default withLayout(memo(CameraSelect));
+export default memo(CameraSelect);

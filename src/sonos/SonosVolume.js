@@ -8,7 +8,7 @@ import SofaSlider from '../SofaSlider'
 import ToggleAvatar from '../ToggleAvatar'
 
 export default function SonosVolume(props) {
-    
+
     const [volume, setVolume] = useState(props.deviceProperties.volume);
  
     function handlePreVolumeChange(event) {
@@ -28,7 +28,7 @@ export default function SonosVolume(props) {
             <ToggleAvatar onClick={ () => handleMuteChange()} avatarState={ (!props.deviceProperties.muted && props.deviceProperties.playbackState=='PLAYING') ? 'on': 'off'}>
                 { props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
             </ToggleAvatar>
-            <SofaSlider padLeft={true} unit={"%"} name={props.name} value={props.deviceProperties.volume} preChange={handlePreVolumeChange} change={handleVolumeChange} />
+            <SofaSlider unit={"%"} name={props.name} value={props.deviceProperties.volume} preChange={handlePreVolumeChange} change={handleVolumeChange} />
         </ListItem>
     );
 

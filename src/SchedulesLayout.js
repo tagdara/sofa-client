@@ -1,7 +1,7 @@
 import React, { memo }  from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from './DataContext/withLayout';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import ScheduleItem from './automation/ScheduleItem';
 import GridBreak from './GridBreak';
@@ -34,8 +34,8 @@ function SchedulesLayout(props) {
     }
     
     function selectSchedule(schedule) {
-        props.setBack('SchedulesLayout',{})
-        props.setLayoutCard('AutomationLayout', {'name':schedule} )
+        props.applyBack('SchedulesLayout',{})
+        props.applyLayoutCard('AutomationLayout', {'name':schedule} )
     }   
     
     function runSchedule(schedule) {

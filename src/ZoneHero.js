@@ -2,6 +2,7 @@ import React, { Component, createElement  } from 'react';
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -55,8 +56,8 @@ function ZoneList(props) {
         var openzones=''
         for (var dev in props.devices) {
             var device=props.devices[dev]
-            if (props.deviceProperties[device.friendlyName].hasOwnProperty('detectionState')) {
-                if (props.deviceProperties[device.friendlyName].detectionState=='open') {
+            if (props.deviceProperties[device.endpointId].hasOwnProperty('detectionState')) {
+                if (props.deviceProperties[device.endpointId].detectionState=='open') {
                     if (securityZones.includes(device.friendlyName)) {
                         if (openzones) {
                             openzones=openzones+", "+device.friendlyName
@@ -73,7 +74,7 @@ function ZoneList(props) {
     return (
             <GridItem wide={props.wide}>
                 { zoneReady() ?
-                <ListItem onClick={ (e) => props.setLayoutCard('ZoneLayout', {'automationZones':automationZones, 'securityZones': securityZones})}>
+                <ListItem onClick={ (e) => props.applyLayoutCard('ZoneLayout', {'automationZones':automationZones, 'securityZones': securityZones})}>
                     <ToggleAvatar avatarState={ (zoneOpen) ? "open" : "closed" } >
                         { zoneOpen ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
                     </ToggleAvatar>
@@ -89,4 +90,4 @@ function ZoneList(props) {
     );
 }
 
-export default withData(ZoneList);
+export default withData(withLayout(ZoneList));

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { withData } from './DataContext/withData';
+import { withUser } from './user/UserProvider';
 
 import PlayerCard from './sonos/PlayerCard';
 import Sonos from './sonos/Sonos';
@@ -9,38 +10,27 @@ import NoPlayer from './sonos/NoPlayer';
 
 function PlayerHero(props) {
     
-    const spkset = JSON.stringify(props.devicesByCategory('SPEAKER'))
-    const speakers = props.devicesByCategory('SPEAKER')
-    //const [speakers, setSpeakers] = useState([])
+    const [speakers, setSpeakers] = useState(props.devicesByCategory('SPEAKER'))
     const isMobile = window.innerWidth <= 800;
     const [mini, setMini] = useState(false);
-    const [playerName, setPlayerName] = useState("");
-    const [defaultPlayer, setDefaultPlayer] = useState("Office");
-    const device = props.deviceByName(playerName)
+    const [defaultPlayer, setDefaultPlayer] = useState("sonos:player:RINCON_B8E937ECE1F001400");
+    const [player, setPlayer] = useState({})
 
     useEffect(() => {
-        setPlayerName(bestPlayer())
-    },[spkset]);
-
-
-    function endpointId(playername) {
-        if (playername && props.deviceByName(playername).hasOwnProperty('endpointId')) {
-            return props.deviceByName(playername).endpointId
-        } else {
-            return ''
-        }
-    }
+        // unfortunately happens every time theres an update of any kind
+        setPlayer(props.deviceByEndpointId(bestPlayer()))
+    },[props.deviceProperties]);
 
     function bestPlayer() {
         
-        if (props.player) {
-            return props.player
+        if (props.userPlayer) {
+            return props.userPlayer
         } else {
             var hotplayer='';
             for (var s = 0; s < speakers.length; s++) {
                 var name=speakers[s].friendlyName
-                if (props.deviceProperties.hasOwnProperty(name)) {
-                    var dev=props.deviceProperties[name]
+                if (props.deviceProperties.hasOwnProperty(speakers[s].endpointId)) {
+                    var dev=props.deviceProperties[speakers[s].endpointId]
                     if (dev.hasOwnProperty("playbackState")) {
                         if (dev.playbackState=='PLAYING') {
                             if (hotplayer=="" || name==defaultPlayer) {
@@ -54,36 +44,32 @@ function PlayerHero(props) {
                     }
                 }
             }
-            
             if (hotplayer) { return hotplayer }
         } 
                 
         return defaultPlayer
     }
 
-    function setPlayerAndMini(name) {
-        props.setPlayer(name)
+    function changePlayer(endpointId) {
+        setPlayer(props.deviceByEndpointId(endpointId))
         setMini(false); 
     }
-    
-    function playerProps(name) {
-        if (name && props.deviceProperties.hasOwnProperty(name)) {
-            return props.deviceProperties[name]
+
+    function playerProps(endpointId) {
+        if (props.deviceProperties.hasOwnProperty(endpointId)) {
+            return props.deviceProperties[endpointId]
         } else {
             return {}
         }
     }
     
     function bigCard() {
-
-        if (mini || !playerName || !playerProps(playerName) || !props.player) {
+        
+        if (mini || !player || !playerProps(player.endpointId)) {
             return false
         }
-        if (playerName) {
-            return true
-        }
-        if (playerProps(playerName).hasOwnProperty('playbackState')) {
-            if (playerProps(playerName).playbackState && playerProps(playerName).playbackState!='STOPPED') {
+        if (playerProps(player.endpointId).hasOwnProperty('playbackState')) {
+            if (playerProps(player.endpointId).playbackState && playerProps(player.endpointId).playbackState!='STOPPED') {
                 return true
             }
         }
@@ -92,14 +78,20 @@ function PlayerHero(props) {
     
     return ( 
         <React.Fragment>
-            { bigCard()==false ?
-                <Sonos setPlayer={setPlayerAndMini} wide={props.wide} small={true} setLayoutCard={props.setLayoutCard} name={playerName} deviceProperties={playerProps(playerName)} />
+            { player ?
+            <>
+                { bigCard()==false ?
+                    <Sonos changePlayer={changePlayer} wide={props.wide} small={true} setLayoutCard={props.setLayoutCard} player={player} name={player.friendlyName} deviceProperties={playerProps(player.endpointId)} />
+                :
+                    <PlayerCard wide={props.wide} changePlayer={changePlayer} player={player} name={player.friendlyName}  setMini={setMini} />
+                }
+            </>
             :
-                <PlayerCard wide={props.wide} name={playerName} setMini={setMini} />
+            <NoPlayer wide={true} />
             }
         </React.Fragment>
     );
 }
 
 
-export default withData(PlayerHero);
+export default withUser(withData(PlayerHero));

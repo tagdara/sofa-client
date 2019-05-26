@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { withLayout } from './DataContext/withLayout';
 import { makeStyles } from '@material-ui/styles';
 import GridItem from './GridItem';
 
@@ -14,7 +13,7 @@ const useStyles = makeStyles({
  
 });
 
-function CameraLayout(props) {
+export default function CameraLayout(props) {
 
     const [cameras, setCameraList] = useState({});
     const classes = useStyles();
@@ -43,5 +42,3 @@ function CameraLayout(props) {
         </GridItem>
     )
 }
-
-export default withLayout(CameraLayout)

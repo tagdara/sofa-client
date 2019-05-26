@@ -98,7 +98,7 @@ export default function AutomationCondition(props) {
 
     useEffect(() => {
         parseControllerProperties()
-    }, []);
+    }, [props.controllerProperties]);
     
     function getIcon(category, size='default') {
 

@@ -9,6 +9,7 @@ import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
 import CloseIcon from '@material-ui/icons/Close';
 import TimerIcon from '@material-ui/icons/Timer';
 import Paper from '@material-ui/core/Paper';
+import Fab from '@material-ui/core/Fab';
 
 const styles = theme => ({
     bigcamholder: {
@@ -41,6 +42,7 @@ const styles = theme => ({
         height: "100% !important",
         width: "auto !important",
         maxWidth: "100%",
+        maxHeight: "100%",
         background: "#222",
         opacity: "1.0", 
         margin: "0 auto",
@@ -50,6 +52,7 @@ const styles = theme => ({
         width: "100%",
         height: "auto !important",
         maxWidth: "100%",
+        maxHeight: "100%",
         background: "#222",
         opacity: "1.0", 
         margin: "auto auto",
@@ -82,11 +85,29 @@ const styles = theme => ({
     },
     bcp: {
         margin: 4,
+        maxHeight: "100%",
     },
     topbutton: {
         zIndex: 2000,
-    }
-    
+    },
+    closebutton: {
+        zIndex: 2000,
+        position: "absolute",
+        top: 16,
+        right: 16,
+    },
+    rotatebutton: {
+        zIndex: 2000,
+        position: "absolute",
+        top: 16,
+        right: 72,
+    },
+    ratebutton: {
+        zIndex: 2000,
+        position: "absolute",
+        top: 16,
+        right: 190,
+    }   
 });
 
 class CameraDialog extends React.Component {
@@ -159,19 +180,17 @@ class CameraDialog extends React.Component {
         
         return (
             <Dialog fullScreen open={this.props.showDialog} onClose={() =>  this.closeDialog()} className={classes.bigcamDialog} PaperProps ={{ classes: { root: classes.paper}}}>
-                <DialogActions>
-                    { !live && 
-                    <Button size="small" color="primary" onClick={() => this.props.changeInterval()} className={classes.topbutton}>
-                        <TimerIcon />{this.props.refreshInterval/1000}
-                    </Button>
-                    }
-                    <IconButton onClick={() => this.rotate()} aria-label="Rotate" color="primary" className={classes.topbutton}>
-                        <ScreenRotationIcon />
-                    </IconButton>
-                    <IconButton onClick={() => this.closeDialog()} aria-label="Close" color="primary" className={classes.topbutton} autoFocus>
-                        <CloseIcon />
-                    </IconButton>
-                </DialogActions>
+                { !live && 
+                <Fab size="medium" aria-label="Rate" className={classes.ratebutton} onClick={() => this.props.changeInterval()}  >
+                    <TimerIcon />{this.props.refreshInterval/1000}
+                </Fab>
+                }
+                <Fab size="medium" color="primary" aria-label="Close" className={classes.closebutton} onClick={() => this.closeDialog()} >
+                    <CloseIcon />
+                </Fab>
+                <Fab size="medium" aria-label="Rotate" className={classes.rotatebutton} onClick={() => this.rotate()}>
+                    <ScreenRotationIcon />
+                </Fab>
                 <Paper className={classes.bcp} >
                     { live ?
                     <video controls muted autoPlay playsInline id="video" className={this.state.rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} ref={video => this.videoRef = video}>

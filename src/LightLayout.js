@@ -12,6 +12,10 @@ import Typography from '@material-ui/core/Typography';
 import Light from './light/Light';
 import GridBreak from './GridBreak';
 
+import ColorLensIcon from '@material-ui/icons/ColorLens';
+import AcUnitIcon from '@material-ui/icons/AcUnit';
+import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
+
 const useStyles = makeStyles({
     
     dialogActions: {
@@ -23,6 +27,13 @@ const useStyles = makeStyles({
     button: {
         minWidth: 36
     },
+    buttonspacer: {
+        minWidth: 36,
+        marginRight: 18
+    },
+    smallicon: {
+        width: 18,
+    }
 });
 
 function LightLayout(props) {
@@ -40,7 +51,7 @@ function LightLayout(props) {
         var all=props.devicesByCategory('LIGHT')
         if (filter=="ALL") { return all }
         for (var j = 0; j < props.devicesByCategory('LIGHT').length; j++) {
-            if (props.deviceProperties[all[j].friendlyName].powerState==filter) {
+            if (props.deviceProperties[all[j].endpointId].powerState==filter) {
                 lights.push(all[j])
             }
         }
@@ -51,6 +62,16 @@ function LightLayout(props) {
     return (    
         <React.Fragment>
             <GridBreak label={"Lights"}>
+                <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
+                    <BrightnessLowIcon className={classes.smallicon } />
+                </Button>
+                <Button onClick={ () => setTempControl(!tempControl) } color={ tempControl ? "primary" : "default"} className={classes.button }>
+                    <AcUnitIcon className={classes.smallicon } />
+                </Button>
+                <Button onClick={ () => setColorControl(!colorControl) } color={ colorControl ? "primary" : "default"} className={classes.buttonspacer }>
+                    <ColorLensIcon className={classes.smallicon } />
+                </Button>
+
                 <Button onClick={ () => setFilter('ALL')} color={ filter=='ALL' ? "primary" : "default"} className={classes.button }>
                     All
                 </Button>
@@ -58,21 +79,9 @@ function LightLayout(props) {
                     On
                 </Button>
             </GridBreak>
-            <GridBreak>
-                <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
-                    Bright
-                </Button>
-                <Button onClick={ () => setTempControl(!tempControl) } color={ tempControl ? "primary" : "default"} className={classes.button }>
-                    Temp
-                </Button>
-                <Button onClick={ () => setColorControl(!colorControl) } color={ colorControl ? "primary" : "default"} className={classes.button }>
-                    Color
-                </Button>
-            </GridBreak>
-
             { filterByType(filter).map((device) =>
                 <Light key={ device.endpointId } sendAlexaCommand={props.sendAlexaCommand} name={ device.friendlyName }
-                    device={ device } deviceProperties={ props.deviceProperties[device.friendlyName] } 
+                    device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } 
                     brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
                     />
             )}

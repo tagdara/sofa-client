@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from './DataContext/withLayout';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import Icon from '@material-ui/core/Icon';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -47,10 +47,10 @@ function BottomButtons(props) {
     return (
         <React.Fragment>
             <Toolbar className={classes.bottomSpacer} />
-            <Fab color="primary" onClick={ (e)=> props.setLayout('Home') } className={classes.fabHome} >
+            <Fab color="primary" onClick={ (e)=> props.applyLayout('Home') } className={classes.fabHome} >
                 <HomeIcon />
             </Fab>
-            { props.backName &&
+            { props.backPage.name &&
                 <Fab color="primary" onClick={ ()=>  props.goBack() } className={classes.fabBack} >
                     <ArrowBackIcon />
                 </Fab>

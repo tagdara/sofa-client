@@ -1,5 +1,7 @@
-import React, { Component } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -15,7 +17,7 @@ import LensIcon from '@material-ui/icons/Lens';
 
 import { HuePicker } from 'react-color';
 
-const styles = theme => ({
+const useStyles = makeStyles({
         
     root: {
         width: '100%',
@@ -37,17 +39,6 @@ const styles = theme => ({
         paddingRight: 16,
         display: 'flex',
         flex: 1,
-    },
-    chip: {
-        background: "silver",
-        color: "black",
-        margin: theme.spacing.unit,
-    },
-
-    hotchip: {
-        background: "orangeRed",
-        color: "white",
-        margin: theme.spacing.unit,
     },
 
     stackedLightControl: {
@@ -98,91 +89,84 @@ const styles = theme => ({
     }
 });
 
-class LightSliderColor extends React.Component {
+export const sl2sb = (color) => {
+    var SL = {h:color.h, s:color.s, l:color.l};
+    var SB = {hue:color.h, saturation:0, brightness:0};
+    var t = SL.s * (SL.l<0.5 ? SL.l : 1-SL.l);
+    SB.brightness = SL.l+t;
+    SB.saturation = SL.l>0 ? 2*t/SB.brightness : SB.saturation ;
+    return SB
+}    
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            delaySet: false,
-            prevcolor: {},
-            color: {hue: 43.5, saturation:0.27, brightness: 1},
-        };
-    } 
-    
-    static getDerivedStateFromProps(nextProps, prevState) {
-
-        var data=nextProps
-        var changes={}
-        
-        if (data.hasOwnProperty('color')) {
-            if (!prevState.delaySet) {
-                changes.color=LightSliderColor.sb2sl(data.color)
-            }
-        }
-
-        return changes
-    }
-    
-    static sl2sb(color) {
-        var SL = {h:color.h, s:color.s, l:color.l};
-        var SB = {hue:color.h, saturation:0, brightness:0};
-        var t = SL.s * (SL.l<0.5 ? SL.l : 1-SL.l);
-        SB.brightness = SL.l+t;
-        SB.saturation = SL.l>0 ? 2*t/SB.brightness : SB.saturation ;
-        return SB
-    }    
-    
-    static sb2sl(color) {
-        var SB = {hue:color.hue, saturation:color.saturation, brightness:color.brightness};
-        var SL = {h:color.hue, s:0, l:0};
-        SL.l = (2 - SB.saturation) * SB.brightness / 2;
-        SL.s = SL.l&&SL.l<1 ? SB.saturation*SB.brightness/(SL.l<0.5 ? SL.l*2 : 2-SL.l*2) : SL.s;
-        return SL
-    }
-    
-    handleColorSliderChange = (color, event) => {
-        this.delaySliderUpdates()    // hue bulbs are slow on HSB
-        this.setState({ color: color.hsl });
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorController", "SetColor", { "color": LightSliderColor.sl2sb(color.hsl) } )
-    }
-
-    handleColorChange = hsb => {
-        this.delaySliderUpdates()   // hue bulbs are slow on HSB
-        this.setState({ color: LightSliderColor.sb2sl(hsb) });
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "ColorController", "SetColor", {"color":hsb} )
-    }
-    
-    delaySliderUpdates = () => {
-        this.setState({ delaySet: true},
-            () =>  setTimeout(() => this.endSliderDelay(), 30000)
-        )
-    }
-    
-    endSliderDelay = () => {
-        this.setState({ delaySet: false});
-    }
-    
-    render() {
-
-        const { classes } = this.props;
-        const reveal = {hue: 43.5, saturation:0.27, brightness: 1};
-
-        return (
-            <ListItem>
-                <ListItemIcon className={classes.indent}><ColorLensIcon /></ListItemIcon>
-                <HuePicker
-                    className={classes.wide}
-                    color={ this.state.color }
-                    onChangeComplete={ this.handleColorSliderChange }
-                />
-                <Button size="small" onClick={ () => this.handleColorChange(reveal)} color={ this.state.color==reveal ? "primary" : "default"} className={classes.button }>
-                    <LensIcon className={classes.revealIcon} />
-                </Button>
-            </ListItem>
-        );
-    }
+export const sb2sl = (color) => {
+    var SB = {hue:color.hue, saturation:color.saturation, brightness:color.brightness};
+    var SL = {h:color.hue, s:0, l:0};
+    SL.l = (2 - SB.saturation) * SB.brightness / 2;
+    SL.s = SL.l&&SL.l<1 ? SB.saturation*SB.brightness/(SL.l<0.5 ? SL.l*2 : 2-SL.l*2) : SL.s;
+    return SL
 }
 
-export default withStyles(styles)(LightSliderColor);
+export default function LightSliderColor(props) {
+
+    const classes = useStyles();
+    const reveal = {hue: 43.5, saturation:0.27, brightness: 1}
+    const [delaySet, setDelaySet] = useState(false);
+    const [prevColor, setPrevColor] = useState({});
+    const [color, setColor] = useState(reveal);
+    const [delayTimer, setDelayTimer] = useState(null);
+    
+    useEffect(() => {
+        if (!delaySet) {
+            setColor(sb2sl(props.color))
+        }
+    }, [props.color]);
+
+
+    function handleColorSliderChange(color, event) {
+        console.log('sliderchange')
+        delaySliderUpdates()    // hue bulbs are slow on HSB
+        setColor(color.hsl);
+        var sendsb=sl2sb(color.hsl)
+        sendsb.brightness=props.brightness/100
+        props.sendAlexaCommand(props.name, props.endpointId, "ColorController", "SetColor", { "color": sendsb } )
+    }
+
+    function handleColorChange(hsb) {
+        console.log('colorchange')
+        delaySliderUpdates()   // hue bulbs are slow on HSB
+        setColor(sb2sl(hsb));
+        hsb.brightness=props.brightness/100
+        props.sendAlexaCommand(props.name, props.endpointId, "ColorController", "SetColor", {"color":hsb} )
+    }
+    
+    function delaySliderUpdates() {
+        setDelaySet(true)
+        if (delayTimer) {
+            clearTimeout(delayTimer)
+        }
+        var timer = () => setTimeout(() => endSliderDelay(), 20000)
+        setDelayTimer(timer)
+        setDelaySet(true)
+    }
+    
+    function endSliderDelay() {
+        setDelaySet(false);
+        setColor(sb2sl(props.color))
+    }
+
+    return (
+        <ListItem>
+            <ListItemIcon className={classes.indent}><ColorLensIcon /></ListItemIcon>
+            <HuePicker
+                className={classes.wide}
+                color={ color }
+                onChangeComplete={ handleColorSliderChange }
+            />
+            <Button size="small" onClick={ () => handleColorChange(reveal)} color={ color==reveal ? "primary" : "default"} className={classes.button }>
+                <LensIcon className={classes.revealIcon} />
+            </Button>
+        </ListItem>
+    );
+
+}
 

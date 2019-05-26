@@ -20,12 +20,6 @@ function VirtualList(props) {
                         <Shade key={ index } name={ key } endpointId={ props.virtualDevices[key].endpointId } commands={ props.virtualDevices[key].commands } sendAlexaCommand={props.sendAlexaCommand} />
                         :null
                 ))}
-                <GridBreak label={"Sprinklers"} />
-                { Object.keys(props.virtualDevices).map((key, index) => (
-                    props.virtualDevices[key]['type']=='water' ?
-                        <Sprinkler key={ index } name={ key } commands={ props.virtualDevices[key].commands } sendAlexaCommand={props.sendAlexaCommand} />
-                        :null
-                ))}
             </React.Fragment>
         : null 
     );

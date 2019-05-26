@@ -1,12 +1,13 @@
-import React, { Component } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Avatar from '@material-ui/core/Avatar';
+import ToggleAvatar from '../ToggleAvatar';
 import Button from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 import ToysIcon from '@material-ui/icons/Toys';
@@ -14,12 +15,18 @@ import ToysIcon from '@material-ui/icons/Toys';
 import GridItem from '../GridItem'
 import SofaSlider from '../SofaSlider'
 
-const styles = theme => ({
+const useStyles = makeStyles({
 
     listItem: {
         padding: "0 0 16 24",
         width: '100%',
     },
+    bottomListItem: {
+        padding: "0 0 0 24",
+        width: '100%',
+        minHeight: 64,
+    },
+
     xlistItem: {
         padding: "16px 16px 8px 16px",
     },
@@ -31,18 +38,6 @@ const styles = theme => ({
         padding: "0 0 8 40",
         width: '100%',
     },
-    cool: {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: "#00796B"
-    },
-    mid: {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: "#558B2F"
-    },
-    hot: {
-        color: theme.palette.primary.contrastText,
-        backgroundColor: "#E65100"
-    },
     buttonLine: {
         display: "flex",
         flexGrow: 1,
@@ -52,13 +47,9 @@ const styles = theme => ({
     button: {
         minWidth: 36
     },
-    hotButton: {
+    fanButton: {
         minWidth: 36,
-        "&:hover" : {
-            backgroundColor: theme.palette.primary.light,
-        },
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
+        marginRight: 24,
     },
     list: {
         width: "100%",
@@ -68,38 +59,28 @@ const styles = theme => ({
     },
 });
 
-class Thermostat extends React.Component {
+export default function Thermostat(props) {
+    
+    const classes = useStyles();
+    const [targetSetpoint, setTargetSetpoint] = useState(70);
+    const [powerLevel, setPowerLevel] = useState(false)
+    const [fanSetMode, setFanSetMode] = useState(false);
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            targetSetpoint: 70,
-        };
-
-    }
-
-    static getDerivedStateFromProps(nextProps, prevState) {
-
-        var data=nextProps.deviceProperties
-        var changes={}
-        
-        if (data.hasOwnProperty('targetSetpoint')) {
-            changes.targetSetpoint=data.targetSetpoint
+    useEffect(() => {
+        console.log(props.deviceProperties)
+        setTargetSetpoint(props.deviceProperties.targetSetpoint.value)
+        if (props.deviceProperties.hasOwnProperty('powerLevel')) {
+            setPowerLevel(props.deviceProperties.powerLevel)
         }
-        if (data.hasOwnProperty('powerLevel')) {
-            changes.powerLevel=data.powerLevel
-        }
+    }, [props.deviceProperties]);
 
-        return changes
-    }
 
-    supportedModes = () => {
-        for (var i = 0; i < this.props.device.capabilities.length; i++) {
-            if (this.props.device.capabilities[i]['interface']=='Alexa.ThermostatController') {
-                if (this.props.device.capabilities[i].hasOwnProperty('configuration')) {
-                    if (this.props.device.capabilities[i]['configuration'].hasOwnProperty('supportedModes')) {
-                        return this.props.device.capabilities[i]['configuration']['supportedModes']
+    function supportedModes() {
+        for (var i = 0; i < props.device.capabilities.length; i++) {
+            if (props.device.capabilities[i]['interface']=='Alexa.ThermostatController') {
+                if (props.device.capabilities[i].hasOwnProperty('configuration')) {
+                    if (props.device.capabilities[i]['configuration'].hasOwnProperty('supportedModes')) {
+                        return props.device.capabilities[i]['configuration']['supportedModes']
                     }
                 }
             }
@@ -108,66 +89,77 @@ class Thermostat extends React.Component {
     }
                     
     
-    tempColor = (temp) => {
-        if (temp>=74) { return this.props.classes.hot }
-        if (temp<70) { return this.props.classes.cool }
-        return this.props.classes.mid;
+    function tempColor(temp) {
+        if (temp>=74) { return "hot" }
+        if (temp<70) { return "cool" }
+        return "mid";
     }
     
-    handlePrePowerLevelChange = event => {
-        this.setState({ powerLevel: event });
+    function handlePrePowerLevelChange(event) {
+        setPowerLevel(event);
     }; 
     
-    handlePowerLevelChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
+    function handlePowerLevelChange(event) {
+        props.sendAlexaCommand(props.name, props.device.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
     }; 
 
-    handlePreSetpointChange = event => {
-        this.setState({ targetSetpoint: event });
+    function handlePreSetpointChange(event) {
+        setTargetSetpoint(event);
     }; 
     
-    handleSetpointChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
+    function handleSetpointChange(event) {
+        props.sendAlexaCommand(props.name, props.device.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
+    }; 
+
+    function handleSetMode(event) {
+        props.sendAlexaCommand(props.name, props.device.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
     }; 
 
 
-    handleSetMode = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.device.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
-    }; 
-
-    render() {
-
-        const { classes, name, deviceProperties } = this.props;
-        const { targetSetpoint, powerLevel } = this.state;
-
-        return (
-            <GridItem>
-                <List className={classes.list} >
-                <ListItem className={classes.listItem}>
-                    <Avatar className={ this.tempColor(deviceProperties.temperature.value) }>{ deviceProperties.temperature.value }</Avatar>
-                    <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint.value} unit={"°"} name={name} padLeft={true}
-                                preChange={this.handlePreSetpointChange} change={this.handleSetpointChange} 
-                                dis={ deviceProperties.thermostatMode!='HEAT' } />
-                </ListItem>
-                <ListItem className={classes.buttonLine}>
-                        { this.supportedModes().map((mode) => (
-                            <Button onClick={ (e) => this.handleSetMode(mode)} size="small" key = {mode+'m'} className={( deviceProperties.thermostatMode==mode ) ? classes.hotButton : classes.button }>
+    return (
+        <GridItem>
+            <List className={classes.list} >
+            <ListItem className={classes.zzzlistItem}>
+                <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature.value) } >{props.deviceProperties.temperature.value}</ToggleAvatar>
+                <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.name}
+                            preChange={handlePreSetpointChange} change={handleSetpointChange} 
+                            dis={ props.deviceProperties.thermostatMode!='HEAT' } />
+            </ListItem>
+            <ListItem className={classes.bottomListItem}>
+                <>
+                    { powerLevel!==false &&
+                        <>
+                            { fanSetMode ?
+                                <>
+                                    <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(false)}>
+                                        {props.deviceProperties.thermostatMode}
+                                    </Button>
+                                    <ListItemIcon><ToysIcon /></ListItemIcon>
+                                    <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={false} minWidth={100}
+                                        preChange={handlePrePowerLevelChange} change={handlePowerLevelChange} />
+                                </>
+                            :
+                                <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(true)}>
+                                    <ToysIcon />{powerLevel}%
+                                </Button>                        
+                            }
+                        </>
+                    }
+                </>
+                <>
+                    {!fanSetMode &&
+                    <>
+                        { supportedModes().map((mode) => (
+                            <Button onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} color={ props.deviceProperties.thermostatMode==mode ? "primary" : "default" } className={classes.button }>
                             {mode}
                             </Button>
                         ))}
-                </ListItem>
-                { this.state.hasOwnProperty('powerLevel') ?
-                <ListItem className={classes.listItemIndent}>
-                    <ListItemIcon><ToysIcon /></ListItemIcon>
-                    <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={false} minWidth={100}
-                                preChange={this.handlePrePowerLevelChange} change={this.handlePowerLevelChange} />
-                </ListItem>
-                : null }
-                </List>
-            </GridItem>
-        );
-    }
+                    </>
+                    }
+                </>
+            </ListItem>
+            </List>
+        </GridItem>
+    );
 }
-
-export default withStyles(styles)(Thermostat);
 

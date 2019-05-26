@@ -25,8 +25,8 @@ function Opener(props) {
         var dev=props.deviceByEndpointId(statusDef.endpointId)
         if (dev) {
             var dp=props.propertiesFromDevices(dev)
-            if (dp.hasOwnProperty(dev.friendlyName)) {
-                dp=dp[dev.friendlyName]
+            if (dp.hasOwnProperty(dev.endpointId)) {
+                dp=dp[dev.endpointId]
                 return dp[statusDef.property]
             }
         }
@@ -50,7 +50,7 @@ function Opener(props) {
         var commands=props.virtualDevices[props.name].commands 
         console.log(command, commands)
         var command = commands[command]
-        props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
+        props.sendAlexaCommand("", command.endpointId, command.controller, command.command, command.value)
     }   
  
     return (
@@ -58,7 +58,9 @@ function Opener(props) {
             <React.Fragment>
                 <StatusLock wide={ props.wide} name={ props.name } secondIcon={false} status={ getStatusProp(props.virtualDevices[props.name].status) }
                     commands={ props.virtualDevices[props.name].commands } handlePress={handlePress} />
-                <PinDialog submitPin={pinCheck} open={showDialog} close={closeDialog} />
+                { showDialog &&
+                    <PinDialog submitPin={pinCheck} open={showDialog} close={closeDialog} camera={props.virtualDevices[props.name].camera} />
+                }
             </React.Fragment>
     );
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from './DataContext/withLayout';
+import { withLayout } from './layout/withLayout';
 
 import SecurityCamera from './camera/securitycamera';
 import ListItem from '@material-ui/core/ListItem';

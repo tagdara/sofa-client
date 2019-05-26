@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withDevices } from './DataContext/withDevices';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
@@ -76,7 +77,7 @@ function DevicePropertyLayout(props) {
             }
         }
 
-        props.setLayoutCard(props.returnName, {...props.returnProps, 'item':item, 'noBottom':'true'} )
+        props.applyLayoutCard(props.returnPage.name, {...props.returnPage.props, 'item':item, 'noBottom':'true'} )
 
     }
     
@@ -106,4 +107,4 @@ function DevicePropertyLayout(props) {
 
 };
 
-export default withDevices(memo(DevicePropertyLayout));
+export default withLayout(withDevices(memo(DevicePropertyLayout)));

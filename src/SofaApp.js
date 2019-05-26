@@ -8,7 +8,10 @@ import SofaAppBar from "./SofaAppBar";
 import SofaAppContent from "./SofaAppContent";
 import ErrorBoundary from './ErrorBoundary'
 import CssBaseline from "@material-ui/core/CssBaseline";
-import DataProvider from './DataContext/DataProvider';
+import DataProvider from './DataContext/NewDataProvider';
+import LayoutProvider from './layout/NewLayoutProvider';
+import UserProvider from './user/UserProvider';
+
 import SofaLogin from './SofaLogin';
 import { Redirect, Route } from 'react-router-dom';
 import { AuthConsumer } from './auth/AuthContext';
@@ -50,13 +53,17 @@ function MainApp(props) {
 
     return (
         <DataProvider>
-            <SofaAppBar open={handleDrawerOpen} mobile={isMobile}/>
-            <Sidebar open={drawerOpen} close={handleDrawerClose} />
-            { !isMobile && <Toolbar /> }
-            <ErrorBoundary>
-                <SofaAppContent toggleSidebar={handleDrawerOpen} closeSidebar={handleDrawerClose}/>
-            </ErrorBoundary>    
-           <CssBaseline />
+            <UserProvider>
+                <LayoutProvider>
+                    <SofaAppBar open={handleDrawerOpen} mobile={isMobile}/>
+                    <Sidebar open={drawerOpen} close={handleDrawerClose} />
+                    { !isMobile && <Toolbar /> }
+                    <ErrorBoundary>
+                        <SofaAppContent toggleSidebar={handleDrawerOpen} closeSidebar={handleDrawerClose}/>
+                    </ErrorBoundary>    
+                   <CssBaseline />
+                </LayoutProvider>
+            </UserProvider>
         </DataProvider>
     )
 }

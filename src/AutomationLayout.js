@@ -1,13 +1,13 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { withData } from './DataContext/withData';
+import { withLayout } from './layout/NewLayoutProvider';
 
 import AutomationSave from "./automation/automationSave"
 import AutomationTitle from "./automation/automationTitle"
 import AutomationDetails from "./automation/automationDetails"
 
 import AutomationColumn from "./AutomationColumn"
-import AutomationRow from "./AutomationRow"
 import ToggleButton from './ToggleButton'
 import GridBreak from './GridBreak';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -171,7 +171,7 @@ function AutomationLayout(props) {
     }
     
     function goBack() {
-        props.setLayoutCard('AutomationsLayout')
+        props.applyLayoutCard('AutomationsLayout')
     }
 
     return (    
@@ -191,4 +191,4 @@ function AutomationLayout(props) {
     )
 };
 
-export default withData(AutomationLayout);
+export default withData(withLayout(AutomationLayout));

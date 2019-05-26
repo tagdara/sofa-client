@@ -15,15 +15,12 @@ import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import VolumeMuteIcon from '@material-ui/icons/VolumeMute';
 
 import SofaSlider from '../SofaSlider'
-import SofaAvatarSlider from '../SofaAvatarSlider'
 
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 import ToggleChip from '../ToggleChip'
 
 import Typography from '@material-ui/core/Typography';
-
-
 
 const useStyles = makeStyles({
     list: {
@@ -65,12 +62,15 @@ export default function Receiver(props) {
     const [inputs, setInputs] = useState({});
     const [topInputs, setTopInputs] = useState(['TV','Sonos']);
     
+    useEffect(() => {
+  	    fetch('/list/yamaha/inputs')
+ 		    .then(result=>result.json())
+            .then(result=>setInputs(result));
+        }, []);
     
     useEffect(() => {
         setVolume(props.deviceProperties.volume)
-      	    fetch('/list/yamaha/inputs')
-     		    .then(result=>result.json())
-                .then(result=>setInputs(result));
+
         }, [props.deviceProperties.volume]);
 
     function handlePreVolumeChange(event) {
@@ -78,7 +78,6 @@ export default function Receiver(props) {
     }; 
 
     function handleVolumeChange(event) {
-        console.log(event, volume)
         props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : volume} )
     }; 
 
@@ -127,6 +126,7 @@ export default function Receiver(props) {
             </ListItem>
         { (getYamahaInput(props.deviceProperties.input)=='Sonos' && !showDetail) || props.deviceProperties.powerState=='OFF'  ? null :
             <ListItem className={classes.listItemBottom}>
+
                 <ToggleAvatar onClick={ () => setMuted(!muted)} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
                     { props.deviceProperties.powerState!='ON' ? <VolumeMuteIcon /> :
                         (props.deviceProperties.muted) ? <VolumeOffIcon /> :  volume

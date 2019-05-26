@@ -82,7 +82,7 @@ class SofaSlider extends React.Component {
 
     handlePreChange = (event,value) => {
         //console.log('handleprechange',value, this.state.drag)
-        this.setState({ value: value, delaySet: true, prechange:true}, () => this.handlePostPreChange(event));
+        this.setState({ value: value, delaySet: true, prechange:true}, () => this.handlePostPreChange(value));
     }; 
 
     handleChange = (event,value) => {

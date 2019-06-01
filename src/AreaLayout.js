@@ -12,9 +12,15 @@ import Typography from '@material-ui/core/Typography';
 
 import Light from './light/Light';
 import GridBreak from './GridBreak';
+import GridSection from './GridSection';
+
 import Scene from './Scene'
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
+
+import ColorLensIcon from '@material-ui/icons/ColorLens';
+import AcUnitIcon from '@material-ui/icons/AcUnit';
+import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 
 
 const useStyles = makeStyles({
@@ -28,6 +34,11 @@ const useStyles = makeStyles({
     button: {
         minWidth: 36
     },
+    buttonspacer: {
+        minWidth: 36,
+        marginRight: 18
+    },
+
 });
 
 function AreaLayout(props) {
@@ -42,17 +53,8 @@ function AreaLayout(props) {
     const [brightControl, setBrightControl] = useState(false)
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
+    const [level, setLevel] = useState(0);
 
-    useEffect(() => {
-        console.log('layoutprops',props.layout.props)
-        //fetch('/list/logic/area/'+props.layout.props.name)
-        //    .then(result=>result.json())
-        //    .then(data=>setAreaData(data))
-        //fetch('/list/logic/scenes/')
-        //    .then(result=>result.json())
-        //    .then(data=>setSceneData(data))
-
-    }, []);
 
     function childrenByArea(filter) {
 
@@ -70,26 +72,12 @@ function AreaLayout(props) {
         return ads
     }
 
-
     function nameSort(a,b) {
       if (a.friendlyName < b.friendlyName)
         return -1;
       if (a.friendlyName > b.friendlyName)
         return 1;
       return 0;
-    }
-
-    function OldfilterByType(filter) {
-        var lights=[]
-        var all=devicesByArea(props.layout.props.name)
-        if (filter=="ALL") { return all.sort(nameSort) }
-        for (var j = 0; j < all.length; j++) {
-            if (props.deviceProperties[all[j].endpointId].powerState==filter) {
-                lights.push(all[j])
-            }
-        }
-        return lights.sort(nameSort)
-            
     }
 
     function filterByType(filter) {
@@ -102,17 +90,14 @@ function AreaLayout(props) {
             }
         }
         return lights.sort(nameSort)
-            
     }
 
-    
+
     function devicesByArea() {
 
         var ads=[]
         if (areaData.hasOwnProperty('lights')) {
             for (var dev in areaData.lights) {
-            //for (var i = 0; i < this.state.arealist[area].lights.length; i++) {
-               // var dbn=this.props.deviceByName(this.state.arealist[area].lights)
                 var dbn=props.deviceByName(dev)
                 if (dbn) {
                     ads.push(dbn)
@@ -161,24 +146,6 @@ function AreaLayout(props) {
             
     }
 
-    function oldsortByShortcuts() {
-
-        if (areaData.hasOwnProperty('scenes') && areaData.hasOwnProperty('shortcuts')) {
-            var sortlist=Object.keys(areaData.scenes).sort().reverse();
-            var sc=Object.keys(areaData.shortcuts).sort();
-            for (var i = 0; i < sc.length; i++) {
-                if (sortlist.indexOf(areaData.shortcuts[sc[i]])>0) {
-                    sortlist.splice(sortlist.indexOf(areaData.shortcuts[sc[i]]),1);
-                    sortlist.unshift(areaData.shortcuts[sc[i]])
-                }
-            }  
-            return sortlist
-        } else {
-            return []
-        }
-            
-    }
-    
     function runScene(sceneName) {
         props.sendAlexaCommand(sceneName, "logic:scene:"+sceneName, "SceneController", "Activate")
     }
@@ -190,42 +157,44 @@ function AreaLayout(props) {
     
     return (    
         <React.Fragment>
-            <GridBreak label={props.layout.props.name}>
-                <Button onClick={ () => setFilter('ALL')} color={ filter=='ALL' ? "primary" : "default"} className={classes.button }>
-                    All
-                </Button>
-                <Button onClick={ () => setFilter('ON')} color={ filter=='ON' ? "primary" : "default"} className={classes.button }>
-                    On
-                </Button>
-            </GridBreak>
-            <GridBreak >
-                <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
-                    Bright
-                </Button>
-                <Button onClick={ () => setTempControl(!tempControl) } color={ tempControl ? "primary" : "default"} className={classes.button }>
-                    Temp
-                </Button>
-                <Button onClick={ () => setColorControl(!colorControl) } color={ colorControl ? "primary" : "default"} className={classes.button }>
-                    Color
-                </Button>
-            </GridBreak>
-
-            { filterByType(filter).map((device) =>
-                <Light key={ device.endpointId } sendAlexaCommand={props.sendAlexaCommand} name={ device.friendlyName }
-                    device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } 
-                    brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
-                    />
-            )}
+            <GridSection name={props.layout.props.name+" Lights"}
+                    secondary={
+                        <>
+                            <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
+                                <BrightnessLowIcon className={classes.smallicon } />
+                            </Button>
+                            <Button onClick={ () => setTempControl(!tempControl) } color={ tempControl ? "primary" : "default"} className={classes.button }>
+                                <AcUnitIcon className={classes.smallicon } />
+                            </Button>
+                            <Button onClick={ () => setColorControl(!colorControl) } color={ colorControl ? "primary" : "default"} className={classes.buttonspacer }>
+                                <ColorLensIcon className={classes.smallicon } />
+                            </Button>
             
-            <GridBreak label={"Scenes"}>
+                            <Button onClick={ () => setFilter('ALL')} color={ filter=='ALL' ? "primary" : "default"} className={classes.button }>
+                                All
+                            </Button>
+                            <Button onClick={ () => setFilter('ON')} color={ filter=='ON' ? "primary" : "default"} className={classes.button }>
+                                On
+                            </Button>
+                        </>
+                    } 
+            >
+                { filterByType(filter).map((device) =>
+                    <Light key={ device.endpointId } sendAlexaCommand={props.sendAlexaCommand} name={ device.friendlyName }
+                        device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } 
+                        brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
+                        />
+                )}
+            </GridSection>
+            <GridSection name={"Scenes"} secondary={
                 <IconButton onClick={ () => addScene() } className={classes.button }>
                     <AddIcon fontSize="small" />
-                </IconButton>
-            </GridBreak>
-
-            { sortByShortcuts().map(scene => 
-                <Scene key={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} sendAlexaCommand={props.sendAlexaCommand} name={scene.friendlyName} computedLevel={computedLevel} />
-            )}
+                </IconButton> }
+            >
+                { sortByShortcuts().map(scene => 
+                    <Scene key={scene.endpointId} endpointId={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} sendAlexaCommand={props.sendAlexaCommand} name={scene.friendlyName} computedLevel={props.deviceProperties['logic:area:'+props.layout.props.name].scene} />
+                )}
+            </GridSection>
 
         </React.Fragment>
     )

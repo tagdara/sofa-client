@@ -10,6 +10,7 @@ export default function LayoutProvider(props) {
     const [backPage, setBackPage] = useState({"name":"", "props":{}})
     const mobileBreakpoint = 800
     const isMobile = window.innerWidth <= mobileBreakpoint;
+    const [masterButtonState, setMasterButtonState] = useState('System')
 
     useEffect(() => {
   	    fetch('/layout')
@@ -17,14 +18,21 @@ export default function LayoutProvider(props) {
             .then(result=> {
                 setLayouts(result);
                 setLayout({"name":"Home", "props":{}, "data":result[layout.name], "page":""})
+                if (isMobile) { applyLayoutCard('SummaryLayout') }
             })
     },[]);
     
     function applyLayout(name, newProps={}) {
+        if (name!='Home') {
+            setMasterButtonState('Home')
+        } else {
+            setMasterButtonState('System')
+        }
         setLayout({"name":name, "props":newProps, "data":layouts[name], "page":layout.page})
     }
 
     function applyLayoutCard(name, newProps={}) {
+        setMasterButtonState('Home')
         setLayout({"name":name, "props":newProps, "data":{ type: "single" }, "page":layout.page})
     }
     
@@ -45,6 +53,12 @@ export default function LayoutProvider(props) {
         setLayout({"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage})
     }
 
+    function applyHomePage(newPage) {
+        setMasterButtonState('Home')
+        setLayout({"name":"Home", "props":layout.props, "data":layouts['Home'], "page":newPage})
+    }
+
+
     return (
         <LayoutContext.Provider
             value={{
@@ -55,10 +69,13 @@ export default function LayoutProvider(props) {
                 applyLayout: applyLayout,
                 applyLayoutCard: applyLayoutCard,
                 applyLayoutPage: applyLayoutPage,
+                applyHomePage: applyHomePage,
                 applyReturnPage: applyReturnPage,
                 applyBackPage: applyBackPage,
                 goBack: goBack,
                 isMobile: isMobile,
+                setMasterButtonState: setMasterButtonState,
+                masterButtonState: masterButtonState,
             }}
         >
             {props.children}
@@ -74,6 +91,8 @@ export function withLayout(Component) {
                                 layouts={context.layouts} layout={context.layout} applyLayout={context.applyLayout} applyLayoutCard={context.applyLayoutCard}
                                 applyLayoutPage={context.applyLayoutPage} applyReturnPage={context.applyReturnPage} applyBackPage={context.applyBackPage}
                                 goBack={context.goBack} backPage={context.backPage} returnPage={context.returnPage} isMobile={context.isMobile}
+                                setMasterButtonState={context.setMasterButtonState} masterButtonState={context.masterButtonState}
+                                applyHomePage={context.applyHomePage}
                             /> }
             </LayoutContext.Consumer>
         );

@@ -1,5 +1,6 @@
 import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
@@ -21,7 +22,9 @@ export default function NoPlayer(props) {
     return (
             <GridItem wide={props.wide} >
                 <ListItem onClick={ () => props.setLayoutCard('PlayersLayout',{})}>
-                    <Avatar ><QueueMusicIcon /></Avatar>
+                    <ListItemAvatar>
+                        <Avatar ><QueueMusicIcon /></Avatar>
+                    </ListItemAvatar>
                     <ListItemText primary={"Waiting for player data"} />
                 </ListItem>
             </GridItem>

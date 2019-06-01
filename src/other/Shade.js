@@ -25,7 +25,7 @@ export default function Shade(props) {
     }   
 
     return (
-        <GridItem nopaper={true} >
+        <GridItem>
         <ListItem>
             <ListItemAvatar>
                 <Avatar><TonalityIcon /></Avatar>

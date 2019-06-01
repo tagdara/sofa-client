@@ -10,7 +10,7 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
 import Light from './light/Light';
-import GridBreak from './GridBreak';
+import GridSection from './GridSection';
 
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
@@ -61,31 +61,35 @@ function LightLayout(props) {
 
     return (    
         <React.Fragment>
-            <GridBreak label={"Lights"}>
-                <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
-                    <BrightnessLowIcon className={classes.smallicon } />
-                </Button>
-                <Button onClick={ () => setTempControl(!tempControl) } color={ tempControl ? "primary" : "default"} className={classes.button }>
-                    <AcUnitIcon className={classes.smallicon } />
-                </Button>
-                <Button onClick={ () => setColorControl(!colorControl) } color={ colorControl ? "primary" : "default"} className={classes.buttonspacer }>
-                    <ColorLensIcon className={classes.smallicon } />
-                </Button>
-
-                <Button onClick={ () => setFilter('ALL')} color={ filter=='ALL' ? "primary" : "default"} className={classes.button }>
-                    All
-                </Button>
-                <Button onClick={ () => setFilter('ON')} color={ filter=='ON' ? "primary" : "default"} className={classes.button }>
-                    On
-                </Button>
-            </GridBreak>
-            { filterByType(filter).map((device) =>
-                <Light key={ device.endpointId } sendAlexaCommand={props.sendAlexaCommand} name={ device.friendlyName }
-                    device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } 
-                    brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
-                    />
-            )}
-
+            <GridSection name={"Lights"}
+                    secondary={
+                        <>
+                            <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
+                                <BrightnessLowIcon className={classes.smallicon } />
+                            </Button>
+                            <Button onClick={ () => setTempControl(!tempControl) } color={ tempControl ? "primary" : "default"} className={classes.button }>
+                                <AcUnitIcon className={classes.smallicon } />
+                            </Button>
+                            <Button onClick={ () => setColorControl(!colorControl) } color={ colorControl ? "primary" : "default"} className={classes.buttonspacer }>
+                                <ColorLensIcon className={classes.smallicon } />
+                            </Button>
+            
+                            <Button onClick={ () => setFilter('ALL')} color={ filter=='ALL' ? "primary" : "default"} className={classes.button }>
+                                All
+                            </Button>
+                            <Button onClick={ () => setFilter('ON')} color={ filter=='ON' ? "primary" : "default"} className={classes.button }>
+                                On
+                            </Button>
+                        </>
+                    }
+            >
+                { filterByType(filter).map((device) =>
+                    <Light key={ device.endpointId } sendAlexaCommand={props.sendAlexaCommand} name={ device.friendlyName }
+                        device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } 
+                        brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
+                        />
+                )}
+            </GridSection>
         </React.Fragment>
     )
 

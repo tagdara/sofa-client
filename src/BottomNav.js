@@ -19,6 +19,7 @@ import HomeIcon from '@material-ui/icons/Home';
 import LensIcon from '@material-ui/icons/Lens';
 import ClearIcon from '@material-ui/icons/Clear';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
 
 // Z Index for dialogs is 1300, so this needs to be lower than that, but still very high to avoid glitches with switches showing through
 
@@ -58,7 +59,7 @@ function iconLoading(props) {
 function BottomNav(props) {
 
     const classes = useStyles();
-    const icons = {'Audio Video':MusicVideoIcon, 'Security':VerifiedUserIcon, 'Lights':LightbulbOutlineIcon}
+    const icons = {'Audio Video':MusicVideoIcon, 'Security':VerifiedUserIcon, 'Lights and Comfort':LightbulbOutlineIcon}
     
     useEffect( () => {
         if (props.layout.data.hasOwnProperty('pages')) {

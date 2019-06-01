@@ -16,7 +16,7 @@ import ComputerList from './other/ComputerList';
 import ModeList from './other/ModeList';
 import DeviceList from './other/DeviceList';
 
-import GridBreak from './GridBreak';
+import GridSection from './GridSection';
 
 const useStyles = makeStyles({
         
@@ -48,18 +48,25 @@ function MoreDevicesLayout(props) {
 
     return (
         <React.Fragment>
-            <VirtualList sendAlexaCommand={props.sendAlexaCommand} />
-            <GridBreak label={"Other Devices"} />
-            <DeviceList devices={ props.devicesByCategory('DEVICE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('DEVICE')) } sendAlexaCommand={props.sendAlexaCommand} />
+            <GridSection name={'Shades'}>
+                <VirtualList sendAlexaCommand={props.sendAlexaCommand} />
+            </GridSection>
+            
+            <GridSection name={"Other Devices"} >
+                <DeviceList devices={ props.devicesByCategory('DEVICE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('DEVICE')) } sendAlexaCommand={props.sendAlexaCommand} />
+            </GridSection>
 
-            <GridBreak label={"Computers"} />
-            <ComputerList devices={ props.devicesByCategory('PC') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('PC')) } sendAlexaCommand={props.sendAlexaCommand} />
+            <GridSection name={"Computers"} >
+                <ComputerList devices={ props.devicesByCategory('PC') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('PC')) } sendAlexaCommand={props.sendAlexaCommand} />
+            </GridSection>
 
-            <GridBreak label={"Services"} />
-            <DeviceList devices={ props.devicesByCategory('OTHER') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('OTHER')) } sendAlexaCommand={props.sendAlexaCommand} />
+            <GridSection name={"Services"} >
+                <DeviceList devices={ props.devicesByCategory('OTHER') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('OTHER')) } sendAlexaCommand={props.sendAlexaCommand} />
+            </GridSection>
 
-            <GridBreak label={"Modes"} />
-            <ModeList devices={ props.devicesByCategory('MODE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('MODE')) } sendAlexaCommand={props.sendAlexaCommand} />
+            <GridSection name={"Modes"} >
+                <ModeList devices={ props.devicesByCategory('MODE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('MODE')) } sendAlexaCommand={props.sendAlexaCommand} />
+            </GridSection>
 
         </React.Fragment>
     )

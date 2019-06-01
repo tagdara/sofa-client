@@ -31,6 +31,7 @@ export function withHeartbeat(Component) {
                 { context => 
                             <Component {...props} 
                                 timedOut={context.timedOut} refreshData={context.refreshData} getLastUpdate={context.getLastUpdate}
+                                modules={context.modules} setModules={context.setModules}
                             />
                 }
             </DataContext.Consumer>

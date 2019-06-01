@@ -9,7 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
 import Zone from './devices/Zone';
-import GridBreak from './GridBreak';
+import GridSection from './GridSection';
 
 const useStyles = makeStyles({
     
@@ -75,15 +75,16 @@ function ZoneLayout(props) {
 
     return (    
         <React.Fragment>
-            <GridBreak label={"Security Zones"} />
-
-            { filterByType(securityZones).map((device) =>
-                <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.endpointId] } />
-            )}
-            <GridBreak label={"Automation Zones"} />
-            { filterByType(automationZones).map((device) =>
-                <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.endpointId] } />
-            )}
+            <GridSection name={"Security Zones"} >
+                { filterByType(securityZones).map((device) =>
+                    <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.endpointId] } />
+                )}
+            </GridSection>
+            <GridSection name={"Automation Zones"} >
+                { filterByType(automationZones).map((device) =>
+                    <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.endpointId] } />
+                )}
+            </GridSection>
         </React.Fragment>
     )
 

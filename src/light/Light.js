@@ -92,8 +92,8 @@ export default function Light(props) {
     }; 
     
     return (
-        <GridItem nopaper={true} >
-            <ListItem button>
+        <GridItem nopaper={false} >
+            <ListItem>
                 <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
                     <LightbulbOutlineIcon className={classes.iconSize} />
                 </ToggleAvatar>

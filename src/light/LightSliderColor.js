@@ -19,65 +19,12 @@ import { HuePicker } from 'react-color';
 
 const useStyles = makeStyles({
         
-    root: {
-        width: '100%',
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    expansionList: {
-        paddingLeft: 4,
-        paddingRight: 4,
-        
-    },
-    halves: {
-        width: '40%',
-    },
-
-    halfSlider: {
-        width: '40%',
-        paddingLeft: 16,
-        paddingRight: 16,
-        display: 'flex',
-        flex: 1,
-    },
-
-    stackedLightControl: {
-        paddingLeft: 16,
-        paddingRight: 16,
-        flex:1,
-    },
-    buttonsAndSlider: {
-        paddingTop: 0,
-        paddingRight: 28,
-        paddingLeft: 10,
-    },
-    nameAndSwitch: {
-        display: "flex",
-        paddingRight: 0,
-        paddingLeft: 10,
-        alignItems: "center",
-    },
-    deviceName: {
-        flex: 1,
-    },
-    listItemLabel: {
-        paddingBottom: 0,
-    },
-    paperLight: {
-        display: "flex",
-        alignItems: "center",
-        paddingLeft: 16,
-    },
-    chipLine: {
-        paddingTop:0,
-        paddingLeft:8,
-        paddingRight:8,
-    },
     wide: {
         width: "100%",
     },
     indent: {
         paddingLeft: 40,
+        paddingRight: 8,
     },
     button: {
         minWidth: 24

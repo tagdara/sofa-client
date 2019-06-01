@@ -12,9 +12,9 @@ const useStyles = makeStyles({
 
 });
 
-function Transition(props) {
-    return <Slide direction="down" {...props} />;
-}
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="down" ref={ref} {...props} />;
+});
 
 function SofaDialog(props) {
 

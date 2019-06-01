@@ -3,8 +3,7 @@ import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Toolbar from '@material-ui/core/Toolbar';
-import Sidebar from './Sidebar';
-import SofaAppBar from "./SofaAppBar";
+import NewAppBar from "./NewAppBar";
 import SofaAppContent from "./SofaAppContent";
 import ErrorBoundary from './ErrorBoundary'
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -55,11 +54,10 @@ function MainApp(props) {
         <DataProvider>
             <UserProvider>
                 <LayoutProvider>
-                    <SofaAppBar open={handleDrawerOpen} mobile={isMobile}/>
-                    <Sidebar open={drawerOpen} close={handleDrawerClose} />
-                    { !isMobile && <Toolbar /> }
+                    <NewAppBar open={handleDrawerOpen} mobile={isMobile}/>
+                    { !1==1 && <Toolbar /> }
                     <ErrorBoundary>
-                        <SofaAppContent toggleSidebar={handleDrawerOpen} closeSidebar={handleDrawerClose}/>
+                        <SofaAppContent />
                     </ErrorBoundary>    
                    <CssBaseline />
                 </LayoutProvider>

@@ -44,6 +44,7 @@ export default function DataProvider(props) {
     const [heartbeat, setHeartbeat] = useState(Date.now());     
     const [lastUpdate, setLastUpdate] = useState(null);     
     const [eventSource] = useState(() => new EventSource("sse"))
+    const [modules, setModules] = useState({})
     const pendingDevs = [];
     
     const [deviceState, dispatch] = useReducer(deviceStateReducer, initialState);
@@ -379,6 +380,8 @@ export default function DataProvider(props) {
                 timedOut: timedOut,
                 refreshData: refreshData,
                 getLastUpdate: getLastUpdate,
+                modules: modules,
+                setModules: setModules,
             }}
         >
             {props.children}

@@ -98,22 +98,20 @@ function SofaAppContent(props) {
 
     return (
         <Grid container spacing={ props.isMobile && props.layout.data.type=='single' ? 2: 8} className={ props.isMobile ? classes.mobileControlArea : classes.controlArea} >
-            { props.layout.data.type=='pages' ? 
+            { props.layout.data.type=='pages'  && 
                 <React.Fragment>
                     { props.layout.data.order.map( page => {
                         return (page==props.layout.page || !props.isMobile ) ?
                         <SofaPage key={page} name={page} page={props.layout.data.pages[page]} />
                         : null
                     })}
-                { props.isMobile && <BottomNav toggleSidebar={props.toggleSidebar} closeSidebar={props.closeSidebar}/> }
                 </React.Fragment>
-            : null }
+            }
             { props.layout.data.type=='single' ?
                 <React.Fragment>
     				<ErrorBoundary wide={props.wide}>
     				{ renderSuspenseModule(props.layout.name, props.layout.props) }
                     </ErrorBoundary>
-                    { (props.layout.props && props.layout.props.noBottom ) ? null : <BottomButtons /> }
                 </React.Fragment>
 			: null }
         </Grid>

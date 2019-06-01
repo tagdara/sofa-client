@@ -8,49 +8,48 @@ import ListItem from '@material-ui/core/ListItem';
 import CoverDimmer from './CoverDimmer';
 import Fade from '@material-ui/core/Fade';
 
-const useStyles = makeStyles({
-
-    bigcover: {
-        width: "100%",
-        maxHeight: 480,
-        position: "relative",
-        padding: 0,
-        borderRadius: "4px 4px 0px 0px",
-    },
-    songTextBox: {
-        color: "#fff",
-        position: "absolute",
-        padding: 16,
-        top:0,
-        bottom:64,
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-    },
-    songTextHolder: {
-        margin: "0 auto",
-    },
-    songTitle: {
-        fontSize:"3rem",
-        paddingBottom:16,
-        flexBasis: 0,
-        flexGrow:2,
-        display: "flex",
-        overflow: "hidden",
-    },
-    songArtist: {
-        fontSize:"2.2rem",
-        fontWeight:200,
-        flexBasis: 0,
-        flexGrow:1,
-        display: "flex",
-        overflow: "hidden",
-    },
-    imgItem: {
-        padding: 0,
-        minHeight: 320,
+const useStyles = makeStyles(theme => {
+    return {
+        bigcover: {
+            width: "100%",
+            maxHeight: 480,
+            position: "relative",
+            padding: 0,
+            borderRadius: "4px 4px 0px 0px",
+        },
+        songTextBox: {
+            position: "absolute",
+            padding: 16,
+            top:0,
+            bottom:64,
+            display: "flex",
+            flexDirection: "column",
+            overflow: "hidden",
+        },
+        songTextHolder: {
+            margin: "0 auto",
+        },
+        songTitle: {
+            fontSize:"3rem",
+            paddingBottom:16,
+            flexBasis: 0,
+            flexGrow:2,
+            display: "flex",
+            overflow: "hidden",
+        },
+        songArtist: {
+            fontSize:"2.2rem",
+            fontWeight:200,
+            flexBasis: 0,
+            flexGrow:1,
+            display: "flex",
+            overflow: "hidden",
+        },
+        imgItem: {
+            padding: 0,
+            minHeight: 320,
+        }
     }
-
 });
 
 export default function PlayerArtOverlay(props) {

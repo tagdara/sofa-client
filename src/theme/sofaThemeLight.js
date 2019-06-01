@@ -17,6 +17,9 @@ export default createMuiTheme({
             main: yellow[500],
             dark: yellow[700]
         },
+        background: {
+            page: "#eee"
+        },
         type: "light"
     }
 })

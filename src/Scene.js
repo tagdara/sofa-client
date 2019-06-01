@@ -1,17 +1,14 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import List from '@material-ui/core/List';
 
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import Avatar from '@material-ui/core/Avatar';
-import CloseIcon from '@material-ui/icons/Close';
 import ListIcon from '@material-ui/icons/List';
+
+import ListItemText from '@material-ui/core/ListItemText';
 import ToggleAvatar from './ToggleAvatar';
 import GridItem from "./GridItem"
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
     
@@ -22,6 +19,9 @@ const useStyles = makeStyles({
     },
     listItem: {
         padding: "8 24px",
+    },
+    working: {
+        margin: "4px 20px 4px 4px"
     }
 });
 
@@ -29,17 +29,28 @@ const useStyles = makeStyles({
 export default function Scene(props) {
     
     const classes = useStyles();
+    const [working, setWorking] = useState(false)
+    
+    useEffect(() => {
+        setWorking(false)
+    }, [props.computedLevel]);
     
     function runScene() {
+        console.log('Activating', "logic:scene:"+props.name)
+        setWorking(true)
         props.sendAlexaCommand(props.name, "logic:scene:"+props.name, "SceneController", "Activate")
     }
     
     return (
-        <GridItem  nopaper={true}>
-            <ListItem >
-                <ToggleAvatar avatarState={props.shortcut==props.computedLevel.toString() ? "on" : "off"} onClick={ () => runScene(name)}>
-                    {props.shortcut=='x' ? <ListIcon /> : props.shortcut }
-                </ToggleAvatar>
+        <GridItem >
+            <ListItem onClick={ () => runScene(name)}>
+                { working ?
+                    <CircularProgress size={32} className={classes.working} />
+                :
+                    <ToggleAvatar avatarState={props.endpointId==props.computedLevel ? 'on' : 'off'}>
+                        {props.shortcut=='x' ? <ListIcon /> : props.shortcut }
+                    </ToggleAvatar>
+                }
                 <ListItemText>{props.name}</ListItemText>
             </ListItem>
         </GridItem >

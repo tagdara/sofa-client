@@ -1,72 +1,52 @@
-import React, { Component } from "react";
-import { withStyles } from '@material-ui/core/styles';
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 
 import SofaSlider from '../SofaSlider';
+import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 
-const styles = theme => ({
+const useStyles = makeStyles({
         
-    root: {
-        width: '100%',
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
     indent: {
         paddingLeft: 40,
+        paddingRight: 8,
     }
 });
 
-class LightSliderBrightness extends React.Component {
+export default function LightSliderBrightness(props) {
     
-    constructor(props) {
-        super(props);
+    const [brightness,setBrightness] = useState(50);
+    const classes = useStyles();
 
-        this.state = {
-            brightness: "no",
-        };
-    } 
+    useEffect(() => {
+        setBrightness(props.brightness)
+    }, [props.brightness])
+
     
-    static getDerivedStateFromProps(nextProps, prevState) {
-
-        var data=nextProps
-        var changes={}
-        
-        if (data.hasOwnProperty('brightness')) {
-            changes.brightness=data.brightness
-        }
-
-        return changes
-    } 
-    
-    handlePreBrightnessChange = (event, value) => {
-        this.setState({ brightness: event, target:this.props.name});
+    function handlePreBrightnessChange(event, value) {
+        setBrightness(event);
     }; 
 
-    handleBrightnessChange = event => {
-        this.props.sendAlexaCommand(this.props.name, this.props.endpointId, "BrightnessController", "SetBrightness", { "brightness" : event } )
+    function handleBrightnessChange(event) {
+        props.sendAlexaCommand('', props.endpointId, "BrightnessController", "SetBrightness", { "brightness" : event } )
     }; 
 
-    render() {
-
-        const { classes } = this.props;
-
-        return (
-                <ListItem>
-                    <ListItemIcon className={classes.indent}><BrightnessLowIcon /></ListItemIcon>
-                    <SofaSlider
-                        name="Brightness" smallText={true} value={this.state.brightness} unit="%"
-                        min={0} max={100} step={10}
-                        preChange={this.handlePreBrightnessChange}
-                        change={this.handleBrightnessChange}
-                        disabled={!this.props.powerState}
-                    />
-                </ListItem>
-        );
-    }
+    return (
+            <ListItem>
+                <ListItemIcon className={classes.indent}><BrightnessLowIcon /></ListItemIcon>
+                <SofaSlider
+                    name="Brightness" smallText={true} value={brightness} unit="%"
+                    min={0} max={100} step={10}
+                    preChange={handlePreBrightnessChange}
+                    change={handleBrightnessChange}
+                    disabled={!props.powerState}
+                />
+            </ListItem>
+    );
 }
-
-export default withStyles(styles)(LightSliderBrightness);
 

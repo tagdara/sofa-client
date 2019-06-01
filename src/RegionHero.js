@@ -31,84 +31,36 @@ function RegionHero(props) {
     
     const lightsOn = lightCount('on')>0;
     const classes = useStyles();
-    const [areas, setAreas] = useState({});
-    const [scenes, setScenes] = useState([]);
     const [regionSelect,setRegionSelect] = useState(false);
     const [selectedArea,setSelectedArea] = useState(false);
     const [region,setRegion] = useState({});
     const [regionData, setRegionData] = useState({});
     const [regionName,setRegionName] = useState('Main');
     
-    function sceneDataByArea(area) {
-        
-        var areascenes={}
-        if (areas.hasOwnProperty(area)) {
-            for (var scene in areas[area].scenes) {
-                if (scenes.hasOwnProperty(scene)) {
-                    areascenes[scene]=scenes[scene]
-                }
-            }
-        }   
-        return areascenes
-    }
-    
-    function areaSceneList(area) {
-
-        if (areas.hasOwnProperty(area)) {
-            if (areas[area].hasOwnProperty('scenes')) {
-                return areas[area].scenes
-            }
-        }
-        return {}
-    }
-    
-    function areaShortcuts(area) {
-
-        if (areas.hasOwnProperty(area)) {
-            if (areas[area].hasOwnProperty('shortcuts')) {
-                return areas[area].shortcuts
-            }
-        }
-        return {}
-    }
-    
     function scenesByArea(area) {
-        var areascenes={}
-        if (areas.hasOwnProperty(area)) {
-            if (areas[area].hasOwnProperty('scenes')) {
-                for (var scene in areas[area].scenes) {
-                    areascenes[scene]=scenes[scene]
-                }
+        var areascenes=[]
+        var devs=props.deviceProperties['logic:area:'+area].children
+        for (var i = 0; i < devs.length; i++) {
+            var dbn=props.deviceByEndpointId(devs[i])
+            if (dbn.displayCategories.includes('SCENE_TRIGGER')) {
+                areascenes.push(dbn)
             }
         }
-
         return areascenes
     }
-
-    function shortcutsByArea(area) {
-
-        if (areas.hasOwnProperty(area)) {
-            if (areas[area].hasOwnProperty('shortcuts')) {
-                return areas[area].shortcuts
-            }
-        }
-        return {}
-    }
-
 
     function devicesByArea(area) {
-
+        
         var ads=[]
-        if (areas.hasOwnProperty(area)) {
-            for (var dev in areas[area].lights) {
-                var dbn=props.deviceByName(dev)
-                if (dbn) {
-                    ads.push(dbn)
-                }
+        var devs=props.deviceProperties['logic:area:'+area].children
+        for (var i = 0; i < devs.length; i++) {
+            var dbn=props.deviceByEndpointId(devs[i])
+            if (dbn) {
+                ads.push(dbn)
             }
         }
-
         return ads
+        
     }
  
     function lightCount(condition) {
@@ -140,10 +92,6 @@ function RegionHero(props) {
             newregion=region
             setRegion(region) 
         }
-        
-        fetch('/list/logic/region/'+newregion)
-            .then(result=>result.json())
-            .then(result=>this.setState(result))
     }
     
     function closeRegionSelect() {
@@ -184,21 +132,21 @@ function RegionHero(props) {
             })
     }
     
-   function loadRegionData(regiondata) {
-       if (regiondata.hasOwnProperty('scenes')) {
-           setScenes(regiondata['scenes'])
-       }
-       if (regiondata.hasOwnProperty('areas')) {
-           setAreas(regiondata['areas'])
-       }
-   }
-    
-    useEffect(() => {
-  	    fetch('/list/logic/region/'+props.region)
- 		    .then(result=>result.json())
- 		    .then(result=> loadRegionData(result));
-    }, []);
+    function getRegionAreas() {
 
+        var areas=[]
+        if (props.deviceProperties['logic:area:'+props.region]) {
+            var devstate=props.deviceProperties['logic:area:'+props.region].children
+            for (var i = 0; i < devstate.length; i++) {
+                var child=props.deviceByEndpointId(devstate[i])
+                if (child.displayCategories.includes('AREA')) {
+                    areas.push(child)
+                }
+            }
+        }
+        return areas
+    }
+    
     return (
         <GridItem wide={props.wide}>
             { lightCount('all') ?
@@ -206,7 +154,7 @@ function RegionHero(props) {
                     <ToggleAvatar avatarState={lightsOn ? "on" : "off"} onClick={ () => props.applyLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
                     <ListItemText primary={lightsOn ? lightCount('on')+" lights are on" : "All lights off" } onClick={ () => props.applyLayoutCard('LightLayout') } />
                     <ListItemSecondaryAction>
-                        <IconButton onClick={(e) => props.setLayoutCard('RegionsLayout')}>
+                        <IconButton onClick={(e) => props.applyLayoutCard('AreasLayout')}>
                             <ViewModuleIcon />
                         </IconButton>
                     </ListItemSecondaryAction>
@@ -217,8 +165,8 @@ function RegionHero(props) {
                     <ListItemText primary={'Waiting for light data'}/>
                 </ListItem>
             }
-            { Object.keys(areas).map((name) => 
-                <AreaLine theme={props.theme} sendAlexaCommand={props.sendAlexaCommand} key={ name } name={ name } shortcuts={areaShortcuts(name)} scenes={areaSceneList(name)} sceneData={scenesByArea(name)} devices={ devicesByArea(name)} deviceProperties={ props.propertiesFromDevices(devicesByArea(name)) } selectArea={selectArea} ></AreaLine>
+            {   getRegionAreas().map((area) => 
+                <AreaLine theme={props.theme} area={ area } name={ area.friendlyName } areaData={ props.deviceProperties[area.endpointId] } sendAlexaCommand={props.sendAlexaCommand} key={ area.endpointId } shortcuts={area.shortcuts} selectArea={selectArea} ></AreaLine>
             )}
         </GridItem>
     );

@@ -26,7 +26,7 @@ export default function Computer(props) {
     }; 
     
     return (
-        <GridItem nopaper={true} >
+        <GridItem >
             <ListItem>
                 <ToggleAvatar avatarState={ props.deviceProperties.powerState=='ON' ? 'on' : 'off'}><DesktopWindowsIcon /></ToggleAvatar>
                 { props.deviceProperties.powerState=='ON' ?

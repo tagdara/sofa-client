@@ -4,42 +4,48 @@ import classNames from 'classnames';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List'
+import Slide from '@material-ui/core/Slide';
 
-const useStyles = makeStyles({
-    
-    
-    content: {
-        display: 'flex',
-        margin: 0,
-        boxSizing: "border-box",
-        padding: "0 8px 0 0",
-        flexWrap: 'wrap',
-        alignItems: "center",
-        flexGrow: 1,
-        minWidth: "320px",
-        minHeight: 80,
-        flexBasis: 0,
-        position: "relative",
-    },
-    nopad: {
-        padding: 0,
-    },
-    list: {
-        width: "100%",
-    },
-    nopadlist: {
-        padding: 0,
-        width: "100%",
-    },
-    colorband: {
-        borderLeft: "solid 5px #44F",
-    },
-    thinmargin: {
-        margin: 2,
-        padding: "4px !important",
-    },
-    normal: {
-        padding: "4px !important",
+
+const useStyles = makeStyles(theme => {
+    return {
+   
+        content: {
+            borderWidth: "thin",
+            borderStyle: "solid",
+            borderColor: theme.palette.divider,
+            display: 'flex',
+            margin: 0,
+            boxSizing: "border-box",
+            padding: "0 8px 0 0",
+            flexWrap: 'wrap',
+            alignItems: "center",
+            flexGrow: 1,
+            minWidth: "320px",
+            minHeight: 80,
+            flexBasis: 0,
+            position: "relative",
+        },
+        nopad: {
+            padding: 0,
+        },
+        list: {
+            width: "100%",
+        },
+        nopadlist: {
+            padding: 0,
+            width: "100%",
+        },
+        colorband: {
+            borderLeft: "solid 5px #44F",
+        },
+        thinmargin: {
+            margin: 2,
+            padding: "4px !important",
+        },
+        normal: {
+            padding: "4px !important",
+        }
     }
 });
 
@@ -68,9 +74,11 @@ export default function GridItem(props) {
     return (
         <Grid item xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 4) } className={ props.thinmargin ? classes.thinmargin: classes.normal}>
             { !props.nopaper ?
-            <Paper elevation={props.elevation} className={classNames(props.content, props.nopad && classes.nopad, props.colorband && classes.colorband)}  >
-                { itemdata }
-            </Paper>
+        
+                <Paper elevation={props.elevation} className={classNames(classes.content, props.nopad && classes.nopad, props.colorband && classes.colorband)}  >
+                    { itemdata }
+                </Paper>
+
             :
             <React.Fragment>
                 { itemdata }
@@ -81,7 +89,7 @@ export default function GridItem(props) {
 }
 
 GridItem.defaultProps = {
-    elevation: 1,
+    elevation: 0,
     wide: false,
     thinmargin: false
 }

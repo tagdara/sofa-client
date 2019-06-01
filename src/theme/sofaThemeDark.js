@@ -18,7 +18,10 @@ export default createMuiTheme({
             dark: yellow[700]
         },
         text: {
-            primary: "#e0e0e0",
+            primary: "#c0c0c0",
+        },
+        background: {
+            page: "#383838"
         },
         type: "dark"
     }

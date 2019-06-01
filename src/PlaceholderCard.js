@@ -1,41 +1,32 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
+import React, { Component } from "react";
+import { makeStyles } from '@material-ui/styles';
 
 import GridItem from './GridItem';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+
 import ListItemText from '@material-ui/core/ListItemText';
+
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const styles = theme => ({    
+const useStyles = makeStyles({
     
     spinner: {
-        padding: "4 16",
+        margin: 0,
     }
     
 });
 
-class PlaceholderCard extends React.Component {
+export default function PlaceholderCard(props){
+    
+    const classes = useStyles();
+    
+    return (
+        <GridItem wide={true} nopaper={true} >
 
-    render() {
-        
-        const { classes, theme } = this.props;        
-        
-        return (
-            <GridItem wide={true}>
-                <ListItem>
-                    <CircularProgress  className={classes.spinner} size={24} />
-                    <ListItemText primary={"Loading..."} />
-                </ListItem>
-            </GridItem>
-        );
-    }
+        </GridItem>
+    );
+
 }
-
-PlaceholderCard.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(PlaceholderCard);
 

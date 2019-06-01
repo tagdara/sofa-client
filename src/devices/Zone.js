@@ -8,7 +8,7 @@ import 'moment-timezone';
 import ClearIcon from '@material-ui/icons/Clear';
 import DoneIcon from '@material-ui/icons/Done';
 
-import Avatar from '@material-ui/core/Avatar';
+import ToggleAvatar from '../ToggleAvatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 
@@ -36,15 +36,11 @@ export default function Zone(props) {
     const classes = useStyles();
 
     return (
-        <GridItem nopaper={true}  >
+        <GridItem >
             <ListItem onClick={() => props.history(props.name, props.endpointId)}>
-                <ListItemAvatar>
-                    { props.deviceProperties.detectionState=='NOT_DETECTED' ?
-                        <Avatar className={classes.closed} ><DoneIcon /></Avatar>
-                    :
-                        <Avatar className={classes.open} ><ClearIcon /></Avatar>
-                    }
-                </ListItemAvatar>
+                <ToggleAvatar avatarState={ props.deviceProperties.detectionState=='NOT_DETECTED' ? 'closed' : 'open' } > 
+                    { props.deviceProperties.detectionState=='NOT_DETECTED' ? <DoneIcon /> : <ClearIcon /> }
+                </ToggleAvatar>
                 <ListItemText primary={props.name} secondary={props.changeTime=='Unknown' ? 'Unknown':<Moment format="ddd MMM D h:mm:sa">{props.changeTime}</Moment>} />
             </ListItem>
         </GridItem>

@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => {
             bottom: 0,
             backgroundColor: theme.palette.background.default,
             opacity: "0.8",
+            borderRadius: "4px 4px 0px 0px",
         },
     }
 

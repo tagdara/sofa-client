@@ -8,7 +8,13 @@ import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 
-import GridBreak from './GridBreak';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+import GridItem from './GridItem';
+import GridSection from './GridSection';
 import TemperatureSensor from './thermostat/TemperatureSensor';
 import Thermostat from './thermostat/Thermostat';
 import ScheduleIcon from '@material-ui/icons/Schedule';
@@ -41,21 +47,25 @@ function ThermostatLayout(props) {
 
     return (    
         <React.Fragment>
-            <GridBreak label={"Thermostats"} >
-                <IconButton onClick={ () => switchToHistory() } className={classes.button }>
-                    <ScheduleIcon fontSize="small" />
-                </IconButton>            
-            </GridBreak>
-
-            { thermostats.map((device) =>
-                <Thermostat sendAlexaCommand={props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
-                                    device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } />
-            )}
-            <GridBreak label={"Temperatures"} />
+            <GridSection name={"Thermostats"}>
+                { thermostats.map((device) =>
+                    <Thermostat sendAlexaCommand={props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
+                                        device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } />
+                )}
+            </GridSection>
+            
+            <GridSection name={"Temperatures"}>
             { temperatureSensors.map((device) =>
                 <TemperatureSensor key={ device.endpointId } name={ device.friendlyName } device={ device } 
                              deviceProperties={ props.deviceProperties[device.endpointId] }  />
             )}
+            </GridSection>
+
+            <GridItem>
+                <ListItem>
+                    <ListItemText onClick={ () => switchToHistory() }>History</ListItemText>
+                </ListItem>
+            </GridItem>
         </React.Fragment>
     )
 

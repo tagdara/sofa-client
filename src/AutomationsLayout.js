@@ -16,7 +16,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-import GridBreak from './GridBreak';
+import GridSection from './GridSection';
 
 const useStyles = makeStyles({
     
@@ -107,26 +107,29 @@ function AutomationsLayout(props) {
 
     return (    
         <React.Fragment>
-            <GridBreak label={"Favorites"}/>
+            <GridSection name={"Favorites"} >
             { Object.keys(automations).sort().map(automation => 
                 ( automations[automation].favorite ?
                     <AutomationItem favorite={automations[automation].favorite} select={selectAutomation} edit={editing} triggerCount={automations[automation].triggerCount } actionCount={automations[automation].actionCount} conditionCount={automations[automation].conditionCount } name={automation} delete={deleteAutomation} run={runAutomation} key={ automation+'-reg' } />
                     :null
                 )
             )}
-            <GridBreak label={"Other Automations"}>
-                <IconButton onClick={ () => newAutomation() } className={classes.button }>
-                    <AddIcon fontSize="small" />
-                </IconButton>
-                { Object.keys(automations).length>0 &&
-                <IconButton onClick={ () => { setRemove(!remove); }} className={classes.button }>
-                    <RemoveIcon fontSize="small" />
-                </IconButton>
-                }
-                <IconButton onClick={ () => switchToSchedule() } className={classes.button }>
-                    <ScheduleIcon fontSize="small" />
-                </IconButton>
-            </GridBreak>
+            </GridSection>
+            <GridSection name={"Other Automations"} secondary={
+                <>
+                    <IconButton onClick={ () => newAutomation() } className={classes.button }>
+                        <AddIcon fontSize="small" />
+                    </IconButton>
+                        { Object.keys(automations).length>0 &&
+                        <IconButton onClick={ () => { setRemove(!remove); }} className={classes.button }>
+                            <RemoveIcon fontSize="small" />
+                        </IconButton>
+                        }
+                    <IconButton onClick={ () => switchToSchedule() } className={classes.button }>
+                        <ScheduleIcon fontSize="small" />
+                    </IconButton>
+                </>
+            }>
 
             { Object.keys(automations).sort().map(automation => 
                 ( !automations[automation].favorite ?
@@ -138,6 +141,7 @@ function AutomationsLayout(props) {
             { adding ? 
                 <AutomationAdd add={addAutomation} />
             : null }
+            </GridSection>
         </React.Fragment>
     )
 

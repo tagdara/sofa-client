@@ -15,6 +15,7 @@ import Typography from '@material-ui/core/Typography';
 
 import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 import LightbulbOutlineIcon from '../LightbulbOutline';
+import CloudOffIcon from '@material-ui/icons/CloudOff';
 
 import SofaSlider from "../SofaSlider"
 import LightSliderBrightness from "./LightSliderBrightness"
@@ -74,7 +75,7 @@ const useStyles = makeStyles({
         width: "100%",
     },
     listItem: {
-        padding: "8 24px",
+        maxHeight: 64,
     }
 });
 
@@ -91,14 +92,33 @@ export default function Light(props) {
         }
     }; 
     
+    function isReachable() {
+        if (props.deviceProperties.hasOwnProperty('connectivity')) {
+            if (props.deviceProperties.connectivity.hasOwnProperty('value')) {
+                if (props.deviceProperties.connectivity.value=='UNREACHABLE') {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
     return (
         <GridItem nopaper={false} >
-            <ListItem>
-                <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
-                    <LightbulbOutlineIcon className={classes.iconSize} />
-                </ToggleAvatar>
-                <ListItemText onClick={() => setShowAll(!showAll) }>{props.name}</ListItemText>
-                <Switch color="primary" className={classes.lightSwitch} checked={props.deviceProperties.powerState=='ON'} onChange={handlePowerChange} />
+            <ListItem className={classes.listItem} >
+                { isReachable() ?
+                    <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
+                        <LightbulbOutlineIcon className={classes.iconSize} />
+                    </ToggleAvatar>
+                :
+                    <ToggleAvatar avatarState={ "off" } >
+                        <CloudOffIcon className={classes.iconSize} />
+                    </ToggleAvatar>
+                }                
+                <ListItemText onClick={() => setShowAll(!showAll) } primary={props.name} secondary={ isReachable() ? '': 'Off at switch' } />
+                { isReachable() &&
+                    <Switch color="primary" className={classes.lightSwitch} checked={props.deviceProperties.powerState=='ON'} onChange={handlePowerChange} />
+                }
             </ListItem>
             { !props.brightControl && !showAll ? null :
                 ( props.deviceProperties.brightness===undefined ?

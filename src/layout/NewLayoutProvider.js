@@ -17,10 +17,25 @@ export default function LayoutProvider(props) {
  		    .then(result=>result.json())
             .then(result=> {
                 setLayouts(result);
-                setLayout({"name":"Home", "props":{}, "data":result[layout.name], "page":""})
-                if (isMobile) { applyLayoutCard('SummaryLayout') }
+                setLayout({"name":layout.name, "props":{}, "data":result[layout.name], "page":result[layout.name]['order'][0]})
+                if (isMobile) {
+                    if (result[layout.name].hasOwnProperty('mobile')) {
+                        applyLayoutCard(result[layout.name]['mobile']) 
+                    }
+                }
             })
     },[]);
+    
+    function goHome() {
+        console.log(layouts, layout.name)
+        setLayout({"name":'Home', "props":{}, "data":layouts['Home'], "page":layouts['Home']['order'][0]})
+        if (isMobile) {
+            if (layouts['Home'].hasOwnProperty('mobile')) {
+                applyLayoutCard(layouts['Home']['mobile']) 
+            }
+        }
+        setMasterButtonState('System')
+    }
     
     function applyLayout(name, newProps={}) {
         if (name!='Home') {
@@ -73,6 +88,7 @@ export default function LayoutProvider(props) {
                 applyReturnPage: applyReturnPage,
                 applyBackPage: applyBackPage,
                 goBack: goBack,
+                goHome: goHome,
                 isMobile: isMobile,
                 setMasterButtonState: setMasterButtonState,
                 masterButtonState: masterButtonState,
@@ -92,7 +108,7 @@ export function withLayout(Component) {
                                 applyLayoutPage={context.applyLayoutPage} applyReturnPage={context.applyReturnPage} applyBackPage={context.applyBackPage}
                                 goBack={context.goBack} backPage={context.backPage} returnPage={context.returnPage} isMobile={context.isMobile}
                                 setMasterButtonState={context.setMasterButtonState} masterButtonState={context.masterButtonState}
-                                applyHomePage={context.applyHomePage}
+                                applyHomePage={context.applyHomePage} goHome={context.goHome}
                             /> }
             </LayoutContext.Consumer>
         );

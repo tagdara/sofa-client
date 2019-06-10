@@ -53,11 +53,7 @@ function NewAppBar(props) {
     
     function callMaster() {
         if (props.masterButtonState=='Home') {
-            if (props.isMobile) {
-                props.applyLayoutCard('SummaryLayout')
-            } else {
-                props.applyLayout('Home')
-            }
+            props.goHome()
         } 
         if (props.masterButtonState=='System') {
             props.applyLayoutCard('SystemLayout')

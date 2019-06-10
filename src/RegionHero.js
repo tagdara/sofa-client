@@ -62,6 +62,17 @@ function RegionHero(props) {
         return ads
         
     }
+
+    function isReachable(dev) {
+        if (dev.hasOwnProperty('connectivity')) {
+            if (dev.connectivity.hasOwnProperty('value')) {
+                if (dev.connectivity.value=='UNREACHABLE') {
+                    return false
+                }
+            }
+        }
+        return true
+    }
  
     function lightCount(condition) {
         var count=0;
@@ -70,8 +81,16 @@ function RegionHero(props) {
         for (var i = 0; i < lights.length; i++) {
             if (lights[i].hasOwnProperty('displayCategories') && props.deviceProperties.hasOwnProperty(lights[i].endpointId) && props.deviceProperties[lights[i].endpointId].hasOwnProperty('powerState')) {
                 if (props.deviceProperties[lights[i].endpointId].powerState && lights[i].displayCategories[0]=='LIGHT') {
-                    if (condition.toLowerCase()=='all' || props.deviceProperties[lights[i].endpointId].powerState.toLowerCase()==condition.toLowerCase()) {
+                    if (condition.toLowerCase()=='all') {
                         count=count+1
+                    } else if (condition.toLowerCase()=='off') {
+                        if (props.deviceProperties[lights[i].endpointId].powerState=='OFF' || !isReachable(props.deviceProperties[lights[i].endpointId])) {
+                            count=count+1
+                        }
+                    } else if (condition.toLowerCase()=='on') {
+                        if (props.deviceProperties[lights[i].endpointId].powerState=='ON' && isReachable(props.deviceProperties[lights[i].endpointId])) {
+                            count=count+1
+                        }
                     }
                 }
             }

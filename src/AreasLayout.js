@@ -31,6 +31,7 @@ const useStyles = makeStyles({
 function RegionsLayout(props) {
 
     const classes = useStyles();
+    console.log('aprops',props.devicesByCategory('AREA'))
     
     function selectArea(name) {
         props.setRegion(name);

@@ -59,12 +59,32 @@ export default function Television(props) {
     const [avinput, setInput] = useState(props.deviceProperties.input);
     const [inputs, setInputs] = useState({});
     
-    useEffect(() => {
-        var adapter=props.device.endpointId.split(':')[0]
-  	    fetch('/list/'+adapter+'/inputs')
- 		    .then(result=>result.json())
-            .then(result=>setInputs(result));
-    }, []);
+
+    function getInputs() {
+        var inputlist=[]
+        for (var j = 0; j < props.device.capabilities.length; j++) {
+            if (props.device.capabilities[j].interface=="Alexa.InputController") {
+                if (props.device.capabilities[j].hasOwnProperty('inputs')) {
+                    for (var k = 0; k < props.device.capabilities[j].inputs.length; k++) {
+                        inputlist.push(props.device.capabilities[j].inputs[k].name)
+                    }
+                }
+            }
+        }
+        return inputlist
+    }
+
+    function hasSpeaker() {
+
+        console.log('has',props.device)
+        for (var j = 0; j < props.device.capabilities.length; j++) {
+            if (props.device.capabilities[j].interface=="Sofa.SpeakerController") {
+                return true
+            }
+        }
+        return false
+    }
+
 
     function handlePreVolumeChange(event) {
         setVolume(event);
@@ -107,7 +127,7 @@ export default function Television(props) {
                 </ListItemSecondaryAction>
 
             </ListItem>
-        { 1==2 && props.deviceProperties.powerState=='ON' && showDetail ?
+        { hasSpeaker() && props.deviceProperties.powerState=='ON' && showDetail ?
             <ListItem className={classes.listItemBottom}>
                 <ToggleAvatar onClick={ () => setMuted(!muted)} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
                     {props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
@@ -120,8 +140,8 @@ export default function Television(props) {
         { showDetail &&
             <ListItem className={classes.bottomListItem}>
                 <ListItemText primary={"Input"} />
-                { Object.keys(inputs).map(inp => 
-                    <ToggleChip key = {inp} label = { inputs[inp] } chipState={ props.deviceProperties.input==inputs[inp] ? "on" : "off" } onClick={ (e) => handleInput(e, inputs[inp])} />
+                { getInputs().map(inp => 
+                    <ToggleChip key = {inp} label = { inp } chipState={ props.deviceProperties.input==inp ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
                 )}
             </ListItem>
         }

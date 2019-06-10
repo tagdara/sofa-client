@@ -67,7 +67,7 @@ export default function Thermostat(props) {
     const [fanSetMode, setFanSetMode] = useState(false);
 
     useEffect(() => {
-        console.log(props.deviceProperties)
+        console.log('tprops',props.deviceProperties)
         setTargetSetpoint(props.deviceProperties.targetSetpoint.value)
         if (props.deviceProperties.hasOwnProperty('powerLevel')) {
             setPowerLevel(props.deviceProperties.powerLevel)
@@ -118,6 +118,7 @@ export default function Thermostat(props) {
 
     return (
         <GridItem>
+            { props.deviceProperties.hasOwnProperty('temperature') &&
             <List className={classes.list} >
             <ListItem className={classes.zzzlistItem}>
                 <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature.value) } >{props.deviceProperties.temperature.value}</ToggleAvatar>
@@ -159,6 +160,7 @@ export default function Thermostat(props) {
                 </>
             </ListItem>
             </List>
+            }
         </GridItem>
     );
 }

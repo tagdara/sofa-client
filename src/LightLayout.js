@@ -46,14 +46,31 @@ function LightLayout(props) {
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
 
+    function isReachable(dev) {
+        if (dev.hasOwnProperty('connectivity')) {
+            if (dev.connectivity.hasOwnProperty('value')) {
+                if (dev.connectivity.value=='UNREACHABLE') {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
     function filterByType(filter) {
         var lights=[]
         var all=props.devicesByCategory('LIGHT')
         if (filter=="ALL") { return all }
         for (var j = 0; j < props.devicesByCategory('LIGHT').length; j++) {
-            if (props.deviceProperties[all[j].endpointId].powerState==filter) {
-                lights.push(all[j])
-            }
+            if (filter.toLowerCase()=='off') {
+                if (props.deviceProperties[all[j].endpointId].powerState=='OFF' || !isReachable(props.deviceProperties[all[j].endpointId])) {
+                    lights.push(all[j])
+                }
+            } else if (filter.toLowerCase()=='on') {
+                if (props.deviceProperties[all[j].endpointId].powerState=='ON' && isReachable(props.deviceProperties[all[j].endpointId])) {
+                    lights.push(all[j])
+                }
+            }            
         }
         return lights
             

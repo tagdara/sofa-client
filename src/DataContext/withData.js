@@ -17,6 +17,7 @@ export function withData(Component) {
                                 getChangeTimesForDevices={context.getChangeTimesForDevices} getHistoryForDevice={context.getHistoryForDevice}
                                 region={context.region} setRegion={context.setRegion}
                                 timedOut={context.timedOut} refreshData={context.refreshData} getLastUpdate={context.getLastUpdate}
+                                lightCount={context.lightCount} 
                             />
                 }
             </DataContext.Consumer>

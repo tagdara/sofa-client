@@ -40,11 +40,6 @@ function ThermostatLayout(props) {
     const thermostats=props.devicesByCategory('THERMOSTAT')
     const temperatureSensors=props.devicesByCategory('TEMPERATURE_SENSOR')
 
-    function switchToHistory() {
-        props.applyBackPage('ThermostatLayout',{})
-        props.applyLayoutCard('ThermostatHistory', {})
-    }
-
     return (    
         <React.Fragment>
             <GridSection name={"Thermostats"}>
@@ -60,12 +55,6 @@ function ThermostatLayout(props) {
                              deviceProperties={ props.deviceProperties[device.endpointId] }  />
             )}
             </GridSection>
-
-            <GridItem>
-                <ListItem>
-                    <ListItemText onClick={ () => switchToHistory() }>History</ListItemText>
-                </ListItem>
-            </GridItem>
         </React.Fragment>
     )
 

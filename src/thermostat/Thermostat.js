@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { withLayout } from '../layout/NewLayoutProvider';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -59,7 +60,7 @@ const useStyles = makeStyles({
     },
 });
 
-export default function Thermostat(props) {
+function Thermostat(props) {
     
     const classes = useStyles();
     const [targetSetpoint, setTargetSetpoint] = useState(70);
@@ -67,7 +68,6 @@ export default function Thermostat(props) {
     const [fanSetMode, setFanSetMode] = useState(false);
 
     useEffect(() => {
-        console.log('tprops',props.deviceProperties)
         setTargetSetpoint(props.deviceProperties.targetSetpoint.value)
         if (props.deviceProperties.hasOwnProperty('powerLevel')) {
             setPowerLevel(props.deviceProperties.powerLevel)
@@ -114,14 +114,19 @@ export default function Thermostat(props) {
     function handleSetMode(event) {
         props.sendAlexaCommand(props.name, props.device.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
     }; 
+    
+    function switchToHistory() {
+        props.applyBackPage('ThermostatLayout',{})
+        props.applyLayoutCard('ThermostatHistory', { 'device':props.device, 'days':7})
+    }
 
 
     return (
         <GridItem>
             { props.deviceProperties.hasOwnProperty('temperature') &&
             <List className={classes.list} >
-            <ListItem className={classes.zzzlistItem}>
-                <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature.value) } >{props.deviceProperties.temperature.value}</ToggleAvatar>
+            <ListItem>
+                <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature.value) } onClick={ () => switchToHistory()} >{props.deviceProperties.temperature.value}</ToggleAvatar>
                 <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.name}
                             preChange={handlePreSetpointChange} change={handleSetpointChange} 
                             dis={ props.deviceProperties.thermostatMode!='HEAT' } />
@@ -165,3 +170,4 @@ export default function Thermostat(props) {
     );
 }
 
+export default withLayout(Thermostat);

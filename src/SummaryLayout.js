@@ -30,6 +30,14 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ToggleAvatar from './ToggleAvatar'
 
+import AvSummary from './AvSummary'
+
+
+import LightSummary from './LightSummary'
+import ThermostatSummary from './ThermostatSummary'
+import DeviceSummary from './DeviceSummary'
+import SecuritySummary from './SecuritySummary'
+
 
 const useStyles = makeStyles({
     
@@ -66,6 +74,9 @@ function SummaryLayout(props) {
                     </ToggleAvatar>
                     <ListItemText primary="Audio Video" secondary={'Control Music and TV'} />
                 </ListItem>
+                <ListItem>
+                    <AvSummary />
+                </ListItem>
             </GridItem>
             <GridItem>
                 <ListItem onClick={() =>  props.applyHomePage('Lights and Comfort')}>
@@ -73,6 +84,11 @@ function SummaryLayout(props) {
                         <LightbulbOutlineIcon />
                     </ToggleAvatar>
                     <ListItemText primary="Lights and Comfort" secondary={'Lighting, Temperature and other devices'} />
+                </ListItem>
+                <ListItem>
+                    <LightSummary />
+                    <DeviceSummary />
+                    <ThermostatSummary />
                 </ListItem>
             </GridItem>
             <GridItem>
@@ -82,6 +98,10 @@ function SummaryLayout(props) {
                     </ToggleAvatar>
                     <ListItemText primary="Security" secondary={'Cameras, Locks and Sensors'} />
                 </ListItem>
+                <ListItem>
+                    <SecuritySummary />
+                </ListItem>
+
             </GridItem>
         </GridSection>
     )

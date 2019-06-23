@@ -58,7 +58,7 @@ function SystemLayout(props) {
     return (    
         <GridSection name={"System"} >
             <GridItem>
-                <ListItem button onClick={() => props.applyTheme(props.colorScheme=='dark' ? 'light' : 'dark')}>
+                <ListItem onClick={() => props.applyTheme(props.colorScheme=='dark' ? 'light' : 'dark')}>
                     <ListItemIcon>
                         <CompareIcon />
                     </ListItemIcon>
@@ -66,7 +66,7 @@ function SystemLayout(props) {
                 </ListItem>
             </GridItem>
             <GridItem>
-                <ListItem button onClick={() => props.applyLayoutCard('AdapterLayout')}>
+                <ListItem onClick={() => props.applyLayoutCard('AdapterLayout')}>
                     <ListItemIcon>
                         <TuneIcon />
                     </ListItemIcon>
@@ -74,7 +74,7 @@ function SystemLayout(props) {
                 </ListItem>
             </GridItem>
             <GridItem>
-                <ListItem button onClick={()=> otherPort('8443','_editor')}>
+                <ListItem onClick={()=> otherPort('8443','_editor')}>
                     <ListItemIcon>
                         <EditIcon />
                     </ListItemIcon>

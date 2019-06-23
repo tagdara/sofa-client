@@ -15,12 +15,15 @@ import GridBreak from './GridBreak';
 import GridSection from './GridSection';
 
 import Scene from './Scene'
+import SceneAdd from './SceneAdd'
+
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
 import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
+import CameraIcon from '@material-ui/icons/Camera';
 
 
 const useStyles = makeStyles({
@@ -54,6 +57,7 @@ function AreaLayout(props) {
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
     const [level, setLevel] = useState(0);
+    const [newScene, setNewScene] = useState(false);
 
 
     function childrenByArea(filter) {
@@ -62,7 +66,7 @@ function AreaLayout(props) {
         var devs=props.deviceProperties['logic:area:'+props.layout.props.name].children
         for (var i = 0; i < devs.length; i++) {
             var dev=props.deviceByEndpointId(devs[i])
-            if (!filter || filter=='ALL' || dev.displayCategories.includes(filter)) {
+            if (!filter || filter=='ALL' || (dev && dev.displayCategories.includes(filter))) {
                 var dbe=props.deviceByEndpointId(devs[i])
                 if (dbe) {
                     ads.push(dbe)
@@ -149,6 +153,11 @@ function AreaLayout(props) {
     function runScene(sceneName) {
         props.sendAlexaCommand(sceneName, "logic:scene:"+sceneName, "SceneController", "Activate")
     }
+
+    function snapScene(sceneName) {
+        props.sendAlexaCommand('', "logic:area:"+props.layout.props.name, "AreaController", "Snapshot", sceneName)
+    }
+
     
     function addScene() {}
     function setShortcut() {}
@@ -187,10 +196,18 @@ function AreaLayout(props) {
                 )}
             </GridSection>
             <GridSection name={"Scenes"} secondary={
-                <IconButton onClick={ () => addScene() } className={classes.button }>
-                    <AddIcon fontSize="small" />
-                </IconButton> }
+                <>
+                    <IconButton onClick={ () => addScene() } className={classes.button }>
+                        <AddIcon fontSize="small" />
+                    </IconButton> 
+                    <IconButton onClick={ () => setNewScene(true) } className={classes.button }>
+                        <CameraIcon fontSize="small" />
+                    </IconButton> 
+                </>
+            }
+
             >
+                { newScene && <SceneAdd areaid={"logic:area:"+props.layout.props.name} setNewScene={setNewScene} sendAlexaCommand={props.sendAlexaCommand} /> }
                 { sortByShortcuts().map(scene => 
                     <Scene key={scene.endpointId} endpointId={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} sendAlexaCommand={props.sendAlexaCommand} name={scene.friendlyName} computedLevel={props.deviceProperties['logic:area:'+props.layout.props.name].scene} />
                 )}

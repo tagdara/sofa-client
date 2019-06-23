@@ -18,7 +18,8 @@ export default createMuiTheme({
             dark: yellow[700]
         },
         background: {
-            page: "#eee"
+            page: "#eee",
+            hover: "rgba(255, 87, 34, 0.1)",
         },
         type: "light"
     }

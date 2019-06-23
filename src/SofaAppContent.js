@@ -53,7 +53,6 @@ function SofaAppContent(props) {
     const [module, setModule] = useState(null);
 
     useEffect(() => {
-        console.log('propslayout',props.layout)
         if (!props.layout.data.hasOwnProperty('pages')) {
             addModules([props.layout.name])
         }

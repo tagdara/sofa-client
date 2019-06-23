@@ -26,6 +26,12 @@ const useStyles = makeStyles(theme => {
             flexBasis: 0,
             position: "relative",
         },
+        hover: {
+            '&:hover': {
+                backgroundColor: theme.palette.background.hover,
+                borderColor: theme.palette.primary.dark,
+            }
+        },
         nopad: {
             padding: 0,
         },
@@ -74,11 +80,9 @@ export default function GridItem(props) {
     return (
         <Grid item xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 4) } className={ props.thinmargin ? classes.thinmargin: classes.normal}>
             { !props.nopaper ?
-        
-                <Paper elevation={props.elevation} className={classNames(classes.content, props.nopad && classes.nopad, props.colorband && classes.colorband)}  >
+                <Paper elevation={props.elevation} className={classNames(classes.content, props.hover && classes.hover, props.nopad && classes.nopad, props.colorband && classes.colorband)}  >
                     { itemdata }
                 </Paper>
-
             :
             <React.Fragment>
                 { itemdata }

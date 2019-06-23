@@ -60,8 +60,8 @@ export default function LayoutProvider(props) {
     }
     
     function goBack() {
-        applyLayoutCard({"name":backPage.name, "props":backPage.props})
-        applyBackPage({"name":"", "props":{}})
+        applyLayoutCard(backPage.name, backPage.props)
+        applyBackPage("", {})
     }
     
     function applyLayoutPage(newPage) {

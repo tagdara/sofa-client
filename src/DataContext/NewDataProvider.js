@@ -107,7 +107,42 @@ export default function DataProvider(props) {
             .then(result=>checkUpdate(result))   
     }
 
+    function isReachable(dev) {
+        if (dev.hasOwnProperty('connectivity')) {
+            if (dev.connectivity.hasOwnProperty('value')) {
+                if (dev.connectivity.value=='UNREACHABLE') {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+    
+    function lightCount(condition) {
+        var count=0;
+        var lights=devicesByCategory('LIGHT')
+        var deviceProperties=propertiesFromDevices(lights)
 
+        for (var i = 0; i < lights.length; i++) {
+            if (deviceProperties.hasOwnProperty(lights[i].endpointId) && deviceProperties[lights[i].endpointId].hasOwnProperty('powerState')) {
+                if (deviceProperties[lights[i].endpointId].powerState && lights[i].displayCategories[0]=='LIGHT') {
+                    if (condition.toLowerCase()=='all') {
+                        count=count+1
+                    } else if (condition.toLowerCase()=='off') {
+                        if (deviceProperties[lights[i].endpointId].powerState=='OFF' || !isReachable(deviceProperties[lights[i].endpointId])) {
+                            count=count+1
+                        }
+                    } else if (condition.toLowerCase()=='on') {
+                        if (deviceProperties[lights[i].endpointId].powerState=='ON' && isReachable(deviceProperties[lights[i].endpointId])) {
+                            count=count+1
+                        }
+                    }
+                }
+            }
+        }
+        return count
+    }    
+        
     function updateMultipleDevices(devs) {
         
         if (devs.length>0) {
@@ -382,6 +417,7 @@ export default function DataProvider(props) {
                 getLastUpdate: getLastUpdate,
                 modules: modules,
                 setModules: setModules,
+                lightCount: lightCount,
             }}
         >
             {props.children}

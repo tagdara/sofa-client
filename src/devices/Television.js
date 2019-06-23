@@ -59,7 +59,6 @@ export default function Television(props) {
     const [avinput, setInput] = useState(props.deviceProperties.input);
     const [inputs, setInputs] = useState({});
     
-
     function getInputs() {
         var inputlist=[]
         for (var j = 0; j < props.device.capabilities.length; j++) {
@@ -75,8 +74,6 @@ export default function Television(props) {
     }
 
     function hasSpeaker() {
-
-        console.log('has',props.device)
         for (var j = 0; j < props.device.capabilities.length; j++) {
             if (props.device.capabilities[j].interface=="Sofa.SpeakerController") {
                 return true
@@ -84,7 +81,6 @@ export default function Television(props) {
         }
         return false
     }
-
 
     function handlePreVolumeChange(event) {
         setVolume(event);

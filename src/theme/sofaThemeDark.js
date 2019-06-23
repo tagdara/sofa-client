@@ -21,8 +21,9 @@ export default createMuiTheme({
             primary: "#c0c0c0",
         },
         background: {
-            page: "#383838"
+            page: "#383838",
+            hover: "rgba(188, 54, 12, 0.1)",
         },
-        type: "dark"
+        type: "dark",
     }
 });

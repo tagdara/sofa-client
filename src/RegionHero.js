@@ -23,13 +23,13 @@ import GridItem from './GridItem';
 const useStyles = makeStyles({
         
     topSplit: {
-        paddingBottom: 24,
+        marginBottom: 16,
     }
 });
 
 function RegionHero(props) {
     
-    const lightsOn = lightCount('on')>0;
+    const lightsOn = props.lightCount('on');
     const classes = useStyles();
     const [regionSelect,setRegionSelect] = useState(false);
     const [selectedArea,setSelectedArea] = useState(false);
@@ -63,41 +63,6 @@ function RegionHero(props) {
         
     }
 
-    function isReachable(dev) {
-        if (dev.hasOwnProperty('connectivity')) {
-            if (dev.connectivity.hasOwnProperty('value')) {
-                if (dev.connectivity.value=='UNREACHABLE') {
-                    return false
-                }
-            }
-        }
-        return true
-    }
- 
-    function lightCount(condition) {
-        var count=0;
-        var lights=props.devicesByCategory('LIGHT')
-
-        for (var i = 0; i < lights.length; i++) {
-            if (lights[i].hasOwnProperty('displayCategories') && props.deviceProperties.hasOwnProperty(lights[i].endpointId) && props.deviceProperties[lights[i].endpointId].hasOwnProperty('powerState')) {
-                if (props.deviceProperties[lights[i].endpointId].powerState && lights[i].displayCategories[0]=='LIGHT') {
-                    if (condition.toLowerCase()=='all') {
-                        count=count+1
-                    } else if (condition.toLowerCase()=='off') {
-                        if (props.deviceProperties[lights[i].endpointId].powerState=='OFF' || !isReachable(props.deviceProperties[lights[i].endpointId])) {
-                            count=count+1
-                        }
-                    } else if (condition.toLowerCase()=='on') {
-                        if (props.deviceProperties[lights[i].endpointId].powerState=='ON' && isReachable(props.deviceProperties[lights[i].endpointId])) {
-                            count=count+1
-                        }
-                    }
-                }
-            }
-        }
-        return count
-    }  
-    
     function handleEdit() {
         setShowEditor(true)
     }
@@ -168,10 +133,10 @@ function RegionHero(props) {
     
     return (
         <GridItem wide={props.wide}>
-            { lightCount('all') ?
+            { props.lightCount('all') ?
                 <ListItem className={classes.topSplit} >
                     <ToggleAvatar avatarState={lightsOn ? "on" : "off"} onClick={ () => props.applyLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
-                    <ListItemText primary={lightsOn ? lightCount('on')+" lights are on" : "All lights off" } onClick={ () => props.applyLayoutCard('LightLayout') } />
+                    <ListItemText primary={lightsOn ? lightsOn+" lights are on" : "All lights off" } onClick={ () => props.applyLayoutCard('LightLayout') } />
                     <ListItemSecondaryAction>
                         <IconButton onClick={(e) => props.applyLayoutCard('AreasLayout')}>
                             <ViewModuleIcon />

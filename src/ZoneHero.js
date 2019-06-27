@@ -75,7 +75,7 @@ function ZoneList(props) {
             <GridItem wide={props.wide}>
                 { zoneReady() ?
                 <ListItem onClick={ (e) => props.applyLayoutCard('ZoneLayout', {'automationZones':automationZones, 'securityZones': securityZones})}>
-                    <ToggleAvatar avatarState={ (zoneOpen) ? "open" : "closed" } >
+                    <ToggleAvatar noback={!zoneOpen} avatarState={ (zoneOpen) ? "open" : "closed" } >
                         { zoneOpen ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
                     </ToggleAvatar>
                     <ListItemText primary={zoneOpen ? zoneCount('open')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>

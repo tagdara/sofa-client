@@ -115,7 +115,7 @@ export default function Receiver(props) {
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
-                <ToggleAvatar onClick={ () => setShowDetail(!showDetail) } avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
+                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
                     <SpeakerGroupIcon />
                 </ToggleAvatar>
                 <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.name} secondary={ props.deviceProperties.powerState=='OFF' ? 'Off' : (props.deviceProperties.input) ? getYamahaInput(props.deviceProperties.input) + " / "+ props.deviceProperties.surround : null}/>
@@ -127,7 +127,7 @@ export default function Receiver(props) {
         { (getYamahaInput(props.deviceProperties.input)=='Sonos' && !showDetail) || props.deviceProperties.powerState=='OFF'  ? null :
             <ListItem className={classes.listItemBottom}>
 
-                <ToggleAvatar onClick={ () => setMuted(!muted)} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
+                <ToggleAvatar onClick={ () => setMuted(!muted)} noback={true} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
                     { props.deviceProperties.powerState!='ON' ? <VolumeMuteIcon /> :
                         (props.deviceProperties.muted) ? <VolumeOffIcon /> :  volume
                     }

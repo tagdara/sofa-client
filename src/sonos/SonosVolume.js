@@ -25,7 +25,7 @@ export default function SonosVolume(props) {
 
     return (
         <ListItem >
-            <ToggleAvatar onClick={ () => handleMuteChange()} avatarState={ (!props.deviceProperties.muted && props.deviceProperties.playbackState=='PLAYING') ? 'on': 'off'}>
+            <ToggleAvatar noback={true} onClick={ () => handleMuteChange()} avatarState={ (!props.deviceProperties.muted && props.deviceProperties.playbackState=='PLAYING') ? 'on': 'off'}>
                 { props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
             </ToggleAvatar>
             <SofaSlider unit={"%"} name={props.name} value={props.deviceProperties.volume} preChange={handlePreVolumeChange} change={handleVolumeChange} />

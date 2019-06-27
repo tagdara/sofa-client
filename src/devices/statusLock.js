@@ -14,9 +14,9 @@ export default function StatusLock(props) {
             { props.status ?
                 <ListItem>
                     { props.status=='NOT_DETECTED' ?
-                        <ToggleAvatar avatarState={"closed"} onClick={ () => props.handlePress(props.commands.hasOwnProperty('toggle') ? 'toggle':'unlock') }><DialpadIcon /></ToggleAvatar>
+                        <ToggleAvatar noback={true} avatarState={"on"} onClick={ () => props.handlePress(props.commands.hasOwnProperty('toggle') ? 'toggle':'unlock') }><DialpadIcon /></ToggleAvatar>
                     :
-                        <ToggleAvatar avatarState={"open"} onClick={ () => props.handlePress(props.commands.hasOwnProperty('toggle') ? 'toggle':'lock') }> <DialpadIcon /></ToggleAvatar>
+                        <ToggleAvatar noback={false} avatarState={"open"} onClick={ () => props.handlePress(props.commands.hasOwnProperty('toggle') ? 'toggle':'lock') }> <DialpadIcon /></ToggleAvatar>
                     }                
                     <ListItemText primary={props.name} secondary={props.status=='NOT_DETECTED' ? 'Closed' : 'Open'} />
                 </ListItem>

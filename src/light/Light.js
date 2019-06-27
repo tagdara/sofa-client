@@ -107,7 +107,7 @@ export default function Light(props) {
         <GridItem nopaper={false} >
             <ListItem className={classes.listItem} >
                 { isReachable() ?
-                    <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
+                    <ToggleAvatar noback={true} avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
                         <LightbulbOutlineIcon className={classes.iconSize} />
                     </ToggleAvatar>
                 :

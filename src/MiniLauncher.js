@@ -32,7 +32,7 @@ function MiniLauncher(props) {
     return (
         <GridItem wide={props.wide}>
             <ListItem onClick={ () => props.applyLayoutCard('MoreDevicesLayout') } >
-                <ToggleAvatar avatarState={ onCount ? 'on' : 'off'}><DevicesOtherIcon /></ToggleAvatar>
+                <ToggleAvatar noback={true} avatarState={ onCount ? 'on' : 'off'}><DevicesOtherIcon /></ToggleAvatar>
                 <ListItemText primary={props.name} secondary={onCount ? onCount+" devices on" : null} />
             </ListItem>
         </GridItem>

@@ -135,7 +135,7 @@ function RegionHero(props) {
         <GridItem wide={props.wide}>
             { props.lightCount('all') ?
                 <ListItem className={classes.topSplit} >
-                    <ToggleAvatar avatarState={lightsOn ? "on" : "off"} onClick={ () => props.applyLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
+                    <ToggleAvatar noback={true} avatarState={lightsOn ? "on" : "off"} onClick={ () => props.applyLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
                     <ListItemText primary={lightsOn ? lightsOn+" lights are on" : "All lights off" } onClick={ () => props.applyLayoutCard('LightLayout') } />
                     <ListItemSecondaryAction>
                         <IconButton onClick={(e) => props.applyLayoutCard('AreasLayout')}>

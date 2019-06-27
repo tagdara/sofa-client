@@ -15,7 +15,7 @@ function ShortcutHero(props) {
     return (
         <GridItem wide={props.wide} >
             <ListItem onClick={() => props.applyLayoutCard('AutomationsLayout')}>
-                <ToggleAvatar avatarState="on">
+                <ToggleAvatar noback={true} avatarState="on">
                     <StorageIcon />
                 </ToggleAvatar>
                 <ListItemText primary={'Shortcuts'} secondary={'Macros and other automation'}/>

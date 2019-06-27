@@ -108,7 +108,7 @@ export default function Television(props) {
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
-                <ToggleAvatar onClick={ () => setShowDetail(!showDetail) } avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
+                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
                     <TvIcon />
                 </ToggleAvatar>
                 <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.name} secondary={props.deviceProperties.input ? props.deviceProperties.input : null}/>
@@ -125,7 +125,7 @@ export default function Television(props) {
             </ListItem>
         { hasSpeaker() && props.deviceProperties.powerState=='ON' && showDetail ?
             <ListItem className={classes.listItemBottom}>
-                <ToggleAvatar onClick={ () => setMuted(!muted)} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
+                <ToggleAvatar noback={true} onClick={ () => setMuted(!muted)} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
                     {props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                 </ToggleAvatar>
                 <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={props.deviceProperties.volume}

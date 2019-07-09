@@ -68,7 +68,12 @@ function Thermostat(props) {
     const [fanSetMode, setFanSetMode] = useState(false);
 
     useEffect(() => {
-        setTargetSetpoint(props.deviceProperties.targetSetpoint.value)
+        if (props.deviceProperties.hasOwnProperty('upperSetpoint')) {
+            console.log('Setpoint',[props.deviceProperties.lowerSetpoint.value, props.deviceProperties.upperSetpoint.value ])
+            setTargetSetpoint([props.deviceProperties.lowerSetpoint.value, props.deviceProperties.upperSetpoint.value ])
+        } else {
+            setTargetSetpoint(props.deviceProperties.targetSetpoint.value)
+        }
         if (props.deviceProperties.hasOwnProperty('powerLevel')) {
             setPowerLevel(props.deviceProperties.powerLevel)
         }
@@ -129,7 +134,7 @@ function Thermostat(props) {
                 <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature.value) } onClick={ () => switchToHistory()} >{props.deviceProperties.temperature.value}</ToggleAvatar>
                 <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.name}
                             preChange={handlePreSetpointChange} change={handleSetpointChange} 
-                            dis={ props.deviceProperties.thermostatMode!='HEAT' } />
+                            disabled={ props.deviceProperties.thermostatMode=='OFF' } />
             </ListItem>
             <ListItem className={classes.bottomListItem}>
                 <>

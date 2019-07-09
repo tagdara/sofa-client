@@ -45,6 +45,7 @@ const useStyles = makeStyles({
 function Sonos(props) {
     
     const classes = useStyles();
+    console.log(props)
 
     function addDefaultSrc(ev){
         ev.target.src = '/image/sonos/logo'

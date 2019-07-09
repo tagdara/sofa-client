@@ -13,7 +13,7 @@ function PlayerHero(props) {
     const [speakers, setSpeakers] = useState(props.devicesByCategory('SPEAKER'))
     const isMobile = window.innerWidth <= 800;
     const [mini, setMini] = useState(false);
-    const [defaultPlayer, setDefaultPlayer] = useState("sonos:player:RINCON_B8E937ECE1F001400");
+    const [defaultPlayer, setDefaultPlayer] = useState(props.Primary);
     const [player, setPlayer] = useState({})
 
     useEffect(() => {
@@ -23,12 +23,19 @@ function PlayerHero(props) {
 
     function bestPlayer() {
         
+        console.log('speakers',speakers)
+        var defaultexists=false
+        
         if (props.userPlayer) {
             return props.userPlayer
         } else {
             var hotplayer='';
             for (var s = 0; s < speakers.length; s++) {
+                if (hotplayer=='') { hotplayer=speaker[s].endpointId }
                 var name=speakers[s].friendlyName
+                if (defaultPlayer==speakers[s].endpointId) {
+                    defaultexists=true
+                }
                 if (props.deviceProperties.hasOwnProperty(speakers[s].endpointId)) {
                     var dev=props.deviceProperties[speakers[s].endpointId]
                     if (dev.hasOwnProperty("playbackState")) {
@@ -46,8 +53,11 @@ function PlayerHero(props) {
             }
             if (hotplayer) { return hotplayer }
         } 
-                
-        return defaultPlayer
+        if (defaultexists) {
+            return defaultPlayer
+        } 
+        
+        return ''
     }
 
     function changePlayer(endpointId) {

@@ -129,7 +129,7 @@ export default function Television(props) {
                     {props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                 </ToggleAvatar>
                 <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={props.deviceProperties.volume}
-                            minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={true} />
+                            minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={false} />
             </ListItem>
             : null
         }

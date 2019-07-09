@@ -51,23 +51,29 @@ function MoreDevicesLayout(props) {
             <GridSection name={'Shades'}>
                 <VirtualList sendAlexaCommand={props.sendAlexaCommand} />
             </GridSection>
-            
+            {  props.devicesByCategory('DEVICE') &&
             <GridSection name={"Other Devices"} >
                 <DeviceList devices={ props.devicesByCategory('DEVICE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('DEVICE')) } sendAlexaCommand={props.sendAlexaCommand} />
             </GridSection>
+            }
 
+            { props.devicesByCategory('PC') &&
             <GridSection name={"Computers"} >
                 <ComputerList devices={ props.devicesByCategory('PC') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('PC')) } sendAlexaCommand={props.sendAlexaCommand} />
             </GridSection>
+            }
 
+            { props.devicesByCategory('OTHER') &&
             <GridSection name={"Services"} >
                 <DeviceList devices={ props.devicesByCategory('OTHER') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('OTHER')) } sendAlexaCommand={props.sendAlexaCommand} />
             </GridSection>
+            }
 
+            { props.devicesByCategory('MODE') && 
             <GridSection name={"Modes"} >
                 <ModeList devices={ props.devicesByCategory('MODE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('MODE')) } sendAlexaCommand={props.sendAlexaCommand} />
             </GridSection>
-
+            }
         </React.Fragment>
     )
 

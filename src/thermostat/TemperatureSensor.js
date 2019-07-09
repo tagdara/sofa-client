@@ -19,16 +19,29 @@ function TemperatureSensor(props) {
         props.applyLayoutCard('ThermostatHistory', { 'device':props.device, 'days':7})
     }
     
+    function summarizeThermostatSetting() {
+        if (props.deviceProperties.hasOwnProperty('thermostatMode')) {
+            if (props.deviceProperties.thermostatMode=='OFF') {
+                return 'Off'
+            }
+        } else {
+            return null
+        }
+        if (props.deviceProperties.hasOwnProperty('upperSetpoint') && props.deviceProperties.hasOwnProperty('upperSetpoint')) {
+            return 'Range set to '+props.deviceProperties.lowerSetpoint.value+'° - '+props.deviceProperties.upperSetpoint.value+'°'
+        }
+        if (props.deviceProperties.hasOwnProperty('targetSetpoint')) {
+            return 'Heat set to '+props.deviceProperties.targetSetpoint.value+'°'
+        }
+        return ''
+    }
+    
     return (
         props.deviceProperties.hasOwnProperty('temperature') &&
         <GridItem wide={props.wide} >
             <ListItem onClick={props.onClick}>
                 <ToggleAvatar onClick={ () => switchToHistory()} avatarState={ tempColor(props.deviceProperties.temperature.value)}>{props.deviceProperties.temperature.value}</ToggleAvatar>
-                { props.deviceProperties.hasOwnProperty('targetSetpoint') ?
-                    <ListItemText primary={props.name} secondary={props.deviceProperties.thermostatMode=='OFF' ? 'Off' : 'Heat set to '+props.deviceProperties.targetSetpoint.value}/>
-                    :
-                    <ListItemText primary={props.name} />
-                }
+                <ListItemText primary={props.name} secondary={summarizeThermostatSetting()} />
            </ListItem>
        </GridItem>
     );

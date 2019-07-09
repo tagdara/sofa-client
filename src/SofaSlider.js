@@ -107,6 +107,14 @@ class SofaSlider extends React.Component {
         this.setState({ delaySet: false});
     }
    
+    unitDisplay = () => {
+        if (Array.isArray(this.state.value)) {
+            return Math.floor(this.state.value[0])+' - '+ Math.floor(this.state.value[1])+this.props.unit
+        } else {
+            return Math.floor(this.state.value)+this.props.unit
+        }
+    }
+   
     render() {
 
         const { classes, disabled, name, unit, padLeft, half, minWidth, smallText } = this.props;
@@ -117,10 +125,10 @@ class SofaSlider extends React.Component {
                         <Typography variant={ smallText ? "caption" : "subtitle1" } className={classes.stackLabel} >{this.props.name}</Typography>
                     :   null }
                     { unit ?
-                        <Typography variant="caption" className={classes.stackLabel} >{Math.floor(this.state.value)+this.props.unit}</Typography>
+                        <Typography variant="caption" className={classes.stackLabel} >{this.unitDisplay()}</Typography>
                     : null }
                         <Slider
-                            classes={{ container: classes.slider }}
+
                             value={this.state.value} step={this.props.step} 
                             min={this.props.min} max={this.props.max}
                             onChange={this.handlePreChange}

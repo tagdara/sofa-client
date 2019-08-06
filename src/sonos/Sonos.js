@@ -45,15 +45,12 @@ const useStyles = makeStyles({
 function Sonos(props) {
     
     const classes = useStyles();
-    console.log(props)
 
     function addDefaultSrc(ev){
         ev.target.src = '/image/sonos/logo'
     }
     
     function setGroupPlayer(thisplayer) {
-        //props.setUserPlayer(thisplayer)
-        console.log('sgp',thisplayer)
         props.applyLayoutCard('PlayerGroup',{ 'player': thisplayer})
     }
     

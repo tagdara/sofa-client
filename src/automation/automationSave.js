@@ -12,28 +12,11 @@ import Fab from '@material-ui/core/Fab';
 
 const useStyles = makeStyles({
 
-    fabHome: {
+
+    fabSave: {
         position: 'fixed',
-        bottom: 8,
-        right: 16,
-        padding: 0,
-        marginBottom: "env(safe-area-inset-bottom)",
-        boxSizing: "content-box",
-        zIndex: 1200,
-    },
-    fabBack: {
-        position: 'fixed',
-        bottom: 8,
-        right: 16,
-        padding: 0,
-        marginBottom: "env(safe-area-inset-bottom)",
-        boxSizing: "content-box",
-        zIndex: 1200,
-    },
-    fabCancel: {
-        position: 'fixed',
-        bottom: 8,
-        right: 84,
+        bottom: 80,
+        right: 24,
         padding: 0,
         marginBottom: "env(safe-area-inset-bottom)",
         boxSizing: "content-box",
@@ -66,20 +49,9 @@ export default function AutomationSave(props) {
     return (
         <React.Fragment>
             <Toolbar className={classes.bottomSpacer} />
-            { !props.saved ?
-                <React.Fragment>
-                    <Fab color="primary" onClick={ ()=>  props.goBack() } className={classes.fabCancel} >
-                        <ClearIcon />
-                    </Fab>
-                    { props.name && 
-                    <Fab color="primary" onClick={ (e)=> props.save() } className={classes.fabHome} >
-                        <SaveIcon />
-                    </Fab>
-                    }
-                </React.Fragment>
-                :
-                <Fab color="primary" onClick={ ()=>  props.goBack() } className={classes.fabBack} >
-                    <ArrowBackIcon />
+            { !props.saved &&
+                <Fab size="small" color="primary" onClick={ (e)=> props.save() } className={classes.fabSave} >
+                    <SaveIcon />
                 </Fab>
             }
         </React.Fragment>

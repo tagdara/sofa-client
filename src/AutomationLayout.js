@@ -181,7 +181,7 @@ function AutomationLayout(props) {
                     <FavoriteIcon fontSize="small" />
                 </ToggleButton>
             </AutomationTitle>
-            <AutomationDetails automation={automation} />
+            <AutomationDetails automation={automation} name={title} sendAlexaCommand={props.sendAlexaCommand} />
             <AutomationColumn items={schedules} saved={saved} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
             <AutomationColumn items={triggers} saved={saved} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'AutomationTrigger'} itemtype={"trigger"} />
             <AutomationColumn items={conditions} saved={saved} save={saveType} automationName={props.name} name={"Conditions"} selector={'DevicePropertyLayout'} itemModule={'AutomationCondition'} itemtype={"condition"} />

@@ -28,11 +28,17 @@ function LightSummary(props) {
 
     return (
         <GridItem wide={false} nopaper={true}>
-            { props.lightCount('all') &&
+            { props.lightCount('all') ?
                 <Button variant="outlined" className={classes.summaryButton} color={lightsOn ? "primary" : "default"} onClick={ () => props.applyLayoutCard('LightLayout') }>
                     <LightbulbOutlineIcon className={classes.iconPad} />
                     {lightsOn ? " "+lightsOn : " Off" }
                 </Button>
+            :
+                <Button variant="outlined" disabled className={classes.summaryButton} onClick={ () => props.applyLayoutCard('LightLayout') }>
+                    <LightbulbOutlineIcon className={classes.iconPad} />
+                    --
+                </Button>
+
             }
         </GridItem>
     );

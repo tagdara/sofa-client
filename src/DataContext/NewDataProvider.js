@@ -24,6 +24,15 @@ export const deviceStateReducer = (state, data) => {
 
             case 'ChangeReport':
                 return Object.assign({...state}, { [data.event.endpoint.endpointId]: { "properties" : [...data.context.properties, ...data.event.payload.change.properties ]}});
+            case 'DeleteReport':
+                var devstate={...state}
+                for (var i = 0; i < data.event.payload.endpoints.length; i++) {
+                    if (data.event.payload.endpoints[i].endpointId in devstate) {
+                        delete devstate[data.event.payload.endpoints[i].endpointId]
+                    }
+                }
+                return devstate
+
             case "Heartbeat":
                 return state
             default:
@@ -51,14 +60,13 @@ export default function DataProvider(props) {
 
     useEffect(() => {
         const listener = event => {
-            //const data = parser(event.data);
             dispatch(JSON.parse(event.data));
+            devDelete(JSON.parse(event.data), devices)
             setHeartbeat(Date.now())
-            //dispatchData(JSON.parse(event.data));
         };
         eventSource.addEventListener('message', listener);
         console.log('Fetching device info')
-        refreshData()
+        retrieveDeviceList()
 
   	    fetch('/directives')
  		    .then(result=>result.json())
@@ -78,6 +86,34 @@ export default function DataProvider(props) {
         console.log('Done with useeffect load')    
             
     },[]);
+
+    function devDelete(data, xdevices) {
+        
+        // CHEESE - device handler should be converted to reducer instead of this shim
+        if (data==={}) { return false }
+        if (!data.hasOwnProperty('event')) { return false }
+        if (data.event.header.name=='DeleteReport') {
+            console.log('handling deletereport', data, xdevices)
+            var ddevs=[...devices]
+            console.log('devlists', ddevs, xdevices)
+            for (var i = 0; i < data.event.payload.endpoints.length; i++) {
+                var epid=data.event.payload.endpoints[i].endpointId
+                console.log('looking to delete', epid)
+                for (var j = 0; j < ddevs.length; j++) {
+                    console.log('compare',epid,ddevs[j].endpointId)
+                    if (ddevs[j].endpointId==epid) {
+                        console.log('deleting', ddevs[j])
+                        ddevs.splice(j, 1);
+                        break
+                    }
+                }
+            }
+            console.log('setdevices',ddevs)
+            setDevices(ddevs)
+            return true
+        }
+    }
+    
 
     function uuidv4() {
         return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -170,7 +206,7 @@ export default function DataProvider(props) {
             } 
         }
         setDevices(devs) 
-        updateMultipleDevices(udl)
+        //updateMultipleDevices(udl)
     }
     
     function devicesByCategory(categories, searchterm) {
@@ -264,7 +300,7 @@ export default function DataProvider(props) {
         }
 
         if (nostate.length>0) {
-            updateMultipleDevices(nostate)
+            //updateMultipleDevices(nostate)
         }
 
         return devstate
@@ -328,14 +364,14 @@ export default function DataProvider(props) {
         }
 
         if (nostate.length>0) {
-            updateMultipleDevices(nostate)
+            //updateMultipleDevices(nostate)
         }
 
         return devstate
         
     }
 
-    function sendAlexaCommand(deviceName, endpointId, controller, command, payload={}) {
+    function sendAlexaCommand(deviceName, endpointId, controller, command, payload={}, cookie={}) {
         
         // value is optional for some alexa commands.  The original sofa2 implementation tried to take a string value and then map it to 
         // a value name, but underestimated the requirement for some commands to pass multiple values and needs to be adjusted.
@@ -346,7 +382,7 @@ export default function DataProvider(props) {
         }
 
         var header={"name": command, "namespace":"Alexa." + controller, "payloadVersion":"3", "messageId": uuidv4(), "correlationToken": uuidv4()}
-        var endpoint={"endpointId": endpointId, "cookie": {}, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
+        var endpoint={"endpointId": endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
         
         console.log('Sending alexa command:',data)
@@ -370,7 +406,8 @@ export default function DataProvider(props) {
 
     function restGet(url) {
 
-        fetch('/deviceListWithData')
+        //fetch('/deviceListWithData')
+        fetch('/deviceList')
             .then(response => {
                 if ( !response.ok ) {
                     catchError( response );
@@ -380,7 +417,7 @@ export default function DataProvider(props) {
             }).catch( catchError );
     }
     
-    function refreshData() {
+    function refreshDataOld() {
         console.log('Refreshing device data')
         var newlu = new Date()
         fetch('/deviceListWithData')
@@ -391,6 +428,27 @@ export default function DataProvider(props) {
                             setLastUpdate(newlu);
             })        
     }
+
+    function refreshData() {
+        console.log('Refreshing device data')
+        var newlu = new Date()
+        //fetch('/deviceList')
+        //    .then(result=>result.json())
+        //    .then(result=>{ updateDeviceList(result, true);
+        //                    setLastUpdate(newlu);
+        //    })        
+    }
+
+    function retrieveDeviceList() {
+        console.log('Refreshing device data')
+        var newlu = new Date()
+        fetch('/deviceList')
+            .then(result=>result.json())
+            .then(result=>{ updateDeviceList(result, true);
+                            setLastUpdate(newlu);
+            })        
+    }
+
 
     return (
         <DataContext.Provider

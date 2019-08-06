@@ -18,12 +18,12 @@ function PlayerHero(props) {
 
     useEffect(() => {
         // unfortunately happens every time theres an update of any kind
+        setSpeakers(props.devicesByCategory('SPEAKER'))
         setPlayer(props.deviceByEndpointId(bestPlayer()))
-    },[props.deviceProperties]);
+    },[props.deviceProperties, props.devices]);
 
     function bestPlayer() {
         
-        console.log('speakers',speakers)
         var defaultexists=false
         
         if (props.userPlayer) {
@@ -31,7 +31,7 @@ function PlayerHero(props) {
         } else {
             var hotplayer='';
             for (var s = 0; s < speakers.length; s++) {
-                if (hotplayer=='') { hotplayer=speaker[s].endpointId }
+                if (hotplayer=='') { hotplayer=speakers[s].endpointId }
                 var name=speakers[s].friendlyName
                 if (defaultPlayer==speakers[s].endpointId) {
                     defaultexists=true
@@ -40,13 +40,12 @@ function PlayerHero(props) {
                     var dev=props.deviceProperties[speakers[s].endpointId]
                     if (dev.hasOwnProperty("playbackState")) {
                         if (dev.playbackState=='PLAYING') {
-                            if (hotplayer=="" || name==defaultPlayer) {
-                                if (dev.input==name || dev.input=="") {
-                                    hotplayer=name
-                                } else {
-                                    hotplayer=dev.input
-                                }
+                            if (dev.input==name || dev.input=="") {
+                                hotplayer=name
+                            } else {
+                                hotplayer=dev.input
                             }
+                            break
                         }
                     }
                 }

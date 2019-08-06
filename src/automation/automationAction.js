@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
 import IconButton from '@material-ui/core/IconButton';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -197,14 +198,16 @@ export default function AutomationAction(props) {
                 }
                     { props.remove ?
                         <ListItemSecondaryAction>
-                            <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
+                            <Button variant="contained" color="primary"  onClick={() => props.delete(props.index)}><CloseIcon /></Button>     
                         </ListItemSecondaryAction>
                         : null
                     }
                     { props.reorder &&
                         <ListItemSecondaryAction>
-                            <IconButton disabled={ props.index==0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></IconButton>
-                            <IconButton onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></IconButton>
+                            <ButtonGroup variant="contained" size="small" >
+                                <Button disabled={ props.index==0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></Button>
+                                <Button onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></Button>
+                            </ButtonGroup>
                         </ListItemSecondaryAction>
                     }
                 </ListItem>

@@ -37,6 +37,8 @@ import LightSummary from './LightSummary'
 import ThermostatSummary from './ThermostatSummary'
 import DeviceSummary from './DeviceSummary'
 import SecuritySummary from './SecuritySummary'
+import CameraSummary from './CameraSummary'
+import AlertSummary from './AlertSummary'
 
 
 const useStyles = makeStyles({
@@ -100,6 +102,8 @@ function SummaryLayout(props) {
                 </ListItem>
                 <ListItem>
                     <SecuritySummary />
+                    <AlertSummary />
+                    <CameraSummary />
                 </ListItem>
 
             </GridItem>

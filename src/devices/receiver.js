@@ -78,7 +78,8 @@ export default function Receiver(props) {
     }; 
 
     function handleVolumeChange(event) {
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : volume} )
+        setVolume(event);
+        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {

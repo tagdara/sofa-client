@@ -4,6 +4,9 @@ import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListIcon from '@material-ui/icons/List';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import CloseIcon from '@material-ui/icons/Close';
 
 import ListItemText from '@material-ui/core/ListItemText';
 import ToggleAvatar from './ToggleAvatar';
@@ -52,6 +55,11 @@ export default function Scene(props) {
                     </ToggleAvatar>
                 }
                 <ListItemText>{props.name}</ListItemText>
+                { props.remove &&
+                    <ListItemSecondaryAction className={classes.listItem}>
+                        <ListItemIcon onClick={() => props.delete(props.endpointId)}><CloseIcon /></ListItemIcon>   
+                    </ListItemSecondaryAction>
+                }
             </ListItem>
         </GridItem >
     )

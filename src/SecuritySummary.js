@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button';
 import GridItem from './GridItem';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import Videocam from '@material-ui/icons/Videocam';
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -39,6 +40,11 @@ const useStyles = makeStyles(theme => {
                 borderColor: "#E65100",
             }
         },
+        
+        base: {
+            width: 96,
+        },
+        
         iconPad: {
             marginRight: 8,
         }

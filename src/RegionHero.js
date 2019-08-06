@@ -40,10 +40,12 @@ function RegionHero(props) {
     function scenesByArea(area) {
         var areascenes=[]
         var devs=props.deviceProperties['logic:area:'+area].children
-        for (var i = 0; i < devs.length; i++) {
-            var dbn=props.deviceByEndpointId(devs[i])
-            if (dbn.displayCategories.includes('SCENE_TRIGGER')) {
-                areascenes.push(dbn)
+        if (devs) {
+            for (var i = 0; i < devs.length; i++) {
+                var dbn=props.deviceByEndpointId(devs[i])
+                if (dbn.displayCategories.includes('SCENE_TRIGGER')) {
+                    areascenes.push(dbn)
+                }
             }
         }
         return areascenes
@@ -53,10 +55,12 @@ function RegionHero(props) {
         
         var ads=[]
         var devs=props.deviceProperties['logic:area:'+area].children
-        for (var i = 0; i < devs.length; i++) {
-            var dbn=props.deviceByEndpointId(devs[i])
-            if (dbn) {
-                ads.push(dbn)
+        if (devs) {
+            for (var i = 0; i < devs.length; i++) {
+                var dbn=props.deviceByEndpointId(devs[i])
+                if (dbn) {
+                    ads.push(dbn)
+                }
             }
         }
         return ads
@@ -121,10 +125,12 @@ function RegionHero(props) {
         var areas=[]
         if (props.deviceProperties['logic:area:'+props.region]) {
             var devstate=props.deviceProperties['logic:area:'+props.region].children
-            for (var i = 0; i < devstate.length; i++) {
-                var child=props.deviceByEndpointId(devstate[i])
-                if (child.displayCategories.includes('AREA')) {
-                    areas.push(child)
+            if (devstate) {
+                for (var i = 0; i < devstate.length; i++) {
+                    var child=props.deviceByEndpointId(devstate[i])
+                    if (child.displayCategories.includes('AREA')) {
+                        areas.push(child)
+                    }
                 }
             }
         }

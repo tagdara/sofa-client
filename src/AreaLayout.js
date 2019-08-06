@@ -19,6 +19,7 @@ import SceneAdd from './SceneAdd'
 
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
@@ -161,7 +162,11 @@ function AreaLayout(props) {
     
     function addScene() {}
     function setShortcut() {}
-    function deleteScene() {}
+    
+    function deleteScene(endpointId) {
+        props.sendAlexaCommand('', endpointId, "SceneController", "Delete")
+    }
+    
     function levelsChange() {}
     
     return (    
@@ -200,6 +205,10 @@ function AreaLayout(props) {
                     <IconButton onClick={ () => addScene() } className={classes.button }>
                         <AddIcon fontSize="small" />
                     </IconButton> 
+                    <IconButton onClick={ () => setEdit(!edit) } className={classes.button }>
+                        <RemoveIcon fontSize="small" />
+                    </IconButton> 
+
                     <IconButton onClick={ () => setNewScene(true) } className={classes.button }>
                         <CameraIcon fontSize="small" />
                     </IconButton> 
@@ -209,7 +218,7 @@ function AreaLayout(props) {
             >
                 { newScene && <SceneAdd areaid={"logic:area:"+props.layout.props.name} setNewScene={setNewScene} sendAlexaCommand={props.sendAlexaCommand} /> }
                 { sortByShortcuts().map(scene => 
-                    <Scene key={scene.endpointId} endpointId={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} sendAlexaCommand={props.sendAlexaCommand} name={scene.friendlyName} computedLevel={props.deviceProperties['logic:area:'+props.layout.props.name].scene} />
+                    <Scene remove={edit} delete={deleteScene} key={scene.endpointId} endpointId={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} sendAlexaCommand={props.sendAlexaCommand} name={scene.friendlyName} computedLevel={props.deviceProperties['logic:area:'+props.layout.props.name].scene} />
                 )}
             </GridSection>
 

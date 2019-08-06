@@ -51,9 +51,13 @@ function ThermostatSummary(props) {
     
     return (
             <GridItem wide={false} nopaper={true}>
-                { device && props.deviceProperties[device.endpointId].hasOwnProperty('temperature') &&
+                { device && props.deviceProperties[device.endpointId].hasOwnProperty('temperature') ?
                 <Button variant="outlined" color="primary" className={tempColor(props.deviceProperties[device.endpointId].temperature.value)} onClick={ () => props.applyLayoutCard('ThermostatLayout') }>
                     {props.deviceProperties[device.endpointId].temperature.value}&deg;
+                </Button>
+                :
+                <Button variant="outlined" disabled className={classes.mid} onClick={ () => props.applyLayoutCard('ThermostatLayout') }>
+                    --&deg;
                 </Button>
                 }
             </GridItem>

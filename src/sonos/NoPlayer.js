@@ -22,6 +22,7 @@ const useStyles = makeStyles({
 export default function NoPlayer(props) {
     const [captcha, setCaptcha] = useState('');
     const classes = useStyles();
+    const [showCaptcha, setShowCaptcha]= useState(false)
     
     function sendCaptcha() {
         fetch('/list/echo/captcha/'+captcha)
@@ -30,20 +31,24 @@ export default function NoPlayer(props) {
     
     return (
             <GridItem wide={props.wide} >
-                <ListItem onClick={ () => props.setLayoutCard('PlayersLayout',{})}>
-                    <ListItemAvatar>
+                <ListItem>
+                    <ListItemAvatar onClick={ () => props.setLayoutCard('PlayersLayout',{})}>
                         <Avatar ><QueueMusicIcon /></Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary={"Waiting for player data"} />
+                    <ListItemText primary={"Waiting for player data"} onClick={ () => setShowCaptcha(!showCaptcha) } />
                 </ListItem>
-                <ListItem onClick={() => sendCaptcha()}>
-                    <img src={'/captcha.jpg'} />
-                </ListItem>
-                <ListItem>
-                    <TextField fullWidth label={'Captcha'} value={captcha}
-                        onChange={(e) => setCaptcha(e.target.value)}
-                    />
-                </ListItem>
+                { showCaptcha &&
+                    <>
+                        <ListItem onClick={() => sendCaptcha()}>
+                            <img src={'/captcha.jpg'} />
+                        </ListItem>
+                        <ListItem>
+                            <TextField fullWidth label={'Captcha'} value={captcha}
+                                onChange={(e) => setCaptcha(e.target.value)}
+                            />
+                        </ListItem>
+                    </>
+                }
             </GridItem>
     );
 

@@ -1,151 +1,234 @@
-import React, { PureComponent, Component, createElement  } from 'react';
+import React, {useState, useEffect, createContext, useReducer} from 'react';
 
-export const DataContext = React.createContext();
+export const DataContext = createContext();
 
-export class DataProvider extends PureComponent {
-  
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            devices: [],
-            deviceState: {},
-            controllerProperties: {},
-            controllerEvents: {},
-            directives: {},
-            virtualDevices: {},
-            region: "Main",
-            player: "",
-            heartbeat: Date.now(),
-            lastUpdate: null,
-        };
+class AlexaDevice {
+    constructor(data) {
+        this.endpointId = data.endpointId;
+        this.friendlyName = data.friendlyName;
+        this.manufacturerName = data.manufacturerName;
+        this.description = data.description;
+        this.displayCategories = data.displayCategories;
         
-        this.pendingDevs=[];
-        this.eventSource = new EventSource("sse");
-
+        for (var j = 0; j < data.capabilities.length; j++) {
+            this[data.capabilities[j].interface.split('.')[1]]=new AlexaController(this, data.capabilities[j])
+        }
     }
     
-    uuidv4  = ()  => {
+    newtoken() {
         return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         )
     }
+    
+    responseHandler(response) {
+        if (response.hasOwnProperty('context')) {
+            for (var i = 0; i < response.context.properties.length; i++) {
+                var prop=response.context.properties[i]
+                this[prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
+                this[prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
+            }
+        }
+        return response
+    }
+    
+}
+
+class AlexaController {
+
+    constructor(device, data) {
+        this.device=device
+        this.namespace=data.interface.split('.')[0]
+        this.controller=data.interface.split('.')[1]
+        if (data.hasOwnProperty('configuration')) {
+            this.configuration=data.configuration;
+        }
+
+        if (data.hasOwnProperty('properties') && data.properties.hasOwnProperty('supported')) {
+            for (var j = 0; j < data.properties.supported.length; j++) {
+                this[data.properties.supported[j].name]=new AlexaControllerProperty()
+            }
+        }
+    }
+    
+    directive(command, payload={}, cookie={}) {
+        var header={"name": command, "namespace":this.namespace+"." + this.controller, "payloadVersion":"3", "messageId": this.device.newtoken(), "correlationToken": this.device.newtoken()}
+        var endpoint={"endpointId": this.device.endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
+        var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
+        console.log('Sending device-based alexa command:',data)
+    
+        return fetch('/directive', { method: 'post',
+                    headers: {
+                        'Accept': 'application/json, text/plain, */*',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                })
+                    .then(res=>res.json())
+                    .then(res=>this.device.responseHandler(res))
+                    .then(res=> { return res;})
+    }
  
-    timedOut = () => {
-        if (((new Date) - this.heartbeat) > 15000) {
+}
+
+class AlexaControllerProperty {
+    constructor() {
+        this.value=null
+    }
+}
+
+export const deviceReducer = (state, data) => {
+
+        if (data==={}) { return state }
+        if (!data.hasOwnProperty('event')) { return state }
+        
+        switch (data.event.header.name) {
+            case 'DeleteReport':
+                var devs={...state}
+                for (var i = 0; i < data.event.payload.endpoints.length; i++) {
+                    if (data.event.payload.endpoints[i].endpointId in devs) {
+                        delete devs[data.event.payload.endpoints[i].endpointId]
+                    }
+                }
+                return devs
+            case 'AddOrUpdateReport':
+                var devs={...state}
+                for (var i = 0; i < data.event.payload.endpoints.length; i++) {
+                    //console.log('Adding Object', data.event.payload.endpoints[i].endpointId, data.event.payload.endpoints[i])
+                    devs[data.event.payload.endpoints[i].endpointId]=new AlexaDevice(data.event.payload.endpoints[i])
+                        //devs.push(data.event.payload.endpoints[i])
+                }
+                return devs
+            case "Multistate":
+                var devs={...state}
+                for (var dev in data.state) {
+                    if (dev in devs) {
+                        for (var i = 0; i < data.state[dev].context.properties.length; i++) {
+                            var prop=data.state[dev].context.properties[i]
+                            devs[dev][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
+                            devs[dev][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
+                        }
+                    }
+                }                
+                return devs;
+            case 'ChangeReport':
+                var devs={...state}
+                if (data.event.endpoint.endpointId in devs) {
+                    for (var i = 0; i < data.event.payload.change.properties.length; i++) {
+                        var prop=data.event.payload.change.properties[i]
+                        devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
+                        devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
+                    }
+                    for (var i = 0; i < data.context.properties.length; i++) {
+                        var prop=data.context.properties[i]
+                        devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
+                        devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
+                    }
+                }
+                return devs;
+            default:
+                return state
+        }
+    }
+
+export default function DataProvider(props) {
+    const initialDevices={};
+    const [controllerProperties, setControllerProperties] = useState({});     
+    const [controllerEvents, setControllerEvents] = useState({});     
+    const [directives, setDirectives] = useState({});     
+    const [virtualDevices, setVirtualDevices] = useState({});     
+    const [region, setRegion] = useState("Main");     
+    const [heartbeat, setHeartbeat] = useState(Date.now());     
+    const [lastUpdate, setLastUpdate] = useState(null);     
+    const [eventSource] = useState(() => new EventSource("sse"))
+    const pendingDevs = [];
+    
+    const [devices, deviceDispatch] = useReducer(deviceReducer, initialDevices);
+    
+    const devobjs={}
+    
+    
+    useEffect(() => {
+
+        const listener = event => {
+            deviceDispatch(JSON.parse(event.data));
+            setHeartbeat(Date.now())
+        };
+        eventSource.addEventListener('message', listener);
+
+  	    fetch('/directives')
+ 		    .then(result=>result.json())
+            .then(result=>setDirectives(result))
+            .then(result=>console.log('done getting directives'));
+
+  	    fetch('/properties')
+ 		    .then(result=>result.json())
+            .then(result=>setControllerProperties(result))
+            .then(result=>console.log('done getting properties'));
+            
+  	    fetch('/list/logic/virtualDevices')
+ 		    .then(result=>result.json())
+            .then(result=>setVirtualDevices(result))
+            .then(result=>console.log('done getting virtual devices'));
+        
+        console.log('Done with useeffect load')    
+            
+    },[]);
+
+    function timedOut() {
+        if (((new Date) - heartbeat) > 15000) {
+            console.log(new Date,heartbeat,(new Date) - heartbeat > 15000)
             return true
         } 
         return false
     }
     
-    checkUpdate = (serverUpdate) => {
+    function checkUpdate(serverUpdate) {
         var serverdate = new Date(serverUpdate.lastupdate)
-        if (this.state.lastUpdate && (serverdate > this.state.lastUpdate)) {
-            this.refreshData()   
+        if (lastUpdate && (serverdate > lastUpdate)) {
+            console.log('check update failed', lastUpdate, serverdate, (serverdate > lastUpdate))
         }
     }
     
-    getLastUpdate = () => {
+    function getLastUpdate() {
   	    fetch('/lastupdate')
  		    .then(result=>result.json())
-            .then(result=>this.checkUpdate(result))   
+            .then(result=>checkUpdate(result))   
     }
- 
-    onMessage = ev => {
-        var jsondata=JSON.parse(ev.data)
-        this.setState({'heartbeat':Date.now()})
+
+    function isReachable(dev) {
         
-        if (jsondata.hasOwnProperty('heartbeat')) {
-            this.checkUpdate(jsondata)
-        }
-
-        if (jsondata.hasOwnProperty('event')) {
-            this.setState({lastUpdate:Date.now()})
-            console.log('SSE update', jsondata)
-            if (jsondata.event.header.name=="Response" || jsondata.event.header.name=='StateReport') {
-                this.mergeState(this.nameByEndPointId(jsondata.event.endpoint.endpointId), jsondata)
-
-            } else if ((jsondata.event.header.name="ChangeReport") && jsondata.event.payload.hasOwnProperty('change')) {
-
-                for (var j = 0; j < jsondata.event.payload.change.properties.length; j++) {
-                    jsondata.context.properties.push(jsondata.event.payload.change.properties[j])
-                }
-                jsondata.payload={}
-                jsondata.event.header.name="StateReport"
-                this.mergeState(this.nameByEndPointId(jsondata.event.endpoint.endpointId), jsondata)
-            } else {
-                console.log('was not changereport', jsondata.event.header.name, jsondata)
-            }
-        }
-    }
-    
-    mergeState = (dev,change) => {
-        
-        if (dev!==undefined && change!==undefined) {
-            var devstate={...this.state.deviceState};
-            devstate[dev]= { "endpointId" : change.event.endpoint.endpointId, "properties" : change.context.properties }
-            this.setState({deviceState:devstate})
+        if (dev.EndpointHealth.connectivity.value.value=='OK') {
             return true
-        } 
+        }
+        return false
     }
     
-    mergeStates = (devs) => {
-        
-        var devstate={...this.state.deviceState};
-        for (var dev in devs) {
-            if (dev!==undefined && devs[dev]!==undefined) {
-                devstate[dev]= { "endpointId" : devs[dev].event.endpoint.endpointId , "properties" : devs[dev].context.properties }
+    function lightCount(condition) {
+        var count=0;
+        var lights=devicesByCategory('LIGHT')
+
+        for (var id in lights) {
+            if (condition.toLowerCase()=='all') {
+                count=count+1
+            } else if (condition.toLowerCase()=='off') {
+                if (lights[id].PowerController.powerState.value=='OFF' || !isReachable(lights[id])) {
+                    count=count+1
+                }
+            } else if (condition.toLowerCase()=='on') {
+                if (lights[id].PowerController.powerState.value=='ON' && isReachable(lights[id])) {
+                    count=count+1
+                }
             }
         }
-        this.setState({ deviceState : devstate })
-        return true
-    }
-
+        return count
+    }    
     
-    updateDevice = dev => {
-        if (!this.pendingDevs.includes(dev)) {
-            this.pendingDevs.push(dev)
-            fetch('/data/devices/'+dev+'?stateReport')
-                .then(result=>result.json())
-                .then(data=>this.mergeState(dev,data))
-        }
-    }
+    function devicesByCategory(categories, searchterm) {
 
-    updateMultipleDevices = (devs) => {
-        
-        if (devs.length>0) {
-
-            console.log('getting updates for multiple devices', devs.length)
-            fetch('/deviceState', {
-                    method: 'post',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(devs)
-                })
-                .then(res=>res.json())
-                .then(res =>this.mergeStates(res))    
-        }
-    }
-
-    updateDeviceList = (devs) => {
-
-        var udl=[]
-        for (var i = 0; i < devs.length; i++) {
-            if (!this.state.deviceState.hasOwnProperty(devs[i].friendlyName)) {
-                udl.push(devs[i].friendlyName)
-            } 
-        }
-        this.setState({devices: devs}, 
-            () =>  this.updateMultipleDevices(udl)
-        )
-    }
-    
-    devicesByCategory = (categories, searchterm) => {
-
+        //console.log('dbc',categories, searchterm)
         if (!categories) {
-            categories=['ALL']
+            categories='ALL'
         }
         if (!Array.isArray(categories)) {
             categories=[categories]
@@ -153,10 +236,10 @@ export class DataProvider extends PureComponent {
         var categoryDevices=[]
         for (var j = 0; j < categories.length; j++) {
             var category=categories[j]
-            for (var i = 0; i < this.state.devices.length; i++) {
-                if (this.state.devices[i].displayCategories.includes(category) || category=='ALL') {
-                    if (!searchterm || this.state.devices[i].friendlyName.toLowerCase().startsWith(searchterm.toLowerCase())) {
-                        categoryDevices.push(this.state.devices[i])
+            for (var id in devices) {
+                if (devices[id].displayCategories.includes(category) || category=='ALL') {
+                    if (!searchterm || devices[id].friendlyName.toLowerCase().startsWith(searchterm.toLowerCase())) {
+                        categoryDevices.push(devices[id])
                     }
                 } 
             }
@@ -170,71 +253,49 @@ export class DataProvider extends PureComponent {
         
     }
     
-    nameByEndPointId = endpointId => {
-        var fn=[]
-        for (var i = 0; i < this.state.devices.length; i++) {
-            if (this.state.devices[i]['endpointId']==endpointId) {
-                return this.state.devices[i].friendlyName
-            } 
-        }
-        console.log('Did not find device named', endpointId, this.state.devices.length)
-    }    
+    function sortByName(devlist) {
+        devlist.sort(function(a, b)  {
+		    var x=a['friendlyName'].toLowerCase(),
+			y=b['friendlyName'].toLowerCase();
+		    return x<y ? -1 : x>y ? 1 : 0;
+	    });    
+        return devlist
+    }
 
-    deviceByName = devname => {
+    function deviceByFriendlyName(devname) {
         var fn=[]
-        for (var i = 0; i < this.state.devices.length; i++) {
-            if (this.state.devices[i]['friendlyName']==devname) {
-                return this.state.devices[i]
+        for (var id in devices) {
+            if (devices[id]['friendlyName']==devname) {
+                return devices[id]
             } 
         }
-        return {}
+        //console.log('Did not find device named', devname, devices.length)
+        return undefined
+    }
+
+    function deviceByEndpointId(endpointId) {
+        if (endpointId in devices) {
+            return devices[endpointId]
+        }
+        //console.log('Did not find device with endpointId', endpointId, devices.length)
+        return undefined
     }
     
-    deviceByEndpointId = endpointId => {
-        var fn=[]
-        for (var i = 0; i < this.state.devices.length; i++) {
-            if (this.state.devices[i]['endpointId']==endpointId) {
-                return this.state.devices[i]
-            } 
+    function propertyNamesFromDevice(dev) {
+        
+        var devprops=[]
+        for (var j = 0; j < dev.capabilities.length; j++) {
+            devprops.push(dev.capabilities[j].interface)
         }
-        console.log('Did not find device named', endpointId, this.state.devices.length)
+        return devprops
     }
 
-    propertiesFromDevices = devs => {
-
-        var devstate={}
-        var nostate=[]
-        if (devs==null || devs==undefined) {
-            return devstate
-        } 
-
-        if (!Array.isArray(devs)) {
-            devs=[devs]
-        }
-        for (var i = 0; i < devs.length; i++) {   
-            devstate[devs[i].friendlyName]={}
-            if (this.state.deviceState.hasOwnProperty(devs[i].friendlyName)) {
-                if (this.state.deviceState[devs[i].friendlyName].hasOwnProperty('properties')) {
-                    for (var j = 0; j < this.state.deviceState[devs[i].friendlyName].properties.length; j++) {
-                        devstate[devs[i].friendlyName][this.state.deviceState[devs[i].friendlyName].properties[j].name]=this.state.deviceState[devs[i].friendlyName].properties[j].value;
-                    }
-                }
-            } else if (!this.pendingDevs.includes(devs[i].friendlyName)) {
-                this.pendingDevs.push(devs[i].friendlyName)
-                nostate.push(devs[i].friendlyName)
-            }
-        }
+    function getChangeTimesForDevices(val,devs) {
         
-        if (nostate.length>0) {
-            this.updateMultipleDevices(nostate)
-        }
+        // Requests the last time the value changed for a set of devices.  This requires the Influx adapter
+        // in order to see history.
 
-        return devstate
-        
-    }
-    
-    getChangeTimesForDevices = (val,devs) => {
-
+        console.log('gctfd',val,devs)
         var endpointList=[]
         for (var i = 0; i < devs.length; i++) {   
            endpointList.push(devs[i].endpointId)
@@ -251,7 +312,10 @@ export class DataProvider extends PureComponent {
             .then(res=> { return(res.json())})
     }
 
-    getHistoryForDevice = (dev, prop, page) => {
+    function getHistoryForDevice(dev, prop, page) {
+        
+        // Requests the history for a specific device and property.  It allows for pagination since the data could be very
+        // large.  This requires the Influx adapter in order to see history.
         
         var url="/list/influx/history/"+dev+"/"+prop
         if (page) {
@@ -262,160 +326,39 @@ export class DataProvider extends PureComponent {
             .then(res=> { return(res.json())})
     }
 
-
-    changeTimesFromDevices = devs => {
-
-        var devstate={}
-        var nostate=[]
-        if (devs==null || devs==undefined) {
-            return devstate
-        } 
-
-        if (!Array.isArray(devs)) {
-            devs=[devs]
-        }
-        for (var i = 0; i < devs.length; i++) {   
-            devstate[devs[i].friendlyName]={}
-            if (this.state.deviceState.hasOwnProperty(devs[i].friendlyName)) {
-                if (this.state.deviceState[devs[i].friendlyName].hasOwnProperty('properties')) {
-                    for (var j = 0; j < this.state.deviceState[devs[i].friendlyName].properties.length; j++) {
-                        devstate[devs[i].friendlyName][this.state.deviceState[devs[i].friendlyName].properties[j].name]=this.state.deviceState[devs[i].friendlyName].properties[j].timeOfSample;
-                    }
-                }
-            } else if (!this.pendingDevs.includes(devs[i].friendlyName)) {
-                this.pendingDevs.push(devs[i].friendlyName)
-                nostate.push(devs[i].friendlyName)
-            }
-        }
-        
-        if (nostate.length>0) {
-            this.updateMultipleDevices(nostate)
-        }
-
-        return devstate
-        
-    }
-    
-    setRegion = region => {
-        this.setState({region: region})
-    }
-
-    setPlayer = player => {
-        this.setState({player: player})
-    }
- 
-    sendAlexaCommand = (deviceName, endpointId, controller, command, payload={}) => {
-        
-        // value is optional for some alexa commands.  The original sofa2 implementation tried to take a string value and then map it to 
-        // a value name, but underestimated the requirement for some commands to pass multiple values and needs to be adjusted.
-        
-        if (endpointId=='') {
-            console.log('No endpoint ID was provided for ', deviceName, controller, command, payload)
-            endpointId=this.deviceByName(deviceName).endpointId
-        }
-
-        var header={"name": command, "namespace":"Alexa." + controller, "payloadVersion":"3", "messageId": this.uuidv4(), "correlationToken": this.uuidv4()}
-        var endpoint={"endpointId": endpointId, "cookie": {}, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
-        var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
-        
-        console.log('Sending alexa command:',data)
-
-        fetch('/directive', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(res=>console.log('Alexa command response:',res.json()))
-    }
-
-    catchError = ( error ) => {
+    function catchError( error ) {
         console.log( error );
     }
 
+    return (
+        <DataContext.Provider
+            value={{
+                devices: devices,
+                virtualDevices: virtualDevices,
+                
+                directives: directives,
+                controllerProperties:controllerProperties,
+                controllerEvents:controllerEvents,
 
-    restGet = (url) => {
+                deviceByEndpointId: deviceByEndpointId,
+                deviceByFriendlyName: deviceByFriendlyName,
+                devicesByCategory: devicesByCategory,
+                propertyNamesFromDevice: propertyNamesFromDevice,
+                isReachable: isReachable,
+                sortByName: sortByName,
+                
+                getChangeTimesForDevices: getChangeTimesForDevices,
+                getHistoryForDevice: getHistoryForDevice,
 
-        fetch('/deviceListWithData')
-            .then(response => {
-                if ( !response.ok ) {
-                    this.catchError( response );
-                } else {
-                    return response.json()
-                }
-            }).catch( this.catchError );
-    }
-    
-    refreshData = () => {
-        console.log('Refreshing device data')
-        var newlu = new Date()
-        fetch('/deviceListWithData')
-            .then(result=>result.json())
-            .then(data=>{   this.mergeStates(data['state']);
-                            this.updateDeviceList(data['devices'], true);
-                            this.setState({lastUpdate : newlu});
-            })        
-    }
-
-    componentDidMount() {
-        //window.addEventListener('resize', this.handleWindowSizeChange);
-
-        this.eventSource.onmessage = e =>
-            this.onMessage(e);
-
-        console.log('Fetching device info')
-        this.refreshData()
-
-  	    fetch('/directives')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({directives:result}));
-
-  	    fetch('/properties')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({controllerProperties:result}));
-
-  	    fetch('/list/logic/virtualDevices')
- 		    .then(result=>result.json())
-            .then(result=>this.setState({ virtualDevices:result }))
-    }
-
-    render() {
-        return (
-            <DataContext.Provider
-                value={{
-                    devices: this.state.devices,
-                    deviceState: this.state.deviceState,
-                    directives: this.state.directives,
-                    virtualDevices: this.state.virtualDevices,
-                    controllerProperties:this.state.controllerProperties,
-                    controllerEvents:this.state.controllerEvents,
-                    sendAlexaCommand: this.sendAlexaCommand,
-                    deviceByName: this.deviceByName,
-                    devicesByCategory: this.devicesByCategory,
-                    propertiesFromDevices: this.propertiesFromDevices,
-                    getChangeTimesForDevices: this.getChangeTimesForDevices,
-                    changeTimesFromDevices: this.changeTimesFromDevices,
-                    getHistoryForDevice: this.getHistoryForDevice,
-                    deviceByEndpointId: this.deviceByEndpointId,
-                    setRegion: this.setRegion,
-                    region: this.state.region,
-                    setPlayer: this.setPlayer,
-                    player: this.state.player,
-                    heartbeat: this.state.heartbeat,
-                    timedOut: this.timedOut,
-                    refreshData: this.refreshData,
-                    eventSource: this.eventSource,
-                    getLastUpdate: this.getLastUpdate,
-                    lastUpdate: this.state.lastUpdate,
-                    checkUpdate: this.checkUpdate,
-                }}
-            >
-                {this.props.children}
-            </DataContext.Provider>
-        );
-    }
+                setRegion: setRegion,
+                region: region,
+                lightCount: lightCount,
+                
+                timedOut: timedOut,
+                getLastUpdate: getLastUpdate,
+            }}
+        >
+            {props.children}
+        </DataContext.Provider>
+    );
 }
-
-export default DataProvider;

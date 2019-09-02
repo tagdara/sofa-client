@@ -24,8 +24,8 @@ export default function LightSliderBrightness(props) {
     const classes = useStyles();
 
     useEffect(() => {
-        setBrightness(props.brightness)
-    }, [props.brightness])
+        setBrightness(props.device.BrightnessController.brightness.value)
+    }, [props.device.BrightnessController.brightness.value])
 
     
     function handlePreBrightnessChange(event, value) {
@@ -33,7 +33,7 @@ export default function LightSliderBrightness(props) {
     }; 
 
     function handleBrightnessChange(event) {
-        props.sendAlexaCommand('', props.endpointId, "BrightnessController", "SetBrightness", { "brightness" : event } )
+        props.device.BrightnessController.directive('SetBrightness', { "brightness" : event })
     }; 
 
     return (
@@ -44,7 +44,7 @@ export default function LightSliderBrightness(props) {
                     min={0} max={100} step={10}
                     preChange={handlePreBrightnessChange}
                     change={handleBrightnessChange}
-                    disabled={!props.powerState}
+                    disabled={!props.device.PowerController.powerState.value}
                 />
             </ListItem>
     );

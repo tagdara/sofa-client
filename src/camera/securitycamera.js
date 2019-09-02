@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { withLayout } from '../layout/NewLayoutProvider';
+import { withData } from '../DataContext/withData';
 
 import Card from '@material-ui/core/Card';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -68,22 +69,42 @@ function SecurityCamera(props) {
 
     const classes = useStyles();
     const intervals = [1000, 500, 5000, 3000]
-    const thumbnailBasePath="/thumbnail/"+props.cameraSource+"/camera";
-    const cameraBasePath="/image/"+props.cameraSource+"/camera";
-    const [camera, setCamera] = useState(thumbnailBasePath+"/"+props.name);
-    const [updateUrl, setUpdateUrl] = useState(camera+"?"+Date.now());
     const [currentUrl, setCurrentUrl] = useState("");
     const [imageLoaded, setImageLoaded] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const [refreshInterval, setRefreshInterval] = useState(3000);
     const [live, setLive] = useState(true);
+    const [imageUri,setImageUri] = useState("")
+    const [updateUrl, setUpdateUrl] = useState("");
     
+    useEffect(()=> {
+        props.camera.CameraStreamController.directive("InitializeCameraStreams", 
+            {
+                "cameraStreams": [
+                    {
+                        "protocol": "HLS",
+                        "resolution": {
+                            "width": 640,
+                            "height": 480
+                        },
+                        "authorizationType": "BASIC",
+                        "videoCodec": "H264",
+                        "audioCodec": "AAC"
+                    }
+                ]
+            }
+        ).then(response => setImageUri(response.payload.imageUri));
+    },[props.camera]);
+
     useEffect(() => {
-        const interval = setInterval(() => { setUpdateUrl(camera+"?"+Date.now()) }, refreshInterval)
-        return () => {
-            clearInterval(interval);
+        if (imageUri) {
+            setUpdateUrl(imageUri+"?time="+Date.now())
+            const interval = setInterval(() => { setUpdateUrl(imageUri+"?"+Date.now()) }, refreshInterval)
+            return () => {
+                clearInterval(interval);
+            }
         }
-    });
+    }, [imageUri]);
     
     function imageFinished() {
         if (!imageLoaded) {
@@ -94,29 +115,29 @@ function SecurityCamera(props) {
     
     function changeInterval() {
         setRefreshInterval(intervals.shift())
-        const interval = setInterval(() => setUpdateUrl(camera+"?"+Date.now()), refreshInterval)
+        const interval = setInterval(() => setUpdateUrl(imageUri+"?time="+Date.now()), refreshInterval)
         intervals.push(refreshInterval)
     }
     
     function closeDialog() {
-        setCamera(thumbnailBasePath+"/"+props.name)
         setShowDialog(false)
     }
     
     function handleClickOpen() {
-        setCamera(cameraBasePath+"/"+props.name)
         setShowDialog(true)
     }
     
     return (
         <GridItem wide={props.wide} nopad={true} thinmargin={props.isMobile}>
             
-            <img
-                className={imageLoaded ? classes.im : classes.hiddenimage}
-                src={updateUrl}
-                onLoad={ () => imageFinished() }
-                onClick={ () => handleClickOpen()}
-            />
+            { imageUri && 
+                <img
+                    className={imageLoaded ? classes.im : classes.hiddenimage}
+                    src={updateUrl}
+                    onLoad={ () => imageFinished() }
+                    onClick={ () => handleClickOpen()}
+                />
+            }
             {imageLoaded ?
                 <React.Fragment>
                     { props.prevCamera &&
@@ -142,11 +163,11 @@ function SecurityCamera(props) {
                 </div>
             }
             { showDialog &&
-                <CameraDialog live={live} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} showDialog={showDialog} closeDialog={closeDialog} src={currentUrl} />
+                <CameraDialog live={live} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={currentUrl} />
             }
         </GridItem>
     );
 
 }
 
-export default withLayout(SecurityCamera)
+export default withData(withLayout(SecurityCamera))

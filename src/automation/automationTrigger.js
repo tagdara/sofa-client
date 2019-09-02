@@ -1,6 +1,6 @@
 import React, { memo }  from 'react';
 import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, withStyles  } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -22,6 +22,12 @@ import OperatorButton from "./operatorButton";
 import GridItem from '../GridItem';
 
 import AutomationItemBase from './AutomationItemBase';
+
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputBase from '@material-ui/core/InputBase';
+
 
 const useStyles = makeStyles({
 
@@ -48,16 +54,36 @@ const useStyles = makeStyles({
     listItem: {
         padding: "12 16",
     },
-    reducedButtonPad: {
+    xxreducedButtonPad: {
         padding: "4 16 12 10",
         alignItems: "flex-end",
     },
     eventName: {
         padding: "8 8 8 64",
+    },
+    flex: {
+        display: "flex",
     }
-
 });
 
+
+const BootstrapInput = withStyles(theme => ({
+    input: {
+        minWidth: '100px',
+        borderRadius: 4,
+        position: 'relative',
+        backgroundColor: theme.palette.background.paper,
+        border: '1px solid #ced4da',
+        fontSize: 16,
+        padding: '10px 26px 10px 12px',
+        transition: theme.transitions.create(['border-color', 'box-shadow']),
+        '&:focus': {
+            borderRadius: 4,
+            borderColor: '#80bdff',
+            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+        },
+    },
+}))(InputBase);
 
 function AutomationTrigger(props) {
     
@@ -81,6 +107,22 @@ function AutomationTrigger(props) {
         trigger.operator=newvalue
         props.save(props.index, trigger)
     }
+
+    function handleChange() {
+        console.log('noop change')
+    }
+   
+    function getDeviceProperties() {
+        var proplist=[]
+        for (var i = 0; i < props.device.capabilities.length; i++) {
+            if (props.device.capabilities[i].hasOwnProperty('properties') && props.device.capabilities[i].properties.hasOwnProperty('supported')) {
+                for (var j = 0; j < props.device.capabilities[i].properties.supported.length; j++) {
+                    proplist.push(props.device.capabilities[i].properties.supported[j].name)
+                }
+            } 
+        }
+        return proplist
+    }    
     
     return (
         <GridItem nolist={true} elevation={0} wide={true}>
@@ -95,9 +137,16 @@ function AutomationTrigger(props) {
                     }
                 </ListItem>
             </Grid>
-            <Grid item xs={props.wide ? 12 : 6 } >
+            <Grid item xs={props.wide ? 12 : 6 } className={classes.flex} >
             { props.item.type=="property" ?
                 <ListItem className={classes.reducedButtonPad} >
+                    <Select value={props.item.propertyName} onChange={handleChange} input={<BootstrapInput name="command" id="command-select" />} >
+                        <MenuItem value=""><em>Choose an property</em></MenuItem>
+                    { getDeviceProperties().map(action => 
+                        <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
+                    )}
+                    </Select>
+
                     <OperatorButton disabled={ props.item.type=='event' } index={props.index} value={ props.item.operator } setOperator={ editOperatorValue }/>
                     <TextField
                             className={classes.input}

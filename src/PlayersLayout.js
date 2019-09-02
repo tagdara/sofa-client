@@ -17,7 +17,8 @@ function PlayersLayout(props) {
     const speakers = props.devicesByCategory('SPEAKER')
 
     function changePlayerHome(newplayer) {
-        props.setUserPlayer(newplayer)
+        var newplayerobj=props.deviceByEndpointId(newplayer)
+        props.setUserPlayer(newplayerobj)
         props.applyLayout('Home')
     }
 
@@ -26,8 +27,8 @@ function PlayersLayout(props) {
             <GridBreak label={"Players"} />
 
             { speakers.map((device) =>
-                device.endpointId===props.deviceProperties[device.endpointId].input || props.deviceProperties[device.endpointId].input=='' ? 
-                <Sonos key={device.endpointId} player={device} changePlayer={changePlayerHome} sendAlexaCommand={props.sendAlexaCommand} devices={speakers} name={ device.friendlyName } device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } linkedPlayers={ props.deviceProperties }/>
+                device.endpointId===device.InputController.input.value || device.InputController.input.value=='' ? 
+                <Sonos key={device.endpointId} player={device} changePlayer={changePlayerHome} devices={speakers} device={ device } />
                 : null
             )}
         </React.Fragment>

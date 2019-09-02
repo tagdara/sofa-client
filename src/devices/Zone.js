@@ -34,12 +34,21 @@ const useStyles = makeStyles({
 export default function Zone(props) {    
     
     const classes = useStyles();
+    
+    function getSensorController() {
+        if (props.device.hasOwnProperty('ContactSensor')) {
+            return props.device.ContactSensor
+        } else if (props.device.hasOwnProperty('MotionSensor')) {
+            return props.device.MotionSensor
+        }
+        return null
+    }
 
     return (
         <GridItem >
             <ListItem onClick={() => props.history(props.name, props.endpointId)}>
-                <ToggleAvatar avatarState={ props.deviceProperties.detectionState=='NOT_DETECTED' ? 'closed' : 'open' } > 
-                    { props.deviceProperties.detectionState=='NOT_DETECTED' ? <DoneIcon /> : <ClearIcon /> }
+                <ToggleAvatar avatarState={ getSensorController().detectionState.value=='NOT_DETECTED' ? 'closed' : 'open' } > 
+                    { getSensorController().detectionState.value=='NOT_DETECTED' ? <DoneIcon /> : <ClearIcon /> }
                 </ToggleAvatar>
                 <ListItemText primary={props.name} secondary={props.changeTime=='Unknown' ? 'Unknown':<Moment format="ddd MMM D h:mm:sa">{props.changeTime}</Moment>} />
             </ListItem>

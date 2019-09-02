@@ -9,7 +9,7 @@ function ReceiverHero(props) {
     return (
         <React.Fragment>
             { props.devices.map((device) => (
-                <Receiver wide={props.wide} sendAlexaCommand={props.sendAlexaCommand} key={device.endpointId} name={ device.friendlyName } device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } />
+                <Receiver wide={props.wide} key={device.endpointId} device={ device } />
                 ))
             }
         </React.Fragment> 

@@ -2,15 +2,22 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Moment from 'react-moment';
 import Button from '@material-ui/core/Button';
+import GridItem from '../GridItem';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
+import LowPriorityIcon from '@material-ui/icons/LowPriority';
+import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
+
+
 
 const useStyles = makeStyles({
     
     root: {
         alignItems: "flex-end",
-        padding: "16px 16px 0px 16px !important",
         display: "flex",
     },
     label: {
@@ -28,18 +35,15 @@ export default function AutomationDetails(props) {
     }
 
     return (    
-        <>
-            <Grid item xs={ 6 } className={classes.root}>
-                <Typography>
-                    Last Run: 
-                    <Moment format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment>
-                </Typography>
+        <GridItem nolist={true} elevation={0} wide={true}>
+            <Grid item xs={ 12 } className={classes.root}>
+                <ListItem>
+                    <ListItemText primary={"Last Run"} secondary={<Moment format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment>} />
+                    <Button onClick={() => runAutomation()}><PlaylistPlayIcon /></Button>
+                    <Button onClick={() => runAutomation(false)}><LowPriorityIcon /></Button>
+                </ListItem>
             </Grid>
-            <Grid item xs={ 6 } className={classes.root}>
-                <Button onClick={() => runAutomation()}>Test</Button>
-                <Button onClick={() => runAutomation(false)}>Test (No Conditions)</Button>
-            </Grid>
-        </>
+        </GridItem>
     )
 
 };

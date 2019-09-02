@@ -14,13 +14,14 @@ function PlayerHero(props) {
     const isMobile = window.innerWidth <= 800;
     const [mini, setMini] = useState(false);
     const [defaultPlayer, setDefaultPlayer] = useState(props.Primary);
-    const [player, setPlayer] = useState({})
+    const [player, setPlayer] = useState(bestPlayer())
 
     useEffect(() => {
-        // unfortunately happens every time theres an update of any kind
-        setSpeakers(props.devicesByCategory('SPEAKER'))
-        setPlayer(props.deviceByEndpointId(bestPlayer()))
-    },[props.deviceProperties, props.devices]);
+        if (player=='') {
+            setSpeakers(props.devicesByCategory('SPEAKER'))
+            setPlayer(bestPlayer()) 
+        }
+    }, [props.devices])
 
     function bestPlayer() {
         
@@ -31,23 +32,17 @@ function PlayerHero(props) {
         } else {
             var hotplayer='';
             for (var s = 0; s < speakers.length; s++) {
-                if (hotplayer=='') { hotplayer=speakers[s].endpointId }
-                var name=speakers[s].friendlyName
+                if (hotplayer=='') { hotplayer=speakers[s];}
                 if (defaultPlayer==speakers[s].endpointId) {
                     defaultexists=true
                 }
-                if (props.deviceProperties.hasOwnProperty(speakers[s].endpointId)) {
-                    var dev=props.deviceProperties[speakers[s].endpointId]
-                    if (dev.hasOwnProperty("playbackState")) {
-                        if (dev.playbackState=='PLAYING') {
-                            if (dev.input==name || dev.input=="") {
-                                hotplayer=name
-                            } else {
-                                hotplayer=dev.input
-                            }
-                            break
-                        }
+                if (speakers[s].MusicController.playbackState.value=='PLAYING') {
+                    if (speakers[s].InputController.input.value==speakers[s].friendlyName || speakers[s].InputController.input.value=="") {
+                        hotplayer=speakers[s]
+                    } else {
+                        hotplayer=props.deviceByEndpointId(speakers[s].InputController.input.value)
                     }
+                    break
                 }
             }
             if (hotplayer) { return hotplayer }
@@ -55,7 +50,6 @@ function PlayerHero(props) {
         if (defaultexists) {
             return defaultPlayer
         } 
-        
         return ''
     }
 
@@ -64,23 +58,13 @@ function PlayerHero(props) {
         setMini(false); 
     }
 
-    function playerProps(endpointId) {
-        if (props.deviceProperties.hasOwnProperty(endpointId)) {
-            return props.deviceProperties[endpointId]
-        } else {
-            return {}
-        }
-    }
-    
     function bigCard() {
         
-        if (mini || !player || !playerProps(player.endpointId)) {
+        if (mini || !player) {
             return false
         }
-        if (playerProps(player.endpointId).hasOwnProperty('playbackState')) {
-            if (playerProps(player.endpointId).playbackState && playerProps(player.endpointId).playbackState!='STOPPED') {
-                return true
-            }
+        if (!mini || (player.hasOwnProperty('MusicController') && player.MusicController.playbackState.value && player.MusicController.playbackState.value!='STOPPED')) {
+            return true
         }
         return false
     }
@@ -90,9 +74,9 @@ function PlayerHero(props) {
             { player ?
             <>
                 { bigCard()==false ?
-                    <Sonos changePlayer={changePlayer} wide={props.wide} small={true} setLayoutCard={props.setLayoutCard} player={player} name={player.friendlyName} deviceProperties={playerProps(player.endpointId)} />
+                    <Sonos changePlayer={changePlayer} wide={props.wide} small={true} setLayoutCard={props.setLayoutCard} player={player} />
                 :
-                    <PlayerCard wide={props.wide} changePlayer={changePlayer} player={player} name={player.friendlyName}  setMini={setMini} />
+                    <PlayerCard wide={props.wide} changePlayer={changePlayer} player={player} setMini={setMini} />
                 }
             </>
             :

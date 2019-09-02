@@ -46,30 +46,17 @@ function LightLayout(props) {
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
 
-    function isReachable(dev) {
-        if (dev.hasOwnProperty('connectivity')) {
-            if (dev.connectivity.hasOwnProperty('value')) {
-                if (dev.connectivity.value=='UNREACHABLE') {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-
     function filterByType(filter) {
         var lights=[]
         var all=props.devicesByCategory('LIGHT')
-        if (filter=="ALL") { return all }
-        for (var j = 0; j < props.devicesByCategory('LIGHT').length; j++) {
-            if (filter.toLowerCase()=='off') {
-                if (props.deviceProperties[all[j].endpointId].powerState=='OFF' || !isReachable(props.deviceProperties[all[j].endpointId])) {
-                    lights.push(all[j])
-                }
-            } else if (filter.toLowerCase()=='on') {
-                if (props.deviceProperties[all[j].endpointId].powerState=='ON' && isReachable(props.deviceProperties[all[j].endpointId])) {
-                    lights.push(all[j])
-                }
+        
+        for (var i = 0; i < all.length; i++) {   
+            if (filter.toLowerCase()=="all") { 
+                lights.push(all[i])
+            } else if (filter.toLowerCase()=='off' && (all[i].PowerController.powerState.value=='OFF' || !props.isReachable(all[i]))) {
+                lights.push(all[i])
+            } else if (filter.toLowerCase()=='on' && all[i].PowerController.powerState.value=='ON' && props.isReachable(all[i])) {
+                lights.push(all[i])
             }            
         }
         return lights
@@ -101,10 +88,9 @@ function LightLayout(props) {
                     }
             >
                 { filterByType(filter).map((device) =>
-                    <Light key={ device.endpointId } sendAlexaCommand={props.sendAlexaCommand} name={ device.friendlyName }
-                        device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } 
-                        brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
-                        />
+                    <Light  key={ device.endpointId } device={ device } 
+                            brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
+                    />
                 )}
             </GridSection>
         </React.Fragment>

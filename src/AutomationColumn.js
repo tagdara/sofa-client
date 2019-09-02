@@ -12,6 +12,8 @@ import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
+import AutomationActionNew from "./automation/automationActionNew"
+
 import AutomationAction from "./automation/automationAction"
 import AutomationCondition from "./automation/automationCondition"
 import AutomationTrigger from "./automation/automationTrigger"
@@ -23,7 +25,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 
 import GridItem from './GridItem';
-import GridPage from './GridPage';
+import GridSection from './GridSection';
 import GridBreak from './GridBreak';
 import PlaceholderCard from './PlaceholderCard';
 import ErrorBoundary from './ErrorBoundary'
@@ -60,7 +62,7 @@ function AutomationColumn(props) {
     const [remove, setRemove] = useState(false)
     const [module, setModule] = useState(null)
     const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
-    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
+    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationActionNew, 'Schedules':AutomationSchedule}
     const AutomationProperty = modmap[props.name]
     
     function getControllerProperties(item) {
@@ -157,6 +159,19 @@ function AutomationColumn(props) {
             props.applyLayoutCard(props.selector)
         }
     }
+
+    function addItemNew() {
+        if (props.itemtype=='schedule') {
+            addInPlace()
+        } else {
+            setRemove(false); 
+            setReorder(false) 
+            props.applyReturnPage("AutomationLayout", {'name': props.automationName, 'type':props.itemtype })
+            props.applyBackPage("AutomationLayout",{'name': props.automationName })
+            props.applyLayoutCard('DeviceLayout')
+        }
+    }
+
     
     function addInPlace() {
         var newItem={'type':'interval', 'interval':1, 'unit':'days', 'start':shortTimeFormat()}
@@ -169,8 +184,14 @@ function AutomationColumn(props) {
     const isMobile = window.innerWidth <= mobileBreakpoint;
     
     return (    
-        <GridPage wide={true} >
-            <GridBreak label={props.name} size="h6" >
+
+            <GridSection name={props.name} secondary={ <>
+                { props.saved &&
+                    <IconButton onClick={ () => addItemNew() } className={classes.button }>
+                        <AddIcon fontSize="small" />
+                    </IconButton>
+                }
+
                 { props.saved &&
                     <IconButton onClick={ () => addItem() } className={classes.button }>
                         <AddIcon fontSize="small" />
@@ -186,8 +207,10 @@ function AutomationColumn(props) {
                     <UnfoldMoreIcon fontSize="small" />
                 </IconButton>
                 }
-            </GridBreak>
-            { Object.keys(props.items).length>0 ?
+                </>
+            } >
+
+            { Object.keys(props.items).length>0 &&
                 <React.Fragment>
                     { props.items.map((item,index) =>
                         <ErrorBoundary key={props.itemtype+index} >
@@ -197,21 +220,16 @@ function AutomationColumn(props) {
                         
                         :
                             <AutomationProperty moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
-                                index={index} item={item} device={ props.deviceByEndpointId(item.endpointId) } name={props.deviceByEndpointId(item.endpointId).friendlyName} 
+                                index={index} item={item} device={ props.deviceByEndpointId(item.endpointId) } name={props.deviceByEndpointId(item.endpointId) ? props.deviceByEndpointId(item.endpointId).friendlyName : 'Whats my name'} 
                                 directives={props.directives} controllerProperties={ getControllerProperties(item)} wide={isMobile} 
                                 />
                         }
                         </ErrorBoundary>
                     )}
                 </React.Fragment>
-                :
-                <GridItem elevation={0} wide={true}>
-                    <ListItem>
-                        <ListItemText primary={"There are no "+props.name+" defined."} />
-                    </ListItem>
-                </GridItem>
             }
-        </GridPage>
+            </GridSection>
+
     )
 
 };

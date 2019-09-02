@@ -29,8 +29,6 @@ const useStyles = makeStyles({
 function PlayerCard(props) {
     
     const classes = useStyles();
-    const spkset = JSON.stringify(props.devicesByCategory('SPEAKER'))
-
     const speakers = props.devicesByCategory('SPEAKER')
     const isMobile = window.innerWidth <= 800;
     const [mini, setMini] = useState(false);
@@ -40,43 +38,22 @@ function PlayerCard(props) {
     const coverDefault = '/image/sonos/logo'; 
     const [imageLoaded, setImageLoaded] = useState(false)
 
-    function createLinkVolumes() {
-
-        let volumes=[];
-        if (props.deviceProperties[props.player.endpointId]) {
-            var allvol=[props.player.endpointId]
-            if (props.deviceProperties[props.player.endpointId].hasOwnProperty('linked')) {
-                allvol=[props.player.endpointId, ...props.deviceProperties[props.player.endpointId].linked];
-            }
-        
-            for (var i = 0; i < allvol.length; i++) {
-                volumes.push(
-                    <SonosVolume sendAlexaCommand={props.sendAlexaCommand} key={ allvol[i] } name={ props.deviceProperties[allvol[i]].friendlyName } endpointId={ allvol[i] } deviceProperties={ props.deviceProperties[allvol[i]] } />
-                )
-            }
-        }
-        return volumes
-    }
-
     function handlePlayPause(event) {
         event.stopPropagation();
-        if (props.deviceProperties[props.player.endpointId].playbackState=='PLAYING') {
-            props.sendAlexaCommand(props.player.friendlyName, props.player.endpointId, 'MusicController', "Pause")
+        if (props.player.MusicController.playbackState.value =='PLAYING') {
+             props.player.MusicController.directive("Pause")
         } else {
-            props.sendAlexaCommand(props.player.friendlyName, props.player.endpointId, 'MusicController', "Play")
+             props.player.MusicController.directive("Play")
         }
     }; 
 
-
     function handleSkip(event) {
-        event.stopPropagation();
-        props.sendAlexaCommand(props.player.friendlyName, props.player.endpointId, 'MusicController', "Skip")
+         props.player.MusicController.directive("Skip")
     }; 
-
 
     function handleStop(event) {
         event.stopPropagation();
-        props.sendAlexaCommand(props.player.friendlyName, props.player.endpointId, 'MusicController', "Stop")
+        props.player.MusicController.directive("Stop")
     }; 
     
     function toggleOverlay() {
@@ -110,49 +87,54 @@ function PlayerCard(props) {
         props.changePlayer(endpointId)
         setMini(false); 
     }
-    
-    function playerProps(endpointId) {
-        if (name && props.deviceProperties.hasOwnProperty(endpointId)) {
-            return props.deviceProperties[endpointId]
-        } else {
-            return {}
-        }
+
+    function handlePlayers(e) {
+        props.applyLayoutCard('PlayersLayout',{'player':props.player.endpointId})    
     }
     
-    function handlePlayers(e) {
-        props.applyLayoutCard('PlayersLayout',{'player':props.player})    
+    function getLinkedPlayers() {
+        var linked=[]
+        if (!props.player.MusicController.linked.value) {
+            console.log('Linked value is empty',props.player.MusicController.linked.value)
+            return []
+        }
+        if (!Array.isArray(props.player.MusicController.linked.value)) {
+            console.log('Linked value is not an array',props.player.MusicController.linked.value)
+            return []
+        }
+        for (var i = 0; i < props.player.MusicController.linked.value.length; i++) {
+            console.log('Linked adding:',props.player.MusicController.linked.value[i])
+            linked.push(props.deviceByEndpointId(props.player.MusicController.linked.value[i]))
+        }
+        return linked
     }
     
     return (
-        props.deviceProperties && props.deviceProperties.hasOwnProperty(props.player.endpointId) ?
         <GridItem wide={props.wide} nopad={true} >
-            <PlayerArtOverlay   art={props.deviceProperties[props.player.endpointId] ? props.deviceProperties[props.player.endpointId].art : coverDefault }
-                                title={props.deviceProperties[props.player.endpointId] ? props.deviceProperties[props.player.endpointId].title : ''}
-                                artist={props.deviceProperties[props.player.endpointId] ? props.deviceProperties[props.player.endpointId].artist : ''}
+            <PlayerArtOverlay   art={props.player.MusicController.art.value ? props.player.MusicController.art.value : coverDefault }
+                                title={props.player.MusicController.title.value ? props.player.MusicController.title.value : ''}
+                                artist={props.player.MusicController.artist.value ? props.player.MusicController.artist.value : ''}
                         >
                 <PlayerArtOverlayButtons min={props.setMini} media={handleMedia} cover={handleCover} stop={handleStop} players={handlePlayers}
                                             playPause={handlePlayPause} skip={handleSkip} 
-                                            playbackState={ props.deviceProperties[props.player.endpointId] ? props.deviceProperties[props.player.endpointId].playbackState : 'Unknown'} />
+                                            playbackState={ props.player.MusicController.playbackState.value ? props.player.MusicController.playbackState.value : 'Unknown'} />
             </PlayerArtOverlay>
             <List className={classes.list} >
-                <SonosVolume sendAlexaCommand={props.sendAlexaCommand} key={ props.player.endpointId } name={ props.player.friendlyName } endpointId={ props.player.endpointId} deviceProperties={ props.deviceProperties[props.player.endpointId] } />
-                { !props.deviceProperties[props.player.endpointId].hasOwnProperty('linked') ? null :
-                    props.deviceProperties[props.player.endpointId].linked.map( linkedplayer =>
-                        <SonosVolume sendAlexaCommand={props.sendAlexaCommand} key={ linkedplayer} name={ props.nameByEndpointId(linkedplayer) } endpointId={ linkedplayer } deviceProperties={ props.deviceProperties[linkedplayer] } />
-                    )
-                }
+                <SonosVolume key={ props.player.endpointId } player={props.player} />
+                { getLinkedPlayers().map( linkedplayer => (
+                    <SonosVolume key={ linkedplayer.endpointId} player={ linkedplayer } />
+                ))}
             </List>
+
             { mediaSelect ?
                 <SonosFavorites open={mediaSelect} close={ closeMediaSelect } />
                 :null
             }
             { coverView ?
-                <SonosCover playbackState={props.deviceProperties[props.player.endpointId].playbackState} handleSkip={ handleSkip} handlePlayPause={handlePlayPause} title={props.deviceProperties[props.player.endpointId].title} artist={props.deviceProperties[props.player.endpointId].artist} src={props.deviceProperties[props.player.endpointId].art} open={coverView} close={ closeCover } />
+                <SonosCover playbackState={props.player.MusicController.playbackState.value} handleSkip={ handleSkip} handlePlayPause={handlePlayPause} title={props.player.MusicController.title.value} artist={props.player.MusicController.artist.value} src={props.player.MusicController.art.value} open={coverView} close={ closeCover } />
                 :null
             }
         </ GridItem >
-        :
-        null
     );
 }
 

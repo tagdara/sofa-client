@@ -98,6 +98,8 @@ function SonosCover(props) {
     function addDefaultSrc(ev) {
         ev.target.src = '/image/sonos/darklogo'
     }
+    
+    console.log('src',props.src)
 
     return (
         <Dialog fullScreen open={props.open} onClose={() => props.close()} className={classes.bigDialog} PaperProps ={{ classes: { root: classes.paper}}}>

@@ -90,7 +90,7 @@ export default function ToggleAvatar(props) {
     const avclass = classes[props.avatarState];
     
     return (
-        <ListItemAvatar className={ props.noback ?  classNames(iconClasses.base, iconClasses[props.avatarState]) : ''}>
+        <ListItemAvatar onClick={props.onClick} className={ props.noback ?  classNames(iconClasses.base, iconClasses[props.avatarState]) : ''}>
             { props.noback ?
                 <>
                     {props.children}

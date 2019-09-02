@@ -68,29 +68,35 @@ function Thermostat(props) {
     const [fanSetMode, setFanSetMode] = useState(false);
 
     useEffect(() => {
-        if (props.deviceProperties.hasOwnProperty('upperSetpoint')) {
-            console.log('Setpoint',[props.deviceProperties.lowerSetpoint.value, props.deviceProperties.upperSetpoint.value ])
-            setTargetSetpoint([props.deviceProperties.lowerSetpoint.value, props.deviceProperties.upperSetpoint.value ])
+        if (props.device.ThermostatController.hasOwnProperty('upperSetpoint')) {
+            setTargetSetpoint([props.device.ThermostatController.lowerSetpoint.value.value, props.device.ThermostatController.upperSetpoint.value.value ])
         } else {
-            setTargetSetpoint(props.deviceProperties.targetSetpoint.value)
+            setTargetSetpoint(props.device.ThermostatController.targetSetpoint.value.value)
         }
-        if (props.deviceProperties.hasOwnProperty('powerLevel')) {
-            setPowerLevel(props.deviceProperties.powerLevel)
+        if (props.device.hasOwnProperty('PowerLevelController')) {
+            setPowerLevel(props.device.PowerLevelController.powerLevel.value)
         }
-    }, [props.deviceProperties]);
+    }, [props.device]);
 
 
     function supportedModes() {
-        for (var i = 0; i < props.device.capabilities.length; i++) {
-            if (props.device.capabilities[i]['interface']=='Alexa.ThermostatController') {
-                if (props.device.capabilities[i].hasOwnProperty('configuration')) {
-                    if (props.device.capabilities[i]['configuration'].hasOwnProperty('supportedModes')) {
-                        return props.device.capabilities[i]['configuration']['supportedModes']
-                    }
-                }
+
+        if (props.device.ThermostatController.hasOwnProperty('configuration')) {
+            if (props.device.ThermostatController.configuration.hasOwnProperty('supportedModes')) {
+                return props.device.ThermostatController.configuration.supportedModes
             }
         }
         return []
+    }
+
+    function supportedRange() {
+
+        if (props.device.ThermostatController.hasOwnProperty('configuration')) {
+            if (props.device.ThermostatController.configuration.hasOwnProperty('supportedRange')) {
+                return props.device.ThermostatController.configuration.supportedRange
+            }
+        }
+        return [60,90]
     }
                     
     
@@ -105,7 +111,7 @@ function Thermostat(props) {
     }; 
     
     function handlePowerLevelChange(event) {
-        props.sendAlexaCommand(props.name, props.device.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
+        props.device.PowerLevelController.directive("SetPowerLevel", {"powerLevel": event})
     }; 
 
     function handlePreSetpointChange(event) {
@@ -113,11 +119,11 @@ function Thermostat(props) {
     }; 
     
     function handleSetpointChange(event) {
-        props.sendAlexaCommand(props.name, props.device.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
+        props.device.ThermostatController.directive("SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
     }; 
 
     function handleSetMode(event) {
-        props.sendAlexaCommand(props.name, props.device.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
+        props.device.ThermostatController.directive("SetThermostatMode",  {"thermostatMode" : { "value": event }} )
     }; 
     
     function switchToHistory() {
@@ -128,13 +134,12 @@ function Thermostat(props) {
 
     return (
         <GridItem>
-            { props.deviceProperties.hasOwnProperty('temperature') &&
             <List className={classes.list} >
             <ListItem>
-                <ToggleAvatar avatarState={ tempColor(props.deviceProperties.temperature.value) } onClick={ () => switchToHistory()} >{props.deviceProperties.temperature.value}</ToggleAvatar>
-                <SofaSlider min={60} max={90} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.name}
+                <ToggleAvatar avatarState={ tempColor(props.device.TemperatureSensor.temperature.value.value) } onClick={ () => switchToHistory()} >{props.device.TemperatureSensor.temperature.value.value}</ToggleAvatar>
+                <SofaSlider min={supportedRange()[0]} max={supportedRange()[1]} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.name}
                             preChange={handlePreSetpointChange} change={handleSetpointChange} 
-                            disabled={ props.deviceProperties.thermostatMode=='OFF' } />
+                            disabled={ props.device.ThermostatController.thermostatMode.value=='OFF' } />
             </ListItem>
             <ListItem className={classes.bottomListItem}>
                 <>
@@ -143,7 +148,7 @@ function Thermostat(props) {
                             { fanSetMode ?
                                 <>
                                     <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(false)}>
-                                        {props.deviceProperties.thermostatMode}
+                                        {props.device.ThermostatController.thermostatMode.value}
                                     </Button>
                                     <ListItemIcon><ToysIcon /></ListItemIcon>
                                     <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={false} minWidth={100}
@@ -161,7 +166,7 @@ function Thermostat(props) {
                     {!fanSetMode &&
                     <>
                         { supportedModes().map((mode) => (
-                            <Button onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} color={ props.deviceProperties.thermostatMode==mode ? "primary" : "default" } className={classes.button }>
+                            <Button onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} color={ props.device.ThermostatController.thermostatMode.value==mode ? "primary" : "default" } className={classes.button }>
                             {mode}
                             </Button>
                         ))}
@@ -170,7 +175,6 @@ function Thermostat(props) {
                 </>
             </ListItem>
             </List>
-            }
         </GridItem>
     );
 }

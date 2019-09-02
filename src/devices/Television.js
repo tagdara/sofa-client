@@ -19,6 +19,7 @@ import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 import ToggleChip from '../ToggleChip'
 import TvRemote from './TvRemote';
+import ErrorBoundary from '../ErrorBoundary';
 
 const useStyles = makeStyles({
     list: {
@@ -51,99 +52,96 @@ const useStyles = makeStyles({
 export default function Television(props) {
     
     const classes = useStyles();
-    const [powerState, setPowerState] = useState(props.deviceProperties.powerState);
-    const [volume, setVolume] = useState(props.deviceProperties.volume);
-    const [muted, setMuted] = useState(props.deviceProperties.muted);
+    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
+    
+    if (props.device.hasOwnProperty('SpeakerController')) {
+        const [volume, setVolume] = useState(props.device.SpeakerController.volume.value);
+        const [mute, setMute] = useState(props.device.SpeakerController.mute.value);
+    }
     const [showRemote, setShowRemote] = useState(false)
     const [showDetail, setShowDetail] = useState(false);
-    const [avinput, setInput] = useState(props.deviceProperties.input);
+    const [avinput, setInput] = useState(props.device.InputController.input.value);
     const [inputs, setInputs] = useState({});
     
     function getInputs() {
         var inputlist=[]
-        for (var j = 0; j < props.device.capabilities.length; j++) {
-            if (props.device.capabilities[j].interface=="Alexa.InputController") {
-                if (props.device.capabilities[j].hasOwnProperty('inputs')) {
-                    for (var k = 0; k < props.device.capabilities[j].inputs.length; k++) {
-                        inputlist.push(props.device.capabilities[j].inputs[k].name)
-                    }
-                }
+        if (props.device.InputController.hasOwnProperty('inputs')) {
+            for (var k = 0; k < props.device.InputController.inputs.length; k++) {
+                inputlist.push(props.device.InputController.inputs[k].name)
             }
         }
         return inputlist
     }
 
-    function hasSpeaker() {
-        for (var j = 0; j < props.device.capabilities.length; j++) {
-            if (props.device.capabilities[j].interface=="Sofa.SpeakerController") {
-                return true
-            }
-        }
-        return false
-    }
 
     function handlePreVolumeChange(event) {
         setVolume(event);
     }; 
 
     function handleVolumeChange(event) {
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
+        setVolume(event);
+        props.device.SpeakerController.directive('SetVolume', { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetMute', { "muted" : !muted} )
+        props.device.SpeakerController.directive('SetVolume', { "mute" : !mute} )
     }; 
     
     function handlePowerChange(event) {
         setPowerState(event.target.checked);
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
+        props.device.PowerController.directive(event.target.checked ? 'TurnOn' : 'TurnOff')
     };
 
     function handleInput(event, inputname) {
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
+        props.device.InputController.directive('SelectInput', { "input": inputname } )
     }; 
+    
     function toggleRemote() {
         setShowRemote(!showRemote)
     }
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
-                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
+            <ErrorBoundary>
+                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.device.PowerController.powerState.value=='ON' ? "on" : "off" }>
                     <TvIcon />
                 </ToggleAvatar>
-                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.name} secondary={props.deviceProperties.input ? props.deviceProperties.input : null}/>
+            </ErrorBoundary>
+            <ErrorBoundary>
+                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={props.device.InputController.input.value}/>
+            </ErrorBoundary>
                 <ListItemSecondaryAction>
-                    { props.deviceProperties.powerState!='ON' ? null :
+                    { props.device.PowerController.powerState.value!='ON' ? null :
                     <IconButton onClick={ () => toggleRemote() } >
                         <ControlCameraIcon />
                     </IconButton>
                     }
 
-                    <Switch color="primary" checked={props.deviceProperties.powerState=='ON'} onChange={ (e) => handlePowerChange(e) } />
+                    <Switch color="primary" checked={props.device.PowerController.powerState.value=='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
-
             </ListItem>
-        { hasSpeaker() && props.deviceProperties.powerState=='ON' && showDetail ?
+        { props.device.hasOwnProperty('SpeakerController') && props.device.PowerController.powerState.value=='ON' && showDetail ?
             <ListItem className={classes.listItemBottom}>
-                <ToggleAvatar noback={true} onClick={ () => setMuted(!muted)} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
-                    {props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
+                <ToggleAvatar noback={true} onClick={ () => setMuted(!muted)} avatarState={ props.device.PowerController.powerState.value=='ON' ? "on" : "off" }>
+                    {props.device.SpeakerController.mute.value ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                 </ToggleAvatar>
-                <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={props.deviceProperties.volume}
+                <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={props.device.SpeakerController.volume.value}
                             minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={false} />
             </ListItem>
             : null
         }
         { showDetail &&
             <ListItem className={classes.bottomListItem}>
+                
                 <ListItemText primary={"Input"} />
                 { getInputs().map(inp => 
-                    <ToggleChip key = {inp} label = { inp } chipState={ props.deviceProperties.input==inp ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
+                    <ToggleChip key = {inp} label = { inp } chipState={ props.device.InputController.input.value==inp ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
                 )}
             </ListItem>
         }
         { showRemote &&
             <ListItem className={classes.remoteListItem}>
-                <TvRemote endpointId={props.device.endpointId} name={props.device.friendlyName} sendAlexaCommand={props.sendAlexaCommand} />
+                <TvRemote device={props.device} />
             </ListItem>
         }
 

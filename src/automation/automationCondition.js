@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, withStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -20,6 +20,10 @@ import GridItem from '../GridItem';
 import OperatorButton from "./operatorButton"
 import Grid from '@material-ui/core/Grid';
 
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputBase from '@material-ui/core/InputBase';
 
 
 const useStyles = makeStyles({
@@ -81,12 +85,32 @@ const useStyles = makeStyles({
     listItem: {
         padding: "12 16",
     },
-    reducedButtonPad: {
+    xxreducedButtonPad: {
         padding: "4 16 12 10",
         alignItems: "flex-end",
+    },
+    flex: {
+        display: "flex",
     }
 });
 
+const BootstrapInput = withStyles(theme => ({
+    input: {
+        minWidth: '100px',
+        borderRadius: 4,
+        position: 'relative',
+        backgroundColor: theme.palette.background.paper,
+        border: '1px solid #ced4da',
+        fontSize: 16,
+        padding: '10px 26px 10px 12px',
+        transition: theme.transitions.create(['border-color', 'box-shadow']),
+        '&:focus': {
+            borderRadius: 4,
+            borderColor: '#80bdff',
+            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+        },
+    },
+}))(InputBase);
 
 export default function AutomationCondition(props) {
 
@@ -140,6 +164,7 @@ export default function AutomationCondition(props) {
                 edval[cp]=props.item.value[cp]
             }
         }
+        console.log('controller props:', props.controllerProperties)
         setFields(subfields)
         setEditVal(edval)
         
@@ -156,13 +181,29 @@ export default function AutomationCondition(props) {
             return "text"
         }
     }
+
+    function handleChange() {
+        console.log('noop change')
+    }
+
+    function getDeviceProperties() {
+        var proplist=[]
+        for (var i = 0; i < props.device.capabilities.length; i++) {
+            if (props.device.capabilities[i].hasOwnProperty('properties') && props.device.capabilities[i].properties.hasOwnProperty('supported')) {
+                for (var j = 0; j < props.device.capabilities[i].properties.supported.length; j++) {
+                    proplist.push(props.device.capabilities[i].properties.supported[j].name)
+                }
+            } 
+        }
+        return proplist
+    }
     
     return (
         <GridItem nolist={true} elevation={0} wide={true}>
             <Grid item xs={props.wide ? 12 : 6 } >
                 <ListItem className={classes.listItem} >
                     <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-                    <ListItemText primary={props.name} secondary={props.item.controller+" "+props.item.propertyName} className={classes.deviceName}/>
+                    <ListItemText primary={props.name} secondary={props.device.endpointId} className={classes.deviceName}/>
                     { props.remove ?
                         <ListItemSecondaryAction>
                             <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
@@ -177,8 +218,14 @@ export default function AutomationCondition(props) {
                     }
                 </ListItem>
             </Grid>
-            <Grid item xs={props.wide ? 12 : 6 } >
+            <Grid item xs={props.wide ? 12 : 6 } className={classes.flex} >
                 <ListItem className={classes.reducedButtonPad} >
+                    <Select value={props.item.propertyName} onChange={handleChange} input={<BootstrapInput name="command" id="command-select" />} >
+                        <MenuItem value=""><em>Choose an property</em></MenuItem>
+                    { getDeviceProperties().map(action => 
+                        <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
+                    )}
+                    </Select>
                     <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
                     { fields.map((conval,i) =>
                         <TextField

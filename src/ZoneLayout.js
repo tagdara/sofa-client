@@ -33,21 +33,29 @@ function ZoneLayout(props) {
     const allzones=props.devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
 
     useEffect(() => {
-        if (props.securityZones && props.automationZones) {
-            setSecurityZones(props.securityZones)
-            setAutomationZones(props.automationZones) 
-        } else {
-      	    fetch('/data/security')
-     		    .then(result=>result.json())
-                .then(result=>{ console.log('res',result)
-                                setSecurityZones(result['Security']); 
-                                setAutomationZones(result['Automation']); 
-                            })
-        }
-    
         props.getChangeTimesForDevices('detectionState',allzones).then(result => setChangeTimes(result))
     }, []);
 
+    function getSecurityZones() {
+        var secZones=[]
+        for (var i = 0; i < allzones.length; i++) {
+            console.log('zone',allzones[i])
+            if (!allzones[i].description.includes('(Automation)')) {
+                secZones.push(allzones[i])
+            } 
+        }
+        return secZones
+    }
+    
+    function getAutomationZones() {
+        var autoZones=[]
+        for (var i = 0; i < allzones.length; i++) { 
+            if (allzones[i].description.includes('(Automation)')) {
+                autoZones.push(allzones[i])
+            } 
+        }
+        return autoZones
+    }
 
     function toggleFilter(event) {
         if (filter=='DETECTED') {
@@ -76,13 +84,13 @@ function ZoneLayout(props) {
     return (    
         <React.Fragment>
             <GridSection name={"Security Zones"} >
-                { filterByType(securityZones).map((device) =>
-                    <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.endpointId] } />
+                { getSecurityZones().map(device =>
+                    <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"}  />
                 )}
             </GridSection>
             <GridSection name={"Automation Zones"} >
-                { filterByType(automationZones).map((device) =>
-                    <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"} deviceProperties={ props.deviceProperties[device.endpointId] } />
+                { getAutomationZones().map(device =>
+                    <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"}  />
                 )}
             </GridSection>
         </React.Fragment>

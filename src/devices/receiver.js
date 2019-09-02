@@ -53,14 +53,15 @@ const useStyles = makeStyles({
 export default function Receiver(props) {
     
     const classes = useStyles();
-    const [powerState, setPowerState] = useState(props.deviceProperties.powerState);
-    const [volume, setVolume] = useState(props.deviceProperties.volume);
-    const [muted, setMuted] = useState(props.deviceProperties.muted);
+    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
+    const [volume, setVolume] = useState(props.device.SpeakerController.volume.value);
+    const [mute, setMute] = useState(props.device.SpeakerController.mute.value);
 
     const [showDetail, setShowDetail] = useState(false);
-    const [avinput, setInput] = useState(props.deviceProperties.input);
+    const [avinput, setInput] = useState(props.device.InputController.input.value);
     const [inputs, setInputs] = useState({});
     const [topInputs, setTopInputs] = useState(['TV','Sonos']);
+    
     
     useEffect(() => {
   	    fetch('/list/yamaha/inputs')
@@ -69,9 +70,9 @@ export default function Receiver(props) {
         }, []);
     
     useEffect(() => {
-        setVolume(props.deviceProperties.volume)
+        setVolume(props.device.SpeakerController.volume.value)
 
-        }, [props.deviceProperties.volume]);
+        }, [props.device.SpeakerController.volume.value]);
 
     function handlePreVolumeChange(event) {
         setVolume(event);
@@ -79,24 +80,24 @@ export default function Receiver(props) {
 
     function handleVolumeChange(event) {
         setVolume(event);
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
+        props.device.SpeakerController.directive('SetVolume', { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SpeakerController', 'SetMute', { "muted" : !muted} )
+        props.device.SpeakerController.directive('SetVolume', { "mute" : !mute} )
     }; 
     
     function handlePowerChange(event) {
         setPowerState(event.target.checked);
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
+        props.device.PowerController.directive(event.target.checked ? 'TurnOn' : 'TurnOff')
     };
     
     function handleSurround(event, surroundmode) {
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'SurroundController', 'SetSurround', {"surround": surroundmode } )
+        props.device.SurroundController.directive('SetSurround', {"surround": surroundmode } )
     }; 
     
     function handleInput(event, inputname) {
-        props.sendAlexaCommand(props.device.friendlyName, props.device.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
+        props.device.InputController.directive('SelectInput', { "input": inputname } )
     }; 
 
     function getYamahaInput(inputname) {
@@ -116,34 +117,34 @@ export default function Receiver(props) {
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
-                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
+                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.device.PowerController.powerState.value=='ON' ? "on" : "off" }>
                     <SpeakerGroupIcon />
                 </ToggleAvatar>
-                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.name} secondary={ props.deviceProperties.powerState=='OFF' ? 'Off' : (props.deviceProperties.input) ? getYamahaInput(props.deviceProperties.input) + " / "+ props.deviceProperties.surround : null}/>
+                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={ props.device.PowerController.powerState.value=='OFF' ? 'Off' : (props.device.InputController.input.value) ? getYamahaInput(props.device.InputController.input.value) + " / "+ props.device.SurroundController.surround.value : null}/>
                 <ListItemSecondaryAction>
-                    <Switch color="primary" checked={props.deviceProperties.powerState=='ON'} onChange={ (e) => handlePowerChange(e) } />
+                    <Switch color="primary" checked={props.device.PowerController.powerState.value=='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
 
             </ListItem>
-        { (getYamahaInput(props.deviceProperties.input)=='Sonos' && !showDetail) || props.deviceProperties.powerState=='OFF'  ? null :
+        { (getYamahaInput(props.device.InputController.input.value)=='Sonos' && !showDetail) || props.device.PowerController.powerState.value=='OFF'  ? null :
             <ListItem className={classes.listItemBottom}>
 
-                <ToggleAvatar onClick={ () => setMuted(!muted)} noback={true} avatarState={ props.deviceProperties.powerState=='ON' ? "on" : "off" }>
-                    { props.deviceProperties.powerState!='ON' ? <VolumeMuteIcon /> :
-                        (props.deviceProperties.muted) ? <VolumeOffIcon /> :  volume
+                <ToggleAvatar onClick={ () => setMute(!mute)} noback={true} avatarState={ props.device.PowerController.powerState.value=='ON' ? "on" : "off" }>
+                    { props.device.PowerController.powerState.value!='ON' ? <VolumeMuteIcon /> :
+                        (props.device.SpeakerController.mute.value) ? <VolumeOffIcon /> :  volume
                     }
                 </ToggleAvatar>
                 <SofaSlider name="Volume" min={0} max={100} defaultValue={0} step={1} value={volume}
-                            disabled={ props.deviceProperties.powerState=='OFF' } minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} />
+                            disabled={ props.device.PowerController.powerState.value=='OFF' } minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} />
             </ListItem>
         }
-        { !showDetail || props.deviceProperties.powerState=='OFF' ? null :
+        { !showDetail || props.device.PowerController.powerState.value=='OFF' ? null :
             <React.Fragment>
                 <ListItem className={classes.bottomListItem}>
                     <ListItemText primary={"Input"} />
                     { Object.keys(inputs).map(inp => (
                         topInputs.includes(inputs[inp]) ?
-                        <ToggleChip key = {inp} label = { inputs[inp] } chipState={ (getYamahaInput(props.deviceProperties.input)==inputs[inp] ) ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
+                        <ToggleChip key = {inp} label = { inputs[inp] } chipState={ (getYamahaInput(props.device.InputController.input.value)==inputs[inp] ) ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
                         : null
                     ))}
                 </ListItem>
@@ -152,13 +153,13 @@ export default function Receiver(props) {
                         <ToggleChip 
                             key = '7ch Stereo'
                             label= '7ch Stereo'
-                            chipState={ props.deviceProperties.surround=='7ch Stereo' ? "on" : "off" }
+                            chipState={ props.device.SurroundController.surround.value=='7ch Stereo' ? "on" : "off" }
                             onClick={ (e) => handleSurround(e, '7ch Stereo')}
                         />
                         <ToggleChip 
                             key = 'Surround Decoder'
                             label='Surround Decoder'
-                            chipState={ props.deviceProperties.surround=='Surround Decoder' ? "on" : "off" }
+                            chipState={ props.device.SurroundController.surround.value=='Surround Decoder' ? "on" : "off" }
                             onClick={ (e) => handleSurround(e, 'Surround Decoder')}
                         />
                 </ListItem>

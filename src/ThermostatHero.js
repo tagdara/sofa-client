@@ -1,28 +1,18 @@
-import React, { Component, createElement  } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import React from 'react';
+
 import { withData } from './DataContext/withData';
 import { withLayout } from './layout/NewLayoutProvider';
 
 import List from '@material-ui/core/List';
 import TemperatureSensor from './thermostat/TemperatureSensor';
 
-const useStyles = makeStyles({
-        
-    list: {
-        width: '100%',
-    },
-    
-});
-
 function ThermostatHero(props) {
     
-    const classes = useStyles();
-    const device = props.deviceByName(props.Primary)
+    const device = props.deviceByFriendlyName(props.Primary)
         
     return (
         !device ? null :
-        <TemperatureSensor onClick={ () => props.applyLayoutCard('ThermostatLayout') } key={ device.endpointId } name={ device.friendlyName } device={ device } 
-                    deviceProperties={ props.deviceProperties[device.endpointId] } wide={props.wide } />
+        <TemperatureSensor onClick={ () => props.applyLayoutCard('ThermostatLayout') } key={ device.endpointId } device={ device } wide={props.wide } />
     );
 }
 

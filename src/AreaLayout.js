@@ -64,14 +64,11 @@ function AreaLayout(props) {
     function childrenByArea(filter) {
 
         var ads=[]
-        var devs=props.deviceProperties['logic:area:'+props.layout.props.name].children
-        for (var i = 0; i < devs.length; i++) {
-            var dev=props.deviceByEndpointId(devs[i])
+        var children=props.deviceByEndpointId('logic:area:'+props.layout.props.name).AreaController.children.value
+        for (var i = 0; i < children.length; i++) {
+            var dev=props.deviceByEndpointId(children[i])
             if (!filter || filter=='ALL' || (dev && dev.displayCategories.includes(filter))) {
-                var dbe=props.deviceByEndpointId(devs[i])
-                if (dbe) {
-                    ads.push(dbe)
-                }
+                ads.push(dev)
             }
         }
         return ads
@@ -88,9 +85,11 @@ function AreaLayout(props) {
     function filterByType(filter) {
         var lights=[]
         var all=childrenByArea('LIGHT')
-        if (filter=="ALL") { return all.sort(nameSort) }
+        if (filter.toUpperCase()=="ALL") { 
+            return all.sort(nameSort) 
+        }
         for (var j = 0; j < all.length; j++) {
-            if (props.deviceProperties[all[j].endpointId].powerState==filter) {
+            if (all[j].PowerController.powerState.value==filter.toUpperCase()) {
                 lights.push(all[j])
             }
         }
@@ -113,40 +112,28 @@ function AreaLayout(props) {
         return ads
     }
     
-    function OldisAShortcut(scene) {
-        for (var shortcut in areaData.shortcuts) {
-            if (areaData.shortcuts[shortcut]==scene) {
-                return shortcut
-            } 
-        }
-        return 'x'
-    }
-
     function isAShortcut(scene) {
-        if (props.deviceProperties['logic:area:'+props.layout.props.name].shortcuts.indexOf(scene) >= 0) {
-            return props.deviceProperties['logic:area:'+props.layout.props.name].shortcuts.indexOf(scene)
+        if (props.deviceByEndpointId('logic:area:'+props.layout.props.name).AreaController.shortcuts.value.indexOf(scene) >= 0) {
+            return props.deviceByEndpointId('logic:area:'+props.layout.props.name).AreaController.shortcuts.value.indexOf(scene)
         } else {
             return 'x'
         }
-
     }
 
-    
     function sortByShortcuts() {
 
         var outscenes=[]
         var allscenes=childrenByArea('SCENE_TRIGGER')
-        var shortcutlist=[...props.deviceProperties['logic:area:'+props.layout.props.name].shortcuts].reverse()
+        var shortcutlist=[...props.deviceByEndpointId('logic:area:'+props.layout.props.name).AreaController.shortcuts.value].reverse()
         for (var j = 0; j < shortcutlist.length; j++) {
             outscenes.push(props.deviceByEndpointId(shortcutlist[j]))
         }
-        
+
         for (var j = 0; j < allscenes.length; j++) {
             if (!shortcutlist.includes(allscenes[j].endpointId)) {
                 outscenes.push(allscenes[j])
             }
         }
-        
         return outscenes
             
     }
@@ -193,11 +180,10 @@ function AreaLayout(props) {
                         </>
                     } 
             >
-                { filterByType(filter).map((device) =>
-                    <Light key={ device.endpointId } sendAlexaCommand={props.sendAlexaCommand} name={ device.friendlyName }
-                        device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } 
+                { filterByType(filter).map(device =>
+                    <Light key={ device.endpointId } device={ device }
                         brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
-                        />
+                    />
                 )}
             </GridSection>
             <GridSection name={"Scenes"} secondary={
@@ -218,7 +204,7 @@ function AreaLayout(props) {
             >
                 { newScene && <SceneAdd areaid={"logic:area:"+props.layout.props.name} setNewScene={setNewScene} sendAlexaCommand={props.sendAlexaCommand} /> }
                 { sortByShortcuts().map(scene => 
-                    <Scene remove={edit} delete={deleteScene} key={scene.endpointId} endpointId={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} sendAlexaCommand={props.sendAlexaCommand} name={scene.friendlyName} computedLevel={props.deviceProperties['logic:area:'+props.layout.props.name].scene} />
+                    <Scene remove={edit} delete={deleteScene} key={scene.endpointId} endpointId={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} sendAlexaCommand={props.sendAlexaCommand} name={scene.friendlyName} computedLevel={props.deviceByEndpointId('logic:area:'+props.layout.props.name).scene} />
                 )}
             </GridSection>
 

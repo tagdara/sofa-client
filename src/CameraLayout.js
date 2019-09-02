@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { withData } from './DataContext/withData';
 
 import SecurityCamera from './camera/securitycamera';
 import VideocamIcon from '@material-ui/icons/Videocam';
@@ -9,16 +10,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 
-export default function CameraLayout(props) {
+function CameraLayout(props) {
 
-    const [cameras, setCameraList] = useState({});
-    
-    useEffect(() => {
-        fetch('/data/cameras')
-            .then(result=>result.json())
-            .then(data=>setCameraList(data))
-    }, []);
-    
+    const cameras=props.devicesByCategory(['CAMERA'])
+
     function openNVR() {
         var newurl="https://unifi-video.dayton.tech:7443"
         var tabname="_nvr"
@@ -27,8 +22,8 @@ export default function CameraLayout(props) {
     
     return (
         <React.Fragment>
-            { Object.keys(cameras).map(name => 
-                <SecurityCamera key={name} name={ name } cameraSource={cameras[name].source} />
+            { cameras.map(camera => 
+                <SecurityCamera camera={camera} key={camera.endpointId} name={ camera.friendlyName } />
             )}
             <List>
                 <ListItem button onClick={() => openNVR() }>
@@ -41,3 +36,5 @@ export default function CameraLayout(props) {
         </React.Fragment>
     )
 }
+
+export default withData(CameraLayout)

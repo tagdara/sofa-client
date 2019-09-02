@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, withStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -23,22 +23,24 @@ import DeviceIcon from '../DeviceIcon';
 import GridPage from '../GridPage';
 import Grid from '@material-ui/core/Grid';
 
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputBase from '@material-ui/core/InputBase';
+
 const useStyles = makeStyles({
         
     areaInput: {
-        marginTop:0,
         marginLeft: 16,
         flexGrow:1,
         flexBasis:0,
     },
     areaInputstring: {
-        marginTop:0,
         marginLeft: 16,
         flexGrow:1,
         flexBasis:0,
     },
     areaInputdecimal: {
-        marginTop:0,
         marginLeft: 16,
         width: 40,
         overflowX: "hidden",
@@ -79,16 +81,35 @@ const useStyles = makeStyles({
         padding: "12 16",
     },
     bottomListItem: {
-        padding: "0 0 0 42",
+        minHeight: 72,
+        padding: "0 0 0 16",
     },
     flex: {
+        padding: "0 16px 8px 16px",
         display: "flex",
-        flexGrow: 1,
+        alignItems: "center",
     }
 });
 
+const BootstrapInput = withStyles(theme => ({
+    input: {
+        minWidth: '100px',
+        borderRadius: 4,
+        position: 'relative',
+        backgroundColor: theme.palette.background.paper,
+        border: '1px solid #ced4da',
+        fontSize: 16,
+        padding: '10px 26px 10px 12px',
+        transition: theme.transitions.create(['border-color', 'box-shadow']),
+        '&:focus': {
+            borderRadius: 4,
+            borderColor: '#80bdff',
+            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+        },
+    },
+}))(InputBase);
 
-export default function AutomationAction(props) {
+export default function AutomationActionNew(props) {
 
     const classes = useStyles();
     const [parentField, setParentField] = useState({})
@@ -172,57 +193,100 @@ export default function AutomationAction(props) {
         setParentField(parent)
     }
 
+    function hslToRgb(h, s, l){
+        var r, g, b;
+
+        if(s == 0){
+            r = g = b = l; // achromatic
+        }else{
+            var hue2rgb = function hue2rgb(p, q, t){
+                if(t < 0) t += 1;
+                if(t > 1) t -= 1;
+                if(t < 1/6) return p + (q - p) * 6 * t;
+                if(t < 1/2) return q;
+                if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+                return p;
+            }
+
+            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+            var p = 2 * l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+        }
+
+        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+    }
+
     function controlMapper(action, index) {
         
         if (action.name=='endpointId') {
             return <Button onClick={() => props.selectDevice(editVal[action.name])}>{ editVal[action.name] ? editVal[action.name] : 'Choose a device'}</Button>
         } else {
             return <TextField
-                        key={"aat"+index}
-                        className={classes['areaInput'+action.type]}
-                        id={'action'+index}
-                        label={action.name}
-                        margin="dense"
-                        value={editVal[action.name]}
-                        onChange={(e) => editValues(action.name, e.target.value)}
-                    />
+                    key={"aat"+index}
+                    className={classes['areaInput'+action.type]}
+                    id={'action'+index}
+                    label={action.name}
+                    value={editVal[action.name]}
+                    onChange={(e) => editValues(action.name, e.target.value)}
+                />
         }
+    }
+    
+    function handleChange() {
+        console.log('noop change')
+    }
+    
+    function getActions() {
+        var actions=[]
+        for (var i = 0; i < props.device.capabilities.length; i++) {
+            actions=actions.concat(getControllerCommands(props.device.capabilities[i].interface.split('.')[1]))
+
+        }
+        return actions.sort()
+    }
+        
+    function getControllerCommands(controller) {
+        var cmds=[]
+        if (props.directives.hasOwnProperty(controller)) {
+            return Object.keys(props.directives[controller])
+        }
+        //console.log('Did not find',controller,'in',props.directives)
+        return []
     }
 
     return (
         <GridItem nolist={true} elevation={0} wide={true}>
             <Grid item xs={props.wide ? 12 : 6 } >
-                <List>
                 <ListItem className={classes.listItem} >
                     <ListItemIcon onClick={() => props.run(name,index)}><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-                    <ListItemText className={classes.deviceName} primary={props.name} secondary={props.item.controller.replace('Controller','')+" / "+props.item.command} />
+                    <ListItemText className={classes.deviceName} primary={props.name} secondary={props.device.endpointId} />
                 </ListItem>
-                </List>
             </Grid>
             <Grid item xs={props.wide ? 12 : 6 } className={classes.flex} >
-                <List className={classes.flex}>
-                <ListItem className={classes.bottomListItem} >
+                    <Select value={props.item.command} onChange={handleChange} input={<BootstrapInput name="command" id="command-select" />} >
+                        <MenuItem value=""><em>Choose an action</em></MenuItem>
+                    { getActions().map(action => 
+                        <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
+                    )}
+   
+                    </Select>
                 { fields.length>0 &&
                     <React.Fragment>
+
                     { fields.map((action,index) => { return controlMapper(action,index)} )}
                     </React.Fragment>
                 }
-                    { props.remove ?
-                        <ListItemSecondaryAction>
-                            <Button variant="contained" color="primary"  onClick={() => props.delete(props.index)}><CloseIcon /></Button>     
-                        </ListItemSecondaryAction>
-                        : null
+                    { props.remove &&
+                        <Button variant="contained" color="primary"  onClick={() => props.delete(props.index)}><CloseIcon /></Button>     
                     }
                     { props.reorder &&
-                        <ListItemSecondaryAction>
-                            <ButtonGroup variant="contained" size="small" >
-                                <Button disabled={ props.index==0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></Button>
-                                <Button onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></Button>
-                            </ButtonGroup>
-                        </ListItemSecondaryAction>
+                        <ButtonGroup variant="contained" size="small" >
+                            <Button disabled={ props.index==0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></Button>
+                            <Button onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></Button>
+                        </ButtonGroup>
                     }
-                </ListItem>
-                </List>
             </Grid>
         </GridItem>
     )

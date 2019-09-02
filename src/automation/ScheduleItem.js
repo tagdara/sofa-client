@@ -59,11 +59,22 @@ function ScheduleItem(props) {
         return ""
     }
     
+    function titleCase(days) {
+
+        for (var i = 0; i < days.length; i++) {
+            // You do not need to check if i is larger than splitStr length, as your for does that for you
+            // Assign it back to the array
+            days[i] = days[i].charAt(0).toUpperCase() + days[i].substring(1);     
+        }
+        // Directly return the joined string
+        return days.join('-'); 
+}
+    
     function textSched(sched) {
         if (sched.type=='interval') {
             return 'Every '+sched.interval+" "+sched.unit+" at "+timeOnly(sched.start)
         } else {
-            return 'On '+sched.days.join(' ')+" at "+timeOnly(sched.start)
+            return 'On '+titleCase(sched.days)+" at "+timeOnly(sched.start)
         }
     }
 
@@ -75,7 +86,7 @@ function ScheduleItem(props) {
             </ListItem>
             { props.schedule.map( sched =>
             <ListItem>
-                <Avatar onClick={ () => props.select(props.name) }><ScheduleIcon /></Avatar>
+                <ToggleAvatar noback={true} onClick={ () => props.select(props.name) }><ScheduleIcon /></ToggleAvatar>
                 <ListItemText onClick={ () => props.select(props.name) } primary={textSched(sched)} secondary={"Next: "+dateOnly(props.next)+" "+timeOnly(props.next)} />
             </ListItem>
             )}

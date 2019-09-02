@@ -18,13 +18,13 @@ export default function AdapterItem(props) {
 
     return (
         <GridItem wide={props.wide} >
-            <ListItem button onClick={() => props.open(props.name)}>
-                <ToggleAvatar avatarState={props.adapterdata.state.logged.ERROR > 5 ? "on": "closed"}>{props.name.charAt()}</ToggleAvatar>
-                <ListItemText primary={props.name} secondary={props.url}/>
+            <ListItem button onClick={() => props.open(props.adapter.endpointId)}>
+                <ToggleAvatar avatarState={props.adapterstate.logged.ERROR > 5 ? "on": "closed"}>{props.adapter.friendlyName.charAt()}</ToggleAvatar>
+                <ListItemText primary={props.adapter.friendlyName} secondary={props.adapterstate.url}/>
             </ListItem>
-            <ListItem button onClick={ () => props.restart(props.name) }>
+            <ListItem button onClick={ () => props.restart(props.adapter.endpointId) }>
                 <ListItemIcon><ReplayIcon /></ListItemIcon>
-                <ListItemText primary={<Moment format="ddd MMM D h:mm:sa">{props.startup}</Moment>} secondary={props.adapterdata.state.logged.ERROR<1? "No errors" : "Errors: "+props.adapterdata.state.logged.ERROR} />
+                <ListItemText primary={<Moment format="ddd MMM D h:mm:sa">{props.adapterstate.startup}</Moment>} secondary={props.adapterstate.logged.ERROR<1? "No errors" : "Errors: "+props.adapterstate.logged.ERROR} />
             </ListItem>
        </GridItem>
     );

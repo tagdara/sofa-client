@@ -15,6 +15,7 @@ import GridItem from './GridItem';
 
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
+import ErrorBoundary from './ErrorBoundary';
 
 import TuneIcon from '@material-ui/icons/Tune';
 import HistoryIcon from '@material-ui/icons/History';
@@ -77,7 +78,9 @@ function SummaryLayout(props) {
                     <ListItemText primary="Audio Video" secondary={'Control Music and TV'} />
                 </ListItem>
                 <ListItem>
-                    <AvSummary />
+                    <ErrorBoundary>
+                        <AvSummary />
+                    </ErrorBoundary>
                 </ListItem>
             </GridItem>
             <GridItem>
@@ -88,9 +91,11 @@ function SummaryLayout(props) {
                     <ListItemText primary="Lights and Comfort" secondary={'Lighting, Temperature and other devices'} />
                 </ListItem>
                 <ListItem>
-                    <LightSummary />
-                    <DeviceSummary />
-                    <ThermostatSummary />
+                    <ErrorBoundary>
+                        <LightSummary />
+                        <DeviceSummary />
+                        <ThermostatSummary />
+                    </ErrorBoundary>
                 </ListItem>
             </GridItem>
             <GridItem>
@@ -101,9 +106,11 @@ function SummaryLayout(props) {
                     <ListItemText primary="Security" secondary={'Cameras, Locks and Sensors'} />
                 </ListItem>
                 <ListItem>
-                    <SecuritySummary />
-                    <AlertSummary />
-                    <CameraSummary />
+                    <ErrorBoundary>
+                        <SecuritySummary />
+                        <AlertSummary />
+                        <CameraSummary />
+                    </ErrorBoundary>
                 </ListItem>
 
             </GridItem>

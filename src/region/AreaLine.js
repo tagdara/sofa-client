@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { withData } from '../DataContext/withData';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -17,30 +18,33 @@ const useStyles = makeStyles({
     },
 });
 
-export default function AreaLine(props) {
+function AreaLine(props) {
     
     const classes = useStyles();
 
     function runShortcut(level) {
-        props.sendAlexaCommand('', props.areaData.shortcuts[level], "SceneController", "Activate")
+        var scene=props.deviceByEndpointId(props.area.AreaController.shortcuts.value[level])
+        scene.SceneController.directive('Activate')
+        //props.sendAlexaCommand('', props.device.AreaController.shortcuts.value[level], "SceneController", "Activate")
     }
     
     function currentLevel() {
-        if (props.areaData.shortcuts.includes(props.areaData.scene)) {
-            return props.areaData.shortcuts.indexOf(props.areaData.scene)
+        if (props.area.AreaController.shortcuts.value.includes(props.area.AreaController.scene.value)) {
+            return props.area.AreaController.shortcuts.value.indexOf(props.area.AreaController.scene.value)
         }
         return 0
     }
 
     return (
         <ListItem className={classes.areaListItem}>
-            <ListItemText className={classes.halves} onClick={ () => props.selectArea(props.name)}>{props.name} </ListItemText>
-            { props.areaData.shortcuts.length>0 &&
+            <ListItemText className={classes.halves} onClick={ () => props.selectArea(props.area.friendlyName)}>{props.area.friendlyName} </ListItemText>
+            { props.area.AreaController.shortcuts.value.length>0 &&
                 <ListItemSecondaryAction>
-                    <DotLevel theme={props.theme} half={true} level={currentLevel()} select={runShortcut} />
+                    <DotLevel half={true} level={currentLevel()} select={runShortcut} />
                 </ListItemSecondaryAction>
             }
         </ListItem>
     );
 }
 
+export default withData(AreaLine)

@@ -6,6 +6,7 @@ import { withData } from './DataContext/withData';
 import Button from '@material-ui/core/Button';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
+import ErrorBoundary from './ErrorBoundary';
 
 import IconButton from '@material-ui/core/IconButton';
 
@@ -45,35 +46,59 @@ const useStyles = makeStyles({
 function MoreDevicesLayout(props) {
     
     const classes = useStyles();
-
+    const switches = devsWithPowerState(props.devicesByCategory('SWITCH'))
+    
+    function devsWithPowerState(devs) {
+        var outdevs=[]
+        for (var j = 0; j < devs.length; j++) {
+            if (devs[j].hasOwnProperty('PowerController')) {
+                outdevs.push(devs[j])
+            }
+        }
+        return outdevs
+    }
+ 
     return (
         <React.Fragment>
             <GridSection name={'Shades'}>
-                <VirtualList sendAlexaCommand={props.sendAlexaCommand} />
+                <ErrorBoundary wide={props.wide}>
+                    <VirtualList sendAlexaCommand={props.sendAlexaCommand} />
+                </ErrorBoundary>
             </GridSection>
-            {  props.devicesByCategory('DEVICE') &&
+            {  props.devicesByCategory('SWITCH') &&
             <GridSection name={"Other Devices"} >
-                <DeviceList devices={ props.devicesByCategory('DEVICE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('DEVICE')) } sendAlexaCommand={props.sendAlexaCommand} />
+                <ErrorBoundary wide={props.wide}>
+                    <DeviceList devices={ switches } />
+                </ErrorBoundary>
+
             </GridSection>
             }
+            { props.devicesByCategory('MODE') && 
+            <GridSection name={"Modes"} >
+                <ErrorBoundary wide={props.wide}>
+                    <ModeList devices={ props.devicesByCategory('MODE') } />
+                </ErrorBoundary>
 
+            </GridSection>
+            }
             { props.devicesByCategory('PC') &&
             <GridSection name={"Computers"} >
-                <ComputerList devices={ props.devicesByCategory('PC') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('PC')) } sendAlexaCommand={props.sendAlexaCommand} />
+                <ErrorBoundary wide={props.wide}>
+                    <ComputerList devices={ props.devicesByCategory('PC') }  />
+                </ErrorBoundary>
+
             </GridSection>
             }
 
             { props.devicesByCategory('OTHER') &&
             <GridSection name={"Services"} >
-                <DeviceList devices={ props.devicesByCategory('OTHER') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('OTHER')) } sendAlexaCommand={props.sendAlexaCommand} />
+                <ErrorBoundary wide={props.wide}>
+                    <DeviceList devices={ props.devicesByCategory('OTHER') } />
+                </ErrorBoundary>
+
             </GridSection>
             }
 
-            { props.devicesByCategory('MODE') && 
-            <GridSection name={"Modes"} >
-                <ModeList devices={ props.devicesByCategory('MODE') } deviceProperties={ props.propertiesFromDevices(props.devicesByCategory('MODE')) } sendAlexaCommand={props.sendAlexaCommand} />
-            </GridSection>
-            }
         </React.Fragment>
     )
 

@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => {
         },
         thinmargin: {
             margin: 2,
-            padding: "4px !important",
+            padding: 0,
         },
         normal: {
             padding: "4px !important",
@@ -95,5 +95,6 @@ export default function GridItem(props) {
 GridItem.defaultProps = {
     elevation: 0,
     wide: false,
-    thinmargin: false
+    thinmargin: false,
+    nopaper: false,
 }

@@ -7,7 +7,7 @@ import NewAppBar from "./NewAppBar";
 import SofaAppContent from "./SofaAppContent";
 import ErrorBoundary from './ErrorBoundary'
 import CssBaseline from "@material-ui/core/CssBaseline";
-import DataProvider from './DataContext/NewDataProvider';
+import DataProvider from './DataContext/DataProvider';
 import LayoutProvider from './layout/NewLayoutProvider';
 import UserProvider from './user/UserProvider';
 
@@ -51,18 +51,18 @@ function MainApp(props) {
     };
 
     return (
-        <DataProvider>
             <UserProvider>
                 <LayoutProvider>
                     <NewAppBar open={handleDrawerOpen} mobile={isMobile}/>
                     { !1==1 && <Toolbar /> }
                     <ErrorBoundary>
-                        <SofaAppContent />
+                        <DataProvider>
+                            <SofaAppContent />
+                        </DataProvider>
                     </ErrorBoundary>    
                    <CssBaseline />
                 </LayoutProvider>
             </UserProvider>
-        </DataProvider>
     )
 }
 

@@ -34,7 +34,7 @@ function SchedulesLayout(props) {
     }
     
     function selectSchedule(schedule) {
-        props.applyBack('SchedulesLayout',{})
+        props.applyBackPage('SchedulesLayout',{})
         props.applyLayoutCard('AutomationLayout', {'name':schedule} )
     }   
     

@@ -24,8 +24,8 @@ export default function LightSliderTemperature(props) {
     const classes = useStyles();
 
     useEffect(() => {
-        setColorTemperatureInKelvin(props.colorTemperatureInKelvin)
-    }, [props.colorTemperatureInKelvin])
+        setColorTemperatureInKelvin(props.device.ColorTemperatureController.colorTemperatureInKelvin.value)
+    }, [props.device.ColorTemperatureController.colorTemperatureInKelvin.value])
 
     
     function handlePreColorTemperatureChange(value) {
@@ -33,7 +33,7 @@ export default function LightSliderTemperature(props) {
     }; 
 
     function handleColorTemperatureChange(value) {
-        props.sendAlexaCommand('', props.endpointId, "ColorTemperatureController", "SetColorTemperature", { "colorTemperatureInKelvin": value} )
+        props.device.ColorTemperatureController.directive('SetColorTemperature', { "colorTemperatureInKelvin": value} )
     }; 
 
     return (

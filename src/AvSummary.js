@@ -32,10 +32,8 @@ function AvSummary(props) {
         var devs=props.devicesByCategory('SPEAKER')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
-            if (props.deviceProperties[devs[i].endpointId].hasOwnProperty("playbackState")) {
-                if (props.deviceProperties[devs[i].endpointId].playbackState=='PLAYING') {
-                    ondevs+=1
-                }
+            if (devs[i].MusicController.playbackState.value=='PLAYING') {
+                ondevs+=1
             }
         }
         setSpeakerCount(ondevs)
@@ -43,10 +41,8 @@ function AvSummary(props) {
         var devs=props.devicesByCategory('RECEIVER')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
-            if (props.deviceProperties[devs[i].endpointId].hasOwnProperty("powerState")) {
-                if (props.deviceProperties[devs[i].endpointId].powerState=='ON') {
-                    ondevs+=1
-                }
+            if (devs[i].PowerController.powerState.value=='ON') {
+                ondevs+=1
             }
         }
         setReceiverCount(ondevs)
@@ -54,15 +50,13 @@ function AvSummary(props) {
         var devs=props.devicesByCategory('TV')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
-            if (props.deviceProperties[devs[i].endpointId].hasOwnProperty("powerState")) {
-                if (props.deviceProperties[devs[i].endpointId].powerState=='ON') {
-                    ondevs+=1
-                }
+            if (devs[i].PowerController.powerState.value=='ON') {
+                ondevs+=1
             }
         }
         setTvCount(ondevs)
 
-    }, [props.deviceProperties])
+    }, [props.devices])
     
     return (
         <>

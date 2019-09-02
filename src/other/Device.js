@@ -17,48 +17,37 @@ import GridItem from '../GridItem';
 
 export default function Device(props) {
     
-    const [powerState, setPowerState] = useState(props.deviceProperties.powerState);
+    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
 
     useEffect(() => {
-        setPowerState(props.deviceProperties.powerState)
-    }, [props.deviceProperties])
+        setPowerState(props.device.PowerController.powerState.value)
+    }, [props.device.PowerController.powerState.value])
 
     function handlePress(commandName) {
         if (commandName=="OFF") {
-            props.sendAlexaCommand(props.name, props.device.endpointId, 'PowerController', 'TurnOff')
+            props.device.PowerController.directive('TurnOff')
         } else if (commandName=="ON") {
-            props.sendAlexaCommand(props.name, props.device.endpointId, 'PowerController', 'TurnOn')
+            props.device.PowerController.directive('TurnOn')
         }
     }   
     
     function handlePowerChange(event) {
         setPowerState(event.target.checked);
         if (event.target.checked) {
-            props.sendAlexaCommand(props.name, props.device.endpointId, 'PowerController', 'TurnOn')
+            props.device.PowerController.directive('TurnOn')
         } else {
-            props.sendAlexaCommand(props.name, props.device.endpointId, 'PowerController', 'TurnOff')
+            props.device.PowerController.directive('TurnOff')
         }
     }; 
 
     return (
         <GridItem>
             <ListItem>
-                <ToggleAvatar avatarState={ props.deviceProperties.powerState=='ON' ? 'on' : 'off'}><TuneIcon /></ToggleAvatar>
-                <ListItemText primary={props.name}/>
-                { props.deviceProperties.hasOwnProperty('powerState') ?
-                    <ListItemSecondaryAction>
-                        <Switch color="primary" checked={props.deviceProperties.powerState=='ON'} onChange={handlePowerChange} />
-                    </ListItemSecondaryAction>
-                :
-                    <ListItemSecondaryAction>
-                        <IconButton onClick={ () => handlePress('ON') }>
-                            <CheckIcon />
-                        </IconButton>
-                        <IconButton onClick={ () => handlePress('OFF') }>
-                            <CloseIcon />
-                        </IconButton>
-                    </ListItemSecondaryAction>
-                }
+                <ToggleAvatar avatarState={ props.device.PowerController.powerState.value=='ON' ? 'on' : 'off'}><TuneIcon /></ToggleAvatar>
+                <ListItemText primary={props.device.friendlyName}/>
+                <ListItemSecondaryAction>
+                    <Switch color="primary" checked={props.device.PowerController.powerState.value=='ON'} onChange={handlePowerChange} />
+                </ListItemSecondaryAction>
            </ListItem>
         </GridItem> 
     );

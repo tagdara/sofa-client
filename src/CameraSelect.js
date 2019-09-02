@@ -1,33 +1,15 @@
 import React, { memo } from "react";
 import { useState, useEffect } from 'react';
+import { withData } from './DataContext/withData';
+
 import SecurityCamera from './camera/securitycamera';
 
 function CameraSelect(props) {
 
-    const [cameras, setCameras] = useState({});
-    const [cameraData, setCameraData] = useState({});
-    const [currentCamera, setCurrentCamera] = useState(null);
-    
-    useEffect(() => {
-  	    fetch('/data/cameras')
- 		    .then(result=>result.json())
- 		    .then(data=>initialSetup(data))
-    },[])
+    //const [cameras, setCameras] = useState({});
+    const cameras=props.devicesByCategory(['CAMERA'])
+    const [currentCamera, setCurrentCamera] = useState(cameras[0]);
 
-    function initialSetup(data) {
-        setCameras(Object.keys(data))
-        setCameraData(data)
-        if (Object.keys(data).length>0) {
-            if (props.default && Object.keys(data).includes(props.default)) {
-                setCurrentCamera(props.default)
-            } else {
-                setCurrentCamera(Object.keys(data)[0])
-            }
-        } else {
-            setCurrentCamera(null)
-        }
-    }
-    
     function nextCamera() {
         var nextcam=cameras.indexOf(currentCamera)+1
         if (nextcam>cameras.length-1) { nextcam=0; }
@@ -45,11 +27,11 @@ function CameraSelect(props) {
     return (
         <React.Fragment>
             { currentCamera!=null ?
-            <SecurityCamera wide={props.wide} cameraSource={cameraData[currentCamera].source} selectButtons={true} key={ currentCamera } 
-                            name={ currentCamera } nextCamera={nextCamera} prevCamera={prevCamera} />
+            <SecurityCamera wide={props.wide} camera={currentCamera} selectButtons={true} key={ currentCamera.endpointId } 
+                            name={ currentCamera.friendlyName } nextCamera={nextCamera} prevCamera={prevCamera} />
             :null }
         </React.Fragment> 
     );
 }
 
-export default memo(CameraSelect);
+export default withData(CameraSelect);

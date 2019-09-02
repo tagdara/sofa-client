@@ -16,9 +16,11 @@ import IconButton from '@material-ui/core/IconButton';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
+import Light from './light/Light';
 import AreaLine from './region/AreaLine';
 import ToggleAvatar from './ToggleAvatar';
 import GridItem from './GridItem';
+import GridSection from './GridSection';
 
 const useStyles = makeStyles({
         
@@ -123,16 +125,35 @@ function RegionHero(props) {
     function getRegionAreas() {
 
         var areas=[]
-        if (props.deviceProperties['logic:area:'+props.region]) {
-            var devstate=props.deviceProperties['logic:area:'+props.region].children
-            if (devstate) {
-                for (var i = 0; i < devstate.length; i++) {
-                    var child=props.deviceByEndpointId(devstate[i])
-                    if (child.displayCategories.includes('AREA')) {
-                        areas.push(child)
-                    }
+        var area=props.deviceByEndpointId('logic:area:'+props.region)
+        if (!area) { return [] }
+        var children=props.deviceByEndpointId('logic:area:'+props.region).AreaController.children.value
+        if (children) {
+            for (var i = 0; i < children.length; i++) {
+                var child=props.deviceByEndpointId(children[i])
+                if (child && child.displayCategories.includes('AREA')) {
+                    areas.push(child)
                 }
             }
+        }
+
+        return areas
+    }
+    
+    function getRegionLights() {
+
+        var areas=[]
+        var area=props.deviceByEndpointId('logic:area:'+props.region)
+        if (!area) { return [] }
+        var children=props.deviceByEndpointId('logic:area:'+props.region).AreaController.children.value
+        if (children) {
+            for (var i = 0; i < children.length; i++) {
+                var child=props.deviceByEndpointId(children[i])
+                if (child && child.displayCategories.includes('LIGHT')) {
+                    areas.push(child)
+                }
+            }
+            return props.sortByName(areas)
         }
         return areas
     }
@@ -156,10 +177,14 @@ function RegionHero(props) {
                 </ListItem>
             }
             {   getRegionAreas().map((area) => 
-                <AreaLine theme={props.theme} area={ area } name={ area.friendlyName } areaData={ props.deviceProperties[area.endpointId] } sendAlexaCommand={props.sendAlexaCommand} key={ area.endpointId } shortcuts={area.shortcuts} selectArea={selectArea} ></AreaLine>
+                <AreaLine area={ area } key={ area.endpointId } selectArea={selectArea} ></AreaLine>
             )}
+            {   getRegionLights().map((light) => 
+                <Light xs={12} nopaper={true} thinmargin={true} device={ light } key={ light.endpointId } />
+            )}
+
         </GridItem>
     );
 }
 
-export default React.memo(withData(withLayout(RegionHero)));
+export default withData(withLayout(RegionHero));

@@ -12,6 +12,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import Paper from '@material-ui/core/Paper';
 import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
 
 import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 import LightbulbOutlineIcon from '../LightbulbOutline';
@@ -76,6 +77,7 @@ const useStyles = makeStyles({
     },
     listItem: {
         maxHeight: 64,
+        width: "100%",
     }
 });
 
@@ -86,28 +88,26 @@ export default function Light(props) {
     
     function handlePowerChange(event){
         if (event.target.checked) {
-            props.sendAlexaCommand(props.name, props.device.endpointId, "PowerController", "TurnOn")
+            props.device.PowerController.directive('TurnOn')
         } else {
-            props.sendAlexaCommand(props.name, props.device.endpointId, "PowerController", "TurnOff")
+            props.device.PowerController.directive('TurnOff')
         }
     }; 
     
     function isReachable() {
-        if (props.deviceProperties.hasOwnProperty('connectivity')) {
-            if (props.deviceProperties.connectivity.hasOwnProperty('value')) {
-                if (props.deviceProperties.connectivity.value=='UNREACHABLE') {
-                    return false
-                }
-            }
+        if (props.device.hasOwnProperty('EndpointHealth')) {
+            if (props.device.EndpointHealth.connectivity.value.value=='OK') { return true }
+            return false
         }
+        console.log('no endpoint health', props.device)
         return true
     }
     
     return (
-        <GridItem nopaper={false} >
+        <GridItem nopaper={props.nopaper} xs={props.xs} thinmargin={props.thinmargin} >
             <ListItem className={classes.listItem} >
                 { isReachable() ?
-                    <ToggleAvatar noback={true} avatarState={props.deviceProperties.powerState=='ON' ? "on" : "off" } >
+                    <ToggleAvatar noback={true} avatarState={props.device.PowerController.powerState.value=='ON' ? "on" : "off" } >
                         <LightbulbOutlineIcon className={classes.iconSize} />
                     </ToggleAvatar>
                 :
@@ -115,34 +115,36 @@ export default function Light(props) {
                         <CloudOffIcon className={classes.iconSize} />
                     </ToggleAvatar>
                 }                
-                <ListItemText onClick={() => setShowAll(!showAll) } primary={props.name} secondary={ isReachable() ? '': 'Off at switch' } />
+                <ListItemText onClick={() => setShowAll(!showAll) } primary={props.device.friendlyName} secondary={ isReachable() ? '': 'Off at switch' } />
                 { isReachable() &&
-                    <Switch color="primary" className={classes.lightSwitch} checked={props.deviceProperties.powerState=='ON'} onChange={handlePowerChange} />
+                    <Switch color="primary" className={classes.lightSwitch} checked={props.device.PowerController.powerState.value=='ON'} onChange={handlePowerChange} />
                 }
             </ListItem>
             { !props.brightControl && !showAll ? null :
-                ( props.deviceProperties.brightness===undefined ?
+                ( !props.device.hasOwnProperty('BrightnessController') ?
                     <ListItem className={classes.placeholder} />
                 :
-                    <LightSliderBrightness sendAlexaCommand={props.sendAlexaCommand} name={props.name} endpointId={props.device.endpointId} powerState={props.deviceProperties.powerState=='ON'} brightness={props.deviceProperties.brightness}/>
+                    <LightSliderBrightness device={props.device} />
                 )
             }
             { !props.tempControl && !showAll ? null :
-                ( props.deviceProperties.colorTemperatureInKelvin===undefined ?
+                ( !props.device.hasOwnProperty('ColorTemperatureController') ?
                     <ListItem className={classes.placeholder} />
                 :
-                <LightSliderTemperature sendAlexaCommand={props.sendAlexaCommand} name={props.name} endpointId={props.device.endpointId} powerState={props.deviceProperties.powerState=='ON'} colorTemperatureInKelvin={props.deviceProperties.colorTemperatureInKelvin}/>
+                <LightSliderTemperature device={props.device}/>
                 )
             }
             { !props.colorControl && !showAll ? null :
-                ( props.deviceProperties.color===undefined ?
+                ( !props.device.hasOwnProperty('ColorController') ?
                     <ListItem className={classes.placeholder} />
                 :
-                    <LightSliderColor sendAlexaCommand={props.sendAlexaCommand} name={props.name} endpointId={props.device.endpointId} brightness={props.deviceProperties.brightness} color={props.deviceProperties.color}/>
+                    <LightSliderColor device={props.device}/>
                 )
             }
         </GridItem>
     );
 }
 
-
+Light.defaultProps = {
+    nopaper: false,
+}

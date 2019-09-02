@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DataContext } from "./NewDataProvider";
+import { DataContext } from "./DataProvider";
 
 export function withDevices(Component) {
     return function DataComponent(props) {
@@ -8,8 +8,7 @@ export function withDevices(Component) {
                 { context => 
                             <Component {...props} {...context} deviceByEndpointId={context.deviceByEndpointId} controllerProperties={context.controllerProperties} 
                                 virtualDevices={context.virtualDevices} deviceByName={context.deviceByName} devicesByCategory={context.devicesByCategory} 
-                                directives={context.directives} sendAlexaCommand={context.sendAlexaCommand} 
-                                devices={context.devicesByCategory(props.Category)} 
+                                directives={context.directives} devices={context.devicesByCategory(props.Category)} 
                             />
                 }
             </DataContext.Consumer>

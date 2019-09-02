@@ -20,28 +20,32 @@ function TemperatureSensor(props) {
     }
     
     function summarizeThermostatSetting() {
-        if (props.deviceProperties.hasOwnProperty('thermostatMode')) {
-            if (props.deviceProperties.thermostatMode=='OFF') {
+        if (props.device.hasOwnProperty('ThermostatController')) {
+            if (props.device.ThermostatController.thermostatMode.value=='OFF') {
                 return 'Off'
             }
         } else {
             return null
         }
-        if (props.deviceProperties.hasOwnProperty('upperSetpoint') && props.deviceProperties.hasOwnProperty('upperSetpoint')) {
-            return 'Range set to '+props.deviceProperties.lowerSetpoint.value+'° - '+props.deviceProperties.upperSetpoint.value+'°'
+    
+        if (props.device.ThermostatController.hasOwnProperty('upperSetpoint') && props.device.ThermostatController.upperSetpoint.value ) {
+            return 'Range set to '+props.device.ThermostatController.lowerSetpoint.value.value+'° - '+props.device.ThermostatController.upperSetpoint.value.value+'°'
         }
-        if (props.deviceProperties.hasOwnProperty('targetSetpoint')) {
-            return 'Heat set to '+props.deviceProperties.targetSetpoint.value+'°'
+        if (props.device.ThermostatController.hasOwnProperty('targetSetpoint') && props.device.ThermostatController.targetSetpoint.value) {
+            return 'Heat set to '+props.device.ThermostatController.targetSetpoint.value.value+'°'
         }
         return ''
     }
     
     return (
-        props.deviceProperties.hasOwnProperty('temperature') &&
+        
         <GridItem wide={props.wide} >
             <ListItem onClick={props.onClick}>
-                <ToggleAvatar onClick={ () => switchToHistory()} avatarState={ tempColor(props.deviceProperties.temperature.value)}>{props.deviceProperties.temperature.value}</ToggleAvatar>
-                <ListItemText primary={props.name} secondary={summarizeThermostatSetting()} />
+                <ToggleAvatar onClick={ () => switchToHistory()} 
+                    avatarState={ props.device.TemperatureSensor.temperature.value ? tempColor(props.device.TemperatureSensor.temperature.value.value) : 'notready'}>
+                    {props.device.TemperatureSensor.temperature.value ? props.device.TemperatureSensor.temperature.value.value : '--'}
+                </ToggleAvatar>
+                <ListItemText primary={props.device.friendlyName} secondary={summarizeThermostatSetting()} />
            </ListItem>
        </GridItem>
     );

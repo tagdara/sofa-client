@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => {
 
 function ThermostatSummary(props) { 
     
-    const device = props.deviceByName('Main Thermostat')
+    const device = props.deviceByFriendlyName('Main Thermostat')
     const classes = useStyles();
     
     function tempColor(temp) {
@@ -51,15 +51,9 @@ function ThermostatSummary(props) {
     
     return (
             <GridItem wide={false} nopaper={true}>
-                { device && props.deviceProperties[device.endpointId].hasOwnProperty('temperature') ?
-                <Button variant="outlined" color="primary" className={tempColor(props.deviceProperties[device.endpointId].temperature.value)} onClick={ () => props.applyLayoutCard('ThermostatLayout') }>
-                    {props.deviceProperties[device.endpointId].temperature.value}&deg;
+                <Button variant="outlined" color="primary" className={tempColor(device.TemperatureSensor.temperature.value.value)} onClick={ () => props.applyLayoutCard('ThermostatLayout') }>
+                    {device.TemperatureSensor.temperature.value.value}&deg;
                 </Button>
-                :
-                <Button variant="outlined" disabled className={classes.mid} onClick={ () => props.applyLayoutCard('ThermostatLayout') }>
-                    --&deg;
-                </Button>
-                }
             </GridItem>
     );
 }

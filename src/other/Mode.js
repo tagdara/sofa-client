@@ -13,24 +13,24 @@ import GridItem from '../GridItem';
 
 export default function Mode(props) {
 
-    const [powerState, setPowerState] = useState(props.deviceProperties.powerState);
+    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
     
     function handlePowerChange(event) {
         setPowerState(event.target.checked);
         if (event.target.checked) {
-            props.sendAlexaCommand(props.name, 'logic:mode:'+props.name, 'PowerController', 'TurnOn')
+            props.device.PowerController.directive('TurnOn')
         } else {
-            props.sendAlexaCommand(props.name, 'logic:mode:'+props.name, 'PowerController', 'TurnOff')
+            props.device.PowerController.directive('TurnOff')
         }
     }; 
     
     return (
         <GridItem >
             <ListItem>
-                <ToggleAvatar avatarState={props.deviceProperties.powerState=='ON' ? 'on' : 'off'}><TuneIcon /></ToggleAvatar>
-                <ListItemText primary={props.name}/>
+                <ToggleAvatar avatarState={props.device.PowerController.powerState.value=='ON' ? 'on' : 'off'}><TuneIcon /></ToggleAvatar>
+                <ListItemText primary={props.device.friendlyName}/>
                 <ListItemSecondaryAction>
-                    <Switch color="primary" checked={props.deviceProperties.powerState=='ON'} onChange={handlePowerChange} />
+                    <Switch color="primary" checked={props.device.PowerController.powerState.value=='ON'} onChange={handlePowerChange} />
                 </ListItemSecondaryAction>
             </ListItem>
         </GridItem>

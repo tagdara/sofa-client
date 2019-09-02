@@ -8,7 +8,7 @@ function TvHero(props) {
     return (
         <React.Fragment>
             { props.devices.map(device => 
-                <Television wide={props.wide} key={device.endpointId} name={ device.friendlyName } device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } sendAlexaCommand={props.sendAlexaCommand} />
+                <Television wide={props.wide} key={device.endpointId} device={ device } />
             )}
         </React.Fragment>
     );

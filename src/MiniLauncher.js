@@ -22,12 +22,12 @@ function MiniLauncher(props) {
     useEffect(() => {
         var ondevs=0
         for (var i = 0; i < props.devices.length; i++) {
-            if (props.deviceProperties[props.devices[i].endpointId].powerState=='ON') {
+            if (props.devices[i].hasOwnProperty('PowerController') && props.devices[i].PowerController.powerState.value=='ON') {
                 ondevs+=1
             }
         }
         setOnCount(ondevs)
-    }, [props.deviceProperties])
+    }, [props.devices])
 
     return (
         <GridItem wide={props.wide}>

@@ -9,26 +9,26 @@ import ToggleAvatar from '../ToggleAvatar'
 
 export default function SonosVolume(props) {
 
-    const [volume, setVolume] = useState(props.deviceProperties.volume);
+    const [volume, setVolume] = useState(props.player.SpeakerController.volume.value);
  
     function handlePreVolumeChange(event) {
         setVolume(event);
     }; 
 
     function handleVolumeChange(event) {
-        props.sendAlexaCommand(props.name, props.endpointId, 'SpeakerController', "SetVolume", { "volume" : event} )
+        props.player.SpeakerController.directive("SetVolume", { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        props.sendAlexaCommand(props.name, props.endpointId, 'SpeakerController',"SetMute", { "muted" : !props.deviceProperties.muted } )
+        props.player.SpeakerController.directive("SetMute", { "mute" : !props.player.SpeakerController.mute.value } )
     }; 
 
     return (
         <ListItem >
-            <ToggleAvatar noback={true} onClick={ () => handleMuteChange()} avatarState={ (!props.deviceProperties.muted && props.deviceProperties.playbackState=='PLAYING') ? 'on': 'off'}>
-                { props.deviceProperties.muted ? <VolumeOffIcon /> : <VolumeUpIcon /> }
+            <ToggleAvatar noback={true} onClick={ () => handleMuteChange()} avatarState={ (!props.player.SpeakerController.mute.value && props.player.MusicController.playbackState.value=='PLAYING') ? 'on': 'off'}>
+                { props.player.SpeakerController.mute.value  ? <VolumeOffIcon /> : <VolumeUpIcon /> }
             </ToggleAvatar>
-            <SofaSlider unit={"%"} name={props.name} value={props.deviceProperties.volume} preChange={handlePreVolumeChange} change={handleVolumeChange} />
+            <SofaSlider unit={"%"} name={props.player.friendlyName} value={props.player.SpeakerController.volume.value } preChange={handlePreVolumeChange} change={handleVolumeChange} />
         </ListItem>
     );
 

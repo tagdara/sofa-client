@@ -64,15 +64,15 @@ function Sonos(props) {
     }
  
     return (
-        props.player.endpointId===props.deviceProperties.input || props.deviceProperties.input==''? 
+        props.player.endpointId===props.player.InputController.input.value || props.player.InputController.input.value==''? 
             <GridItem wide={props.wide}>
                 { props.small ? null :
                     <React.Fragment>
                         <List className={classes.list} >
                         <ListItem className={classes.topListItem}> 
-                            <ListItemText variant="body2" primary={props.name}  onClick={ () => {  props.changePlayer(props.endpointId)} }/>
+                            <ListItemText variant="body2" primary={props.player.friendlyName}  onClick={ () => {  props.changePlayer(props.endpointId)} }/>
                         </ListItem>
-                        {props.deviceProperties.linked.map(link =>
+                        {props.player.MusicController.linked.value.map(link =>
                             <ListItem className={classes.topListItem} key={ link+"link" }>
                                 <ListItemText variant="body2" primary={getPlayerByEndpointId(link)} />
                             </ListItem>)
@@ -83,13 +83,13 @@ function Sonos(props) {
                 }
                 <ListItem className={classes.bottomListItem} onClick={ () => props.changePlayer(props.player.endpointId)} >
                     <ListItemAvatar>
-                        <Avatar onError={addDefaultSrc} src={props.deviceProperties.art} />
+                        <Avatar onError={addDefaultSrc} src={props.player.MusicController.art.value} />
                     </ListItemAvatar>
-                    { props.deviceProperties.title!='' ?
-                        <ListItemText primary={ props.small ? props.name : props.deviceProperties.title } 
-                                        secondary={props.small ? props.deviceProperties.title+" - "+props.deviceProperties.artist : props.deviceProperties.artist }/>
+                    { props.player.MusicController.title.value!='' ?
+                        <ListItemText primary={ props.small ? props.player.friendlyName : props.player.MusicController.title.value } 
+                                        secondary={props.small ? props.player.MusicController.title.value+" - "+props.player.MusicController.artist.value : props.player.MusicController.artist.value }/>
                         :
-                        <ListItemText primary={ props.small ? props.name : 'No music selected.'} secondary={ props.small ? 'No music selected.' : null } />
+                        <ListItemText primary={ props.small ? props.player.friendlyName : 'No music selected.'} secondary={ props.small ? 'No music selected.' : null } />
                     }
                     { !props.small ? null : 
                         <ListItemSecondaryAction>

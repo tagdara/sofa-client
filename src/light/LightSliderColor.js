@@ -64,26 +64,22 @@ export default function LightSliderColor(props) {
     
     useEffect(() => {
         if (!delaySet) {
-            setColor(sb2sl(props.color))
+            setColor(sb2sl(props.device.ColorController.color.value))
         }
-    }, [props.color]);
+    }, [props.device.ColorController.color.value]);
 
 
     function handleColorSliderChange(color, event) {
-        console.log('sliderchange')
-        delaySliderUpdates()    // hue bulbs are slow on HSB
         setColor(color.hsl);
         var sendsb=sl2sb(color.hsl)
-        sendsb.brightness=props.brightness/100
-        props.sendAlexaCommand(props.name, props.endpointId, "ColorController", "SetColor", { "color": sendsb } )
+        sendsb.brightness=props.device.BrightnessController.brightness.value/100
+        props.device.ColorController.directive('SetColor',{ "color": sendsb })
     }
 
     function handleColorChange(hsb) {
-        console.log('colorchange')
-        delaySliderUpdates()   // hue bulbs are slow on HSB
         setColor(sb2sl(hsb));
-        hsb.brightness=props.brightness/100
-        props.sendAlexaCommand(props.name, props.endpointId, "ColorController", "SetColor", {"color":hsb} )
+        hsb.brightness=props.device.BrightnessController.brightness.value/100
+        props.device.ColorController.directive('SetColor',{ "color": hsb })
     }
     
     function delaySliderUpdates() {

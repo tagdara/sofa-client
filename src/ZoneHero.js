@@ -19,55 +19,64 @@ function ZoneList(props) {
     const [securityZones, setSecurityZones] = useState([])
     const [automationZones, setAutomationZones] = useState([])
 
-    useEffect(() => {
-  	    fetch('/data/security')
- 		    .then(result=>result.json())
-            .then(result=>{ setSecurityZones(result['Security']); setAutomationZones(result['Automation']); })
-    }, []);
+    function getSecurityZones() {
+        var secZones=[]
+        for (var i = 0; i < props.devices.length; i++) { 
+            if (!props.devices[i].description.includes('(Automation)')) {
+                secZones.push(props.devices[i])
+            } 
+        }
+        return secZones
+    }
+    
+    function getAutomationZones() {
+        var autoZones=[]
+        for (var i = 0; i < props.devices.length; i++) { 
+            if (props.devices[i].description.includes('(Automation)')) {
+                autoZones.push(props.devices[i])
+            } 
+        }
+        return autoZones
+    }
 
     function zoneReady() {
         
-        if (!securityZones || Object.keys(props.deviceProperties).length==0) {
+        if (!getSecurityZones()) {
             return false
-        } else {
-            for (var dev in props.deviceProperties) {
-                if (props.deviceProperties[dev].detectionState==undefined) {
-                    return false
-                }
-            }
-        }
+        } 
         return true
     }
     
     function zoneCount(condition) {
         var count=0;
-        for (var dev in props.deviceProperties) {
-            if (condition=='all' || props.deviceProperties[dev].detectionState==condition) {
-                if (securityZones && securityZones.includes(dev)) {
-                    count=count+1
-                }
+        getSecurityZones().map(zone => {
+            var controller=null
+            if (zone.hasOwnProperty('ContactSensor')) {
+                controller=zone.ContactSensor
+            } else if (zone.hasOwnProperty('MotionSensor')) {
+                controller=zone.MotionSensor
+            } 
+            if (controller && (condition=='all' || controller.detectionState.value==condition.toUpperCase())) {
+                count=count+1
             }
-        }
+        })
         return count
     }
 
 
     function listOfOpenZones() {
         var openzones=''
-        for (var dev in props.devices) {
-            var device=props.devices[dev]
-            if (props.deviceProperties[device.endpointId].hasOwnProperty('detectionState')) {
-                if (props.deviceProperties[device.endpointId].detectionState=='open') {
-                    if (securityZones.includes(device.friendlyName)) {
-                        if (openzones) {
-                            openzones=openzones+", "+device.friendlyName
-                        } else {
-                            openzones=device.friendlyName
-                        }
-                    }
-                }
+        getSecurityZones().map(zone => {
+            var controller=null
+            if (zone.hasOwnProperty('ContactSensor')) {
+                controller=zone.ContactSensor
+            } else if (zone.hasOwnProperty('MotionSensor')) {
+                controller=zone.MotionSensor
             }
-        }
+            if (controller &&  controller.detectionState.value=='DETECTED') {
+                openzones=openzones+zone.friendlyName+" "
+            }
+        })
         return openzones
     }
 
@@ -78,7 +87,7 @@ function ZoneList(props) {
                     <ToggleAvatar noback={!zoneOpen} avatarState={ (zoneOpen) ? "open" : "closed" } >
                         { zoneOpen ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
                     </ToggleAvatar>
-                    <ListItemText primary={zoneOpen ? zoneCount('open')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
+                    <ListItemText primary={zoneOpen ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
                 </ListItem>
                 :
                 <ListItem>

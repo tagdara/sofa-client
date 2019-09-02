@@ -42,7 +42,7 @@ function RegionsLayout(props) {
             <GridBreak label={"Areas"} />
             { props.devicesByCategory('AREA').map((area) =>
             <GridItem wide={props.wide} key={ area.endpointId } >
-                <AreaLine area={ area } name={ area.friendlyName } areaData={ props.deviceProperties[area.endpointId] } sendAlexaCommand={props.sendAlexaCommand} shortcuts={area.shortcuts} selectArea={selectArea} ></AreaLine>
+                <AreaLine area={ area } name={ area.friendlyName } shortcuts={area.shortcuts} selectArea={selectArea} ></AreaLine>
             </GridItem>
             )}
         </React.Fragment>

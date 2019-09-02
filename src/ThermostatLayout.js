@@ -45,14 +45,13 @@ function ThermostatLayout(props) {
             <GridSection name={"Thermostats"}>
                 { thermostats.map((device) =>
                     <Thermostat sendAlexaCommand={props.sendAlexaCommand} key={ device.endpointId } name={ device.friendlyName } 
-                                        device={ device } deviceProperties={ props.deviceProperties[device.endpointId] } />
+                                        device={ device }  />
                 )}
             </GridSection>
             
             <GridSection name={"Temperatures"}>
             { temperatureSensors.map((device) =>
-                <TemperatureSensor key={ device.endpointId } name={ device.friendlyName } device={ device } 
-                             deviceProperties={ props.deviceProperties[device.endpointId] }  />
+                <TemperatureSensor key={ device.endpointId } name={ device.friendlyName } device={ device } />
             )}
             </GridSection>
         </React.Fragment>

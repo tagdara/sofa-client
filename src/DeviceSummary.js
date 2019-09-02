@@ -28,14 +28,14 @@ function DeviceSummary(props) {
     
     useEffect(() => {
         var ondevs=0
-        var devs=props.devicesByCategory('DEVICE')
+        var devs=props.devicesByCategory('SWITCH')
         for (var i = 0; i < devs.length; i++) {
-            if (props.deviceProperties[devs[i].endpointId].powerState=='ON') {
+            if (devs[i].hasOwnProperty('PowerController') && devs[i].PowerController.powerState.value=='ON') {
                 ondevs+=1
             }
         }
         setOnCount(ondevs)
-    }, [props.deviceProperties])
+    }, [props.devices])
     
     return (
         <GridItem wide={false} nopaper={true}>

@@ -13,29 +13,29 @@ import GridItem from '../GridItem';
 
 export default function Computer(props) {
 
-    const [lockState, setLockState] = useState(props.deviceProperties.lockState);
-    const [powerState, setPowerState] = useState(props.deviceProperties.powerState);
+    const [lockState, setLockState] = useState(props.device.LockController.lockState.value);
+    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
 
     function handlePowerChange(event) {
         setPowerState(event.target.checked);
         if (event.target.checked) {
-            props.sendAlexaCommand(props.name, props.device.endpointId, 'PowerController', 'TurnOn')
+            props.device.PowerController.directive('TurnOn')
         } else {
-            props.sendAlexaCommand(props.name, props.device.endpointId, 'PowerController', 'TurnOff')
+            props.device.PowerController.directive('TurnOff')
         }
     }; 
     
     return (
         <GridItem >
             <ListItem>
-                <ToggleAvatar avatarState={ props.deviceProperties.powerState=='ON' ? 'on' : 'off'}><DesktopWindowsIcon /></ToggleAvatar>
-                { props.deviceProperties.powerState=='ON' ?
-                <ListItemText primary={props.name} secondary={props.deviceProperties.lockState=='LOCKED' ? 'Locked':'Unlocked'}/>
+                <ToggleAvatar avatarState={ props.device.PowerController.powerState.value=='ON' ? 'on' : 'off'}><DesktopWindowsIcon /></ToggleAvatar>
+                { props.device.PowerController.powerState.value=='ON' ?
+                <ListItemText primary={props.device.friendlyName} secondary={props.device.LockController.lockState.value=='LOCKED' ? 'Locked':'Unlocked'}/>
                 : 
-                <ListItemText primary={props.name} secondary={'Powered off'}/>
+                <ListItemText primary={props.device.friendlyName} secondary={'Powered off'}/>
                 }
                 <ListItemSecondaryAction>
-                    <Switch color="primary" checked={props.deviceProperties.powerState=='ON'} onChange={handlePowerChange} />
+                    <Switch color="primary" checked={props.device.PowerController.powerState.value=='ON'} onChange={handlePowerChange} />
                 </ListItemSecondaryAction>
            </ListItem>
         </GridItem>   

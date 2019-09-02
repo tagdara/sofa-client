@@ -17,11 +17,14 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import TonalityIcon from '@material-ui/icons/Tonality';
 import GridItem from '../GridItem';
 
+import Button from '@material-ui/core/Button';
+import ButtonGroup from '@material-ui/core/ButtonGroup';
+
 export default function Shade(props) {
     
     function handlePress(commandName) {
         var command = props.commands[commandName]
-        props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
+        props.device[command.controller].directive(command.command, command.value)
     }   
 
     return (
@@ -32,9 +35,11 @@ export default function Shade(props) {
             </ListItemAvatar>
             <ListItemText primary={props.name}/>
             <ListItemSecondaryAction>
-                <IconButton onClick={ () => handlePress('down') }><ExpandMoreIcon /></IconButton>
-                <IconButton onClick={ () => handlePress('stop') }><RemoveIcon /></IconButton>
-                <IconButton onClick={ () => handlePress('up') }><ExpandLessIcon /></IconButton>
+                <ButtonGroup size="small" >
+                    <Button onClick={ () => handlePress('down') }><ExpandMoreIcon /></Button>
+                    <Button onClick={ () => handlePress('stop') }><RemoveIcon /></Button>
+                    <Button onClick={ () => handlePress('up') }><ExpandLessIcon /></Button>
+                </ButtonGroup>
             </ListItemSecondaryAction>
         </ListItem>
         </GridItem>

@@ -26,7 +26,7 @@ export default function MoreDevicesLayout(props) {
         <React.Fragment>
             <GridSection name={'Shades'}>
                 <ErrorBoundary wide={props.wide}>
-                    <VirtualList sendAlexaCommand={props.sendAlexaCommand} />
+                    <VirtualList />
                 </ErrorBoundary>
             </GridSection>
             { switches &&

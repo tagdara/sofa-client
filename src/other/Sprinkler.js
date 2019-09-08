@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { DataContext } from '../DataContext/DataProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -24,10 +25,11 @@ const useStyles = makeStyles({
 export default function Sprinkler(props) {
 
     const classes = useStyles();
+    const { deviceByEndpointId } = useContext(DataContext);
 
     function handlePress(commandName) {
         var command = props.commands[commandName]
-        props.sendAlexaCommand(command.name, command.endpointId, command.controller, command.command, command.value)
+        deviceByEndpointId(command.endpointId)[command.controller].directive(command.command, command.value)
     }   
 
     return (

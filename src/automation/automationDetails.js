@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { DataContext } from '../DataContext/DataProvider';
+
 import { makeStyles } from '@material-ui/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -28,9 +30,10 @@ const useStyles = makeStyles({
 export default function AutomationDetails(props) {
 
     const classes = useStyles();
+    const { deviceByEndpointId } = useContext(DataContext);
     
     function runAutomation(conditions=true) {
-        props.sendAlexaCommand(props.name, 'logic:activity:'+props.name, 'SceneController', 'Activate', {}, {"conditions": conditions})
+        deviceByEndpointId('logic:activity:'+props.name).SceneController.directive('Activate', {}, {"conditions": conditions})
     }
 
     return (    

@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { DataContext } from './DataContext/DataProvider';
 
 import ToggleAvatar from './ToggleAvatar';
 import DotLevel from './DotLevel';
@@ -84,9 +85,10 @@ const useStyles = makeStyles({
 export default function Area(props) {
     
     const classes = useStyles();
+    const { deviceByEndpointId } = useContext(DataContext);
 
     function runScene(sceneName) {
-        props.sendAlexaCommand(sceneName, "logic:scene:"+sceneName, "SceneController", "Activate")
+        deviceByEndpointId("logic:scene:"+sceneName).SceneController.directive("Activate")
     }
 
     function runShortcut(level) {
@@ -100,10 +102,10 @@ export default function Area(props) {
     return (
         <GridItem wide={props.wide} >
             <ListItem className={classes.listItem}>
-                <ToggleAvatar avatarState={props.current===true ? "on" : "off"} onClick={() => props.setRegion(props.name) } >
+                <ToggleAvatar avatarState={props.current===true ? "on" : "off"} onClick={() => props.setArea(props.name) } >
                     <RoomIcon className={classes.iconSize} />
                 </ToggleAvatar>
-                <ListItemText onClick={() => props.setRegion(props.name) } >{props.name}</ListItemText>
+                <ListItemText onClick={() => props.setArea(props.name) } >{props.name}</ListItemText>
                 { props.mode==="add" || props.mode==="remove" ? null :
                 <DotLevel level={0} select={runShortcut} />
                 }

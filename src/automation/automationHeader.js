@@ -14,7 +14,7 @@ export default function AutomationHeader(props) {
                     <FavoriteIcon fontSize="small" />
                 </ToggleButton>
             </AutomationTitle>
-            <AutomationDetails automation={props.automation} name={props.name} sendAlexaCommand={props.sendAlexaCommand} />
+            <AutomationDetails automation={props.automation} name={props.name} />
         </GridSection>
     )
 

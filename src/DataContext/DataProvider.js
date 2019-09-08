@@ -9,15 +9,33 @@ class AlexaDevice {
         this.manufacturerName = data.manufacturerName;
         this.description = data.description;
         this.displayCategories = data.displayCategories;
+        this.interfaces = []
+        this.interfaceobjects = []
         
         for (var j = 0; j < data.capabilities.length; j++) {
             this[data.capabilities[j].interface.split('.')[1]]=new AlexaController(this, data.capabilities[j])
+            if (!this.interfaces.includes(data.capabilities[j].interface.split('.')[1])) {
+                this.interfaces.push(data.capabilities[j].interface.split('.')[1])
+                this.interfaceobjects.push(this[data.capabilities[j].interface.split('.')[1]])
+            }
         }
+    }
+    
+    hasData() {
+        for (var ifo in this.interfaceobjects) {
+            for (var po in ifo.propertyobjects) {
+                if (po.value===null) {
+                    console.log('device is missing data', this.endpointId, this.friendlyName, ifo.controller, po )
+                    return false
+                }
+            }
+        }
+        return true
     }
     
     newtoken() {
         return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-            (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+            (((c ^ crypto.getRandomValues(new Uint8Array(1))[0] ) & 15) >> c / 4).toString(16)
         )
     }
     
@@ -40,28 +58,34 @@ class AlexaController {
         this.device=device
         this.namespace=data.interface.split('.')[0]
         this.controller=data.interface.split('.')[1]
+        this.properties=[]
+        this.propertyobjects=[]
+        
         if (data.hasOwnProperty('configuration')) {
             this.configuration=data.configuration;
+        }
+
+        if (data.hasOwnProperty('inputs')) {
+            this.inputs=data.inputs;
         }
 
         if (data.hasOwnProperty('properties') && data.properties.hasOwnProperty('supported')) {
             for (var j = 0; j < data.properties.supported.length; j++) {
                 this[data.properties.supported[j].name]=new AlexaControllerProperty()
+                this.properties.push(data.properties.supported[j].name)
+                this.propertyobjects.push(this[data.properties.supported[j].name])
             }
         }
     }
     
     directive(command, payload={}, cookie={}) {
+        const serverurl="https://"+window.location.hostname;
         var header={"name": command, "namespace":this.namespace+"." + this.controller, "payloadVersion":"3", "messageId": this.device.newtoken(), "correlationToken": this.device.newtoken()}
         var endpoint={"endpointId": this.device.endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
         console.log('Sending device-based alexa command:',data)
     
-        return fetch('/directive', { method: 'post',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
+        return fetch(serverurl+'/directive', { method: 'post',
                     body: JSON.stringify(data)
                 })
                     .then(res=>res.json())
@@ -75,6 +99,14 @@ class AlexaControllerProperty {
     constructor() {
         this.value=null
     }
+    
+    get deepvalue() {
+        // this is a shim to prevent the objects with value.value from breaking when value is null and javascript
+        // throws an error.
+        if (!this.value) return null;
+        if (this.value.hasOwnProperty('value')) return this.value.value;
+        return this.value;
+    }
 }
 
 export const deviceReducer = (state, data) => {
@@ -82,29 +114,29 @@ export const deviceReducer = (state, data) => {
         if (data==={}) { return state }
         if (!data.hasOwnProperty('event')) { return state }
         
+        var i=0;
+        var devs={...state}
+        var prop='';
         switch (data.event.header.name) {
             case 'DeleteReport':
-                var devs={...state}
-                for (var i = 0; i < data.event.payload.endpoints.length; i++) {
+                for (i = 0; i < data.event.payload.endpoints.length; i++) {
                     if (data.event.payload.endpoints[i].endpointId in devs) {
                         delete devs[data.event.payload.endpoints[i].endpointId]
                     }
                 }
                 return devs
             case 'AddOrUpdateReport':
-                var devs={...state}
-                for (var i = 0; i < data.event.payload.endpoints.length; i++) {
+                for (i = 0; i < data.event.payload.endpoints.length; i++) {
                     //console.log('Adding Object', data.event.payload.endpoints[i].endpointId, data.event.payload.endpoints[i])
                     devs[data.event.payload.endpoints[i].endpointId]=new AlexaDevice(data.event.payload.endpoints[i])
                         //devs.push(data.event.payload.endpoints[i])
                 }
                 return devs
             case "Multistate":
-                var devs={...state}
                 for (var dev in data.state) {
                     if (dev in devs) {
-                        for (var i = 0; i < data.state[dev].context.properties.length; i++) {
-                            var prop=data.state[dev].context.properties[i]
+                        for (i = 0; i < data.state[dev].context.properties.length; i++) {
+                            prop=data.state[dev].context.properties[i]
                             devs[dev][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
                             devs[dev][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
                         }
@@ -112,15 +144,14 @@ export const deviceReducer = (state, data) => {
                 }                
                 return devs;
             case 'ChangeReport':
-                var devs={...state}
                 if (data.event.endpoint.endpointId in devs) {
-                    for (var i = 0; i < data.event.payload.change.properties.length; i++) {
-                        var prop=data.event.payload.change.properties[i]
+                    for (i = 0; i < data.event.payload.change.properties.length; i++) {
+                        prop=data.event.payload.change.properties[i]
                         devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
                         devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
                     }
-                    for (var i = 0; i < data.context.properties.length; i++) {
-                        var prop=data.context.properties[i]
+                    for (i = 0; i < data.context.properties.length; i++) {
+                        prop=data.context.properties[i]
                         devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
                         devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
                     }
@@ -132,21 +163,19 @@ export const deviceReducer = (state, data) => {
     }
 
 export default function DataProvider(props) {
+    
+    const serverurl="https://"+window.location.hostname;
+    const [eventSource, setEventSource] = useState(() => new EventSource(serverurl+"/sse"))
+    
     const initialDevices={};
     const [controllerProperties, setControllerProperties] = useState({});     
-    const [controllerEvents, setControllerEvents] = useState({});     
     const [directives, setDirectives] = useState({});     
     const [virtualDevices, setVirtualDevices] = useState({});     
-    const [region, setRegion] = useState("Main");     
+    const [area, setArea] = useState("Main");     
     const [heartbeat, setHeartbeat] = useState(Date.now());     
-    const [lastUpdate, setLastUpdate] = useState(null);     
-    const [eventSource] = useState(() => new EventSource("sse"))
-    const pendingDevs = [];
-    
+    const [lastUpdate] = useState(null);     
     const [devices, deviceDispatch] = useReducer(deviceReducer, initialDevices);
-    
-    const devobjs={}
-    
+
     
     useEffect(() => {
 
@@ -154,30 +183,35 @@ export default function DataProvider(props) {
             deviceDispatch(JSON.parse(event.data));
             setHeartbeat(Date.now())
         };
+
         eventSource.addEventListener('message', listener);
 
-  	    fetch('/directives')
+  	    fetch(serverurl+'/directives')
  		    .then(result=>result.json())
             .then(result=>setDirectives(result))
             .then(result=>console.log('done getting directives'));
 
-  	    fetch('/properties')
+  	    fetch(serverurl+'/properties')
  		    .then(result=>result.json())
             .then(result=>setControllerProperties(result))
             .then(result=>console.log('done getting properties'));
             
-  	    fetch('/list/logic/virtualDevices')
+  	    fetch(serverurl+'/list/logic/virtualDevices')
  		    .then(result=>result.json())
             .then(result=>setVirtualDevices(result))
             .then(result=>console.log('done getting virtual devices'));
         
         console.log('Done with useeffect load')    
             
-    },[]);
+    },[eventSource, serverurl]);
+
+    function reconnect() {
+        setEventSource(() => new EventSource(serverurl+"/sse"))
+    }
 
     function timedOut() {
-        if (((new Date) - heartbeat) > 15000) {
-            console.log(new Date,heartbeat,(new Date) - heartbeat > 15000)
+        if (((new Date()) - heartbeat) > 15000) {
+            console.log(new Date(),heartbeat,(new Date()) - heartbeat > 15000)
             return true
         } 
         return false
@@ -191,14 +225,14 @@ export default function DataProvider(props) {
     }
     
     function getLastUpdate() {
-  	    fetch('/lastupdate')
+  	    fetch(serverurl+'/lastupdate')
  		    .then(result=>result.json())
             .then(result=>checkUpdate(result))   
     }
 
     function isReachable(dev) {
         
-        if (dev.EndpointHealth.connectivity.value.value=='OK') {
+        if (dev.EndpointHealth.connectivity.value.value==='OK') {
             return true
         }
         return false
@@ -209,14 +243,14 @@ export default function DataProvider(props) {
         var lights=devicesByCategory('LIGHT')
 
         for (var id in lights) {
-            if (condition.toLowerCase()=='all') {
+            if (condition.toLowerCase()==='all') {
                 count=count+1
-            } else if (condition.toLowerCase()=='off') {
-                if (lights[id].PowerController.powerState.value=='OFF' || !isReachable(lights[id])) {
+            } else if (condition.toLowerCase()==='off') {
+                if (lights[id].PowerController.powerState.value==='OFF' || !isReachable(lights[id])) {
                     count=count+1
                 }
-            } else if (condition.toLowerCase()=='on') {
-                if (lights[id].PowerController.powerState.value=='ON' && isReachable(lights[id])) {
+            } else if (condition.toLowerCase()==='on') {
+                if (lights[id].PowerController.powerState.value==='ON' && isReachable(lights[id])) {
                     count=count+1
                 }
             }
@@ -237,9 +271,11 @@ export default function DataProvider(props) {
         for (var j = 0; j < categories.length; j++) {
             var category=categories[j]
             for (var id in devices) {
-                if (devices[id].displayCategories.includes(category) || category=='ALL') {
+                if (devices[id].displayCategories.includes(category) || category==='ALL') {
                     if (!searchterm || devices[id].friendlyName.toLowerCase().startsWith(searchterm.toLowerCase())) {
-                        categoryDevices.push(devices[id])
+                        if (devices[id].hasData()) {
+                            categoryDevices.push(devices[id])
+                        }
                     }
                 } 
             }
@@ -263,13 +299,12 @@ export default function DataProvider(props) {
     }
 
     function deviceByFriendlyName(devname) {
-        var fn=[]
+
         for (var id in devices) {
-            if (devices[id]['friendlyName']==devname) {
+            if (devices[id]['friendlyName']===devname) {
                 return devices[id]
             } 
         }
-        //console.log('Did not find device named', devname, devices.length)
         return undefined
     }
 
@@ -295,21 +330,18 @@ export default function DataProvider(props) {
         // Requests the last time the value changed for a set of devices.  This requires the Influx adapter
         // in order to see history.
 
-        console.log('gctfd',val,devs)
+        //console.log('gctfd',val,devs)
         var endpointList=[]
         for (var i = 0; i < devs.length; i++) {   
            endpointList.push(devs[i].endpointId)
         }
 
-        return fetch('/list/influx/last/'+val, {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(endpointList)
-            })
-            .then(res=> { return(res.json())})
+        return fetch(serverurl+'/list/influx/last/'+val, {
+                    method: "post",
+                    body: JSON.stringify(endpointList)
+                })
+                    .then(res=>res.json())
+                    .then(res=> { return res;})
     }
 
     function getHistoryForDevice(dev, prop, page) {
@@ -317,17 +349,14 @@ export default function DataProvider(props) {
         // Requests the history for a specific device and property.  It allows for pagination since the data could be very
         // large.  This requires the Influx adapter in order to see history.
         
-        var url="/list/influx/history/"+dev+"/"+prop
+        var url=serverurl+"/list/influx/history/"+dev+"/"+prop
         if (page) {
             url=url+"/"+page
         }
 
         return fetch(url)
-            .then(res=> { return(res.json())})
-    }
-
-    function catchError( error ) {
-        console.log( error );
+            .then(res=> res.json())
+            .then(res=> { return res;})
     }
 
     return (
@@ -338,7 +367,6 @@ export default function DataProvider(props) {
                 
                 directives: directives,
                 controllerProperties:controllerProperties,
-                controllerEvents:controllerEvents,
 
                 deviceByEndpointId: deviceByEndpointId,
                 deviceByFriendlyName: deviceByFriendlyName,
@@ -350,12 +378,14 @@ export default function DataProvider(props) {
                 getChangeTimesForDevices: getChangeTimesForDevices,
                 getHistoryForDevice: getHistoryForDevice,
 
-                setRegion: setRegion,
-                region: region,
+                setArea: setArea,
+                area: area,
                 lightCount: lightCount,
                 
                 timedOut: timedOut,
                 getLastUpdate: getLastUpdate,
+                eventSource: eventSource,
+                reconnect: reconnect
             }}
         >
             {props.children}

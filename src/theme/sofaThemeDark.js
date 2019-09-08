@@ -1,7 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import deepOrange from '@material-ui/core/colors/deepOrange';
-import indigo from '@material-ui/core/colors/indigo';
-import red from '@material-ui/core/colors/red';
 import yellow from '@material-ui/core/colors/yellow';
 
 export default createMuiTheme({
@@ -21,8 +19,10 @@ export default createMuiTheme({
             primary: "#c0c0c0",
         },
         background: {
-            page: "#383838",
+            default: "#000",
+            page: "#111",
             hover: "rgba(188, 54, 12, 0.1)",
+            paper: "#222",
         },
         type: "dark",
     }

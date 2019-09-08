@@ -1,5 +1,5 @@
-import React, { memo } from 'react';
-import { useState, useEffect } from 'react';
+import React from 'react';
+import { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import DialogContent from '@material-ui/core/DialogContent';

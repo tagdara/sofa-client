@@ -1,45 +1,25 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
-
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
 import Zone from './devices/Zone';
 import GridSection from './GridSection';
 
-const useStyles = makeStyles({
-    
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    listDialogContent: {
-        padding: 0,
-    }
+export default function ZoneLayout(props) {
 
-});
-
-function ZoneLayout(props) {
-
-    const classes = useStyles();
-    const [filter, setFilter] = useState('all');
-    const isMobile = window.innerWidth <= 800;
+    const { applyLayoutCard, applyBackPage } = useContext(LayoutContext);
+    const { devicesByCategory, getChangeTimesForDevices } = useRef(useContext(DataContext)).current;
+    const allzones=devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
     const [changeTimes, setChangeTimes] = useState({})
-    const [securityZones, setSecurityZones] = useState([])
-    const [automationZones, setAutomationZones] = useState([])
-    const allzones=props.devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
 
     useEffect(() => {
-        props.getChangeTimesForDevices('detectionState',allzones).then(result => setChangeTimes(result))
-    }, []);
+        var zones=devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
+        getChangeTimesForDevices('detectionState',zones).then(result => setChangeTimes(result))
+    }, [devicesByCategory,getChangeTimesForDevices]);
 
     function getSecurityZones() {
         var secZones=[]
         for (var i = 0; i < allzones.length; i++) {
-            console.log('zone',allzones[i])
             if (!allzones[i].description.includes('(Automation)')) {
                 secZones.push(allzones[i])
             } 
@@ -57,28 +37,9 @@ function ZoneLayout(props) {
         return autoZones
     }
 
-    function toggleFilter(event) {
-        if (filter=='DETECTED') {
-            setFilter({ filter:'all'})
-        } else {
-            setFilter({ filter:'DETECTED'}) 
-        }
-    }
-    
-    function filterByType(zonetype) {
-        var typezones=[]
-        for (var j = 0; j < allzones.length; j++) {
-            if (zonetype.includes(allzones[j].friendlyName)) {
-                typezones.push(allzones[j])
-            }
-        }
-        return typezones
-            
-    }
-    
     function historyZone(name, endpointId) {
-        props.applyBackPage('ZoneLayout', {} )
-        props.applyLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"detectionState"})
+        applyBackPage('ZoneLayout', {} )
+        applyLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"detectionState"})
     }
 
     return (    
@@ -95,7 +56,4 @@ function ZoneLayout(props) {
             </GridSection>
         </React.Fragment>
     )
-
 };
-
-export default withData(withLayout(ZoneLayout));

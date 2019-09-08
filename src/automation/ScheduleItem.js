@@ -1,25 +1,17 @@
 import React, { memo }  from 'react';
-import { useState, useEffect } from 'react';
-
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Switch from '@material-ui/core/Switch';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import TuneIcon from '@material-ui/icons/Tune';
-
-import CloseIcon from '@material-ui/icons/Close';
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 
 function ScheduleItem(props) {
 
-    const monthLongNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];  
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];  
    
     function dateOnly(full) {
-        if (full=='never') {
+        if (full==='never') {
             return 'never'
         }
         var donly=full.replace('Z','').split('T')[0]
@@ -29,14 +21,13 @@ function ScheduleItem(props) {
     }
 
     function timeOnly(full) {
-        if (full=='never') {
+        
+        if (full==='never') {
             return ''
         }
-        
+        var tonly=full
         if (full.includes('T')) {
-            var tonly=full.replace('Z','').split('T')[1]
-        } else {
-            var tonly=full
+            tonly=full.replace('Z','').split('T')[1]
         }
         
         var hms=tonly.split(':')
@@ -50,15 +41,6 @@ function ScheduleItem(props) {
         }
     }
 
-    function dateIfFuture(full) {
-        var date = new Date();
-        var mydate=new Date(full);
-        if(date < mydate) {
-            return " starting "+dateOnly(full)
-        } 
-        return ""
-    }
-    
     function titleCase(days) {
 
         for (var i = 0; i < days.length; i++) {
@@ -71,7 +53,7 @@ function ScheduleItem(props) {
 }
     
     function textSched(sched) {
-        if (sched.type=='interval') {
+        if (sched.type==='interval') {
             return 'Every '+sched.interval+" "+sched.unit+" at "+timeOnly(sched.start)
         } else {
             return 'On '+titleCase(sched.days)+" at "+timeOnly(sched.start)

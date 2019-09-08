@@ -1,16 +1,13 @@
-import React from "react";
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import { withData } from '../DataContext/withData';
+import React, { useState, useContext } from 'react';
+import { DataContext } from '../DataContext/DataProvider';
+import { makeStyles } from '@material-ui/styles';
 
 import List from '@material-ui/core/List';
 
 import SofaCategoryFilter from './sofaCategoryFilter'
 import DeviceExpand from './deviceExpand'
 
-const styles = theme => ({
-        
-
+const useStyles = makeStyles({        
     list: {
         minWidth: 320,
         width: "100%",
@@ -18,32 +15,28 @@ const styles = theme => ({
  
 });
 
-class DeviceSelect extends React.Component {
+export default function DeviceSelect(props) {
 
-    constructor(props) {
-        super(props);
+    const [filter, setFilter] = useState('');
+    const { controllers, directives } = useContext(DataContext);
+    const classes = useStyles();
 
-        this.state = {
-            filter: '',
+    function filterDevices(mode, filter, devices) {
+
+        if (mode==='action') {
+            return actionDevices(filter, devices)
+        } else if (mode==='property') {
+            return propertyDevices(filter, devices)
         }
     }
     
-    filterDevices = (mode, filter, devices) => {
-
-        if (mode=='action') {
-            return this.actionDevices(filter, devices)
-        } else if (mode=='property') {
-            return this.propertyDevices(filter, devices)
-        }
-    }
-    
-    actionDevices = (filter, devices) => {
+    function actionDevices(filter, devices) {
         var actiondevices=[]
         for (var i = 0; i < devices.length; i++) {
-            if (devices[i].displayCategories==filter || filter=='') {
-                var dc=this.getControllers(devices[i])
+            if (devices[i].displayCategories===filter || filter==='') {
+                var dc=getControllers(devices[i])
                 for (var j = 0; j < dc.length; j++) {
-                    var cc=this.getControllerCommands(dc[j])
+                    var cc=getControllerCommands(dc[j])
                     if (Object.keys(cc).length>0) {
                         actiondevices.push(devices[i])
                         break
@@ -54,11 +47,11 @@ class DeviceSelect extends React.Component {
         return actiondevices
     }
 
-    propertyDevices = (filter, devices) => {
+    function propertyDevices(filter, devices) {
         var propertydevices=[]
         for (var i = 0; i < devices.length; i++) {
-            if (devices[i].displayCategories==filter || filter=='') {
-                if (this.getProperties(devices[i]).length>0) {
+            if (devices[i].displayCategories===filter || filter==='') {
+                if (getProperties(devices[i]).length>0) {
                     propertydevices.push(devices[i])
                 }
             }
@@ -67,69 +60,46 @@ class DeviceSelect extends React.Component {
     }
     
     
-    getProperties = (device, controller) => {
+    function getProperties(device, controller) {
         var proplist=[]
         for (var i = 0; i < device.capabilities.length; i++) {
             if (device.capabilities[i].properties.hasOwnProperty('supported')) {
                 for (var j = 0; j < device.capabilities[i].properties.supported.length; j++) {
-                    if (device.capabilities[i].interface.split(".")[1]==controller || controller==null) {
+                    if (device.capabilities[i].interface.split(".")[1]===controller || controller===null) {
                         proplist.push(device.capabilities[i].properties.supported[j].name)
                     }
                 }
             }
         }
-        //console.log('proplist',device.friendlyName,proplist)
         return proplist
     }
 
 
-    getControllers = (device) => {
+    function getControllers(device) {
         var caplist=[]
         for (var cap in device.capabilities) {
             var capi=device.capabilities[cap]['interface'].split(".")[1]
-            if (this.getControllerCommands(capi)) {
+            if (getControllerCommands(capi)) {
                 caplist.push(device.capabilities[cap]['interface'].split(".")[1])
             }
         }
         return caplist
     }
     
-    getControllerCommands = (controller) => {
-        var cmds=[]
-        return this.props.directives[controller]
+    function getControllerCommands(controller) {
+        return directives[controller]
     }
     
-    getControllerDirectives = (controller) => {
-        if (this.props.directives.hasOwnProperty(controller)) {
-            return this.props.directives[controller]
-        } else {
-            return {}
-        }
-    }
-    
-    applyFilter = filter => {
-        console.log('applying filter',filter)
-        this.setState({filter: filter})
+    function applyFilter(newfilter) {
+        setFilter(newfilter)
     }
 
-    render() {
-        
-        const { classes, mode, devices, controllers, directives} = this.props;
-        const { filter } = this.state;
-        
-        return (
-            <List className={classes.list} >
-                <SofaCategoryFilter applyFilter={this.applyFilter} />
-                { this.filterDevices(mode, filter, devices).map((device) => (
-                    <DeviceExpand key={ device.endpointId+'-exp' } device={device} mode={mode} controllers={controllers} select={this.props.select} directives={directives}  />
-                ))}
-            </List>
-        )
-    }
+    return (
+        <List className={classes.list} >
+            <SofaCategoryFilter applyFilter={applyFilter} />
+            { filterDevices(props.mode, filter, props.devices).map((device) => (
+                <DeviceExpand key={ device.endpointId+'-exp' } device={device} mode={props.mode} controllers={controllers} select={props.select} directives={directives}  />
+            ))}
+        </List>
+    )
 }
-
-DeviceSelect.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
-
-export default withData(withStyles(styles)(DeviceSelect));

@@ -1,18 +1,12 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
-
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 
 import AutomationItem from './automation/automationItem';
 import AutomationAdd from './automation/automationAdd';
 import IconButton from '@material-ui/core/IconButton';
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
@@ -29,28 +23,28 @@ const useStyles = makeStyles({
 
 });
 
-function AutomationsLayout(props) {
+export default function AutomationsLayout(props) {
 
     const classes = useStyles();
+    const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
+    const { deviceByEndpointId } = useContext(DataContext);
+
     const [automations, setAutomations] = useState({})
-    const [adding, setAdding] = useState(false)
-    const [editing, setEditing] = useState(false)
+    const adding = false
+    const editing = false
     const [remove, setRemove] = useState(false)
-    const [favoriteMode, setFavoriteMode] = useState(false)
-
+    const serverurl="https://"+window.location.hostname;
+    
     useEffect(() => {
-        getAutomations()
-    }, []);
-
-    function getAutomations() {
-        fetch('/list/logic/automationlist')
+        fetch(serverurl+'/list/logic/automationlist')
             .then(result=>result.json())
             .then(result=>setAutomations(result))
-    }
+
+    }, [serverurl]);
     
     function selectAutomation(automation) {
-        props.applyBackPage('AutomationsLayout',{})
-        props.applyLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
+        applyBackPage('AutomationsLayout',{})
+        applyLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
     }    
     
     function addAutomation(automationName) {
@@ -59,16 +53,12 @@ function AutomationsLayout(props) {
             console.log('An automation with that name already exists',automationName)
             return false
         } else {
-            var automations=automations
+            //var automations=automations
             automations[automationName]={'actionCount': 0, 'conditionCount': 0}
             console.log('Automations will be', automations)
     
-            fetch('/add/logic/automation/'+automationName, {
+            fetch(serverurl+'/add/logic/automation/'+automationName, {
                     method: 'post',
-                    headers: {
-                        'Accept': 'application/json, text/plain, */*',
-                        'Content-Type': 'application/json'
-                    },
                     body: JSON.stringify([])
                 })
                 .then(setAutomations(automations))
@@ -80,7 +70,7 @@ function AutomationsLayout(props) {
         console.log('Deleting',automationName,automations)
         delete automations[automationName]
 
-        fetch('/del/logic/automation/'+automationName, {
+        fetch(serverurl+'/del/logic/automation/'+automationName, {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
@@ -92,17 +82,18 @@ function AutomationsLayout(props) {
     } 
         
     function runAutomation(name) {
-        props.sendAlexaCommand(name, 'logic:activity:'+name, 'SceneController', 'Activate')
+        var auto=deviceByEndpointId('logic:activity:'+name)
+        auto.SceneController.directive('Activate')
     }
 
     function newAutomation() {
-        props.applyBackPage('AutomationsLayout',{})
-        props.applyLayoutCard('AutomationLayout', {'noBottom':true})        
+        applyBackPage('AutomationsLayout',{})
+        applyLayoutCard('AutomationLayout', {'noBottom':true})        
     }
     
     function switchToSchedule() {
-        props.applyBackPage('AutomationsLayout',{})
-        props.applyLayoutCard('SchedulesLayout', {})
+        applyBackPage('AutomationsLayout',{})
+        applyLayoutCard('SchedulesLayout', {})
     }
 
     return (    
@@ -144,7 +135,4 @@ function AutomationsLayout(props) {
             </GridSection>
         </React.Fragment>
     )
-
 };
-
-export default withData(withLayout(AutomationsLayout));

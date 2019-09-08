@@ -7,7 +7,6 @@ import Button from '@material-ui/core/Button';
 import GridItem from '../GridItem';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import LowPriorityIcon from '@material-ui/icons/LowPriority';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';

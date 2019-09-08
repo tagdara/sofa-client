@@ -1,14 +1,12 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
 import Button from '@material-ui/core/Button';
 import GridItem from './GridItem';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-import Videocam from '@material-ui/icons/Videocam';
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -51,60 +49,55 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-function SecuritySummary(props) {
+export default function SecuritySummary(props) {
     
+    const { applyLayoutCard } = useContext(LayoutContext);
+    const { devicesByCategory } = useContext(DataContext);
+
     const classes = useStyles();
+    const allzones = devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
     const zoneOpen = zoneCount('DETECTED')>0;
-    const [filter, setFilter] = useState('open');
-    const [securityZones, setSecurityZones] = useState([])
-    const [automationZones, setAutomationZones] = useState([])
+
+    function zoneCount(condition) {
+        var count=0;
+        getSecurityZones().map(zone => {
+            var controller=null
+            if (zone.hasOwnProperty('ContactSensor')) {
+                controller=zone.ContactSensor
+            } else if (zone.hasOwnProperty('MotionSensor')) {
+                controller=zone.MotionSensor
+            } 
+            if (controller && (condition==='all' || controller.detectionState.value===condition.toUpperCase())) {
+                count=count+1
+            }
+            return ''
+        })
+        return count
+    }
     
-    useEffect(() => {
-  	    fetch('/data/security')
- 		    .then(result=>result.json())
-            .then(result=>{ setSecurityZones(result['Security']); setAutomationZones(result['Automation']); })
-    }, []);
-    
+    function getSecurityZones() {
+        var secZones=[]
+        if (allzones===undefined) return []
+        for (var i = 0; i < allzones.length; i++) {
+            if (!allzones[i].description.includes('(Automation)')) {
+                secZones.push(allzones[i])
+            } 
+        }
+        return secZones
+    }
+
     function secColor(count) {
         if (count>0) { return classes.hot }
         return classes.mid;
     }
 
-    function zoneReady() {
-        
-        if (!securityZones || Object.keys(props.deviceProperties).length==0) {
-            return false
-        } else {
-            for (var dev in props.deviceProperties) {
-                if (props.deviceProperties[dev].detectionState==undefined) {
-                    return false
-                }
-            }
-        }
-        return true
-    }
-    
-    function zoneCount(condition) {
-        var count=0;
-        for (var dev in props.deviceProperties) {
-            if (condition=='all' || props.deviceProperties[dev].detectionState==condition) {
-                if (securityZones && securityZones.includes(dev)) {
-                    count=count+1
-                }
-            }
-        }
-        return count
-    }
-
-    
     return (
         <GridItem wide={false} nopaper={true}>
-            <Button variant="outlined" className={ secColor(zoneOpen) } onClick={ () => props.applyLayoutCard('ZoneLayout') }>
+            <Button variant="outlined" className={ secColor(zoneOpen) } onClick={ () => applyLayoutCard('ZoneLayout') }>
                 { zoneOpen ? <PriorityHighIcon className={classes.iconPad} /> : <VerifiedUserIcon/> }
-                { zoneOpen ? onCount : "" }
+                { zoneOpen ? zoneCount('DETECTED') : "" }
             </Button>
         </GridItem>
     );
 }
 
-export default withData(withLayout(SecuritySummary));

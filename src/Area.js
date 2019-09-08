@@ -1,22 +1,17 @@
-import React, { Component } from "react";
+import React from "react";
 import { makeStyles } from '@material-ui/styles';
 
 import ToggleAvatar from './ToggleAvatar';
 import DotLevel from './DotLevel';
 
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 
 import RoomIcon from '@material-ui/icons/Room';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
-import LensIcon from '@material-ui/icons/Lens';
 
 import GridItem from './GridItem'
 
@@ -105,21 +100,21 @@ export default function Area(props) {
     return (
         <GridItem wide={props.wide} >
             <ListItem className={classes.listItem}>
-                <ToggleAvatar avatarState={props.current==true ? "on" : "off"} onClick={() => props.setRegion(props.name) } >
+                <ToggleAvatar avatarState={props.current===true ? "on" : "off"} onClick={() => props.setRegion(props.name) } >
                     <RoomIcon className={classes.iconSize} />
                 </ToggleAvatar>
                 <ListItemText onClick={() => props.setRegion(props.name) } >{props.name}</ListItemText>
-                { props.mode=="add" || props.mode=="remove" ? null :
+                { props.mode==="add" || props.mode==="remove" ? null :
                 <DotLevel level={0} select={runShortcut} />
                 }
                 <IconButton>
-                    { props.mode!="add" ? null :
+                    { props.mode!=="add" ? null :
                     <AddIcon className={classes.iconSize} onClick={() => props.addArea(props.name) }/>
                     }
-                    { props.mode!="remove" ? null :
+                    { props.mode!=="remove" ? null :
                     <RemoveIcon className={classes.iconSize} onClick={() => props.removeArea(props.name)}/>
                     }
-                    { props.mode!="more" ? null :
+                    { props.mode!=="more" ? null :
                     <MoreHorizIcon className={classes.iconSize} onClick={() => props.viewArea(props.name) }/>
                     }
                 </IconButton>

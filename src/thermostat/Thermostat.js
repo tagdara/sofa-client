@@ -1,16 +1,12 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { LayoutContext } from '../layout/NewLayoutProvider';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from '../layout/NewLayoutProvider';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ToggleAvatar from '../ToggleAvatar';
 import Button from '@material-ui/core/Button';
-import Paper from '@material-ui/core/Paper';
 import ToysIcon from '@material-ui/icons/Toys';
 
 import GridItem from '../GridItem'
@@ -60,18 +56,20 @@ const useStyles = makeStyles({
     },
 });
 
-function Thermostat(props) {
+export default function Thermostat(props) {
     
     const classes = useStyles();
+    const { applyLayoutCard, applyBackPage } = useContext(LayoutContext);
+
     const [targetSetpoint, setTargetSetpoint] = useState(70);
     const [powerLevel, setPowerLevel] = useState(false)
     const [fanSetMode, setFanSetMode] = useState(false);
 
     useEffect(() => {
         if (props.device.ThermostatController.hasOwnProperty('upperSetpoint')) {
-            setTargetSetpoint([props.device.ThermostatController.lowerSetpoint.value.value, props.device.ThermostatController.upperSetpoint.value.value ])
+            setTargetSetpoint([props.device.ThermostatController.lowerSetpoint.deepvalue, props.device.ThermostatController.upperSetpoint.deepvalue ])
         } else {
-            setTargetSetpoint(props.device.ThermostatController.targetSetpoint.value.value)
+            setTargetSetpoint(props.device.ThermostatController.targetSetpoint.deepvalue)
         }
         if (props.device.hasOwnProperty('PowerLevelController')) {
             setPowerLevel(props.device.PowerLevelController.powerLevel.value)
@@ -101,6 +99,7 @@ function Thermostat(props) {
                     
     
     function tempColor(temp) {
+        if (!temp) { return 'disabled' } 
         if (temp>=74) { return "hot" }
         if (temp<70) { return "cool" }
         return "mid";
@@ -127,56 +126,58 @@ function Thermostat(props) {
     }; 
     
     function switchToHistory() {
-        props.applyBackPage('ThermostatLayout',{})
-        props.applyLayoutCard('ThermostatHistory', { 'device':props.device, 'days':7})
+        applyBackPage('ThermostatLayout',{})
+        applyLayoutCard('ThermostatHistory', { 'device':props.device, 'days':7})
     }
 
 
-    return (
+    return ( 
         <GridItem>
             <List className={classes.list} >
-            <ListItem>
-                <ToggleAvatar avatarState={ tempColor(props.device.TemperatureSensor.temperature.value.value) } onClick={ () => switchToHistory()} >{props.device.TemperatureSensor.temperature.value.value}</ToggleAvatar>
-                <SofaSlider min={supportedRange()[0]} max={supportedRange()[1]} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.name}
-                            preChange={handlePreSetpointChange} change={handleSetpointChange} 
-                            disabled={ props.device.ThermostatController.thermostatMode.value=='OFF' } />
-            </ListItem>
-            <ListItem className={classes.bottomListItem}>
-                <>
-                    { powerLevel!==false &&
-                        <>
-                            { fanSetMode ?
-                                <>
-                                    <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(false)}>
-                                        {props.device.ThermostatController.thermostatMode.value}
-                                    </Button>
-                                    <ListItemIcon><ToysIcon /></ListItemIcon>
-                                    <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={false} minWidth={100}
-                                        preChange={handlePrePowerLevelChange} change={handlePowerLevelChange} />
-                                </>
-                            :
-                                <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(true)}>
-                                    <ToysIcon />{powerLevel}%
-                                </Button>                        
-                            }
-                        </>
-                    }
-                </>
-                <>
-                    {!fanSetMode &&
+                <ListItem>
+                    <ToggleAvatar 
+                        avatarState={ tempColor(props.device.TemperatureSensor.temperature.deepvalue) }
+                        onClick={ () => switchToHistory()} >
+                            {props.device.TemperatureSensor.temperature.deepvalue ? props.device.TemperatureSensor.temperature.deepvalue : '--'}
+                    </ToggleAvatar>
+                    <SofaSlider min={supportedRange()[0]} max={supportedRange()[1]} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.device.friendlyName}
+                                preChange={handlePreSetpointChange} change={handleSetpointChange} 
+                                disabled={ props.device.ThermostatController.thermostatMode.value==='OFF' } />
+                </ListItem>
+                <ListItem className={classes.bottomListItem}>
                     <>
-                        { supportedModes().map((mode) => (
-                            <Button onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} color={ props.device.ThermostatController.thermostatMode.value==mode ? "primary" : "default" } className={classes.button }>
-                            {mode}
-                            </Button>
-                        ))}
+                        { powerLevel!==false &&
+                            <>
+                                { fanSetMode ?
+                                    <>
+                                        <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(false)}>
+                                            {props.device.ThermostatController.thermostatMode.value}
+                                        </Button>
+                                        <ListItemIcon><ToysIcon /></ListItemIcon>
+                                        <SofaSlider value={powerLevel} step={10} unit={"%"} name={"Fan Speed"} padLeft={false} minWidth={100}
+                                            preChange={handlePrePowerLevelChange} change={handlePowerLevelChange} />
+                                    </>
+                                :
+                                    <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(true)}>
+                                        <ToysIcon />{powerLevel}%
+                                    </Button>                        
+                                }
+                            </>
+                        }
                     </>
-                    }
-                </>
-            </ListItem>
+                    <>
+                        {!fanSetMode &&
+                        <>
+                            { supportedModes().map((mode) => (
+                                <Button onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} color={ props.device.ThermostatController.thermostatMode.value===mode ? "primary" : "default" } className={classes.button }>
+                                {mode}
+                                </Button>
+                            ))}
+                        </>
+                        }
+                    </>
+                </ListItem>
             </List>
         </GridItem>
     );
 }
-
-export default withLayout(Thermostat);

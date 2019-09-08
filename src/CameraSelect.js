@@ -1,13 +1,13 @@
-import React, { memo } from "react";
-import { useState, useEffect } from 'react';
-import { withData } from './DataContext/withData';
+import React, { useState, useContext } from 'react';
+import { DataContext } from './DataContext/DataProvider';
 
 import SecurityCamera from './camera/securitycamera';
 
-function CameraSelect(props) {
+export default function CameraSelect(props) {
 
     //const [cameras, setCameras] = useState({});
-    const cameras=props.devicesByCategory(['CAMERA'])
+    const { devicesByCategory } = useContext(DataContext);
+    const cameras=devicesByCategory(['CAMERA'])
     const [currentCamera, setCurrentCamera] = useState(cameras[0]);
 
     function nextCamera() {
@@ -33,5 +33,3 @@ function CameraSelect(props) {
         </React.Fragment> 
     );
 }
-
-export default withData(CameraSelect);

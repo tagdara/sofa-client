@@ -16,11 +16,10 @@ export default function DeviceIcon(props) {
     const icons = {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
 
     function getIcon(category, size='default') {
-
+        
+        var RealIcon=DeveloperBoardIcon
         if (icons.hasOwnProperty(category)) {
-            var RealIcon=icons[category]
-        } else {
-            var RealIcon=DeveloperBoardIcon
+            RealIcon=icons[category]
         }
         return <RealIcon size={24} fontSize={size} />
     }

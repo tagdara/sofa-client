@@ -14,16 +14,8 @@ const useStyles = makeStyles({
 
 
 export default function AutomationItemBase(props) {
-    
-    function widenChildren() {
-        var childrenWithProps = React.Children.map(child => { console.log(child); React.cloneElement(child, { wide: true }) })
-
-        return childrenWithProps
-    }
 
     const classes = useStyles();
-    const mobileBreakpoint = 800
-    const isMobile = window.innerWidth <= mobileBreakpoint;
 
     return (
         <Grid container spacing={8} xs={ 12 } className={ classes.gridColumn}>

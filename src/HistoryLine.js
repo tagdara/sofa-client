@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Moment from 'react-moment';
@@ -34,12 +33,12 @@ export default function HistoryLine(props) {
     return (
         <GridItem>
             <ListItem>
-                { props.val=='NOT_DETECTED' ?
+                { props.val==='NOT_DETECTED' ?
                     <Avatar className={classes.closed} ><DoneIcon /></Avatar>
                 :
                     <Avatar className={classes.open} ><ClearIcon /></Avatar>
                 }
-                <ListItemText primary={<Moment format={props.justTime ? "h:mm:ssa" : "ddd MMM D h:mm:ssa"}>{props.time}</Moment>} secondary={props.val=='DETECTED' ? 'Open' : 'Closed'} />
+                <ListItemText primary={<Moment format={props.justTime ? "h:mm:ssa" : "ddd MMM D h:mm:ssa"}>{props.time}</Moment>} secondary={props.val==='DETECTED' ? 'Open' : 'Closed'} />
             </ListItem>
         </GridItem>
     );

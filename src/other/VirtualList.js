@@ -1,24 +1,21 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import List from '@material-ui/core/List';
+import React, { useContext } from 'react';
+import { DataContext } from '../DataContext/DataProvider';
 
-import { withData } from '../DataContext/withData';
 import Shade from './Shade';
 
-function VirtualList(props) {
+export default function VirtualList(props) {
+
+    const { virtualDevices } = useContext(DataContext);
 
     return (
-        props.virtualDevices ?
+        virtualDevices ?
             <React.Fragment>
-                { Object.keys(props.virtualDevices).map((key, index) => (
-                    props.virtualDevices[key]['type']=='shade' ?
-                        <Shade key={ index } name={ key } endpointId={ props.virtualDevices[key].endpointId } commands={ props.virtualDevices[key].commands } sendAlexaCommand={props.sendAlexaCommand} />
+                { Object.keys(virtualDevices).map((key, index) => (
+                    virtualDevices[key]['type']==='shade' ?
+                        <Shade key={ index } name={ key } endpointId={ virtualDevices[key].endpointId } commands={ virtualDevices[key].commands } />
                         :null
                 ))}
             </React.Fragment>
         : null 
     );
 }
-
-export default withData(VirtualList);

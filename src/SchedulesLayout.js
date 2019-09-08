@@ -1,51 +1,30 @@
-import React, { memo }  from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withLayout } from './layout/NewLayoutProvider';
+import React, { useState, useEffect, useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
 
 import ScheduleItem from './automation/ScheduleItem';
 import GridBreak from './GridBreak';
 
-const useStyles = makeStyles({
-    
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    listDialogContent: {
-        padding: 0,
-    }
+export default function SchedulesLayout(props) {
 
-});
-
-function SchedulesLayout(props) {
-
-    const classes = useStyles();
     const [schedules, setSchedules] = useState([])
+    const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
 
     useEffect(() => {
-        getSchedules()
-    }, []);
-
-    function getSchedules() {
-        fetch('/list/logic/schedule')
+        var serverurl="https://"+window.location.hostname+'/list/logic/schedule';
+        fetch(serverurl)
             .then(result=>result.json())
             .then(result=>setSchedules(result));
-        console.log(schedules)
-    }
-    
+    }, []);
+
     function selectSchedule(schedule) {
-        props.applyBackPage('SchedulesLayout',{})
-        props.applyLayoutCard('AutomationLayout', {'name':schedule} )
+        applyBackPage('SchedulesLayout',{})
+        applyLayoutCard('AutomationLayout', {'name':schedule} )
     }   
     
     function runSchedule(schedule) {
         console.log('stubbed run', schedule)
     }
-    
-    function toggleSchedule(schedule) {
-        console.log('stubbed toggle', schedule)
-    }
-    
+
     return (    
         <React.Fragment>
             <GridBreak label={"Scheduled Activities"} />
@@ -56,5 +35,3 @@ function SchedulesLayout(props) {
     )
 
 };
-
-export default memo(withLayout(SchedulesLayout))

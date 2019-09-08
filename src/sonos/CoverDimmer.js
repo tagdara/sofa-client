@@ -1,10 +1,7 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Paper from '@material-ui/core/Paper';
 
-
-//  theme.palette.background.default,
 const useStyles = makeStyles(theme => {
     return {
         coverDimmer: {
@@ -18,13 +15,11 @@ const useStyles = makeStyles(theme => {
             borderRadius: "4px 4px 0px 0px",
         },
     }
-
 });
 
 export default function CoverDimmer(props) {
 
     const classes = useStyles();
-    
     return ( 
         <Paper elevation={0} className={classes.coverDimmer} {...props} />
     );

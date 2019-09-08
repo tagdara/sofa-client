@@ -1,10 +1,8 @@
-import React, { Component, createElement, memo  } from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withHeartbeat } from './DataContext/withData';
 
 import Grid from '@material-ui/core/Grid';
-import ErrorCard from './ErrorCard';
 import PlaceholderCard from './PlaceholderCard';
 import ErrorBoundary from './ErrorBoundary';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,7 +16,7 @@ const useStyles = makeStyles(theme => {
             overflowX: "hidden",
             overflowY: "hidden",
             alignContent: "start",
-            padding: "3 !important",
+            padding: "3px !important",
             backgroundColor: theme.palette.background.page,
             borderRadius: "4px 4px 4px 4px",
             maxWidth: "33%",
@@ -39,67 +37,39 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-function cardLoading(props) {
-    
-    if (props.error) {
-        console.log(props)
-        return <ErrorCard />;
-    } else if (props.pastDelay) {
-        return <PlaceholderCard />;
-    } else {
-        return <ErrorCard />;
-    }
-}
-
-function SofaPage(props) {
+export default function SofaPage(props) {
     
     const classes = useStyles();
     const mobileBreakpoint = 800
     const isMobile = window.innerWidth <= mobileBreakpoint;
     const [modules, setModules] = useState([]);
-    const [layout, setLayout] = useState({});
-
+    
     useEffect(() => {
-        //props.getLastUpdate()
-        if (props.timedOut()) { props.refreshData() }
-        if (props.page) {
-            addPageModules(props.page)
-        }
-    },[]);
-
-    function addModules(modulelist) {
         
-        var changes=false;
-        var newmodules = {}
-
-        modulelist.map( item => {
-            if (!modules.hasOwnProperty(item)) {
+        function addModules(modulelist) {
+            
+            var newmodules = {}
+            modulelist.forEach( item => {
                 console.log('Loading module',item)
-                newmodules[item]= React.lazy( () => import('./'+item) )
-                changes=true
-            }
-        })
-        if (changes) {
-            setModules({...modules, ...newmodules});
+                newmodules[item]=React.lazy( () => import('./'+item) )
+            })
+            setModules(newmodules);
         }
-    }
 
-    function addPageModules(layout) {
-        
-        var newmodules = []
-            layout.map( item => 
+        if (props.page) {
+            var newmodules = []
+            props.page.map( item => 
                 newmodules.push(item['module'])
             );
-        addModules(newmodules)
-    }
+            addModules(newmodules)
+        }
+    },[props.page]);
 
-    
     function renderSuspenseLayoutModule( item, page, index ) {
         
         if (modules.hasOwnProperty(item['module'])) {
             let Module = modules[item['module']]
             item['props']['wide']=true
-            let moduleprops=item['props']
             return  <React.Suspense fallback={<PlaceholderCard name={ item['module'] }/>}>
                         <Module key={ item['module'] } {...item['props']} />
                     </React.Suspense>
@@ -125,4 +95,3 @@ function SofaPage(props) {
     );
 }
 
-export default withHeartbeat(SofaPage)

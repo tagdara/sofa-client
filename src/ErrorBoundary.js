@@ -3,17 +3,15 @@ import ErrorCard from './ErrorCard'
 
 class ErrorBoundary extends Component {
     
+    // This is one of the last non-functional components because as of 9/2019 there was no hooks equivalent
+    // for componentDidCatch.
+    
     constructor (props) {
         super(props)
-        this.state = { 
-            hasError: false,
-            error: "",
-            info: "",
-        }
+        this.state = { hasError: false, error: "", info: "" }
     }
         
     componentDidCatch (error, info) {
-        //console.log('Error',error, info)
         this.setState({ hasError: true, error: error, info: info})
     }
     

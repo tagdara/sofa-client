@@ -1,9 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { LayoutContext } from '../layout/NewLayoutProvider';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from '../layout/NewLayoutProvider';
-import { withUser } from '../user/UserProvider';
 
 import Avatar from '@material-ui/core/Avatar';
 import Chip from '@material-ui/core/Chip';
@@ -12,8 +9,6 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 
 import ListItemText from '@material-ui/core/ListItemText';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -42,21 +37,22 @@ const useStyles = makeStyles({
 });
 
 
-function Sonos(props) {
+export default function Sonos(props) {
     
     const classes = useStyles();
+    const { applyLayoutCard } = useContext(LayoutContext);
 
     function addDefaultSrc(ev){
         ev.target.src = '/image/sonos/logo'
     }
     
     function setGroupPlayer(thisplayer) {
-        props.applyLayoutCard('PlayerGroup',{ 'player': thisplayer})
+        applyLayoutCard('PlayerGroup',{ 'player': thisplayer})
     }
     
     function getPlayerByEndpointId(endpointId) {
         for (var i = 0; i < props.devices.length; i++) {
-            if (props.devices[i].endpointId==endpointId) {
+            if (props.devices[i].endpointId===endpointId) {
                 return props.devices[i].friendlyName
             }
         }
@@ -64,7 +60,7 @@ function Sonos(props) {
     }
  
     return (
-        props.player.endpointId===props.player.InputController.input.value || props.player.InputController.input.value==''? 
+        props.player.endpointId===props.player.InputController.input.value || props.player.InputController.input.value===''? 
             <GridItem wide={props.wide}>
                 { props.small ? null :
                     <React.Fragment>
@@ -85,7 +81,7 @@ function Sonos(props) {
                     <ListItemAvatar>
                         <Avatar onError={addDefaultSrc} src={props.player.MusicController.art.value} />
                     </ListItemAvatar>
-                    { props.player.MusicController.title.value!='' ?
+                    { props.player.MusicController.title.value!=='' ?
                         <ListItemText primary={ props.small ? props.player.friendlyName : props.player.MusicController.title.value } 
                                         secondary={props.small ? props.player.MusicController.title.value+" - "+props.player.MusicController.artist.value : props.player.MusicController.artist.value }/>
                         :
@@ -93,7 +89,7 @@ function Sonos(props) {
                     }
                     { !props.small ? null : 
                         <ListItemSecondaryAction>
-                            <IconButton onClick={(e) => props.applyLayoutCard('PlayersLayout',{'player':props.player.endpointId})} >
+                            <IconButton onClick={(e) => applyLayoutCard('PlayersLayout',{'player':props.player.endpointId})} >
                                 <ViewModuleIcon />
                             </IconButton>
                         </ListItemSecondaryAction>
@@ -103,5 +99,3 @@ function Sonos(props) {
         : null
     );
 }
-
-export default withUser(withLayout(Sonos));

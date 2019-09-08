@@ -4,7 +4,6 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import Dialog from '@material-ui/core/Dialog';
 import Slide from  '@material-ui/core/Slide';
-import SofaDialogTitle from './SofaDialogTitle';
 
 const useStyles = makeStyles({
 
@@ -29,7 +28,6 @@ function SofaDialog(props) {
             onClose={props.close}
             TransitionComponent={Transition}
         >
-            <SofaDialogTitle title={props.title} tabs={props.tabs} tabValue={props.tabValue} tabChange={props.tabChange} />
             {props.children}
         </Dialog>
     )

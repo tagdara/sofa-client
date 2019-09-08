@@ -1,14 +1,8 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useContext }  from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
+import { DataContext } from './DataContext/DataProvider';
 
-import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
-
 import Light from './light/Light';
 import GridSection from './GridSection';
 
@@ -36,26 +30,25 @@ const useStyles = makeStyles({
     }
 });
 
-function LightLayout(props) {
+export default function LightLayout(props) {
 
+    const { devicesByCategory, isReachable } = useContext(DataContext);
     const classes = useStyles();
     const [filter, setFilter] = useState('ON');
-    const isMobile = window.innerWidth <= 800;
-    const [changeTimes, setChangeTimes] = useState([])
     const [brightControl, setBrightControl] = useState(false)
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
 
     function filterByType(filter) {
         var lights=[]
-        var all=props.devicesByCategory('LIGHT')
+        var all=devicesByCategory('LIGHT')
         
         for (var i = 0; i < all.length; i++) {   
-            if (filter.toLowerCase()=="all") { 
+            if (filter.toLowerCase()==="all") { 
                 lights.push(all[i])
-            } else if (filter.toLowerCase()=='off' && (all[i].PowerController.powerState.value=='OFF' || !props.isReachable(all[i]))) {
+            } else if (filter.toLowerCase()==='off' && (all[i].PowerController.powerState.value==='OFF' || !isReachable(all[i]))) {
                 lights.push(all[i])
-            } else if (filter.toLowerCase()=='on' && all[i].PowerController.powerState.value=='ON' && props.isReachable(all[i])) {
+            } else if (filter.toLowerCase()==='on' && all[i].PowerController.powerState.value==='ON' && isReachable(all[i])) {
                 lights.push(all[i])
             }            
         }
@@ -78,10 +71,10 @@ function LightLayout(props) {
                                 <ColorLensIcon className={classes.smallicon } />
                             </Button>
             
-                            <Button onClick={ () => setFilter('ALL')} color={ filter=='ALL' ? "primary" : "default"} className={classes.button }>
+                            <Button onClick={ () => setFilter('ALL')} color={ filter==='ALL' ? "primary" : "default"} className={classes.button }>
                                 All
                             </Button>
-                            <Button onClick={ () => setFilter('ON')} color={ filter=='ON' ? "primary" : "default"} className={classes.button }>
+                            <Button onClick={ () => setFilter('ON')} color={ filter==='ON' ? "primary" : "default"} className={classes.button }>
                                 On
                             </Button>
                         </>
@@ -97,5 +90,3 @@ function LightLayout(props) {
     )
 
 };
-
-export default withData(LightLayout);

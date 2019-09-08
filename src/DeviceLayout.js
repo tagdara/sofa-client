@@ -1,58 +1,33 @@
-import React, { memo } from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withDevices } from './DataContext/withDevices';
-import { withLayout } from './layout/NewLayoutProvider';
-
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import React, { useState, useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
 import GridBreak from './GridBreak';
 import Device from './deviceSelect/Device';
 
-const useStyles = makeStyles({
-    
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    listDialogContent: {
-        padding: 0,
-    }
+export default function DeviceLayout(props) {
 
-});
-
-function DeviceLayout(props) {
-
-    const classes = useStyles();
-    const [filter, setFilter] = useState('all');
-    const [mode, setMode] = useState('action');
+    const { applyLayoutCard } = useContext(LayoutContext);
+    const { devices, devicesByCategory, returnPage, controllers, directives } = useContext(DataContext);
+    const [mode] = useState('action');
     const [limit, setLimit] = useState(20);
-
-    function toggleFilter(event) {
-        if (filter=='open') {
-            setFilter({ filter:'all'})
-        } else {
-            setFilter({ filter:'open'}) 
-        }
-    }
 
     function filterByType(devtype) {
 
-        if (devtype=='all' || devtype=='') {
-            if (limit<props.devices.length) {
+        if (devtype==='all' || devtype==='') {
+            if (limit<devices.length) {
                 setTimeout(() => { setLimit(limit+20) }, 0)
             }
             
-            console.log(props.devices.length, props.devices.slice(0, limit).length )
-            return props.devices.slice(0, limit)
+            console.log(devices.length, devices.slice(0, limit).length )
+            return devices.slice(0, limit)
         }
-        return props.devicesByCategory(devtype)
+        return devicesByCategory(devtype)
     }
  
     function select(itemtype, deviceName, endpointId, controller, directive) { 
 
-        if (mode=='action') {
+        if (mode==='action') {
             var item={  "type": itemtype,
                         "endpointId": endpointId,
                         "command": directive,
@@ -60,8 +35,7 @@ function DeviceLayout(props) {
                         "deviceName": deviceName
             }
         }
-        console.log('props.return',props.returnPage.name, props.returnPage.props, item)
-        props.applyLayoutCard(props.returnPage.name, {...props.returnPage.props, 'item':item, 'noBottom':'true'} )
+        applyLayoutCard(returnPage.name, {...returnPage.props, 'item':item, 'noBottom':'true'} )
 
     }
     
@@ -70,11 +44,9 @@ function DeviceLayout(props) {
             <GridBreak label={"Devices"}>
             </GridBreak>
             { filterByType('all').map((device) =>
-                <Device key={ device.endpointId+'-exp' } device={device} mode={mode} controllers={props.controllers} select={select} directives={props.directives}  />
+                <Device key={ device.endpointId+'-exp' } device={device} mode={mode} controllers={controllers} select={select} directives={directives}  />
             )}
         </React.Fragment>
     )
 
 };
-
-export default withDevices(withLayout(memo(DeviceLayout)));

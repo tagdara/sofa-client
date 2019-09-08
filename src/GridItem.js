@@ -4,8 +4,6 @@ import classNames from 'classnames';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import List from '@material-ui/core/List'
-import Slide from '@material-ui/core/Slide';
-
 
 const useStyles = makeStyles(theme => {
     return {
@@ -58,7 +56,6 @@ const useStyles = makeStyles(theme => {
 
 export default function GridItem(props) {
     
-    const itemElevation = 1
     const mobileBreakpoint = 800
     const classes = useStyles();
     const isMobile = window.innerWidth <= mobileBreakpoint;

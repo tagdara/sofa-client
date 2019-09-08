@@ -1,8 +1,6 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -25,44 +23,30 @@ const useStyles = makeStyles({
     list: {
         width: "100%",
     },
-    xlist: {
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-    },
-    xlistItem: {
-        width: '100%',
-        minHeight: 48,
-        padding: 0,
-    },
     bottomListItem: {
         flexWrap: "wrap",
         justifyContent: "flex-end",
     },
-    xx: {
-        minHeight: 48,
-        padding: 8,
-    },
-		xlistItemBottom: {
-				padding: "16 0 0 0",
-		}
+
 });
 
 export default function Television(props) {
     
     const classes = useStyles();
-    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
-    
-    if (props.device.hasOwnProperty('SpeakerController')) {
-        const [volume, setVolume] = useState(props.device.SpeakerController.volume.value);
-        const [mute, setMute] = useState(props.device.SpeakerController.mute.value);
-    }
+    const [mute, setMute] = useState(false);
     const [showRemote, setShowRemote] = useState(false)
     const [showDetail, setShowDetail] = useState(false);
-    const [avinput, setInput] = useState(props.device.InputController.input.value);
-    const [inputs, setInputs] = useState({});
+    const [volume, setVolume] = useState(0);
+    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
     
+    useEffect(() => {
+        if (props.device.hasOwnProperty('SpeakerController')) {
+            setVolume(props.device.SpeakerController.volume.value);
+            setMute(props.device.SpeakerController.mute.value);
+        }
+    }, [props.device])
+
+  
     function getInputs() {
         var inputlist=[]
         if (props.device.InputController.hasOwnProperty('inputs')) {
@@ -72,7 +56,6 @@ export default function Television(props) {
         }
         return inputlist
     }
-
 
     function handlePreVolumeChange(event) {
         setVolume(event);
@@ -84,7 +67,7 @@ export default function Television(props) {
     }; 
 
     function handleMuteChange(event) {
-        props.device.SpeakerController.directive('SetVolume', { "mute" : !mute} )
+        props.device.SpeakerController.directive('SetVolume', { "mute" : event} )
     }; 
     
     function handlePowerChange(event) {
@@ -99,11 +82,12 @@ export default function Television(props) {
     function toggleRemote() {
         setShowRemote(!showRemote)
     }
+    
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
             <ErrorBoundary>
-                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.device.PowerController.powerState.value=='ON' ? "on" : "off" }>
+                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }>
                     <TvIcon />
                 </ToggleAvatar>
             </ErrorBoundary>
@@ -111,21 +95,21 @@ export default function Television(props) {
                 <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={props.device.InputController.input.value}/>
             </ErrorBoundary>
                 <ListItemSecondaryAction>
-                    { props.device.PowerController.powerState.value!='ON' ? null :
+                    { props.device.PowerController.powerState.value!=='ON' ? null :
                     <IconButton onClick={ () => toggleRemote() } >
                         <ControlCameraIcon />
                     </IconButton>
                     }
 
-                    <Switch color="primary" checked={props.device.PowerController.powerState.value=='ON'} onChange={ (e) => handlePowerChange(e) } />
+                    <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
             </ListItem>
-        { props.device.hasOwnProperty('SpeakerController') && props.device.PowerController.powerState.value=='ON' && showDetail ?
+        { props.device.hasOwnProperty('SpeakerController') && powerState==='ON' && showDetail ?
             <ListItem className={classes.listItemBottom}>
-                <ToggleAvatar noback={true} onClick={ () => setMuted(!muted)} avatarState={ props.device.PowerController.powerState.value=='ON' ? "on" : "off" }>
-                    {props.device.SpeakerController.mute.value ? <VolumeOffIcon /> : <VolumeUpIcon /> }
+                <ToggleAvatar noback={true} onClick={ () => handleMuteChange(!props.device.SpeakerController.mute.value)} avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }>
+                    {mute ? <VolumeOffIcon /> : <VolumeUpIcon /> }
                 </ToggleAvatar>
-                <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={props.device.SpeakerController.volume.value}
+                <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={volume}
                             minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={false} />
             </ListItem>
             : null
@@ -135,7 +119,7 @@ export default function Television(props) {
                 
                 <ListItemText primary={"Input"} />
                 { getInputs().map(inp => 
-                    <ToggleChip key = {inp} label = { inp } chipState={ props.device.InputController.input.value==inp ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
+                    <ToggleChip key = {inp} label = { inp } chipState={ props.device.InputController.input.value===inp ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
                 )}
             </ListItem>
         }
@@ -144,8 +128,6 @@ export default function Television(props) {
                 <TvRemote device={props.device} />
             </ListItem>
         }
-
         </GridItem>
-    );
+    )
 }
-

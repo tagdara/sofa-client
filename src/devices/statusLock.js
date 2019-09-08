@@ -13,12 +13,12 @@ export default function StatusLock(props) {
         <GridItem wide={props.wide}>
             { props.status ?
                 <ListItem>
-                    { props.status=='NOT_DETECTED' ?
+                    { props.status==='NOT_DETECTED' ?
                         <ToggleAvatar noback={true} avatarState={"on"} onClick={ () => props.handlePress(props.commands.hasOwnProperty('toggle') ? 'toggle':'unlock') }><DialpadIcon /></ToggleAvatar>
                     :
                         <ToggleAvatar noback={false} avatarState={"open"} onClick={ () => props.handlePress(props.commands.hasOwnProperty('toggle') ? 'toggle':'lock') }> <DialpadIcon /></ToggleAvatar>
                     }                
-                    <ListItemText primary={props.name} secondary={props.status=='NOT_DETECTED' ? 'Closed' : 'Open'} />
+                    <ListItemText primary={props.name} secondary={props.status==='NOT_DETECTED' ? 'Closed' : 'Open'} />
                 </ListItem>
             :
                 <ListItem>

@@ -4,15 +4,11 @@ import { makeStyles, withStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-import IconButton from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import TextField from '@material-ui/core/TextField';
 
-import ShuffleIcon from '@material-ui/icons/Shuffle';
 import CloseIcon from '@material-ui/icons/Close';
 
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
@@ -20,11 +16,9 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import GridItem from '../GridItem';
 import DeviceIcon from '../DeviceIcon';
-import GridPage from '../GridPage';
 import Grid from '@material-ui/core/Grid';
 
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 
@@ -116,27 +110,51 @@ export default function AutomationActionNew(props) {
     const [fields, setFields] = useState([])
     const [editVal, setEditVal] = useState({})
     const actionValues = getActionValues(props.item.controller, props.item.command)
-    const actionValue = getActionValue(props.item.controller, props.item.command)
-    
+
     useEffect(() => {
+        function parseActionValues() {
+    
+            var subfields=[]
+            var edval={}
+            var parent=""
+            
+            for (var av in actionValues) {
+                if (typeof actionValues[av] === 'object') {
+                    parent=av
+                    for (var avsub in actionValues[av]) {
+                        subfields.push({ 'name':avsub, 'type': actionValues[av][avsub] })
+                        edval[avsub]=''
+                        if (props.item.hasOwnProperty('value')) {
+                            if (props.item.value.hasOwnProperty(av)) {
+                                if (props.item.value[av].hasOwnProperty(avsub)) {
+                                    edval[avsub]=props.item.value[av][avsub]
+                                } 
+                            }
+                        }
+                    }
+                } else {
+                    console.log('not an object',actionValues[av])
+                    subfields= [{ "name":av, "type":actionValues[av] }]
+                    edval[av]=''
+                    if (props.item.hasOwnProperty('value')) {
+                        if (props.item.value.hasOwnProperty(av)) {
+                            edval[av]=props.item.value[av]
+                        }
+                    }
+                }
+            }
+            setFields(subfields)
+            setEditVal(edval)
+            setParentField(parent)
+        }
+
         parseActionValues()
-    }, [props.item]);
+    }, [props.item, actionValues]);
 
     function getActionValues(controller, command) {
         return props.directives[controller][command]
     }
 
-    function getActionValue(controller, command) {
-        var payload=props.directives[controller][command]
-        for (var prop in payload) {
-            if (payload[prop].hasOwnProperty('value')) {
-                return prop
-            }
-        } 
-        return ''
-    }
-
-    
     function editValues(action, value) {
         var newitem=props.item // working copy of props
         var edval=editVal
@@ -157,70 +175,9 @@ export default function AutomationActionNew(props) {
         console.log(action, value)
     }
 
-    function parseActionValues() {
-
-        var subfields=[]
-        var edval={}
-        var parent=""
-        
-        for (var av in actionValues) {
-            if (typeof actionValues[av] === 'object') {
-                parent=av
-                for (var avsub in actionValues[av]) {
-                    subfields.push({ 'name':avsub, 'type': actionValues[av][avsub] })
-                    edval[avsub]=''
-                    if (props.item.hasOwnProperty('value')) {
-                        if (props.item.value.hasOwnProperty(av)) {
-                            if (props.item.value[av].hasOwnProperty(avsub)) {
-                                edval[avsub]=props.item.value[av][avsub]
-                            } 
-                        }
-                    }
-                }
-            } else {
-                console.log('not an object',actionValues[av])
-                subfields= [{ "name":av, "type":actionValues[av] }]
-                edval[av]=''
-                if (props.item.hasOwnProperty('value')) {
-                    if (props.item.value.hasOwnProperty(av)) {
-                        edval[av]=props.item.value[av]
-                    }
-                }
-            }
-        }
-        setFields(subfields)
-        setEditVal(edval)
-        setParentField(parent)
-    }
-
-    function hslToRgb(h, s, l){
-        var r, g, b;
-
-        if(s == 0){
-            r = g = b = l; // achromatic
-        }else{
-            var hue2rgb = function hue2rgb(p, q, t){
-                if(t < 0) t += 1;
-                if(t > 1) t -= 1;
-                if(t < 1/6) return p + (q - p) * 6 * t;
-                if(t < 1/2) return q;
-                if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-                return p;
-            }
-
-            var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-            var p = 2 * l - q;
-            r = hue2rgb(p, q, h + 1/3);
-            g = hue2rgb(p, q, h);
-            b = hue2rgb(p, q, h - 1/3);
-        }
-
-        return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
-    }
-
     function controlMapper(action, index) {
         
-        if (action.name=='endpointId') {
+        if (action.name==='endpointId') {
             return <Button onClick={() => props.selectDevice(editVal[action.name])}>{ editVal[action.name] ? editVal[action.name] : 'Choose a device'}</Button>
         } else {
             return <TextField
@@ -240,19 +197,16 @@ export default function AutomationActionNew(props) {
     
     function getActions() {
         var actions=[]
-        for (var i = 0; i < props.device.capabilities.length; i++) {
-            actions=actions.concat(getControllerCommands(props.device.capabilities[i].interface.split('.')[1]))
-
+        for (var i = 0; i < props.device.interfaces.length; i++) {
+            actions=actions.concat(getControllerCommands(props.device.interfaces[i]))
         }
         return actions.sort()
     }
         
     function getControllerCommands(controller) {
-        var cmds=[]
         if (props.directives.hasOwnProperty(controller)) {
             return Object.keys(props.directives[controller])
         }
-        //console.log('Did not find',controller,'in',props.directives)
         return []
     }
 
@@ -260,8 +214,8 @@ export default function AutomationActionNew(props) {
         <GridItem nolist={true} elevation={0} wide={true}>
             <Grid item xs={props.wide ? 12 : 6 } >
                 <ListItem className={classes.listItem} >
-                    <ListItemIcon onClick={() => props.run(name,index)}><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-                    <ListItemText className={classes.deviceName} primary={props.name} secondary={props.device.endpointId} />
+                    <ListItemIcon onClick={() => props.run(props.device.friendlyName, props.index)}><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
+                    <ListItemText className={classes.deviceName} primary={props.device.friendlyName} secondary={props.device.endpointId} />
                 </ListItem>
             </Grid>
             <Grid item xs={props.wide ? 12 : 6 } className={classes.flex} >
@@ -283,7 +237,7 @@ export default function AutomationActionNew(props) {
                     }
                     { props.reorder &&
                         <ButtonGroup variant="contained" size="small" >
-                            <Button disabled={ props.index==0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></Button>
+                            <Button disabled={ props.index===0 } onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></Button>
                             <Button onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></Button>
                         </ButtonGroup>
                     }

@@ -1,27 +1,27 @@
-import React, { memo } from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
+
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
-import ErrorCard from './ErrorCard';
 import ErrorBoundary from './ErrorBoundary';
 import PlaceholderCard from './PlaceholderCard';
 import SofaPage from './SofaPage';
-import BottomNav from './BottomNav';
-import BottomButtons from './BottomButtons';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 const useStyles = makeStyles({
     
     controlArea: {
-        margin: "8 auto",
+        margin: "8px auto",
         maxWidth: 1440,
         boxSizing: "border-box",
         overflowY: "auto",
         width: "100%",
     },
     mobileControlArea: {
-        margin: "8 auto",
+        margin: "8px auto",
         maxWidth: 600,
         width: "100%",
         marginTop: "env(safe-area-inset-top)",
@@ -31,39 +31,35 @@ const useStyles = makeStyles({
         minHeight: "100%",
         alignContent: "flex-start",
     },
- 
 });
 
-function cardLoading(props) {
+export default function SofaAppContent(props) {
     
-    if (props.error) {
-        console.log(props)
-        return <ErrorCard message={props.error.message} />;
-    } else if (props.pastDelay) {
-        return <PlaceholderCard />;
-    } else {
-        return null;
-    }
-}
-
-function SofaAppContent(props) {
-    
+    const { layout, isMobile } = useContext(LayoutContext);
+    const { eventSource } = useContext(DataContext);
     const classes = useStyles();
     const [modules, setModules] = useState([]);
-    const [module, setModule] = useState(null);
 
     useEffect(() => {
-        if (!props.layout.data.hasOwnProperty('pages')) {
-            addModules([props.layout.name])
+
+        function addSuspenseModule(modulename) {
+            return ( React.lazy(() => import('./'+modulename)))
         }
-    },[props.layout]);
+
+        function addModules(modulelist) {
+            var newmodules = {}
+            modulelist.forEach( item => {
+                console.log('adding module',item)
+                newmodules[item]=addSuspenseModule(item)
+            })
+            setModules(newmodules);
+        }
+
+        if (!layout.data.hasOwnProperty('pages')) {
+            addModules([layout.name])
+        }
+    },[layout]);
     
-
-    function addSuspenseModule(modulename) {
-        
-        return ( React.lazy(() => import('./'+modulename)))
-    }
-
     function renderSuspenseModule( modulename, moduleprops ) {
 
         if (modules.hasOwnProperty(modulename)) {
@@ -75,46 +71,33 @@ function SofaAppContent(props) {
             return null
         }
     }
-    
-    function addModules(modulelist) {
-        
-        var changes=false;
-        var newmodules = {}
-        modulelist.map( item => {
-            if (modules.hasOwnProperty(item)) {
-                newmodules[item]=modules[item]
-            } else {
-                console.log('adding module',item)
-                //newmodules[item]=addModule(item)
-                newmodules[item]=addSuspenseModule(item)
-                changes=true
-            }
-        })
-        if (changes) {
-            setModules(newmodules);
-        }
-    }
+ 
 
     return (
-        <Grid container spacing={ props.isMobile && props.layout.data.type=='single' ? 2: 8} className={ props.isMobile ? classes.mobileControlArea : classes.controlArea} >
-            { props.layout.data.type=='pages'  && 
-                <React.Fragment>
-                    { props.layout.data.order.map( page => {
-                        return (page==props.layout.page || !props.isMobile ) ?
-                        <SofaPage key={page} name={page} page={props.layout.data.pages[page]} />
+        eventSource.readyState !== 1 ?
+        <Grid container spacing={2} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
+            <ListItem>
+                <ListItemText primary="Network not ready" secondary={"Server side status "+eventSource.readyState} />
+            </ListItem>
+        </Grid>
+        :
+        <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
+            { layout.data.type==='pages'  && 
+                <ErrorBoundary wide={props.wide}>
+                    { layout.data.order.map( page => {
+                        return (page===layout.page || !isMobile ) ?
+                        <SofaPage key={page} name={page} page={layout.data.pages[page]} />
                         : null
                     })}
-                </React.Fragment>
+                </ErrorBoundary>
             }
-            { props.layout.data.type=='single' ?
+            { layout.data.type==='single' ?
                 <React.Fragment>
     				<ErrorBoundary wide={props.wide}>
-    				{ renderSuspenseModule(props.layout.name, props.layout.props) }
+    				{ renderSuspenseModule(layout.name, layout.props) }
                     </ErrorBoundary>
                 </React.Fragment>
 			: null }
         </Grid>
     );
 }
-
-export default withLayout(SofaAppContent)

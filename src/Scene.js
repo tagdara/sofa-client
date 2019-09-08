@@ -39,25 +39,29 @@ export default function Scene(props) {
     }, [props.computedLevel]);
     
     function runScene() {
-        console.log('Activating', "logic:scene:"+props.name)
+        console.log('Activating', props.scene.friendlyName)
         setWorking(true)
-        props.sendAlexaCommand(props.name, "logic:scene:"+props.name, "SceneController", "Activate")
+        props.scene.SceneController.directive('Activate')
+    }
+    
+    function deleteScene(endpointId) {
+        props.scene.SceneController.directive("Delete")
     }
     
     return (
         <GridItem >
-            <ListItem onClick={ () => runScene(name)}>
+            <ListItem onClick={ () => runScene()}>
                 { working ?
                     <CircularProgress size={32} className={classes.working} />
                 :
-                    <ToggleAvatar avatarState={props.endpointId==props.computedLevel ? 'on' : 'off'}>
-                        {props.shortcut=='x' ? <ListIcon /> : props.shortcut }
+                    <ToggleAvatar avatarState={props.scene.endpointId===props.computedLevel ? 'on' : 'off'}>
+                        {props.shortcut==='x' ? <ListIcon /> : props.shortcut }
                     </ToggleAvatar>
                 }
-                <ListItemText>{props.name}</ListItemText>
+                <ListItemText>{props.scene.friendlyName}</ListItemText>
                 { props.remove &&
                     <ListItemSecondaryAction className={classes.listItem}>
-                        <ListItemIcon onClick={() => props.delete(props.endpointId)}><CloseIcon /></ListItemIcon>   
+                        <ListItemIcon onClick={() => deleteScene() }><CloseIcon /></ListItemIcon>   
                     </ListItemSecondaryAction>
                 }
             </ListItem>

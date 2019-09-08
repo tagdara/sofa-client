@@ -1,25 +1,19 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
-import { withUser } from './user/UserProvider';
-
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import React, { useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
 import GridBreak from './GridBreak';
 import Sonos from "./sonos/Sonos";
 
 
-function PlayersLayout(props) {
-
-    const speakers = props.devicesByCategory('SPEAKER')
+export default function PlayersLayout(props) {
+    const { applyLayout } = useContext(LayoutContext);
+    const { devicesByCategory } = useContext(DataContext);
+    const speakers = devicesByCategory('SPEAKER')
 
     function changePlayerHome(newplayer) {
-        var newplayerobj=props.deviceByEndpointId(newplayer)
-        props.setUserPlayer(newplayerobj)
-        props.applyLayout('Home')
+        //var newplayerobj=deviceByEndpointId(newplayer)
+        applyLayout('Home')
     }
 
     return (    
@@ -27,12 +21,10 @@ function PlayersLayout(props) {
             <GridBreak label={"Players"} />
 
             { speakers.map((device) =>
-                device.endpointId===device.InputController.input.value || device.InputController.input.value=='' ? 
+                device.endpointId===device.InputController.input.value || device.InputController.input.value==='' ? 
                 <Sonos key={device.endpointId} player={device} changePlayer={changePlayerHome} devices={speakers} device={ device } />
                 : null
             )}
         </React.Fragment>
     )
 };
-
-export default withUser(withData(withLayout(PlayersLayout)));

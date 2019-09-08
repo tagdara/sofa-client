@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Typography from '@material-ui/core/Typography';
@@ -56,9 +55,9 @@ export default function PlayerArtOverlay(props) {
     
     const classes = useStyles();
     const [showOverlay, setShowOverlay] = useState(true);
-    const coverDefault = '/image/sonos/logo'; 
     const [imageLoaded, setImageLoaded] = useState(false)
-
+    const serverurl="https://"+window.location.hostname;
+    
     function toggleOverlay() {
         setShowOverlay(!showOverlay)
     }
@@ -68,8 +67,9 @@ export default function PlayerArtOverlay(props) {
             <Fade in={ imageLoaded } >
             <img
                 className={classes.bigcover}
-                src={ props.art }
+                src={ serverurl+props.art }
                 title={ props.title }
+                alt={ props.title }
                 onClick={ () => toggleOverlay()}
                 onLoad={ () => setImageLoaded(true) }
             />

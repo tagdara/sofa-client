@@ -1,42 +1,47 @@
-import React from 'react';
-import { withLayout } from './layout/NewLayoutProvider';
-import { withData } from './DataContext/withData';
-import { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
 import ToggleAvatar from './ToggleAvatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import CloseIcon from '@material-ui/icons/Close';
-import DialpadIcon from '@material-ui/icons/Dialpad';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import TuneIcon from '@material-ui/icons/Tune';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 
 import GridItem from './GridItem';
 
-function MiniLauncher(props) {
+export default function MiniLauncher(props) {
     
-    const [onCount, setOnCount] = useState(0)
+    const { applyLayoutCard } = useContext(LayoutContext);
+    const { devicesByCategory } = useContext(DataContext);
+    const switches = devsWithPowerState(devicesByCategory('SWITCH'))
+    
+    function devsWithPowerState(devs) {
+        var outdevs=[]
+        for (var j = 0; j < devs.length; j++) {
+            if (devs[j].hasOwnProperty('PowerController')) {
+                outdevs.push(devs[j])
+            }
+        }
+        return outdevs
+    }
 
-    useEffect(() => {
+    function onCount() {
         var ondevs=0
-        for (var i = 0; i < props.devices.length; i++) {
-            if (props.devices[i].hasOwnProperty('PowerController') && props.devices[i].PowerController.powerState.value=='ON') {
+        for (var i = 0; i < switches.length; i++) {
+            if (switches[i].PowerController.powerState.value==='ON') {
                 ondevs+=1
             }
         }
-        setOnCount(ondevs)
-    }, [props.devices])
+        return ondevs
+    }
 
     return (
         <GridItem wide={props.wide}>
-            <ListItem onClick={ () => props.applyLayoutCard('MoreDevicesLayout') } >
-                <ToggleAvatar noback={true} avatarState={ onCount ? 'on' : 'off'}><DevicesOtherIcon /></ToggleAvatar>
-                <ListItemText primary={"More Devices"} secondary={onCount ? onCount+" devices on" : null} />
+            <ListItem onClick={ () => applyLayoutCard('MoreDevicesLayout') } >
+                <ToggleAvatar noback={true} avatarState={ onCount() ? 'on' : 'off'}><DevicesOtherIcon /></ToggleAvatar>
+                <ListItemText primary={"More Devices"} secondary={onCount() ? onCount()+" devices on" : null} />
             </ListItem>
         </GridItem>
     );
 }
-
-export default withData(withLayout(MiniLauncher));

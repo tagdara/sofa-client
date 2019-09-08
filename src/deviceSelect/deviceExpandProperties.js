@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React from 'react';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,7 +14,7 @@ export default function DeviceExpandProperties(props) {
         for (var i = 0; i < device.capabilities.length; i++) {
             if (device.capabilities[i].hasOwnProperty('properties') && device.capabilities[i].properties.hasOwnProperty('supported')) {
                 for (var j = 0; j < device.capabilities[i].properties.supported.length; j++) {
-                    if (device.capabilities[i].interface.split(".")[1]==controller || controller==null) {
+                    if (device.capabilities[i].interface.split(".")[1]===controller || controller==null) {
                         proplist.push(device.capabilities[i].properties.supported[j].name)
                     }
                 }
@@ -24,11 +24,6 @@ export default function DeviceExpandProperties(props) {
         return proplist
     }
 
-    function getControllerCommands(controller) {
-        var cmds=[]
-        return props.controllers[controller]
-    }
-    
     return (
         <List>
             { Object.keys(props.controllers).sort().map(controller => {

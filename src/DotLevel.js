@@ -1,13 +1,9 @@
-import React, { Component } from "react";
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
 import LensIcon from '@material-ui/icons/Lens';
-import LensOutlinedIcon from '@material-ui/icons/LensOutlined';
-//import TripOriginIcon from '@material-ui/icons/TripOrigin';
 import TripOriginIcon from '@material-ui/icons/RadioButtonUnchecked';
-
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
@@ -57,20 +53,20 @@ export default function DotLevel(props) {
         <React.Fragment >
             { levels.map((lev) =>
             <IconButton key={lev} color={ level >0 ? "primary" : "default" } onClick={ () => applyLevel(lev) } >
-                { lev==0  ?
+                { lev===0  ?
                 <>
-                    { working && lev==level ?
+                    { working && lev===level ?
                         <CircularProgress size={24} className={classes.working} />
                     :
-                        <TripOriginIcon className={ lev==level ? classes.selectedZero : classes.zeroIcon} />
+                        <TripOriginIcon className={ lev===level ? classes.selectedZero : classes.zeroIcon} />
                     }
                 </>
                 :
                 <>
-                    { (working && lev==level) ?
+                    { (working && lev===level) ?
                         <CircularProgress size={24} className={classes.working} />
                     :
-                    <LensIcon className={ lev==level ? classes.selectedIcon : classes.smallIcon} />
+                    <LensIcon className={ lev===level ? classes.selectedIcon : classes.smallIcon} />
                     }
                 </>
                 }

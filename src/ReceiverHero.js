@@ -1,14 +1,15 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-
+import React, { useContext } from 'react';
+import { DataContext } from './DataContext/DataProvider';
 import Receiver from './devices/receiver';
 
-function ReceiverHero(props) {
+export default function ReceiverHero(props) {
+    
+    const { devicesByCategory } = useContext(DataContext);
+    const devices = devicesByCategory('RECEIVER')
 
     return (
         <React.Fragment>
-            { props.devices.map((device) => (
+            { devices.map((device) => (
                 <Receiver wide={props.wide} key={device.endpointId} device={ device } />
                 ))
             }
@@ -16,5 +17,3 @@ function ReceiverHero(props) {
     );
     
 }
-
-export default withData(ReceiverHero);

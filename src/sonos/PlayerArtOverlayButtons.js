@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -8,10 +7,8 @@ import Fab from '@material-ui/core/Fab';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
 import StopIcon from '@material-ui/icons/Stop';
 import SkipNextIcon from '@material-ui/icons/SkipNext';
-import SkipPreviousIcon from '@material-ui/icons/SkipPrevious';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import MaximizeIcon from '@material-ui/icons/Maximize';
 
@@ -41,11 +38,7 @@ const useStyles = makeStyles({
         bottom: 20,
         left: 16,
     },
-    favButton: {
-        position: "absolute",
-        bottom: 20,
-        left: 64,
-    },
+
     coverButton: {
         position: "absolute",
         bottom: 20,
@@ -72,9 +65,6 @@ export default function PlayerArtOverlayButtons(props) {
             <IconButton color="primary" className={classes.playersButton} onClick={ (e) => props.players(e)}>
                 <ViewModuleIcon />
             </IconButton>
-            <IconButton color="primary" className={classes.favButton} onClick={ (e) => props.media(e)}>
-                <QueueMusicIcon />
-            </IconButton>
             { isMobile ? null :
             <IconButton color="primary" className={classes.coverButton} onClick={ (e) => props.cover(e)}>
                 <FullscreenIcon />
@@ -84,7 +74,7 @@ export default function PlayerArtOverlayButtons(props) {
                 <StopIcon />
             </IconButton>
             <Fab color="primary" aria-label="play" className={classes.playButton} onClick={ (e) => props.playPause(e)}>
-                { props.playbackState=='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
+                { props.playbackState==='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
             </Fab>
             <IconButton className={classes.skipButton} onClick={ (e) => props.skip(e)}>
                 <SkipNextIcon />

@@ -1,6 +1,6 @@
-import React, { Component, memo } from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
-import { makeStyles, useTheme } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';;
@@ -40,12 +40,8 @@ const useStyles = makeStyles({
 export default function SofaAvatarSlider(props) {
 
     const classes = useStyles();
-    
     const [value, setValue] = useState(0);
-    const [delay, setDelay] = useState(false);
     const [drag, setDrag] = useState(false);
-    const [prechange, setPrechange] = useState(false);
-    const [sendPrechange, setSendPrechange] = useState(false);
 
     useEffect(() => {
   	    setValue(props.value)

@@ -1,17 +1,10 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
-import Icon from '@material-ui/core/Icon';
-import IconButton from '@material-ui/core/IconButton';
 
-import CloseIcon from '@material-ui/icons/Close';
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 import LensIcon from '@material-ui/icons/Lens';
 
@@ -57,15 +50,10 @@ export default function LightSliderColor(props) {
 
     const classes = useStyles();
     const reveal = {hue: 43.5, saturation:0.27, brightness: 1}
-    const [delaySet, setDelaySet] = useState(false);
-    const [prevColor, setPrevColor] = useState({});
     const [color, setColor] = useState(reveal);
-    const [delayTimer, setDelayTimer] = useState(null);
     
     useEffect(() => {
-        if (!delaySet) {
-            setColor(sb2sl(props.device.ColorController.color.value))
-        }
+        setColor(sb2sl(props.device.ColorController.color.value))
     }, [props.device.ColorController.color.value]);
 
 
@@ -81,21 +69,6 @@ export default function LightSliderColor(props) {
         hsb.brightness=props.device.BrightnessController.brightness.value/100
         props.device.ColorController.directive('SetColor',{ "color": hsb })
     }
-    
-    function delaySliderUpdates() {
-        setDelaySet(true)
-        if (delayTimer) {
-            clearTimeout(delayTimer)
-        }
-        var timer = () => setTimeout(() => endSliderDelay(), 20000)
-        setDelayTimer(timer)
-        setDelaySet(true)
-    }
-    
-    function endSliderDelay() {
-        setDelaySet(false);
-        setColor(sb2sl(props.color))
-    }
 
     return (
         <ListItem>
@@ -105,7 +78,7 @@ export default function LightSliderColor(props) {
                 color={ color }
                 onChangeComplete={ handleColorSliderChange }
             />
-            <Button size="small" onClick={ () => handleColorChange(reveal)} color={ color==reveal ? "primary" : "default"} className={classes.button }>
+            <Button size="small" onClick={ () => handleColorChange(reveal)} color={ color===reveal ? "primary" : "default"} className={classes.button }>
                 <LensIcon className={classes.revealIcon} />
             </Button>
         </ListItem>

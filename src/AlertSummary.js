@@ -1,7 +1,6 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from './layout/NewLayoutProvider';
 
 import Button from '@material-ui/core/Button';
 import GridItem from './GridItem';
@@ -15,17 +14,16 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-function AlertSummary(props) {
+export default function AlertSummary(props) {
     
     const classes = useStyles();
+    const { applyLayoutCard } = useContext(LayoutContext);
     
     return (
         <GridItem wide={false} nopaper={true}>
-            <Button variant="outlined" className={ classes.base} onClick={ () => props.applyLayoutCard('CameraLayout') }>
+            <Button variant="outlined" className={ classes.base} onClick={ () => applyLayoutCard('CameraLayout') }>
                 <Message />
             </Button>
         </GridItem>
     );
 }
-
-export default withLayout(AlertSummary);

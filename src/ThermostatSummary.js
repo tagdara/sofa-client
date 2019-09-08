@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
+
 import GridItem from './GridItem'
 import Button from '@material-ui/core/Button';
 
@@ -34,13 +35,24 @@ const useStyles = makeStyles(theme => {
                 backgroundColor: "#FFE0B2",
                 borderColor: "#E65100",
             }
+        },
+        disabled: {
+            width: 96,
+            color: "#444",
+            borderColor: "#444",
+            '&:hover': {
+                backgroundColor: "#666",
+                borderColor: "#444",
+            }
         }
     }
 });
 
-function ThermostatSummary(props) { 
+export default function ThermostatSummary(props) { 
     
-    const device = props.deviceByFriendlyName('Main Thermostat')
+    const { applyLayoutCard } = useContext(LayoutContext);
+    const { deviceByFriendlyName } = useContext(DataContext);
+    const device = deviceByFriendlyName('Main Thermostat')
     const classes = useStyles();
     
     function tempColor(temp) {
@@ -49,14 +61,13 @@ function ThermostatSummary(props) {
         return classes.mid;
     }
     
-    return (
+    return ( device ?
             <GridItem wide={false} nopaper={true}>
-                <Button variant="outlined" color="primary" className={tempColor(device.TemperatureSensor.temperature.value.value)} onClick={ () => props.applyLayoutCard('ThermostatLayout') }>
-                    {device.TemperatureSensor.temperature.value.value}&deg;
+                <Button variant="outlined" color="primary" className={device.TemperatureSensor.temperature.value ? tempColor(device.TemperatureSensor.temperature.deepvalue) : classes.disabled } onClick={ () => applyLayoutCard('ThermostatLayout') }>
+                    {device.TemperatureSensor.temperature.value ? device.TemperatureSensor.temperature.deepvalue : '--'}&deg;
                 </Button>
             </GridItem>
+            : null
     );
 }
-
-export default withData(withLayout(ThermostatSummary));
 

@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/styles';
 
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -10,7 +9,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import TextField from '@material-ui/core/TextField';
 
-import ShuffleIcon from '@material-ui/icons/Shuffle';
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -21,7 +19,6 @@ import OperatorButton from "./operatorButton"
 import Grid from '@material-ui/core/Grid';
 
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 
@@ -85,10 +82,6 @@ const useStyles = makeStyles({
     listItem: {
         padding: "12 16",
     },
-    xxreducedButtonPad: {
-        padding: "4 16 12 10",
-        alignItems: "flex-end",
-    },
     flex: {
         display: "flex",
     }
@@ -115,35 +108,35 @@ const BootstrapInput = withStyles(theme => ({
 export default function AutomationCondition(props) {
 
     const classes = useStyles();
-    const [parentField, setParentField] = useState({})
     const [fields, setFields] = useState([])
     const [editVal, setEditVal] = useState({})
-    const [condition, setCondition] = useState({})
 
     useEffect(() => {
-        parseControllerProperties()
-    }, [props.controllerProperties]);
-    
-    function getIcon(category, size='default') {
-
-        if (icons.hasOwnProperty(category)) {
-            var RealIcon=icons[category]
-        } else {
-            var RealIcon=DeveloperBoardIcon
+        function parseControllerProperties() {
+            var subfields=[]
+            var edval={}
+            for (var cp in props.controllerProperties) {
+                subfields.push({ 'name':cp, 'type': props.controllerProperties[cp] })
+                edval[cp]=''
+                if (props.item.hasOwnProperty('value') && props.item.value.hasOwnProperty(cp)) {
+                    edval[cp]=props.item.value[cp]
+                }
+            }
+            console.log('controller props:', props.controllerProperties)
+            setFields(subfields)
+            setEditVal(edval)
         }
-        return <RealIcon size={24} fontSize={size} />
-    }
-
+        
+        parseControllerProperties()
+    }, [props.item, props.controllerProperties]);
+    
+    
     function editOperatorValue(value) {
         var condition=props.item
         condition.operator=value
         props.save(props.index, condition)
     }
 
-    function editValue(val) {
-        console.log('ev',val)
-    }
-    
     function editValues(conval, value) {
         var condition=props.item
         var edval=editVal
@@ -153,29 +146,12 @@ export default function AutomationCondition(props) {
         props.save(props.index, condition)
     }
     
-    function parseControllerProperties() {
-
-        var subfields=[]
-        var edval={}
-        for (var cp in props.controllerProperties) {
-            subfields.push({ 'name':cp, 'type': props.controllerProperties[cp] })
-            edval[cp]=''
-            if (props.item.hasOwnProperty('value') && props.item.value.hasOwnProperty(cp)) {
-                edval[cp]=props.item.value[cp]
-            }
-        }
-        console.log('controller props:', props.controllerProperties)
-        setFields(subfields)
-        setEditVal(edval)
-        
-    }
-    
     function typeFromType(vartype) {
-        if (vartype=="time") {
+        if (vartype==="time") {
             return "time"
-        } else if  (vartype=="percentage") {
+        } else if  (vartype==="percentage") {
             return "number"
-        } else if  (vartype=="integer") {
+        } else if  (vartype==="integer") {
             return "number"
         } else {
             return "text"
@@ -188,13 +164,10 @@ export default function AutomationCondition(props) {
 
     function getDeviceProperties() {
         var proplist=[]
-        for (var i = 0; i < props.device.capabilities.length; i++) {
-            if (props.device.capabilities[i].hasOwnProperty('properties') && props.device.capabilities[i].properties.hasOwnProperty('supported')) {
-                for (var j = 0; j < props.device.capabilities[i].properties.supported.length; j++) {
-                    proplist.push(props.device.capabilities[i].properties.supported[j].name)
-                }
-            } 
-        }
+        for (var i = 0; i < props.device.interfaces.length; i++) {
+            console.log(props.device.interfaces[i], props.device[props.device.interfaces[i]].properties)
+            proplist = proplist.concat(props.device[props.device.interfaces[i]].properties);
+        } 
         return proplist
     }
     
@@ -203,7 +176,7 @@ export default function AutomationCondition(props) {
             <Grid item xs={props.wide ? 12 : 6 } >
                 <ListItem className={classes.listItem} >
                     <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-                    <ListItemText primary={props.name} secondary={props.device.endpointId} className={classes.deviceName}/>
+                    <ListItemText primary={props.device.friendlyName} secondary={props.device.endpointId} className={classes.deviceName}/>
                     { props.remove ?
                         <ListItemSecondaryAction>
                             <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     

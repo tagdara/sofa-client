@@ -1,79 +1,77 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
 
 import Button from '@material-ui/core/Button';
 import GridItem from './GridItem';
-import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
+
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
 import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
 import TvIcon from '@material-ui/icons/Tv';
 
 const useStyles = makeStyles({
         
-    topSplit: {
-        paddingBottom: 24,
-    },
     summaryButton: {
         width: 96,
     }
 });
 
-function AvSummary(props) {
+export default function AvSummary(props) {
     
     const classes = useStyles();
-    const [speakerCount, setSpeakerCount] = useState(0)
-    const [receiverCount, setReceiverCount] = useState(0)
-    const [tvCount, setTvCount] = useState(0)
+    const { applyHomePage } = useContext(LayoutContext);
+    const { devicesByCategory } = useContext(DataContext);
 
-    useEffect(() => {
-        var devs=props.devicesByCategory('SPEAKER')
+    function onTvs() {
+        var devs=devicesByCategory('TV')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
-            if (devs[i].MusicController.playbackState.value=='PLAYING') {
+            if (devs[i].PowerController.powerState.value==='ON') {
                 ondevs+=1
             }
         }
-        setSpeakerCount(ondevs)
+        return ondevs
+    }
 
-        var devs=props.devicesByCategory('RECEIVER')
+    function onReceivers() {
+        var devs=devicesByCategory('RECEIVER')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
-            if (devs[i].PowerController.powerState.value=='ON') {
+            if (devs[i].PowerController.powerState.value==='ON') {
                 ondevs+=1
             }
         }
-        setReceiverCount(ondevs)
-
-        var devs=props.devicesByCategory('TV')
+        return ondevs
+    }
+    
+    function onSpeakers() {
+        var devs=devicesByCategory('SPEAKER')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
-            if (devs[i].PowerController.powerState.value=='ON') {
+            if (devs[i].MusicController.playbackState.value==='PLAYING') {
                 ondevs+=1
             }
         }
-        setTvCount(ondevs)
-
-    }, [props.devices])
+        return ondevs
+    }
     
     return (
         <>
         <GridItem wide={false} nopaper={true}>
-            <Button className={classes.summaryButton} variant="outlined" color={speakerCount ? "primary" : "default"} onClick={ () => props.applyHomePage('Audio Video') }>
+            <Button className={classes.summaryButton} variant="outlined" color={onSpeakers() ? "primary" : "default"} onClick={ () => applyHomePage('Audio Video') }>
                 <QueueMusicIcon />
             </Button>
         </GridItem>
 
         <GridItem wide={false} nopaper={true}>
-            <Button className={classes.summaryButton} variant="outlined" color={receiverCount ? "primary" : "default"} onClick={ () => props.applyHomePage('Audio Video') }>
+            <Button className={classes.summaryButton} variant="outlined" color={onReceivers() ? "primary" : "default"} onClick={ () => applyHomePage('Audio Video') }>
                 <SpeakerGroupIcon />
             </Button>
         </GridItem>
 
         <GridItem wide={false} nopaper={true}>
-            <Button className={classes.summaryButton} variant="outlined" color={tvCount ? "primary" : "default"} onClick={ () => props.applyHomePage('Audio Video') }>
+            <Button className={classes.summaryButton} variant="outlined" color={onTvs() ? "primary" : "default"} onClick={ () => applyHomePage('Audio Video') }>
                 <TvIcon />
             </Button>
         </GridItem>
@@ -81,5 +79,3 @@ function AvSummary(props) {
 
     );
 }
-
-export default withData(withLayout(AvSummary));

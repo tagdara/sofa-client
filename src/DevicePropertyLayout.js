@@ -1,12 +1,7 @@
-import React, { memo } from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withDevices } from './DataContext/withDevices';
-import { withLayout } from './layout/NewLayoutProvider';
+import React, { useState, useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import ListItem from '@material-ui/core/ListItem';
 
@@ -18,58 +13,33 @@ import SearchIcon from '@material-ui/icons/Search';
 import IconButton from '@material-ui/core/IconButton';
 import InputAdornment from '@material-ui/core/InputAdornment';
 
-const useStyles = makeStyles({
-    
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    listDialogContent: {
-        padding: 0,
-    },
-    searchGrid: {
-        alignItems: "flex-end",
-        padding: "16px 16px 0px 16px !important",
-        height: 64,
-        display: "flex",
-    },
+export default function DevicePropertyLayout(props) {
 
-});
-
-function DevicePropertyLayout(props) {
-
-    const classes = useStyles();
-    const [filter, setFilter] = useState('all');
-    const [mode, setMode] = useState('property');
+    const { applyLayoutCard, returnPage } = useContext(LayoutContext);
+    const { devices, devicesByCategory, controllers, directives } = useContext(DataContext);
+    const [mode] = useState('property');
     const [searchTerm, setSearchTerm] = useState('');
 
-
-    function toggleFilter(event) {
-        if (filter=='open') {
-            setFilter({ filter:'all'})
-        } else {
-            setFilter({ filter:'open'}) 
-        }
-    }
-    
     function filterByType(devtype) {
 
-        if (devtype=='all' || devtype=='') {
-            return props.devices
+        if (devtype==='all' || devtype==='') {
+            return devices
         }
-        return props.devicesByCategory(devtype, searchTerm)
+        return devicesByCategory(devtype, searchTerm)
     }
     
-    function select(itemtype, deviceName, endpointId, controller, propertyName,z) { 
-        console.log('z?',itemtype, z)
-        if (mode=='action') {
-            var item={  "type": itemtype,
+    function select(itemtype, deviceName, endpointId, controller, propertyName) { 
+
+        var item={}
+        if (mode==='action') {
+            item={  "type": itemtype,
                         "endpointId": endpointId,
-                        "command": directive,
+                        "command": propertyName,
                         "controller": controller,
                         "deviceName": deviceName
             }
         } else {
-            var item={  "type": itemtype,
+            item={  "type": itemtype,
                         "endpointId": endpointId,
                         "propertyName": propertyName,
                         "controller": controller,
@@ -77,7 +47,7 @@ function DevicePropertyLayout(props) {
             }
         }
 
-        props.applyLayoutCard(props.returnPage.name, {...props.returnPage.props, 'item':item, 'noBottom':'true'} )
+        applyLayoutCard(returnPage.name, {...returnPage.props, 'item':item, 'noBottom':'true'} )
 
     }
     
@@ -85,11 +55,7 @@ function DevicePropertyLayout(props) {
         <React.Fragment>
             <GridItem wide={true} elevation={0}>
                 <ListItem>
-                    <TextField
-                        fullWidth
-                        variant="outlined"
-                        label="Search"
-                        value={searchTerm}
+                    <TextField fullWidth variant="outlined" label="Search" value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                         InputProps={{endAdornment: (<InputAdornment position="end">
                             <IconButton><SearchIcon /></IconButton></InputAdornment>
@@ -100,11 +66,9 @@ function DevicePropertyLayout(props) {
             <GridBreak label={"Devices"}>
             </GridBreak>
             { filterByType('ALL').map((device) =>
-                <DeviceExpand key={ device.endpointId+'-exp' } device={device} mode={mode} controllers={props.controllers} select={select} directives={props.directives}  />
+                <DeviceExpand key={ device.endpointId+'-exp' } device={device} mode={mode} controllers={controllers} select={select} directives={directives}  />
             )}
         </React.Fragment>
     )
 
 };
-
-export default withLayout(withDevices(memo(DevicePropertyLayout)));

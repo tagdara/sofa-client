@@ -1,8 +1,7 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
 
 import LightbulbOutlineIcon from './LightbulbOutline';
 import Button from '@material-ui/core/Button';
@@ -21,20 +20,23 @@ const useStyles = makeStyles({
     }
 });
 
-function LightSummary(props) {
+export default function LightSummary(props) {
     
-    const lightsOn = props.lightCount('on');
+    const { applyLayoutCard } = useContext(LayoutContext);
+    const { lightCount } = useContext(DataContext);
+
+    const lightsOn = lightCount('on');
     const classes = useStyles();
 
     return (
         <GridItem wide={false} nopaper={true}>
-            { props.lightCount('all') ?
-                <Button variant="outlined" className={classes.summaryButton} color={lightsOn ? "primary" : "default"} onClick={ () => props.applyLayoutCard('LightLayout') }>
+            { lightCount('all') ?
+                <Button variant="outlined" className={classes.summaryButton} color={lightsOn ? "primary" : "default"} onClick={ () => applyLayoutCard('LightLayout') }>
                     <LightbulbOutlineIcon className={classes.iconPad} />
                     {lightsOn ? " "+lightsOn : " Off" }
                 </Button>
             :
-                <Button variant="outlined" disabled className={classes.summaryButton} onClick={ () => props.applyLayoutCard('LightLayout') }>
+                <Button variant="outlined" disabled className={classes.summaryButton} onClick={ () => applyLayoutCard('LightLayout') }>
                     <LightbulbOutlineIcon className={classes.iconPad} />
                     --
                 </Button>
@@ -43,5 +45,3 @@ function LightSummary(props) {
         </GridItem>
     );
 }
-
-export default withData(withLayout(LightSummary));

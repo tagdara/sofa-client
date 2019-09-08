@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/lab/Slider';
+import Slider from '@material-ui/core/Slider';
 
 const useStyles = makeStyles({
          
@@ -30,9 +30,6 @@ const useStyles = makeStyles({
     padLeft: {
         paddingLeft: 16,
     },
-    xstackLabel: {
-        alignSelf: "flex-end",
-    },
     slider: {
         margin: "-18px"
     }
@@ -51,7 +48,9 @@ export default function SofaSlider(props) {
     
     function handlePreChange(event, value) {
         setValue(value);
-        props.preChange(value);
+        if (props.preChange) {
+            props.preChange(value);
+        }
     }; 
 
     function handleChange(event,value) {

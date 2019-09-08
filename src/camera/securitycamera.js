@@ -1,21 +1,15 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
+import { LayoutContext } from '../layout/NewLayoutProvider';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from '../layout/NewLayoutProvider';
-import { withData } from '../DataContext/withData';
 
-import Card from '@material-ui/core/Card';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import IconButton from '@material-ui/core/IconButton';
 
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import SlideshowIcon from '@material-ui/icons/Slideshow';
 
-import HistoryIcon from '@material-ui/icons/History';
 import CameraDialog from './cameraDialog';
-import ListItem from '@material-ui/core/ListItem';
 import GridItem from '../GridItem';
 
 const useStyles = makeStyles({    
@@ -45,9 +39,11 @@ const useStyles = makeStyles({
         width: "100%",
         height: "auto",
         borderRadius: 4,
+        display: "flex",
     },
     hiddenimage: {
         height: 0,
+        display: "none",
     },
     hidden: {
         borderRadius: 4,
@@ -65,17 +61,45 @@ const useStyles = makeStyles({
     },
 });
 
-function SecurityCamera(props) {
+function useInterval(callback, delay) {
+    
+    const savedCallback = useRef();
+
+    // Remember the latest function.
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval.
+    useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+    }, [delay]);
+}
+
+export default function SecurityCamera(props) {
 
     const classes = useStyles();
+    const { isMobile, applyLayoutCard } = useContext(LayoutContext);
     const intervals = [1000, 500, 5000, 3000]
-    const [currentUrl, setCurrentUrl] = useState("");
     const [imageLoaded, setImageLoaded] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     const [refreshInterval, setRefreshInterval] = useState(3000);
-    const [live, setLive] = useState(true);
+    const live = true;
     const [imageUri,setImageUri] = useState("")
     const [updateUrl, setUpdateUrl] = useState("");
+
+    useInterval(() => {
+        // Your custom logic here
+        if (imageUri) {
+            setUpdateUrl(imageUri+"?time="+Date.now())
+        }
+    }, refreshInterval);
     
     useEffect(()=> {
         props.camera.CameraStreamController.directive("InitializeCameraStreams", 
@@ -93,29 +117,17 @@ function SecurityCamera(props) {
                     }
                 ]
             }
-        ).then(response => setImageUri(response.payload.imageUri));
+        ).then(response => { setUpdateUrl(response.payload.imageUri+"?time="+Date.now()); setImageUri(response.payload.imageUri) })
     },[props.camera]);
 
-    useEffect(() => {
-        if (imageUri) {
-            setUpdateUrl(imageUri+"?time="+Date.now())
-            const interval = setInterval(() => { setUpdateUrl(imageUri+"?"+Date.now()) }, refreshInterval)
-            return () => {
-                clearInterval(interval);
-            }
-        }
-    }, [imageUri]);
-    
     function imageFinished() {
         if (!imageLoaded) {
             setImageLoaded(true);
         }
-        setCurrentUrl(updateUrl)
     }
     
     function changeInterval() {
         setRefreshInterval(intervals.shift())
-        const interval = setInterval(() => setUpdateUrl(imageUri+"?time="+Date.now()), refreshInterval)
         intervals.push(refreshInterval)
     }
     
@@ -128,14 +140,14 @@ function SecurityCamera(props) {
     }
     
     return (
-        <GridItem wide={props.wide} nopad={true} thinmargin={props.isMobile}>
-            
+        <GridItem wide={props.wide} nopad={true} thinmargin={isMobile}>
             { imageUri && 
                 <img
                     className={imageLoaded ? classes.im : classes.hiddenimage}
                     src={updateUrl}
                     onLoad={ () => imageFinished() }
                     onClick={ () => handleClickOpen()}
+                    alt={props.camera.friendlyName+" Security Camera"}
                 />
             }
             {imageLoaded ?
@@ -151,7 +163,7 @@ function SecurityCamera(props) {
                         </IconButton>
                     }
                     { props.selectButtons &&
-                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => props.applyLayoutCard('CameraLayout')}>
+                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
                             <ViewModuleIcon />
                         </IconButton>
                     }
@@ -163,11 +175,8 @@ function SecurityCamera(props) {
                 </div>
             }
             { showDialog &&
-                <CameraDialog live={live} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={currentUrl} />
+                <CameraDialog live={live} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
             }
         </GridItem>
     );
-
 }
-
-export default withData(withLayout(SecurityCamera))

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { LayoutContext } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
@@ -14,7 +15,7 @@ const useStyles = makeStyles(theme => {
             overflowX: "hidden",
             overflowY: "hidden",
             alignContent: "start",
-            padding: "3 !important",
+            padding: "3px !important",
             backgroundColor: theme.palette.background.page,
             borderRadius: "4px 4px 4px 4px",
         },
@@ -27,6 +28,7 @@ const useStyles = makeStyles(theme => {
 
 export default function GridSection(props) {
     
+    const { isMobile } = useContext(LayoutContext);
     const classes = useStyles();
 
     return (
@@ -36,10 +38,19 @@ export default function GridSection(props) {
                 <List className={classes.nopad}>
                     <ListItem>
                         <ListItemText primary={props.name} />
-                        <ListItemSecondaryAction>
-                        {props.secondary}
-                        </ListItemSecondaryAction>
+                        { (!isMobile || !props.break) &&
+                            <ListItemSecondaryAction>
+                                {props.secondary}
+                            </ListItemSecondaryAction>
+                        }
                     </ListItem>
+                    { (isMobile && props.break) &&
+                        <ListItem>
+                            <ListItemSecondaryAction>
+                                {props.secondary}
+                            </ListItemSecondaryAction>
+                        </ListItem>
+                    }
                 </List>
                 </Grid>
             }
@@ -48,4 +59,8 @@ export default function GridSection(props) {
     );
 }
 
+GridSection.defaultProps = {
+    break: false
+}
+ 
 

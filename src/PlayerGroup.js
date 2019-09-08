@@ -1,11 +1,6 @@
-import React, { memo}  from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
+import React, { useContext } from 'react';
+import { DataContext } from './DataContext/DataProvider';
 
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -21,55 +16,32 @@ import ToggleAvatar from './ToggleAvatar';
 
 import Sonos from "./sonos/Sonos";
 
-const useStyles = makeStyles({
-    
-    listDialogContent: {
-        padding: 0,
-    }
+export default function PlayerGroup(props) {
 
-});
-
-function PlayerGroup(props) {
-    
-    console.log('group', props, props.player, props.deviceProperties)
-
-    const classes = useStyles();
-    const isMobile = window.innerWidth <= 800;
-    const speakers = props.devicesByCategory('SPEAKER')
-    const device = props.deviceByEndpointId(props.player)
-    
-    console.log('group device', device)
+    const { devicesByCategory, deviceByEndpointId } = useContext(DataContext);
+    const speakers = devicesByCategory('SPEAKER')
+    const device = deviceByEndpointId(props.player)
     
     function isLinked(name) {
 
-        if (name==props.player) return true
-        if (props.deviceProperties.hasOwnProperty(props.player)) {
-            if (props.deviceProperties[props.player].hasOwnProperty('linked')) {
-                if (props.deviceProperties[props.player].linked.includes(name)) {
-                    return true
-                }
-            }
+        if (name===props.player || device.MusicController.linked.value.includes(name)) {
+            return true
         }
         return false
     }
     
-    function handleAddRemove(endpointId, action) {
-        if (action=='add') {
-            var sonosinput=props.player
-        } else {
-            var sonosinput=''
+    function handleAddRemove(speaker, action) {
+        var sonosinput=''
+        if (action==='add') {
+            sonosinput=props.player
         }
-        props.sendAlexaCommand(name, endpointId, 'InputController', "SelectInput", { "input": sonosinput } )
+        speaker.InputController.directive("SelectInput", { "input": sonosinput } )
     }; 
-
 
     return (    
         <React.Fragment>
             <GridBreak label={"Playing"} />
-            { props.deviceProperties.hasOwnProperty(props.player) &&
-                <Sonos small={true} setLayoutCard={props.setLayoutCard} setPlayer={props.setPlayer} sendAlexaCommand={props.sendAlexaCommand} 
-                        devices={speakers} name={ device.friendlyName } player={ device } deviceProperties={ props.deviceProperties[device.endpointId] } linkedPlayers={ props.deviceProperties }/>
-            }
+            <Sonos small={true} setPlayer={props.setPlayer} devices={speakers} name={ device.friendlyName } player={ device } />
             <GridBreak label={"In Group"} />
             { speakers.map(speaker =>
                 isLinked(speaker.endpointId) &&
@@ -78,7 +50,7 @@ function PlayerGroup(props) {
                             <ToggleAvatar avatarState={"on"}><SpeakerIcon /></ToggleAvatar>
                             <ListItemText variant="body2" primary={speaker.friendlyName} />
                             <ListItemSecondaryAction>
-                                <IconButton onClick={()=> handleAddRemove(speaker.endpointId, 'remove') }>
+                                <IconButton onClick={()=> handleAddRemove(speaker, 'remove') }>
                                     <RemoveIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>
@@ -93,16 +65,13 @@ function PlayerGroup(props) {
                             <ToggleAvatar avatarState={"off"}><SpeakerIcon /></ToggleAvatar>
                             <ListItemText variant="body2" primary={speaker.friendlyName} />
                             <ListItemSecondaryAction>
-                                <IconButton onClick={()=> handleAddRemove(speaker.endpointId, 'add') }>
+                                <IconButton onClick={()=> handleAddRemove(speaker, 'add') }>
                                     <AddIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>
                         </ListItem>
                     </GridItem>
             )}
-
         </React.Fragment>
     )
 };
-
-export default withData(memo(PlayerGroup));

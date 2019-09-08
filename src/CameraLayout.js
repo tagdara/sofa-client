@@ -1,6 +1,5 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { withData } from './DataContext/withData';
+import React, { useContext } from 'react';
+import { DataContext } from './DataContext/DataProvider';
 
 import SecurityCamera from './camera/securitycamera';
 import VideocamIcon from '@material-ui/icons/Videocam';
@@ -10,9 +9,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
 
-function CameraLayout(props) {
-
-    const cameras=props.devicesByCategory(['CAMERA'])
+export default function CameraLayout(props) {
+    
+    const { devicesByCategory } = useContext(DataContext);
+    const cameras=devicesByCategory(['CAMERA'])
 
     function openNVR() {
         var newurl="https://unifi-video.dayton.tech:7443"
@@ -36,5 +36,3 @@ function CameraLayout(props) {
         </React.Fragment>
     )
 }
-
-export default withData(CameraLayout)

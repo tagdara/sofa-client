@@ -1,8 +1,7 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
 import Button from '@material-ui/core/Button';
 import GridItem from './GridItem';
@@ -21,25 +20,28 @@ const useStyles = makeStyles({
     }
 });
 
-function DeviceSummary(props) {
+export default function DeviceSummary(props) {
     
     const classes = useStyles();
     const [onCount, setOnCount] = useState(0)
     
+    const { applyLayoutCard } = useContext(LayoutContext);
+    const { devicesByCategory } = useContext(DataContext);
+    const switches = devicesByCategory('SWITCH')
+    
     useEffect(() => {
         var ondevs=0
-        var devs=props.devicesByCategory('SWITCH')
-        for (var i = 0; i < devs.length; i++) {
-            if (devs[i].hasOwnProperty('PowerController') && devs[i].PowerController.powerState.value=='ON') {
+        for (var i = 0; i < switches.length; i++) {
+            if (switches[i].hasOwnProperty('PowerController') && switches[i].PowerController.powerState.value==='ON') {
                 ondevs+=1
             }
         }
         setOnCount(ondevs)
-    }, [props.devices])
+    }, [switches])
     
     return (
         <GridItem wide={false} nopaper={true}>
-            <Button variant="outlined" className={classes.summaryButton} color={onCount ? "primary" : "default"} onClick={ () => props.applyLayoutCard('MoreDevicesLayout') }>
+            <Button variant="outlined" className={classes.summaryButton} color={onCount ? "primary" : "default"} onClick={ () => applyLayoutCard('MoreDevicesLayout') }>
                 <DevicesOtherIcon className={classes.iconPad} />
                 {onCount ? "   "+onCount : " Off" }
             </Button>
@@ -47,4 +49,3 @@ function DeviceSummary(props) {
     );
 }
 
-export default withData(withLayout(DeviceSummary));

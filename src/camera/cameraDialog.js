@@ -1,13 +1,7 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { withLayout } from '../layout/NewLayoutProvider';
-import { withData } from '../DataContext/withData';
 
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
 import CloseIcon from '@material-ui/icons/Close';
 import TimerIcon from '@material-ui/icons/Timer';
@@ -78,7 +72,9 @@ const useStyles = makeStyles({
     },
 });
 
-function CameraDialog(props) {
+const Hls = window.Hls;
+
+export default function CameraDialog(props) {
 
     const classes = useStyles();
     const [rotation, setRotation]=useState(0)
@@ -112,13 +108,13 @@ function CameraDialog(props) {
     useEffect(()=> {
         console.log('uri update',uri)
         enableScaling()
-        if (props.live && Hls.isSupported() ) {
+        if (props.live && window.Hls.isSupported() ) {
             var hls = new Hls();
             hls.loadSource(uri);
             hls.attachMedia(video.current);
             hls.on(Hls.Events.MANIFEST_PARSED,function() { video.current.play(); });
         }
-    }, [uri])
+    }, [uri, props.live])
     
             
     function enableScaling() {
@@ -139,7 +135,7 @@ function CameraDialog(props) {
     function rotate() {
 
         
-        if (rotation!=90) {
+        if (rotation!==90) {
             setRotation(90)
         } else {
             setRotation(0)
@@ -167,11 +163,10 @@ function CameraDialog(props) {
                     <source src={uri} type="application/x-mpegURL" />
                 </video>
                 :
-                <img className={rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} src={props.src}/>
+                <img alt={props.camera.friendlyName} className={rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} src={props.src}/>
                 }
             </Paper>
         </Dialog>
     )
 };
 
-export default withData(withLayout(CameraDialog));

@@ -6,7 +6,6 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SpeakerIcon from '@material-ui/icons/Speaker';
 import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
 import TouchAppIcon from '@material-ui/icons/TouchApp';
@@ -55,13 +54,12 @@ class SofaCategoryFilter extends React.Component {
     getIcon = (category, size='default') => {
             
         var pxSize=24;
-        if (size=='small') {
+        if (size==='small') {
             pxSize=16
         }
+        var RealIcon=DeveloperBoardIcon
         if (this.state.icons.hasOwnProperty(category)) {
-            var RealIcon=this.state.icons[category]
-        } else {
-            var RealIcon=DeveloperBoardIcon
+            RealIcon=this.state.icons[category]
         }
         
         return <RealIcon size={pxSize} fontSize={size} />
@@ -69,7 +67,7 @@ class SofaCategoryFilter extends React.Component {
     
     filterIcon = (icon) => {
         console.log('filter',this.state.filter,'vs',icon)
-        if (this.state.filter==icon) {
+        if (this.state.filter===icon) {
             this.setState({filter:''})
             this.props.applyFilter('')
         }  else {
@@ -85,7 +83,7 @@ class SofaCategoryFilter extends React.Component {
         return (
             <ListSubheader className={classes.line}>
             { Object.keys(this.state.icons).map((icon) => 
-                <Button key={icon+"icon"} size="small" onClick={ () => this.filterIcon(icon)} className={ (this.state.filter==icon) ? classes.hotButton : classes.button }>
+                <Button key={icon+"icon"} size="small" onClick={ () => this.filterIcon(icon)} className={ (this.state.filter===icon) ? classes.hotButton : classes.button }>
                     {this.getIcon(icon,'small')}
                 </Button>
             )}

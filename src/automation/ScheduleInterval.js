@@ -1,20 +1,14 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-
 import TextField from  '@material-ui/core/TextField';
-
 import ScheduleIcon from '@material-ui/icons/Schedule';
-import ToggleButton from '../ToggleButton';
-import ToggleAvatar from '../ToggleAvatar';
 import UnitButton from './UnitButton';
 
 const useStyles = makeStyles({
-
     shortLabel: {
         flexGrow:0,
     },
@@ -25,9 +19,7 @@ const useStyles = makeStyles({
         maxWidth: 50,
         marginRight: 16,
     },
-
 });
-
 
 export default function ScheduleInterval(props) {
     
@@ -37,7 +29,6 @@ export default function ScheduleInterval(props) {
         props.change('unit', newunit)    
     }
     
-
     return (
         <ListItem> 
             <ListItemIcon onClick={props.toggle}><ScheduleIcon /></ListItemIcon>

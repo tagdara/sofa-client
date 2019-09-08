@@ -1,53 +1,30 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
-
-import Button from '@material-ui/core/Button';
-
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import React, { useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
 import GridBreak from './GridBreak';
-import Region from './Region';
-import LayersIcon from '@material-ui/icons/Layers';
-import AreaLine from './region/AreaLine';
+import AreaLine from './AreaLine';
 import GridItem from './GridItem';
 
-const useStyles = makeStyles({
+export default function AreasLayout(props) {
     
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    listDialogContent: {
-        padding: 0,
-    },
-    button: {
-        minWidth: 36
-    },
-});
+    const { applyLayout } = useContext(LayoutContext);
+    const { setArea, devicesByCategory } = useContext(DataContext);
 
-function RegionsLayout(props) {
-
-    const classes = useStyles();
-    
     function selectArea(name) {
-        props.setRegion(name);
-        props.applyLayout('Home');
+        setArea(name);
+        applyLayout('Home');
     }
 
     return (    
         <React.Fragment>
             <GridBreak label={"Areas"} />
-            { props.devicesByCategory('AREA').map((area) =>
-            <GridItem wide={props.wide} key={ area.endpointId } >
-                <AreaLine area={ area } name={ area.friendlyName } shortcuts={area.shortcuts} selectArea={selectArea} ></AreaLine>
-            </GridItem>
+            { devicesByCategory('AREA').map((area) =>
+                <GridItem wide={props.wide} key={ area.endpointId } >
+                    <AreaLine area={ area } name={ area.friendlyName } shortcuts={area.shortcuts} selectArea={selectArea} ></AreaLine>
+                </GridItem>
             )}
         </React.Fragment>
     )
 
 };
-
-export default withLayout(withData(RegionsLayout));

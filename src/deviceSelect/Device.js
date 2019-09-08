@@ -1,14 +1,9 @@
-import React, { memo } from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withData } from '../DataContext/withData';
-import { withLayout } from '../layout/NewLayoutProvider';
+import React from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import Button from '@material-ui/core/Button';
 
 import GridItem from '../GridItem';
 
@@ -22,50 +17,21 @@ import ListIcon from '@material-ui/icons/List';
 import TvIcon from '@material-ui/icons/Tv';
 import LightbulbOutlineIcon from '../LightbulbOutline';
 
-const useStyles = makeStyles({
-        
-    deviceExpand: {
-        padding: "0",
-        marginBottom: 2,
-    },
-    detailList: {
-        paddingLeft: 24,
-    },
-    expListItem: {
-        padding: 0,
-        width: '100%',
-    },
-    list: {
-        minWidth: 320,
-        width: "100%",
-    },
-    summary: {
-        margin: '0 !important',
-        padding: 0,
-    },
-    sumexp: {
-        margin: '0 !important',
-        padding: 0,
-    },
-});
-
 export default function Device(props) {
 
-    const classes = useStyles();
     const icons = {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
 
     function getIcon(category, size='default') {
             
         var pxSize=24;
-        if (size=='small') {
+        var RealIcon=DeveloperBoardIcon    
+        if (size==='small') {
             pxSize=16
         }
         if (icons.hasOwnProperty(category)) {
-            var RealIcon=icons[category]
-        } else {
-            var RealIcon=DeveloperBoardIcon
-        }
-        
+            RealIcon=icons[category]
+        } 
+
         return <RealIcon size={pxSize} fontSize={size} />
     }
 

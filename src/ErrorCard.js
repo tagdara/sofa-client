@@ -9,6 +9,16 @@ import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied'
 
 export default function ErrorCard(props) {
 
+    function reloadPWA() {
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.unregister();
+            });
+        }
+        window.location.reload(true)
+    }
+
     return (
         <GridItem wide={props.wide}>
             <List>
@@ -17,7 +27,7 @@ export default function ErrorCard(props) {
                     <ListItemText primary={props.name} secondary={props.message} />
                 </ListItem>
                 <ListItem>
-                    <ListItemText primary={"Reload"} onClick={() => location.reload() }/>
+                    <ListItemText primary={"Reload"} onClick={() => reloadPWA() }/>
                 </ListItem>
             </List>
         </GridItem>

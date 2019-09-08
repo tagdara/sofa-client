@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -9,16 +8,10 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
-
-import Avatar from '@material-ui/core/Avatar';
 import TextField from  '@material-ui/core/TextField';
-
 import EventIcon from '@material-ui/icons/Event';
-import GridItem from '../GridItem'
-import ToggleAvatar from '../ToggleAvatar'
 
 const useStyles = makeStyles({
-
     shortLabel: {
         flexGrow:0,
     },
@@ -35,10 +28,9 @@ export default function ScheduleStart(props) {
     const classes = useStyles();
 
     function shortTimeFormat(thisdate) {
+        var longdate=new Date().toISOString().replace('Z','')
         if (thisdate) {
-            var longdate=thisdate
-        } else {
-            var longdate=new Date().toISOString().replace('Z','')
+            longdate=thisdate
         }
 
         if (longdate.split(':').length>2) {

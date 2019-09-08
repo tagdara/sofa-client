@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
@@ -24,7 +24,6 @@ const units = [
 export default function UnitButton(props) {
 
     const classes = useStyles();
-    const [value, setValue] = useState("min")
     const [anchor, setAnchor] = useState(null)
 
 
@@ -37,7 +36,6 @@ export default function UnitButton(props) {
     };
     
     function handleMenuSelect(event, item) {
-        setValue(item)
         setAnchor(null)
         props.setUnit(units[item])
     };

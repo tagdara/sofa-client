@@ -1,54 +1,38 @@
-import React from 'react';
+import React, { useContext }from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { withLayout } from '../layout/NewLayoutProvider';
+import { LayoutContext } from '../layout/NewLayoutProvider';
 
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar';
 
-function TemperatureSensor(props) { 
+export default function TemperatureSensor(props) { 
+    
+    const { applyLayoutCard, applyBackPage } = useContext(LayoutContext);
     
     function tempColor(temp) {
+        if (!temp) { return 'disabled' }
         if (temp>=74) { return "hot" }
         if (temp<70) { return "cool" }
         return "mid";
     }
     
     function switchToHistory() {
-        props.applyBackPage('ThermostatLayout',{})
-        props.applyLayoutCard('ThermostatHistory', { 'device':props.device, 'days':7})
+        applyBackPage('ThermostatLayout',{})
+        applyLayoutCard('ThermostatHistory', { 'device':props.device, 'days':7})
     }
-    
-    function summarizeThermostatSetting() {
-        if (props.device.hasOwnProperty('ThermostatController')) {
-            if (props.device.ThermostatController.thermostatMode.value=='OFF') {
-                return 'Off'
-            }
-        } else {
-            return null
-        }
-    
-        if (props.device.ThermostatController.hasOwnProperty('upperSetpoint') && props.device.ThermostatController.upperSetpoint.value ) {
-            return 'Range set to '+props.device.ThermostatController.lowerSetpoint.value.value+'° - '+props.device.ThermostatController.upperSetpoint.value.value+'°'
-        }
-        if (props.device.ThermostatController.hasOwnProperty('targetSetpoint') && props.device.ThermostatController.targetSetpoint.value) {
-            return 'Heat set to '+props.device.ThermostatController.targetSetpoint.value.value+'°'
-        }
-        return ''
-    }
-    
+
     return (
         
         <GridItem wide={props.wide} >
             <ListItem onClick={props.onClick}>
                 <ToggleAvatar onClick={ () => switchToHistory()} 
-                    avatarState={ props.device.TemperatureSensor.temperature.value ? tempColor(props.device.TemperatureSensor.temperature.value.value) : 'notready'}>
-                    {props.device.TemperatureSensor.temperature.value ? props.device.TemperatureSensor.temperature.value.value : '--'}
+                    avatarState={ tempColor(props.device.TemperatureSensor.temperature.deepvalue) }>
+                    {props.device.TemperatureSensor.temperature.value ? props.device.TemperatureSensor.temperature.deepvalue : '--'}
                 </ToggleAvatar>
-                <ListItemText primary={props.device.friendlyName} secondary={summarizeThermostatSetting()} />
+                <ListItemText primary={props.device.friendlyName}  />
            </ListItem>
-       </GridItem>
+        </GridItem>
     );
 }
 
-export default withLayout(TemperatureSensor);

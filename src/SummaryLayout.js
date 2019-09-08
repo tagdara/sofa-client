@@ -1,39 +1,22 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import { withThemeChange } from './theme/SofaTheme';
-import { withLayout } from './layout/NewLayoutProvider';
-
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-
-import Divider from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
+import { useEffect, useContext, useRef } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
 
 import GridSection from './GridSection';
 import GridItem from './GridItem';
 
-import IconButton from '@material-ui/core/IconButton';
-import AddIcon from '@material-ui/icons/Add';
 import ErrorBoundary from './ErrorBoundary';
 
-import TuneIcon from '@material-ui/icons/Tune';
-import HistoryIcon from '@material-ui/icons/History';
-import CompareIcon from '@material-ui/icons/Compare';
-import PersonIcon from '@material-ui/icons/Person';
-import EditIcon from '@material-ui/icons/Edit';
 import MusicVideoIcon from '@material-ui/icons/MusicVideo';
 import LightbulbOutlineIcon from './LightbulbOutline';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
+
 import ToggleAvatar from './ToggleAvatar'
 
 import AvSummary from './AvSummary'
-
-
 import LightSummary from './LightSummary'
 import ThermostatSummary from './ThermostatSummary'
 import DeviceSummary from './DeviceSummary'
@@ -41,37 +24,18 @@ import SecuritySummary from './SecuritySummary'
 import CameraSummary from './CameraSummary'
 import AlertSummary from './AlertSummary'
 
+export default function SummaryLayout(props) {
 
-const useStyles = makeStyles({
-    
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    listDialogContent: {
-        padding: 0,
-    },
-    button: {
-        minWidth: 36
-    },
-    buttonspacer: {
-        minWidth: 36,
-        marginRight: 18
-    },
-
-});
-
-function SummaryLayout(props) {
-
-    const classes = useStyles();
+    const { setMasterButtonState, applyHomePage} = useRef(useContext(LayoutContext)).current;
 
     useEffect(() => {
-        props.setMasterButtonState('System')
-    },[]);    
+        setMasterButtonState('System')
+    },[setMasterButtonState]);    
     
     return (    
         <GridSection name={"Summary"} >
             <GridItem>
-                <ListItem onClick={() => props.applyHomePage('Audio Video') }>
+                <ListItem onClick={() => applyHomePage('Audio Video') }>
                     <ToggleAvatar avatarState="on">
                         <MusicVideoIcon />
                     </ToggleAvatar>
@@ -84,7 +48,7 @@ function SummaryLayout(props) {
                 </ListItem>
             </GridItem>
             <GridItem>
-                <ListItem onClick={() =>  props.applyHomePage('Lights and Comfort')}>
+                <ListItem onClick={() => applyHomePage('Lights and Comfort')}>
                     <ToggleAvatar avatarState="on">
                         <LightbulbOutlineIcon />
                     </ToggleAvatar>
@@ -99,7 +63,7 @@ function SummaryLayout(props) {
                 </ListItem>
             </GridItem>
             <GridItem>
-                <ListItem onClick={() =>  props.applyHomePage('Security')}>
+                <ListItem onClick={() =>  applyHomePage('Security')}>
                     <ToggleAvatar avatarState="on">
                         <VerifiedUserIcon />
                     </ToggleAvatar>
@@ -114,8 +78,7 @@ function SummaryLayout(props) {
                 </ListItem>
 
             </GridItem>
+            <Typography variant="caption">v2.04</Typography>
         </GridSection>
     )
 };
-
-export default withLayout(withThemeChange(SummaryLayout));

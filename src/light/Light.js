@@ -1,24 +1,12 @@
-import React from "react";
-import { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ToggleAvatar from '../ToggleAvatar';
-import Icon from '@material-ui/core/Icon';
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Paper from '@material-ui/core/Paper';
 import Switch from '@material-ui/core/Switch';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-
-import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 import LightbulbOutlineIcon from '../LightbulbOutline';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
-
-import SofaSlider from "../SofaSlider"
 import LightSliderBrightness from "./LightSliderBrightness"
 import LightSliderTemperature from "./LightSliderTemperature"
 import LightSliderColor from "./LightSliderColor"
@@ -96,7 +84,7 @@ export default function Light(props) {
     
     function isReachable() {
         if (props.device.hasOwnProperty('EndpointHealth')) {
-            if (props.device.EndpointHealth.connectivity.value.value=='OK') { return true }
+            if (props.device.EndpointHealth.connectivity.value.value==='OK') { return true }
             return false
         }
         console.log('no endpoint health', props.device)
@@ -107,7 +95,7 @@ export default function Light(props) {
         <GridItem nopaper={props.nopaper} xs={props.xs} thinmargin={props.thinmargin} >
             <ListItem className={classes.listItem} >
                 { isReachable() ?
-                    <ToggleAvatar noback={true} avatarState={props.device.PowerController.powerState.value=='ON' ? "on" : "off" } >
+                    <ToggleAvatar noback={true} avatarState={props.device.PowerController.powerState.value==='ON' ? "on" : "off" } >
                         <LightbulbOutlineIcon className={classes.iconSize} />
                     </ToggleAvatar>
                 :
@@ -117,7 +105,7 @@ export default function Light(props) {
                 }                
                 <ListItemText onClick={() => setShowAll(!showAll) } primary={props.device.friendlyName} secondary={ isReachable() ? '': 'Off at switch' } />
                 { isReachable() &&
-                    <Switch color="primary" className={classes.lightSwitch} checked={props.device.PowerController.powerState.value=='ON'} onChange={handlePowerChange} />
+                    <Switch color="primary" className={classes.lightSwitch} checked={props.device.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
                 }
             </ListItem>
             { !props.brightControl && !showAll ? null :

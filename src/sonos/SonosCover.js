@@ -14,29 +14,27 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Slide from '@material-ui/core/Slide';
 
-import GridItem from '../GridItem';
-
 const useStyles = makeStyles({
 
     bigDialog: {
-        backgroundColor: "#222",
+        backgroundColor: "#000",
         paddingTop: "env(safe-area-inset-top)",
         paddingBottom: "env(safe-area-inset-bottom)",
         minWidth: '320px',
         boxSizing: "border-box",
     },
     root: {
-        backgroundColor: "#111"
+        backgroundColor: "#000"
     },
     paper: {
-        backgroundColor: "#111",
+        backgroundColor: "#000",
         boxShadow: "none",
         overflow: "hidden"
     },
     coverArt: {
         width: "100%",
         maxWidth: "100%",
-        background: "#222",
+        background: "#000",
         opacity: "1.0", 
         margin: "auto auto",
         borderRadius: 4,
@@ -91,6 +89,7 @@ const useStyles = makeStyles({
 
 function SonosCover(props) {
     
+    const serverurl="https://"+window.location.hostname;
     const classes = useStyles();
     const mobileBreakpoint = 800
     const isMobile = window.innerWidth <= mobileBreakpoint;
@@ -107,7 +106,7 @@ function SonosCover(props) {
                 <Grid item xs={isMobile ? 12 : 6}>
                 <Slide direction="right" in={true} mountOnEnter unmountOnExit>
                     <Paper elevation={1} className={ classes.nopad} >
-                        <img onError={addDefaultSrc} className={classes.coverArt} src={props.src}/>
+                        <img onError={addDefaultSrc} className={classes.coverArt} src={serverurl+props.src} alt={props.title} />
                     </Paper>
                 </Slide>
                 </Grid>
@@ -117,7 +116,7 @@ function SonosCover(props) {
                 </Grid>
             </Grid>
             <IconButton className={classes.skipbutton} onClick={ (e) => props.handlePlayPause(e) } color="primary">
-                { props.playbackState=='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
+                { props.playbackState==='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
             </IconButton>
             <IconButton className={classes.pausebutton} onClick={ (e) => props.handleSkip(e) } color="primary">
                 <SkipNextIcon />

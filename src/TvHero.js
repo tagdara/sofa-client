@@ -1,17 +1,16 @@
-import React from "react";
-import { withData } from './DataContext/withData';
-
+import React, { useContext } from "react";
 import Television from './devices/Television';
+import { DataContext } from './DataContext/DataProvider';
 
-function TvHero(props) {
+export default function TvHero(props) {
+    
+    const { devicesByCategory } = useContext(DataContext);
 
     return (
         <React.Fragment>
-            { props.devices.map(device => 
+            { devicesByCategory('TV').map(device => 
                 <Television wide={props.wide} key={device.endpointId} device={ device } />
             )}
         </React.Fragment>
     );
 }
-
-export default withData(TvHero);

@@ -1,5 +1,4 @@
-import React, { memo } from 'react';
-import { useState, useEffect } from 'react';
+import React from 'react';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -9,15 +8,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import TuneIcon from '@material-ui/icons/Tune';
 
 export default function DeviceExpandActions(props) {
-
-    function getControllerCommands(controller) {
-        var cmds=[]
-        if (props.directives.hasOwnProperty(controller)) {
-            return Object.keys(props.directives[controller])
-        }
-        console.log('Did not find',controller,'in',props.directives)
-        return []
-    }
 
     return (
         <List>

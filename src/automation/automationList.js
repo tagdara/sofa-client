@@ -113,7 +113,7 @@ class AutomationList extends React.Component {
     
     render() {
         
-        const { classes, fullScreen  } = this.props;
+        const { classes  } = this.props;
         const { editing, adding, automations } = this.state
         
         return (

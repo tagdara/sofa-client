@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
@@ -27,7 +27,6 @@ const operators = [
 export default function OperatorButton(props) {
 
     const classes = useStyles();
-    const [value, setValue] = useState("=")
     const [anchor, setAnchor] = useState(null)
 
 
@@ -40,7 +39,6 @@ export default function OperatorButton(props) {
     };
     
     function handleMenuSelect(event, item) {
-        setValue(item)
         setAnchor(null)
         props.setOperator(operators[item])
     };

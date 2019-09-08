@@ -1,11 +1,7 @@
 import React, { memo }  from 'react';
-import { useState, useEffect } from 'react';
 import { makeStyles, withStyles  } from '@material-ui/styles';
 
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-
-import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -14,17 +10,11 @@ import TextField from '@material-ui/core/TextField';
 
 import AnnouncementIcon from '@material-ui/icons/Announcement';
 import CloseIcon from '@material-ui/icons/Close';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import DeviceIcon from '../DeviceIcon';
 import OperatorButton from "./operatorButton";
 import GridItem from '../GridItem';
-
-import AutomationItemBase from './AutomationItemBase';
-
 import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 
@@ -88,22 +78,15 @@ const BootstrapInput = withStyles(theme => ({
 function AutomationTrigger(props) {
     
     const classes = useStyles();
-    const [value, setValue] = useState('')
-
-    //const [propertyName, setPropertyName] = useState('')
-    const [op, setOp] = useState('=')
-    const [controller, setController] = useState('')
 
     function editTriggerValue(newvalue) {
         var trigger=props.item
-        setValue(newvalue)
         trigger.value=newvalue
         props.save(props.index, trigger)
     }
     
     function editOperatorValue(newvalue) {
         var trigger=props.item
-        setOp(newvalue)
         trigger.operator=newvalue
         props.save(props.index, trigger)
     }
@@ -114,22 +97,20 @@ function AutomationTrigger(props) {
    
     function getDeviceProperties() {
         var proplist=[]
-        for (var i = 0; i < props.device.capabilities.length; i++) {
-            if (props.device.capabilities[i].hasOwnProperty('properties') && props.device.capabilities[i].properties.hasOwnProperty('supported')) {
-                for (var j = 0; j < props.device.capabilities[i].properties.supported.length; j++) {
-                    proplist.push(props.device.capabilities[i].properties.supported[j].name)
-                }
-            } 
-        }
+        for (var i = 0; i < props.device.interfaces.length; i++) {
+            console.log(props.device.interfaces[i], props.device[props.device.interfaces[i]].properties)
+            proplist = proplist.concat(props.device[props.device.interfaces[i]].properties);
+        } 
         return proplist
-    }    
+    }
+ 
     
     return (
         <GridItem nolist={true} elevation={0} wide={true}>
             <Grid item xs={props.wide ? 12 : 6 } >
                 <ListItem className={classes.listItem} >
                     <ListItemIcon>{ props.controllerProperties.hasOwnProperty('error') ? <CloseIcon/> : <DeviceIcon name={props.device.displayCategories[0]} />}</ListItemIcon>
-                    <ListItemText primary={props.name} secondary={ props.controllerProperties.hasOwnProperty('error') ? props.controllerProperties.error : props.item.controller} className={classes.deviceName}/>
+                    <ListItemText primary={props.device.name} secondary={ props.controllerProperties.hasOwnProperty('error') ? props.controllerProperties.error : props.item.controller} className={classes.deviceName}/>
                     { props.remove &&
                         <ListItemSecondaryAction className={classes.listItem}>
                             <ListItemIcon onClick={() => props.delete(props.index)}><CloseIcon /></ListItemIcon>   
@@ -138,7 +119,7 @@ function AutomationTrigger(props) {
                 </ListItem>
             </Grid>
             <Grid item xs={props.wide ? 12 : 6 } className={classes.flex} >
-            { props.item.type=="property" ?
+            { props.item.type==="property" ?
                 <ListItem className={classes.reducedButtonPad} >
                     <Select value={props.item.propertyName} onChange={handleChange} input={<BootstrapInput name="command" id="command-select" />} >
                         <MenuItem value=""><em>Choose an property</em></MenuItem>
@@ -147,7 +128,7 @@ function AutomationTrigger(props) {
                     )}
                     </Select>
 
-                    <OperatorButton disabled={ props.item.type=='event' } index={props.index} value={ props.item.operator } setOperator={ editOperatorValue }/>
+                    <OperatorButton disabled={ props.item.type==='event' } index={props.index} value={ props.item.operator } setOperator={ editOperatorValue }/>
                     <TextField
                             className={classes.input}
                             id={'trigger'+props.index}

@@ -1,8 +1,7 @@
-import React, { Component, createElement  } from 'react';
-import PropTypes from 'prop-types';
-import { useState, useEffect } from 'react';
-import { withData } from './DataContext/withData';
-import { withLayout } from './layout/NewLayoutProvider';
+import React from 'react';
+import { useContext } from 'react';
+import { LayoutContext } from './layout/NewLayoutProvider';
+import { DataContext } from './DataContext/DataProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -12,31 +11,21 @@ import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import GridItem from './GridItem';
 import ToggleAvatar from './ToggleAvatar';
 
-function ZoneList(props) {
-    
-    const zoneOpen = zoneCount('DETECTED')>0;
-    const [filter, setFilter] = useState('open');
-    const [securityZones, setSecurityZones] = useState([])
-    const [automationZones, setAutomationZones] = useState([])
+export default function ZoneHero(props) {
 
+    const { applyLayoutCard } = useContext(LayoutContext);
+    const { devicesByCategory } = useContext(DataContext);
+    const devices=devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
+    const zoneOpen = zoneCount('DETECTED')>0;
+    
     function getSecurityZones() {
         var secZones=[]
-        for (var i = 0; i < props.devices.length; i++) { 
-            if (!props.devices[i].description.includes('(Automation)')) {
-                secZones.push(props.devices[i])
+        for (var i = 0; i < devices.length; i++) { 
+            if (!devices[i].description.includes('(Automation)')) {
+                secZones.push(devices[i])
             } 
         }
         return secZones
-    }
-    
-    function getAutomationZones() {
-        var autoZones=[]
-        for (var i = 0; i < props.devices.length; i++) { 
-            if (props.devices[i].description.includes('(Automation)')) {
-                autoZones.push(props.devices[i])
-            } 
-        }
-        return autoZones
     }
 
     function zoneReady() {
@@ -56,9 +45,10 @@ function ZoneList(props) {
             } else if (zone.hasOwnProperty('MotionSensor')) {
                 controller=zone.MotionSensor
             } 
-            if (controller && (condition=='all' || controller.detectionState.value==condition.toUpperCase())) {
+            if (controller && (condition==='all' || controller.detectionState.value===condition.toUpperCase())) {
                 count=count+1
             }
+            return ''
         })
         return count
     }
@@ -73,30 +63,30 @@ function ZoneList(props) {
             } else if (zone.hasOwnProperty('MotionSensor')) {
                 controller=zone.MotionSensor
             }
-            if (controller &&  controller.detectionState.value=='DETECTED') {
+            if (controller &&  controller.detectionState.value==='DETECTED') {
                 openzones=openzones+zone.friendlyName+" "
             }
+            return ''
         })
         return openzones
     }
 
     return (
-            <GridItem wide={props.wide}>
-                { zoneReady() ?
-                <ListItem onClick={ (e) => props.applyLayoutCard('ZoneLayout', {'automationZones':automationZones, 'securityZones': securityZones})}>
-                    <ToggleAvatar noback={!zoneOpen} avatarState={ (zoneOpen) ? "open" : "closed" } >
-                        { zoneOpen ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
-                    </ToggleAvatar>
-                    <ListItemText primary={zoneOpen ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
-                </ListItem>
-                :
-                <ListItem>
-                    <ToggleAvatar avatarState={"notready"} ><PriorityHighIcon/></ToggleAvatar>
-                    <ListItemText primary={'Waiting for zone data'}/>
-                </ListItem>
-                }
-            </GridItem>
+        <GridItem wide={props.wide}>
+            { zoneReady() ?
+            <ListItem onClick={ (e) => applyLayoutCard('ZoneLayout')}>
+                <ToggleAvatar noback={!zoneOpen} avatarState={ (zoneOpen) ? "open" : "closed" } >
+                    { zoneOpen ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
+                </ToggleAvatar>
+                <ListItemText primary={zoneOpen ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
+            </ListItem>
+            :
+            <ListItem>
+                <ToggleAvatar avatarState={"notready"} ><PriorityHighIcon/></ToggleAvatar>
+                <ListItemText primary={'Waiting for zone data'}/>
+            </ListItem>
+            }
+        </GridItem>
     );
 }
 
-export default withData(withLayout(ZoneList));

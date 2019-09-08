@@ -83,11 +83,11 @@ const useIconStyles = makeStyles(theme => {
         }   
     }
 });
+
 export default function ToggleAvatar(props) {
 
     const classes = useStyles();
     const iconClasses = useIconStyles();
-    const avclass = classes[props.avatarState];
     
     return (
         <ListItemAvatar onClick={props.onClick} className={ props.noback ?  classNames(iconClasses.base, iconClasses[props.avatarState]) : ''}>
@@ -96,7 +96,7 @@ export default function ToggleAvatar(props) {
                     {props.children}
                 </>
             :
-                <Avatar className={ avclass} onClick={props.onClick}>
+                <Avatar className={ classes[props.avatarState] } onClick={props.onClick}>
                     {props.children}
                 </Avatar>
             }

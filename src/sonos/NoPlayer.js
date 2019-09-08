@@ -1,27 +1,17 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
 import ListItemText from '@material-ui/core/ListItemText';
 import Avatar from '@material-ui/core/Avatar';
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
-import { makeStyles } from '@material-ui/styles';
 import GridItem from '../GridItem';
 import TextField from '@material-ui/core/TextField';
 
-const useStyles = makeStyles({
-
-    listItem: {
-        width: '100%',
-        minHeight: 48,
-        padding: "12px 0",
-    }
-});
 
 export default function NoPlayer(props) {
     const [captcha, setCaptcha] = useState('');
-    const classes = useStyles();
     const [showCaptcha, setShowCaptcha]= useState(false)
     
     function sendCaptcha() {
@@ -40,7 +30,7 @@ export default function NoPlayer(props) {
                 { showCaptcha &&
                     <>
                         <ListItem onClick={() => sendCaptcha()}>
-                            <img src={'/captcha.jpg'} />
+                            <img src={'/captcha.jpg'} alt={"captcha"} />
                         </ListItem>
                         <ListItem>
                             <TextField fullWidth label={'Captcha'} value={captcha}

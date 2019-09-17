@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/styles';
 
@@ -21,7 +21,6 @@ import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
-
 
 const useStyles = makeStyles({
         
@@ -105,31 +104,98 @@ const BootstrapInput = withStyles(theme => ({
     },
 }))(InputBase);
 
+class AutomationInterface {
+    
+    constructor(property, value, directive) {
+        this[property]=new AutomationControllerProperty(value)
+        this.propName=[property]
+        console.log('directive',directive)
+        this.directive=directive
+    }
+
+    xdirective(command, payload={}, cookie={}) {
+        if (command==='TurnOn') { payload="ON" }
+        if (command==='TurnOff') { payload="OFF" }
+        console.log('automation directive', command, payload, cookie)
+        this[this.propName]={ 'value':payload }
+        console.log('This now',this)
+    }
+}
+
+class AutomationControllerProperty {
+    
+    constructor(value) {
+        this.value=value
+    }
+    
+    get deepvalue() {
+        // this is a shim to prevent the objects with value.value from breaking when value is null and javascript
+        // throws an error.
+        if (!this.value) return null;
+        if (this.value.hasOwnProperty('value')) return this.value.value;
+        return this.value;
+    }
+    
+    deep() {
+        // this is a shim to prevent the objects with value.value from breaking when value is null and javascript
+        // throws an error.
+        if (!this.value) return null;
+        if (this.value.hasOwnProperty('value')) return this.value.value;
+        return this.value;
+    }
+}
+
+
 export default function AutomationCondition(props) {
 
-    const classes = useStyles();
-    const [fields, setFields] = useState([])
-    const [editVal, setEditVal] = useState({})
-
-    useEffect(() => {
-        function parseControllerProperties() {
-            var subfields=[]
-            var edval={}
-            for (var cp in props.controllerProperties) {
-                subfields.push({ 'name':cp, 'type': props.controllerProperties[cp] })
-                edval[cp]=''
-                if (props.item.hasOwnProperty('value') && props.item.value.hasOwnProperty(cp)) {
-                    edval[cp]=props.item.value[cp]
-                }
-            }
-            console.log('controller props:', props.controllerProperties)
-            setFields(subfields)
-            setEditVal(edval)
-        }
-        
-        parseControllerProperties()
-    }, [props.item, props.controllerProperties]);
+    function directive(command, payload={}, cookie={}) {
+        if (command==='TurnOn') { payload="ON" }
+        if (command==='TurnOff') { payload="OFF" }
+        console.log('automation directive', command, payload, cookie)
+        var x = Object.assign({}, autoInterface);
+        var newprop=new AutomationControllerProperty({ 'value': payload })
+        console.log('newprop.deep',newprop.deepvalue)
+        x[x.propName]=newprop
+        setAutoInterface(x)
+        console.log('This now',x)
+    }
     
+    let interfaceobj=new AutomationInterface(props.item.propertyName, props.item.value, directive)
+    const classes = useStyles();
+    const [propMod, setPropMod] = useState(loadPropMod(props.item.propertyName))
+    const [autoInterface, setAutoInterface] = useState(interfaceobj)
+
+    function loadPropMod(name) {
+        let pmod=React.lazy(() => { 
+                try { 
+                    return import('../controllers/properties/'+name).catch(() => ({ default: () => errorBlock(name) }))
+                }
+                catch {
+                    return errorBlock(name)
+                }
+            })
+        return pmod
+    }
+
+    function errorBlock(modulename) {
+        return <TextField value={'failed'+modulename} />
+    }
+    
+    function placeholder(modulename) {
+        return <TextField value={modulename} />
+    }
+    
+    function renderSuspenseModule( modulename ) {
+        console.log('prop',propMod,modulename)
+        if (propMod!==undefined) {
+            let Module=propMod
+            return  <Suspense key={ modulename } fallback={placeholder}>
+                        <Module interface={ autoInterface } device={props.device} />
+                    </Suspense>
+        } else {
+            return <TextField value={'Loading...'} />
+        }
+    }
     
     function editOperatorValue(value) {
         var condition=props.item
@@ -137,40 +203,18 @@ export default function AutomationCondition(props) {
         props.save(props.index, condition)
     }
 
-    function editValues(conval, value) {
-        var condition=props.item
-        var edval=editVal
-        edval[conval]=value     
-        setEditVal(edval)
-        condition.value=edval
-        props.save(props.index, condition)
-    }
-    
-    function typeFromType(vartype) {
-        if (vartype==="time") {
-            return "time"
-        } else if  (vartype==="percentage") {
-            return "number"
-        } else if  (vartype==="integer") {
-            return "number"
-        } else {
-            return "text"
-        }
+    function handleChangePropertyName(newval) {
+        console.log('change propname', newval)
+        setPropMod(loadPropMod(newval))
+
+        var x = Object.assign({}, autoInterface);
+        var newprop=new AutomationControllerProperty({ 'value': null })
+        x[newval]=newprop
+        x.propName=newval
+        setAutoInterface(x)
+
     }
 
-    function handleChange() {
-        console.log('noop change')
-    }
-
-    function getDeviceProperties() {
-        var proplist=[]
-        for (var i = 0; i < props.device.interfaces.length; i++) {
-            console.log(props.device.interfaces[i], props.device[props.device.interfaces[i]].properties)
-            proplist = proplist.concat(props.device[props.device.interfaces[i]].properties);
-        } 
-        return proplist
-    }
-    
     return (
         <GridItem nolist={true} elevation={0} wide={true}>
             <Grid item xs={props.wide ? 12 : 6 } >
@@ -193,24 +237,14 @@ export default function AutomationCondition(props) {
             </Grid>
             <Grid item xs={props.wide ? 12 : 6 } className={classes.flex} >
                 <ListItem className={classes.reducedButtonPad} >
-                    <Select value={props.item.propertyName} onChange={handleChange} input={<BootstrapInput name="command" id="command-select" />} >
-                        <MenuItem value=""><em>Choose an property</em></MenuItem>
-                    { getDeviceProperties().map(action => 
+                    <Select value={autoInterface.propName} onChange={(e) => handleChangePropertyName(e.target.value)} input={<BootstrapInput name="command" id="command-select" />} >
+                        <MenuItem value=""><em>Choose a property</em></MenuItem>
+                    { props.device.properties().map(action => 
                         <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
                     )}
                     </Select>
                     <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
-                    { fields.map((conval,i) =>
-                        <TextField
-                            key={'cdf'+i}
-                            className={classes['input'+conval.type]}
-                            id={'cdf'+i}
-                            label={conval.name}
-                            value={editVal[conval.name]}
-                            onChange={(e) => editValues(conval.name, e.target.value)}
-                            type={typeFromType(conval.type)}
-                        />
-                    )}
+                    { renderSuspenseModule(autoInterface.propName) }
                 </ListItem>
             </Grid>
         </GridItem>

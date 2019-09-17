@@ -13,8 +13,8 @@ class AlexaDevice {
         this.interfaceobjects = []
         
         for (var j = 0; j < data.capabilities.length; j++) {
-            this[data.capabilities[j].interface.split('.')[1]]=new AlexaController(this, data.capabilities[j])
-            if (!this.interfaces.includes(data.capabilities[j].interface.split('.')[1])) {
+            if (data.capabilities[j].interface.split('.')[1] && !this.interfaces.includes(data.capabilities[j].interface.split('.')[1])) {
+                this[data.capabilities[j].interface.split('.')[1]]=new AlexaController(this, data.capabilities[j])
                 this.interfaces.push(data.capabilities[j].interface.split('.')[1])
                 this.interfaceobjects.push(this[data.capabilities[j].interface.split('.')[1]])
             }
@@ -49,6 +49,15 @@ class AlexaDevice {
         }
         return response
     }
+    
+    properties() {
+        var allprops=[]
+        for (var j = 0; j < this.interfaces.length; j++) {
+            allprops=allprops.concat(this[this.interfaces[j]].properties);
+        }
+        return allprops
+    }
+            
     
 }
 
@@ -172,16 +181,17 @@ export default function DataProvider(props) {
     const [directives, setDirectives] = useState({});     
     const [virtualDevices, setVirtualDevices] = useState({});     
     const [area, setArea] = useState("Main");     
-    const [heartbeat, setHeartbeat] = useState(Date.now());     
+    //const [heartbeat, setHeartbeat] = useState(Date.now());     
     const [lastUpdate] = useState(null);     
     const [devices, deviceDispatch] = useReducer(deviceReducer, initialDevices);
+    const [defaultPlayer, setDefaultPlayer] = useState('sonos:player:RINCON_B8E937ECE1F001400');     
+    const [userPlayer, setUserPlayer] = useState('');     
 
-    
     useEffect(() => {
 
         const listener = event => {
             deviceDispatch(JSON.parse(event.data));
-            setHeartbeat(Date.now())
+            //setHeartbeat(Date.now())
         };
 
         eventSource.addEventListener('message', listener);
@@ -209,13 +219,13 @@ export default function DataProvider(props) {
         setEventSource(() => new EventSource(serverurl+"/sse"))
     }
 
-    function timedOut() {
-        if (((new Date()) - heartbeat) > 15000) {
-            console.log(new Date(),heartbeat,(new Date()) - heartbeat > 15000)
-            return true
-        } 
-        return false
-    }
+    //function timedOut() {
+    //    if (((new Date()) - heartbeat) > 15000) {
+    //        console.log(new Date(),heartbeat,(new Date()) - heartbeat > 15000)
+    //        return true
+    //    } 
+    //    return false
+    //}
     
     function checkUpdate(serverUpdate) {
         var serverdate = new Date(serverUpdate.lastupdate)
@@ -272,7 +282,7 @@ export default function DataProvider(props) {
             var category=categories[j]
             for (var id in devices) {
                 if (devices[id].displayCategories.includes(category) || category==='ALL') {
-                    if (!searchterm || devices[id].friendlyName.toLowerCase().startsWith(searchterm.toLowerCase())) {
+                    if (!searchterm || devices[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
                         if (devices[id].hasData()) {
                             categoryDevices.push(devices[id])
                         }
@@ -288,6 +298,25 @@ export default function DataProvider(props) {
         return categoryDevices
         
     }
+
+    function devicesByFriendlyName(subname) {
+
+        var subDevices=[]
+        for (var id in devices) {
+            if (subname==="" || devices[id]['friendlyName'].includes(subname)) {
+                subDevices.push(devices[id])
+            } 
+        }
+
+        subDevices.sort(function(a, b)  {
+		    var x=a['friendlyName'].toLowerCase(),
+			y=b['friendlyName'].toLowerCase();
+		    return x<y ? -1 : x>y ? 1 : 0;
+	    });    
+        return subDevices
+    }
+
+
     
     function sortByName(devlist) {
         devlist.sort(function(a, b)  {
@@ -370,6 +399,8 @@ export default function DataProvider(props) {
 
                 deviceByEndpointId: deviceByEndpointId,
                 deviceByFriendlyName: deviceByFriendlyName,
+                devicesByFriendlyName: devicesByFriendlyName,
+
                 devicesByCategory: devicesByCategory,
                 propertyNamesFromDevice: propertyNamesFromDevice,
                 isReachable: isReachable,
@@ -381,11 +412,16 @@ export default function DataProvider(props) {
                 setArea: setArea,
                 area: area,
                 lightCount: lightCount,
-                
-                timedOut: timedOut,
+            
                 getLastUpdate: getLastUpdate,
                 eventSource: eventSource,
-                reconnect: reconnect
+                reconnect: reconnect,
+                
+                defaultPlayer: defaultPlayer,
+                setDefaultPlayer: setDefaultPlayer,
+                userPlayer: userPlayer,
+                setUserPlayer: setUserPlayer
+
             }}
         >
             {props.children}

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React , { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
@@ -32,19 +31,23 @@ const useStyles = makeStyles({
     },
     slider: {
         margin: "-18px"
+    },
+    small: {
+        padding: 3,
+    },
+    smallLabel: {
+        paddingLeft: 8,
     }
 
 });
 
-export default function SofaSlider(props) {
+export default function SmallSlider(props) {
     
     const classes = useStyles();
-    const [value, setValue] = useState(0)
+    const [value, setValue] = useState(props.value)
     
     useEffect(() => {
-        if (props.value) {
-            setValue(props.value)
-        }
+        setValue(props.value)
     }, [props.value]);
 
     
@@ -68,38 +71,30 @@ export default function SofaSlider(props) {
     }
    
     return (
-        <div style={{ "minWidth": props.minWidth }} className={ props.padLeft ? classes.stack+" "+classes.padLeft: ( props.half ? classes.half : classes.stack) } >
-        { props.name ?
-            <Typography variant={ props.smallText ? "caption" : "subtitle1" } className={classes.stackLabel} >{props.name}</Typography>
-        :   null }
-        { props.unit ?
-            <Typography variant="caption" className={classes.stackLabel} >{unitDisplay()}</Typography>
-        : null }
+        <>
             <Slider
+                className={classes.small}
                 value={value} step={props.step} 
                 min={props.min} max={props.max}
                 onChange={handlePreChange}
                 onChangeCommitted={handleChange}
                 disabled={props.disabled}
             />
-        </div>
+            { props.unit ?
+                <Typography variant="caption" className={classes.smallLabel} >{unitDisplay()}</Typography>
+            : null }
+        </>
     );
 }
 
-SofaSlider.defaultProps = {
-    name: '',
+SmallSlider.defaultProps = {
     unit: '',
     min: 0,
     max: 100,
     step: 1,
     default: 0,
     value: 0,
-    tabs: '',
     disabled: false,
-    padLeft: false,
-    half: false,
-    minWidth: 240,
-    smallText: false,
 }
 
 

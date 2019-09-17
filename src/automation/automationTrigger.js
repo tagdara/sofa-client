@@ -98,7 +98,7 @@ function AutomationTrigger(props) {
     function getDeviceProperties() {
         var proplist=[]
         for (var i = 0; i < props.device.interfaces.length; i++) {
-            console.log(props.device.interfaces[i], props.device[props.device.interfaces[i]].properties)
+            //console.log(props.device.interfaces[i], props.device[props.device.interfaces[i]].properties)
             proplist = proplist.concat(props.device[props.device.interfaces[i]].properties);
         } 
         return proplist
@@ -110,7 +110,7 @@ function AutomationTrigger(props) {
             <Grid item xs={props.wide ? 12 : 6 } >
                 <ListItem className={classes.listItem} >
                     <ListItemIcon>{ props.controllerProperties.hasOwnProperty('error') ? <CloseIcon/> : <DeviceIcon name={props.device.displayCategories[0]} />}</ListItemIcon>
-                    <ListItemText primary={props.device.name} secondary={ props.controllerProperties.hasOwnProperty('error') ? props.controllerProperties.error : props.item.controller} className={classes.deviceName}/>
+                    <ListItemText primary={props.device.friendlyName} secondary={ props.controllerProperties.hasOwnProperty('error') ? props.controllerProperties.error : props.item.controller} className={classes.deviceName}/>
                     { props.remove &&
                         <ListItemSecondaryAction className={classes.listItem}>
                             <ListItemIcon onClick={() => props.delete(props.index)}><CloseIcon /></ListItemIcon>   

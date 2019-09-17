@@ -41,7 +41,8 @@ export default function Sonos(props) {
     
     const classes = useStyles();
     const { applyLayoutCard } = useContext(LayoutContext);
-
+    const serverurl="https://"+window.location.hostname;
+    
     function addDefaultSrc(ev){
         ev.target.src = '/image/sonos/logo'
     }
@@ -66,7 +67,7 @@ export default function Sonos(props) {
                     <React.Fragment>
                         <List className={classes.list} >
                         <ListItem className={classes.topListItem}> 
-                            <ListItemText variant="body2" primary={props.player.friendlyName}  onClick={ () => {  props.changePlayer(props.endpointId)} }/>
+                            <ListItemText variant="body2" primary={props.player.friendlyName}  onClick={ () => {  props.setUserPlayer(props.endpointId)} }/>
                         </ListItem>
                         {props.player.MusicController.linked.value.map(link =>
                             <ListItem className={classes.topListItem} key={ link+"link" }>
@@ -77,9 +78,9 @@ export default function Sonos(props) {
                         <Chip label={ 'Group' } className={ classes.cornerChip } onClick={ () => setGroupPlayer(props.player.endpointId)} />
                     </React.Fragment>
                 }
-                <ListItem className={classes.bottomListItem} onClick={ () => props.changePlayer(props.player.endpointId)} >
+                <ListItem className={classes.bottomListItem} onClick={ () => props.setUserPlayer(props.player.endpointId)} >
                     <ListItemAvatar>
-                        <Avatar onError={addDefaultSrc} src={props.player.MusicController.art.value} />
+                        <Avatar onError={addDefaultSrc} src={serverurl+props.player.MusicController.art.value} />
                     </ListItemAvatar>
                     { props.player.MusicController.title.value!=='' ?
                         <ListItemText primary={ props.small ? props.player.friendlyName : props.player.MusicController.title.value } 

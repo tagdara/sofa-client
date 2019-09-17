@@ -72,8 +72,13 @@ export default function PlayerCard(props) {
             return []
         }
         for (var i = 0; i < props.player.MusicController.linked.value.length; i++) {
-            linked.push(deviceByEndpointId(props.player.MusicController.linked.value[i]))
+            if (deviceByEndpointId(props.player.MusicController.linked.value[i])) {
+                linked.push(deviceByEndpointId(props.player.MusicController.linked.value[i]))
+            } else {
+                console.log('weirdness with',props.player.MusicController.linked.value[i])
+            }
         }
+        console.log('linked', linked)
         return linked
     }
     

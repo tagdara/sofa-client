@@ -42,7 +42,7 @@ const useStyles = makeStyles({
     coverButton: {
         position: "absolute",
         bottom: 20,
-        left: 112,
+        left: 64,
     },
     minButton: {
         position: "absolute",

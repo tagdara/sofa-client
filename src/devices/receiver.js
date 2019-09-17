@@ -6,10 +6,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import Switch from '@material-ui/core/Switch';
 import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
-import VolumeOffIcon from '@material-ui/icons/VolumeOff';
-import VolumeMuteIcon from '@material-ui/icons/VolumeMute';
-
-import SofaSlider from '../SofaSlider'
+import SofaAvatarSlider from '../SofaAvatarSlider'
 
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
@@ -18,17 +15,11 @@ import ToggleChip from '../ToggleChip'
 export default function Receiver(props) {
     
     const [mute, setMute] = useState(props.device.SpeakerController.mute.value);
-    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
     const [showDetail, setShowDetail] = useState(false);
-    const [volume, setVolume] = useState(props.device.SpeakerController.volume.value);
 
     function handleVolumeChange(event) {
         props.device.SpeakerController.directive('SetVolume', { "volume" : event} )
     }; 
-
-    function handleVolumePreChange(event) {
-        setVolume(event)
-    }
 
     function handleMuteChange(event) {
         setMute(event)
@@ -36,7 +27,6 @@ export default function Receiver(props) {
     }; 
     
     function handlePowerChange(event) {
-        setPowerState(event.target.checked);
         props.device.PowerController.directive(event.target.checked ? 'TurnOn' : 'TurnOff')
     };
     
@@ -66,20 +56,16 @@ export default function Receiver(props) {
                 </ToggleAvatar>
                 <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={ props.device.PowerController.powerState.value==='OFF' ? 'Off' : (props.device.InputController.input.value) ? props.device.InputController.input.value + " / "+ props.device.SurroundController.surround.value : null}/>
                 <ListItemSecondaryAction>
-                    <Switch color="primary" checked={powerState==='ON'} onChange={ (e) => handlePowerChange(e) } />
+                    <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
 
             </ListItem>
         { (props.device.InputController.input.value==='Sonos' && !showDetail) || props.device.PowerController.powerState.value==='OFF'  ? null :
-            <ListItem>
-                <ToggleAvatar onClick={ () => handleMuteChange(!props.device.SpeakerController.mute.value)} noback={true} avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }>
-                    { props.device.PowerController.powerState.value!=='ON' ? <VolumeMuteIcon /> :
-                        (props.device.SpeakerController.mute.value) ? <VolumeOffIcon /> :  volume
-                    }
-                </ToggleAvatar>
-                <SofaSlider name="Volume" min={0} max={100} defaultValue={0} step={1} value={props.device.SpeakerController.volume.value}
-                            disabled={ props.device.PowerController.powerState.value==='OFF' } minWidth={240} preChange={handleVolumePreChange} change={handleVolumeChange} />
-            </ListItem>
+            <SofaAvatarSlider   avatarClick={ () => handleMuteChange(!props.device.SpeakerController.mute.value)} noAvatarBack={true} 
+                                avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }
+                                name="Volume" min={0} max={100} defaultValue={0} step={1} value={props.device.SpeakerController.volume.value}
+                                disabled={ props.device.PowerController.powerState.value==='OFF' } minWidth={240} 
+                                change={handleVolumeChange} />
         }
         { !showDetail || props.device.PowerController.powerState.value==='OFF' ? null :
             <React.Fragment>

@@ -8,11 +8,11 @@ import Sonos from "./sonos/Sonos";
 
 export default function PlayersLayout(props) {
     const { applyLayout } = useContext(LayoutContext);
-    const { devicesByCategory } = useContext(DataContext);
+    const { setUserPlayer, devicesByCategory } = useContext(DataContext);
     const speakers = devicesByCategory('SPEAKER')
 
     function changePlayerHome(newplayer) {
-        //var newplayerobj=deviceByEndpointId(newplayer)
+        setUserPlayer(newplayer)
         applyLayout('Home')
     }
 
@@ -22,7 +22,7 @@ export default function PlayersLayout(props) {
 
             { speakers.map((device) =>
                 device.endpointId===device.InputController.input.value || device.InputController.input.value==='' ? 
-                <Sonos key={device.endpointId} player={device} changePlayer={changePlayerHome} devices={speakers} device={ device } />
+                <Sonos key={device.endpointId} player={device} setUserPlayer={changePlayerHome} devices={speakers} device={ device } />
                 : null
             )}
         </React.Fragment>

@@ -93,6 +93,7 @@ export default function AutomationLayout(props) {
             }
         }
 
+        console.log('Propsname',props.name)
         fetch(serverurl+'/list/logic/automation/'+props.name)
             .then(result=>result.json())
             .then(result=>loadAutomation(result));

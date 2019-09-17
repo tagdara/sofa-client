@@ -5,21 +5,21 @@ import PlayerCard from './sonos/PlayerCard';
 import Sonos from './sonos/Sonos';
 import NoPlayer from './sonos/NoPlayer';
 
-function bestPlayerId(speakers, defaultPlayer) {
+function bestPlayerId(speakers, defaultPlayer, userPlayer) {
     
     var defaultexists=false
+    
+    if (userPlayer) {
+        return userPlayer
+    }
 
     var hotplayer=undefined;
+    
     for (var s = 0; s < speakers.length; s++) {
-        if (hotplayer===undefined) { hotplayer=speakers[s];}
-        if (defaultPlayer===speakers[s].endpointId) defaultexists=true;
+        if (speakers[s].endpointId===defaultPlayer) {defaultexists=true}
         if (speakers[s].MusicController.playbackState.value==='PLAYING') {
             hotplayer=speakers[s]
             break
-        }
-        if (speakers[s].MusicController.playbackState.value!=='STOPPED') {
-            // set hotplayer but keep looking.
-            hotplayer=speakers[s]
         }
     }
 
@@ -32,27 +32,25 @@ function bestPlayerId(speakers, defaultPlayer) {
 
     if (defaultexists) {
         return defaultPlayer
-    } 
+    }
+    
+    if (speakers) {
+        return speakers[0].endpointId
+    }
     return undefined
 }
 
 
 export default function PlayerHero(props) {
     
-    const { devicesByCategory, deviceByEndpointId } = useContext(DataContext);
+    const { userPlayer, defaultPlayer, setUserPlayer, devicesByCategory, deviceByEndpointId } = useContext(DataContext);
     const speakers = devicesByCategory('SPEAKER')
     const [mini, setMini] = useState(false);
-    const defaultPlayer = useState(props.Primary);
     const [playerId, setPlayerId] = useState('')
 
     useEffect(()=> {
-        setPlayerId(bestPlayerId(speakers, defaultPlayer))
-    }, [speakers, defaultPlayer] )
-    
-    function changePlayer(endpointId) {
-        setPlayerId(endpointId)
-        setMini(false); 
-    }
+        setPlayerId(bestPlayerId(speakers, defaultPlayer, userPlayer))
+    }, [speakers, defaultPlayer, userPlayer] )
 
     function bigCard() {
         
@@ -72,9 +70,9 @@ export default function PlayerHero(props) {
             { playerId ?
             <>
                 { bigCard()===false ?
-                    <Sonos changePlayer={changePlayer} wide={props.wide} small={true} player={deviceByEndpointId(playerId)} />
+                    <Sonos setUserPlayer={setUserPlayer} wide={props.wide} small={true} player={deviceByEndpointId(playerId)} />
                 :
-                    <PlayerCard wide={props.wide} changePlayer={changePlayer} player={deviceByEndpointId(playerId)} setMini={setMini} />
+                    <PlayerCard wide={props.wide} player={deviceByEndpointId(playerId)} setMini={setMini} />
                 }
             </>
             :

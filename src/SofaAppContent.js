@@ -10,6 +10,7 @@ import PlaceholderCard from './PlaceholderCard';
 import SofaPage from './SofaPage';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     
@@ -31,6 +32,10 @@ const useStyles = makeStyles({
         minHeight: "100%",
         alignContent: "flex-start",
     },
+    version: {
+        paddingLeft: 16,
+        opacity: "0.5"
+    }
 });
 
 export default function SofaAppContent(props) {
@@ -98,6 +103,7 @@ export default function SofaAppContent(props) {
                     </ErrorBoundary>
                 </React.Fragment>
 			: null }
+			<Typography className={ classes.version } variant="caption">{process.env.REACT_APP_VERSION}</Typography>
         </Grid>
     );
 }

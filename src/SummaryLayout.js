@@ -78,7 +78,6 @@ export default function SummaryLayout(props) {
                 </ListItem>
 
             </GridItem>
-            <Typography variant="caption">v2.07</Typography>
         </GridSection>
     )
 };

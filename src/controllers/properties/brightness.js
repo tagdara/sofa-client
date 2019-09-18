@@ -26,7 +26,7 @@ export default function Brightness(props) {
         <SmallSlider
             value={props.interface.brightness.value===null ? 50 : props.interface.brightness.value }
             min={0} max={100} step={10}
-            change={ props.changeValue }
+            change={ handleBrightnessChange }
             disabled={!props.device.PowerController.powerState.value}
         />
     );

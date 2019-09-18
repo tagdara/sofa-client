@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -22,12 +22,17 @@ const BootstrapInput = withStyles(theme => ({
     },
 }))(InputBase);
 
-export default function connectivity(props) {
-    console.log('valxx',props.interface.connectivity.deep())
+export default function Connectivity(props) {
+
+    useEffect(() => {
+        // Set default if passed a null
+        if (props.interface.connectivity.deepvalue()===null) {
+            props.interface.directive('SetConnectivity',{'value':'OK'})
+        }
+    }, [])
     
     return (
-        <Select value={props.interface.connectivity.deep() ? props.interface.connectivity.deep() : 'OK' } onChange={(e) => props.interface.directive('SetConnectivity',{'value':e.target.value})} input={<BootstrapInput name="connectivity" id="connectivity" />} >
-            <MenuItem value=""><em>Choose a value</em></MenuItem>
+        <Select value={ props.interface.connectivity.deepvalue() } onChange={(e) => props.interface.directive('SetConnectivity',{'value':e.target.value})} input={<BootstrapInput name="connectivity" id="connectivity" />} >
             <MenuItem value="OK">OK</MenuItem>
             <MenuItem value="UNREACHABLE">UNREACHABLE</MenuItem>
         </Select>

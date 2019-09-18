@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, withStyles } from '@material-ui/styles';
 
 import MenuItem from '@material-ui/core/MenuItem';
@@ -24,12 +24,17 @@ const BootstrapInput = withStyles(theme => ({
     },
 }))(InputBase);
 
-export default function powerState(props) {
+export default function PowerState(props) {
     
-    console.log('val',props.interface.powerState.value)
+    useEffect(() => {
+        // Set default if passed a null
+        if (props.interface.powerState.value===null) {
+            props.interface.directive('TurnOff')
+        }
+    }, [])
     
     return (
-        <Select value={props.interface.powerState.value===null ? 'OFF' : props.interface.powerState.value } onChange={(e) => props.interface.directive( e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' ) } input={<BootstrapInput name="powerState" id="powerState" />} >
+        <Select value={props.interface.powerState.value } onChange={(e) => props.interface.directive( e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' ) } input={<BootstrapInput name="powerState" id="powerState" />} >
             <MenuItem value=""><em>Choose a property</em></MenuItem>
             <MenuItem value="ON">ON</MenuItem>
             <MenuItem value="OFF">OFF</MenuItem>

@@ -109,16 +109,7 @@ class AutomationInterface {
     constructor(property, value, directive) {
         this[property]=new AutomationControllerProperty(value)
         this.propName=[property]
-        console.log('directive',directive)
         this.directive=directive
-    }
-
-    xdirective(command, payload={}, cookie={}) {
-        if (command==='TurnOn') { payload="ON" }
-        if (command==='TurnOff') { payload="OFF" }
-        console.log('automation directive', command, payload, cookie)
-        this[this.propName]={ 'value':payload }
-        console.log('This now',this)
     }
 }
 
@@ -126,23 +117,17 @@ class AutomationControllerProperty {
     
     constructor(value) {
         this.value=value
+        this.deepvalue = this.deepvalue.bind(this);
     }
     
-    get deepvalue() {
+    deepvalue() {
         // this is a shim to prevent the objects with value.value from breaking when value is null and javascript
         // throws an error.
         if (!this.value) return null;
         if (this.value.hasOwnProperty('value')) return this.value.value;
         return this.value;
     }
-    
-    deep() {
-        // this is a shim to prevent the objects with value.value from breaking when value is null and javascript
-        // throws an error.
-        if (!this.value) return null;
-        if (this.value.hasOwnProperty('value')) return this.value.value;
-        return this.value;
-    }
+
 }
 
 
@@ -152,18 +137,22 @@ export default function AutomationCondition(props) {
         if (command==='TurnOn') { payload="ON" }
         if (command==='TurnOff') { payload="OFF" }
         console.log('automation directive', command, payload, cookie)
-        var x = Object.assign({}, autoInterface);
-        var newprop=new AutomationControllerProperty({ 'value': payload })
-        console.log('newprop.deep',newprop.deepvalue)
-        x[x.propName]=newprop
-        setAutoInterface(x)
-        console.log('This now',x)
+        setPropertyValue(payload)
     }
     
     let interfaceobj=new AutomationInterface(props.item.propertyName, props.item.value, directive)
     const classes = useStyles();
     const [propMod, setPropMod] = useState(loadPropMod(props.item.propertyName))
     const [autoInterface, setAutoInterface] = useState(interfaceobj)
+    const [propertyValue, setPropertyValue] = useState(props.item.value)
+    const [propertyName, setPropertyName] = useState(props.item.propertyName)
+    
+    useEffect(() => {
+        console.log('updating', propertyName, propertyValue)
+        setAutoInterface(new AutomationInterface(propertyName, propertyValue, directive))
+
+    }, [propertyName, propertyValue, setAutoInterface])
+
 
     function loadPropMod(name) {
         let pmod=React.lazy(() => { 
@@ -186,7 +175,6 @@ export default function AutomationCondition(props) {
     }
     
     function renderSuspenseModule( modulename ) {
-        console.log('prop',propMod,modulename)
         if (propMod!==undefined) {
             let Module=propMod
             return  <Suspense key={ modulename } fallback={placeholder}>
@@ -206,12 +194,14 @@ export default function AutomationCondition(props) {
     function handleChangePropertyName(newval) {
         console.log('change propname', newval)
         setPropMod(loadPropMod(newval))
+        setPropertyName(newval)
+        setPropertyValue(null)
 
-        var x = Object.assign({}, autoInterface);
-        var newprop=new AutomationControllerProperty({ 'value': null })
-        x[newval]=newprop
-        x.propName=newval
-        setAutoInterface(x)
+        //var x = Object.assign({}, autoInterface);
+        //var newprop=new AutomationControllerProperty({ 'value': null })
+        //x[newval]=newprop
+        //x.propName=newval
+        //setAutoInterface(x)
 
     }
 

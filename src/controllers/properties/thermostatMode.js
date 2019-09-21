@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { withStyles } from '@material-ui/styles';
-
+import {withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
@@ -24,24 +23,25 @@ const BootstrapInput = withStyles(theme => ({
     },
 }))(InputBase);
 
-export default function DetectionState(props) {
+export default function ThermostatMode(props) {
+    
+    console.log('device', props.device, props.device.ThermostatController.configuration.supportedModes)
     
     useEffect(() => {
         // Set default if passed undefined
-        if (props.interface.detectionState.value===undefined) {
+        if (props.interface.thermostatMode.deepvalue()===undefined) {
             if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('DETECTED')
+                props.interface.setDefault('OFF')
             }
         }
     }, [props.interface])
     
     return (
-        <Select value={ props.interface.detectionState.value ? props.interface.detectionState.value : "" } onChange={props.changeValue} input={<BootstrapInput name="detectionState" id="detectionState" />} >
-            <MenuItem value="DETECTED">DETECTED</MenuItem>
-            <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
+        <Select value={props.interface.thermostatMode.deepvalue() ? props.interface.thermostatMode.deepvalue() : ""} onChange={(e) => props.interface.directive('SetThermostatMode', {'value': e.target.value }) } input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
+            { props.device.ThermostatController.configuration.supportedModes.map( mode => 
+                <MenuItem value={mode}>{mode}</MenuItem>
+            )}
         </Select>
     );
 
 }
-
-

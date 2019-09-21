@@ -1,5 +1,4 @@
-import React, { Suspense } from 'react';
-import { useState, useEffect } from 'react';
+import React, { Suspense, useState, useEffect} from 'react';
 import { makeStyles, withStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -83,6 +82,9 @@ const useStyles = makeStyles({
     },
     flex: {
         display: "flex",
+    },
+    wideSelect: {
+        width: "100%",
     }
 });
 
@@ -106,10 +108,18 @@ const BootstrapInput = withStyles(theme => ({
 
 class AutomationInterface {
     
-    constructor(property, value, directive) {
+    constructor(property, value, setPropertyValue, setDefault) {
         this[property]=new AutomationControllerProperty(value)
         this.propName=[property]
-        this.directive=directive
+        this.setDefault=setDefault
+        this.setPropertyValue=setPropertyValue
+    }
+    
+    directive(command, payload={}, cookie={}) {
+        if (command==='TurnOn') { payload={ "value" : "ON" } }
+        if (command==='TurnOff') { payload={ "value" : "OFF" } }
+        console.log('automation directive', command, payload, cookie)
+        this.setPropertyValue(payload.value)
     }
 }
 
@@ -123,7 +133,7 @@ class AutomationControllerProperty {
     deepvalue() {
         // this is a shim to prevent the objects with value.value from breaking when value is null and javascript
         // throws an error.
-        if (!this.value) return null;
+        if (!this.value) return undefined;
         if (this.value.hasOwnProperty('value')) return this.value.value;
         return this.value;
     }
@@ -134,25 +144,35 @@ class AutomationControllerProperty {
 export default function AutomationCondition(props) {
 
     function directive(command, payload={}, cookie={}) {
-        if (command==='TurnOn') { payload="ON" }
-        if (command==='TurnOff') { payload="OFF" }
+        if (command==='TurnOn') { payload={ "value" : "ON" } }
+        if (command==='TurnOff') { payload={ "value" : "OFF" } }
         console.log('automation directive', command, payload, cookie)
-        setPropertyValue(payload)
+        setPropertyValue(payload.value)
     }
-    
+
     let interfaceobj=new AutomationInterface(props.item.propertyName, props.item.value, directive)
     const classes = useStyles();
     const [propMod, setPropMod] = useState(loadPropMod(props.item.propertyName))
     const [autoInterface, setAutoInterface] = useState(interfaceobj)
     const [propertyValue, setPropertyValue] = useState(props.item.value)
     const [propertyName, setPropertyName] = useState(props.item.propertyName)
+    const [controllerName, setControllerName] = useState(props.item.controller)
+    const [op, setOperator] = useState(props.item.operator)
+
+    useEffect(() => {
+        
+        if (propertyValue!==undefined) {
+            save()
+        }
+    }, [propertyName, propertyValue, controllerName, op ])
     
     useEffect(() => {
-        console.log('updating', propertyName, propertyValue)
-        setAutoInterface(new AutomationInterface(propertyName, propertyValue, directive))
+        setAutoInterface(new AutomationInterface(propertyName, propertyValue, setPropertyValue, setDefault))
+    }, [propertyName, propertyValue, setPropertyValue, setAutoInterface ])
 
-    }, [propertyName, propertyValue, setAutoInterface])
-
+    function setDefault(val) {
+        setPropertyValue(val)
+    }
 
     function loadPropMod(name) {
         let pmod=React.lazy(() => { 
@@ -186,28 +206,33 @@ export default function AutomationCondition(props) {
     }
     
     function editOperatorValue(value) {
-        var condition=props.item
-        condition.operator=value
-        props.save(props.index, condition)
+        setOperator(value)
+        save()
     }
 
     function handleChangePropertyName(newval) {
         console.log('change propname', newval)
+        setPropertyValue(undefined)
         setPropMod(loadPropMod(newval))
+        setControllerName(props.device.controllerForProperty(newval))
         setPropertyName(newval)
-        setPropertyValue(null)
-
-        //var x = Object.assign({}, autoInterface);
-        //var newprop=new AutomationControllerProperty({ 'value': null })
-        //x[newval]=newprop
-        //x.propName=newval
-        //setAutoInterface(x)
-
+    }
+    
+    function save() {
+        var condition={ "controller": props.device.controllerForProperty(propertyName),
+                        "deviceName": props.item.deviceName,
+                        "endpointId": props.item.endpointId,
+                        "operator": op,
+                        "propertyName": propertyName,
+                        "type": "property",
+                        "value": propertyValue }
+        console.log('saving', props.index, condition)
+        props.save(props.index, condition)
     }
 
     return (
-        <GridItem nolist={true} elevation={0} wide={true}>
-            <Grid item xs={props.wide ? 12 : 6 } >
+        <GridItem nolist={true} elevation={0} wide={true} xs={9}>
+            <Grid item xs={props.wide ? 12 : 4 } >
                 <ListItem className={classes.listItem} >
                     <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
                     <ListItemText primary={props.device.friendlyName} secondary={props.device.endpointId} className={classes.deviceName}/>
@@ -225,19 +250,21 @@ export default function AutomationCondition(props) {
                     }
                 </ListItem>
             </Grid>
-            <Grid item xs={props.wide ? 12 : 6 } className={classes.flex} >
+            <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
                 <ListItem className={classes.reducedButtonPad} >
-                    <Select value={autoInterface.propName} onChange={(e) => handleChangePropertyName(e.target.value)} input={<BootstrapInput name="command" id="command-select" />} >
-                        <MenuItem value=""><em>Choose a property</em></MenuItem>
+                    <Select className={classes.wideSelect} value={autoInterface.propName} onChange={(e) => handleChangePropertyName(e.target.value)} input={<BootstrapInput name="command" id="command-select" />} >
                     { props.device.properties().map(action => 
                         <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
                     )}
                     </Select>
                     <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
+                </ListItem>
+            </Grid>
+            <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
+                <ListItem className={classes.reducedButtonPad} >
                     { renderSuspenseModule(autoInterface.propName) }
                 </ListItem>
             </Grid>
         </GridItem>
-
     )
 }

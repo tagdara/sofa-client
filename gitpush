@@ -3,4 +3,4 @@
 git add --all
 git commit -m "Fixes and updates"
 git push
-npm version minor
+npm version patch

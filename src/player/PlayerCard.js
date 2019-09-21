@@ -8,8 +8,8 @@ import List from '@material-ui/core/List';
 import PlayerArtOverlay from './PlayerArtOverlay';
 import PlayerArtOverlayButtons from './PlayerArtOverlayButtons';
 
-import SonosVolume from './SonosVolume';
-import SonosCover from './SonosCover';
+import PlayerVolume from './PlayerVolume';
+import PlayerCover from './PlayerCover';
 import GridItem from '../GridItem';
 
 const useStyles = makeStyles({
@@ -29,7 +29,7 @@ export default function PlayerCard(props) {
     const { deviceByEndpointId } = useContext(DataContext);
 
     const [coverView, setCoverView] = useState(false);
-    const coverDefault = '/image/sonos/logo'; 
+    const coverDefault = '/image/'+props.player.endpointId.split(':')[0]+'/logo'
 
     function handlePlayPause(event) {
         event.stopPropagation();
@@ -74,8 +74,6 @@ export default function PlayerCard(props) {
         for (var i = 0; i < props.player.MusicController.linked.value.length; i++) {
             if (deviceByEndpointId(props.player.MusicController.linked.value[i])) {
                 linked.push(deviceByEndpointId(props.player.MusicController.linked.value[i]))
-            } else {
-                console.log('weirdness with',props.player.MusicController.linked.value[i])
             }
         }
         console.log('linked', linked)
@@ -93,13 +91,13 @@ export default function PlayerCard(props) {
                                             playbackState={ props.player.MusicController.playbackState.value ? props.player.MusicController.playbackState.value : 'Unknown'} />
             </PlayerArtOverlay>
             <List className={classes.list} >
-                <SonosVolume key={ props.player.endpointId } player={props.player} />
+                <PlayerVolume key={ props.player.endpointId } player={props.player} />
                 { getLinkedPlayers().map( linkedplayer => (
-                    <SonosVolume key={ linkedplayer.endpointId} player={ linkedplayer } />
+                    <PlayerVolume key={ linkedplayer.endpointId} player={ linkedplayer } />
                 ))}
             </List>
             { coverView ?
-                <SonosCover playbackState={props.player.MusicController.playbackState.value} handleSkip={ handleSkip} handlePlayPause={handlePlayPause} title={props.player.MusicController.title.value} artist={props.player.MusicController.artist.value} src={props.player.MusicController.art.value} open={coverView} close={ closeCover } />
+                <PlayerCover playbackState={props.player.MusicController.playbackState.value} handleSkip={ handleSkip} handlePlayPause={handlePlayPause} title={props.player.MusicController.title.value} artist={props.player.MusicController.artist.value} src={props.player.MusicController.art.value} open={coverView} close={ closeCover } />
                 :null
             }
         </ GridItem >

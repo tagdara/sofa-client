@@ -14,7 +14,7 @@ import GridBreak from './GridBreak';
 import GridItem from './GridItem';
 import ToggleAvatar from './ToggleAvatar';
 
-import Sonos from "./sonos/Sonos";
+import PlayerBase from "./player/PlayerBase";
 
 export default function PlayerGroup(props) {
 
@@ -31,17 +31,17 @@ export default function PlayerGroup(props) {
     }
     
     function handleAddRemove(speaker, action) {
-        var sonosinput=''
+        var playerinput=''
         if (action==='add') {
-            sonosinput=props.player
+            playerinput=props.player
         }
-        speaker.InputController.directive("SelectInput", { "input": sonosinput } )
+        speaker.InputController.directive("SelectInput", { "input": playerinput } )
     }; 
 
     return (    
         <React.Fragment>
             <GridBreak label={"Playing"} />
-            <Sonos small={true} setPlayer={props.setPlayer} devices={speakers} name={ device.friendlyName } player={ device } />
+            <PlayerBase small={true} setPlayer={props.setPlayer} devices={speakers} name={ device.friendlyName } player={ device } />
             <GridBreak label={"In Group"} />
             { speakers.map(speaker =>
                 isLinked(speaker.endpointId) &&

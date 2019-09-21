@@ -1,4 +1,4 @@
-import React, {memo} from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Dialog from '@material-ui/core/Dialog';
@@ -87,7 +87,7 @@ const useStyles = makeStyles({
     }
 });
 
-function SonosCover(props) {
+export default function PlayerCover(props) {
     
     const serverurl="https://"+window.location.hostname;
     const classes = useStyles();
@@ -95,7 +95,8 @@ function SonosCover(props) {
     const isMobile = window.innerWidth <= mobileBreakpoint;
 
     function addDefaultSrc(ev) {
-        ev.target.src = '/image/sonos/darklogo'
+        // allow unique logos per adapter
+        ev.target.src = '/image/'+props.player.endpointId.split(':')[0]+'/darklogo'
     }
     
     console.log('src',props.src)
@@ -129,4 +130,3 @@ function SonosCover(props) {
     
 };
 
-export default memo(SonosCover);

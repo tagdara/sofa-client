@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 
-import PlayerCard from './sonos/PlayerCard';
-import Sonos from './sonos/Sonos';
-import NoPlayer from './sonos/NoPlayer';
+import PlayerCard from './player/PlayerCard';
+import PlayerBase from './player/PlayerBase';
+import NoPlayer from './player/NoPlayer';
 
 function bestPlayerId(speakers, defaultPlayer, userPlayer) {
     
@@ -70,7 +70,7 @@ export default function PlayerHero(props) {
             { playerId ?
             <>
                 { bigCard()===false ?
-                    <Sonos setUserPlayer={setUserPlayer} wide={props.wide} small={true} player={deviceByEndpointId(playerId)} />
+                    <PlayerBase setUserPlayer={setUserPlayer} wide={props.wide} small={true} player={deviceByEndpointId(playerId)} />
                 :
                     <PlayerCard wide={props.wide} player={deviceByEndpointId(playerId)} setMini={setMini} />
                 }

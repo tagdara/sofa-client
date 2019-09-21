@@ -3,7 +3,7 @@ import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
 import GridBreak from './GridBreak';
-import Sonos from "./sonos/Sonos";
+import PlayerBase from "./player/PlayerBase";
 
 
 export default function PlayersLayout(props) {
@@ -22,7 +22,7 @@ export default function PlayersLayout(props) {
 
             { speakers.map((device) =>
                 device.endpointId===device.InputController.input.value || device.InputController.input.value==='' ? 
-                <Sonos key={device.endpointId} player={device} setUserPlayer={changePlayerHome} devices={speakers} device={ device } />
+                <PlayerBase key={device.endpointId} player={device} setUserPlayer={changePlayerHome} devices={speakers} device={ device } />
                 : null
             )}
         </React.Fragment>

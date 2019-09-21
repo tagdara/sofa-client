@@ -4,8 +4,12 @@ import { DataContext } from './DataContext/DataProvider';
 import { makeStyles } from '@material-ui/styles';
 
 import AutomationItem from './automation/automationItem';
+import ScheduleItem from './automation/ScheduleItem';
+
 import AutomationAdd from './automation/automationAdd';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -33,14 +37,31 @@ export default function AutomationsLayout(props) {
     const adding = false
     const editing = false
     const [remove, setRemove] = useState(false)
+    const [favorites, setFavorites] = useState(true)
+    const [scheduled, setScheduled] = useState(false)
+
     const serverurl="https://"+window.location.hostname;
     
     useEffect(() => {
-        fetch(serverurl+'/list/logic/automationlist')
+        fetch(serverurl+'/list/logic/automations')
             .then(result=>result.json())
-            .then(result=>setAutomations(result))
+            .then(result=>fixAutomations(result))
 
     }, [serverurl]);
+    
+    function fixAutomations(autos) {
+        var sections=['actions','schedules','triggers','conditions'] 
+        
+        for (var auto in autos) {
+            for (var j = 0; j < sections.length; j++) {
+                if (!autos[auto].hasOwnProperty(sections[j])) {
+                    console.log('warning', auto, 'does not have a',sections[j],'entry')    
+                    autos[auto][sections[j]]=[]
+                }
+            }
+        }
+        setAutomations(autos)
+    }
     
     function selectAutomation(automation) {
         applyBackPage('AutomationsLayout',{})
@@ -90,23 +111,21 @@ export default function AutomationsLayout(props) {
         applyBackPage('AutomationsLayout',{})
         applyLayoutCard('AutomationLayout', {'noBottom':true})        
     }
-    
-    function switchToSchedule() {
-        applyBackPage('AutomationsLayout',{})
-        applyLayoutCard('SchedulesLayout', {})
+
+    function toggleFavorites() {
+        setFavorites(!favorites)
+    }
+
+    function toggleScheduled() {
+        setScheduled(!scheduled)
+        if (!scheduled) {
+            setFavorites(false)
+        }
     }
 
     return (    
         <React.Fragment>
-            <GridSection name={"Favorites"} >
-            { Object.keys(automations).sort().map(automation => 
-                ( automations[automation].favorite ?
-                    <AutomationItem favorite={automations[automation].favorite} select={selectAutomation} edit={editing} triggerCount={automations[automation].triggerCount } actionCount={automations[automation].actionCount} conditionCount={automations[automation].conditionCount } name={automation} delete={deleteAutomation} run={runAutomation} key={ automation+'-reg' } />
-                    :null
-                )
-            )}
-            </GridSection>
-            <GridSection name={"Other Automations"} secondary={
+            <GridSection name={"Automations"} secondary={
                 <>
                     <IconButton onClick={ () => newAutomation() } className={classes.button }>
                         <AddIcon fontSize="small" />
@@ -116,19 +135,24 @@ export default function AutomationsLayout(props) {
                             <RemoveIcon fontSize="small" />
                         </IconButton>
                         }
-                    <IconButton onClick={ () => switchToSchedule() } className={classes.button }>
+                    <IconButton onClick={ () => toggleScheduled() } className={classes.button }>
                         <ScheduleIcon fontSize="small" />
                     </IconButton>
-                </>
-            }>
-
+                    <Button onClick={ () => toggleFavorites() }>ALL</Button>
+                </> }
+            >
             { Object.keys(automations).sort().map(automation => 
-                ( !automations[automation].favorite ?
-                    <AutomationItem favorite={automations[automation].favorite} select={selectAutomation} edit={remove} triggerCount={automations[automation].triggerCount } actionCount={automations[automation].actionCount} conditionCount={automations[automation].conditionCount } name={automation} delete={deleteAutomation} run={runAutomation} key={ automation+'-reg' } />
-                    :null
+                ( (automations[automation].favorite || !favorites) &&
+                    <React.Fragment key={ automation+'-reg' }>
+                        { (scheduled && automations[automation].schedules.length>0 ) &&
+                            <ScheduleItem name={automation} automation={ automations[automation] } select={selectAutomation} run={runAutomation} />
+                        }
+                        { !scheduled &&
+                            <AutomationItem name={automation} automation={ automations[automation] } select={selectAutomation} edit={editing} delete={deleteAutomation} run={runAutomation} />
+                        }
+                    </React.Fragment>
                 )
             )}
-
             { adding ? 
                 <AutomationAdd add={addAutomation} />
             : null }

@@ -16,11 +16,11 @@ export default function AutomationItem(props) {
         { props.edit ?
             <ToggleAvatar avatarState={"off"} onClick={ () => props.delete(props.name)}><CloseIcon /></ToggleAvatar>
         :
-            <ToggleAvatar avatarState={props.favorite? "on": "off"} onClick={ () => props.run(props.name)}>
-                { props.favorite ? <FavoriteIcon/> : <ListIcon /> }
+            <ToggleAvatar avatarState={props.automation.favorite? "on": "off"} onClick={ () => props.run(props.name)}>
+                { props.automation.favorite ? <FavoriteIcon/> : <ListIcon /> }
             </ToggleAvatar>
         }
-            <ListItemText primary={props.name} secondary={props.triggerCount+" triggers / "+props.conditionCount+" conditions / "+props.actionCount+' actions'}  onClick={() => props.select(props.name)}/>
+            <ListItemText primary={props.name} secondary={props.automation.triggers.length+" triggers / "+props.automation.conditions.length+" conditions / "+props.automation.actions.length+' actions'}  onClick={() => props.select(props.name)}/>
         </ListItem>
         </GridItem>
     )

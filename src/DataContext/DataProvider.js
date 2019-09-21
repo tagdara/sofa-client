@@ -57,7 +57,15 @@ class AlexaDevice {
         }
         return allprops
     }
-            
+
+    controllerForProperty(propname) {
+        for (var j = 0; j < this.interfaces.length; j++) {
+            if (this[this.interfaces[j]].properties.includes(propname)) {
+                return this.interfaces[j]
+            }
+        }
+        return ''
+    }
     
 }
 

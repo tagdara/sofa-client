@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
 import Button from '@material-ui/core/Button';
-import LensIcon from '@material-ui/icons/Lens';
-import { HuePicker } from 'react-color';
+import { SketchPicker } from 'react-color'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
 
 const useStyles = makeStyles({
         
@@ -15,7 +15,8 @@ const useStyles = makeStyles({
         paddingRight: 8,
     },
     button: {
-        minWidth: 24
+        minWidth: 96,
+        minHeight: 39,
     },
     revealIcon: {
         height: 24,
@@ -23,6 +24,14 @@ const useStyles = makeStyles({
         color: "FFE4B5",
     }
 });
+
+const sketchPickerStyles = {
+  default: {
+    picker: { // See the individual picker source for which keys to use
+      boxShadow: 'none',
+    },
+  },
+}
 
 export const sl2sb = (color) => {
     var SL = {h:color.h, s:color.s, l:color.l};
@@ -34,6 +43,7 @@ export const sl2sb = (color) => {
 }    
 
 export const sb2sl = (color) => {
+    
     var SB = {hue:color.hue, saturation:color.saturation, brightness:color.brightness};
     var SL = {h:color.hue, s:0, l:0};
     SL.l = (2 - SB.saturation) * SB.brightness / 2;
@@ -42,50 +52,76 @@ export const sb2sl = (color) => {
 }
 
 export default function Color(props) {
+    
+    console.log(props.interface.color.value, props.interface)
+
 
     const classes = useStyles();
-    const reveal = {hue: 43.5, saturation:0.27, brightness: 1}
-    const [color, setColor] = useState(reveal);
+    const [color, setColor] = useState(props.interface.color.value);
+    const [openDialog, setOpenDialog] = useState(false);
     
     useEffect(() => {
-        if (props.interface.color.value==null) {
+        const reveal = {hue: 43.5, saturation:0.27, brightness: 1}
+        
+        if (props.interface.color.value===undefined) {
             setColor(sb2sl(reveal))
         } else {
+            //setColor(sb2sl(props.interface.color.value.color))
             setColor(sb2sl(props.interface.color.value))
         }
+
     }, [props.interface.color.value]);
 
 
     function handleColorSliderChange(color, event) {
         setColor(color.hsl);
-        var sendsb=sl2sb(color.hsl)
-        //sendsb.brightness=props.device.BrightnessController.brightness.value/100
-        props.interface.directive('SetColor',{ "color": sendsb })
+        if (props.live===true) {
+            var sendsb=sl2sb(color)
+            props.interface.directive('SetColor',{ "color": sendsb })
+        }
     }
 
-    function handleColorChange(hsb) {
-        setColor(sb2sl(hsb));
-        //hsb.brightness=props.device.BrightnessController.brightness.value/100
-        props.interface.directive('SetColor',{ "color": hsb })
+    function gethsl(sl) {
+        if (sl) {
+            return { "backgroundColor":"hsl("+sl['h']+", "+(sl['s']*100)+"%, "+(sl['l']*100)+"%)"}
+        }
+        return { "backgroundColor":"hsl(255, 100%, 100%)"}
     }
     
-    function gethsl(sl) {
-        console.log(sl,{ "color":"hsl("+sl['h']+", "+(sl['s']*100)+"%, "+(sl['brightness']*100)+"%)"})
-        return { "color":"hsl("+sl['h']+", "+(sl['s']*100)+"%, "+(sl['l']*100)+"%)"}
+    function closeDialog() {
+        setOpenDialog(false)
+    }
+    
+    function saveColor() { 
+        var sendsb=sl2sb(color)
+        props.interface.directive('SetColor',{ "color": sendsb })
+        setOpenDialog(false)
     }
 
     return (
         <>
-            <Button size="small" onClick={ () => handleColorChange(reveal)} style={gethsl(color)} color={ color===reveal ? "primary" : "default"} className={classes.button }>
-                <LensIcon className={classes.revealIcon} />
+            <Button variant="outlined" size="small" onClick={ () => setOpenDialog(true) } style={gethsl(color)} className={classes.button }> &nbsp;
             </Button>
-            <HuePicker
-                className={classes.wide}
-                color={ color }
-                onChangeComplete={ handleColorSliderChange }
-            />
+            <Dialog open={openDialog} close={closeDialog} maxWidth={'xs'} fullWidth={false} >
+                <SketchPicker
+                    disableAlpha styles={sketchPickerStyles}
+                    color={ color }
+                    onChangeComplete={ handleColorSliderChange }
+                />
+                <DialogActions>
+                    <Button onClick={closeDialog} color="primary">
+                        CANCEL
+                    </Button>
+                    <Button onClick={saveColor} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </>
     );
+}
 
+Color.defaultProps = {
+    live: false
 }
 

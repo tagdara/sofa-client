@@ -37,14 +37,15 @@ const useStyles = makeStyles({
 });
 
 
-export default function Sonos(props) {
+export default function PlayerBase(props) {
     
     const classes = useStyles();
     const { applyLayoutCard } = useContext(LayoutContext);
     const serverurl="https://"+window.location.hostname;
     
     function addDefaultSrc(ev){
-        ev.target.src = '/image/sonos/logo'
+        // allow unique logos per adapter
+        ev.target.src = '/image/'+props.player.endpointId.split(':')[0]+'/logo'
     }
     
     function setGroupPlayer(thisplayer) {

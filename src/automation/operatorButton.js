@@ -9,9 +9,16 @@ import Menu from '@material-ui/core/Menu';
 const useStyles = makeStyles({
         
     button: {
-        maxWidth: 36,
-        minWidth: 36,
+        maxWidth: 64,
+        minWidth: 64,
+        marginLeft: 8,
+        fontSize: 18,
+        fontWeight: "bold",
     },
+    bigtext: {
+        fontSize: 16,
+        fontWeight: "bold",
+    }
     
 });
 
@@ -55,6 +62,7 @@ export default function OperatorButton(props) {
                         key={option}
                         selected={index === operators.indexOf(props.value)}
                         onClick={event => handleMenuSelect(event, index)}
+                        className={classes.bigtext}
                     >
                         {option}
                     </MenuItem>

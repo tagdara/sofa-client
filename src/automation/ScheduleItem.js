@@ -7,6 +7,8 @@ import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 
 function ScheduleItem(props) {
+    
+    console.log('sa', props.automation.schedules)
 
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];  
    
@@ -64,12 +66,12 @@ function ScheduleItem(props) {
         <GridItem>
             <ListItem>
                 <ToggleAvatar avatarState={'on'} onClick={ () => props.select(props.name) }><TuneIcon /></ToggleAvatar>
-                <ListItemText onClick={ () => props.select(props.name) } primary={props.name} secondary={"Last: "+dateOnly(props.last)+" "+timeOnly(props.last)} />
+                <ListItemText onClick={ () => props.select(props.name) } primary={props.name} secondary={"Last: "+dateOnly(props.automation.lastrun)+" "+timeOnly(props.automation.lastrun)} />
             </ListItem>
-            { props.schedule.map( sched =>
+            { props.automation.schedules.map( sched =>
             <ListItem>
                 <ToggleAvatar noback={true} onClick={ () => props.select(props.name) }><ScheduleIcon /></ToggleAvatar>
-                <ListItemText onClick={ () => props.select(props.name) } primary={textSched(sched)} secondary={"Next: "+dateOnly(props.next)+" "+timeOnly(props.next)} />
+                <ListItemText onClick={ () => props.select(props.name) } primary={textSched(sched)} secondary={"Next: "+dateOnly(props.automation.nextrun)+" "+timeOnly(props.automation.nextrun)} />
             </ListItem>
             )}
         </GridItem>

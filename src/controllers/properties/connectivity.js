@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { makeStyles, withStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
@@ -25,14 +25,16 @@ const BootstrapInput = withStyles(theme => ({
 export default function Connectivity(props) {
 
     useEffect(() => {
-        // Set default if passed a null
-        if (props.interface.connectivity.deepvalue()===null) {
-            props.interface.directive('SetConnectivity',{'value':'OK'})
+        // Set default if passed undefined
+        if (props.interface.connectivity.deepvalue()===undefined) {
+            if (props.interface.hasOwnProperty('setDefault')) {
+                props.interface.setDefault('OK')
+            }
         }
-    }, [])
-    
+    }, [props.interface])
+
     return (
-        <Select value={ props.interface.connectivity.deepvalue() } onChange={(e) => props.interface.directive('SetConnectivity',{'value':e.target.value})} input={<BootstrapInput name="connectivity" id="connectivity" />} >
+        <Select value={ props.interface.connectivity.deepvalue() ? props.interface.connectivity.deepvalue() : ''  } onChange={(e) => props.interface.directive('SetConnectivity',{'value':e.target.value})} input={<BootstrapInput name="connectivity" id="connectivity" />} >
             <MenuItem value="OK">OK</MenuItem>
             <MenuItem value="UNREACHABLE">UNREACHABLE</MenuItem>
         </Select>

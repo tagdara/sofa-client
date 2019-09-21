@@ -74,11 +74,11 @@ export default function SmallSlider(props) {
         <>
             <Slider
                 className={classes.small}
-                value={value} step={props.step} 
+                value={ value===undefined ? 0 : value } step={props.step} 
                 min={props.min} max={props.max}
                 onChange={handlePreChange}
                 onChangeCommitted={handleChange}
-                disabled={props.disabled}
+                disabled={ value===undefined || props.disabled }
             />
             { props.unit ?
                 <Typography variant="caption" className={classes.smallLabel} >{unitDisplay()}</Typography>

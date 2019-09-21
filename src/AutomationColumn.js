@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
 
-import AutomationActionNew from "./automation/automationActionNew"
+import AutomationAction from "./automation/automationAction"
 import AutomationCondition from "./automation/automationCondition"
 import AutomationTrigger from "./automation/automationTrigger"
 import AutomationSchedule from "./automation/automationSchedule"
@@ -31,13 +31,13 @@ const useStyles = makeStyles({
 export default function AutomationColumn(props) {
 
     const classes = useStyles();
-    const { isMobile, applyLayoutCard, applyReturnPage, applyBackPage } = useContext(LayoutContext);
+    const { isMobile } = useContext(LayoutContext);
     const { deviceByEndpointId, controllerProperties, directives } = useContext(DataContext);
 
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
     const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
-    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationActionNew, 'Schedules':AutomationSchedule}
+    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
     const AutomationProperty = modmap[props.name]
     
     function getControllerProperties(item) {
@@ -70,6 +70,7 @@ export default function AutomationColumn(props) {
         var newitems=[...props.items]
         newitems[index]=item
         props.save(props.itemtype, newitems)
+        //console.log('Column value',props.itemtype,'is now:',newitems)
     }
     
     function moveUp(index) {
@@ -107,50 +108,48 @@ export default function AutomationColumn(props) {
     }
 
     function addItem() {
+        var newItem={}
         if (props.itemtype==='schedule') {
-            addInPlace()
-        } else {
-            setRemove(false); 
-            setReorder(false) 
-            applyReturnPage("AutomationLayout", {'name': props.automationName, 'type':props.itemtype })
-            applyBackPage("AutomationLayout",{'name': props.automationName })
-            applyLayoutCard(props.selector)
+            newItem={'type':'interval', 'interval':1, 'unit':'days', 'start':shortTimeFormat()}
+            props.save(props.itemtype,[...props.items, newItem])
+        } else if (props.itemtype==='action') {
+            newItem={
+                "type": "command",
+                "endpointId": undefined,
+                "controller": undefined,
+                "command": undefined,
+                "deviceName": undefined
+            }
+            props.save(props.itemtype,[...props.items, newItem])
+        } else if (props.itemtype==='condition') {
+            newItem={
+                "type": "property",
+                "endpointId": undefined,
+                "value": undefined,
+                "propertyName": undefined,
+                "controller": undefined,
+                "deviceName": undefined
+            }
+            props.save(props.itemtype,[...props.items, newItem])
+        } else if (props.itemtype==='trigger') {
+            newItem={
+                "type": "property",
+                "endpointId": undefined,
+                "value": undefined,
+                "propertyName": undefined,
+                "controller": undefined,
+                "deviceName": undefined
+            }
+            props.save(props.itemtype,[...props.items, newItem])
         }
     }
 
-    function addItemNew() {
-        if (props.itemtype==='schedule') {
-            addInPlace()
-        } else {
-            setRemove(false); 
-            setReorder(false) 
-            applyReturnPage("AutomationLayout", {'name': props.automationName, 'type':props.itemtype })
-            applyBackPage("AutomationLayout",{'name': props.automationName })
-            applyLayoutCard('DeviceLayout')
-        }
-    }
-
-    
-    function addInPlace() {
-        var newItem={'type':'interval', 'interval':1, 'unit':'days', 'start':shortTimeFormat()}
-        setRemove(false); 
-        setReorder(false)
-        props.save(props.itemtype,[...props.items, newItem])
-    }   
-    
     return (    
 
             <GridSection name={props.name} secondary={ <>
-                { props.saved &&
-                    <IconButton onClick={ () => addItemNew() } className={classes.button }>
-                        <AddIcon fontSize="small" />
-                    </IconButton>
-                }
-                { props.saved &&
-                    <IconButton onClick={ () => addItem() } className={classes.button }>
-                        <AddIcon fontSize="small" />
-                    </IconButton>
-                }
+                <IconButton onClick={ () => addItem() } className={classes.button }>
+                    <AddIcon fontSize="small" />
+                </IconButton>
                 { Object.keys(props.items).length>0 &&
                 <IconButton onClick={ () => { setRemove(!remove); setReorder(false); }} className={classes.button }>
                     <RemoveIcon fontSize="small" />
@@ -172,7 +171,7 @@ export default function AutomationColumn(props) {
                             <AutomationProperty key={props.itemtype+index} save={save} remove={remove} delete={deleteItem} index={index} item={item} />
                         :
                             <AutomationProperty moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
-                                index={index} item={item} device={ deviceByEndpointId(item.endpointId) } directives={directives} controllerProperties={ getControllerProperties(item)} wide={isMobile} 
+                                index={index} item={item} device={ item.endpointId===undefined ? undefined : deviceByEndpointId(item.endpointId) } directives={directives} controllerProperties={ getControllerProperties(item)} wide={isMobile} 
                                 />
                         }
                         </ErrorBoundary>

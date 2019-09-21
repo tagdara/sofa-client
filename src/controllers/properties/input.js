@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { withStyles } from '@material-ui/styles';
-
+import {withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
@@ -24,24 +23,23 @@ const BootstrapInput = withStyles(theme => ({
     },
 }))(InputBase);
 
-export default function DetectionState(props) {
-    
+export default function Input(props) {
+
     useEffect(() => {
         // Set default if passed undefined
-        if (props.interface.detectionState.value===undefined) {
+        if (props.interface.input.value===undefined) {
             if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('DETECTED')
+                props.interface.setDefault('')
             }
         }
     }, [props.interface])
     
     return (
-        <Select value={ props.interface.detectionState.value ? props.interface.detectionState.value : "" } onChange={props.changeValue} input={<BootstrapInput name="detectionState" id="detectionState" />} >
-            <MenuItem value="DETECTED">DETECTED</MenuItem>
-            <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
+        <Select value={props.interface.input.value ? props.interface.input.value : ""} onChange={(e) => props.interface.directive('SetInput', {'input': e.target.value }) } input={<BootstrapInput name="input" id="input" />} >
+            { props.device.InputController.inputs.map( inp => 
+                <MenuItem value={inp.name}>{inp.name}</MenuItem>
+            )}
         </Select>
     );
 
 }
-
-

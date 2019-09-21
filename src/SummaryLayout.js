@@ -1,5 +1,4 @@
-import React from 'react';
-import { useEffect, useContext, useRef } from 'react';
+import React, { useEffect, useContext, useRef } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 
 import GridSection from './GridSection';
@@ -12,8 +11,6 @@ import LightbulbOutlineIcon from './LightbulbOutline';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
-
 import ToggleAvatar from './ToggleAvatar'
 
 import AvSummary from './AvSummary'

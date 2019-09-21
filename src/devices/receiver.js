@@ -48,6 +48,17 @@ export default function Receiver(props) {
         return inputlist
     }
 
+    function getSurrounds() {
+        var inputlist=[]
+        if (props.device.SurroundController.hasOwnProperty('inputs')) {
+            for (var k = 0; k < props.device.SurroundController.inputs.length; k++) {
+                inputlist.push(props.device.SurroundController.inputs[k].name)
+            }
+        }
+        return inputlist
+    }
+
+
     return (
         <GridItem wide={props.wide}>
             <ListItem>
@@ -77,18 +88,9 @@ export default function Receiver(props) {
                 </ListItem>
                 <ListItem>
                     <ListItemText primary={"Surround Sound"} />
-                        <ToggleChip 
-                            key = '7ch Stereo'
-                            label= '7ch Stereo'
-                            chipState={ props.device.SurroundController.surround.value==='7ch Stereo' ? "on" : "off" }
-                            onClick={ (e) => handleSurround(e, '7ch Stereo')}
-                        />
-                        <ToggleChip 
-                            key = 'Surround Decoder'
-                            label='Surround Decoder'
-                            chipState={ props.device.SurroundController.surround.value==='Surround Decoder' ? "on" : "off" }
-                            onClick={ (e) => handleSurround(e, 'Surround Decoder')}
-                        />
+                    { getSurrounds().map(inp => 
+                        <ToggleChip key = {inp} label = { inp } chipState={ props.device.SurroundController.surround.value===inp ? "on" : "off" } onClick={ (e) => handleSurround(e, inp)} />
+                    )}
                 </ListItem>
             </React.Fragment>
         }

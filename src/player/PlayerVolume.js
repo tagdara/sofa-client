@@ -5,7 +5,7 @@ import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import SofaSlider from '../SofaSlider'
 import ToggleAvatar from '../ToggleAvatar'
 
-export default function SonosVolume(props) {
+export default function PlayerVolume(props) {
 
     function handleVolumeChange(event) {
         props.player.SpeakerController.directive("SetVolume", { "volume" : event} )

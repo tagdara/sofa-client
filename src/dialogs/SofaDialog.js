@@ -22,7 +22,7 @@ function SofaDialog(props) {
     return (
         <Dialog className={classes.dialog}
             fullScreen={props.fullScreen}
-            fullWidth={true}
+            fullWidth={props.fullWidth}
             maxWidth={props.maxWidth}
             open={props.open}  
             onClose={props.close}
@@ -38,6 +38,7 @@ SofaDialog.defaultProps = {
     tabs: '',
     tabValue: '',
     tabChange: '',
+    fullWidth: true,
 }
 
 export default withMobileDialog()(SofaDialog);

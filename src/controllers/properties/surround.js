@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import { withStyles } from '@material-ui/styles';
-
+import {withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
@@ -24,24 +23,26 @@ const BootstrapInput = withStyles(theme => ({
     },
 }))(InputBase);
 
-export default function DetectionState(props) {
-    
+// This is Sofa namespace and not official Amazon Alexa
+// It should be replaced with a Mode Controller but is currently modeled after input controller
+
+export default function Surround(props) {
+
     useEffect(() => {
         // Set default if passed undefined
-        if (props.interface.detectionState.value===undefined) {
+        if (props.interface.surround.value===undefined) {
             if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('DETECTED')
+                props.interface.setDefault('')
             }
         }
     }, [props.interface])
     
     return (
-        <Select value={ props.interface.detectionState.value ? props.interface.detectionState.value : "" } onChange={props.changeValue} input={<BootstrapInput name="detectionState" id="detectionState" />} >
-            <MenuItem value="DETECTED">DETECTED</MenuItem>
-            <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
+        <Select value={props.interface.surround.value ? props.interface.surround.value : ""} onChange={(e) => props.interface.directive('SetSurround', {'surround': e.target.value }) } input={<BootstrapInput name="surround" id="surround" />} >
+            { props.device.SurroundController.inputs.map( inp => 
+                <MenuItem value={inp.name}>{inp.name}</MenuItem>
+            )}
         </Select>
     );
 
 }
-
-

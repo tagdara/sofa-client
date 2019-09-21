@@ -49,7 +49,7 @@ export default function Device(props) {
 
     return (
         <GridItem nopad={true}>
-            <ListItem button onClick={() => setShowDetail(!showDetail)}>
+            <ListItem button onClick={props.select? () => props.select(props.device) : () => setShowDetail(!showDetail)}>
                 <ListItemIcon>{getIcon(props.device.displayCategories)}</ListItemIcon>
                 <ListItemText primary={props.device.friendlyName} secondary={props.device.displayCategories} />
                 <ListItemSecondaryAction>

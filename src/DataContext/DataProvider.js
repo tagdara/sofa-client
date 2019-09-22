@@ -13,10 +13,14 @@ class AlexaDevice {
         this.interfaceobjects = []
         
         for (var j = 0; j < data.capabilities.length; j++) {
-            if (data.capabilities[j].interface.split('.')[1] && !this.interfaces.includes(data.capabilities[j].interface.split('.')[1])) {
-                this[data.capabilities[j].interface.split('.')[1]]=new AlexaController(this, data.capabilities[j])
-                this.interfaces.push(data.capabilities[j].interface.split('.')[1])
-                this.interfaceobjects.push(this[data.capabilities[j].interface.split('.')[1]])
+            var interfacename=data.capabilities[j].interface.split('.')[1]
+            if (data.capabilities[j].hasOwnProperty('instance')) {
+                interfacename=data.capabilities[j].instance.split('.')[1]
+            }
+            if (data.capabilities[j].interface.split('.')[1] && !this.interfaces.includes(interfacename)) {
+                this[interfacename]=new AlexaController(this, data.capabilities[j])
+                this.interfaces.push(interfacename)
+                this.interfaceobjects.push(this[interfacename])
             }
         }
     }
@@ -43,8 +47,12 @@ class AlexaDevice {
         if (response.hasOwnProperty('context')) {
             for (var i = 0; i < response.context.properties.length; i++) {
                 var prop=response.context.properties[i]
-                this[prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
-                this[prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
+                var interfacename=prop.namespace.split('.')[1]
+                if (prop.hasOwnProperty('instance')) {
+                    interfacename=prop.instance.split('.')[1]
+                }
+                this[interfacename][prop.name]['value']=prop['value']
+                this[interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
             }
         }
         return response
@@ -86,6 +94,14 @@ class AlexaController {
             this.inputs=data.inputs;
         }
 
+        if (data.hasOwnProperty('instance')) {
+            this.instance=data.instance;
+        }
+        
+        if (data.hasOwnProperty('capabilityResources')) {
+            this.capabilityResources=data.capabilityResources;
+        }
+
         if (data.hasOwnProperty('properties') && data.properties.hasOwnProperty('supported')) {
             for (var j = 0; j < data.properties.supported.length; j++) {
                 this[data.properties.supported[j].name]=new AlexaControllerProperty()
@@ -98,6 +114,9 @@ class AlexaController {
     directive(command, payload={}, cookie={}) {
         const serverurl="https://"+window.location.hostname;
         var header={"name": command, "namespace":this.namespace+"." + this.controller, "payloadVersion":"3", "messageId": this.device.newtoken(), "correlationToken": this.device.newtoken()}
+        if (this.hasOwnProperty('instance')) {
+            header.instance=this.instance
+        }
         var endpoint={"endpointId": this.device.endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
         console.log('Sending device-based alexa command:',data)
@@ -154,8 +173,14 @@ export const deviceReducer = (state, data) => {
                     if (dev in devs) {
                         for (i = 0; i < data.state[dev].context.properties.length; i++) {
                             prop=data.state[dev].context.properties[i]
-                            devs[dev][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
-                            devs[dev][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
+                            var interfacename=prop.namespace.split('.')[1]
+                            console.log('prop',prop)
+                            if (prop.hasOwnProperty('instance')) {
+                                interfacename=prop.instance.split('.')[1]
+                                console.log('instanced',interfacename)
+                            }
+                            devs[dev][interfacename][prop.name]['value']=prop['value']
+                            devs[dev][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
                         }
                     }
                 }                
@@ -164,13 +189,22 @@ export const deviceReducer = (state, data) => {
                 if (data.event.endpoint.endpointId in devs) {
                     for (i = 0; i < data.event.payload.change.properties.length; i++) {
                         prop=data.event.payload.change.properties[i]
-                        devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
-                        devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
+                        var interfacename=prop.namespace.split('.')[1]
+                        console.log('prop',prop)
+                        if (prop.hasOwnProperty('instance')) {
+                            interfacename=prop.instance.split('.')[1]
+                        }
+                        devs[data.event.endpoint.endpointId][interfacename][prop.name]['value']=prop['value']
+                        devs[data.event.endpoint.endpointId][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
                     }
                     for (i = 0; i < data.context.properties.length; i++) {
                         prop=data.context.properties[i]
-                        devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['value']=prop['value']
-                        devs[data.event.endpoint.endpointId][prop.namespace.split('.')[1]][prop.name]['timeOfSample']=prop['timeOfSample']
+                        var interfacename=prop.namespace.split('.')[1]
+                        if (prop.hasOwnProperty('instance')) {
+                            interfacename=prop.instance.split('.')[1]
+                        }
+                        devs[data.event.endpoint.endpointId][interfacename][prop.name]['value']=prop['value']
+                        devs[data.event.endpoint.endpointId][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
                     }
                 }
                 return devs;

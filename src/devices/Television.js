@@ -78,9 +78,34 @@ export default function Television(props) {
     function handleInput(event, inputname) {
         props.device.InputController.directive('SelectInput', { "input": inputname } )
     }; 
+
+    function handleModeChoice(event, mode, modechoice) {
+        props.device[mode].directive('SetMode', { "mode": modechoice })
+    }; 
     
     function toggleRemote() {
         setShowRemote(!showRemote)
+    }
+    
+    function getModes() {
+        
+        var modes={}
+        for (var k = 0; k < props.device.interfaces.length; k++) {
+            if (props.device[props.device.interfaces[k]].controller==='ModeController') {
+                var mc=props.device[props.device.interfaces[k]]
+                var modename=mc.capabilityResources.friendlyNames[0].value.text
+                console.log('getmodes',modename)
+                var modechoices=[]
+                for (var j = 0; j < mc.configuration.supportedModes.length; j++) {
+                    console.log('getmodes',mc.configuration.supportedModes[j].value)
+                    modechoices.push(mc.configuration.supportedModes[j].value)
+                    console.log('getmc',modechoices)
+                }
+                modes[modename]=modechoices
+            }
+        }
+        console.log('getmodes',modes)
+        return modes
     }
     
     return (
@@ -120,6 +145,18 @@ export default function Television(props) {
                 <ListItemText primary={"Input"} />
                 { getInputs().map(inp => 
                     <ToggleChip key = {inp} label = { inp } chipState={ props.device.InputController.input.value===inp ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
+                )}
+            </ListItem>
+        }
+        { showDetail &&
+            <ListItem className={classes.bottomListItem}>
+                { Object.keys(getModes()).map(mode => 
+                    <React.Fragment key={mode}>
+                        <ListItemText primary={mode} key={mode} />
+                        { getModes()[mode].map(modechoice => 
+                            <ToggleChip key = {modechoice} label = { modechoice.split('.')[1] } chipState={ props.device[mode].mode.value===modechoice ? "on" : "off"} onClick={ (e) => handleModeChoice(e, mode, modechoice)} />
+                        )}
+                    </React.Fragment>
                 )}
             </ListItem>
         }

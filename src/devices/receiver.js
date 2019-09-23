@@ -1,5 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { DataContext } from '../DataContext/DataProvider';
+
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
@@ -11,9 +12,11 @@ import SofaAvatarSlider from '../SofaAvatarSlider'
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
 import ToggleChip from '../ToggleChip'
+import ModeLines from '../ModeLines'
 
 export default function Receiver(props) {
     
+    const { getModes } = useContext(DataContext);
     const [mute, setMute] = useState(props.device.SpeakerController.mute.value);
     const [showDetail, setShowDetail] = useState(false);
 
@@ -30,10 +33,6 @@ export default function Receiver(props) {
         props.device.PowerController.directive(event.target.checked ? 'TurnOn' : 'TurnOff')
     };
     
-    function handleSurround(event, surroundmode) {
-        props.device.SurroundController.directive('SetSurround', {"surround": surroundmode } )
-    }; 
-    
     function handleInput(event, inputname) {
         props.device.InputController.directive('SelectInput', { "input": inputname } )
     }; 
@@ -47,17 +46,14 @@ export default function Receiver(props) {
         }
         return inputlist
     }
-
-    function getSurrounds() {
-        var inputlist=[]
-        if (props.device.SurroundController.hasOwnProperty('inputs')) {
-            for (var k = 0; k < props.device.SurroundController.inputs.length; k++) {
-                inputlist.push(props.device.SurroundController.inputs[k].name)
-            }
+    
+    function surroundName() {
+        var surroundmodes=getModes(props.device).Surround
+        if (surroundmodes.hasOwnProperty(props.device.Surround.mode.value)) {
+            return surroundmodes[props.device.Surround.mode.value]
         }
-        return inputlist
+        return ""
     }
-
 
     return (
         <GridItem wide={props.wide}>
@@ -65,7 +61,7 @@ export default function Receiver(props) {
                 <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }>
                     <SpeakerGroupIcon />
                 </ToggleAvatar>
-                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={ props.device.PowerController.powerState.value==='OFF' ? 'Off' : (props.device.InputController.input.value) ? props.device.InputController.input.value + " / "+ props.device.SurroundController.surround.value : null}/>
+                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={ props.device.PowerController.powerState.value==='OFF' ? 'Off' : (props.device.InputController.input.value) ? props.device.InputController.input.value + " / "+ surroundName() : null}/>
                 <ListItemSecondaryAction>
                     <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
@@ -86,12 +82,7 @@ export default function Receiver(props) {
                         <ToggleChip key = {inp} label = { inp } chipState={ props.device.InputController.input.value===inp ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
                     )}
                 </ListItem>
-                <ListItem>
-                    <ListItemText primary={"Surround Sound"} />
-                    { getSurrounds().map(inp => 
-                        <ToggleChip key = {inp} label = { inp } chipState={ props.device.SurroundController.surround.value===inp ? "on" : "off" } onClick={ (e) => handleSurround(e, inp)} />
-                    )}
-                </ListItem>
+                <ModeLines device={props.device} />
             </React.Fragment>
         }
         </GridItem>

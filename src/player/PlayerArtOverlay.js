@@ -67,7 +67,7 @@ export default function PlayerArtOverlay(props) {
             <Fade in={ imageLoaded } >
             <img
                 className={classes.bigcover}
-                src={ serverurl+props.art }
+                src={ serverurl+props.art+"?time="+Date.now() }
                 title={ props.title }
                 alt={ props.title }
                 onClick={ () => toggleOverlay()}

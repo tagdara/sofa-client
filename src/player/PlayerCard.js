@@ -76,7 +76,6 @@ export default function PlayerCard(props) {
                 linked.push(deviceByEndpointId(props.player.MusicController.linked.value[i]))
             }
         }
-        console.log('linked', linked)
         return linked
     }
     

@@ -153,6 +153,7 @@ export const deviceReducer = (state, data) => {
         var i=0;
         var devs={...state}
         var prop='';
+        var interfacename=""
         switch (data.event.header.name) {
             case 'DeleteReport':
                 for (i = 0; i < data.event.payload.endpoints.length; i++) {
@@ -173,11 +174,9 @@ export const deviceReducer = (state, data) => {
                     if (dev in devs) {
                         for (i = 0; i < data.state[dev].context.properties.length; i++) {
                             prop=data.state[dev].context.properties[i]
-                            var interfacename=prop.namespace.split('.')[1]
-                            console.log('prop',prop)
+                            interfacename=prop.namespace.split('.')[1]
                             if (prop.hasOwnProperty('instance')) {
                                 interfacename=prop.instance.split('.')[1]
-                                console.log('instanced',interfacename)
                             }
                             devs[dev][interfacename][prop.name]['value']=prop['value']
                             devs[dev][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
@@ -189,8 +188,7 @@ export const deviceReducer = (state, data) => {
                 if (data.event.endpoint.endpointId in devs) {
                     for (i = 0; i < data.event.payload.change.properties.length; i++) {
                         prop=data.event.payload.change.properties[i]
-                        var interfacename=prop.namespace.split('.')[1]
-                        console.log('prop',prop)
+                        interfacename=prop.namespace.split('.')[1]
                         if (prop.hasOwnProperty('instance')) {
                             interfacename=prop.instance.split('.')[1]
                         }
@@ -199,7 +197,7 @@ export const deviceReducer = (state, data) => {
                     }
                     for (i = 0; i < data.context.properties.length; i++) {
                         prop=data.context.properties[i]
-                        var interfacename=prop.namespace.split('.')[1]
+                        interfacename=prop.namespace.split('.')[1]
                         if (prop.hasOwnProperty('instance')) {
                             interfacename=prop.instance.split('.')[1]
                         }
@@ -396,6 +394,23 @@ export default function DataProvider(props) {
         return devprops
     }
 
+    function getModes(dev) {
+        
+        var modes={}
+        for (var k = 0; k < dev.interfaces.length; k++) {
+            if (dev[dev.interfaces[k]].controller==='ModeController') {
+                var mc=dev[dev.interfaces[k]]
+                var modename=mc.capabilityResources.friendlyNames[0].value.text
+                var modechoices=[]
+                for (var j = 0; j < mc.configuration.supportedModes.length; j++) {
+                    modechoices[mc.configuration.supportedModes[j].value] = mc.configuration.supportedModes[j].modeResources.friendlyNames[0].value.text
+                }
+                modes[modename]=modechoices
+            }
+        }
+        return modes
+    }
+
     function getChangeTimesForDevices(val,devs) {
         
         // Requests the last time the value changed for a set of devices.  This requires the Influx adapter
@@ -462,7 +477,9 @@ export default function DataProvider(props) {
                 defaultPlayer: defaultPlayer,
                 setDefaultPlayer: setDefaultPlayer,
                 userPlayer: userPlayer,
-                setUserPlayer: setUserPlayer
+                setUserPlayer: setUserPlayer,
+                
+                getModes: getModes
 
             }}
         >

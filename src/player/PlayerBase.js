@@ -62,7 +62,7 @@ export default function PlayerBase(props) {
     }
  
     return (
-        props.player.endpointId===props.player.InputController.input.value || props.player.InputController.input.value===''? 
+        props.player.friendlyName===props.player.InputController.input.value || props.player.InputController.input.value===''? 
             <GridItem wide={props.wide}>
                 { props.small ? null :
                     <React.Fragment>

@@ -34,7 +34,7 @@ function bestPlayerId(speakers, defaultPlayer, userPlayer) {
         return defaultPlayer
     }
     
-    if (speakers) {
+    if (speakers.length>0) {
         return speakers[0].endpointId
     }
     return undefined

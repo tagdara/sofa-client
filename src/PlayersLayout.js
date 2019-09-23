@@ -15,13 +15,15 @@ export default function PlayersLayout(props) {
         setUserPlayer(newplayer)
         applyLayout('Home')
     }
+    
+    console.log('speakers',speakers)
 
     return (    
         <React.Fragment>
             <GridBreak label={"Players"} />
 
             { speakers.map((device) =>
-                device.endpointId===device.InputController.input.value || device.InputController.input.value==='' ? 
+                device.friendlyName===device.InputController.input.value || device.InputController.input.value==='' ? 
                 <PlayerBase key={device.endpointId} player={device} setUserPlayer={changePlayerHome} devices={speakers} device={ device } />
                 : null
             )}

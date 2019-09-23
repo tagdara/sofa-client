@@ -27,6 +27,7 @@ const useStyles = makeStyles({
     bigcamPaper: {
         margin: "auto 4px",
         maxHeight: "100%",
+        display: "flex",
     },
     bigcam: {
         width: "100%",

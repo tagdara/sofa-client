@@ -2,6 +2,7 @@ import React from 'react';
 import { useContext } from 'react';
 import { ThemeContext } from './theme/SofaTheme';
 import { LayoutContext } from './layout/NewLayoutProvider';
+import { NetworkContext } from './NetworkProvider';
 
 import GridSection from './GridSection';
 import GridItem from './GridItem';
@@ -19,9 +20,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 export default function SystemLayout(props) {
 
+    const { logout } = useContext(NetworkContext);
     const { applyLayoutCard } = useContext(LayoutContext);
     const { applyTheme, colorScheme } = useContext(ThemeContext);
-
+    const serverurl="https://"+window.location.hostname;
+    
     function otherPort(portnumber, tabname) {
         var newurl=window.location.protocol+"//"+window.location.hostname+":"+portnumber;
         window.open(newurl,tabname);
@@ -42,7 +45,6 @@ export default function SystemLayout(props) {
         window.location.reload(true)
     }
 
-    
     return (    
         <GridSection name={"System"} >
             <GridItem>
@@ -83,6 +85,14 @@ export default function SystemLayout(props) {
                         <EditIcon />
                     </ListItemIcon>
                     <ListItemText primary={'Editor'} secondary={'Edit Sofa code and view logs.'}/>
+                </ListItem>
+            </GridItem>
+            <GridItem>
+                <ListItem onClick={()=> logout()}>
+                    <ListItemIcon>
+                        <EditIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'Logout'} secondary={'Log out of Sofa.'}/>
                 </ListItem>
             </GridItem>
         </GridSection>

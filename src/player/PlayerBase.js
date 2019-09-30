@@ -39,6 +39,7 @@ const useStyles = makeStyles({
 
 export default function PlayerBase(props) {
     
+    console.log('player',props.player)
     const classes = useStyles();
     const { applyLayoutCard } = useContext(LayoutContext);
     const serverurl="https://"+window.location.hostname;
@@ -62,7 +63,7 @@ export default function PlayerBase(props) {
     }
  
     return (
-        props.player.friendlyName===props.player.InputController.input.value || props.player.InputController.input.value===''? 
+        props.player && (props.player.friendlyName===props.player.InputController.input.value || props.player.InputController.input.value==='') ? 
             <GridItem wide={props.wide}>
                 { props.small ? null :
                     <React.Fragment>

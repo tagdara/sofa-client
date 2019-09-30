@@ -1,4 +1,5 @@
-import React, {useState, useEffect, createContext, useReducer} from 'react';
+import React, {useContext, useState, useEffect, createContext, useReducer} from 'react';
+import { NetworkContext } from '../NetworkProvider';
 
 export const DataContext = createContext();
 
@@ -121,7 +122,7 @@ class AlexaController {
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
         console.log('Sending device-based alexa command:',data)
     
-        return fetch(serverurl+'/directive', { method: 'post',
+        return fetch(serverurl+'/directive', { withCredentials: true, credentials: 'include', method: 'post',
                     body: JSON.stringify(data)
                 })
                     .then(res=>res.json())
@@ -213,8 +214,8 @@ export const deviceReducer = (state, data) => {
 
 export default function DataProvider(props) {
     
-    const serverurl="https://"+window.location.hostname;
-    const [eventSource, setEventSource] = useState(() => new EventSource(serverurl+"/sse"))
+    const { getJSON, connectError, eventSource, loggedIn, addSubscriber } = useContext(NetworkContext);
+    //const [eventSource, setEventSource] = useState(() => new EventSource(serverurl+"/sse"))
     
     const initialDevices={};
     const [controllerProperties, setControllerProperties] = useState({});     
@@ -228,44 +229,24 @@ export default function DataProvider(props) {
     const [userPlayer, setUserPlayer] = useState('');     
 
     useEffect(() => {
-
-        const listener = event => {
-            deviceDispatch(JSON.parse(event.data));
-            //setHeartbeat(Date.now())
-        };
-
-        eventSource.addEventListener('message', listener);
-
-  	    fetch(serverurl+'/directives')
- 		    .then(result=>result.json())
-            .then(result=>setDirectives(result))
-            .then(result=>console.log('done getting directives'));
-
-  	    fetch(serverurl+'/properties')
- 		    .then(result=>result.json())
-            .then(result=>setControllerProperties(result))
-            .then(result=>console.log('done getting properties'));
-            
-  	    fetch(serverurl+'/list/logic/virtualDevices')
- 		    .then(result=>result.json())
-            .then(result=>setVirtualDevices(result))
-            .then(result=>console.log('done getting virtual devices'));
         
-        console.log('Done with useeffect load')    
-            
-    },[eventSource, serverurl]);
+        function getData() {
+            addSubscriber(deviceDispatch)
+            getJSON('directives')
+                .then(result=>setDirectives(result))
+                .then(result=>console.log('done getting directives'));
+    
+      	    getJSON('properties')
+                .then(result=>setControllerProperties(result))
+                .then(result=>console.log('done getting properties'));
+                
+      	    getJSON('list/logic/virtualDevices')
+                .then(result=>setVirtualDevices(result))
+                .then(result=>console.log('done getting virtual devices'));
+        }
+        if (loggedIn===true ) { getData() }
+    },[loggedIn]);
 
-    function reconnect() {
-        setEventSource(() => new EventSource(serverurl+"/sse"))
-    }
-
-    //function timedOut() {
-    //    if (((new Date()) - heartbeat) > 15000) {
-    //        console.log(new Date(),heartbeat,(new Date()) - heartbeat > 15000)
-    //        return true
-    //    } 
-    //    return false
-    //}
     
     function checkUpdate(serverUpdate) {
         var serverdate = new Date(serverUpdate.lastupdate)
@@ -275,8 +256,7 @@ export default function DataProvider(props) {
     }
     
     function getLastUpdate() {
-  	    fetch(serverurl+'/lastupdate')
- 		    .then(result=>result.json())
+  	    getJSON('lastupdate')
             .then(result=>checkUpdate(result))   
     }
 
@@ -422,12 +402,8 @@ export default function DataProvider(props) {
            endpointList.push(devs[i].endpointId)
         }
 
-        return fetch(serverurl+'/list/influx/last/'+val, {
-                    method: "post",
-                    body: JSON.stringify(endpointList)
-                })
-                    .then(res=>res.json())
-                    .then(res=> { return res;})
+        return getJSON('list/influx/last/'+val)
+                .then(res=> { return res;})
     }
 
     function getHistoryForDevice(dev, prop, page) {
@@ -435,14 +411,11 @@ export default function DataProvider(props) {
         // Requests the history for a specific device and property.  It allows for pagination since the data could be very
         // large.  This requires the Influx adapter in order to see history.
         
-        var url=serverurl+"/list/influx/history/"+dev+"/"+prop
+        var url="list/influx/history/"+dev+"/"+prop
         if (page) {
             url=url+"/"+page
         }
-
-        return fetch(url)
-            .then(res=> res.json())
-            .then(res=> { return res;})
+        return getJSON(url)
     }
 
     return (
@@ -469,18 +442,15 @@ export default function DataProvider(props) {
                 setArea: setArea,
                 area: area,
                 lightCount: lightCount,
-            
-                getLastUpdate: getLastUpdate,
-                eventSource: eventSource,
-                reconnect: reconnect,
                 
                 defaultPlayer: defaultPlayer,
                 setDefaultPlayer: setDefaultPlayer,
                 userPlayer: userPlayer,
                 setUserPlayer: setUserPlayer,
                 
-                getModes: getModes
-
+                getModes: getModes,
+                loggedIn: loggedIn,
+                connectError: connectError
             }}
         >
             {props.children}

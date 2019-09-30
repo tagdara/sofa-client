@@ -1,9 +1,11 @@
-import React, {useState, useEffect, createContext} from 'react';
+import React, {useContext, useState, useEffect, createContext} from 'react';
+import { NetworkContext } from '../NetworkProvider';
 
 export const LayoutContext = createContext({});
 
 export const LayoutProvider = (props) => {
 
+    const { getJSON, loggedIn } = useContext(NetworkContext);
     const [layouts, setLayouts] = useState(undefined);     
     const [layout, setLayout] = useState({"name":"Home", "props":{}, "data":{}, "page":""}); 
     const [returnPage, setReturnPage] = useState({"name":"", "props":{}})
@@ -13,14 +15,20 @@ export const LayoutProvider = (props) => {
     const [masterButtonState, setMasterButtonState] = useState('System')
 
     useEffect(() => {
-        var serverurl="https://"+window.location.hostname;
-  	    fetch(serverurl+'/layout')
- 		    .then(result=>result.json())
-            .then(result=> setLayouts(result));
-    }, [])
+        if (loggedIn) {
+      	    getJSON('layout')
+                .then(result=> setLayouts(result));
+        }
+    }, [loggedIn])
             
     useEffect(() => {   
+        
         if (layouts!==undefined) {
+            if (layouts.hasOwnProperty('error')) {
+                console.log('Error getting layout', layouts)
+                setLayout(undefined)
+                return
+            }
             if (isMobile) {
                 if (layouts['Home'].hasOwnProperty('mobile')) {
                     setMasterButtonState('Home')

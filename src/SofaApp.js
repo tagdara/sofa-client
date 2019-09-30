@@ -9,6 +9,7 @@ import DataProvider from './DataContext/DataProvider';
 import { LayoutProvider } from './layout/NewLayoutProvider';
 import UserProvider from './user/UserProvider';
 import SofaThemeProvider from './theme/SofaTheme';
+import NetworkProvider from './NetworkProvider';
 
 
 function MainApp(props) {
@@ -30,17 +31,19 @@ function MainApp(props) {
     };
 
     return (
-            <UserProvider>
-                <LayoutProvider>
-                    <DataProvider>
-                        <MasterButton open={handleDrawerOpen} mobile={isMobile}/>
-                        <ErrorBoundary>
-                            <SofaAppContent />
-                        </ErrorBoundary>    
-                    </DataProvider>
-                    <CssBaseline />
-                </LayoutProvider>
-            </UserProvider>
+            <NetworkProvider>
+                <UserProvider>
+                    <LayoutProvider>
+                        <DataProvider>
+                            <MasterButton open={handleDrawerOpen} mobile={isMobile}/>
+                            <ErrorBoundary>
+                                <SofaAppContent />
+                            </ErrorBoundary>   
+                        </DataProvider>
+                        <CssBaseline />
+                    </LayoutProvider>
+                </UserProvider>
+            </NetworkProvider>
     )
 }
 

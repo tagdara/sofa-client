@@ -6,7 +6,7 @@ import PlayerBase from './player/PlayerBase';
 import NoPlayer from './player/NoPlayer';
 
 function bestPlayerId(speakers, defaultPlayer, userPlayer) {
-    
+    console.log('bestie')
     var defaultexists=false
     
     if (userPlayer) {
@@ -27,7 +27,11 @@ function bestPlayerId(speakers, defaultPlayer, userPlayer) {
         if (hotplayer.InputController.input.value===hotplayer.friendlyName || hotplayer.InputController.input.value==="") {
             return hotplayer.endpointId
         }
-        return hotplayer.InputController.input.value
+        for (var t = 0; t < speakers.length; t++) {
+            if (speakers[t].friendlyName===hotplayer.InputController.input.value) {
+                return speakers[t].endpointId
+            }
+        }
     }
 
     if (defaultexists) {
@@ -47,6 +51,9 @@ export default function PlayerHero(props) {
     const speakers = devicesByCategory('SPEAKER')
     const [mini, setMini] = useState(false);
     const [playerId, setPlayerId] = useState('')
+
+    console.log('speakers',speakers, defaultPlayer, userPlayer)
+    console.log(bestPlayerId(speakers, defaultPlayer, userPlayer))
 
     useEffect(()=> {
         setPlayerId(bestPlayerId(speakers, defaultPlayer, userPlayer))

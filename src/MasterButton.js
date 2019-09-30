@@ -1,7 +1,7 @@
 import React, {useContext} from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
-import { DataContext } from './DataContext/DataProvider';
+import { NetworkContext } from './NetworkProvider';
 
 import MenuIcon from '@material-ui/icons/Menu';
 import HomeIcon from '@material-ui/icons/Home';
@@ -52,7 +52,7 @@ export default function MasterButton(props) {
     
     const classes = useStyles();
     const { applyLayoutCard, masterButtonState, goBack, goHome, backPage } = useContext(LayoutContext);
-    const { eventSource, reconnect } = useContext(DataContext);
+    const { loggedIn, connectError, reconnect } = useContext(NetworkContext);
     
     function callMaster() {
         if (masterButtonState==='Home') {
@@ -62,10 +62,20 @@ export default function MasterButton(props) {
             applyLayoutCard('SystemLayout')
         } 
     }
-
+    
+    function reloadPWA() {
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.unregister();
+            });
+        }
+        window.location.reload(true)
+    }
+    
     return (
-        eventSource.readyState !== 1 ?
-            <Fab className={classes.fab} color="primary" onClick={ ()=> reconnect() } >
+        loggedIn===false || connectError ?
+            <Fab className={classes.fab} color="primary" onClick={ ()=> reloadPWA() } >
                 <RefreshIcon />
             </Fab>
         :

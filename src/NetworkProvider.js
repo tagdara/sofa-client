@@ -1,4 +1,4 @@
-import React, {useState, useEffect, createContext, useReducer} from 'react';
+import React, {useState, useEffect, createContext} from 'react';
 
 export const NetworkContext = createContext();
 
@@ -6,16 +6,20 @@ export default function NetworkProvider(props) {
     
     const serverurl="https://"+window.location.hostname;
     const [eventSource, setEventSource] = useState(null)
-    const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(true);
     const [connectError, setConnectError] = useState(false);
     const [subscribers, setSubscribers] = useState([])
+    const [token, setToken]= useState(getCookie('token'))
     
     useEffect(() => {
-        getJSON('loggedin')
+        console.log('Token',token)
+        getJSON('get-user')
+            .then(response=> console.log('Loggedin check?', response))
     }, [])
 
     useEffect(() => {
         if (loggedIn) {
+            console.log('Logged in so starting EventSource')
             connectEventSource()
         }
         //getJSON('loggedin')
@@ -23,8 +27,9 @@ export default function NetworkProvider(props) {
     }, [loggedIn])
 
     function connectEventSource() {
+        console.log('previous eventsource', eventSource)
         console.log('connecting event source')
-        var esource=new EventSource(serverurl+"/sse", {withCredentials: true})
+        var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token}, withCredentials: true })
         esource.addEventListener('message', listener);
         esource.addEventListener('error', errorlistener);
         esource.addEventListener('open', openlistener);
@@ -48,8 +53,9 @@ export default function NetworkProvider(props) {
     };
 
     const errorlistener = event => {
-        setConnectError(true)
-        console.log('error',event)
+        //setConnectError(true)
+        setLoggedIn(false)
+        console.log('error',event,event.message)
         //var newurl="https://"+window.location.hostname+"/plogin"
         //window.open(newurl);
         //setHeartbeat(Date.now())
@@ -61,6 +67,11 @@ export default function NetworkProvider(props) {
     };
 
     function handleFetchErrors(response) {
+        if (response.status===400) {
+            setLoggedIn(false)
+            console.log('Not logged in', response.status, response.statusText)
+            return { "error": "login" }
+        }
         if (response.status===401) {
             setLoggedIn(false)
             console.log('Not logged in', response.status, response.statusText)
@@ -69,30 +80,58 @@ export default function NetworkProvider(props) {
         if (!response.ok) {
             console.log('Error connecting', response.status, response.statusText)
             setConnectError(true)
-            throw Error(response.statusText);
             return { "error": response.statusText }
         }
-        setLoggedIn(true)
+        //setLoggedIn(true)
         setConnectError(false)
         return response.json()
     }
     
     function getJSON(path) {
-  	    return fetch(serverurl+"/"+path, {credentials: 'include'})
+  	    return fetch(serverurl+"/"+path, { method: 'GET', headers: { 'authorization': token}})
  		    .then(result=>handleFetchErrors(result))
     }
 
-    function login() {
-        console.log('Logging in as user')
-  	    fetch(serverurl+'/plogin', {credentials: 'include'})
- 		    .then(result=>result.json())
-            .then(result=>setLoggedIn(true))
+    function login(user, password) {
+        console.log('Logging in as user',user,password)
+        let formData = new FormData();
+        formData.append('user',user);
+        formData.append('password', password);
+  	    return fetch(serverurl+'/login', { method: 'post', body: formData })
+ 		            .then(result=>result.json())
+                    .then(result=>setTokenCookie(result))
+    }
+    
+    function setTokenCookie(tokendata) {
+        if (tokendata.hasOwnProperty('token')) {
+            document.cookie = "token="+tokendata.token+";"
+            console.log('GetCookie', getCookie('token'))
+            setToken(getCookie('token'))
+            setLoggedIn(true)
+            return tokendata.token
+        }
+    }
+    
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+              return c.substring(name.length, c.length);
+            }
+        }
+        return "";
     }
 
-
     function logout() {
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         console.log('logging out')
-  	    fetch(serverurl+'/plogout', {credentials: 'include'})
+  	    fetch(serverurl+'/logout', {credentials: 'include'})
  		    .then(result=>result.json())
             .then(result=>setEventSource(null))
             .then(result=>setLoggedIn(false))

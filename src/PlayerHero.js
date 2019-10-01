@@ -6,7 +6,7 @@ import PlayerBase from './player/PlayerBase';
 import NoPlayer from './player/NoPlayer';
 
 function bestPlayerId(speakers, defaultPlayer, userPlayer) {
-    console.log('bestie')
+
     var defaultexists=false
     
     if (userPlayer) {
@@ -51,9 +51,6 @@ export default function PlayerHero(props) {
     const speakers = devicesByCategory('SPEAKER')
     const [mini, setMini] = useState(false);
     const [playerId, setPlayerId] = useState('')
-
-    console.log('speakers',speakers, defaultPlayer, userPlayer)
-    console.log(bestPlayerId(speakers, defaultPlayer, userPlayer))
 
     useEffect(()=> {
         setPlayerId(bestPlayerId(speakers, defaultPlayer, userPlayer))

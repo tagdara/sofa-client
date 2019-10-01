@@ -119,7 +119,9 @@ export default function SofaAppContent(props) {
             { connectError ?
                 <ErrorCard />
             :
+            <Grid container spacing={2} justify="center" alignItems="center" className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                 <SofaLogin />
+            </Grid>
             }
         </React.Fragment>
     );

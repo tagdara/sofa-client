@@ -214,9 +214,8 @@ export const deviceReducer = (state, data) => {
 
 export default function DataProvider(props) {
     
-    const { getJSON, connectError, eventSource, loggedIn, addSubscriber } = useContext(NetworkContext);
-    //const [eventSource, setEventSource] = useState(() => new EventSource(serverurl+"/sse"))
-    
+    const { getJSON, connectError, loggedIn, addSubscriber } = useContext(NetworkContext);
+
     const initialDevices={};
     const [controllerProperties, setControllerProperties] = useState({});     
     const [directives, setDirectives] = useState({});     

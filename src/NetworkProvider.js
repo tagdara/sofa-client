@@ -27,13 +27,18 @@ export default function NetworkProvider(props) {
     }, [loggedIn])
 
     function connectEventSource() {
-        console.log('previous eventsource', eventSource)
-        console.log('connecting event source')
-        var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token}, withCredentials: true })
-        esource.addEventListener('message', listener);
-        esource.addEventListener('error', errorlistener);
-        esource.addEventListener('open', openlistener);
-        setEventSource(esource)
+        if (token) {
+            console.log('previous eventsource', eventSource)
+            console.log('connecting event source')
+            var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token}, withCredentials: true })
+            esource.addEventListener('message', listener);
+            esource.addEventListener('error', errorlistener);
+            esource.addEventListener('open', openlistener);
+            setEventSource(esource)
+        } else {
+            console.log('!! EventSource connect cancelled - No authorization token detected.')
+            setLoggedIn(false)
+        }
     }
     
     function addSubscriber(subscriber) {
@@ -84,12 +89,20 @@ export default function NetworkProvider(props) {
         }
         //setLoggedIn(true)
         setConnectError(false)
+        
         return response.json()
     }
     
     function getJSON(path) {
-  	    return fetch(serverurl+"/"+path, { method: 'GET', headers: { 'authorization': token}})
- 		    .then(result=>handleFetchErrors(result))
+        if (token) {
+      	    return fetch(serverurl+"/"+path, { method: 'GET', headers: { 'authorization': token}})
+     		    .then(result=>handleFetchErrors(result))
+        } else {
+            setLoggedIn(false)
+            var promise1 = new Promise(function(resolve, reject) {
+                resolve(undefined);});
+            return promise1;
+        }
     }
 
     function login(user, password) {

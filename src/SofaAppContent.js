@@ -65,7 +65,7 @@ export default function SofaAppContent(props) {
         console.log('layout', layout)
         if (layout && layout.hasOwnProperty('error')) {
             console.log('Layout not ready', layout.error)
-        } else if (layout && !layout.data.hasOwnProperty('pages')) {
+        } else if (layout && layout.hasOwnProperty('data') && !layout.data.hasOwnProperty('pages')) {
             addModules([layout.name])
         }
     },[layout]);

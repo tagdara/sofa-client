@@ -16,14 +16,14 @@ import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 
 
 export default function SystemLayout(props) {
 
-    const { logout } = useContext(NetworkContext);
+    const { sofaConsole, logout } = useContext(NetworkContext);
     const { applyLayoutCard } = useContext(LayoutContext);
     const { applyTheme, colorScheme } = useContext(ThemeContext);
-    const serverurl="https://"+window.location.hostname;
     
     function otherPort(portnumber, tabname) {
         var newurl=window.location.protocol+"//"+window.location.hostname+":"+portnumber;
@@ -94,6 +94,11 @@ export default function SystemLayout(props) {
                     </ListItemIcon>
                     <ListItemText primary={'Logout'} secondary={'Log out of Sofa.'}/>
                 </ListItem>
+            </GridItem>
+            <GridItem wide={true}>
+                <Typography>
+                    {sofaConsole}
+                </Typography>
             </GridItem>
         </GridSection>
     )

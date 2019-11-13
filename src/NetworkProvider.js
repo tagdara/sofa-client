@@ -10,21 +10,43 @@ export default function NetworkProvider(props) {
     const [connectError, setConnectError] = useState(false);
     const [subscribers, setSubscribers] = useState([])
     const [token, setToken]= useState(getCookie('token'))
+    const [sofaConsole, setSofaConsole]=useState("")
     
-    useEffect(() => {
-        console.log('Token',token)
+    
+    
+    // This causes the program to loop reloading indefinitely
+    //useEffect(() => {
+
+    //     window.console = {
+    //        log : function(msg) { setSofaConsole(sofaConsole+"  "+msg) },
+    //        info : function(msg) { setSofaConsole(sofaConsole+"  "+msg) },
+    //        warn : function(msg) { setSofaConsole(sofaConsole+"  "+msg) },
+    //        error : function(msg) { setSofaConsole(sofaConsole+"  "+msg) }
+    //    }
+    //}, [])
+    
+    useEffect(() => {    
         getJSON('get-user')
-            .then(response=> console.log('Loggedin check?', response))
+            .then(response=> { console.log('Loggedin check?', response) } )
     }, [])
 
     useEffect(() => {
-        if (loggedIn) {
-            console.log('Logged in so starting EventSource')
-            connectEventSource()
-        }
-        //getJSON('loggedin')
-        //    .then(data => { console.log(data)})
-    }, [loggedIn])
+        if (token) {
+            if (eventSource===null || eventSource.readyState===2 || connectError===true) {
+                console.log('previous eventsource', eventSource)
+                console.log('connecting event source')
+                var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token}, withCredentials: true })
+                esource.addEventListener('message', listener);
+                esource.addEventListener('error', errorlistener);
+                esource.addEventListener('open', openlistener);
+                setEventSource(esource)
+            }
+        } else {
+            console.log('!! EventSource connect cancelled - No authorization token detected.')
+            setLoggedIn(false)
+        }    
+    }, [connectError])
+    
 
     function connectEventSource() {
         if (token) {
@@ -42,7 +64,6 @@ export default function NetworkProvider(props) {
     }
     
     function addSubscriber(subscriber) {
-        console.log('Adding subscriber', subscriber)
         var sublist=subscribers
         sublist.push(subscriber)
         setSubscribers([...(new Set(sublist))])
@@ -58,8 +79,7 @@ export default function NetworkProvider(props) {
     };
 
     const errorlistener = event => {
-        //setConnectError(true)
-        setLoggedIn(false)
+        setConnectError(true)
         console.log('error',event,event.message)
         //var newurl="https://"+window.location.hostname+"/plogin"
         //window.open(newurl);
@@ -114,10 +134,20 @@ export default function NetworkProvider(props) {
  		            .then(result=>result.json())
                     .then(result=>setTokenCookie(result))
     }
+
+    function writeCookie (key, value, days) {
+        var date = new Date();
+        // Default at 365 days.
+        days = days || 365;
+        // Get unix milliseconds at current time plus number of days
+        date.setTime(+ date + (days * 86400000)); //24 * 60 * 60 * 1000
+        window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
+        return value;
+    };
     
     function setTokenCookie(tokendata) {
         if (tokendata.hasOwnProperty('token')) {
-            document.cookie = "token="+tokendata.token+";"
+            writeCookie("token", tokendata.token, 365)
             console.log('GetCookie', getCookie('token'))
             setToken(getCookie('token'))
             setLoggedIn(true)
@@ -131,10 +161,10 @@ export default function NetworkProvider(props) {
         var ca = decodedCookie.split(';');
         for(var i = 0; i <ca.length; i++) {
             var c = ca[i];
-            while (c.charAt(0) == ' ') {
+            while (c.charAt(0) === ' ') {
               c = c.substring(1);
             }
-            if (c.indexOf(name) == 0) {
+            if (c.indexOf(name) === 0) {
               return c.substring(name.length, c.length);
             }
         }
@@ -164,6 +194,7 @@ export default function NetworkProvider(props) {
                 logout: logout,
                 addSubscriber: addSubscriber,
                 reconnect: reconnect,
+                sofaConsole: sofaConsole,
             }}
         >
             {props.children}

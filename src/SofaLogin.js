@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/styles';
 
 import Grid from '@material-ui/core/Grid';
 import GridItem from './GridItem';
-import GridSection from './GridSection';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
@@ -28,7 +27,7 @@ const useStyles = makeStyles({
 
 export default function SofaLogin(props) {
     
-    const { loggedIn, login } = useContext(NetworkContext);
+    const { login } = useContext(NetworkContext);
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
     const classes = useStyles();    
@@ -47,6 +46,9 @@ export default function SofaLogin(props) {
     return (    
         <Grid container spacing={2} justify="center" alignItems="center" className={classes.controlArea} >
             <GridItem wide={props.wide} className={classes.loginBox}>
+                <ListItem>
+                    <ListItemText primary={"Sofa Login"} />
+                </ListItem>
                 <ListItem>
                     <TextField variant="outlined" onChange={(e) => setUser(e.target.value) } 
                         id="user" label="User" type="mail" defaultValue={""} />

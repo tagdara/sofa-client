@@ -78,6 +78,7 @@ export default function SofaAppContent(props) {
                         <Module key={ modulename } {...moduleprops} />
                     </React.Suspense>
         } else {
+            console.log('Error: could not redner suspense module',modulename,moduleprops)
             return null
         }
     }
@@ -86,43 +87,41 @@ export default function SofaAppContent(props) {
     return (
         loggedIn ?
         <React.Fragment>
-            { connectError ?
+            { connectError && 
                 <Grid container spacing={2} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                     <ListItem>
                         <ListItemText primary="Network not ready" secondary={eventSource===undefined ? "" : "Server side status "+eventSource.readyState} />
                     </ListItem>
                 </Grid>
-            :
-                <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
-                    { layout.data.type==='pages'  && 
-                        <ErrorBoundary wide={props.wide}>
-                            { layout.data.order.map( page => {
-                                return (page===layout.page || !isMobile ) ?
-                                <SofaPage key={page} name={page} page={layout.data.pages[page]} />
-                                : null
-                            })}
-                        </ErrorBoundary>
-                    }
-                    { layout.data.type==='single' ?
-                        <React.Fragment>
-            				<ErrorBoundary wide={props.wide}>
-            				{ renderSuspenseModule(layout.name, layout.props) }
-                            </ErrorBoundary>
-                        </React.Fragment>
-        			: null }
-        			<Typography className={ classes.version } variant="caption">{process.env.REACT_APP_VERSION}</Typography>
-                </Grid>
             }
+            <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
+                { layout.data.type==='pages'  && 
+                    <ErrorBoundary wide={props.wide}>
+                        { layout.data.order.map( page => {
+                            return (page===layout.page || !isMobile ) ?
+                            <SofaPage key={page} name={page} page={layout.data.pages[page]} />
+                            : null
+                        })}
+                    </ErrorBoundary>
+                }
+                { layout.data.type==='single' ?
+                    <React.Fragment>
+        				<ErrorBoundary wide={props.wide}>
+        				{ renderSuspenseModule(layout.name, layout.props) }
+                        </ErrorBoundary>
+                    </React.Fragment>
+    			: null }
+    			<Typography className={ classes.version } variant="caption">{process.env.REACT_APP_VERSION}</Typography>
+            </Grid>
         </React.Fragment>
         :
-        <React.Fragment>
-            { connectError ?
+        <>
+            { connectError &&
                 <ErrorCard />
-            :
+            }
             <Grid container spacing={2} justify="center" alignItems="center" className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                 <SofaLogin />
             </Grid>
-            }
-        </React.Fragment>
+        </>
     );
 }

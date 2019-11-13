@@ -52,7 +52,7 @@ export default function MasterButton(props) {
     
     const classes = useStyles();
     const { applyLayoutCard, masterButtonState, goBack, goHome, backPage } = useContext(LayoutContext);
-    const { loggedIn, connectError, reconnect } = useContext(NetworkContext);
+    const { loggedIn, connectError } = useContext(NetworkContext);
     
     function callMaster() {
         if (masterButtonState==='Home') {

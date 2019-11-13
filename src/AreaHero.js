@@ -29,7 +29,7 @@ export default function AreaHero(props) {
     function getAreaAreas() {
 
         var areas=[]
-        if (!area) { return [] }
+        if (!area || thisarea===undefined) { return [] }
         var children=thisarea.AreaController.children.value
         if (children) {
             for (var i = 0; i < children.length; i++) {
@@ -45,7 +45,7 @@ export default function AreaHero(props) {
     function getAreaLights() {
 
         var areas=[]
-        if (!area) { return [] }
+        if (!area || thisarea===undefined)  { return [] }
         var children=thisarea.AreaController.children.value
         if (children) {
             for (var i = 0; i < children.length; i++) {

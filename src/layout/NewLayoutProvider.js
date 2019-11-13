@@ -19,7 +19,7 @@ export const LayoutProvider = (props) => {
       	    getJSON('layout')
                 .then(result=> setLayouts(result));
         }
-    }, [loggedIn])
+    }, [loggedIn, getJSON])
             
     useEffect(() => {   
         

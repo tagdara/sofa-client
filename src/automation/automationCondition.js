@@ -160,6 +160,17 @@ export default function AutomationCondition(props) {
     const [op, setOperator] = useState(props.item.operator)
 
     useEffect(() => {
+        function save() {
+            var condition={ "controller": props.device.controllerForProperty(propertyName),
+                            "deviceName": props.item.deviceName,
+                            "endpointId": props.item.endpointId,
+                            "operator": op,
+                            "propertyName": propertyName,
+                            "type": "property",
+                            "value": propertyValue }
+            console.log('saving', props.index, condition)
+            props.save(props.index, condition)
+        }      
         
         if (propertyValue!==undefined) {
             save()

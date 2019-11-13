@@ -83,12 +83,17 @@ export default function Light(props) {
     }; 
     
     function isReachable() {
-        if (props.device.hasOwnProperty('EndpointHealth')) {
-            if (props.device.EndpointHealth.connectivity.value.value==='OK') { return true }
+        try {
+            if (props.device.hasOwnProperty('EndpointHealth')) {
+                if (props.device.EndpointHealth.connectivity.value.value==='OK') { return true }
+                return false
+            }
+            console.log('no endpoint health', props.device)
+            return true
+        } catch (e) {
+            console.log('Error getting reachable state', e)
             return false
         }
-        console.log('no endpoint health', props.device)
-        return true
     }
     
     return (

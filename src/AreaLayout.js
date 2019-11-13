@@ -54,15 +54,21 @@ export default function AreaLayout(props) {
     function childrenByArea(filter) {
 
         var ads=[]
-        var children=area.AreaController.children.value
-        for (var i = 0; i < children.length; i++) {
-            var dev=deviceByEndpointId(children[i])
-            if (!filter || filter==='ALL' || (dev && dev.displayCategories.includes(filter))) {
-                ads.push(dev)
+        try {
+            var children=area.AreaController.children.value
+            for (var i = 0; i < children.length; i++) {
+                var dev=deviceByEndpointId(children[i])
+                if (!filter || filter==='ALL' || (dev && dev.displayCategories.includes(filter))) {
+                    ads.push(dev)
+                }
             }
+            return ads    
+        } catch (e) {
+            console.log('Error getting children by area', e)
+        } finally {
+            return ads
         }
-        return ads
-    }
+}
 
     function nameSort(a,b) {
       if (a.friendlyName < b.friendlyName)
@@ -97,19 +103,23 @@ export default function AreaLayout(props) {
     function sortByShortcuts() {
 
         var outscenes=[]
-        var allscenes=childrenByArea('SCENE_TRIGGER')
-        var shortcutlist=[...area.AreaController.shortcuts.value].reverse()
-        for (var j = 0; j < shortcutlist.length; j++) {
-            outscenes.push(deviceByEndpointId(shortcutlist[j]))
-        }
-
-        for (j = 0; j < allscenes.length; j++) {
-            if (!shortcutlist.includes(allscenes[j].endpointId)) {
-                outscenes.push(allscenes[j])
+        try {
+            var allscenes=childrenByArea('SCENE_TRIGGER')
+            var shortcutlist=[...area.AreaController.shortcuts.value].reverse()
+            for (var j = 0; j < shortcutlist.length; j++) {
+                outscenes.push(deviceByEndpointId(shortcutlist[j]))
             }
+    
+            for (j = 0; j < allscenes.length; j++) {
+                if (!shortcutlist.includes(allscenes[j].endpointId)) {
+                    outscenes.push(allscenes[j])
+                }
+            }
+        } catch (e) {
+            console.log('Error getting children by area', e)
+        } finally {
+            return outscenes
         }
-        return outscenes
-            
     }
     
     return (    

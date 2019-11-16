@@ -12,19 +12,6 @@ export default function NetworkProvider(props) {
     const [token, setToken]= useState(getCookie('token'))
     const [sofaConsole, setSofaConsole]=useState("")
     
-    
-    
-    // This causes the program to loop reloading indefinitely
-    //useEffect(() => {
-
-    //     window.console = {
-    //        log : function(msg) { setSofaConsole(sofaConsole+"  "+msg) },
-    //        info : function(msg) { setSofaConsole(sofaConsole+"  "+msg) },
-    //        warn : function(msg) { setSofaConsole(sofaConsole+"  "+msg) },
-    //        error : function(msg) { setSofaConsole(sofaConsole+"  "+msg) }
-    //    }
-    //}, [])
-    
     useEffect(() => {    
         getJSON('get-user')
             .then(response=> { console.log('Loggedin check?', response) } )
@@ -35,6 +22,7 @@ export default function NetworkProvider(props) {
             if (eventSource===null || eventSource.readyState===2 || connectError===true) {
                 console.log('previous eventsource', eventSource)
                 console.log('connecting event source')
+                // Authorization headers or custom headers may not be supported with EventSource
                 var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token}, withCredentials: true })
                 esource.addEventListener('message', listener);
                 esource.addEventListener('error', errorlistener);
@@ -80,10 +68,7 @@ export default function NetworkProvider(props) {
 
     const errorlistener = event => {
         setConnectError(true)
-        console.log('error',event,event.message)
-        //var newurl="https://"+window.location.hostname+"/plogin"
-        //window.open(newurl);
-        //setHeartbeat(Date.now())
+        console.log('SSE error',event.srcElement.readyState,event)
     };
 
     const openlistener = event => {

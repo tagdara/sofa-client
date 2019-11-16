@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 
 export default function SofaAppContent(props) {
     
-    const { layout, isMobile } = useContext(LayoutContext);
+    const { layout, layouts, isMobile } = useContext(LayoutContext);
     const { connectError, eventSource, loggedIn } = useContext(NetworkContext);
     const classes = useStyles();
     const [modules, setModules] = useState([]);
@@ -63,12 +63,25 @@ export default function SofaAppContent(props) {
             setModules(newmodules);
         }
         console.log('layout', layout)
-        if (layout && layout.hasOwnProperty('error')) {
+        console.log('layouts', layouts)
+        
+        if (layouts===undefined) {
+            console.log('layouts not ready')
+        } else if (layout && layout.hasOwnProperty('error')) {
             console.log('Layout not ready', layout.error)
-        } else if (layout && layout.hasOwnProperty('data') && !layout.data.hasOwnProperty('pages')) {
+        } else if (layout && isMobile) {
+            if (layouts && layouts.hasOwnProperty(layout.name) && layouts[layout.name].hasOwnProperty('mobile')) {
+                addModules([layouts[layout.name]['mobile']])
+            } else {
+                addModules([layout.name])
+            }
+        } else if (layout && layouts && layouts.hasOwnProperty(layout.name) && !layouts[layout.name].hasOwnProperty('pages')) {
+            addModules([layout.name])
+        } else {
             addModules([layout.name])
         }
-    },[layout]);
+        
+    },[layout, layouts]);
     
     function renderSuspenseModule( modulename, moduleprops ) {
 
@@ -78,7 +91,6 @@ export default function SofaAppContent(props) {
                         <Module key={ modulename } {...moduleprops} />
                     </React.Suspense>
         } else {
-            console.log('Error: could not redner suspense module',modulename,moduleprops)
             return null
         }
     }

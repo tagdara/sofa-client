@@ -98,8 +98,9 @@ export default function DataProvider(props) {
                 .then(result=>setVirtualDevices(result))
                 //.then(result=>console.log('done getting virtual devices'));
         }
+        console.log('logged in changed to',loggedIn) 
         if (loggedIn===true ) { getData() }
-    },[loggedIn]);
+    }, [loggedIn] );
 
     function isReachable(dev) {
         

@@ -9,6 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles({
     loginBox: {
@@ -30,12 +31,16 @@ export default function SofaLogin(props) {
     const { login } = useContext(NetworkContext);
     const [user, setUser] = useState('')
     const [password, setPassword] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
     const classes = useStyles();    
     
     function confirmToken(result) {
         console.log('resulting token', result)
         if (result) {
+            setErrorMessage('')
             window.location.replace(window.location);
+        } else {
+            setErrorMessage('Incorrect credentials')
         }
     }
 
@@ -46,19 +51,22 @@ export default function SofaLogin(props) {
     return (    
         <Grid container spacing={2} justify="center" alignItems="center" className={classes.controlArea} >
             <GridItem wide={props.wide} className={classes.loginBox}>
-                <ListItem>
-                    <ListItemText primary={"Sofa Login"} />
+                <ListItem style={{display:'flex', justifyContent:'center'}} >
+                    <Typography variant="h6">Sofa Login</Typography>
                 </ListItem>
                 <ListItem>
-                    <TextField variant="outlined" onChange={(e) => setUser(e.target.value) } 
+                    <TextField fullWidth variant="outlined" onChange={(e) => setUser(e.target.value) } 
                         id="user" label="User" type="mail" defaultValue={""} />
                 </ListItem>
                 <ListItem>
-                    <TextField variant="outlined" onChange={(e) => setPassword(e.target.value) } 
+                    <TextField fullWidth variant="outlined" onChange={(e) => setPassword(e.target.value) } 
                         id="password" label="Password" type="password" defaultValue={""}  />
                 </ListItem>
                 <ListItem>
-                    <Button onClick={ ()=> checkLogin()}>
+                    <ListItemText primary={errorMessage} />
+                </ListItem>
+                <ListItem style={{display:'flex', justifyContent:'center'}} >
+                    <Button fullWidth onClick={ ()=> checkLogin()}>
                         Login
                     </Button>
                 </ListItem>

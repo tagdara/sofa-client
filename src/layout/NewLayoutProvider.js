@@ -5,21 +5,21 @@ export const LayoutContext = createContext({});
 
 export const LayoutProvider = (props) => {
 
-    const { getJSON, loggedIn } = useContext(NetworkContext);
+    const { getJSON, loggedIn, connectError } = useContext(NetworkContext);
     const [layouts, setLayouts] = useState(undefined);     
-    const [layout, setLayout] = useState({"name":"Home", "props":{}, "data":{}, "page":""}); 
+    const [layout, setLayout] = useState(getLayoutCookie()); 
     const [returnPage, setReturnPage] = useState({"name":"", "props":{}})
     const [backPage, setBackPage] = useState({"name":"", "props":{}})
     const mobileBreakpoint = 800
     const isMobile = window.innerWidth <= mobileBreakpoint;
     const [masterButtonState, setMasterButtonState] = useState('System')
+    
+    const oldlayout={"name":"Home", "props":{}, "data":{}, "page":""}
 
     useEffect(() => {
-        if (loggedIn) {
-      	    getJSON('layout')
-                .then(result=> setLayouts(result));
-        }
-    }, [loggedIn, getJSON])
+      	getJSON('layout')
+            .then(result=> { setLayouts(result) } );
+    }, [])
             
     useEffect(() => {   
         
@@ -32,19 +32,22 @@ export const LayoutProvider = (props) => {
             if (isMobile) {
                 if (layouts['Home'].hasOwnProperty('mobile')) {
                     setMasterButtonState('Home')
-                    setLayout({"name":layouts["Home"]['mobile'], "props":{}, "data":{ type: "single" } })
                     return
                 }
             }
-            setLayout({"name":"Home", "props":{}, "data":layouts["Home"] } )
+            var newLayout={"name":"Home", "props":{}, "data":layouts["Home"] }
+            setLayout(newLayout )
+            writeLayoutCookie(newLayout)
             return
         }
         return
     },[layouts, isMobile]);
     
     function goHome() {
-        console.log(layouts, layout.name)
-        setLayout({"name":'Home', "props":{}, "data":layouts['Home'], "page":layouts['Home']['order'][0]})
+        var newLayout={"name":'Home', "props":{}, "data":layouts['Home'], "page":layouts['Home']['order'][0]}
+        setLayout(newLayout)
+        setLayout(newLayout )
+        writeLayoutCookie(newLayout)
         if (isMobile) {
             if (layouts['Home'].hasOwnProperty('mobile')) {
                 applyLayoutCard(layouts['Home']['mobile']) 
@@ -59,12 +62,16 @@ export const LayoutProvider = (props) => {
         } else {
             setMasterButtonState('System')
         }
-        setLayout({"name":name, "props":newProps, "data":layouts[name], "page":layout.page})
+        var newLayout={"name":name, "props":newProps, "data":layouts[name], "page":layout.page}
+        setLayout(newLayout)
+        writeLayoutCookie(newLayout)
     }
 
     function applyLayoutCard(name, newProps={}) {
         setMasterButtonState('Home')
-        setLayout({"name":name, "props":newProps, "data":{ type: "single" }, "page":layout.page})
+        var newLayout={"name":name, "props":newProps, "data":{ type: "single" }, "page":layout.page}
+        setLayout(newLayout)
+        writeLayoutCookie(newLayout)
     }
     
     function applyReturnPage(returnName, returnProps={}) {
@@ -81,13 +88,43 @@ export const LayoutProvider = (props) => {
     }
     
     function applyLayoutPage(newPage) {
+        var newLayout={"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage}
         setLayout({"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage})
+        writeLayoutCookie(newLayout)
     }
 
     function applyHomePage(newPage) {
         setMasterButtonState('Home')
-        setLayout({"name":"Home", "props":layout.props, "data":layouts['Home'], "page":newPage})
+        var newLayout={"name":"Home", "props":layout.props, "data":layouts['Home'], "page":newPage}
+        setLayout(newLayout)
+        writeLayoutCookie(newLayout)
     }
+    
+    function getLayoutCookie() {
+        var name = "layout=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for(var i = 0; i <ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) === ' ') {
+              c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return JSON.parse(c.substring(name.length, c.length));
+            }
+        }
+        return {"name":"Home", "props":{}, "data":{}, "page":""}
+    }    
+    
+    function writeLayoutCookie (value) {
+        var date = new Date();
+        // Default at 365 days.
+        var days = 1;
+        // Get unix milliseconds at current time plus number of days
+        date.setTime(+ date + (days * 86400000)); //24 * 60 * 60 * 1000
+        window.document.cookie = "layout=" + JSON.stringify(value) + "; expires=" + date.toGMTString() + "; path=/";
+        return value;
+    };
 
 
     return (

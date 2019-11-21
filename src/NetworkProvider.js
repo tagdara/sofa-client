@@ -8,9 +8,9 @@ export default function NetworkProvider(props) {
     const [eventSource, setEventSource] = useState(null)
     const [loggedIn, setLoggedIn] = useState(true);
     const [connectError, setConnectError] = useState(false);
+    const [streamError, setStreamError] = useState(false);
     const [subscribers, setSubscribers] = useState([])
-    const [token, setToken]= useState(getCookie('token'))
-    const [sofaConsole, setSofaConsole]=useState("")
+    const [token, setToken]= useState(getCookie('token'));
     
     useEffect(() => {    
         getJSON('get-user')
@@ -67,12 +67,12 @@ export default function NetworkProvider(props) {
     };
 
     const errorlistener = event => {
-        setConnectError(true)
+        setStreamError(true)
         console.log('SSE error',event.srcElement.readyState,event)
     };
 
     const openlistener = event => {
-        setConnectError(false)
+        setStreamError(false)
         setLoggedIn(true)
     };
 
@@ -173,13 +173,13 @@ export default function NetworkProvider(props) {
         <NetworkContext.Provider
             value={{
                 connectError: connectError,
+                streamError: streamError,
                 loggedIn: loggedIn,
                 getJSON: getJSON,
                 login: login,
                 logout: logout,
                 addSubscriber: addSubscriber,
                 reconnect: reconnect,
-                sofaConsole: sofaConsole,
             }}
         >
             {props.children}

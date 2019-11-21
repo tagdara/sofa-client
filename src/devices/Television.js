@@ -84,6 +84,24 @@ export default function Television(props) {
         setShowRemote(!showRemote)
     }
     
+    function localVolumeCheck() {
+        if ( props.device.hasOwnProperty('SpeakerController') ) {
+            for (var k = 0; k < props.device.interfaces.length; k++) {
+                if (props.device[props.device.interfaces[k]].controller==='ModeController') {
+                    if (props.device[props.device.interfaces[k]].instance==="Tv.Audio") {
+                        if (props.device[props.device.interfaces[k]].mode.value==="Audio.audioSystem") {
+                            return true
+                        }
+                    }
+                    return false
+                }
+            }
+            return true
+        } else {
+            return false
+        }
+    }
+    
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
@@ -105,7 +123,7 @@ export default function Television(props) {
                     <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
             </ListItem>
-        { props.device.hasOwnProperty('SpeakerController') && powerState==='ON' && showDetail ?
+        { localVolumeCheck() && powerState==='ON' && showDetail ?
             <ListItem className={classes.listItemBottom}>
                 <ToggleAvatar noback={true} onClick={ () => handleMuteChange(!props.device.SpeakerController.mute.value)} avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }>
                     {mute ? <VolumeOffIcon /> : <VolumeUpIcon /> }

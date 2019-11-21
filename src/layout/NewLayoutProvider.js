@@ -5,7 +5,7 @@ export const LayoutContext = createContext({});
 
 export const LayoutProvider = (props) => {
 
-    const { getJSON, loggedIn, connectError } = useContext(NetworkContext);
+    const { getJSON } = useContext(NetworkContext);
     const [layouts, setLayouts] = useState(undefined);     
     const [layout, setLayout] = useState(getLayoutCookie()); 
     const [returnPage, setReturnPage] = useState({"name":"", "props":{}})
@@ -13,13 +13,12 @@ export const LayoutProvider = (props) => {
     const mobileBreakpoint = 800
     const isMobile = window.innerWidth <= mobileBreakpoint;
     const [masterButtonState, setMasterButtonState] = useState('System')
-    
-    const oldlayout={"name":"Home", "props":{}, "data":{}, "page":""}
 
     useEffect(() => {
+        
       	getJSON('layout')
             .then(result=> { setLayouts(result) } );
-    }, [])
+    }, [getJSON])
             
     useEffect(() => {   
         

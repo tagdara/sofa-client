@@ -24,7 +24,6 @@ export default function ModeLines(props) {
                 modes[modename]=modechoices
             }
         }
-        console.log('modes',modes)
         return modes
     }
    

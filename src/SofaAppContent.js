@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 export default function SofaAppContent(props) {
     
     const { layout, layouts, isMobile } = useContext(LayoutContext);
-    const { connectError, eventSource, loggedIn } = useContext(NetworkContext);
+    const { connectError, streamError, loggedIn } = useContext(NetworkContext);
     const classes = useStyles();
     const [modules, setModules] = useState([]);
     
@@ -65,23 +65,25 @@ export default function SofaAppContent(props) {
         console.log('layout', layout)
         console.log('layouts', layouts)
         
-        if (layouts===undefined) {
-            console.log('layouts not ready')
-        } else if (layout && layout.hasOwnProperty('error')) {
-            console.log('Layout not ready', layout.error)
-        } else if (layout && isMobile) {
-            if (layouts && layouts.hasOwnProperty(layout.name) && layouts[layout.name].hasOwnProperty('mobile')) {
-                addModules([layouts[layout.name]['mobile']])
+        if (loggedIn) {
+            if (layouts===undefined) {
+                console.log('layouts not ready')
+            } else if (layout && layout.hasOwnProperty('error')) {
+                console.log('Layout not ready', layout.error)
+            } else if (layout && isMobile) {
+                if (layouts && layouts.hasOwnProperty(layout.name) && layouts[layout.name].hasOwnProperty('mobile')) {
+                    addModules([layouts[layout.name]['mobile']])
+                } else {
+                    addModules([layout.name])
+                }
+            } else if (layout && layouts && layouts.hasOwnProperty(layout.name) && !layouts[layout.name].hasOwnProperty('pages')) {
+                addModules([layout.name])
             } else {
                 addModules([layout.name])
             }
-        } else if (layout && layouts && layouts.hasOwnProperty(layout.name) && !layouts[layout.name].hasOwnProperty('pages')) {
-            addModules([layout.name])
-        } else {
-            addModules([layout.name])
         }
         
-    },[layout, layouts]);
+    },[layout, layouts, isMobile, loggedIn ]);
     
     function renderSuspenseModule( modulename, moduleprops ) {
 
@@ -98,14 +100,6 @@ export default function SofaAppContent(props) {
 
     return (
         loggedIn ?
-        <React.Fragment>
-            { connectError && 
-                <Grid container spacing={2} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
-                    <ListItem>
-                        <ListItemText primary="Network not ready" secondary={eventSource===undefined ? "" : "Server side status "+eventSource.readyState} />
-                    </ListItem>
-                </Grid>
-            }
             <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                 { layout.data.type==='pages'  && 
                     <ErrorBoundary wide={props.wide}>
@@ -123,9 +117,15 @@ export default function SofaAppContent(props) {
                         </ErrorBoundary>
                     </React.Fragment>
     			: null }
+                { (streamError || connectError) && 
+                    <Grid container spacing={2} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
+                        <ListItem>
+                            <ListItemText primary="Network not ready" secondary={streamError ? "Server Side Event Stream not connected" : null } />
+                        </ListItem>
+                    </Grid>
+                }
     			<Typography className={ classes.version } variant="caption">{process.env.REACT_APP_VERSION}</Typography>
             </Grid>
-        </React.Fragment>
         :
         <>
             { connectError &&

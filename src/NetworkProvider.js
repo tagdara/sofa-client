@@ -110,6 +110,26 @@ export default function NetworkProvider(props) {
         }
     }
 
+    function postJSON(path, data) {
+        if (token) {
+            return fetch(serverurl+'/'+path, {
+                method: 'post',
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json',
+                    'authorization': token
+                },
+                body: JSON.stringify(data)
+            })
+                .then(result=>handleFetchErrors(result))
+        } else {
+            setLoggedIn(false)
+            var promise1 = new Promise(function(resolve, reject) {
+                resolve(undefined);});
+            return promise1;
+        }
+    }
+
     function login(user, password) {
         console.log('Logging in as user',user,password)
         let formData = new FormData();
@@ -176,6 +196,7 @@ export default function NetworkProvider(props) {
                 streamError: streamError,
                 loggedIn: loggedIn,
                 getJSON: getJSON,
+                postJSON: postJSON,
                 login: login,
                 logout: logout,
                 addSubscriber: addSubscriber,

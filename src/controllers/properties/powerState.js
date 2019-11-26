@@ -34,6 +34,8 @@ export default function PowerState(props) {
         }
     }, [props.interface])
     
+    console.log('powerstate propsdev', props.interface)
+    
     return (
         <Select value={props.interface.powerState.value ? props.interface.powerState.value : ""} onChange={(e) => props.interface.directive( e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' ) } input={<BootstrapInput name="powerState" id="powerState" />} >
             <MenuItem value=""><em>Choose a property</em></MenuItem>

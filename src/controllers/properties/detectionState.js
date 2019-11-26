@@ -27,6 +27,7 @@ const BootstrapInput = withStyles(theme => ({
 export default function DetectionState(props) {
     
     useEffect(() => {
+        console.log('dspropif', props.interface)
         // Set default if passed undefined
         if (props.interface.detectionState.value===undefined) {
             if (props.interface.hasOwnProperty('setDefault')) {
@@ -34,9 +35,13 @@ export default function DetectionState(props) {
             }
         }
     }, [props.interface])
+
+    function handleDetectionStateChange(event) {
+        props.interface.directive('SetDetectionState', { "detectionState" : event.target.value })
+    }; 
     
     return (
-        <Select value={ props.interface.detectionState.value ? props.interface.detectionState.value : "" } onChange={props.changeValue} input={<BootstrapInput name="detectionState" id="detectionState" />} >
+        <Select value={ props.interface.detectionState.value ? props.interface.detectionState.value : "" } onChange={handleDetectionStateChange} input={<BootstrapInput name="detectionState" id="detectionState" />} >
             <MenuItem value="DETECTED">DETECTED</MenuItem>
             <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
         </Select>

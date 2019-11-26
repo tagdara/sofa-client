@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
+import { NetworkContext } from './NetworkProvider';
 
 import AutomationSave from "./automation/automationSave"
 import AutomationHeader from "./automation/automationHeader"
@@ -18,6 +19,7 @@ export default function AutomationLayout(props) {
     const [title, setTitle] = useState(props.name)
     const serverurl="https://"+window.location.hostname;
     const { applyLayoutCard } = useContext(LayoutContext);
+    const { getJSON, postJSON } = useContext(NetworkContext);
 
     useEffect(() => {
         function checkCallbackItems(itemtype) {
@@ -94,8 +96,10 @@ export default function AutomationLayout(props) {
         }
 
         console.log('Propsname',props.name)
-        fetch(serverurl+'/list/logic/automation/'+props.name)
-            .then(result=>result.json())
+        //fetch(serverurl+'/list/logic/automation/'+props.name)
+        //    .then(result=>result.json())
+        //    .then(result=>loadAutomation(result));
+        getJSON('list/logic/automation/'+props.name)
             .then(result=>loadAutomation(result));
     }, [props.name, props.item, gotReturn, props.type, serverurl]);
 
@@ -121,15 +125,17 @@ export default function AutomationLayout(props) {
     
     function newSaveAutomation() {
         
-        fetch(serverurl+'/save/logic/automation/'+title, {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules, "favorite": favorite})
-            })
-                .then(setSaved(true))
+        postJSON('save/logic/automation/'+title, {"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules, "favorite": favorite})
+            .then(setSaved(true))
+        //fetch(serverurl+'/save/logic/automation/'+title, {
+        //        method: 'post',
+        //        headers: {
+        //            'Accept': 'application/json, text/plain, */*',
+        //            'Content-Type': 'application/json'
+        //        },
+        //        body: JSON.stringify({"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules, "favorite": favorite})
+        //    })
+        //        .then(setSaved(true))
     }
 
     

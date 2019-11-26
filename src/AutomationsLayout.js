@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
+import { NetworkContext } from './NetworkProvider';
+
 import { makeStyles } from '@material-ui/styles';
 
 import AutomationItem from './automation/automationItem';
@@ -32,6 +34,7 @@ export default function AutomationsLayout(props) {
     const classes = useStyles();
     const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
     const { deviceByEndpointId } = useContext(DataContext);
+    const { getJSON, postJSON } = useContext(NetworkContext);
 
     const [automations, setAutomations] = useState({})
     const adding = false
@@ -43,9 +46,11 @@ export default function AutomationsLayout(props) {
     const serverurl="https://"+window.location.hostname;
     
     useEffect(() => {
-        fetch(serverurl+'/list/logic/automations')
-            .then(result=>result.json())
+        getJSON('list/logic/automations')
             .then(result=>fixAutomations(result))
+        //fetch(serverurl+'/list/logic/automations')
+        //    .then(result=>result.json())
+        //    .then(result=>fixAutomations(result))
 
     }, [serverurl]);
     
@@ -77,12 +82,14 @@ export default function AutomationsLayout(props) {
             //var automations=automations
             automations[automationName]={'actionCount': 0, 'conditionCount': 0}
             console.log('Automations will be', automations)
-    
-            fetch(serverurl+'/add/logic/automation/'+automationName, {
-                    method: 'post',
-                    body: JSON.stringify([])
-                })
+            postJSON('add/logic/automation/'+automationName, [])
                 .then(setAutomations(automations))
+    
+            //fetch(serverurl+'/add/logic/automation/'+automationName, {
+            //        method: 'post',
+            //        body: JSON.stringify([])
+            //    })
+            //    .then(setAutomations(automations))
         }
     } 
     
@@ -90,16 +97,19 @@ export default function AutomationsLayout(props) {
 
         console.log('Deleting',automationName,automations)
         delete automations[automationName]
-
-        fetch(serverurl+'/del/logic/automation/'+automationName, {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify([])
-            })
+        
+        postJSON('del/logic/automation/'+automationName, [])
             .then(setAutomations(automations));
+
+        //fetch(serverurl+'/del/logic/automation/'+automationName, {
+         //       method: 'post',
+        //        headers: {
+        //            'Accept': 'application/json, text/plain, */*',
+        //            'Content-Type': 'application/json'
+        //        },
+        //        body: JSON.stringify([])
+        //    })
+        //    .then(setAutomations(automations));
     } 
         
     function runAutomation(name) {

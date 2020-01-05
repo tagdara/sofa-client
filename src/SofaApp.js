@@ -12,7 +12,7 @@ import SofaThemeProvider from './theme/SofaTheme';
 import NetworkProvider from './NetworkProvider';
 
 
-function MainApp(props) {
+export default function SofaApp(props) {
     
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [screenWidth, setScreenWidth] = useState(window.innerWidth)
@@ -31,6 +31,7 @@ function MainApp(props) {
     };
 
     return (
+        <SofaThemeProvider>
             <NetworkProvider>
                 <UserProvider>
                     <LayoutProvider>
@@ -44,16 +45,7 @@ function MainApp(props) {
                     </LayoutProvider>
                 </UserProvider>
             </NetworkProvider>
-    )
-}
-
-export default function SofaApp(props) {
-
-    return (
-        <SofaThemeProvider>
-            <MainApp />
         </SofaThemeProvider>
-    );
-
+    )
 }
 

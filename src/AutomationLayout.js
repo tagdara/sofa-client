@@ -101,7 +101,7 @@ export default function AutomationLayout(props) {
         //    .then(result=>loadAutomation(result));
         getJSON('list/logic/automation/'+props.name)
             .then(result=>loadAutomation(result));
-    }, [props.name, props.item, gotReturn, props.type, serverurl]);
+    }, [props.name, props.item, gotReturn, props.type, serverurl, getJSON]);
 
 
 

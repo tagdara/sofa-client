@@ -3,6 +3,16 @@ import { NetworkContext } from '../NetworkProvider';
 import AlexaDevice from './AlexaDevice'
 export const DataContext = createContext();
 
+function getFromLocalStorage() {
+    
+    try { 
+        return JSON.parse(localStorage.getItem('devices'))
+    }
+    catch {}
+    return {}
+    
+}
+
 export const deviceReducer = (state, data) => {
 
         if (data==={}) { return state }
@@ -21,12 +31,18 @@ export const deviceReducer = (state, data) => {
                 }
                 return devs
             case 'AddOrUpdateReport':
+                var local=getFromLocalStorage()
+                if (!local) {
+                    local={}
+                }
                 for (i = 0; i < data.event.payload.endpoints.length; i++) {
+                    local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
                     //console.log('Adding Object', data.event.payload.endpoints[i].endpointId, data.event.payload.endpoints[i])
                     devs[data.event.payload.endpoints[i].endpointId]=new AlexaDevice(data.event.payload.endpoints[i])
                         //devs.push(data.event.payload.endpoints[i])
                 }
-                return devs
+                localStorage.setItem('devices', JSON.stringify(local));
+                return devs;
             case "Multistate":
                 for (var dev in data.state) {
                     if (dev in devs) {
@@ -71,9 +87,9 @@ export const deviceReducer = (state, data) => {
 
 export default function DataProvider(props) {
     
-    const { getJSON, connectError, loggedIn, addSubscriber } = useContext(NetworkContext);
+    const { getJSON, postJSON, connectError, loggedIn, addSubscriber } = useContext(NetworkContext);
 
-    const initialDevices={};
+    const initialDevices=loadLocalStorageDevices();
     const [controllerProperties, setControllerProperties] = useState({});     
     const [directives, setDirectives] = useState({});     
     const [virtualDevices, setVirtualDevices] = useState({});     
@@ -82,6 +98,10 @@ export default function DataProvider(props) {
     const [defaultPlayer, setDefaultPlayer] = useState('sonos:player:RINCON_B8E937ECE1F001400');     
     const [userPlayer, setUserPlayer] = useState('');     
 
+    useEffect(() => {
+        //localStorage.setItem('devices', JSON.stringify(devices));
+    }, [devices]);
+    
     useEffect(() => {
         
         function getData() {
@@ -101,6 +121,16 @@ export default function DataProvider(props) {
         console.log('logged in changed to',loggedIn) 
         if (loggedIn===true ) { getData() }
     }, [loggedIn] );
+    
+    function loadLocalStorageDevices() {
+        
+        var devs={}
+        var local=getFromLocalStorage()
+        for (var dev in local) {
+            devs[local[dev].endpointId]=new AlexaDevice(local[dev])
+        }
+        return devs
+    }
 
     function isReachable(dev) {
         
@@ -244,7 +274,7 @@ export default function DataProvider(props) {
            endpointList.push(devs[i].endpointId)
         }
 
-        return getJSON('list/influx/last/'+val)
+        return postJSON('list/influx/last/'+val, endpointList)
                 .then(res=> { return res;})
     }
 

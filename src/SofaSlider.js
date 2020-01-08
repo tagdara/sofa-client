@@ -24,6 +24,7 @@ const useStyles = makeStyles({
         boxSizing: "border-box",
         marginRight: 8,
         overflowX: "hidden",
+        overflowY: "hidden",
         alignItems: "center",
         paddingRight: 8,
     },

@@ -4,6 +4,9 @@ import ToggleAvatar from './ToggleAvatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+
+import IconButton from '@material-ui/core/IconButton';
 
 import GridItem from './GridItem'
 import ReplayIcon from '@material-ui/icons/Replay';
@@ -14,23 +17,48 @@ import 'moment-timezone';
 export default function AdapterItem(props) { 
     
     function getErrorState(count) {
-        if (props.adapter.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
-            if (props.adapter.AdapterHealth.logged.value.ERROR > count) {
-                return 'on'
-            } else {
-                return 'closed'
+        try {
+
+            if (props.adapter.PowerController.powerState.value=='OFF') {
+                return 'disabled'
             }
-        } else {
+            
+            if (props.adapter.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
+                if (props.adapter.AdapterHealth.logged.value.ERROR > count) {
+                    return 'on'
+                } else {
+                    return 'closed'
+                }
+            } else {
+                return 'disabled'
+            }
+        }
+        catch {
             return 'disabled'
         }
     }
 
     function getErrorCount() {
-        if (props.adapter.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
-            return props.adapter.AdapterHealth.logged.value.ERROR
-        } else {
-            return 0
+        try {
+            if (props.adapter.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
+                return "Errors: "+props.adapter.AdapterHealth.logged.value.ERROR
+            } else {
+                return "No Errors"
+            }
         }
+        catch {
+            return ""
+        }
+    }
+    
+    function getStartupDate() {
+        try {
+            if (props.adapter.AdapterHealth.startup.value) {
+                return <Moment format="ddd MMM D h:mm:sa">{props.adapter.AdapterHealth.startup.value}</Moment>
+            }
+        } 
+        catch {}
+        return ""
     }
 
 
@@ -40,9 +68,11 @@ export default function AdapterItem(props) {
                 <ToggleAvatar avatarState={ getErrorState(5) }>{props.adapter.friendlyName.charAt()}</ToggleAvatar>
                 <ListItemText primary={props.adapter.friendlyName} secondary={props.adapter.AdapterHealth.url.value}/>
             </ListItem>
-            <ListItem button onClick={ () => props.adapter.PowerController.directive('TurnOn') }>
-                <ListItemIcon><ReplayIcon /></ListItemIcon>
-                <ListItemText primary={<Moment format="ddd MMM D h:mm:sa">{props.adapter.AdapterHealth.startup.value}</Moment>} secondary={ getErrorCount()<1 ? "No errors" : "Errors: "+getErrorCount()} />
+            <ListItem>
+                <ListItemText primary={getStartupDate()} secondary={ getErrorCount()} />
+                <ListItemSecondaryAction>
+                    <IconButton size={"small"} onClick={ () => props.adapter.PowerController.directive('TurnOn')} ><ReplayIcon /></IconButton>
+                </ListItemSecondaryAction>
             </ListItem>
        </GridItem>
     );

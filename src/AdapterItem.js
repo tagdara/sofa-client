@@ -64,7 +64,7 @@ export default function AdapterItem(props) {
 
     return (
         <GridItem wide={props.wide} >
-            <ListItem button onClick={ () => window.open(props.adapter.AdapterHealth.url, '_'+props.adapter.friendlyName) }>
+            <ListItem button onClick={ () => window.open(props.adapter.AdapterHealth.url.value, '_'+props.adapter.friendlyName) }>
                 <ToggleAvatar avatarState={ getErrorState(5) }>{props.adapter.friendlyName.charAt()}</ToggleAvatar>
                 <ListItemText primary={props.adapter.friendlyName} secondary={props.adapter.AdapterHealth.url.value}/>
             </ListItem>

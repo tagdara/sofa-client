@@ -208,6 +208,36 @@ export default function DataProvider(props) {
         return subDevices
     }
 
+    function devicesByController(controllers, searchterm) {
+
+        //console.log('dbc',categories, searchterm)
+        if (!controllers) {
+            return []
+        }
+        if (!Array.isArray(controllers)) {
+            controllers=[controllers]
+        }
+        var controllerDevices=[]
+        for (var j = 0; j < controllers.length; j++) {
+            var controller=controllers[j]
+            for (var id in devices) {
+                if (devices[id].interfaces.includes(controller)) {
+                    if (!searchterm || devices[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
+                        if (devices[id].hasData()) {
+                            controllerDevices.push(devices[id])
+                        }
+                    }
+                } 
+            }
+        }
+        controllerDevices.sort(function(a, b)  {
+		    var x=a['friendlyName'].toLowerCase(),
+			y=b['friendlyName'].toLowerCase();
+		    return x<y ? -1 : x>y ? 1 : 0;
+	    });    
+        return controllerDevices
+        
+    }
 
     
     function sortByName(devlist) {
@@ -304,6 +334,7 @@ export default function DataProvider(props) {
                 devicesByFriendlyName: devicesByFriendlyName,
 
                 devicesByCategory: devicesByCategory,
+                devicesByController: devicesByController,
                 propertyNamesFromDevice: propertyNamesFromDevice,
                 isReachable: isReachable,
                 sortByName: sortByName,

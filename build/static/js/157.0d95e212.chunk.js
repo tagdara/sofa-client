@@ -1,2 +1,0 @@
-(this["webpackJsonpsofa-client"]=this["webpackJsonpsofa-client"]||[]).push([[157],{137:function(e,n,t){"use strict";t.r(n),t.d(n,"default",(function(){return r}));var a=t(0),l=t.n(a),c=t(393),u=t(392);function r(e){return l.a.createElement(u.a,null,l.a.createElement(c.a,null,"Health"),l.a.createElement(c.a,null,e.interface.connectivity.value.value),l.a.createElement(c.a,null,"\xa0"))}}}]);
-//# sourceMappingURL=157.0d95e212.chunk.js.map

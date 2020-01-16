@@ -8,14 +8,14 @@ import GridSection from './GridSection';
 export default function ZoneLayout(props) {
 
     const { applyLayoutCard, applyBackPage } = useContext(LayoutContext);
-    const { devicesByCategory, getChangeTimesForDevices } = useRef(useContext(DataContext)).current;
-    const allzones=devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
+    const { devicesByController, getChangeTimesForDevices } = useRef(useContext(DataContext)).current;
+    const allzones = devicesByController(['ContactSensor','MotionSensor'])
     const [changeTimes, setChangeTimes] = useState({})
 
     useEffect(() => {
-        var zones=devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
+        var zones = devicesByController(['ContactSensor','MotionSensor'])
         getChangeTimesForDevices('detectionState',zones).then(result => setChangeTimes(result))
-    }, [devicesByCategory,getChangeTimesForDevices]);
+    }, [devicesByController, getChangeTimesForDevices]);
 
     function getSecurityZones() {
         var secZones=[]

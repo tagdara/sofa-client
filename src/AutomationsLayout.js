@@ -52,7 +52,7 @@ export default function AutomationsLayout(props) {
         //    .then(result=>result.json())
         //    .then(result=>fixAutomations(result))
 
-    }, [serverurl]);
+    }, [getJSON, serverurl]);
     
     function fixAutomations(autos) {
         var sections=['actions','schedules','triggers','conditions'] 

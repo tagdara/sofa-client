@@ -3,7 +3,6 @@ import React from 'react';
 import ToggleAvatar from './ToggleAvatar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -19,7 +18,7 @@ export default function AdapterItem(props) {
     function getErrorState(count) {
         try {
 
-            if (props.adapter.PowerController.powerState.value=='OFF') {
+            if (props.adapter.PowerController.powerState.value==='OFF') {
                 return 'disabled'
             }
             

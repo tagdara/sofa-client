@@ -1,10 +1,11 @@
 import React, {useState, useEffect, createContext} from 'react';
 
+const serverurl="https://"+window.location.hostname;
+
 export const NetworkContext = createContext();
 
 export default function NetworkProvider(props) {
-    
-    const serverurl="https://"+window.location.hostname;
+
     const [eventSource, setEventSource] = useState(null)
     const [loggedIn, setLoggedIn] = useState(true);
     const [connectError, setConnectError] = useState(false);
@@ -34,7 +35,6 @@ export default function NetworkProvider(props) {
             setLoggedIn(false)
         }    
     }, [connectError])
-    
 
     function connectEventSource() {
         if (token) {

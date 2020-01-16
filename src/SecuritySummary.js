@@ -10,15 +10,6 @@ import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
 const useStyles = makeStyles(theme => {
     return {        
-        cool: {
-            width: 96,
-            color: "#00796B",
-            borderColor: "#00796B",
-            '&:hover': {
-                backgroundColor: "#B2DFDB",
-                borderColor: "#00796B",
-            }
-        },
         mid: {
             width: 96,
             color: "#558B2F",
@@ -38,11 +29,6 @@ const useStyles = makeStyles(theme => {
                 borderColor: "#E65100",
             }
         },
-        
-        base: {
-            width: 96,
-        },
-        
         iconPad: {
             marginRight: 8,
         }
@@ -52,10 +38,10 @@ const useStyles = makeStyles(theme => {
 export default function SecuritySummary(props) {
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { devicesByCategory } = useContext(DataContext);
+    const { devicesByController } = useContext(DataContext);
 
     const classes = useStyles();
-    const allzones = devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
+    const allzones = devicesByController(['ContactSensor','MotionSensor'])
     const zoneOpen = zoneCount('DETECTED')>0;
 
     function zoneCount(condition) {

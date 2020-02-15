@@ -83,7 +83,7 @@ export default function SofaAppContent(props) {
             }
         }
         
-    },[layout, layouts, isMobile, loggedIn ]);
+    },[ layout, layouts, isMobile, loggedIn ]);
     
     function renderSuspenseModule( modulename, moduleprops ) {
 

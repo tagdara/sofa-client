@@ -1,80 +1,133 @@
-import React, {useState, useEffect, createContext} from 'react';
+import React, {useState, useEffect, useCallback, createContext} from 'react';
 
 const serverurl="https://"+window.location.hostname;
 
+export const useStream = (userToken) => {
+    const [token, setToken] = useState(userToken);
+    const [eventSource, setEventSource] = useState(undefined)
+    const [connected, setConnected] = useState(false);
+    const [subscribers, setSubscribers] = useState([])
+    const [isConnecting, setIsConnecting] = useState(false)
+
+    const addSubscriber = useCallback(
+        (subscriber) => {
+            var sublist=[...subscribers]
+            sublist.push(subscriber)
+            setSubscribers([...(new Set(sublist))])
+        }, [subscribers]
+    )
+
+//    const addSubscriber = (subscriber) => {
+//        console.log('.. adding subscriber')
+//        var sublist=[...subscribers]
+//        sublist.push(subscriber)
+//        setSubscribers([...(new Set(sublist))])
+//    }
+    
+    const streamStatus = () => {
+        return eventSource.status
+    }
+    
+    const closeStream = () => {
+        setConnected(false)
+        setEventSource(undefined)
+    }
+
+    useEffect(() => {
+        let unmounted = false;
+
+        const connectStream = () => {
+            if (token && subscribers.length>0 && !isConnecting) {
+                setIsConnecting(true)
+                console.log('.. Connecting event source:', token, subscribers)
+                var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token }, withCredentials: true })
+                esource.addEventListener('message', dataHandler);
+                esource.addEventListener('error', errorHandler);
+                esource.addEventListener('open', openHandler);
+                setEventSource(esource)
+            }
+        }
+        
+        const openHandler = () => {
+            setConnected(true)
+            setIsConnecting(false)
+        }
+
+        const errorHandler = () => {
+            setConnected(false)
+            setIsConnecting(false)
+            connectStream()
+        }
+
+        const dataHandler = event => {
+            //deviceDispatch(JSON.parse(event.data));
+            var data=JSON.parse(event.data)
+            for (var i = 0; i < subscribers.length; i++) {
+                subscribers[i](data)
+            }
+            //setHeartbeat(Date.now())
+        };
+
+        if (!unmounted && !isConnecting && !connected) {
+            connectStream()
+        }
+            
+        return () => {
+            unmounted = true;
+        };
+        
+    }, [token, subscribers, isConnecting, connected]);
+
+    return { connected, streamStatus, setToken, closeStream, addSubscriber };
+};
+
+export const useApi = ( path, token, initialData ) => {
+    
+    const [isLoading, setIsLoading] = useState(true);
+    const [hasError, setHasError] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [fetchedData, setFetchedData] = useState(initialData);
+
+    useEffect(() => {
+        let unmounted = false;
+
+        const handleFetchResponse = response => {
+            if (unmounted) return initialData;
+            setLoggedIn(response.status!==400 && response.status!==401 )
+            setHasError(!response.ok);
+            setIsLoading(false);
+            
+            return response.status!==400 && response.status!==401 && response.ok && response.json ? response.json() : initialData;
+        };
+
+        const fetchData = () => {
+            setIsLoading(true);
+      	    return fetch(serverurl+'/'+path, { method: 'GET', headers: { 'authorization': token}})
+                .then(handleFetchResponse)
+                .catch(handleFetchResponse);
+        };
+
+        if (path && !unmounted)
+            fetchData().then(data => !unmounted && setFetchedData(data));
+
+        return () => {
+            unmounted = true;
+        };
+    }, [ path, token, initialData ]);
+
+    return { isLoading, hasError, loggedIn, data: fetchedData };
+};
+
+
 export const NetworkContext = createContext();
+
 
 export default function NetworkProvider(props) {
 
-    const [eventSource, setEventSource] = useState(null)
     const [loggedIn, setLoggedIn] = useState(true);
     const [connectError, setConnectError] = useState(false);
-    const [streamError, setStreamError] = useState(false);
-    const [subscribers, setSubscribers] = useState([])
     const [token, setToken]= useState(getCookie('token'));
-    
-    useEffect(() => {    
-        getJSON('get-user')
-            .then(response=> { console.log('Loggedin check?', response) } )
-    }, [])
-
-    useEffect(() => {
-        if (token) {
-            if (eventSource===null || eventSource.readyState===2 || connectError===true) {
-                console.log('previous eventsource', eventSource)
-                console.log('connecting event source')
-                // Authorization headers or custom headers may not be supported with EventSource
-                var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token}, withCredentials: true })
-                esource.addEventListener('message', listener);
-                esource.addEventListener('error', errorlistener);
-                esource.addEventListener('open', openlistener);
-                setEventSource(esource)
-            }
-        } else {
-            console.log('!! EventSource connect cancelled - No authorization token detected.')
-            setLoggedIn(false)
-        }    
-    }, [connectError])
-
-    function connectEventSource() {
-        if (token) {
-            console.log('previous eventsource', eventSource)
-            console.log('connecting event source')
-            var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token}, withCredentials: true })
-            esource.addEventListener('message', listener);
-            esource.addEventListener('error', errorlistener);
-            esource.addEventListener('open', openlistener);
-            setEventSource(esource)
-        } else {
-            console.log('!! EventSource connect cancelled - No authorization token detected.')
-            setLoggedIn(false)
-        }
-    }
-    
-    function addSubscriber(subscriber) {
-        var sublist=subscribers
-        sublist.push(subscriber)
-        setSubscribers([...(new Set(sublist))])
-    }
-
-    const listener = event => {
-        //deviceDispatch(JSON.parse(event.data));
-        var data=JSON.parse(event.data)
-        for (var i = 0; i < subscribers.length; i++) {
-            subscribers[i](data)
-        }
-        //setHeartbeat(Date.now())
-    };
-
-    const errorlistener = event => {
-        setStreamError(true)
-        console.log('SSE error',event.srcElement.readyState,event)
-    };
-
-    const openlistener = event => {
-        setStreamError(false)
-        setLoggedIn(true)
-    };
+    const { streamConnected, streamStatus, setStreamToken, closeStream, addSubscriber } = useStream(token, [])
 
     function handleFetchErrors(response) {
         if (response.status===400) {
@@ -154,7 +207,8 @@ export default function NetworkProvider(props) {
         if (tokendata.hasOwnProperty('token')) {
             writeCookie("token", tokendata.token, 365)
             console.log('GetCookie', getCookie('token'))
-            setToken(getCookie('token'))
+            setToken(tokendata.token)
+            setStreamToken(tokendata.token)
             setLoggedIn(true)
             return tokendata.token
         }
@@ -181,30 +235,25 @@ export default function NetworkProvider(props) {
         console.log('logging out')
   	    fetch(serverurl+'/logout', {credentials: 'include'})
  		    .then(result=>result.json())
-            .then(result=>setEventSource(null))
             .then(result=>setLoggedIn(false))
-    }
-    
-    function reconnect() {
-        connectEventSource()
+            .then(result=>closeStream())
     }
 
     return (
         <NetworkContext.Provider
             value={{
                 connectError: connectError,
-                streamError: streamError,
+                streamConnected: streamConnected,
+                streamStatus: streamStatus,
                 loggedIn: loggedIn,
                 getJSON: getJSON,
                 postJSON: postJSON,
                 login: login,
                 logout: logout,
                 addSubscriber: addSubscriber,
-                reconnect: reconnect,
             }}
         >
             {props.children}
         </NetworkContext.Provider>
     )
 }
-

@@ -101,7 +101,7 @@ export default function DataProvider(props) {
     useEffect(() => {
         //localStorage.setItem('devices', JSON.stringify(devices));
     }, [devices]);
-    
+
     useEffect(() => {
         
         function getData() {
@@ -120,7 +120,7 @@ export default function DataProvider(props) {
         }
         console.log('logged in changed to',loggedIn) 
         if (loggedIn===true ) { getData() }
-    }, [loggedIn] );
+    }, [ loggedIn ] );
     
     function loadLocalStorageDevices() {
         

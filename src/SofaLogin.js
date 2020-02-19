@@ -24,15 +24,18 @@ const useStyles = makeStyles({
         overflowY: "auto",
         width: "100%",
     },
+    form: {
+        width: "100%",
+    }
 });
 
 export default function SofaLogin(props) {
     
-    const { login } = useContext(NetworkContext);
-    const [user, setUser] = useState('')
+    const { login, getCookie } = useContext(NetworkContext);
+    const [user, setUser] = useState(getCookie("user"))
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
-    const classes = useStyles();    
+    const classes = useStyles();
     
     function confirmToken(result) {
         console.log('resulting token', result)
@@ -48,29 +51,35 @@ export default function SofaLogin(props) {
         login(user,password).then(result=>confirmToken(result))
     }
 
-    return (    
-        <Grid container spacing={2} justify="center" alignItems="center" className={classes.controlArea} >
-            <GridItem wide={props.wide} className={classes.loginBox}>
-                <ListItem style={{display:'flex', justifyContent:'center'}} >
-                    <Typography variant="h6">Sofa Login</Typography>
-                </ListItem>
-                <ListItem>
-                    <TextField fullWidth variant="outlined" onChange={(e) => setUser(e.target.value) } 
-                        id="user" label="User" type="mail" defaultValue={""} />
-                </ListItem>
-                <ListItem>
-                    <TextField fullWidth variant="outlined" onChange={(e) => setPassword(e.target.value) } 
-                        id="password" label="Password" type="password" defaultValue={""}  />
-                </ListItem>
-                <ListItem>
-                    <ListItemText primary={errorMessage} />
-                </ListItem>
-                <ListItem style={{display:'flex', justifyContent:'center'}} >
-                    <Button fullWidth onClick={ ()=> checkLogin()}>
-                        Login
-                    </Button>
-                </ListItem>
-            </GridItem>
-        </Grid>
+    function keyPress(code) {
+        if (code===13) {
+            checkLogin()
+        }
+    }
+
+    return (
+            <Grid container spacing={2} justify="center" alignItems="center" className={classes.controlArea} >
+                <GridItem wide={props.wide} className={classes.loginBox}>
+                    <ListItem style={{display:'flex', justifyContent:'center'}} >
+                        <Typography variant="h6">Sofa Login</Typography>
+                    </ListItem>
+                    <ListItem>
+                        <TextField fullWidth variant="outlined" onChange={(e) => setUser(e.target.value) } 
+                            value={user} id="user" label="User" type="mail"  />
+                    </ListItem>
+                    <ListItem>
+                        <TextField fullWidth variant="outlined" onChange={(e) => setPassword(e.target.value)} onKeyDown={ (e) => keyPress(e.keyCode) } 
+                            id="password" label="Password" type="password" defaultValue={""}  />
+                    </ListItem>
+                    <ListItem>
+                        <ListItemText primary={errorMessage} />
+                    </ListItem>
+                    <ListItem style={{display:'flex', justifyContent:'center'}} >
+                        <Button fullWidth onClick={ ()=> checkLogin()}>
+                            Login
+                        </Button>
+                    </ListItem>
+                </GridItem>
+            </Grid>
     )
 };

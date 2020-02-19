@@ -1,21 +1,44 @@
-import React, {useContext, useState, useEffect, createContext} from 'react';
+import React, {useContext, useState, useEffect, createContext, useReducer} from 'react';
 import { NetworkContext } from '../NetworkProvider';
+import PlaceholderCard from '../PlaceholderCard';
+
+export const moduleReducer = (state, data) => {
+
+    function addSuspenseModule(modulename) {
+        return ( React.lazy(() => import('../'+modulename)))
+    }
+
+    function addModules(modulelist) {
+        var newmodules = {...state}
+        modulelist.forEach( item => {
+            if (!newmodules.hasOwnProperty(item)) {
+                console.log('adding module', item)
+                newmodules[item]=addSuspenseModule(item)
+            }
+        })
+        return newmodules
+    }
+    
+    return addModules(data)
+}
+
 
 export const LayoutContext = createContext({});
 
 export const LayoutProvider = (props) => {
 
     const { getJSON } = useContext(NetworkContext);
+    const mobileBreakpoint = 800
+    const isMobile = window.innerWidth <= mobileBreakpoint;
     const [layouts, setLayouts] = useState(undefined);     
     const [layout, setLayout] = useState(getLayoutCookie()); 
     const [returnPage, setReturnPage] = useState({"name":"", "props":{}})
     const [backPage, setBackPage] = useState({"name":"", "props":{}})
-    const mobileBreakpoint = 800
-    const isMobile = window.innerWidth <= mobileBreakpoint;
     const [masterButtonState, setMasterButtonState] = useState('System')
+    //const [modules, setModules] = useState([]);
+    const [modules, moduleDispatch] = useReducer(moduleReducer, []);
 
     useEffect(() => {
-        
       	getJSON('layout')
             .then(result=> { setLayouts(result) } );
     }, [getJSON])
@@ -41,17 +64,71 @@ export const LayoutProvider = (props) => {
         }
         return
     },[layouts, isMobile]);
-    
-    function goHome() {
-        var newLayout={"name":'Home', "props":{}, "data":layouts['Home'], "page":layouts['Home']['order'][0]}
-        setLayout(newLayout)
-        setLayout(newLayout )
-        writeLayoutCookie(newLayout)
-        if (isMobile) {
-            if (layouts['Home'].hasOwnProperty('mobile')) {
-                applyLayoutCard(layouts['Home']['mobile']) 
+
+
+    useEffect(() => {    
+        
+        function addPageModules(page, currentLayout) {
+            if (currentLayout.data.pages.hasOwnProperty(page)) {
+                var pageData=currentLayout.data.pages[page]
+                var newModules=[]
+                for(var i = 0; i <pageData.length; i++) {
+                    newModules.push(pageData[i].module)
+                }
+                moduleDispatch(newModules)
+            } else {
+                console.log('Page',page,'not found in layout')
             }
         }
+    
+        function addPagesModules(page, currentLayout) {
+            //console.log('Adding modules for pages', Object.keys(layout.data.pages))
+            for (const key of Object.keys(currentLayout.data.pages)) {
+                addPageModules(key, currentLayout)
+            }
+        }        
+    
+        function getModulesForLayout(currentLayout) {
+            if (layout.data.type==='pages') {
+                if (isMobile) {
+                    if (currentLayout.hasOwnProperty('page')) {
+                        if (currentLayout.data.hasOwnProperty('mobile') && currentLayout.page===currentLayout.data.mobile) {
+                            moduleDispatch([currentLayout.data.mobile])
+                        } else {
+                            addPageModules(currentLayout.page, currentLayout)
+                        }
+                    } else if (currentLayout.data.hasOwnProperty('mobile')) {
+                        moduleDispatch([currentLayout.data.mobile])
+                    } else {
+                        addPageModules(Object.keys(currentLayout.data.pages)[0], currentLayout)
+                    }
+                } else {
+                    addPagesModules(layout.name, currentLayout)
+                }
+            } else {
+                moduleDispatch([layout.name]) 
+            }
+        }
+        
+        getModulesForLayout(layout)
+        
+    }, [ layout, isMobile ])
+    
+    function goHome() {
+        console.log('gohome to',layouts['Home'])
+        var newLayout={"name":'Home', "props":{}, "data":layouts['Home'], "page":layouts['Home']['order'][0]}
+        if (isMobile && layouts['Home'].hasOwnProperty('mobile')) {
+            console.log('setting home to mobile')
+            newLayout.page=layouts['Home'].mobile
+        }
+        
+        setLayout(newLayout)
+        writeLayoutCookie(newLayout)
+//        if (isMobile) {
+//            if (layouts['Home'].hasOwnProperty('mobile')) {
+//                applyLayoutCard(layouts['Home']['mobile'],{},layouts['Home']) 
+//            }
+//        }
         setMasterButtonState('System')
     }
     
@@ -66,9 +143,9 @@ export const LayoutProvider = (props) => {
         writeLayoutCookie(newLayout)
     }
 
-    function applyLayoutCard(name, newProps={}) {
+    function applyLayoutCard(name, newProps={}, data={ type: "single" }) {
         setMasterButtonState('Home')
-        var newLayout={"name":name, "props":newProps, "data":{ type: "single" }, "page":layout.page}
+        var newLayout={"name":name, "props":newProps, "data":data, "page":layout.page}
         setLayout(newLayout)
         writeLayoutCookie(newLayout)
     }
@@ -87,19 +164,23 @@ export const LayoutProvider = (props) => {
     }
     
     function applyLayoutPage(newPage) {
-        var newLayout={"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage}
-        setLayout({"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage})
+        console.log('Apply layout page',newPage)
+        var newLayout={"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage}    
+        setLayout(newLayout)
         writeLayoutCookie(newLayout)
     }
 
     function applyHomePage(newPage) {
+        console.log('Apply home page',newPage)
         setMasterButtonState('Home')
         var newLayout={"name":"Home", "props":layout.props, "data":layouts['Home'], "page":newPage}
+        console.log('Apply home page',newPage, newLayout)
         setLayout(newLayout)
         writeLayoutCookie(newLayout)
     }
     
     function getLayoutCookie() {
+        var cookieLayout={"name":"Home", "props":{}, "data":{}, "page":""}
         var name = "layout=";
         var decodedCookie = decodeURIComponent(document.cookie);
         var ca = decodedCookie.split(';');
@@ -109,10 +190,17 @@ export const LayoutProvider = (props) => {
               c = c.substring(1);
             }
             if (c.indexOf(name) === 0) {
-                return JSON.parse(c.substring(name.length, c.length));
+                cookieLayout=JSON.parse(c.substring(name.length, c.length));
             }
         }
-        return {"name":"Home", "props":{}, "data":{}, "page":""}
+        
+        if (isMobile) {
+            if (cookieLayout.data.hasOwnProperty('mobile') && !cookieLayout.hasOwnProperty('page')) {
+                cookieLayout.page=cookieLayout.data.mobile
+            }
+        }
+        
+        return cookieLayout
     }    
     
     function writeLayoutCookie (value) {
@@ -125,12 +213,28 @@ export const LayoutProvider = (props) => {
         return value;
     };
 
+    function renderSuspenseModule( modulename, moduleprops ) {
+
+        if (modules.hasOwnProperty(modulename)) {
+            let Module = modules[modulename]
+            moduleprops['wide']=true
+            return <React.Suspense fallback={<PlaceholderCard name={ modulename } />}>
+                        <Module key={ modulename } {...moduleprops} />
+                    </React.Suspense>
+        } else {
+            console.log('could not render', modulename)
+            return null
+        }
+    }
+
 
     return (
         <LayoutContext.Provider
             value={{
                 layouts: layouts,
                 layout: layout,
+                modules: modules,
+                renderSuspenseModule: renderSuspenseModule,
                 backPage: backPage,
                 returnPage: returnPage,
                 applyLayout: applyLayout,

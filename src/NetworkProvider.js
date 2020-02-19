@@ -8,6 +8,7 @@ export const useStream = (userToken) => {
     const [connected, setConnected] = useState(false);
     const [subscribers, setSubscribers] = useState([])
     const [isConnecting, setIsConnecting] = useState(false)
+    const [attempts, setAttempts] = useState(0)
 
     const addSubscriber = useCallback(
         (subscriber) => {
@@ -37,7 +38,7 @@ export const useStream = (userToken) => {
         let unmounted = false;
 
         const connectStream = () => {
-            if (token && subscribers.length>0 && !isConnecting) {
+            if (token && subscribers.length>0 && !isConnecting && attempts < 5) {
                 setIsConnecting(true)
                 console.log('.. Connecting event source:', token, subscribers)
                 var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token }, withCredentials: true })
@@ -54,9 +55,9 @@ export const useStream = (userToken) => {
         }
 
         const errorHandler = () => {
+            console.log('ERROR with EventSource')
             setConnected(false)
-            setIsConnecting(false)
-            connectStream()
+            //connectStream()
         }
 
         const dataHandler = event => {
@@ -152,7 +153,7 @@ export default function NetworkProvider(props) {
     }
     
     function getJSON(path) {
-        if (token) {
+        if (token && loggedIn ) {
       	    return fetch(serverurl+"/"+path, { method: 'GET', headers: { 'authorization': token}})
      		    .then(result=>handleFetchErrors(result))
         } else {
@@ -190,7 +191,7 @@ export default function NetworkProvider(props) {
         formData.append('password', password);
   	    return fetch(serverurl+'/login', { method: 'post', body: formData })
  		            .then(result=>result.json())
-                    .then(result=>setTokenCookie(result))
+                    .then(result=>setTokenUserCookies(user, result))
     }
 
     function writeCookie (key, value, days) {
@@ -203,15 +204,17 @@ export default function NetworkProvider(props) {
         return value;
     };
     
-    function setTokenCookie(tokendata) {
+    function setTokenUserCookies(user, tokendata) {
+        console.log('tokendata',tokendata)
         if (tokendata.hasOwnProperty('token')) {
             writeCookie("token", tokendata.token, 365)
+            writeCookie("user", user, 365)
             console.log('GetCookie', getCookie('token'))
             setToken(tokendata.token)
-            setStreamToken(tokendata.token)
-            setLoggedIn(true)
+            if (!loggedIn) { setLoggedIn(true) }
             return tokendata.token
         }
+
     }
     
     function getCookie(cname) {
@@ -251,6 +254,7 @@ export default function NetworkProvider(props) {
                 login: login,
                 logout: logout,
                 addSubscriber: addSubscriber,
+                getCookie: getCookie,
             }}
         >
             {props.children}

@@ -1,7 +1,5 @@
 import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ViewWeekIcon from '@material-ui/icons/ViewWeek';
 import ToggleButton from '../ToggleButton';
 
 export default function ScheduleDays(props) {
@@ -23,7 +21,6 @@ export default function ScheduleDays(props) {
     
     return (
         <ListItem>
-            <ListItemIcon onClick={props.toggle}><ViewWeekIcon /></ListItemIcon>
             { daysOfTheWeek.map((day) => 
                 <ToggleButton key={day} label={day} buttonState={props.value && props.value.includes(day) ? 'on' : 'off' } onClick={(e) => editDays(day)} >
                     {day}

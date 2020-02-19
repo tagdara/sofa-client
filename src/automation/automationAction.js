@@ -100,11 +100,11 @@ export default function AutomationAction(props) {
     const [item, setItem]=useState(props.item)
     const [propMod, setPropMod] = useState(loadPropMod(propertyFromDirective(controllerForDirective(item.command), item.command)))
 
-    useEffect(() => {
-        if (item.value!==undefined) {
-            save()
-        }
-    }, [ item ])
+//    useEffect(() => {
+//        if (item.value!==undefined) {
+//            save()
+//        }
+//    }, [ item ])
     
     useEffect(() => {
         setAutoInterface(new AutomationInterface(propertyFromDirective(item.controller, item.command), item.value, updateItemValue, setDefault))
@@ -118,6 +118,7 @@ export default function AutomationAction(props) {
     function updateItemValue(val) {
         console.log('updating item',val, {...item, 'value': val })
         setItem({...item, 'value': val })
+        save({...item, 'value': val })
     }
 
     function errorBlock(modulename) {
@@ -175,7 +176,7 @@ export default function AutomationAction(props) {
                 return null
             }
             let Module=propMod
-            return  <Suspense key={ modulename } fallback={placeholder}>
+            return  <Suspense key={ modulename } fallback={ placeholder() }>
                         <Module interface={ autoInterface } device={props.device} />
                     </Suspense>
         } else {

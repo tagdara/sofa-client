@@ -37,7 +37,7 @@ export default function AutomationColumn(props) {
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
     const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
-    const modmap={'Triggers':AutomationTrigger, 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
+    const modmap={'Triggers': AutomationTrigger , 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
     const AutomationProperty = modmap[props.name]
     
     function getControllerProperties(item) {
@@ -70,7 +70,7 @@ export default function AutomationColumn(props) {
         var newitems=[...props.items]
         newitems[index]=item
         props.save(props.itemtype, newitems)
-        //console.log('Column value',props.itemtype,'is now:',newitems)
+        console.log('Column value',props.itemtype,'is now:',newitems)
     }
     
     function moveUp(index) {
@@ -143,10 +143,8 @@ export default function AutomationColumn(props) {
             props.save(props.itemtype,[...props.items, newItem])
         }
     }
-
-    return (    
-
-            <GridSection name={props.name} secondary={ <>
+    
+    const headerButtons = <>
                 <IconButton onClick={ () => addItem() } className={classes.button }>
                     <AddIcon fontSize="small" />
                 </IconButton>
@@ -161,17 +159,22 @@ export default function AutomationColumn(props) {
                 </IconButton>
                 }
                 </>
-            } >
+            
+
+    return (    
+
+            <GridSection name={props.name} secondary={ headerButtons } >
 
             { Object.keys(props.items).length>0 &&
                 <React.Fragment>
                     { props.items.map((item,index) =>
                         <ErrorBoundary key={props.itemtype+index} >
                         { props.itemtype==='schedule' ?
-                            <AutomationProperty key={props.itemtype+index} save={save} remove={remove} delete={deleteItem} index={index} item={item} />
+                            <AutomationProperty key={props.itemtype+index} save={save} remove={remove} delete={deleteItem} index={index} item={item} wide={isMobile}/>
                         :
                             <AutomationProperty moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
-                                index={index} item={item} device={ item.endpointId===undefined ? undefined : deviceByEndpointId(item.endpointId) } directives={directives} controllerProperties={ getControllerProperties(item)} wide={isMobile} 
+                                index={index} item={item} device={ item.endpointId===undefined ? undefined : deviceByEndpointId(item.endpointId) } 
+                                directives={directives} controllerProperties={ getControllerProperties(item)} wide={isMobile} 
                                 />
                         }
                         </ErrorBoundary>

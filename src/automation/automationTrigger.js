@@ -188,7 +188,7 @@ export default function AutomationTrigger(props) {
                 return null
             }
             let Module=propMod
-            return  <Suspense key={ modulename } fallback={placeholder}>
+            return  <Suspense key={ modulename } fallback={ placeholder() }>
                         <Module interface={ autoInterface } device={props.device} />
                     </Suspense>
         } else {

@@ -24,27 +24,25 @@ const BootstrapInput = withStyles(theme => ({
     },
 }))(InputBase);
 
-export default function DetectionState(props) {
+export default function PressState(props) {
     
     useEffect(() => {
         // Set default if passed undefined
-        if (props.interface.detectionState.value===undefined) {
+        if (props.interface.pressState.value===undefined) {
             if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('DETECTED')
+                props.interface.setDefault('ON')
             }
         }
     }, [props.interface])
 
-    function handleDetectionStateChange(event) {
-        //props.interface.directive('SetDetectionState', { "detectionState" : event.target.value })
+    function handlePressStateChange(event) {
         props.interface.directive(event.target.value)
-
     }; 
     
     return (
-        <Select value={ props.interface.detectionState.value ? props.interface.detectionState.value : "" } onChange={handleDetectionStateChange} input={<BootstrapInput name="detectionState" id="detectionState" />} >
-            <MenuItem value="DETECTED">DETECTED</MenuItem>
-            <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
+        <Select value={ props.interface.pressState.value ? props.interface.pressState.value : "" } onChange={handlePressStateChange} input={<BootstrapInput name="pressState" id="pressState" />} >
+            <MenuItem value="ON">ON</MenuItem>
+            <MenuItem value="OFF">OFF</MenuItem>
         </Select>
     );
 

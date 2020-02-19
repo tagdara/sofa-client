@@ -79,6 +79,7 @@ function useInterval(callback, delay) {
             let id = setInterval(tick, delay);
             return () => clearInterval(id);
         }
+        
     }, [delay]);
 }
 
@@ -102,6 +103,12 @@ export default function SecurityCamera(props) {
     }, refreshInterval);
     
     useEffect(()=> {
+        
+        function updateUrlUri(data) {
+            setUpdateUrl(data.payload.imageUri+"?time="+Date.now());
+            setImageUri(data.payload.imageUri)
+        }
+        
         props.camera.CameraStreamController.directive("InitializeCameraStreams", 
             {
                 "cameraStreams": [
@@ -117,8 +124,9 @@ export default function SecurityCamera(props) {
                     }
                 ]
             }
-        ).then(response => { setUpdateUrl(response.payload.imageUri+"?time="+Date.now()); setImageUri(response.payload.imageUri) })
-    },[props.camera]);
+        ).then(response => updateUrlUri(response))
+
+    }, [props.camera]);
 
     function imageFinished() {
         if (!imageLoaded) {

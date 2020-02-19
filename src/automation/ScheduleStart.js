@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -15,10 +16,17 @@ const useStyles = makeStyles({
     shortLabel: {
         flexGrow:0,
     },
+    label: {
+        flexGrow:1,
+        flexBasis:0,
+        padding: 0,
+    },
     input: {
+        marginLeft:8,
         marginTop:0,
         flexGrow:0,
         marginBottom:0,
+        padding: 6,
     },
 });
 
@@ -41,9 +49,20 @@ export default function ScheduleStart(props) {
     }
 
     return (
-        <ListItem> 
-            <ListItemIcon><EventIcon /></ListItemIcon>
-            <ListItemText className={classes.shortLabel} primary="Starting" />
+        <>
+        <Grid item xs={props.wide ? 12 : 4 } >
+            <ListItem> 
+                <ListItemIcon><EventIcon /></ListItemIcon>
+                <ListItemText className={classes.label} primary="Starting" />
+                { props.remove ?
+                    <ListItemSecondaryAction>
+                        <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
+                    </ListItemSecondaryAction>
+                    : null
+                }
+            </ListItem>
+        </Grid>
+        <Grid item xs={props.wide ? 12 : 4 } >
             <TextField
                 className={classes.input}
                 type="datetime-local"
@@ -52,12 +71,7 @@ export default function ScheduleStart(props) {
                 value={props.value ? props.value : shortTimeFormat() }
                 onChange={(e) => props.change(props.target, e.target.value)}
             />
-            { props.remove ?
-                <ListItemSecondaryAction>
-                    <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
-                </ListItemSecondaryAction>
-                : null
-            }
-        </ListItem>
+        </Grid>
+        </>
     )
 }

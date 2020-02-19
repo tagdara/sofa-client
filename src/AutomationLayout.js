@@ -96,9 +96,6 @@ export default function AutomationLayout(props) {
         }
 
         console.log('Propsname',props.name)
-        //fetch(serverurl+'/list/logic/automation/'+props.name)
-        //    .then(result=>result.json())
-        //    .then(result=>loadAutomation(result));
         getJSON('list/logic/automation/'+props.name)
             .then(result=>loadAutomation(result));
     }, [props.name, props.item, gotReturn, props.type, serverurl, getJSON]);
@@ -116,6 +113,7 @@ export default function AutomationLayout(props) {
         } else if (itemtype==='trigger') {
             setTriggers(items)
         } else if (itemtype==='condition') {
+            console.log('setting conditions', items)
             setConditions(items)
         } else if (itemtype==='schedule') {
             setSchedules(items)
@@ -127,15 +125,6 @@ export default function AutomationLayout(props) {
         
         postJSON('save/logic/automation/'+title, {"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules, "favorite": favorite})
             .then(setSaved(true))
-        //fetch(serverurl+'/save/logic/automation/'+title, {
-        //        method: 'post',
-        //        headers: {
-        //            'Accept': 'application/json, text/plain, */*',
-        //            'Content-Type': 'application/json'
-        //        },
-        //        body: JSON.stringify({"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules, "favorite": favorite})
-        //    })
-        //        .then(setSaved(true))
     }
 
     
@@ -147,7 +136,7 @@ export default function AutomationLayout(props) {
         applyLayoutCard('AutomationsLayout')
     }
 
-    return (    
+    return (
         <React.Fragment>
             <AutomationHeader name={title} save={saveType} favorite={favorite? "on": "off"} saveFavorite={saveFavorite} automation={automation} />
             <AutomationColumn items={schedules} saved={saved} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
@@ -157,4 +146,5 @@ export default function AutomationLayout(props) {
             <AutomationSave name={title} saved={saved} save={newSaveAutomation} goBack={goBack} />
         </React.Fragment>
     )
+    
 };

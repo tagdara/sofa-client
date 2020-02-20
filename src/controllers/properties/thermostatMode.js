@@ -30,6 +30,7 @@ export default function ThermostatMode(props) {
     useEffect(() => {
         // Set default if passed undefined
         if (props.interface.thermostatMode.deepvalue()===undefined) {
+        //if (props.interface.thermostatMode.deepvalue()===undefined || !props.device.ThermostatController.configuration.supportedModes.includes(props.interface.thermostatMode.deepvalue())) {
             if (props.interface.hasOwnProperty('setDefault')) {
                 props.interface.setDefault('OFF')
             }
@@ -39,7 +40,7 @@ export default function ThermostatMode(props) {
     return (
         <Select value={props.interface.thermostatMode.deepvalue() ? props.interface.thermostatMode.deepvalue() : ""} onChange={(e) => props.interface.directive('SetThermostatMode', {'value': e.target.value }) } input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
             { props.device.ThermostatController.configuration.supportedModes.map( mode => 
-                <MenuItem value={mode}>{mode}</MenuItem>
+                <MenuItem key={mode} value={mode}>{mode}</MenuItem>
             )}
         </Select>
     );

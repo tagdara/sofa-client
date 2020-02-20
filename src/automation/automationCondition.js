@@ -29,53 +29,10 @@ const useStyles = makeStyles({
         flexGrow:1,
         flexBasis:0,
     },
-    inputstring: {
-        marginTop:0,
-        marginLeft: 8,
-        flexGrow:1,
-        flexBasis:0,
-    },
-    inputtime: {
-        marginTop:0,
-        marginLeft: 8,
-        flexGrow:1,
-        flexBasis:0,
-    },
-    inputdecimal: {
-        marginTop:0,
-        marginLeft: 8,
-        width: 40,
-        overflowX: "hidden",
-    },
-    inputpercentage: {
-        marginTop:0,
-        marginLeft: 8,
-        width: 40,
-        overflowX: "hidden",
-    },
-    inputinteger: {
-        marginTop:0,
-        marginLeft: 8,
-        width: 40,
-        overflowX: "hidden",
-    },
-    opbutton: {
-        marginRight: 8,
-    },
     deviceName: {
         flexGrow:1,
         flexBasis:0,
         padding: 0,
-    },
-    dialogActions: {
-        paddingBottom: "env(safe-area-inset-bottom)",
-    },
-    dialogContent: {
-        padding: 0,
-    },
-    listActions: {
-        minWidth: 320,
-        width: "100%",
     },
     listItem: {
         padding: "12 16",
@@ -151,10 +108,6 @@ export default function AutomationCondition(props) {
     const classes = useStyles();
     const [propMod, setPropMod] = useState(loadPropMod(props.item.propertyName))
 
-//    function setDefault(val) {
-//        props.save(props.index, {...props.item, "value": val})
-//    }
-
     function loadPropMod(name) {
         let pmod=React.lazy(() => { 
                 try { 
@@ -202,7 +155,7 @@ export default function AutomationCondition(props) {
             <Grid item xs={props.wide ? 12 : 4 } >
                 <ListItem className={classes.listItem} >
                     <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-                    <ListItemText primary={props.device.friendlyName} secondary={props.device.endpointId} className={classes.deviceName}/>
+                    <ListItemText primary={props.device.friendlyName} secondary={props.device.endpointId} />
                     { props.remove ?
                         <ListItemSecondaryAction>
                             <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
@@ -218,7 +171,7 @@ export default function AutomationCondition(props) {
                 </ListItem>
             </Grid>
             <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
-                <ListItem className={classes.reducedButtonPad} >
+                <ListItem >
                     <Select className={classes.wideSelect} value={props.item.propertyName} onChange={(e) => handleChangePropertyName(e.target.value)} input={<BootstrapInput name="command" id="command-select" />} >
                     { props.device.properties().map(action => 
                         <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
@@ -228,7 +181,7 @@ export default function AutomationCondition(props) {
                 </ListItem>
             </Grid>
             <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
-                <ListItem className={classes.reducedButtonPad} >
+                <ListItem>
                     { renderSuspenseModule(props.item.propertyName) }
                 </ListItem>
             </Grid>

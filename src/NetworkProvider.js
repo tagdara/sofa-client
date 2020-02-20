@@ -3,12 +3,10 @@ import React, {useState, useEffect, useCallback, createContext} from 'react';
 const serverurl="https://"+window.location.hostname;
 
 export const useStream = (userToken) => {
-    const [token, setToken] = useState(userToken);
     const [eventSource, setEventSource] = useState(undefined)
-    const [connected, setConnected] = useState(false);
+    //const [connected, setConnected] = useState(false);
     const [subscribers, setSubscribers] = useState([])
     const [isConnecting, setIsConnecting] = useState(false)
-    const [attempts, setAttempts] = useState(0)
 
     const addSubscriber = useCallback(
         (subscriber) => {
@@ -25,23 +23,45 @@ export const useStream = (userToken) => {
 //        setSubscribers([...(new Set(sublist))])
 //    }
     
-    const streamStatus = () => {
-        return eventSource.status
+
+    function getStreamStatus() {
+        
+        if (eventSource) {
+            return eventSource.readyState
+        } else {
+            return 10
+        }
     }
+
+    function getConnected() {
+        if (eventSource!==undefined) {
+            if (eventSource.readyState===1) {
+                console.log('getconnected',true)
+                return true
+            }
+        }
+        console.log('getconnected',false)
+        return false
+    }
+
+    const streamStatus=getStreamStatus()
+    
+    const streamConnected = getConnected()
     
     const closeStream = () => {
-        setConnected(false)
+        //setConnected(false)
         setEventSource(undefined)
     }
 
     useEffect(() => {
         let unmounted = false;
+        console.log('connected',streamConnected, streamStatus)
 
         const connectStream = () => {
-            if (token && subscribers.length>0 && !isConnecting && attempts < 5) {
+            if (userToken && subscribers.length>0 && !isConnecting) {
                 setIsConnecting(true)
-                console.log('.. Connecting event source:', token, subscribers)
-                var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': token }, withCredentials: true })
+                console.log('.. Connecting event source:', userToken, subscribers)
+                var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': userToken }, withCredentials: true })
                 esource.addEventListener('message', dataHandler);
                 esource.addEventListener('error', errorHandler);
                 esource.addEventListener('open', openHandler);
@@ -50,13 +70,14 @@ export const useStream = (userToken) => {
         }
         
         const openHandler = () => {
-            setConnected(true)
+            console.log('SSE Opened')
+            //setConnected(true)
             setIsConnecting(false)
         }
 
         const errorHandler = () => {
             console.log('ERROR with EventSource')
-            setConnected(false)
+            //setConnected(false)
             //connectStream()
         }
 
@@ -69,7 +90,7 @@ export const useStream = (userToken) => {
             //setHeartbeat(Date.now())
         };
 
-        if (!unmounted && !isConnecting && !connected) {
+        if (!unmounted && !isConnecting && streamStatus!==1) {
             connectStream()
         }
             
@@ -77,9 +98,10 @@ export const useStream = (userToken) => {
             unmounted = true;
         };
         
-    }, [token, subscribers, isConnecting, connected]);
-
-    return { connected, streamStatus, setToken, closeStream, addSubscriber };
+    }, [ userToken, subscribers, isConnecting, streamConnected, streamStatus]);
+    
+    //return { connected, streamStatus, setToken, closeStream, addSubscriber };
+    return { streamConnected, streamStatus, closeStream, addSubscriber };
 };
 
 export const useApi = ( path, token, initialData ) => {
@@ -117,18 +139,20 @@ export const useApi = ( path, token, initialData ) => {
     }, [ path, token, initialData ]);
 
     return { isLoading, hasError, loggedIn, data: fetchedData };
+    
 };
 
 
 export const NetworkContext = createContext();
-
 
 export default function NetworkProvider(props) {
 
     const [loggedIn, setLoggedIn] = useState(true);
     const [connectError, setConnectError] = useState(false);
     const [token, setToken]= useState(getCookie('token'));
-    const { streamConnected, streamStatus, setStreamToken, closeStream, addSubscriber } = useStream(token, [])
+    const { streamConnected, streamStatus, closeStream, addSubscriber } = useStream(token, [])
+
+    console.log('streamConnected', streamConnected, streamStatus)
 
     function handleFetchErrors(response) {
         if (response.status===400) {

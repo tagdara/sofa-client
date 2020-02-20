@@ -1,5 +1,4 @@
-import React, { Suspense } from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, Suspense } from 'react';
 import { makeStyles, withStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
@@ -96,29 +95,15 @@ export default function AutomationAction(props) {
 
     const classes = useStyles();
     const [deviceSelect, setDeviceSelect] = useState(false);
-    const [autoInterface, setAutoInterface] = useState(undefined)
-    const [item, setItem]=useState(props.item)
-    const [propMod, setPropMod] = useState(loadPropMod(propertyFromDirective(controllerForDirective(item.command), item.command)))
+    //const [autoInterface, setAutoInterface] = useState(undefined)
+    //const [item, setItem]=useState(props.item)
+    const [propMod, setPropMod] = useState(loadPropMod(propertyFromDirective(controllerForDirective(props.command), props.command)))
+    let interfaceobj=new AutomationInterface(propertyFromDirective(props.item.controller, props.item.command), props.item.value, updateItemValue)
 
-//    useEffect(() => {
-//        if (item.value!==undefined) {
-//            save()
-//        }
-//    }, [ item ])
-    
-    useEffect(() => {
-        setAutoInterface(new AutomationInterface(propertyFromDirective(item.controller, item.command), item.value, updateItemValue, setDefault))
-    }, [item, setAutoInterface ])
-
-    function setDefault(val) {
-        setItem({...item, 'value': val })
-        save({...item, 'value': val })
-    }
     
     function updateItemValue(val) {
-        console.log('updating item',val, {...item, 'value': val })
-        setItem({...item, 'value': val })
-        save({...item, 'value': val })
+        console.log('updating item',val, {...props.item, 'value': val })
+        props.save({...props.item, 'value': val })
     }
 
     function errorBlock(modulename) {
@@ -171,13 +156,14 @@ export default function AutomationAction(props) {
     }
     
     function renderSuspenseModule( modulename ) {
+        console.log('render',modulename)
         if (propMod!==undefined) {
             if (propMod===null) {
                 return null
             }
             let Module=propMod
             return  <Suspense key={ modulename } fallback={ placeholder() }>
-                        <Module interface={ autoInterface } device={props.device} />
+                        <Module interface={ interfaceobj } device={props.device} />
                     </Suspense>
         } else {
             return <TextField value={'Loading...'} />
@@ -195,33 +181,21 @@ export default function AutomationAction(props) {
     }
 
     function handleChangeDirectiveName(newval) {
-        setItem({...item, controller:controllerForDirective(newval), command:newval, value: undefined})
         setPropMod(loadPropMod(propertyFromDirective(controllerForDirective(newval), newval)))
-        save({...item, controller:controllerForDirective(newval), command:newval, value: undefined})
-    }
-    
-    function save(newitem) {
-        if (newitem) {
-            //console.log('saving', props.index, newitem)
-            props.save(props.index, newitem)
-        } else {
-            //console.log('saving', props.index, item)
-            props.save(props.index, item)
-        }
+        props.save({...props.item, controller:controllerForDirective(newval), command:newval, value: undefined})
     }
     
     function selectDevice(newdevice) {
         setDeviceSelect(false)
         var newitem={}
-        if (newdevice.interfaces.includes(item.controller)) {
-            newitem={...item, name:newdevice.friendlyName, endpointId: newdevice.endpointId }
+        if (newdevice.interfaces.includes(props.item.controller)) {
+            newitem={...props.item, name:newdevice.friendlyName, endpointId: newdevice.endpointId }
         } else {
             setPropMod(loadPropMod(propertyFromDirective(newdevice.interfaces[0], directives(newdevice)[0])))
-            newitem={...item, name:newdevice.friendlyName, endpointId: newdevice.endpointId, controller:newdevice.interfaces[0], command:directives(newdevice)[0], value: undefined}
+            newitem={...props.item, name:newdevice.friendlyName, endpointId: newdevice.endpointId, controller:newdevice.interfaces[0], command:directives(newdevice)[0], value: undefined}
             //newitem={...item, name:newdevice.friendlyName, endpointId: newdevice.endpointId, controller:undefined, command:undefined, value: undefined}
         }
-        setItem(newitem)
-        save(newitem)
+        props.save(newitem)
     }
     
     function closeDialog() {
@@ -265,7 +239,7 @@ export default function AutomationAction(props) {
             { props.device!==undefined &&
                 <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
                     <ListItem>
-                        <Select className={classes.wideSelect} value={item.command ? item.command : ''} onChange={(e) => handleChangeDirectiveName(e.target.value)} input={<BootstrapInput name="command" id="command-select" />} >
+                        <Select className={classes.wideSelect} value={props.item.command ? props.item.command : ''} onChange={(e) => handleChangeDirectiveName(e.target.value)} input={<BootstrapInput name="command" id="command-select" />} >
                         { directives().map(action => 
                             <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
                         )}
@@ -276,8 +250,8 @@ export default function AutomationAction(props) {
             { props.device!==undefined &&
                 <Grid item xs={props.wide ? 12 : 4} className={classes.flex} >
                     <ListItem >
-                        { autoInterface ? 
-                            renderSuspenseModule(autoInterface.propName)
+                        { interfaceobj ? 
+                            renderSuspenseModule( interfaceobj.propName)
                             : null
                         }
                     </ListItem>

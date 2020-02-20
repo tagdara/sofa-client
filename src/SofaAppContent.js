@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 export default function SofaAppContent(props) {
     
     const { layout, isMobile, renderSuspenseModule } = useContext(LayoutContext);
-    const { connectError, streamError, loggedIn } = useContext(NetworkContext);
+    const { streamStatus, streamConnected, connectError, loggedIn } = useContext(NetworkContext);
     const classes = useStyles();
 
     return (
@@ -68,10 +68,10 @@ export default function SofaAppContent(props) {
     				{ renderSuspenseModule(layout.page ? layout.page : layout.data.mobile, layout.props) }
                     </ErrorBoundary>
                 }
-                { (streamError || connectError) && 
+                { !streamConnected && 
                     <Grid container spacing={2} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                         <ListItem>
-                            <ListItemText primary="Network not ready" secondary={streamError ? "Server Side Event Stream not connected" : null } />
+                            <ListItemText primary="Network not ready" secondary={"Server Side Event Stream not connected:" +streamConnected+" " +streamStatus } />
                         </ListItem>
                     </Grid>
                 }

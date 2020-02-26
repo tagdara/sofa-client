@@ -40,7 +40,7 @@ export default function AutomationsLayout(props) {
     const adding = false
     const editing = false
     const [remove, setRemove] = useState(false)
-    const [favorites, setFavorites] = useState(true)
+    const [favorites, setFavorites] = useState(props.favorites)
     const [scheduled, setScheduled] = useState(false)
 
     const serverurl="https://"+window.location.hostname;
@@ -170,3 +170,7 @@ export default function AutomationsLayout(props) {
         </React.Fragment>
     )
 };
+
+AutomationsLayout.defaultProps = {
+    favorites: true,
+}

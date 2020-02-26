@@ -13,12 +13,12 @@ export default function PowerLevel(props) {
     }, [props.interface])
     
     function handlePowerLevelChange(event) {
-        props.interface.directive('SetPowerLevel', { "powerLevel" : event })
+        props.interface.directive('SetPowerLevel', event)
     }; 
 
     return (
         <SmallSlider
-            value={ props.interface.powerLevel.value } unit={"%"}
+            value={ parseInt(props.interface.powerLevel.value) } unit={"%"}
             min={0} max={100} step={10}
             change={ handlePowerLevelChange }
             disabled={props.device.hasOwnProperty('PowerController') ? !props.device.PowerController.powerState.value : false}

@@ -32,14 +32,14 @@ const useStyles = makeStyles(theme => {
         fab: {
             position: "fixed",
             bottom: 16,
-            right: 16,
+            left: "calc(100vw - 80px)",
             marginBottom: "env(safe-area-inset-bottom)",
             zIndex: 1200,
         },
         fabBack: {
             position: 'fixed',
             bottom: 24,
-            right: 80,
+            left: "calc(100vw - 128px)",
             padding: 0,
             marginBottom: "env(safe-area-inset-bottom)",
             boxSizing: "content-box",

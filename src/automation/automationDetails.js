@@ -13,8 +13,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import LowPriorityIcon from '@material-ui/icons/LowPriority';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
 
-
-
 const useStyles = makeStyles({
     
     root: {
@@ -40,7 +38,7 @@ export default function AutomationDetails(props) {
         <GridItem nolist={true} elevation={0} wide={true}>
             <Grid item xs={ 12 } className={classes.root}>
                 <ListItem>
-                    <ListItemText primary={"Last Run"} secondary={<Moment format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment>} />
+                    <ListItemText primary={"Last Run"} secondary={ props.automation.lastrun!=='never' ? <Moment format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment> : 'Never'} />
                     <Button onClick={() => runAutomation()}><PlaylistPlayIcon /></Button>
                     <Button onClick={() => runAutomation(false)}><LowPriorityIcon /></Button>
                 </ListItem>

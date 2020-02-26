@@ -34,8 +34,8 @@ export default function DeviceDialog(props) {
 
         if (devtype==='all' || devtype==='') {
             var devs=devicesByCategory('ALL', nameFilter)
-            return devs
-            //return devs.slice(0, limit)
+            //return devs
+            return devs.slice(0, limit)
         }
         return devicesByCategory(devtype)
     }
@@ -66,7 +66,7 @@ export default function DeviceDialog(props) {
     
     return (
         <SofaDialog open={props.open} close={props.close} maxWidth={'lg'} >
-            <GridSection name={"Devices"} secondary={<Button onClick={props.close}>Close</Button>} >
+            <GridSection name={"Devices"} secondary={<Button onClick={props.close}>Close</Button>} scroll={true} tall={true}>
             <GridSearch wide={true} searchValue={nameFilter} setSearchValue={setNameFilter} />
                 { filterByType('all').map((device) =>
                     <Device key={ device.endpointId } device={device} mode={mode} controllers={controllers} select={props.select ? props.select : executeDirective} directives={directives} showDevice={setShowDevice} />

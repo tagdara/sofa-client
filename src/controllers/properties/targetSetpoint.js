@@ -3,8 +3,6 @@ import SmallSlider from '../../SmallSlider';
 
 export default function TargetSetpoint(props) {
     
-    console.log( props.interface)
-   
     useEffect(() => {
         // Set default if passed undefined
         if (props.interface.targetSetpoint.deepvalue()===undefined) {
@@ -20,7 +18,7 @@ export default function TargetSetpoint(props) {
 
     return (
         <SmallSlider
-            value={ props.interface.targetSetpoint.deepvalue() } unit={"°"}
+            value={ props.interface.targetSetpoint.deepvalue() ? parseInt(props.interface.targetSetpoint.deepvalue()) : 70 } unit={"°"}
             min={60} max={90} step={1}
             change={ handleTargetSetpointChange }
         />

@@ -37,7 +37,7 @@ export default function DetectionState(props) {
 
     function handleDetectionStateChange(event) {
         //props.interface.directive('SetDetectionState', { "detectionState" : event.target.value })
-        props.interface.directive(event.target.value)
+        props.interface.directive('SetDetectionState', event.target.value)
 
     }; 
     

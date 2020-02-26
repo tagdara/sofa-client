@@ -10,7 +10,7 @@ export default function AutomationHeader(props) {
     return (    
         <GridSection name={"Automation"} >
             <AutomationTitle name={props.name} save={props.save} >
-                <ToggleButton buttonState={props.favorite} onClick={ () => props.saveFavorite(!props.favorite) }>
+                <ToggleButton buttonState={props.favorite ? 'on' : 'off' } onClick={ () => props.saveFavorite(!props.favorite) }>
                     <FavoriteIcon fontSize="small" />
                 </ToggleButton>
             </AutomationTitle>

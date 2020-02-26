@@ -27,7 +27,7 @@ export default function SummaryLayout(props) {
 
     useEffect(() => {
         setMasterButtonState('System')
-    },[setMasterButtonState]);    
+    }, [ setMasterButtonState ] );    
     
     return (    
         <GridSection name={"Summary"} >

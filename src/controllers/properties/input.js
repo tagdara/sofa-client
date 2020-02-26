@@ -24,7 +24,7 @@ const BootstrapInput = withStyles(theme => ({
 }))(InputBase);
 
 export default function Input(props) {
-
+    
     useEffect(() => {
         // Set default if passed undefined
         if (props.interface.input.value===undefined) {
@@ -37,7 +37,7 @@ export default function Input(props) {
     return (
         <Select value={props.interface.input.value ? props.interface.input.value : ""} onChange={(e) => props.interface.directive('SetInput', {'input': e.target.value }) } input={<BootstrapInput name="input" id="input" />} >
             { props.device.InputController.inputs.map( inp => 
-                <MenuItem value={inp.name}>{inp.name}</MenuItem>
+                <MenuItem key={inp.name} value={inp.name}>{inp.name}</MenuItem>
             )}
         </Select>
     );

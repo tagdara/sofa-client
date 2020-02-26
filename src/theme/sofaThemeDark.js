@@ -23,6 +23,11 @@ export default createMuiTheme({
             page: "#111",
             hover: "rgba(188, 54, 12, 0.1)",
             paper: "#222",
+            card: "#262626",
+        },
+        dot: {
+            off: "#444",
+            on: deepOrange[500],
         },
         type: "dark",
     }

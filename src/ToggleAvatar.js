@@ -15,6 +15,10 @@ const useStyles = makeStyles(theme => {
             color: theme.palette.primary.contrastText,
             background: theme.palette.primary.main,
         },
+        light: {
+            color: theme.palette.primary.contrastText,
+            background: theme.palette.primary.light,
+        },
         notready: {
             color: theme.palette.primary.contrastText,
             backgroundColor: "#bbb",
@@ -78,9 +82,22 @@ const useIconStyles = makeStyles(theme => {
             color: "#E65100"
         },
         base: {
-            padding: "0 8px",
-            fontSize: 20,
-        }   
+            padding: 0,
+            minWidth: 56,
+        },
+        reverse: {
+            justifyContent: "flex-end",
+            display: "flex",
+        },
+        sizeSmall: {
+            minWidth: 36,
+            fontSize: 10,
+        },
+        avatarSmall: {
+            height: 28,
+            width: 28,
+            fontSize: 14,
+        }
     }
 });
 
@@ -90,13 +107,13 @@ export default function ToggleAvatar(props) {
     const iconClasses = useIconStyles();
     
     return (
-        <ListItemAvatar onClick={props.onClick} className={ props.noback ?  classNames(iconClasses.base, iconClasses[props.avatarState]) : ''}>
+        <ListItemAvatar onClick={props.onClick} className={ classNames(props.small ? iconClasses.sizeSmall : iconClasses.base, props.noback ? classes.none : iconClasses[props.avatarState], props.reverse && iconClasses.reverse )}>
             { props.noback ?
                 <>
                     {props.children}
                 </>
             :
-                <Avatar className={ classes[props.avatarState] } onClick={props.onClick}>
+                <Avatar className={ classNames(props.small && iconClasses.avatarSmall, classes[props.avatarState] )} onClick={props.onClick}>
                     {props.children}
                 </Avatar>
             }
@@ -105,4 +122,8 @@ export default function ToggleAvatar(props) {
     )
 
 }
-
+ToggleAvatar.defaultProps = {
+    reverse: false,
+    noback: false,
+    small: false,
+}

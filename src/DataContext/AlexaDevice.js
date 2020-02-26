@@ -41,13 +41,17 @@ export default class AlexaDevice {
     }
     
     responseHandler(response) {
-        if (response.hasOwnProperty('context')) {
+        // This does not actually update the device.  Since this update is happening inside the object
+        // react ignores it.  This should be reviewed as data management handled in the future.
+        if (response.hasOwnProperty('context') && response.context.hasOwnProperty('properties')) {
+            console.log('resp', response.context)
             for (var i = 0; i < response.context.properties.length; i++) {
                 var prop=response.context.properties[i]
                 var interfacename=prop.namespace.split('.')[1]
                 if (prop.hasOwnProperty('instance')) {
                     interfacename=prop.instance.split('.')[1]
                 }
+                //console.log('setting', interfacename, prop.name, prop['value'])
                 this[interfacename][prop.name]['value']=prop['value']
                 this[interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
             }

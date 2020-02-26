@@ -36,11 +36,9 @@ export const useStream = (userToken) => {
     function getConnected() {
         if (eventSource!==undefined) {
             if (eventSource.readyState===1) {
-                console.log('getconnected',true)
                 return true
             }
         }
-        console.log('getconnected',false)
         return false
     }
 
@@ -55,7 +53,6 @@ export const useStream = (userToken) => {
 
     useEffect(() => {
         let unmounted = false;
-        console.log('connected',streamConnected, streamStatus)
 
         const connectStream = () => {
             if (userToken && subscribers.length>0 && !isConnecting) {
@@ -151,8 +148,6 @@ export default function NetworkProvider(props) {
     const [connectError, setConnectError] = useState(false);
     const [token, setToken]= useState(getCookie('token'));
     const { streamConnected, streamStatus, closeStream, addSubscriber } = useStream(token, [])
-
-    console.log('streamConnected', streamConnected, streamStatus)
 
     function handleFetchErrors(response) {
         if (response.status===400) {

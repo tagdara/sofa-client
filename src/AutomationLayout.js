@@ -5,6 +5,7 @@ import { NetworkContext } from './NetworkProvider';
 import AutomationSave from "./automation/automationSave"
 import AutomationHeader from "./automation/automationHeader"
 import AutomationColumn from "./AutomationColumn"
+import GridSection from './GridSection';
 
 export default function AutomationLayout(props) {
 
@@ -18,7 +19,7 @@ export default function AutomationLayout(props) {
     const [saved, setSaved] = useState(true)
     const [title, setTitle] = useState(props.name)
     const serverurl="https://"+window.location.hostname;
-    const { applyLayoutCard } = useContext(LayoutContext);
+    const { applyLayoutCard, isMobile } = useContext(LayoutContext);
     const { getJSON, postJSON } = useContext(NetworkContext);
 
     useEffect(() => {
@@ -96,8 +97,12 @@ export default function AutomationLayout(props) {
         }
 
         console.log('Propsname',props.name)
-        getJSON('list/logic/automation/'+props.name)
-            .then(result=>loadAutomation(result));
+        if (props.name!==undefined) {
+            getJSON('list/logic/automation/'+props.name)
+                .then(result=>loadAutomation(result));
+        } else {
+            console.log('This is a blank automation.')
+        }
     }, [props.name, props.item, gotReturn, props.type, serverurl, getJSON]);
 
 
@@ -107,6 +112,7 @@ export default function AutomationLayout(props) {
         if (itemtype==='title') {
             setTitle(items)
         } else if (itemtype==='favorite') {
+            console.log('SetFavorite',items)
             setFavorite(items)
         } else if (itemtype==='action') {
             setActions(items)
@@ -122,7 +128,6 @@ export default function AutomationLayout(props) {
     }
     
     function newSaveAutomation() {
-        
         postJSON('save/logic/automation/'+title, {"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules, "favorite": favorite})
             .then(setSaved(true))
     }
@@ -137,14 +142,14 @@ export default function AutomationLayout(props) {
     }
 
     return (
-        <React.Fragment>
-            <AutomationHeader name={title} save={saveType} favorite={favorite? "on": "off"} saveFavorite={saveFavorite} automation={automation} />
+        <GridSection xs={isMobile ? 12 : 9} background={false}>
+            <AutomationHeader name={title} save={saveType} favorite={favorite} saveFavorite={saveFavorite} automation={automation} />
             <AutomationColumn items={schedules} saved={saved} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
             <AutomationColumn items={triggers} saved={saved} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'AutomationTrigger'} itemtype={"trigger"} />
             <AutomationColumn items={conditions} saved={saved} save={saveType} automationName={props.name} name={"Conditions"} selector={'DevicePropertyLayout'} itemModule={'AutomationCondition'} itemtype={"condition"} />
             <AutomationColumn items={actions} saved={saved} save={saveType} automationName={props.name} name={"Actions"} selector={'DeviceDirectiveLayout'} itemModule={'AutomationAction'} itemtype={"action"} />
             <AutomationSave name={title} saved={saved} save={newSaveAutomation} goBack={goBack} />
-        </React.Fragment>
+        </GridSection>
     )
     
 };

@@ -68,13 +68,15 @@ class AutomationInterface {
     constructor(property, value, setPropertyValue, setDefault) {
         this[property]=new AutomationControllerProperty(value)
         this.propName=[property]
-        this.setDefault=setDefault
+        if (setDefault!==undefined) {
+            this.setDefault=setDefault
+        }
         this.setPropertyValue=setPropertyValue
     }
     
-    directive(payload={}, cookie={}) {
-        if (payload==='TurnOn') { payload="ON"}
-        if (payload==='TurnOff') { payload="OFF"}
+    directive(command, payload={}, cookie={}, instance={}) {
+        if (command==='TurnOn') { payload="ON"}
+        if (command==='TurnOff') { payload="OFF"}
         console.log('update payload', payload, cookie)
         this.setPropertyValue(payload)
     }

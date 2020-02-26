@@ -2,6 +2,7 @@ import React,{ useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
@@ -15,10 +16,12 @@ import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 import SofaSlider from '../SofaSlider'
 import GridItem from '../GridItem'
 import ToggleAvatar from '../ToggleAvatar'
-import ToggleChip from '../ToggleChip'
 import TvRemote from './TvRemote';
 import ErrorBoundary from '../ErrorBoundary';
 import ModeLines from '../ModeLines'
+
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 
 const useStyles = makeStyles({
     list: {
@@ -28,7 +31,9 @@ const useStyles = makeStyles({
         flexWrap: "wrap",
         justifyContent: "flex-end",
     },
-
+    select: {
+        minWidth: "50%",
+    },
 });
 
 export default function Television(props) {
@@ -105,13 +110,9 @@ export default function Television(props) {
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
+                <ListItemIcon onClick={ () => setShowDetail(!showDetail) } ><TvIcon /></ListItemIcon>
             <ErrorBoundary>
-                <ToggleAvatar noback={true} onClick={ () => setShowDetail(!showDetail) } avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }>
-                    <TvIcon />
-                </ToggleAvatar>
-            </ErrorBoundary>
-            <ErrorBoundary>
-                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={props.device.InputController.input.value}/>
+                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={props.device.PowerController.powerState.value!=='ON' ? 'Off' : props.device.InputController.input.value}/>
             </ErrorBoundary>
                 <ListItemSecondaryAction>
                     { props.device.PowerController.powerState.value!=='ON' ? null :
@@ -135,15 +136,16 @@ export default function Television(props) {
         }
         { showDetail &&
             <ListItem className={classes.bottomListItem}>
-                
                 <ListItemText primary={"Input"} />
-                { getInputs().map(inp => 
-                    <ToggleChip key = {inp} label = { inp } chipState={ props.device.InputController.input.value===inp ? "on" : "off" } onClick={ (e) => handleInput(e, inp)} />
-                )}
+                <Select disabled={props.device.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty value={props.device.InputController.input.value ? props.device.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
+                    { getInputs().map(inp =>
+                        <MenuItem key={inp} value={inp}>{inp}</MenuItem>
+                    )}
+                </Select>
             </ListItem>
         }
         { showDetail &&
-            <ModeLines device={props.device} />
+            <ModeLines disabled={props.device.PowerController.powerState.value!=='ON'} device={props.device} />
         }
         { showRemote &&
             <ListItem className={classes.remoteListItem}>

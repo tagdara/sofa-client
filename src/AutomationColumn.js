@@ -67,6 +67,7 @@ export default function AutomationColumn(props) {
     }
 
     function save(index, item) {
+        console.log('column saving',index,item)
         var newitems=[...props.items]
         newitems[index]=item
         props.save(props.itemtype, newitems)
@@ -75,10 +76,12 @@ export default function AutomationColumn(props) {
     
     function moveUp(index) {
         if (index-1>=0) {
+            console.log('moving up item',index,props.items[index], props.items)
             var newitems=[...props.items]
             var element = newitems[index];
             newitems.splice(index, 1);
             newitems.splice(index-1, 0, element);
+            console.log('moved up item', newitems[index-1], newitems)
             props.save(props.itemtype, newitems)
         }
     }

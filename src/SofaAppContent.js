@@ -19,9 +19,8 @@ const useStyles = makeStyles({
     controlArea: {
         margin: "8px auto",
         maxWidth: 1440,
+        width: "100vw",
         boxSizing: "border-box",
-        overflowY: "auto",
-        width: "100%",
     },
     mobileControlArea: {
         margin: "8px auto",
@@ -30,7 +29,6 @@ const useStyles = makeStyles({
         marginTop: "env(safe-area-inset-top)",
         paddingTop: 8,
         boxSizing: "border-box",
-        overflowY: "auto",
         minHeight: "100%",
         alignContent: "flex-start",
     },
@@ -75,7 +73,9 @@ export default function SofaAppContent(props) {
                         </ListItem>
                     </Grid>
                 }
-                <Typography className={ classes.version } variant="caption">{process.env.REACT_APP_VERSION}</Typography>
+                { layout.name==="Home" &&
+                    <Typography className={ classes.version } variant="caption">{process.env.REACT_APP_VERSION}</Typography>
+                }
             </Grid>
         :
         <>

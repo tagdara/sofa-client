@@ -24,9 +24,7 @@ const BootstrapInput = withStyles(theme => ({
 }))(InputBase);
 
 export default function ThermostatMode(props) {
-    
-    console.log('device', props.device, props.device.ThermostatController.configuration.supportedModes)
-    
+
     useEffect(() => {
         // Set default if passed undefined
         if (props.interface.thermostatMode.deepvalue()===undefined) {
@@ -38,7 +36,7 @@ export default function ThermostatMode(props) {
     }, [props.interface])
     
     return (
-        <Select value={props.interface.thermostatMode.deepvalue() ? props.interface.thermostatMode.deepvalue() : ""} onChange={(e) => props.interface.directive('SetThermostatMode', {'value': e.target.value }) } input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
+        <Select value={props.interface.thermostatMode.deepvalue() ? props.interface.thermostatMode.deepvalue() : ""} onChange={(e) => props.interface.directive({'value': e.target.value }) } input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
             { props.device.ThermostatController.configuration.supportedModes.map( mode => 
                 <MenuItem key={mode} value={mode}>{mode}</MenuItem>
             )}

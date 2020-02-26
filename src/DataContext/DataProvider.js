@@ -103,9 +103,13 @@ export default function DataProvider(props) {
     }, [devices]);
 
     useEffect(() => {
+       addSubscriber(deviceDispatch)
+    }, []);
+
+
+    useEffect(() => {
         
         function getData() {
-            addSubscriber(deviceDispatch)
             getJSON('directives')
                 .then(result=>setDirectives(result))
                 //.then(result=>console.log('done getting directives'));

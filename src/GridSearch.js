@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => {
             minHeight: 80,
             flexBasis: 0,
             position: "relative",
+            overflowY: "auto",
         },
         thinmargin: {
             margin: 2,

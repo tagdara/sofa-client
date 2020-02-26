@@ -7,9 +7,13 @@ import Slide from  '@material-ui/core/Slide';
 
 const useStyles = makeStyles({
 
-    dialog: { height : "100%", },
-
+    dialogPaper: {
+        minHeight: '90vh',
+        maxHeight: '90vh',
+        overflowX: "hidden",
+    },
 });
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
@@ -20,13 +24,14 @@ function SofaDialog(props) {
     const classes = useStyles();
     
     return (
-        <Dialog className={classes.dialog}
+        <Dialog
             fullScreen={props.fullScreen}
             fullWidth={props.fullWidth}
             maxWidth={props.maxWidth}
             open={props.open}  
             onClose={props.close}
             TransitionComponent={Transition}
+            classes={{ paper: classes.dialogPaper }}
         >
             {props.children}
         </Dialog>

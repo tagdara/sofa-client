@@ -44,41 +44,41 @@ const useStyles = makeStyles({
 export default function SmallSlider(props) {
     
     const classes = useStyles();
-    const [value, setValue] = useState(props.value)
+    const [val, setVal] = useState(props.value)
     
     useEffect(() => {
-        setValue(props.value)
+        setVal(props.value)
     }, [props.value]);
 
     
-    function handlePreChange(event, value) {
-        setValue(value);
+    function handlePreChange(event, newval) {
+        setVal(newval);
         if (props.preChange) {
-            props.preChange(value);
+            props.preChange(newval);
         }
     }; 
 
-    function handleChange(event,value) {
-        props.change(value);
+    function handleChange(event,newval) {
+        props.change(newval);
     }; 
    
     function unitDisplay() {
-        if (Array.isArray(value)) {
-            return Math.floor(value[0])+' - '+ Math.floor(value[1])+props.unit
+        if (Array.isArray(val)) {
+            return Math.floor(val[0])+' - '+ Math.floor(val[1])+props.unit
         } else {
-            return Math.floor(value)+props.unit
+            return Math.floor(val)+props.unit
         }
     }
-   
+    
     return (
         <>
             <Slider
                 className={classes.small}
-                value={ value===undefined ? 0 : value } step={props.step} 
+                value={ val===undefined ? 0 : val } step={props.step} 
                 min={props.min} max={props.max}
                 onChange={handlePreChange}
                 onChangeCommitted={handleChange}
-                disabled={ value===undefined || props.disabled }
+                disabled={ val===undefined || props.disabled }
             />
             { props.unit ?
                 <Typography variant="caption" className={classes.smallLabel} >{unitDisplay()}</Typography>

@@ -27,7 +27,7 @@ export const LayoutContext = createContext({});
 
 export const LayoutProvider = (props) => {
 
-    const { getJSON } = useContext(NetworkContext);
+    const { getJSON, loggedIn } = useContext(NetworkContext);
     const mobileBreakpoint = 800
     const isMobile = window.innerWidth <= mobileBreakpoint;
     const [layouts, setLayouts] = useState(undefined);     
@@ -52,10 +52,12 @@ export const LayoutProvider = (props) => {
                 return
             }
             if (isMobile) {
-                if (layouts['Home'].hasOwnProperty('mobile')) {
+                if (layout.name==="Home" && layouts['Home'].hasOwnProperty('mobile') && layout.page===(layouts['Home'].mobile)) {
+                    setMasterButtonState('System')
+                } else {
                     setMasterButtonState('Home')
-                    return
                 }
+                return
             }
             var newLayout={"name":"Home", "props":{}, "data":layouts["Home"] }
             setLayout(newLayout )
@@ -63,7 +65,7 @@ export const LayoutProvider = (props) => {
             return
         }
         return
-    },[layouts, isMobile]);
+    },[ layouts, isMobile ]);
 
 
     useEffect(() => {    
@@ -89,24 +91,26 @@ export const LayoutProvider = (props) => {
         }        
     
         function getModulesForLayout(currentLayout) {
-            if (layout.data.type==='pages') {
-                if (isMobile) {
-                    if (currentLayout.hasOwnProperty('page')) {
-                        if (currentLayout.data.hasOwnProperty('mobile') && currentLayout.page===currentLayout.data.mobile) {
+            if (loggedIn) {
+                if (layout.data.type==='pages') {
+                    if (isMobile) {
+                        if (currentLayout.hasOwnProperty('page')) {
+                            if (currentLayout.data.hasOwnProperty('mobile') && currentLayout.page===currentLayout.data.mobile) {
+                                moduleDispatch([currentLayout.data.mobile])
+                            } else {
+                                addPageModules(currentLayout.page, currentLayout)
+                            }
+                        } else if (currentLayout.data.hasOwnProperty('mobile')) {
                             moduleDispatch([currentLayout.data.mobile])
                         } else {
-                            addPageModules(currentLayout.page, currentLayout)
+                            addPageModules(Object.keys(currentLayout.data.pages)[0], currentLayout)
                         }
-                    } else if (currentLayout.data.hasOwnProperty('mobile')) {
-                        moduleDispatch([currentLayout.data.mobile])
                     } else {
-                        addPageModules(Object.keys(currentLayout.data.pages)[0], currentLayout)
+                        addPagesModules(layout.name, currentLayout)
                     }
                 } else {
-                    addPagesModules(layout.name, currentLayout)
+                    moduleDispatch([layout.name]) 
                 }
-            } else {
-                moduleDispatch([layout.name]) 
             }
         }
         
@@ -115,7 +119,6 @@ export const LayoutProvider = (props) => {
     }, [ layout, isMobile ])
     
     function goHome() {
-        console.log('gohome to',layouts['Home'])
         var newLayout={"name":'Home', "props":{}, "data":layouts['Home'], "page":layouts['Home']['order'][0]}
         if (isMobile && layouts['Home'].hasOwnProperty('mobile')) {
             console.log('setting home to mobile')
@@ -171,10 +174,8 @@ export const LayoutProvider = (props) => {
     }
 
     function applyHomePage(newPage) {
-        console.log('Apply home page',newPage)
         setMasterButtonState('Home')
         var newLayout={"name":"Home", "props":layout.props, "data":layouts['Home'], "page":newPage}
-        console.log('Apply home page',newPage, newLayout)
         setLayout(newLayout)
         writeLayoutCookie(newLayout)
     }
@@ -199,7 +200,6 @@ export const LayoutProvider = (props) => {
                 cookieLayout.page=cookieLayout.data.mobile
             }
         }
-        
         return cookieLayout
     }    
     
@@ -222,7 +222,7 @@ export const LayoutProvider = (props) => {
                         <Module key={ modulename } {...moduleprops} />
                     </React.Suspense>
         } else {
-            console.log('could not render', modulename)
+            //console.log('could not render', modulename)
             return null
         }
     }

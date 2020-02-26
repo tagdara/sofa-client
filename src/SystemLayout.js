@@ -6,6 +6,7 @@ import { NetworkContext } from './NetworkProvider';
 
 import GridSection from './GridSection';
 import GridItem from './GridItem';
+import AutomationsFavorites from './AutomationsFavorites';
 
 import TuneIcon from '@material-ui/icons/Tune';
 import CompareIcon from '@material-ui/icons/Compare';
@@ -45,7 +46,9 @@ export default function SystemLayout(props) {
         window.location.reload(true)
     }
 
-    return (    
+    return (  
+        <>
+        <AutomationsFavorites />
         <GridSection name={"System"} >
             <GridItem>
                 <ListItem onClick={() => applyTheme(colorScheme==='dark' ? 'light' : 'dark')}>
@@ -55,7 +58,7 @@ export default function SystemLayout(props) {
                     <ListItemText primary={colorScheme==='dark' ? 'Light Mode' : 'Dark Mode'} secondary={'Change interface color to suit your surroundings'} />
                 </ListItem>
             </GridItem>
-            <GridItem wide={props.wide}>
+            <GridItem>
                 <ListItem onClick={() => reloadPWA() }>
                     <ListItemIcon>
                         <RefreshIcon />
@@ -71,7 +74,7 @@ export default function SystemLayout(props) {
                     <ListItemText primary={'Adapters'} secondary={'Check the status or restart an adapter.'}/>
                 </ListItem>
             </GridItem>
-            <GridItem wide={props.wide}>
+            <GridItem>
                 <ListItem onClick={()=> devBuild('3000','_devsofa')}>
                     <ListItemIcon>
                         <DeveloperBoardIcon />
@@ -88,6 +91,14 @@ export default function SystemLayout(props) {
                 </ListItem>
             </GridItem>
             <GridItem>
+                <ListItem onClick={() => applyLayoutCard('DeviceLayout')}>
+                    <ListItemIcon>
+                        <TuneIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={'All Devices'} secondary={'Check the status of any device.'}/>
+                </ListItem>
+            </GridItem>
+            <GridItem>
                 <ListItem onClick={()=> logout()}>
                     <ListItemIcon>
                         <EditIcon />
@@ -95,11 +106,12 @@ export default function SystemLayout(props) {
                     <ListItemText primary={'Logout'} secondary={'Log out of Sofa.'}/>
                 </ListItem>
             </GridItem>
-            <GridItem wide={true}>
+            <GridItem>
                 <Typography>
                     {sofaConsole}
                 </Typography>
             </GridItem>
         </GridSection>
+        </>
     )
 };

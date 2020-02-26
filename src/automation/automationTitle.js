@@ -33,7 +33,7 @@ export default function AutomationTitle(props) {
             <TextField
                 fullWidth
                 label={'Name'}
-                value={props.name}
+                value={ props.name===undefined ? "" : props.name }
                 onChange={(e) => editTitle(e.target.value)}
             />
             {props.children}

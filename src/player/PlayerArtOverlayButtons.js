@@ -4,13 +4,11 @@ import { makeStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Fab from '@material-ui/core/Fab';
 
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
-import StopIcon from '@material-ui/icons/Stop';
+
 import SkipNextIcon from '@material-ui/icons/SkipNext';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import MaximizeIcon from '@material-ui/icons/Maximize';
 
 const useStyles = makeStyles({
 
@@ -20,8 +18,8 @@ const useStyles = makeStyles({
     },
     playButton: {
         position: "absolute",
-        bottom: 16,
-        right: 48,
+        bottom: 8,
+        left: 16,
     },
     stopButton: {
         position: "absolute",
@@ -30,15 +28,14 @@ const useStyles = makeStyles({
     },
     skipButton: {
         position: "absolute",
-        bottom: 20,
-        right: 4,
+        bottom: 12,
+        left: 64,
     },
     playersButton: {
         position: "absolute",
-        bottom: 20,
-        left: 16,
+        bottom: 12,
+        right: 16,
     },
-
     coverButton: {
         position: "absolute",
         bottom: 20,
@@ -55,28 +52,17 @@ const useStyles = makeStyles({
 export default function PlayerArtOverlayButtons(props) {
     
     const classes = useStyles();
-    const isMobile = window.innerWidth <= 800;
+
 
     return ( 
         <React.Fragment >
-            <IconButton color="primary" className={classes.minButton} onClick={ (e) => props.min(true)}>
-                <MaximizeIcon />
-            </IconButton>
-            <IconButton color="primary" className={classes.playersButton} onClick={ (e) => props.players(e)}>
+            <IconButton size={"small"} color="primary" className={classes.playersButton} onClick={ (e) => props.players(e)}>
                 <ViewModuleIcon />
             </IconButton>
-            { isMobile ? null :
-            <IconButton color="primary" className={classes.coverButton} onClick={ (e) => props.cover(e)}>
-                <FullscreenIcon />
-            </IconButton>
-            }
-            <IconButton className={classes.stopButton} onClick={ (e) => props.stop(e)}>
-                <StopIcon />
-            </IconButton>
-            <Fab color="primary" aria-label="play" className={classes.playButton} onClick={ (e) => props.playPause(e)}>
+            <Fab size={"small"} color="primary" aria-label="play" className={classes.playButton} onClick={ (e) => props.playPause(e)}>
                 { props.playbackState==='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
             </Fab>
-            <IconButton className={classes.skipButton} onClick={ (e) => props.skip(e)}>
+            <IconButton size={"small"} className={classes.skipButton} onClick={ (e) => props.skip(e)}>
                 <SkipNextIcon />
             </IconButton>
         </React.Fragment>

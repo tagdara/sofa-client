@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 import ErrorBoundary from './ErrorBoundary';
 import VirtualList from './other/VirtualList';
-import ComputerList from './other/ComputerList';
+//import ComputerList from './other/ComputerList';
 import ModeList from './other/ModeList';
 import DeviceList from './other/DeviceList';
 import GridSection from './GridSection';
@@ -38,31 +38,13 @@ export default function MoreDevicesLayout(props) {
             </GridSection>
             }
             { devicesByCategory('MODE') && 
-            <GridSection name={"Modes"} >
+            <GridSection name={"Modes"} show={false}>
                 <ErrorBoundary wide={props.wide}>
                     <ModeList devices={ devicesByCategory('MODE') } />
                 </ErrorBoundary>
 
             </GridSection>
             }
-            { devicesByCategory('PC') &&
-            <GridSection name={"Computers"} >
-                <ErrorBoundary wide={props.wide}>
-                    <ComputerList devices={ devicesByCategory('PC') }  />
-                </ErrorBoundary>
-
-            </GridSection>
-            }
-
-            { devicesByCategory('OTHER') &&
-            <GridSection name={"Services"} >
-                <ErrorBoundary wide={props.wide}>
-                    <DeviceList devices={ devicesByCategory('OTHER') } />
-                </ErrorBoundary>
-
-            </GridSection>
-            }
-
         </React.Fragment>
     )
 }

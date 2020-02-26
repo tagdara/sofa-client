@@ -2,10 +2,9 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Typography from '@material-ui/core/Typography';
-import ListItem from '@material-ui/core/ListItem';
 
-import CoverDimmer from './CoverDimmer';
 import Fade from '@material-ui/core/Fade';
+import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -13,8 +12,10 @@ const useStyles = makeStyles(theme => {
             width: "100%",
             maxHeight: 480,
             position: "relative",
-            padding: 0,
-            borderRadius: "4px 4px 0px 0px",
+            padding: "8px 0 0 8px",
+            borderRadius: "4px 0px 0px 0px",
+            height: "auto",
+            minHeight:100,
         },
         songTextBox: {
             position: "absolute",
@@ -25,8 +26,26 @@ const useStyles = makeStyles(theme => {
             flexDirection: "column",
             overflow: "hidden",
         },
+        songImageHolder: {
+            position: "relative",
+            padding: 0,
+            margin: 0,
+        },
         songTextHolder: {
-            margin: "0 auto",
+            paddingLeft: 16,
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            position: "relative",
+            height: "60%",
+        },
+        songButtonHolder: {
+            paddingLeft: 16,
+            display: "flex",
+            justifyContent: "flex-end",
+            flexDirection: "column",
+            position: "relative",
+            height: "40%",
         },
         songTitle: {
             fontSize:"3rem",
@@ -46,47 +65,50 @@ const useStyles = makeStyles(theme => {
         },
         imgItem: {
             padding: 0,
-            minHeight: 320,
-        }
+            width: "100%",
+            minWidth:"100%",
+        },
+        songText: {
+            width: "100%",
+        },
+        topbox: {
+            paddingBottom: 8,
+            borderBottom: "1px solid",
+            borderBottomColor: theme.palette.divider,
+        },
     }
 });
 
 export default function PlayerArtOverlay(props) {
     
     const classes = useStyles();
-    const [showOverlay, setShowOverlay] = useState(true);
     const [imageLoaded, setImageLoaded] = useState(false)
     const serverurl="https://"+window.location.hostname;
-    
-    function toggleOverlay() {
-        setShowOverlay(!showOverlay)
-    }
 
     return ( 
-        <ListItem className={classes.imgItem} onClick={ () => toggleOverlay()} >
-            <Fade in={ imageLoaded } >
-            <img
-                className={classes.bigcover}
-                src={ serverurl+props.art+"?time="+Date.now() }
-                title={ props.title }
-                alt={ props.title }
-                onClick={ () => toggleOverlay()}
-                onLoad={ () => setImageLoaded(true) }
-            />
-            </Fade>
-            { showOverlay &&
-                <React.Fragment>
-                    <CoverDimmer onClick={ () => toggleOverlay()} />
-                    <div className={classes.songTextBox}>
-                        <div className={classes.songTextHolder}>
-                            <Typography className={classes.songTitle} variant="h3">{props.title}</Typography>
-                            <Typography className={classes.songArtist} variant="h4">{props.artist}</Typography>
-                        </div>
-                    </div>
-                </React.Fragment>
-            }
-            {props.children}
-        </ListItem>
+        <Grid container className={classes.topbox} >
+            <Grid item xs={4} className={classes.songImageHolder}>
+                <Fade in={ imageLoaded } >
+                <img
+                    className={classes.bigcover}
+                    src={ serverurl+props.art+"?title="+props.title }
+                    title={ props.title }
+                    alt={ props.title }
+                    onClick={ (e) => props.cover(e)}
+                    onLoad={ () => setImageLoaded(true) }
+                />
+                </Fade>
+            </Grid>
+            <Grid item container xs={8} >
+                <Grid item xs={12} className={classes.songTextHolder}>
+                    <Typography variant="h5" className={classes.songText}>{props.title}</Typography>
+                    <Typography variant="h6" className={classes.songText}>{props.artist}</Typography>
+                </Grid>
+                <Grid item xs={12} className={classes.songButtonHolder}>
+                    {props.children}
+                </Grid>
+            </Grid>
+        </Grid>
     );
 }
 

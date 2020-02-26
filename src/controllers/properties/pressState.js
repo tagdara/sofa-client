@@ -36,7 +36,7 @@ export default function PressState(props) {
     }, [props.interface])
 
     function handlePressStateChange(event) {
-        props.interface.directive(event.target.value)
+        props.interface.directive('SetPressState', event.target.value)
     }; 
     
     return (

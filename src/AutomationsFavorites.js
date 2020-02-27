@@ -11,7 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 export default function AutomationsFavorites(props) {
 
-    const { applyLayoutCard } = useContext(LayoutContext);
+    const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
     const { deviceByEndpointId } = useContext(DataContext);
     const { getJSON } = useContext(NetworkContext);
 
@@ -30,6 +30,11 @@ export default function AutomationsFavorites(props) {
         auto.SceneController.directive('Activate')
         return true
     }
+    
+    function selectAutomation(automation) {
+        applyBackPage('SystemLayout',{})
+        applyLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
+    }    
 
     return (    
         <GridSection name={"Automations"} secondary={
@@ -40,7 +45,7 @@ export default function AutomationsFavorites(props) {
         >
         { Object.keys(automations).sort().map(automation => 
             ( automations[automation].favorite &&
-                <AutomationItem launcher={true} key={automation} icon={"base"} name={automation} automation={ automations[automation] } run={runAutomation} select={runAutomation} />
+                <AutomationItem allowEdit={false} launcher={true} key={automation} icon={"base"} name={automation} automation={ automations[automation] } run={runAutomation} select={selectAutomation} />
             )
         )}
         </GridSection>

@@ -43,19 +43,18 @@ export default class AlexaDevice {
     responseHandler(response) {
         // This does not actually update the device.  Since this update is happening inside the object
         // react ignores it.  This should be reviewed as data management handled in the future.
-        if (response.hasOwnProperty('context') && response.context.hasOwnProperty('properties')) {
-            console.log('resp', response.context)
-            for (var i = 0; i < response.context.properties.length; i++) {
-                var prop=response.context.properties[i]
-                var interfacename=prop.namespace.split('.')[1]
-                if (prop.hasOwnProperty('instance')) {
-                    interfacename=prop.instance.split('.')[1]
-                }
+        //if (response.hasOwnProperty('context') && response.context.hasOwnProperty('properties')) {
+        //    console.log('resp', response.context)
+        //    for (var i = 0; i < response.context.properties.length; i++) {
+        //        var prop=response.context.properties[i]
+        //        if (prop.hasOwnProperty('instance')) {
+        //            var interfacename=prop.instance.split('.')[1]
+        //         }
                 //console.log('setting', interfacename, prop.name, prop['value'])
-                this[interfacename][prop.name]['value']=prop['value']
-                this[interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
-            }
-        }
+            //    this[interfacename][prop.name]['value']=prop['value']
+             //   this[interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
+        //    }
+        //}
         return response
     }
     
@@ -79,6 +78,24 @@ export default class AlexaDevice {
 }
 
 export class AlexaController {
+    
+    directive(command, payload={}, cookie={}) {
+        const serverurl="https://"+window.location.hostname;
+        var header={"name": command, "namespace":this.namespace+"." + this.controller, "payloadVersion":"3", "messageId": this.device.newtoken(), "correlationToken": this.device.newtoken()}
+        if (this.hasOwnProperty('instance')) {
+            header.instance=this.instance
+        }
+        var endpoint={"endpointId": this.device.endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
+        var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
+        console.log('Sending device-based alexa command:',data)
+    
+        return fetch(serverurl+'/directive', { withCredentials: true, credentials: 'include', method: 'post',
+                    body: JSON.stringify(data)
+                })
+                    .then(res=>res.json())
+                    .then(res=>this.device.responseHandler(res))
+                    .then(res=> { return res;})
+    }
 
     constructor(device, data) {
         this.device=device
@@ -110,25 +127,10 @@ export class AlexaController {
                 this.propertyobjects.push(this[data.properties.supported[j].name])
             }
         }
+        
+        //console.log('This directive', [this.directive])
     }
     
-    directive(command, payload={}, cookie={}) {
-        const serverurl="https://"+window.location.hostname;
-        var header={"name": command, "namespace":this.namespace+"." + this.controller, "payloadVersion":"3", "messageId": this.device.newtoken(), "correlationToken": this.device.newtoken()}
-        if (this.hasOwnProperty('instance')) {
-            header.instance=this.instance
-        }
-        var endpoint={"endpointId": this.device.endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
-        var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
-        console.log('Sending device-based alexa command:',data)
-    
-        return fetch(serverurl+'/directive', { withCredentials: true, credentials: 'include', method: 'post',
-                    body: JSON.stringify(data)
-                })
-                    .then(res=>res.json())
-                    .then(res=>this.device.responseHandler(res))
-                    .then(res=> { return res;})
-    }
  
 }
 

@@ -25,6 +25,8 @@ const BootstrapInput = withStyles(theme => ({
 
 export default function Input(props) {
     
+    console.log('input props',props)
+    
     useEffect(() => {
         // Set default if passed undefined
         if (props.interface.input.value===undefined) {

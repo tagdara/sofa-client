@@ -9,8 +9,10 @@ import GridSection from './GridSection';
 
 export default function MoreDevicesLayout(props) {
 
-    const { devicesByCategory } = useContext(DataContext);
-    const switches = devsWithPowerState(devicesByCategory('SWITCH'))
+    const { deviceStatesByCategory } = useContext(DataContext);
+    const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))   
+    const modes = deviceStatesByCategory('MODE')
+    
     
     function devsWithPowerState(devs) {
         var outdevs=[]
@@ -37,10 +39,10 @@ export default function MoreDevicesLayout(props) {
 
             </GridSection>
             }
-            { devicesByCategory('MODE') && 
+            { modes && 
             <GridSection name={"Modes"} show={false}>
                 <ErrorBoundary wide={props.wide}>
-                    <ModeList devices={ devicesByCategory('MODE') } />
+                    <ModeList devices={ modes } />
                 </ErrorBoundary>
 
             </GridSection>

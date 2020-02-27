@@ -18,9 +18,9 @@ import GridItem from './GridItem';
 export default function AreaHero(props) {
 
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceByEndpointId, lightCount, sortByName, area } = useContext(DataContext);
+    const { deviceStateByEndpointId, lightCount, sortByName, area } = useContext(DataContext);
     const lightsOn = lightCount('on');
-    const thisarea = deviceByEndpointId('logic:area:'+area)
+    const thisarea = deviceStateByEndpointId('logic:area:'+area)
 
     function selectArea(name) {
         applyLayoutCard('AreaLayout',{"name": name})
@@ -33,7 +33,7 @@ export default function AreaHero(props) {
         var children=thisarea.AreaController.children.value
         if (children) {
             for (var i = 0; i < children.length; i++) {
-                var child=deviceByEndpointId(children[i])
+                var child=deviceStateByEndpointId(children[i])
                 if (child && child.displayCategories.includes('AREA')) {
                     areas.push(child)
                 }
@@ -49,7 +49,7 @@ export default function AreaHero(props) {
         var children=thisarea.AreaController.children.value
         if (children) {
             for (var i = 0; i < children.length; i++) {
-                var child=deviceByEndpointId(children[i])
+                var child=deviceStateByEndpointId(children[i])
                 if (child && child.displayCategories.includes('LIGHT')) {
                     areas.push(child)
                 }

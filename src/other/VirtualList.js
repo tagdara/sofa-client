@@ -5,14 +5,14 @@ import Shade from './Shade';
 
 export default function VirtualList(props) {
 
-    const { virtualDevices } = useContext(DataContext);
+    const { virtualDeviceStates } = useContext(DataContext);
 
     return (
-        virtualDevices ?
+        virtualDeviceStates ?
             <React.Fragment>
-                { Object.keys(virtualDevices).map((key, index) => (
-                    virtualDevices[key]['type']==='shade' ?
-                        <Shade key={ index } name={ key } endpointId={ virtualDevices[key].endpointId } commands={ virtualDevices[key].commands } />
+                { Object.keys(virtualDeviceStates).map((key, index) => (
+                    virtualDeviceStates[key]['type']==='shade' ?
+                        <Shade key={ index } name={ key } endpointId={ virtualDeviceStates[key].endpointId } commands={ virtualDeviceStates[key].commands } />
                         :null
                 ))}
             </React.Fragment>

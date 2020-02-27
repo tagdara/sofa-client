@@ -8,8 +8,8 @@ import TemperatureSensor from './thermostat/TemperatureSensor';
 export default function ThermostatHero(props) {
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceByFriendlyName } = useContext(DataContext);
-    const device = deviceByFriendlyName(props.Primary)
+    const { deviceStateByFriendlyName } = useContext(DataContext);
+    const device = deviceStateByFriendlyName(props.Primary)
         
     return (
         !device ? null :

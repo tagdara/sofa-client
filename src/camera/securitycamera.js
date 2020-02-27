@@ -109,22 +109,26 @@ export default function SecurityCamera(props) {
             setImageUri(data.payload.imageUri)
         }
         
-        props.camera.CameraStreamController.directive("InitializeCameraStreams", 
-            {
-                "cameraStreams": [
-                    {
-                        "protocol": "HLS",
-                        "resolution": {
-                            "width": 640,
-                            "height": 480
-                        },
-                        "authorizationType": "BASIC",
-                        "videoCodec": "H264",
-                        "audioCodec": "AAC"
-                    }
-                ]
-            }
-        ).then(response => updateUrlUri(response))
+        if (props.camera.CameraStreamController.hasOwnProperty('directive')) { 
+            props.camera.CameraStreamController.directive("InitializeCameraStreams", 
+                {
+                    "cameraStreams": [
+                        {
+                            "protocol": "HLS",
+                            "resolution": {
+                                "width": 640,
+                                "height": 480
+                            },
+                            "authorizationType": "BASIC",
+                            "videoCodec": "H264",
+                            "audioCodec": "AAC"
+                        }
+                    ]
+                }
+            ).then(response => updateUrlUri(response))
+        } else {
+            console.log('no directive in ', props.camera.CameraStreamController)
+        }
 
     }, [props.camera]);
 

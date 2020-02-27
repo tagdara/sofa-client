@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 
 export default function LightLayout(props) {
 
-    const { devicesByCategory, isReachable } = useContext(DataContext);
+    const { deviceStatesByCategory, isReachable } = useContext(DataContext);
     const classes = useStyles();
     const [filter, setFilter] = useState('ON');
     const [brightControl, setBrightControl] = useState(false)
@@ -41,7 +41,7 @@ export default function LightLayout(props) {
 
     function filterByType(filter) {
         var lights=[]
-        var all=devicesByCategory('LIGHT')
+        var all=deviceStatesByCategory('LIGHT')
         
         for (var i = 0; i < all.length; i++) {   
             if (filter.toLowerCase()==="all") { 

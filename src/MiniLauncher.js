@@ -13,8 +13,9 @@ import GridItem from './GridItem';
 export default function MiniLauncher(props) {
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { devicesByCategory } = useContext(DataContext);
-    const switches = devsWithPowerState(devicesByCategory('SWITCH'))
+    const { deviceStatesByCategory } = useContext(DataContext);
+    const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))
+
     
     function devsWithPowerState(devs) {
         var outdevs=[]

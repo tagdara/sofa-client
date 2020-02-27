@@ -225,11 +225,11 @@ export default function AutomationTrigger(props) {
         //save({...item, controller:controllerForDirective(newval), command:newval, value: undefined})
     }
 
-    function handleChangeDirectiveName(newval) {
-        setItem({...item, controller:controllerForDirective(newval), command:newval, value: undefined})
-        setPropMod(loadPropMod(propertyFromDirective(controllerForDirective(newval), newval)))
-        save({...item, controller:controllerForDirective(newval), command:newval, value: undefined})
-    }
+    //function handleChangeDirectiveName(newval) {
+    //    setItem({...item, controller:controllerForDirective(newval), command:newval, value: undefined})
+    //    setPropMod(loadPropMod(propertyFromDirective(controllerForDirective(newval), newval)))
+    //    save({...item, controller:controllerForDirective(newval), command:newval, value: undefined})
+    //}
     
     function save(newitem) {
         if (newitem) {

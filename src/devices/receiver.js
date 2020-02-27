@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { DataContext } from '../DataContext/DataProvider';
+import { DeviceContext } from '../DataContext/DeviceProvider';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -54,11 +54,11 @@ const useStyles = makeStyles(theme => {
 
 });
 
+
 export default function Receiver(props) {
 
     const classes = useStyles();
-    const { getModes } = useContext(DataContext);
-    const [mute, setMute] = useState(props.device.SpeakerController.mute.value);
+    const { getModes } = useContext(DeviceContext);
     const [showDetail, setShowDetail] = useState(props.device.PowerController.powerState.value==='ON');
 
     function handleVolumeChange(event) {
@@ -66,8 +66,7 @@ export default function Receiver(props) {
     }; 
 
     function handleMuteChange(event) {
-        setMute(event)
-        props.device.SpeakerController.directive('SetVolume', { "mute" : !mute} )
+        props.device.SpeakerController.directive('SetVolume', { "mute" : !props.device.SpeakerController.mute.value } )
     }; 
     
     function handlePowerChange(event) {

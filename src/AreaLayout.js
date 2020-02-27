@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 export default function AreaLayout(props) {
 
     const classes = useStyles();
-    const { deviceByEndpointId } = useContext(DataContext);
+    const { deviceStateByEndpointId } = useContext(DataContext);
     const { layout } = useContext(LayoutContext);
     
     const [edit, setEdit] = useState(false)
@@ -49,7 +49,7 @@ export default function AreaLayout(props) {
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
     const [newScene, setNewScene] = useState(false);
-    const area = deviceByEndpointId('logic:area:'+layout.props.name)
+    const area = deviceStateByEndpointId('logic:area:'+layout.props.name)
 
     function childrenByArea(filter) {
 
@@ -57,7 +57,7 @@ export default function AreaLayout(props) {
         try {
             var children=area.AreaController.children.value
             for (var i = 0; i < children.length; i++) {
-                var dev=deviceByEndpointId(children[i])
+                var dev=deviceStateByEndpointId(children[i])
                 if (!filter || filter==='ALL' || (dev && dev.displayCategories.includes(filter))) {
                     ads.push(dev)
                 }
@@ -107,7 +107,7 @@ export default function AreaLayout(props) {
             var allscenes=childrenByArea('SCENE_TRIGGER')
             var shortcutlist=[...area.AreaController.shortcuts.value].reverse()
             for (var j = 0; j < shortcutlist.length; j++) {
-                outscenes.push(deviceByEndpointId(shortcutlist[j]))
+                outscenes.push(deviceStateByEndpointId(shortcutlist[j]))
             }
     
             for (j = 0; j < allscenes.length; j++) {

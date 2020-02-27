@@ -99,11 +99,13 @@ class AutomationControllerProperty {
 
 export default function AutomationAction(props) {
     
+    console.log('action props', props)
+    
     const classes = useStyles();
     const [deviceSelect, setDeviceSelect] = useState(false);
     const pfd = propertyFromDirective(controllerForDirective(props.item.command), props.item.command)
     const [propMod, setPropMod] = useState(loadPropMod(pfd))
-    let interfaceobj=new AutomationInterface(propertyFromDirective(props.item.controller, props.item.command), props.item.value, updateItemValue)
+    const interfaceobj=new AutomationInterface(propertyFromDirective(props.item.controller, props.item.command), props.item.value, updateItemValue)
     
     function updateItemValue(val) {
         console.log('updating item',val, {...props.item, 'value': val })

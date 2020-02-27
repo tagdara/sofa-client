@@ -6,8 +6,8 @@ import SecurityCamera from './camera/securitycamera';
 export default function CameraSelect(props) {
 
     //const [cameras, setCameras] = useState({});
-    const { devicesByCategory } = useContext(DataContext);
-    const cameras=devicesByCategory(['CAMERA'])
+    const { deviceStatesByCategory } = useContext(DataContext);
+    const cameras=deviceStatesByCategory(['CAMERA'])
     const [currentCamera, setCurrentCamera] = useState(cameras[0]);
 
     function nextCamera() {

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback, createContext} from 'react';
+import React, {useState, useEffect, createContext} from 'react';
 
 const serverurl="https://"+window.location.hostname;
 
@@ -7,22 +7,12 @@ export const useStream = (userToken) => {
     //const [connected, setConnected] = useState(false);
     const [subscribers, setSubscribers] = useState([])
     const [isConnecting, setIsConnecting] = useState(false)
-
-    const addSubscriber = useCallback(
-        (subscriber) => {
-            var sublist=[...subscribers]
-            sublist.push(subscriber)
-            setSubscribers([...(new Set(sublist))])
-        }, [subscribers]
-    )
-
-//    const addSubscriber = (subscriber) => {
-//        console.log('.. adding subscriber')
-//        var sublist=[...subscribers]
-//        sublist.push(subscriber)
-//        setSubscribers([...(new Set(sublist))])
-//    }
     
+    const addSubscriber = (subscriber) => {
+        // to see why this is needed for the closure issue
+        // https://stackoverflow.com/questions/58193166/usestate-hook-setter-incorrectly-overwrites-state
+        setSubscribers((subscribers) => ([...subscribers, subscriber] ));
+    };
 
     function getStreamStatus() {
         

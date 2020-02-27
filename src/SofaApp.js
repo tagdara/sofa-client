@@ -5,6 +5,7 @@ import MasterButton from "./MasterButton"
 import SofaAppContent from "./SofaAppContent";
 import ErrorBoundary from './ErrorBoundary'
 import CssBaseline from "@material-ui/core/CssBaseline";
+import DeviceProvider from './DataContext/DeviceProvider';
 import DataProvider from './DataContext/DataProvider';
 import { LayoutProvider } from './layout/NewLayoutProvider';
 import UserProvider from './user/UserProvider';
@@ -35,12 +36,14 @@ export default function SofaApp(props) {
             <NetworkProvider>
                 <UserProvider>
                     <LayoutProvider>
-                        <DataProvider>
-                            <MasterButton open={handleDrawerOpen} mobile={isMobile}/>
-                            <ErrorBoundary>
-                                <SofaAppContent />
-                            </ErrorBoundary>   
-                        </DataProvider>
+                        <DeviceProvider>
+                            <DataProvider>
+                                <MasterButton open={handleDrawerOpen} mobile={isMobile}/>
+                                <ErrorBoundary>
+                                    <SofaAppContent />
+                                </ErrorBoundary>   
+                            </DataProvider>
+                        </DeviceProvider>
                         <CssBaseline />
                     </LayoutProvider>
                 </UserProvider>

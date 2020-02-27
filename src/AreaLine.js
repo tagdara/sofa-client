@@ -20,10 +20,12 @@ const useStyles = makeStyles({
 export default function AreaLine(props) {
     
     const classes = useStyles();
-    const { deviceByEndpointId } = useContext(DataContext);
+    const { deviceStateByEndpointId } = useContext(DataContext);
 
     function runShortcut(level) {
-        var scene=deviceByEndpointId(props.area.AreaController.shortcuts.value[level])
+        console.log('lev',props.area.AreaController.shortcuts.value[level])
+        var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
+        console.log('scene',scene)
         scene.SceneController.directive('Activate')
     }
     

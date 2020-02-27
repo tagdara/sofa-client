@@ -11,8 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 export default function CameraLayout(props) {
     
-    const { devicesByCategory } = useContext(DataContext);
-    const cameras=devicesByCategory(['CAMERA'])
+    const { deviceStatesByCategory } = useContext(DataContext);
+    const cameras=deviceStatesByCategory(['CAMERA'])
 
     function openNVR() {
         var newurl="https://unifi-video.dayton.tech:7443"

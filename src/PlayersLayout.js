@@ -8,8 +8,8 @@ import PlayerBase from "./player/PlayerBase";
 
 export default function PlayersLayout(props) {
     const { applyLayout } = useContext(LayoutContext);
-    const { setUserPlayer, devicesByCategory } = useContext(DataContext);
-    const speakers = devicesByCategory('SPEAKER')
+    const { setUserPlayer, deviceStatesByCategory } = useContext(DataContext);
+    const speakers = deviceStatesByCategory('SPEAKER')
 
     function changePlayerHome(newplayer) {
         setUserPlayer(newplayer)

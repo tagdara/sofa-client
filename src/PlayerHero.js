@@ -47,18 +47,17 @@ function bestPlayerId(speakers, defaultPlayer, userPlayer) {
 
 export default function PlayerHero(props) {
     
-    const { userPlayer, defaultPlayer, setUserPlayer, devicesByCategory, deviceByEndpointId } = useContext(DataContext);
-    const speakers = devicesByCategory('SPEAKER')
+    const { userPlayer, defaultPlayer, setUserPlayer, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
+    const speakers = deviceStatesByCategory('SPEAKER')
     const [mini, setMini] = useState(false);
     const [playerId, setPlayerId] = useState('')
+    const player=deviceStateByEndpointId(playerId)
 
     useEffect(()=> {
         setPlayerId(bestPlayerId(speakers, defaultPlayer, userPlayer))
     }, [speakers, defaultPlayer, userPlayer] )
 
     function bigCard() {
-        
-        var player=deviceByEndpointId(playerId)
         
         if (mini || !player) {
             return false
@@ -74,9 +73,9 @@ export default function PlayerHero(props) {
             { playerId ?
             <>
                 { bigCard()===false ?
-                    <PlayerBase setUserPlayer={setUserPlayer} wide={props.wide} small={true} player={deviceByEndpointId(playerId)} />
+                    <PlayerBase setUserPlayer={setUserPlayer} wide={props.wide} small={true} player={player} />
                 :
-                    <PlayerCard wide={props.wide} player={deviceByEndpointId(playerId)} setMini={setMini} />
+                    <PlayerCard wide={props.wide} player={player} setMini={setMini} />
                 }
             </>
             :

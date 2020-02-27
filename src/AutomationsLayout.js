@@ -29,7 +29,7 @@ const useStyles = makeStyles({
 
 });
 
-export default function AutomationsLayout(props) {
+export function AutomationsLayout(props) {
 
     const classes = useStyles();
     const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
@@ -174,3 +174,6 @@ export default function AutomationsLayout(props) {
 AutomationsLayout.defaultProps = {
     favorites: true,
 }
+
+export default React.memo(AutomationsLayout);
+

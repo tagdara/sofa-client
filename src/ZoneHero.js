@@ -14,8 +14,8 @@ import ToggleAvatar from './ToggleAvatar';
 export default function ZoneHero(props) {
 
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { devicesByCategory } = useContext(DataContext);
-    const devices=devicesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
+    const { deviceStatesByCategory } = useContext(DataContext);
+    const devices=deviceStatesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
     const zoneOpen = zoneCount('DETECTED')>0;
     
     function getSecurityZones() {

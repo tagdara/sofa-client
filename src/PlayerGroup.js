@@ -18,9 +18,9 @@ import PlayerBase from "./player/PlayerBase";
 
 export default function PlayerGroup(props) {
 
-    const { devicesByCategory, deviceByEndpointId } = useContext(DataContext);
-    const speakers = devicesByCategory('SPEAKER')
-    const device = deviceByEndpointId(props.player)
+    const { deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
+    const speakers = deviceStatesByCategory('SPEAKER')
+    const device = deviceStateByEndpointId(props.player)
     
     function isLinked(name) {
 

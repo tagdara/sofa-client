@@ -8,9 +8,9 @@ import Thermostat from './thermostat/Thermostat';
 
 export default function ThermostatLayout(props) {
 
-    const { devicesByCategory } = useContext(DataContext);
-    const thermostats=devicesByCategory('THERMOSTAT')
-    const temperatureSensors=devicesByCategory('TEMPERATURE_SENSOR')
+    const { deviceStatesByCategory } = useContext(DataContext);
+    const thermostats=deviceStatesByCategory('THERMOSTAT')
+    const temperatureSensors=deviceStatesByCategory('TEMPERATURE_SENSOR')
 
     return (    
         <React.Fragment>

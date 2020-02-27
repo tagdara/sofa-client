@@ -36,7 +36,9 @@ const useStyles = makeStyles({
     },
 });
 
-export default function Television(props) {
+
+
+export function Television(props) {
     
     const classes = useStyles();
     const [mute, setMute] = useState(false);
@@ -155,3 +157,5 @@ export default function Television(props) {
         </GridItem>
     )
 }
+
+export default React.memo(Television);

@@ -26,7 +26,7 @@ export default function PlayerCard(props) {
     
     const classes = useStyles();
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceByEndpointId } = useContext(DataContext);
+    const { deviceStateByEndpointId } = useContext(DataContext);
 
     const [coverView, setCoverView] = useState(false);
     const coverDefault = '/image/'+props.player.endpointId.split(':')[0]+'/logo'
@@ -72,8 +72,8 @@ export default function PlayerCard(props) {
             return []
         }
         for (var i = 0; i < props.player.MusicController.linked.value.length; i++) {
-            if (deviceByEndpointId(props.player.MusicController.linked.value[i])) {
-                linked.push(deviceByEndpointId(props.player.MusicController.linked.value[i]))
+            if (deviceStateByEndpointId(props.player.MusicController.linked.value[i])) {
+                linked.push(deviceStateByEndpointId(props.player.MusicController.linked.value[i]))
             }
         }
         return linked

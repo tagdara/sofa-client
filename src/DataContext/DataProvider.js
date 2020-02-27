@@ -1,19 +1,21 @@
 import React, {useContext, useState, useEffect, createContext, useReducer} from 'react';
 import { NetworkContext } from '../NetworkProvider';
+import { DeviceContext } from './DeviceProvider';
+
 import AlexaDevice from './AlexaDevice'
 export const DataContext = createContext();
 
 function getFromLocalStorage() {
     
     try { 
-        return JSON.parse(localStorage.getItem('devices'))
+        return JSON.parse(localStorage.getItem('deviceStates'))
     }
     catch {}
     return {}
     
 }
 
-export const deviceReducer = (state, data) => {
+export const deviceStatesReducer = (state, data) => {
 
         if (data==={}) { return state }
         if (!data.hasOwnProperty('event')) { return state }
@@ -22,52 +24,49 @@ export const deviceReducer = (state, data) => {
         var devs={...state}
         var prop='';
         var interfacename=""
+        var dev={}
         switch (data.event.header.name) {
-            case 'DeleteReport':
-                for (i = 0; i < data.event.payload.endpoints.length; i++) {
-                    if (data.event.payload.endpoints[i].endpointId in devs) {
-                        delete devs[data.event.payload.endpoints[i].endpointId]
-                    }
-                }
-                return devs
-            case 'AddOrUpdateReport':
-                var local=getFromLocalStorage()
-                if (!local) {
-                    local={}
-                }
-                for (i = 0; i < data.event.payload.endpoints.length; i++) {
-                    local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
-                    //console.log('Adding Object', data.event.payload.endpoints[i].endpointId, data.event.payload.endpoints[i])
-                    devs[data.event.payload.endpoints[i].endpointId]=new AlexaDevice(data.event.payload.endpoints[i])
-                        //devs.push(data.event.payload.endpoints[i])
-                }
-                localStorage.setItem('devices', JSON.stringify(local));
-                return devs;
             case "Multistate":
-                for (var dev in data.state) {
-                    if (dev in devs) {
-                        for (i = 0; i < data.state[dev].context.properties.length; i++) {
-                            prop=data.state[dev].context.properties[i]
-                            interfacename=prop.namespace.split('.')[1]
-                            if (prop.hasOwnProperty('instance')) {
-                                interfacename=prop.instance.split('.')[1]
-                            }
-                            devs[dev][interfacename][prop.name]['value']=prop['value']
-                            devs[dev][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
+                for (dev in data.state) {
+                    for (i = 0; i < data.state[dev].context.properties.length; i++) {
+                        prop=data.state[dev].context.properties[i]
+                        interfacename=prop.namespace.split('.')[1]
+                        if (prop.hasOwnProperty('instance')) {
+                            interfacename=prop.instance.split('.')[1]
                         }
+                        if (!devs.hasOwnProperty(dev)) {
+                            devs[dev]={}
+                        }
+                        
+                        if (!devs[dev].hasOwnProperty(interfacename)) {
+                            devs[dev][interfacename]={}
+                        }
+                        
+                        if (!devs[dev][interfacename].hasOwnProperty(prop.name)) {
+                            devs[dev][interfacename][prop.name]={}
+                        }
+                        devs[dev][interfacename][prop.name]['value']=prop['value']
+                        devs[dev][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
                     }
                 }                
                 return devs;
             case 'ChangeReport':
+
                 if (data.event.endpoint.endpointId in devs) {
+                    var pname=""
+                    var devif={}
+                    var epid=data.event.endpoint.endpointId
+                    dev={...devs[data.event.endpoint.endpointId]}
                     for (i = 0; i < data.event.payload.change.properties.length; i++) {
                         prop=data.event.payload.change.properties[i]
                         interfacename=prop.namespace.split('.')[1]
                         if (prop.hasOwnProperty('instance')) {
                             interfacename=prop.instance.split('.')[1]
                         }
-                        devs[data.event.endpoint.endpointId][interfacename][prop.name]['value']=prop['value']
-                        devs[data.event.endpoint.endpointId][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
+                        pname=prop['name']
+                        devif={...dev[interfacename]}
+
+                        dev={...dev, [interfacename]: { ...devif, [pname] : { ...devif[pname], 'value': prop['value'], 'timeOfSample': prop['timeOfSample'] }}}
                     }
                     for (i = 0; i < data.context.properties.length; i++) {
                         prop=data.context.properties[i]
@@ -75,11 +74,13 @@ export const deviceReducer = (state, data) => {
                         if (prop.hasOwnProperty('instance')) {
                             interfacename=prop.instance.split('.')[1]
                         }
-                        devs[data.event.endpoint.endpointId][interfacename][prop.name]['value']=prop['value']
-                        devs[data.event.endpoint.endpointId][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
+                        devif={...dev[interfacename]}
+                        dev={...dev, [interfacename] : {...devif, [pname] : { ...devif[pname], 'value': prop['value'], 'timeOfSample': prop['timeOfSample'] }}}
                     }
+                    //console.log('result',epid, dev)
+                    return {...devs, [epid]: dev };
                 }
-                return devs;
+                return state
             default:
                 return state
         }
@@ -87,39 +88,26 @@ export const deviceReducer = (state, data) => {
 
 export default function DataProvider(props) {
     
-    const { getJSON, postJSON, connectError, loggedIn, addSubscriber } = useContext(NetworkContext);
+    const { deviceByEndpointId, devicesByCategory } = useContext(DeviceContext);
+    const { getJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
 
-    const initialDevices=loadLocalStorageDevices();
-    const [controllerProperties, setControllerProperties] = useState({});     
-    const [directives, setDirectives] = useState({});     
-    const [virtualDevices, setVirtualDevices] = useState({});     
+    const initialDeviceStates=loadLocalStorageDevices();
+    const [virtualDeviceStates, setVirtualDeviceStates] = useState({});     
     const [area, setArea] = useState("Main");     
-    const [devices, deviceDispatch] = useReducer(deviceReducer, initialDevices);
+    const [deviceStates, deviceStatesDispatch] = useReducer(deviceStatesReducer, initialDeviceStates);
     const [defaultPlayer, setDefaultPlayer] = useState('sonos:player:RINCON_B8E937ECE1F001400');     
     const [userPlayer, setUserPlayer] = useState('');     
 
     useEffect(() => {
-        //localStorage.setItem('devices', JSON.stringify(devices));
-    }, [devices]);
-
-    useEffect(() => {
-       addSubscriber(deviceDispatch)
+       addSubscriber(deviceStatesDispatch)
     }, []);
-
 
     useEffect(() => {
         
         function getData() {
-            getJSON('directives')
-                .then(result=>setDirectives(result))
-                //.then(result=>console.log('done getting directives'));
-    
-      	    getJSON('properties')
-                .then(result=>setControllerProperties(result))
-                //.then(result=>console.log('done getting properties'));
                 
       	    getJSON('list/logic/virtualDevices')
-                .then(result=>setVirtualDevices(result))
+                .then(result=>setVirtualDeviceStates(result))
                 //.then(result=>console.log('done getting virtual devices'));
         }
         console.log('logged in changed to',loggedIn) 
@@ -146,7 +134,7 @@ export default function DataProvider(props) {
     
     function lightCount(condition) {
         var count=0;
-        var lights=devicesByCategory('LIGHT')
+        var lights=deviceStatesByCategory('LIGHT')
 
         for (var id in lights) {
             if (condition.toLowerCase()==='all') {
@@ -164,55 +152,80 @@ export default function DataProvider(props) {
         return count
     }    
     
-    function devicesByCategory(categories, searchterm) {
+    function deviceStatesByCategory(categories, searchterm) {
 
-        //console.log('dbc',categories, searchterm)
-        if (!categories) {
-            categories='ALL'
-        }
-        if (!Array.isArray(categories)) {
-            categories=[categories]
-        }
-        var categoryDevices=[]
-        for (var j = 0; j < categories.length; j++) {
-            var category=categories[j]
-            for (var id in devices) {
-                if (devices[id].displayCategories.includes(category) || category==='ALL') {
-                    if (!searchterm || devices[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
-                        if (devices[id].hasData()) {
-                            categoryDevices.push(devices[id])
-                        }
-                    }
-                } 
-            }
-        }
+        var categoryDevices=devicesByCategory(categories,searchterm)
+        
         categoryDevices.sort(function(a, b)  {
 		    var x=a['friendlyName'].toLowerCase(),
 			y=b['friendlyName'].toLowerCase();
 		    return x<y ? -1 : x>y ? 1 : 0;
 	    });    
-        return categoryDevices
         
+        return getStatesForDevices(categoryDevices)
     }
 
-    function devicesByFriendlyName(subname) {
+//    function OlddeviceStatesByCategory(categories, searchterm) {
 
-        var subDevices=[]
-        for (var id in devices) {
-            if (subname==="" || devices[id]['friendlyName'].includes(subname)) {
-                subDevices.push(devices[id])
+        
+//       for (var i = 0; i < categoryDevices.length; i++) {
+//            if (deviceStates.hasOwnProperty(categoryDevices[i].endpointId)) {
+//                for (var j = 0; j < categoryDevices[i].interfaces.length; j++) {
+//                    var dev=categoryDevices[i][categoryDevices[i].interfaces[j]]
+//                    dev={...dev, ...deviceStates[ categoryDevices[i].endpointId ][ categoryDevices[i].interfaces[j]] }
+//                }
+//            }
+//        }
+//        categoryDevices.sort(function(a, b)  {
+//		    var x=a['friendlyName'].toLowerCase(),
+//			y=b['friendlyName'].toLowerCase();
+//		    return x<y ? -1 : x>y ? 1 : 0;
+//	    });    
+//        return categoryDevices
+        
+//    }
+    
+    function getStatesForDevices(devices) {
+        var newdevs=[]
+        for (var i = 0; i < devices.length; i++) {
+            newdevs.push(getStateForDevice(devices[i]))
+        }
+        return newdevs
+    }
+
+    function getStateForDevice(device) {
+        
+        var dev={...device}
+        if (deviceStates.hasOwnProperty(device.endpointId)) {
+            for (var j = 0; j < device.interfaces.length; j++) {
+                var devif=device[device.interfaces[j]]
+                //console.log('interface directive [', devif.directive,']')
+                dev={...dev, [device.interfaces[j]] : { ...device[device.interfaces[j]], directive: devif.directive, ...deviceStates[ device.endpointId ][ device.interfaces[j]] }}
+            }
+        }
+        return dev
+    }
+
+
+
+    function deviceStatesByFriendlyName(subname) {
+
+        var subDeviceStates=[]
+        for (var id in deviceStates) {
+            if (subname==="" || deviceStates[id]['friendlyName'].includes(subname)) {
+                subDeviceStates.push(deviceStates[id])
             } 
         }
 
-        subDevices.sort(function(a, b)  {
+        subDeviceStates.sort(function(a, b)  {
 		    var x=a['friendlyName'].toLowerCase(),
 			y=b['friendlyName'].toLowerCase();
 		    return x<y ? -1 : x>y ? 1 : 0;
 	    });    
-        return subDevices
+        return subDeviceStates
     }
 
-    function devicesByController(controllers, searchterm) {
+    function deviceStatesByController(controllers, searchterm) {
 
         //console.log('dbc',categories, searchterm)
         if (!controllers) {
@@ -221,25 +234,25 @@ export default function DataProvider(props) {
         if (!Array.isArray(controllers)) {
             controllers=[controllers]
         }
-        var controllerDevices=[]
+        var controllerDeviceStates=[]
         for (var j = 0; j < controllers.length; j++) {
             var controller=controllers[j]
-            for (var id in devices) {
-                if (devices[id].interfaces.includes(controller)) {
-                    if (!searchterm || devices[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
-                        if (devices[id].hasData()) {
-                            controllerDevices.push(devices[id])
+            for (var id in deviceStates) {
+                if (deviceStates[id].interfaces.includes(controller)) {
+                    if (!searchterm || deviceStates[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
+                        if (deviceStates[id].hasData()) {
+                            controllerDeviceStates.push(deviceStates[id])
                         }
                     }
                 } 
             }
         }
-        controllerDevices.sort(function(a, b)  {
+        controllerDeviceStates.sort(function(a, b)  {
 		    var x=a['friendlyName'].toLowerCase(),
 			y=b['friendlyName'].toLowerCase();
 		    return x<y ? -1 : x>y ? 1 : 0;
 	    });    
-        return controllerDevices
+        return controllerDeviceStates
         
     }
 
@@ -253,32 +266,27 @@ export default function DataProvider(props) {
         return devlist
     }
 
-    function deviceByFriendlyName(devname) {
+    function deviceStateByFriendlyName(devname) {
 
-        for (var id in devices) {
-            if (devices[id]['friendlyName']===devname) {
-                return devices[id]
+        for (var id in deviceStates) {
+            if (deviceStates[id]['friendlyName']===devname) {
+                return deviceStates[id]
             } 
         }
         return undefined
     }
 
-    function deviceByEndpointId(endpointId) {
-        if (endpointId in devices) {
-            return devices[endpointId]
+    function deviceStateByEndpointId(endpointId) {
+
+        var dev=deviceByEndpointId(endpointId)
+        if (dev!==undefined) {
+            return getStateForDevice(dev)
         }
-        //console.log('Did not find device with endpointId', endpointId, devices.length)
+        //console.log('Did not find device with endpointId', endpointId, Object.keys(deviceStates))
         return undefined
+
     }
-    
-    function propertyNamesFromDevice(dev) {
-        
-        var devprops=[]
-        for (var j = 0; j < dev.capabilities.length; j++) {
-            devprops.push(dev.capabilities[j].interface)
-        }
-        return devprops
-    }
+
 
     function getModes(dev) {
         
@@ -297,54 +305,20 @@ export default function DataProvider(props) {
         return modes
     }
 
-    function getChangeTimesForDevices(val,devs) {
-        
-        // Requests the last time the value changed for a set of devices.  This requires the Influx adapter
-        // in order to see history.
-
-        //console.log('gctfd',val,devs)
-        var endpointList=[]
-        for (var i = 0; i < devs.length; i++) {   
-           endpointList.push(devs[i].endpointId)
-        }
-
-        return postJSON('list/influx/last/'+val, endpointList)
-                .then(res=> { return res;})
-    }
-
-    function getHistoryForDevice(dev, prop, page) {
-        
-        // Requests the history for a specific device and property.  It allows for pagination since the data could be very
-        // large.  This requires the Influx adapter in order to see history.
-        
-        var url="list/influx/history/"+dev+"/"+prop
-        if (page) {
-            url=url+"/"+page
-        }
-        return getJSON(url)
-    }
-
     return (
         <DataContext.Provider
             value={{
-                devices: devices,
-                virtualDevices: virtualDevices,
-                
-                directives: directives,
-                controllerProperties:controllerProperties,
+                deviceStates: deviceStates,
+                virtualDeviceStates: virtualDeviceStates,
 
-                deviceByEndpointId: deviceByEndpointId,
-                deviceByFriendlyName: deviceByFriendlyName,
-                devicesByFriendlyName: devicesByFriendlyName,
+                deviceStateByEndpointId: deviceStateByEndpointId,
+                deviceStateByFriendlyName: deviceStateByFriendlyName,
+                deviceStatesByFriendlyName: deviceStatesByFriendlyName,
 
-                devicesByCategory: devicesByCategory,
-                devicesByController: devicesByController,
-                propertyNamesFromDevice: propertyNamesFromDevice,
+                deviceStatesByCategory: deviceStatesByCategory,
+                deviceStatesByController: deviceStatesByController,
                 isReachable: isReachable,
                 sortByName: sortByName,
-                
-                getChangeTimesForDevices: getChangeTimesForDevices,
-                getHistoryForDevice: getHistoryForDevice,
 
                 setArea: setArea,
                 area: area,
@@ -356,8 +330,6 @@ export default function DataProvider(props) {
                 setUserPlayer: setUserPlayer,
                 
                 getModes: getModes,
-                loggedIn: loggedIn,
-                connectError: connectError
             }}
         >
             {props.children}

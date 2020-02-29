@@ -29,11 +29,10 @@ export default function ModeLines(props) {
     const { getModes, deviceByEndpointId } = useContext(DeviceContext);
     const device=deviceByEndpointId(props.device.endpointId)
     const modes=getModes(device, props.exclude)
-
+    
     function handleModeChoice(event, mode, modechoice) {
         props.directive(props.device.endpointId, mode, 'SetMode', { "mode": modechoice })
     }; 
-
 
     return (
         Object.keys(modes).map(mode => 

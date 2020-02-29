@@ -8,7 +8,7 @@ import MatrixList from './other/MatrixList';
 
 export default function MoreDevicesLayout(props) {
 
-    const { deviceStatesByCategory } = useContext(DataContext);
+    const { deviceStatesByCategory, directive} = useContext(DataContext);
     const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))
     const otherDevices=deviceStatesByCategory('OTHER')
     const matrixDevices=deviceStatesByCategory('MATRIX') 
@@ -28,7 +28,7 @@ export default function MoreDevicesLayout(props) {
             { switches &&
             <GridSection name={"Other Devices"} >
                 <ErrorBoundary wide={props.wide}>
-                    <DeviceList devices={ switches } />
+                    <DeviceList devices={ switches } directive={directive} />
                 </ErrorBoundary>
 
             </GridSection>
@@ -36,14 +36,14 @@ export default function MoreDevicesLayout(props) {
             { matrixDevices &&
             <GridSection name={"Display Matrix"} >
                 <ErrorBoundary wide={props.wide}>
-                    <MatrixList devices={ matrixDevices }  />
+                    <MatrixList devices={ matrixDevices } directive={directive}  />
                 </ErrorBoundary>
             </GridSection>
             }
             { otherDevices &&
             <GridSection name={"Services"} show={false}>
                 <ErrorBoundary wide={props.wide}>
-                    <DeviceList devices={ otherDevices } />
+                    <DeviceList devices={ otherDevices } directive={directive} />
                 </ErrorBoundary>
             </GridSection>
             }

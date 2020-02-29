@@ -271,9 +271,13 @@ export default function DeviceProvider(props) {
         var dev=deviceByEndpointId(endpointId)
         if (dev!==undefined) {
             for (var j = 0; j < dev.capabilities.length; j++) {
-                if (dev.capabilities[j].interface.endsWith(name)) {
+                if (dev.capabilities[j].interface.endsWith("."+name)) {
                     return dev.capabilities[j]
                 }
+                if (dev.capabilities[j].hasOwnProperty('instance') && dev.capabilities[j].instance.endsWith("."+name)) {
+                    return dev.capabilities[j]
+                }
+                
             }
         }
         return undefined

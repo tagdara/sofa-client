@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { DeviceContext } from '../DataContext/DeviceProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -23,19 +24,12 @@ const useStyles = makeStyles(theme => {
 export default function Matrix(props) {
     
     const classes = useStyles();
-    
-    function getInputs() {
-        var inputlist=[]
-        if (props.device.InputController.hasOwnProperty('inputs')) {
-            for (var k = 0; k < props.device.InputController.inputs.length; k++) {
-                inputlist.push(props.device.InputController.inputs[k].name)
-            }
-        }
-        return inputlist
-    }
+    const { deviceByEndpointId, directive, getInputs} = useContext(DeviceContext);
+    const device=deviceByEndpointId(props.device.endpointId)
+    const inputs=getInputs(device)   
     
     function handleInput(event, inputname) {
-        props.device.InputController.directive('SelectInput', { "input": inputname } )
+        directive(props.device.endpointId, "InputController", 'SelectInput', { "input": inputname } )
     }; 
         
     return (
@@ -44,7 +38,7 @@ export default function Matrix(props) {
                 <ToggleAvatar avatarState={'on'}><TvIcon /></ToggleAvatar>
                 <ListItemText primary={props.device.friendlyName} />
                 <Select className={classes.select} displayEmpty value={props.device.InputController.input.value ? props.device.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
-                    { getInputs().map(inp =>
+                    { inputs.map(inp =>
                         <MenuItem key={inp} value={inp}>{inp}</MenuItem>
                     )}
                 </Select>

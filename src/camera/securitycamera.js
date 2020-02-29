@@ -79,7 +79,7 @@ function useInterval(callback, delay) {
             let id = setInterval(tick, delay);
             return () => clearInterval(id);
         }
-        
+
     }, [delay]);
 }
 
@@ -94,6 +94,7 @@ export default function SecurityCamera(props) {
     const live = true;
     const [imageUri,setImageUri] = useState("")
     const [updateUrl, setUpdateUrl] = useState("");
+    const [ready, setReady] = useState(false)
 
     useInterval(() => {
         // Your custom logic here
@@ -109,8 +110,10 @@ export default function SecurityCamera(props) {
             setImageUri(data.payload.imageUri)
         }
         
-        if (props.camera.CameraStreamController.hasOwnProperty('directive')) { 
-            props.camera.CameraStreamController.directive("InitializeCameraStreams", 
+        if ((props.camera) && (ready!==props.camera.endpointId)) { 
+            setReady(props.camera.endpointId)
+            //props.camera.CameraStreamController.directive("InitializeCameraStreams", 
+            props.directive(props.camera.endpointId, "CameraStreamController", "InitializeCameraStreams",
                 {
                     "cameraStreams": [
                         {
@@ -126,11 +129,9 @@ export default function SecurityCamera(props) {
                     ]
                 }
             ).then(response => updateUrlUri(response))
-        } else {
-            console.log('no directive in ', props.camera.CameraStreamController)
-        }
+        } 
 
-    }, [props.camera]);
+    }, [props.camera, ready]);
 
     function imageFinished() {
         if (!imageLoaded) {
@@ -187,7 +188,7 @@ export default function SecurityCamera(props) {
                 </div>
             }
             { showDialog &&
-                <CameraDialog live={live} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
+                <CameraDialog directive={props.directive} live={live} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
             }
         </GridItem>
     );

@@ -14,6 +14,9 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 
 export default function AdapterItem(props) { 
+
+    console.log('Adapter',props.adapter)
+
     
     function getErrorState(count) {
         try {
@@ -70,7 +73,7 @@ export default function AdapterItem(props) {
             <ListItem>
                 <ListItemText primary={getStartupDate()} secondary={ getErrorCount()} />
                 <ListItemSecondaryAction>
-                    <IconButton size={"small"} onClick={ () => props.adapter.PowerController.directive('TurnOn')} ><ReplayIcon /></IconButton>
+                    <IconButton size={"small"} onClick={ () => props.directive(props.adapter.endpointId, "PowerController", 'TurnOn')} ><ReplayIcon /></IconButton>
                 </ListItemSecondaryAction>
             </ListItem>
        </GridItem>

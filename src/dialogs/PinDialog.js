@@ -69,7 +69,7 @@ export default function PinDialog(props) {
             <DialogContent>
                 <Grid container item spacing={1} xs={12} >
                     <Grid item xs={12} />
-                    <SecurityCamera wide={true} camera={props.camera} selectButtons={false} />
+                    <SecurityCamera wide={true} camera={props.camera} selectButtons={false} directive={props.directive} />
                     <Grid item xs={12} className={classes.nameInput}>
                         <TextField
                             id="required"

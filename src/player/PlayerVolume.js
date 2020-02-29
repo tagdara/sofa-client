@@ -4,11 +4,11 @@ import SofaAvatarSlider from '../SofaAvatarSlider'
 export default function PlayerVolume(props) {
     
     function handleVolumeChange(event) {
-        props.player.SpeakerController.directive("SetVolume", { "volume" : event} )
+        props.directive(props.player.endpointId, "SpeakerController", "SetVolume", { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        props.player.SpeakerController.directive("SetMute", { "mute" : !props.player.SpeakerController.mute.value } )
+        props.directive(props.player.endpointId, "SpeakerController", "SetMute", { "mute" : !props.player.SpeakerController.mute.value } )
     }; 
 
     return (

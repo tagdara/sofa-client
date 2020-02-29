@@ -7,7 +7,7 @@ export default function DeviceList(props) {
     return (
         <React.Fragment>
             { props.devices.map(device =>
-                <Device key={ device.endpointId } device={ device } />
+                <Device key={ device.endpointId } device={ device } directive={props.directive} />
             )}
         </React.Fragment>
     )

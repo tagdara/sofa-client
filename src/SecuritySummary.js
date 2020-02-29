@@ -38,10 +38,10 @@ const useStyles = makeStyles(theme => {
 export default function SecuritySummary(props) {
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { devicesByController } = useContext(DataContext);
+    const { deviceStatesByController } = useContext(DataContext);
 
     const classes = useStyles();
-    const allzones = devicesByController(['ContactSensor','MotionSensor'])
+    const allzones = deviceStatesByController(['ContactSensor','MotionSensor'])
     const zoneOpen = zoneCount('DETECTED')>0;
 
     function zoneCount(condition) {

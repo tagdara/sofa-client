@@ -20,13 +20,11 @@ const useStyles = makeStyles({
 export default function AreaLine(props) {
     
     const classes = useStyles();
-    const { deviceStateByEndpointId } = useContext(DataContext);
+    const { deviceStateByEndpointId, directive } = useContext(DataContext);
 
     function runShortcut(level) {
-        console.log('lev',props.area.AreaController.shortcuts.value[level])
         var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
-        console.log('scene',scene)
-        scene.SceneController.directive('Activate')
+        directive(scene.endpointId, 'SceneController', 'Activate')
     }
     
     function currentLevel() {
@@ -35,11 +33,24 @@ export default function AreaLine(props) {
         }
         return 0
     }
+    
+    function hasShortcuts() {
+        try {
+            if (props.area.AreaController.shortcuts.value.length>0) {
+                return true
+            }
+        }
+        catch {
+            return false
+        }
+
+        return false
+    }
 
     return (
         <ListItem className={classes.areaListItem}>
             <ListItemText className={classes.halves} onClick={ () => props.selectArea(props.area.friendlyName)}>{props.area.friendlyName} </ListItemText>
-            { props.area.AreaController.shortcuts.value.length>0 &&
+            { hasShortcuts() &&
                 <ListItemSecondaryAction>
                     <DotLevel half={true} level={currentLevel()} select={runShortcut} />
                 </ListItemSecondaryAction>

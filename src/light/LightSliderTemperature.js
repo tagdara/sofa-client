@@ -20,7 +20,7 @@ export default function LightSliderTemperature(props) {
     const classes = useStyles();
 
     function handleColorTemperatureChange(value) {
-        props.device.ColorTemperatureController.directive('SetColorTemperature', { "colorTemperatureInKelvin": value} )
+        props.directive(props.device.endpointId, "ColorTemperatureController", "SetColorTemperature", { "colorTemperatureInKelvin": value} )
     }; 
 
     return (

@@ -74,12 +74,8 @@ export default function Light(props) {
     const classes = useStyles();
     const [showAll, setShowAll] = useState(false)
     
-    function handlePowerChange(event){
-        if (event.target.checked) {
-            props.device.PowerController.directive('TurnOn')
-        } else {
-            props.device.PowerController.directive('TurnOff')
-        }
+    function handlePowerChange(event) {
+        props.directive(props.device.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     }; 
     
     function isReachable() {
@@ -117,21 +113,21 @@ export default function Light(props) {
                 ( !props.device.hasOwnProperty('BrightnessController') ?
                     <ListItem className={classes.placeholder} />
                 :
-                    <LightSliderBrightness device={props.device} />
+                    <LightSliderBrightness device={props.device} directive={props.directive} />
                 )
             }
             { !props.tempControl && !showAll ? null :
                 ( !props.device.hasOwnProperty('ColorTemperatureController') ?
                     <ListItem className={classes.placeholder} />
                 :
-                <LightSliderTemperature device={props.device}/>
+                <LightSliderTemperature device={props.device} directive={props.directive}/>
                 )
             }
             { !props.colorControl && !showAll ? null :
                 ( !props.device.hasOwnProperty('ColorController') ?
                     <ListItem className={classes.placeholder} />
                 :
-                    <LightSliderColor device={props.device}/>
+                    <LightSliderColor device={props.device} directive={props.directive}/>
                 )
             }
         </GridItem>

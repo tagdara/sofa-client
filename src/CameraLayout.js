@@ -11,7 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 export default function CameraLayout(props) {
     
-    const { deviceStatesByCategory } = useContext(DataContext);
+    const { deviceStatesByCategory, directive } = useContext(DataContext);
     const cameras=deviceStatesByCategory(['CAMERA'])
 
     function openNVR() {
@@ -23,7 +23,7 @@ export default function CameraLayout(props) {
     return (
         <React.Fragment>
             { cameras.map(camera => 
-                <SecurityCamera camera={camera} key={camera.endpointId} name={ camera.friendlyName } />
+                <SecurityCamera camera={camera} key={camera.endpointId} name={ camera.friendlyName } directive={directive} />
             )}
             <List>
                 <ListItem button onClick={() => openNVR() }>

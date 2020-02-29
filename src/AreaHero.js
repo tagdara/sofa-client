@@ -27,7 +27,7 @@ export default function AreaHero(props) {
     }
     
     function getAreaAreas() {
-
+        
         var areas=[]
         if (!area || thisarea===undefined) { return [] }
         var children=thisarea.AreaController.children.value

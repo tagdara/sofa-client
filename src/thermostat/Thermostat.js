@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from '../layout/NewLayoutProvider';
 import { makeStyles } from '@material-ui/styles';
+import { DeviceContext } from '../DataContext/DeviceProvider';
 
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -60,10 +61,12 @@ export default function Thermostat(props) {
     
     const classes = useStyles();
     const { applyLayoutCard, applyBackPage } = useContext(LayoutContext);
+    const { directive, getController} = useContext(DeviceContext);
 
     const [targetSetpoint, setTargetSetpoint] = useState(70);
     const [powerLevel, setPowerLevel] = useState(false)
     const [fanSetMode, setFanSetMode] = useState(false);
+    //const device=deviceByEndpointId(props.device.endpointId)
 
     useEffect(() => {
         if (props.device.ThermostatController.hasOwnProperty('upperSetpoint')) {
@@ -78,22 +81,18 @@ export default function Thermostat(props) {
 
 
     function supportedModes() {
-
-        if (props.device.ThermostatController.hasOwnProperty('configuration')) {
-            if (props.device.ThermostatController.configuration.hasOwnProperty('supportedModes')) {
-                return props.device.ThermostatController.configuration.supportedModes
-            }
-        }
+        try { return getController(props.device.endpointId, "ThermostatController").configuration.supportedModes }
+        catch {}
         return []
     }
 
-    function supportedRange() {
 
-        if (props.device.ThermostatController.hasOwnProperty('configuration')) {
-            if (props.device.ThermostatController.configuration.hasOwnProperty('supportedRange')) {
-                return props.device.ThermostatController.configuration.supportedRange
-            }
+    function supportedRange() {
+        try {
+            return getController(props.device.endpointId, "ThermostatController").configuration.supportedRange
         }
+        catch {}
+        
         return [60,90]
     }
                     
@@ -110,7 +109,7 @@ export default function Thermostat(props) {
     }; 
     
     function handlePowerLevelChange(event) {
-        props.device.PowerLevelController.directive("SetPowerLevel", {"powerLevel": event})
+        directive(props.device.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
     }; 
 
     function handlePreSetpointChange(event) {
@@ -118,11 +117,11 @@ export default function Thermostat(props) {
     }; 
     
     function handleSetpointChange(event) {
-        props.device.ThermostatController.directive("SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
+        directive(props.device.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
     }; 
 
     function handleSetMode(event) {
-        props.device.ThermostatController.directive("SetThermostatMode",  {"thermostatMode" : { "value": event }} )
+        directive(props.device.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
     }; 
     
     function switchToHistory() {

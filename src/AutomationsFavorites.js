@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 export default function AutomationsFavorites(props) {
 
     const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
-    const { deviceByEndpointId } = useContext(DataContext);
+    const { deviceStateByEndpointId } = useContext(DataContext);
     const { getJSON } = useContext(NetworkContext);
 
     const [automations, setAutomations] = useState({})
@@ -25,7 +25,7 @@ export default function AutomationsFavorites(props) {
     }, [getJSON, serverurl]);
     
     function runAutomation(name) {
-        var auto=deviceByEndpointId('logic:activity:'+name)
+        var auto=deviceStateByEndpointId('logic:activity:'+name)
         console.log('auto',name, auto)
         auto.SceneController.directive('Activate')
         return true

@@ -1,2 +1,0 @@
-(this["webpackJsonpsofa-client"]=this["webpackJsonpsofa-client"]||[]).push([[162],{243:function(e,t,n){"use strict";n.r(t),n.d(t,"default",(function(){return u}));var a=n(0),c=n.n(a),i=n(54),r=n(219);function u(e){var t=(0,Object(a.useContext)(i.DataContext).devicesByCategory)("RECEIVER");return c.a.createElement(c.a.Fragment,null,t.map((function(t){return c.a.createElement(r.default,{wide:e.wide,key:t.endpointId,device:t})})))}}}]);
-//# sourceMappingURL=162.dbb23c42.chunk.js.map

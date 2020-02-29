@@ -19,7 +19,7 @@ export default function LightSliderBrightness(props) {
     const classes = useStyles();
 
     function handleBrightnessChange(event) {
-        props.device.BrightnessController.directive('SetBrightness', { "brightness" : event })
+        props.directive(props.device.endpointId,'BrightnessController', 'SetBrightness', { "brightness" : event })
     }; 
 
     return (

@@ -21,7 +21,7 @@ export default function TemperatureSensor(props) {
         applyBackPage('ThermostatLayout',{})
         applyLayoutCard('ThermostatHistory', { 'device':props.device, 'days':7})
     }
-
+    
     return (
         
         <GridItem wide={props.wide} >

@@ -1,7 +1,8 @@
 import React, {useContext, useState, useEffect, createContext, useReducer} from 'react';
 import { NetworkContext } from '../NetworkProvider';
-import AlexaDevice from './AlexaDevice'
+
 export const DeviceContext = createContext();
+
 
 function getFromLocalStorage() {
     
@@ -13,42 +14,46 @@ function getFromLocalStorage() {
     
 }
 
+    
 const deviceReducer = (state, data) => {
-
-        if (data==={}) { return state }
-        if (!data.hasOwnProperty('event')) { return state }
+    
+    if (data==={}) { return state }
+    if (!data.hasOwnProperty('event')) { return state }
         
-        var i=0;
-        var devs={...state}
-        switch (data.event.header.name) {
-            case 'DeleteReport':
-                for (i = 0; i < data.event.payload.endpoints.length; i++) {
-                    if (data.event.payload.endpoints[i].endpointId in devs) {
-                        delete devs[data.event.payload.endpoints[i].endpointId]
-                    }
+    var i=0;
+    var devs={...state}
+    switch (data.event.header.name) {
+        case 'DeleteReport':
+            for (i = 0; i < data.event.payload.endpoints.length; i++) {
+                if (data.event.payload.endpoints[i].endpointId in devs) {
+                    delete devs[data.event.payload.endpoints[i].endpointId]
                 }
-                return devs
-            case 'AddOrUpdateReport':
-                var local=getFromLocalStorage()
-                if (!local) {
-                    local={}
+            }
+            localStorage.setItem('devices', JSON.stringify(devs));
+            return devs
+        case 'AddOrUpdateReport':
+            var local=getFromLocalStorage()
+            if (!local) {
+                local={}
+            }
+            for (i = 0; i < data.event.payload.endpoints.length; i++) {
+                if (data.event.payload.endpoints[i].endpointId==='logic:area:Main') {
+                    console.log('AOU',data.event.payload.endpoints[i].endpointId,data.event.payload.endpoints[i])
                 }
-                for (i = 0; i < data.event.payload.endpoints.length; i++) {
-                    local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
-                    devs[data.event.payload.endpoints[i].endpointId]=new AlexaDevice(data.event.payload.endpoints[i])
-                }
-                localStorage.setItem('devices', JSON.stringify(local));
-                return devs;
-            default:
-                return state
-        }
+                local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
+            }
+            localStorage.setItem('devices', JSON.stringify(local));
+            return local;
+        default:
+            return state
     }
+}
 
 export default function DeviceProvider(props) {
    
     const { getJSON, postJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
 
-    const initialDevices=loadLocalStorageDevices();
+    const initialDevices=getFromLocalStorage()
     const [controllerProperties, setControllerProperties] = useState({});     
     const [directives, setDirectives] = useState({});     
     const [virtualDevices, setVirtualDevices] = useState({});     
@@ -57,12 +62,8 @@ export default function DeviceProvider(props) {
  
 
     useEffect(() => {
-        //localStorage.setItem('devices', JSON.stringify(devices));
-    }, [devices]);
-
-    useEffect(() => {
        addSubscriber(deviceDispatch)
-    }, [ ]);
+    }, [] );
 
 
     useEffect(() => {
@@ -84,15 +85,6 @@ export default function DeviceProvider(props) {
         if (loggedIn===true ) { getData() }
     }, [ loggedIn ] );
     
-    function loadLocalStorageDevices() {
-        
-        var devs={}
-        var local=getFromLocalStorage()
-        for (var dev in local) {
-            devs[local[dev].endpointId]=new AlexaDevice(local[dev])
-        }
-        return devs
-    }
 
     function devicesByCategory(categories, searchterm) {
 
@@ -109,9 +101,7 @@ export default function DeviceProvider(props) {
             for (var id in devices) {
                 if (devices[id].displayCategories.includes(category) || category==='ALL') {
                     if (!searchterm || devices[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
-                        if (devices[id].hasData()) {
-                            categoryDevices.push(devices[id])
-                        }
+                        categoryDevices.push(devices[id])
                     }
                 } 
             }
@@ -124,6 +114,7 @@ export default function DeviceProvider(props) {
         return categoryDevices
         
     }
+
 
     function devicesByFriendlyName(subname) {
 
@@ -153,11 +144,10 @@ export default function DeviceProvider(props) {
         }
         var controllerDevices=[]
         for (var j = 0; j < controllers.length; j++) {
-            var controller=controllers[j]
             for (var id in devices) {
-                if (devices[id].interfaces.includes(controller)) {
-                    if (!searchterm || devices[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
-                        if (devices[id].hasData()) {
+                for (var k = 0; k < devices[id].capabilities.length; k++) {
+                    if (devices[id].capabilities[k].interface.endsWith(controllers[j])) {
+                        if (!searchterm || devices[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
                             controllerDevices.push(devices[id])
                         }
                     }
@@ -184,7 +174,7 @@ export default function DeviceProvider(props) {
     }
 
     function deviceByFriendlyName(devname) {
-
+            
         for (var id in devices) {
             if (devices[id]['friendlyName']===devname) {
                 return devices[id]
@@ -210,18 +200,34 @@ export default function DeviceProvider(props) {
         return devprops
     }
 
-    function getModes(dev) {
+    function getInputs(dev,exclude=[]) {
+        
+        var choices=[]        
+        for (var k = 0; k < dev.capabilities.length; k++) {
+            if (dev.capabilities[k].interface.endsWith('InputController')) {
+                for (var j = 0; j < dev.capabilities[k].inputs.length; j++) {
+                    choices.push(dev.capabilities[k].inputs[j].name)
+                }
+            }
+        }
+        return choices
+    }
+
+
+    function getModes(dev,exclude=[]) {
         
         var modes={}
-        for (var k = 0; k < dev.interfaces.length; k++) {
-            if (dev[dev.interfaces[k]].controller==='ModeController') {
-                var mc=dev[dev.interfaces[k]]
+        for (var k = 0; k < dev.capabilities.length; k++) {
+            if (dev.capabilities[k].interface.endsWith('ModeController')) {
+                var mc=dev.capabilities[k]
                 var modename=mc.capabilityResources.friendlyNames[0].value.text
-                var modechoices=[]
-                for (var j = 0; j < mc.configuration.supportedModes.length; j++) {
-                    modechoices[mc.configuration.supportedModes[j].value] = mc.configuration.supportedModes[j].modeResources.friendlyNames[0].value.text
+                if (!exclude.includes(modename)) {
+                    var modechoices=[]
+                    for (var j = 0; j < mc.configuration.supportedModes.length; j++) {
+                        modechoices[mc.configuration.supportedModes[j].value] = mc.configuration.supportedModes[j].modeResources.friendlyNames[0].value.text
+                    }
+                    modes[modename]=modechoices
                 }
-                modes[modename]=modechoices
             }
         }
         return modes
@@ -253,6 +259,46 @@ export default function DeviceProvider(props) {
         }
         return getJSON(url)
     }
+    
+    function newtoken() {
+        return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+            (((c ^ crypto.getRandomValues(new Uint8Array(1))[0] ) & 15) >> c / 4).toString(16)
+        )
+    }
+    
+    function getController(endpointId, name) {
+        
+        var dev=deviceByEndpointId(endpointId)
+        if (dev!==undefined) {
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                if (dev.capabilities[j].interface.endsWith(name)) {
+                    return dev.capabilities[j]
+                }
+            }
+        }
+        return undefined
+    }
+ 
+
+    function directive (endpointId, controllerName, command, payload={}, cookie={}) {
+        var controller=getController(endpointId, controllerName)
+        const serverurl="https://"+window.location.hostname;
+        var header={"name": command, "namespace":controller.interface, 
+                    "payloadVersion":"3", "messageId": newtoken(), "correlationToken": newtoken()}
+        if (controller.hasOwnProperty('instance')) {
+            header.instance=controller.instance
+        }
+        var endpoint={"endpointId": endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
+        var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
+        console.log('Sending device-based alexa command:',data)
+    
+        return fetch(serverurl+'/directive', { withCredentials: true, credentials: 'include', method: 'post',
+                    body: JSON.stringify(data)
+                })
+                    .then(res=>res.json())
+                    //.then(res=>this.device.responseHandler(res))
+                    .then(res=> { return res;})
+    }
 
     return (
         <DeviceContext.Provider
@@ -279,6 +325,9 @@ export default function DeviceProvider(props) {
                 area: area,
                 
                 getModes: getModes,
+                getInputs: getInputs,
+                getController: getController,
+                directive: directive,
             }}
         >
             {props.children}

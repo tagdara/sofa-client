@@ -21,10 +21,10 @@ export default function AvSummary(props) {
     
     const classes = useStyles();
     const { applyHomePage } = useContext(LayoutContext);
-    const { devicesByCategory } = useContext(DataContext);
+    const { deviceStatesByCategory } = useContext(DataContext);
 
     function onTvs() {
-        var devs=devicesByCategory('TV')
+        var devs=deviceStatesByCategory('TV')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
             if (devs[i].PowerController.powerState.value==='ON') {
@@ -35,7 +35,7 @@ export default function AvSummary(props) {
     }
 
     function onReceivers() {
-        var devs=devicesByCategory('RECEIVER')
+        var devs=deviceStatesByCategory('RECEIVER')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
             if (devs[i].PowerController.powerState.value==='ON') {
@@ -46,7 +46,7 @@ export default function AvSummary(props) {
     }
     
     function onSpeakers() {
-        var devs=devicesByCategory('SPEAKER')
+        var devs=deviceStatesByCategory('SPEAKER')
         var ondevs=0
         for (var i = 0; i < devs.length; i++) {
             if (devs[i].MusicController.playbackState.value==='PLAYING') {

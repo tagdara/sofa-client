@@ -26,7 +26,7 @@ export default function PlayerCard(props) {
     
     const classes = useStyles();
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStateByEndpointId } = useContext(DataContext);
+    const { deviceStateByEndpointId, directive } = useContext(DataContext);
 
     const [coverView, setCoverView] = useState(false);
     const coverDefault = '/image/'+props.player.endpointId.split(':')[0]+'/logo'
@@ -34,18 +34,18 @@ export default function PlayerCard(props) {
     function handlePlayPause(event) {
         event.stopPropagation();
         if (props.player.MusicController.playbackState.value ==='PLAYING') {
-             props.player.MusicController.directive("Pause")
+            directive(props.player.endpointId, 'MusicController', 'Pause')
         } else {
-             props.player.MusicController.directive("Play")
+            directive(props.player.endpointId, 'MusicController', 'Play')
         }
     }; 
 
     function handleSkip(event) {
-         props.player.MusicController.directive("Skip")
+        directive(props.player.endpointId, 'MusicController', "Skip")
     }; 
 
     function handleStop(event) {
-        props.player.MusicController.directive("Stop")
+        directive(props.player.endpointId, 'MusicController', "Stop")
     }; 
 
     function handleCover() {
@@ -92,9 +92,9 @@ export default function PlayerCard(props) {
             </PlayerArtOverlay>
             <Grid item xs={12}>
             <List className={classes.list} >
-                <PlayerVolume key={ props.player.endpointId } player={props.player} />
+                <PlayerVolume key={ props.player.endpointId } player={props.player} directive={directive} />
                 { getLinkedPlayers().map( linkedplayer => (
-                    <PlayerVolume key={ linkedplayer.endpointId} player={ linkedplayer } />
+                    <PlayerVolume key={ linkedplayer.endpointId} player={ linkedplayer } directive={directive} />
                 ))}
             </List>
             { coverView ?

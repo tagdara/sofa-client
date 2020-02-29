@@ -51,8 +51,8 @@ const useStyles = makeStyles(theme => {
 export default function ThermostatSummary(props) { 
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceByFriendlyName } = useContext(DataContext);
-    const device = deviceByFriendlyName('Main Thermostat')
+    const { deviceStateByFriendlyName } = useContext(DataContext);
+    const device = deviceStateByFriendlyName('Main Thermostat')
     const classes = useStyles();
     
     function tempColor(temp) {

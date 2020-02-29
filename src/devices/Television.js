@@ -1,5 +1,6 @@
-import React,{ useState, useEffect } from 'react';
+import React,{ useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { DeviceContext } from '../DataContext/DeviceProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -46,6 +47,9 @@ export function Television(props) {
     const [showDetail, setShowDetail] = useState(false);
     const [volume, setVolume] = useState(0);
     const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
+    const { deviceByEndpointId, directive, getInputs} = useContext(DeviceContext);
+    const device=deviceByEndpointId(props.device.endpointId)
+    const inputs=getInputs(device)  
     
     useEffect(() => {
         if (props.device.hasOwnProperty('SpeakerController')) {
@@ -54,37 +58,26 @@ export function Television(props) {
         }
     }, [props.device])
 
-  
-    function getInputs() {
-        var inputlist=[]
-        if (props.device.InputController.hasOwnProperty('inputs')) {
-            for (var k = 0; k < props.device.InputController.inputs.length; k++) {
-                inputlist.push(props.device.InputController.inputs[k].name)
-            }
-        }
-        return inputlist
-    }
-
     function handlePreVolumeChange(event) {
         setVolume(event);
     }; 
 
     function handleVolumeChange(event) {
         setVolume(event);
-        props.device.SpeakerController.directive('SetVolume', { "volume" : event} )
+        directive(props.device.endpointId,"SpeakerController", 'SetVolume', { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        props.device.SpeakerController.directive('SetVolume', { "mute" : event} )
+        directive(props.device.endpointId,"SpeakerController", 'SetVolume', { "mute" : event} )
     }; 
     
     function handlePowerChange(event) {
         setPowerState(event.target.checked);
-        props.device.PowerController.directive(event.target.checked ? 'TurnOn' : 'TurnOff')
+        directive(props.device.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
     };
 
     function handleInput(event, inputname) {
-        props.device.InputController.directive('SelectInput', { "input": inputname } )
+       directive(props.device.endpointId,"InputController", 'SelectInput', { "input": inputname } )
     }; 
 
     function toggleRemote() {
@@ -93,22 +86,21 @@ export function Television(props) {
     
     function localVolumeCheck() {
         if ( props.device.hasOwnProperty('SpeakerController') ) {
-            for (var k = 0; k < props.device.interfaces.length; k++) {
-                if (props.device[props.device.interfaces[k]].controller==='ModeController') {
-                    if (props.device[props.device.interfaces[k]].instance==="Tv.Audio") {
-                        if (props.device[props.device.interfaces[k]].mode.value==="Audio.audioSystem") {
-                            return true
-                        }
-                    }
+            if ( props.device.hasOwnProperty('Audio') ) {
+                if (props.device.Audio.mode.value==="Audio.audioSystem") {
+                    return true
+                } else {
                     return false
                 }
+            } else {
+                return true
             }
-            return true
-        } else {
-            return false
         }
+        
+        return false
+
     }
-    
+     
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
@@ -140,7 +132,7 @@ export function Television(props) {
             <ListItem className={classes.bottomListItem}>
                 <ListItemText primary={"Input"} />
                 <Select disabled={props.device.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty value={props.device.InputController.input.value ? props.device.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
-                    { getInputs().map(inp =>
+                    { inputs.map(inp =>
                         <MenuItem key={inp} value={inp}>{inp}</MenuItem>
                     )}
                 </Select>

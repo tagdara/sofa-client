@@ -87,7 +87,7 @@ export default function CameraDialog(props) {
     },[]);
 
     useEffect(()=> {
-        props.camera.CameraStreamController.directive("InitializeCameraStreams", 
+        props.directive(props.camera.endpointId,"CameraStreamController", "InitializeCameraStreams", 
             {
                 "cameraStreams": [
                     {

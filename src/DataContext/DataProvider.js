@@ -28,30 +28,48 @@ export const deviceStatesReducer = (state, data) => {
         switch (data.event.header.name) {
             case "Multistate":
                 for (dev in data.state) {
+                    if (dev==='sonos:player:RINCON_B8E937ECE1F001400') {
+                        console.log('MS',data.state[dev])
+                    }
+                    var newdev={}
+                    if (devs.hasOwnProperty(dev)) {
+                        newdev={...devs[dev]}
+                    }
                     for (i = 0; i < data.state[dev].context.properties.length; i++) {
                         prop=data.state[dev].context.properties[i]
                         interfacename=prop.namespace.split('.')[1]
                         if (prop.hasOwnProperty('instance')) {
                             interfacename=prop.instance.split('.')[1]
                         }
-                        if (!devs.hasOwnProperty(dev)) {
-                            devs[dev]={}
+
+                        if (!newdev.hasOwnProperty(interfacename)) {
+                            newdev[interfacename]={}
                         }
                         
-                        if (!devs[dev].hasOwnProperty(interfacename)) {
-                            devs[dev][interfacename]={}
+                        try {
+                            if (prop['value'].hasOwnProperty('value')) {
+                                prop['deepvalue']=prop.value.value
+                            } else {
+                                prop['deepvalue']=prop.value
+                            }
+                        } 
+                        catch {
+                            prop['deepvalue']=prop.value
                         }
                         
-                        if (!devs[dev][interfacename].hasOwnProperty(prop.name)) {
-                            devs[dev][interfacename][prop.name]={}
-                        }
-                        devs[dev][interfacename][prop.name]['value']=prop['value']
-                        devs[dev][interfacename][prop.name]['timeOfSample']=prop['timeOfSample']
+                        newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
                     }
+                    devs={...devs, [dev] : newdev }
+                    if (dev==='sonos:player:RINCON_B8E937ECE1F001400') {
+                        console.log('MS+',{ [dev]: newdev})
+                    }
+
                 }                
                 return devs;
             case 'ChangeReport':
-
+                if (data.event.endpoint.endpointId==='elk:zone:27') {
+                    console.log('CR',data)
+                }
                 if (data.event.endpoint.endpointId in devs) {
                     var pname=""
                     var devif={}
@@ -65,8 +83,18 @@ export const deviceStatesReducer = (state, data) => {
                         }
                         pname=prop['name']
                         devif={...dev[interfacename]}
+                        try {
+                            if (prop['value'] && prop['value'].hasOwnProperty('value')) {
+                                prop['deepvalue']=prop.value.value
+                            } else {
+                                prop['deepvalue']=prop.value
+                            }
+                        } 
+                        catch {
+                            prop['deepvalue']=prop.value
+                        }
 
-                        dev={...dev, [interfacename]: { ...devif, [pname] : { ...devif[pname], 'value': prop['value'], 'timeOfSample': prop['timeOfSample'] }}}
+                        dev={...dev, [interfacename]: { ...devif, [pname] : { ...devif[pname], 'value': prop['value'], "deepvalue": prop['deepvalue'], 'timeOfSample': prop['timeOfSample'] }}}
                     }
                     for (i = 0; i < data.context.properties.length; i++) {
                         prop=data.context.properties[i]
@@ -74,8 +102,21 @@ export const deviceStatesReducer = (state, data) => {
                         if (prop.hasOwnProperty('instance')) {
                             interfacename=prop.instance.split('.')[1]
                         }
+                        
+                        pname=prop['name']
                         devif={...dev[interfacename]}
-                        dev={...dev, [interfacename] : {...devif, [pname] : { ...devif[pname], 'value': prop['value'], 'timeOfSample': prop['timeOfSample'] }}}
+                        try {
+                            if (prop['value'] && prop['value'].hasOwnProperty('value')) {
+                                prop['deepvalue']=prop.value.value
+                            } else {
+                                prop['deepvalue']=prop.value
+                            }
+                        } 
+                        catch {
+                            prop['deepvalue']=prop.value
+                        }
+
+                        dev={...dev, [interfacename] : {...devif, [pname] : { ...devif[pname], 'value': prop['value'], "deepvalue": prop['deepvalue'], 'timeOfSample': prop['timeOfSample'] }}}
                     }
                     //console.log('result',epid, dev)
                     return {...devs, [epid]: dev };
@@ -87,8 +128,9 @@ export const deviceStatesReducer = (state, data) => {
     }
 
 export default function DataProvider(props) {
+
     
-    const { deviceByEndpointId, devicesByCategory } = useContext(DeviceContext);
+    const { deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive } = useContext(DeviceContext);
     const { getJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
 
     const initialDeviceStates=loadLocalStorageDevices();
@@ -154,6 +196,7 @@ export default function DataProvider(props) {
     
     function deviceStatesByCategory(categories, searchterm) {
 
+        //console.log('XXXXXXXXXXXXXXXXXXXXX DP')
         var categoryDevices=devicesByCategory(categories,searchterm)
         
         categoryDevices.sort(function(a, b)  {
@@ -165,95 +208,57 @@ export default function DataProvider(props) {
         return getStatesForDevices(categoryDevices)
     }
 
-//    function OlddeviceStatesByCategory(categories, searchterm) {
-
-        
-//       for (var i = 0; i < categoryDevices.length; i++) {
-//            if (deviceStates.hasOwnProperty(categoryDevices[i].endpointId)) {
-//                for (var j = 0; j < categoryDevices[i].interfaces.length; j++) {
-//                    var dev=categoryDevices[i][categoryDevices[i].interfaces[j]]
-//                    dev={...dev, ...deviceStates[ categoryDevices[i].endpointId ][ categoryDevices[i].interfaces[j]] }
-//                }
-//            }
-//        }
-//        categoryDevices.sort(function(a, b)  {
-//		    var x=a['friendlyName'].toLowerCase(),
-//			y=b['friendlyName'].toLowerCase();
-//		    return x<y ? -1 : x>y ? 1 : 0;
-//	    });    
-//        return categoryDevices
-        
-//    }
-    
     function getStatesForDevices(devices) {
         var newdevs=[]
         for (var i = 0; i < devices.length; i++) {
-            newdevs.push(getStateForDevice(devices[i]))
+            var gs=getStateForDevice(devices[i])
+            if (gs!==undefined) {
+                gs.endpointId=devices[i].endpointId
+                newdevs.push(gs)
+            }
         }
         return newdevs
     }
 
+
     function getStateForDevice(device) {
         
-        var dev={...device}
+        var dev=undefined
         if (deviceStates.hasOwnProperty(device.endpointId)) {
-            for (var j = 0; j < device.interfaces.length; j++) {
-                var devif=device[device.interfaces[j]]
-                //console.log('interface directive [', devif.directive,']')
-                dev={...dev, [device.interfaces[j]] : { ...device[device.interfaces[j]], directive: devif.directive, ...deviceStates[ device.endpointId ][ device.interfaces[j]] }}
-            }
-        }
+            dev={...device, ...deviceStates[device.endpointId]}
+        } 
         return dev
     }
 
 
+    function deviceStateByFriendlyName(subname) {
+
+        var categoryDevice=deviceByFriendlyName(subname)
+        return getStateForDevice(categoryDevice)
+    }
+
 
     function deviceStatesByFriendlyName(subname) {
 
-        var subDeviceStates=[]
-        for (var id in deviceStates) {
-            if (subname==="" || deviceStates[id]['friendlyName'].includes(subname)) {
-                subDeviceStates.push(deviceStates[id])
-            } 
-        }
-
-        subDeviceStates.sort(function(a, b)  {
+        var categoryDevices=devicesByFriendlyName(subname)
+        categoryDevices.sort(function(a, b)  {
 		    var x=a['friendlyName'].toLowerCase(),
 			y=b['friendlyName'].toLowerCase();
 		    return x<y ? -1 : x>y ? 1 : 0;
 	    });    
-        return subDeviceStates
+        return getStatesForDevices(categoryDevices)
     }
 
     function deviceStatesByController(controllers, searchterm) {
-
-        //console.log('dbc',categories, searchterm)
-        if (!controllers) {
-            return []
-        }
-        if (!Array.isArray(controllers)) {
-            controllers=[controllers]
-        }
-        var controllerDeviceStates=[]
-        for (var j = 0; j < controllers.length; j++) {
-            var controller=controllers[j]
-            for (var id in deviceStates) {
-                if (deviceStates[id].interfaces.includes(controller)) {
-                    if (!searchterm || deviceStates[id].friendlyName.toLowerCase().includes(searchterm.toLowerCase())) {
-                        if (deviceStates[id].hasData()) {
-                            controllerDeviceStates.push(deviceStates[id])
-                        }
-                    }
-                } 
-            }
-        }
-        controllerDeviceStates.sort(function(a, b)  {
+        
+        var categoryDevices=devicesByController(controllers, searchterm)
+        categoryDevices.sort(function(a, b)  {
 		    var x=a['friendlyName'].toLowerCase(),
 			y=b['friendlyName'].toLowerCase();
 		    return x<y ? -1 : x>y ? 1 : 0;
 	    });    
-        return controllerDeviceStates
         
+        return getStatesForDevices(categoryDevices)
     }
 
     
@@ -266,15 +271,6 @@ export default function DataProvider(props) {
         return devlist
     }
 
-    function deviceStateByFriendlyName(devname) {
-
-        for (var id in deviceStates) {
-            if (deviceStates[id]['friendlyName']===devname) {
-                return deviceStates[id]
-            } 
-        }
-        return undefined
-    }
 
     function deviceStateByEndpointId(endpointId) {
 
@@ -284,7 +280,6 @@ export default function DataProvider(props) {
         }
         //console.log('Did not find device with endpointId', endpointId, Object.keys(deviceStates))
         return undefined
-
     }
 
 
@@ -330,6 +325,7 @@ export default function DataProvider(props) {
                 setUserPlayer: setUserPlayer,
                 
                 getModes: getModes,
+                directive: directive,
             }}
         >
             {props.children}

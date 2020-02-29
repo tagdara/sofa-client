@@ -9,7 +9,7 @@ import GridSection from './GridSection';
 
 export default function MoreDevicesLayout(props) {
 
-    const { deviceStatesByCategory } = useContext(DataContext);
+    const { deviceStatesByCategory, directive } = useContext(DataContext);
     const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))   
     const modes = deviceStatesByCategory('MODE')
     
@@ -34,7 +34,7 @@ export default function MoreDevicesLayout(props) {
             { switches &&
             <GridSection name={"Other Devices"} >
                 <ErrorBoundary wide={props.wide}>
-                    <DeviceList devices={ switches } />
+                    <DeviceList devices={ switches } directive={directive} />
                 </ErrorBoundary>
 
             </GridSection>

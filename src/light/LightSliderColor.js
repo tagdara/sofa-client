@@ -61,13 +61,13 @@ export default function LightSliderColor(props) {
         setColor(color.hsl);
         var sendsb=sl2sb(color.hsl)
         sendsb.brightness=props.device.BrightnessController.brightness.value/100
-        props.device.ColorController.directive('SetColor',{ "color": sendsb })
+        props.directive(props.device.endpointId, "ColorController", "SetColor", { "color": sendsb })
     }
 
     function handleColorChange(hsb) {
         setColor(sb2sl(hsb));
         hsb.brightness=props.device.BrightnessController.brightness.value/100
-        props.device.ColorController.directive('SetColor',{ "color": hsb })
+        props.directive(props.device.endpointId, "ColorController", "SetColor", { "color": hsb })
     }
 
     return (

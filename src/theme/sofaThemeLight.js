@@ -24,6 +24,18 @@ export default createMuiTheme({
             off: "#bbb",
             on: deepOrange[500],
         },
+        avatar: {
+            normal: deepOrange[500],
+            off: deepOrange[700],    
+            on: deepOrange[500],
+            notready: "#bbb",
+            closed: "#6a6",
+            open: "#e66",
+            cool: "#00796B",
+            mid: "#558B2F",
+            hot: "#E65100",
+        },
+
         type: "light"
     }
 })

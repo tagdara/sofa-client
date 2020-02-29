@@ -5,9 +5,10 @@ import { DataContext } from './DataContext/DataProvider';
 export default function TvHero(props) {
  
     const { deviceStatesByCategory } = useContext(DataContext);
+    const tvs= deviceStatesByCategory('TV')
     
     return (
-        deviceStatesByCategory('TV').map(device => 
+        tvs.map(device => 
             <Television wide={props.wide} key={device.endpointId} device={ device } />
         )
     );

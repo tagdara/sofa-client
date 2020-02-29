@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 
 export default function LightLayout(props) {
 
-    const { deviceStatesByCategory, isReachable } = useContext(DataContext);
+    const { deviceStatesByCategory, isReachable, directive } = useContext(DataContext);
     const classes = useStyles();
     const [filter, setFilter] = useState('ON');
     const [brightControl, setBrightControl] = useState(false)
@@ -81,7 +81,7 @@ export default function LightLayout(props) {
                     }
             >
                 { filterByType(filter).map((device) =>
-                    <Light  key={ device.endpointId } device={ device } 
+                    <Light  key={ device.endpointId } device={ device } directive={ directive }
                             brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
                     />
                 )}

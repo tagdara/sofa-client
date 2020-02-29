@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DataContext } from '../DataContext/DataProvider';
+import { DeviceContext } from '../DataContext/DeviceProvider';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -19,12 +19,11 @@ import GridItem from '../GridItem';
 
 export default function Shade(props) {
     
-    const { deviceByEndpointId } = useContext(DataContext);
+    const { directive } = useContext(DeviceContext);
     
     function handlePress(commandName) {
         var command = props.commands[commandName]
-        var dev=deviceByEndpointId(command.endpointId)
-        dev[command.controller].directive(command.command, command.value)
+        directive(command.endpointId, command.controller, command.command, command.value)
     }   
 
     return (

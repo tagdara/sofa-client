@@ -7,9 +7,9 @@ import GridBreak from './GridBreak';
 
 export default function AdapterLayout(props) {
     
-    const { devicesByCategory } = useContext(DataContext);
+    const { deviceStatesByCategory, directive} = useContext(DataContext);
     const [adapterStatus, setAdapterStatus] = useState('');
-    const adapters = devicesByCategory('ADAPTER')
+    const adapters = deviceStatesByCategory('ADAPTER')
     
     function clearAdapterStatus() {
         setAdapterStatus("")
@@ -22,7 +22,7 @@ export default function AdapterLayout(props) {
                 <AdapterStatus status={adapterStatus} name={''} clear={clearAdapterStatus} />
             }
             { adapters.map( adapter => 
-                <AdapterItem key={adapter.endpointId} adapter={adapter} />
+                <AdapterItem key={adapter.endpointId} adapter={adapter} directive={directive} />
             )}
         </React.Fragment>
     )

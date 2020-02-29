@@ -26,8 +26,8 @@ export default function DeviceSummary(props) {
     const [onCount, setOnCount] = useState(0)
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { devicesByCategory } = useContext(DataContext);
-    const switches = devicesByCategory('SWITCH')
+    const { deviceStatesByCategory } = useContext(DataContext);
+    const switches = deviceStatesByCategory('SWITCH')
     
     useEffect(() => {
         var ondevs=0

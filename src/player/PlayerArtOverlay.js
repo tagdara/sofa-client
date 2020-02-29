@@ -12,8 +12,7 @@ const useStyles = makeStyles(theme => {
             width: "100%",
             maxHeight: 480,
             position: "relative",
-            padding: "8px 0 0 8px",
-            borderRadius: "4px 0px 0px 0px",
+            padding: 0,
             height: "auto",
             minHeight:100,
         },
@@ -28,11 +27,13 @@ const useStyles = makeStyles(theme => {
         },
         songImageHolder: {
             position: "relative",
-            padding: 0,
+            padding: "16px 0 0 16px",
             margin: 0,
         },
         songTextHolder: {
             paddingLeft: 16,
+            paddingTop: 16,
+            boxSizing: "border-box",
             display: "flex",
             justifyContent: "center",
             flexDirection: "column",
@@ -84,6 +85,7 @@ export default function PlayerArtOverlay(props) {
     const classes = useStyles();
     const [imageLoaded, setImageLoaded] = useState(false)
     const serverurl="https://"+window.location.hostname;
+    
 
     return ( 
         <Grid container className={classes.topbox} >
@@ -101,8 +103,8 @@ export default function PlayerArtOverlay(props) {
             </Grid>
             <Grid item container xs={8} >
                 <Grid item xs={12} className={classes.songTextHolder}>
-                    <Typography variant="h5" className={classes.songText}>{props.title}</Typography>
-                    <Typography variant="h6" className={classes.songText}>{props.artist}</Typography>
+                    <Typography variant="subtitle1" className={classes.songText}>{props.title}</Typography>
+                    <Typography variant="subtitle2" className={classes.songText}>{props.artist}</Typography>
                 </Grid>
                 <Grid item xs={12} className={classes.songButtonHolder}>
                     {props.children}

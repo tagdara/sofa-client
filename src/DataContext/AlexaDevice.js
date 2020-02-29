@@ -147,4 +147,3 @@ export class AlexaControllerProperty {
         return this.value;
     }
 }
-

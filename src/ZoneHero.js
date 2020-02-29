@@ -45,6 +45,8 @@ export default function ZoneHero(props) {
             } else if (zone.hasOwnProperty('MotionSensor')) {
                 controller=zone.MotionSensor
             } 
+            
+            //console.log('cont',controller.detectionState.value)
             if (controller && (condition==='all' || controller.detectionState.value===condition.toUpperCase())) {
                 count=count+1
             }

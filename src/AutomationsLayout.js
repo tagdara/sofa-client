@@ -33,7 +33,7 @@ export function AutomationsLayout(props) {
 
     const classes = useStyles();
     const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
-    const { deviceByEndpointId } = useContext(DataContext);
+    const { deviceStateByEndpointId } = useContext(DataContext);
     const { getJSON, postJSON } = useContext(NetworkContext);
 
     const [automations, setAutomations] = useState({})
@@ -113,7 +113,7 @@ export function AutomationsLayout(props) {
     } 
         
     function runAutomation(name) {
-        var auto=deviceByEndpointId('logic:activity:'+name)
+        var auto=deviceStateByEndpointId('logic:activity:'+name)
         auto.SceneController.directive('Activate')
     }
 

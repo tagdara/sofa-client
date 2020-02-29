@@ -9,17 +9,20 @@ import GridItem from './GridItem';
 export default function AreasLayout(props) {
     
     const { applyLayout } = useContext(LayoutContext);
-    const { setArea, devicesByCategory } = useContext(DataContext);
+    const { setArea, deviceStatesByCategory } = useContext(DataContext);
+    const areas = deviceStatesByCategory('AREA')
 
     function selectArea(name) {
         setArea(name);
         applyLayout('Home');
     }
 
+    console.log('Areas',areas)
+
     return (    
         <React.Fragment>
             <GridBreak label={"Areas"} />
-            { devicesByCategory('AREA').map((area) =>
+            { areas.map((area) =>
                 <GridItem wide={props.wide} key={ area.endpointId } >
                     <AreaLine area={ area } name={ area.friendlyName } shortcuts={area.shortcuts} selectArea={selectArea} ></AreaLine>
                 </GridItem>

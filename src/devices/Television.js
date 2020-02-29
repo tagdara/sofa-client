@@ -1,4 +1,4 @@
-import React,{ useState, useEffect, useContext } from 'react';
+import React,{ useState, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { DeviceContext } from '../DataContext/DeviceProvider';
 
@@ -10,13 +10,10 @@ import IconButton from '@material-ui/core/IconButton';
 
 import Switch from '@material-ui/core/Switch';
 import TvIcon from '@material-ui/icons/Tv';
-import VolumeUpIcon from '@material-ui/icons/VolumeUp';
-import VolumeOffIcon from '@material-ui/icons/VolumeOff';
 import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
-import SofaSlider from '../SofaSlider'
+import SofaAvatarSlider from '../SofaAvatarSlider'
 import GridItem from '../GridItem'
-import ToggleAvatar from '../ToggleAvatar'
 import TvRemote from './TvRemote';
 import ErrorBoundary from '../ErrorBoundary';
 import ModeLines from '../ModeLines'
@@ -35,6 +32,12 @@ const useStyles = makeStyles({
     select: {
         minWidth: "50%",
     },
+    minLI: {
+        minHeight: 48,
+        display: "flex",
+        alignItems: "center",
+    },
+
 });
 
 
@@ -42,28 +45,13 @@ const useStyles = makeStyles({
 export function Television(props) {
     
     const classes = useStyles();
-    const [mute, setMute] = useState(false);
     const [showRemote, setShowRemote] = useState(false)
     const [showDetail, setShowDetail] = useState(false);
-    const [volume, setVolume] = useState(0);
-    const [powerState, setPowerState] = useState(props.device.PowerController.powerState.value);
     const { deviceByEndpointId, directive, getInputs} = useContext(DeviceContext);
     const device=deviceByEndpointId(props.device.endpointId)
     const inputs=getInputs(device)  
-    
-    useEffect(() => {
-        if (props.device.hasOwnProperty('SpeakerController')) {
-            setVolume(props.device.SpeakerController.volume.value);
-            setMute(props.device.SpeakerController.mute.value);
-        }
-    }, [props.device])
-
-    function handlePreVolumeChange(event) {
-        setVolume(event);
-    }; 
 
     function handleVolumeChange(event) {
-        setVolume(event);
         directive(props.device.endpointId,"SpeakerController", 'SetVolume', { "volume" : event} )
     }; 
 
@@ -72,7 +60,6 @@ export function Television(props) {
     }; 
     
     function handlePowerChange(event) {
-        setPowerState(event.target.checked);
         directive(props.device.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
     };
 
@@ -100,13 +87,25 @@ export function Television(props) {
         return false
 
     }
+    
+    function subText() {
+        if (showDetail || props.device.PowerController.powerState.value==='OFF') {
+            return null
+        }
+        if (props.device.PowerController.powerState.value!=='OFF') {
+            if (localVolumeCheck()) {
+                return props.device.SpeakerController.volume.value+"% / "+props.device.InputController.input.value
+            }
+        }
+        return props.device.InputController.input.value
+    }
      
     return (
         <GridItem wide={props.wide}>
             <ListItem className={classes.listItem}>
                 <ListItemIcon onClick={ () => setShowDetail(!showDetail) } ><TvIcon /></ListItemIcon>
             <ErrorBoundary>
-                <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={props.device.PowerController.powerState.value!=='ON' ? 'Off' : props.device.InputController.input.value}/>
+                <ListItemText className={classes.minLI} onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={subText()}/>
             </ErrorBoundary>
                 <ListItemSecondaryAction>
                     { props.device.PowerController.powerState.value!=='ON' ? null :
@@ -118,15 +117,15 @@ export function Television(props) {
                     <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
             </ListItem>
-        { localVolumeCheck() && powerState==='ON' && showDetail ?
-            <ListItem className={classes.listItemBottom}>
-                <ToggleAvatar noback={true} onClick={ () => handleMuteChange(!props.device.SpeakerController.mute.value)} avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }>
-                    {mute ? <VolumeOffIcon /> : <VolumeUpIcon /> }
-                </ToggleAvatar>
-                <SofaSlider name="Volume" unit="%" min={0} max={100} defaultValue={0} step={1} value={volume}
-                            minWidth={240} preChange={handlePreVolumeChange} change={handleVolumeChange} padLeft={false} />
-            </ListItem>
-            : null
+        { localVolumeCheck() && ( props.device.PowerController.powerState.value==='ON' || showDetail ) &&
+            <SofaAvatarSlider   label={"Volume"} 
+                                small={true} reverse={true} minWidth={64} 
+                                value={props.device.SpeakerController.volume.value}
+                                change={handleVolumeChange} 
+                                avatarClick={ () => handleMuteChange(!props.device.SpeakerController.mute.value)} 
+                                avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }
+                                disabled={ props.device.PowerController.powerState.value==='OFF' }
+            />
         }
         { showDetail &&
             <ListItem className={classes.bottomListItem}>
@@ -139,7 +138,7 @@ export function Television(props) {
             </ListItem>
         }
         { showDetail &&
-            <ModeLines disabled={props.device.PowerController.powerState.value!=='ON'} device={props.device} />
+            <ModeLines disabled={props.device.PowerController.powerState.value!=='ON'} device={props.device} directive={directive} />
         }
         { showRemote &&
             <ListItem className={classes.remoteListItem}>

@@ -19,6 +19,9 @@ const useStyles = makeStyles({
     line: {
         display: "flex",
         width: '100%',
+        maxWidth: '100%',
+        flexGrow: 1,
+        flexBasis: 0,
     }
 })
 

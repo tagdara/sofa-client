@@ -22,6 +22,7 @@ const useStyles = makeStyles({
         maxWidth: '100%',
         flexGrow: 1,
         flexBasis: 0,
+        minHeight: 48,
     }
 })
 

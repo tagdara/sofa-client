@@ -103,6 +103,7 @@ export default function CameraDialog(props) {
                 ]
             }
         ).then(response => setUri(response.payload.cameraStreams[0].uri));
+    // eslint-disable-next-line     
     },[props.camera]);
     
     

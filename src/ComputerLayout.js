@@ -5,30 +5,24 @@ import ErrorBoundary from './ErrorBoundary';
 import DeviceList from './other/DeviceList';
 import GridSection from './GridSection';
 import MatrixList from './other/MatrixList';
+import ComputerIcon from '@material-ui/icons/Computer';
 
 export default function MoreDevicesLayout(props) {
 
-    const { deviceStatesByCategory, directive} = useContext(DataContext);
-    const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))
+    const { deviceStatesByFriendlyName, deviceStatesByCategory, directive} = useContext(DataContext);
+    //const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))
     const otherDevices=deviceStatesByCategory('OTHER')
-    const matrixDevices=deviceStatesByCategory('MATRIX') 
-    
-    function devsWithPowerState(devs) {
-        var outdevs=[]
-        for (var j = 0; j < devs.length; j++) {
-            if (devs[j].hasOwnProperty('PowerController')) {
-                outdevs.push(devs[j])
-            }
-        }
-        return outdevs
-    }
+    const switches=deviceStatesByFriendlyName(['PC1','PC2','PC3','PC4'], false, 'SWITCH')
+
+    //const matrixDevices=deviceStatesByCategory('MATRIX') 
+    const matrixDevices=deviceStatesByFriendlyName(['Living Room TV', 'Office 1', 'Office 2', 'Downstairs 1', 'Downstairs 2', 'Rack'], false)
  
     return (
         <React.Fragment>
             { switches &&
-            <GridSection name={"Other Devices"} >
+            <GridSection name={"Computers"} >
                 <ErrorBoundary wide={props.wide}>
-                    <DeviceList devices={ switches } directive={directive} />
+                    <DeviceList icon={<ComputerIcon />} devices={ switches } directive={directive} />
                 </ErrorBoundary>
 
             </GridSection>

@@ -130,7 +130,7 @@ export default function SecurityCamera(props) {
                 }
             ).then(response => updateUrlUri(response))
         } 
-
+    // eslint-disable-next-line 
     }, [props.camera, ready]);
 
     function imageFinished() {

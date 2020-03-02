@@ -35,7 +35,7 @@ export default function Matrix(props) {
     return (
         <GridItem >
             <ListItem>
-                <ToggleAvatar avatarState={'on'}><TvIcon /></ToggleAvatar>
+                <ToggleAvatar noback={true} avatarState={props.device.InputController.input.value!=='Blank' ? 'on': 'off'}><TvIcon /></ToggleAvatar>
                 <ListItemText primary={props.device.friendlyName} />
                 <Select className={classes.select} displayEmpty value={props.device.InputController.input.value ? props.device.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
                     { inputs.map(inp =>

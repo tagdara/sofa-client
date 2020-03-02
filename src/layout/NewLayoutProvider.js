@@ -12,7 +12,7 @@ export const moduleReducer = (state, data) => {
         var newmodules = {...state}
         modulelist.forEach( item => {
             if (!newmodules.hasOwnProperty(item)) {
-                console.log('adding module', item)
+                //console.log('adding module', item)
                 newmodules[item]=addSuspenseModule(item)
             }
         })
@@ -65,6 +65,7 @@ export const LayoutProvider = (props) => {
             return
         }
         return
+    // eslint-disable-next-line 
     },[ layouts, isMobile ]);
 
 
@@ -115,13 +116,13 @@ export const LayoutProvider = (props) => {
         }
         
         getModulesForLayout(layout)
-        
+    // eslint-disable-next-line    
     }, [ layout, isMobile ])
     
     function goHome() {
         var newLayout={"name":'Home', "props":{}, "data":layouts['Home'], "page":layouts['Home']['order'][0]}
         if (isMobile && layouts['Home'].hasOwnProperty('mobile')) {
-            console.log('setting home to mobile')
+            //console.log('setting home to mobile')
             newLayout.page=layouts['Home'].mobile
         }
         
@@ -167,7 +168,7 @@ export const LayoutProvider = (props) => {
     }
     
     function applyLayoutPage(newPage) {
-        console.log('Apply layout page',newPage)
+        //console.log('Apply layout page',newPage)
         var newLayout={"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage}    
         setLayout(newLayout)
         writeLayoutCookie(newLayout)

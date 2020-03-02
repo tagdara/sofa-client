@@ -9,26 +9,15 @@ import GridSection from './GridSection';
 
 export default function MoreDevicesLayout(props) {
 
-    const { deviceStatesByCategory, directive } = useContext(DataContext);
-    const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))   
+    const { deviceStatesByFriendlyName, deviceStatesByCategory, directive } = useContext(DataContext);
+    const switches=deviceStatesByFriendlyName(['Bathroom Fan','Bathroom Heat Fan'], false, 'SWITCH')
     const modes = deviceStatesByCategory('MODE')
-    
-    
-    function devsWithPowerState(devs) {
-        var outdevs=[]
-        for (var j = 0; j < devs.length; j++) {
-            if (devs[j].hasOwnProperty('PowerController')) {
-                outdevs.push(devs[j])
-            }
-        }
-        return outdevs
-    }
  
     return (
         <React.Fragment>
             <GridSection name={'Shades'}>
                 <ErrorBoundary wide={props.wide}>
-                    <VirtualList />
+                    <VirtualList directive={directive} />
                 </ErrorBoundary>
             </GridSection>
             { switches &&

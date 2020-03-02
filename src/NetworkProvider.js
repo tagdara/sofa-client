@@ -47,7 +47,7 @@ export const useStream = (userToken) => {
         const connectStream = () => {
             if (userToken && subscribers.length>0 && !isConnecting) {
                 setIsConnecting(true)
-                console.log('.. Connecting event source:', userToken, subscribers)
+                //console.log('.. Connecting event source:', userToken, subscribers)
                 var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': userToken }, withCredentials: true })
                 esource.addEventListener('message', dataHandler);
                 esource.addEventListener('error', errorHandler);

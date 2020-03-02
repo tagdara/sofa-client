@@ -37,9 +37,6 @@ const deviceReducer = (state, data) => {
                 local={}
             }
             for (i = 0; i < data.event.payload.endpoints.length; i++) {
-                if (data.event.payload.endpoints[i].endpointId==='logic:area:Main') {
-                    console.log('AOU',data.event.payload.endpoints[i].endpointId,data.event.payload.endpoints[i])
-                }
                 local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
             }
             localStorage.setItem('devices', JSON.stringify(local));
@@ -63,6 +60,7 @@ export default function DeviceProvider(props) {
 
     useEffect(() => {
        addSubscriber(deviceDispatch)
+    // eslint-disable-next-line 
     }, [] );
 
 
@@ -81,8 +79,9 @@ export default function DeviceProvider(props) {
                 .then(result=>setVirtualDevices(result))
                 //.then(result=>console.log('done getting virtual devices'));
         }
-        console.log('logged in changed to',loggedIn) 
+        //console.log('logged in changed to',loggedIn) 
         if (loggedIn===true ) { getData() }
+    // eslint-disable-next-line 
     }, [ loggedIn ] );
     
 
@@ -116,22 +115,39 @@ export default function DeviceProvider(props) {
     }
 
 
-    function devicesByFriendlyName(subname) {
+    function devicesByFriendlyName(subname,sort=true, category) {
 
         var subDevices=[]
-        for (var id in devices) {
-            if (subname==="" || devices[id]['friendlyName'].includes(subname)) {
-                subDevices.push(devices[id])
+        if (typeof(subname)==='object') {
+            for (var j = 0; j < subname.length; j++) {
+                for (var id in devices) {
+                    if (subname[j]===devices[id]['friendlyName']) {
+                        if (category===undefined || devices[id].displayCategories.includes(category)) {
+                            subDevices.push(devices[id])
+                            continue
+                        }
+                    }
+                }
             } 
+        } else {
+            for (var devid in devices) {
+                if (subname==="" || devices[devid]['friendlyName'].includes(subname)) {
+                    subDevices.push(devices[devid])
+                } 
+            }
         }
 
-        subDevices.sort(function(a, b)  {
-		    var x=a['friendlyName'].toLowerCase(),
-			y=b['friendlyName'].toLowerCase();
-		    return x<y ? -1 : x>y ? 1 : 0;
-	    });    
+        if (sort) {
+            subDevices.sort(function(a, b)  {
+    		    var x=a['friendlyName'].toLowerCase(),
+    			y=b['friendlyName'].toLowerCase();
+    		    return x<y ? -1 : x>y ? 1 : 0;
+    	    });    
+        }
         return subDevices
     }
+
+
 
     function devicesByController(controllers, searchterm) {
 
@@ -294,7 +310,7 @@ export default function DeviceProvider(props) {
         }
         var endpoint={"endpointId": endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
-        console.log('Sending device-based alexa command:',data)
+        //console.log('Sending device-based alexa command:',data)
     
         return fetch(serverurl+'/directive', { withCredentials: true, credentials: 'include', method: 'post',
                     body: JSON.stringify(data)

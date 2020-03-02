@@ -16,6 +16,7 @@ export default function ZoneLayout(props) {
 
     useEffect(() => {
         getChangeTimesForDevices('detectionState',allzones).then(result => setChangeTimes(result))
+    // eslint-disable-next-line 
     }, []);
     
     function getSecurityZones() {

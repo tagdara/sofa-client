@@ -28,9 +28,6 @@ export const deviceStatesReducer = (state, data) => {
         switch (data.event.header.name) {
             case "Multistate":
                 for (dev in data.state) {
-                    if (dev==='sonos:player:RINCON_B8E937ECE1F001400') {
-                        console.log('MS',data.state[dev])
-                    }
                     var newdev={}
                     if (devs.hasOwnProperty(dev)) {
                         newdev={...devs[dev]}
@@ -60,16 +57,9 @@ export const deviceStatesReducer = (state, data) => {
                         newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
                     }
                     devs={...devs, [dev] : newdev }
-                    if (dev==='sonos:player:RINCON_B8E937ECE1F001400') {
-                        console.log('MS+',{ [dev]: newdev})
-                    }
-
                 }                
                 return devs;
             case 'ChangeReport':
-                if (data.event.endpoint.endpointId==='elk:zone:27') {
-                    console.log('CR',data)
-                }
                 if (data.event.endpoint.endpointId in devs) {
                     var pname=""
                     var devif={}
@@ -142,6 +132,7 @@ export default function DataProvider(props) {
 
     useEffect(() => {
        addSubscriber(deviceStatesDispatch)
+    // eslint-disable-next-line 
     }, []);
 
     useEffect(() => {
@@ -152,8 +143,9 @@ export default function DataProvider(props) {
                 .then(result=>setVirtualDeviceStates(result))
                 //.then(result=>console.log('done getting virtual devices'));
         }
-        console.log('logged in changed to',loggedIn) 
+        //console.log('logged in changed to',loggedIn) 
         if (loggedIn===true ) { getData() }
+    // eslint-disable-next-line 
     }, [ loggedIn ] );
     
     function loadLocalStorageDevices() {
@@ -238,14 +230,9 @@ export default function DataProvider(props) {
     }
 
 
-    function deviceStatesByFriendlyName(subname) {
+    function deviceStatesByFriendlyName(subname, sort, category) {
 
-        var categoryDevices=devicesByFriendlyName(subname)
-        categoryDevices.sort(function(a, b)  {
-		    var x=a['friendlyName'].toLowerCase(),
-			y=b['friendlyName'].toLowerCase();
-		    return x<y ? -1 : x>y ? 1 : 0;
-	    });    
+        var categoryDevices=devicesByFriendlyName(subname, sort, category)
         return getStatesForDevices(categoryDevices)
     }
 

@@ -36,28 +36,31 @@ export default function AutomationColumn(props) {
 
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
-    const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
+    //const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
     const modmap={'Triggers': AutomationTrigger , 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
     const AutomationProperty = React.memo(modmap[props.name])
 
-    function oldgetControllerProperties(item) {
-        try {
-            if (item.hasOwnProperty('propertyName')) {
-                if (controllerProperties[item.controller].hasOwnProperty(item.propertyName)) {
-                    item.type="property"
-                    return controllerProperties[item.controller][item.propertyName]
-                } else if (eventSources.hasOwnProperty(item.propertyName)) {
-                    item.type="event"
-                    return eventSources[item.propertyName]
-                }
-            }
-        }
-        catch(err) {
-            console.log('Error getting properties for',item)
-            return {'error': 'Invalid property: '+item.controller+"/"+item.propertyName}
-        }
-        return {}
-    }    
+
+    // The current code needs to have the eventsource portion retrofitted back in
+    // Leaving this here in the meantime as a reminder
+    //function oldgetControllerProperties(item) {
+    //    try {
+    //        if (item.hasOwnProperty('propertyName')) {
+    //            if (controllerProperties[item.controller].hasOwnProperty(item.propertyName)) {
+    //                item.type="property"
+    //                return controllerProperties[item.controller][item.propertyName]
+    //            } else if (eventSources.hasOwnProperty(item.propertyName)) {
+    //                item.type="event"
+    //                return eventSources[item.propertyName]
+    //            }
+    //        }
+    //    }
+    //    catch(err) {
+    //        console.log('Error getting properties for',item)
+    //       return {'error': 'Invalid property: '+item.controller+"/"+item.propertyName}
+    //    }
+    //    return {}
+    //}    
 
     function getControllerProperties(endpointId) {
         

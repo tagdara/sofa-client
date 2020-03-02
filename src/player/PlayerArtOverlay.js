@@ -74,7 +74,7 @@ const useStyles = makeStyles(theme => {
         },
         topbox: {
             paddingBottom: 8,
-            borderBottom: "1px solid",
+            borderBottom: "0px solid",
             borderBottomColor: theme.palette.divider,
         },
     }

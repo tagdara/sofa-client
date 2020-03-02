@@ -18,7 +18,7 @@ export default function Device(props) {
     return (
         <GridItem>
             <ListItem>
-                <ToggleAvatar avatarState={ props.device.PowerController.powerState.value==='ON' ? 'on' : 'off'}><TuneIcon /></ToggleAvatar>
+                <ToggleAvatar noback={true} avatarState={ props.device.PowerController.powerState.value==='ON' ? 'on' : 'off'}>{ props.icon ? props.icon : <TuneIcon />}</ToggleAvatar>
                 <ListItemText primary={props.device.friendlyName}/>
                 <ListItemSecondaryAction>
                     <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />

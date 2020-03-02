@@ -6,6 +6,7 @@ import VirtualList from './other/VirtualList';
 import ModeList from './other/ModeList';
 import DeviceList from './other/DeviceList';
 import GridSection from './GridSection';
+import FanIcon from '@material-ui/icons/Toys';
 
 export default function MoreDevicesLayout(props) {
 
@@ -23,7 +24,7 @@ export default function MoreDevicesLayout(props) {
             { switches &&
             <GridSection name={"Other Devices"} >
                 <ErrorBoundary wide={props.wide}>
-                    <DeviceList devices={ switches } directive={directive} />
+                    <DeviceList icon={<FanIcon />} devices={ switches } directive={directive} />
                 </ErrorBoundary>
 
             </GridSection>

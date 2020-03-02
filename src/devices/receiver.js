@@ -49,6 +49,7 @@ const useStyles = makeStyles(theme => {
             minHeight: 48,
             display: "flex",
             alignItems: "center",
+            flexDirection: "row",
         },
         list: {
             maxWidth: "100%",
@@ -123,7 +124,7 @@ export default function Receiver(props) {
             <List className={classes.list} >
                 <ListItem className={ classes.cardline } >
                     <ListItemIcon onClick={ () => setShowDetail(!showDetail) } ><SpeakerGroupIcon /></ListItemIcon>
-                    <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={subText()} className={classes.minLI} />
+                    <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={subText()} className={subText() ? classes.normal : classes.minLI} />
                     <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItem>
                 { (showDetail || props.device.PowerController.powerState.value==='ON' ) &&

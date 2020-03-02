@@ -25,19 +25,29 @@ const BootstrapInput = withStyles(theme => ({
 
 export default function PowerState(props) {
     
+    console.log('props item', props.item)
+
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.powerState.value===undefined) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('OFF')
-            }
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'PowerController', 'TurnOn', {}, {}, props.item.instance)
         }
-    }, [props.interface])
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
+
     
-    console.log('powerstate propsdev', props.interface)
+    function handleChange(e) {
+        props.directive(props.device.endpointId, 'PowerController', e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' , {}, {}, props.item.instance)
+    }
+    
+    function getValue() {
+        if (props.item.value==='ON' || props.item.value==='OFF') { return props.item.value }
+        if (props.item.command==='TurnOn') {return 'ON'}
+        if (props.item.command==='TurnOn') {return 'OFF'}
+        return ''
+    }
     
     return (
-        <Select value={props.interface.powerState.value ? props.interface.powerState.value : ""} onChange={(e) => props.interface.directive( e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' ) } input={<BootstrapInput name="powerState" id="powerState" />} >
+        <Select value={getValue()} onChange={handleChange} input={<BootstrapInput name="powerState" id="powerState" />} >
             <MenuItem value=""><em>Choose a property</em></MenuItem>
             <MenuItem value="ON">ON</MenuItem>
             <MenuItem value="OFF">OFF</MenuItem>

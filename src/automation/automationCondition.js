@@ -1,25 +1,15 @@
 import React, { Suspense, useState } from 'react';
-import { makeStyles, withStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
+import AutomationInput from './AutomationInput';
+import AutomationDevice from './AutomationDevice';
 
-import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import TextField from '@material-ui/core/TextField';
-
-import CloseIcon from '@material-ui/icons/Close';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-import DeviceIcon from '../DeviceIcon';
 import GridItem from '../GridItem';
 import OperatorButton from "./operatorButton"
 import Grid from '@material-ui/core/Grid';
-
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
-import InputBase from '@material-ui/core/InputBase';
 
 const useStyles = makeStyles({
         
@@ -45,70 +35,41 @@ const useStyles = makeStyles({
     }
 });
 
-const BootstrapInput = withStyles(theme => ({
-    input: {
-        minWidth: '100px',
-        borderRadius: 4,
-        position: 'relative',
-        backgroundColor: theme.palette.background.paper,
-        border: '1px solid #ced4da',
-        fontSize: 16,
-        padding: '10px 26px 10px 12px',
-        transition: theme.transitions.create(['border-color', 'box-shadow']),
-        '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-    },
-}))(InputBase);
-
-class AutomationInterface {
-    
-    constructor(property, value, setPropertyValue, setDefault) {
-        this[property]=new AutomationControllerProperty(value)
-        this.propName=[property]
-        if (setDefault!==undefined) {
-            this.setDefault=setDefault
-        }
-        this.setPropertyValue=setPropertyValue
-    }
-    
-    directive(command, payload={}, cookie={}, instance={}) {
-        if (command==='TurnOn') { payload="ON"}
-        if (command==='TurnOff') { payload="OFF"}
-        console.log('update payload', payload, cookie)
-        this.setPropertyValue(payload)
-    }
-}
-
-class AutomationControllerProperty {
-    
-    constructor(value) {
-        this.value=value
-        this.deepvalue = this.deepvalue.bind(this);
-    }
-    
-    deepvalue() {
-        // this is a shim to prevent the objects with value.value from breaking when value is null and javascript
-        // throws an error.
-        if (!this.value) return undefined;
-        if (this.value.hasOwnProperty('value')) return this.value.value;
-        return this.value;
-    }
-}
-
 
 export default function AutomationCondition(props) {
 
-    function updateItemValue(val) {
-        console.log('updating item', val, {...props.item, 'value': val })
-        props.save(props.index, {...props.item, "value": val})
+    const classes = useStyles();
+    const interfaceobj=getInterface()
+    const [propMod, setPropMod] = useState(loadPropMod(props.item.propertyName))
+    
+    console.log('cp device', props.controllerProperties)
+    
+    function directive (endpointId, controllerName, command, payload={}, cookie={}, instance) {
+        if (command==='TurnOn') { payload="ON"}
+        if (command==='TurnOff') { payload="OFF"}
+        props.save(props.index, {...props.item, controller:controllerName, command:command, instance: instance, value: payload})
     }
 
-    let interfaceobj=new AutomationInterface(props.item.propertyName, props.item.value, updateItemValue)
-    const classes = useStyles();
-    const [propMod, setPropMod] = useState(loadPropMod(props.item.propertyName))
+    function getInterface() {
+        
+        if (props.device===undefined) { return undefined }
+        if (props.device.hasOwnProperty('capabilities')) {
+            for (var j = 0; j < props.device.capabilities.length; j++) {
+                if (props.device.capabilities[j].interface.split('.')[1]===props.item.controller) {
+                    if (props.item.instance===undefined && props.device.capabilities[j].interface.instance===undefined) {
+                        return props.device.capabilities[j]
+                    }
+                    if (props.item.hasOwnProperty('instance') && props.device.capabilities[j].hasOwnProperty('instance')) {
+                        if (props.item.instance===props.device.capabilities[j].instance.split('.')[1]) {
+                            return props.device.capabilities[j]
+                        }
+                    }               
+                }
+            }
+        }
+        console.log('failed get interface',props.item.controller, props.item.instance ,props.device)
+        return undefined
+    }
 
     function loadPropMod(name) {
         let pmod=React.lazy(() => { 
@@ -131,62 +92,95 @@ export default function AutomationCondition(props) {
     }
     
     function renderSuspenseModule( modulename ) {
-
+        
         if (propMod!==undefined) {
+            if (propMod===null) {
+                return null
+            }
             let Module=propMod
             return  <Suspense key={ modulename } fallback={ placeholder() }>
-                        <Module interface={ interfaceobj } device={props.device} />
+                        <Module item={props.item} interface={ interfaceobj } device={props.device} instance={props.item.instance} directive={directive} />
                     </Suspense>
+        } else {
+            return <TextField value={'Loading...'} />
         }
-        console.log('fallthrough')
-        return <TextField value={'Loading...'} />
     }
-    
+     
     function editOperatorValue(value) {
         props.save(props.index, {...props.item, "operator": value})
     }
 
     function handleChangePropertyName(newval) {
         setPropMod(loadPropMod(newval))
-        props.save(props.index, {...props.item, "value": undefined, "controller":props.device.controllerForProperty(newval), "propertyName": newval })
+        props.save(props.index, {...props.item, "value": undefined, "controller":props.controllerForProperty(props.device.endpointId, newval), "propertyName": newval })
+    }
+    
+    function directives(otherdev) {
+
+        var dev=props.device
+        if (otherdev) { dev=otherdev }
+        var dirs=[]
+        if (dev.hasOwnProperty('capabilities')) {
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                var shortIf=dev.capabilities[j].interface.split('.')[1]
+                if (shortIf==='ModeController') {
+                    dirs=dirs.concat('SetMode.'+dev.capabilities[j].instance.split('.')[1])
+                } else if (props.directives.hasOwnProperty(shortIf)) {
+                    dirs=dirs.concat(Object.keys(props.directives[shortIf]));
+                } 
+            }
+        }
+        return dirs
+    }   
+    
+    function propertyFromDirective(controllerName, directiveName) {
+        if (controllerName===undefined || directiveName===undefined) {
+            return undefined
+        }
+        if (props.directives.hasOwnProperty(controllerName) && props.directives[controllerName].hasOwnProperty(directiveName)) {
+            var actionValues = props.directives[controllerName][directiveName]
+            for (var av in actionValues) {
+                return av
+            }
+        }
+        return undefined
+    }    
+    
+    function selectDevice(newdevice) {
+        console.log('selected new device',newdevice)
+        var newitem={}
+        setPropMod(loadPropMod(propertyFromDirective(newdevice.capabilities[0].interface, directives(newdevice.capabilities[0].interface)[0])))
+        newitem={...props.item, instance: newdevice.capabilities[0].instance, name:newdevice.friendlyName, endpointId: newdevice.endpointId, controller:newdevice.capabilities[0], command:directives(newdevice.capabilities[0].interface)[0], value: undefined}
+        props.save(props.index, newitem)
     }
 
 
     return (
-        <GridItem nolist={true} elevation={0} wide={true} xs={9}>
-            <Grid item xs={props.wide ? 12 : 4 } >
-                <ListItem className={classes.listItem} >
-                    <ListItemIcon><DeviceIcon name={props.device.displayCategories[0]} /></ListItemIcon>
-                    <ListItemText primary={props.device.friendlyName} secondary={props.device.endpointId} />
-                    { props.remove ?
-                        <ListItemSecondaryAction>
-                            <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
-                        </ListItemSecondaryAction>
-                        : null
-                    }
-                    { props.reorder &&
-                        <ListItemSecondaryAction>
-                            <IconButton onClick={() => props.moveUp(props.index)}><ExpandLessIcon /></IconButton>   
-                            <IconButton onClick={() => props.moveDown(props.index)}><ExpandMoreIcon /></IconButton>
-                        </ListItemSecondaryAction>
-                    }
-                </ListItem>
-            </Grid>
-            <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
-                <ListItem >
-                    <Select className={classes.wideSelect} value={props.item.propertyName} onChange={(e) => handleChangePropertyName(e.target.value)} input={<BootstrapInput name="command" id="command-select" />} >
-                    { props.device.properties().map(action => 
-                        <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
-                    )}
-                    </Select>
-                    <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
-                </ListItem>
-            </Grid>
-            <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
-                <ListItem>
-                    { renderSuspenseModule(props.item.propertyName) }
-                </ListItem>
-            </Grid>
+        <GridItem nolist={true} elevation={0} wide={true} xs={12}>
+            <AutomationDevice   device={props.device} index={props.index} selectDevice={selectDevice} wide={props.wide}
+                                remove={props.remove} reorder={props.reorder}
+                                moveUp={props.moveUp} moveDown={props.moveDown} delete={props.delete} />
+            { props.device!==undefined &&
+                <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
+                    <ListItem >
+                        <Select className={classes.wideSelect} value={props.item.propertyName} 
+                                onChange={(e) => handleChangePropertyName(e.target.value)} 
+                                input={<AutomationInput name="command" id="command-select" />} >
+                        { props.controllerProperties.map(action => 
+                            <MenuItem key={props.device.endpointId+action} value={action}>{action}</MenuItem>
+                        )}
+                        </Select>
+                        <OperatorButton index={props.index} value={props.item.operator ? props.item.operator : "=" } setOperator={ editOperatorValue }/>
+                    </ListItem>
+                </Grid>
+            }
+            { (props.device!==undefined && props.item.propertyName!==undefined) &&
+                <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
+                    <ListItem>
+                        { renderSuspenseModule(props.item.propertyName) }
+                    </ListItem>
+                </Grid>
+                }
         </GridItem>
     )
 }

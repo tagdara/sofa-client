@@ -45,7 +45,7 @@ export default function AutomationsFavorites(props) {
         >
         { Object.keys(automations).sort().map(automation => 
             ( automations[automation].favorite &&
-                <AutomationItem allowEdit={false} launcher={true} key={automation} icon={"base"} name={automation} automation={ automations[automation] } run={runAutomation} select={selectAutomation} />
+                <AutomationItem favorites={true} allowEdit={false} launcher={true} key={automation} icon={"base"} name={automation} automation={ automations[automation] } run={runAutomation} select={selectAutomation} />
             )
         )}
         </GridSection>

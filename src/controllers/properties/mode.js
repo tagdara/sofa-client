@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -25,13 +25,21 @@ const BootstrapInput = withStyles(theme => ({
 
 export default function Mode(props) {
     
+    useEffect(() => {
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'ModeController', 'SetMode', {"mode" : props.interface.configuration.supportedModes[0].value}, {}, props.item.instance)
+        }
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
+
     function handleModeChange(event) {
-        props.interface.directive('SetMode', event.target.value, {}, props.instance)
+        //props.interface.directive('SetMode', event.target.value, {}, props.instance)
+        props.directive(props.device.endpointId, 'ModeController', 'SetMode', {"mode" : event.target.value}, {}, props.item.instance)
     }; 
 
     return (
-        <Select value={props.interface.mode.value ? props.interface.mode.value : ""} onChange={handleModeChange} input={<BootstrapInput name="input" id="input" />} >
-            { props.device[props.instance].configuration.supportedModes.map( mode => 
+        <Select value={props.item.value!==undefined ? props.item.value.mode : ""} onChange={handleModeChange} input={<BootstrapInput name="input" id="input" />} >
+            { props.interface.configuration.supportedModes.map( mode => 
                 <MenuItem key={mode.value} value={mode.value}>{mode.value.split('.')[1]}</MenuItem>
             )}
         </Select>

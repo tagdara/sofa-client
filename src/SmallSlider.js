@@ -36,7 +36,7 @@ const useStyles = makeStyles({
         padding: 3,
     },
     smallLabel: {
-        paddingLeft: 8,
+        paddingLeft: 16,
     }
 
 });

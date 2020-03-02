@@ -2,26 +2,24 @@ import React, { useEffect } from 'react';
 import SmallSlider from '../../SmallSlider';
 
 export default function PowerLevel(props) {
-    
+
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.powerLevel.value===undefined) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault(50)
-            }
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'PowerLevelController', 'SetPowerLevel', { "powerLevel" : 50 }, {}, props.item.instance)
         }
-    }, [props.interface])
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
     
     function handlePowerLevelChange(event) {
-        props.interface.directive('SetPowerLevel', event)
+        props.directive(props.device.endpointId, 'PowerLevelController', 'SetPowerLevel', { "powerLevel" : event }, {}, props.item.instance)
+
     }; 
 
     return (
         <SmallSlider
-            value={ parseInt(props.interface.powerLevel.value) } unit={"%"}
+            value={ parseInt(props.item.value.powerLevel) } unit={"%"}
             min={0} max={100} step={10}
             change={ handlePowerLevelChange }
-            disabled={props.device.hasOwnProperty('PowerController') ? !props.device.PowerController.powerState.value : false}
         />
     );
 }

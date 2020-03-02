@@ -24,23 +24,23 @@ const BootstrapInput = withStyles(theme => ({
 }))(InputBase);
 
 export default function ThermostatMode(props) {
-
+    
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.thermostatMode.deepvalue()===undefined) {
-        //if (props.interface.thermostatMode.deepvalue()===undefined || !props.device.ThermostatController.configuration.supportedModes.includes(props.interface.thermostatMode.deepvalue())) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('OFF')
-            }
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'ThermostatController', 'SetMode', {"thermostatMode" : { "value" : props.interface.configuration.supportedModes[0].value}}, {}, props.item.instance)
         }
-    }, [props.interface])
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
+
+    function handleModeChange(event) {
+        props.directive(props.device.endpointId, 'ThermostatController', 'SetMode', {"thermostatMode" : { "value" : event.target.value}}, {}, props.item.instance)
+    }; 
     
     return (
-        <Select value={props.interface.thermostatMode.deepvalue() ? props.interface.thermostatMode.deepvalue() : ""} onChange={(e) => props.interface.directive({'value': e.target.value }) } input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
-            { props.device.ThermostatController.configuration.supportedModes.map( mode => 
+        <Select value={props.item.value ? props.item.value.thermostatMode.value : ""} onChange={handleModeChange} input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
+            { props.interface.configuration.supportedModes.map( mode => 
                 <MenuItem key={mode} value={mode}>{mode}</MenuItem>
             )}
         </Select>
     );
-
 }

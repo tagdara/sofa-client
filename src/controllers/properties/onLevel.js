@@ -2,23 +2,22 @@ import React, { useEffect } from 'react';
 import SmallSlider from '../../SmallSlider';
 
 export default function OnLevel(props) {
-    
+
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.onLevel.value===undefined) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault(100)
-            }
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'OnLevelController', 'SetOnLevel', { "onLevel" : 80 }, {}, props.item.instance)
         }
-    }, [props.interface])
-    
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
+
     function handleOnLevelChange(event) {
-        props.interface.directive('SetOnLevel', { "onLevel" : event })
+        props.directive(props.device.endpointId, 'OnLevelController', 'SetOnLevel', { "onLevel" :  event }, {}, props.item.instance)
+ 
     }; 
 
     return (
         <SmallSlider
-            value={ props.interface.onLevel.value } unit={"%"}
+            value={ parseInt(props.item.value.onLevel) } unit={"%"}
             min={0} max={100} step={10}
             change={ handleOnLevelChange }
         />

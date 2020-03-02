@@ -44,7 +44,7 @@ export default function AutomationSchedule(props) {
     }
 
     return (
-        <GridItem nolist={true} elevation={0} wide={true} xs={9}>
+        <GridItem nolist={true} elevation={0} wide={true} xs={12}>
             <ScheduleStart wide={props.wide} delete={props.delete} remove={props.remove} target="start" change={editValues} value={schedule.start} />
             <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
                 { schedule.hasOwnProperty('type') && schedule.type==='interval' ?

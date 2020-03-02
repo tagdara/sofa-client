@@ -31,7 +31,7 @@ export default createMuiTheme({
         },
         avatar: {
             normal: deepOrange[500],
-            off: deepOrange[700],    
+            off: "#444",    
             on: deepOrange[500],
             notready: "#bbb",
             closed: "#6a6",

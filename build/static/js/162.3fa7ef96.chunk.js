@@ -1,2 +1,0 @@
-(this["webpackJsonpsofa-client"]=this["webpackJsonpsofa-client"]||[]).push([[162],{244:function(e,t,n){"use strict";n.r(t),n.d(t,"default",(function(){return r}));var a=n(0),i=n.n(a),c=n(56),o=n(220);function r(e){var t=(0,Object(a.useContext)(c.DataContext).deviceStatesByCategory)("RECEIVER"),n=i.a.memo(o.default);return t.map((function(t){return i.a.createElement(n,{wide:e.wide,key:t.endpointId,device:t})}))}}}]);
-//# sourceMappingURL=162.3fa7ef96.chunk.js.map

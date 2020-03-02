@@ -172,7 +172,7 @@ export function AutomationsLayout(props) {
 };
 
 AutomationsLayout.defaultProps = {
-    favorites: true,
+    favorites: false,
 }
 
 export default React.memo(AutomationsLayout);

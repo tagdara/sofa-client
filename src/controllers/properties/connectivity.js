@@ -25,16 +25,19 @@ const BootstrapInput = withStyles(theme => ({
 export default function Connectivity(props) {
 
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.connectivity.deepvalue()===undefined) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('OK')
-            }
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'EndpointHealth', 'SetConnectivity', { "connectivity" : "OK" }, {}, props.item.instance)
         }
-    }, [props.interface])
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
+    
+    function handleChange(e) {
+        props.directive(props.device.endpointId, 'EndpointHealth', 'SetConnectivity', { "connectivity" : e.target.value }, {}, props.item.instance)
+    }
+
 
     return (
-        <Select value={ props.interface.connectivity.deepvalue() ? props.interface.connectivity.deepvalue() : ''  } onChange={(e) => props.interface.directive('SetConnectivity',{'value':e.target.value})} input={<BootstrapInput name="connectivity" id="connectivity" />} >
+        <Select value={ props.item.value ? props.item.value.connectivity : ''  } onChange={handleChange} input={<BootstrapInput name="connectivity" id="connectivity" />} >
             <MenuItem value="OK">OK</MenuItem>
             <MenuItem value="UNREACHABLE">UNREACHABLE</MenuItem>
         </Select>

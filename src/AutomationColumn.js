@@ -39,10 +39,8 @@ export default function AutomationColumn(props) {
     const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
     const modmap={'Triggers': AutomationTrigger , 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
     const AutomationProperty = React.memo(modmap[props.name])
-    
-    console.log("--- AC",props.name)
-    
-    function getControllerProperties(item) {
+
+    function oldgetControllerProperties(item) {
         try {
             if (item.hasOwnProperty('propertyName')) {
                 if (controllerProperties[item.controller].hasOwnProperty(item.propertyName)) {
@@ -60,6 +58,40 @@ export default function AutomationColumn(props) {
         }
         return {}
     }    
+
+    function getControllerProperties(endpointId) {
+        
+        var devprops=[]        
+        if (endpointId) {
+            var dev=deviceByEndpointId(endpointId)
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
+                    console.log('xxxxxxxx', Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]), controllerProperties[dev.capabilities[j].interface.split('.')[1]])
+                    devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
+                }
+                //devprops.push(controllerProperties[dev.capabilities[j].interface.split('.')[1]])
+            }
+        }
+        console.log('devprops',devprops)
+        return devprops
+    }    
+
+    function controllerForProperty(endpointId, controllerProp) {
+        
+        if (endpointId) {
+            var dev=deviceByEndpointId(endpointId)
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
+                    if (Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]).includes(controllerProp)) {
+                        return dev.capabilities[j].interface.split('.')[1]
+                    }
+                }
+            }
+        }
+        return undefined
+    }    
+
+
 
     function deleteItem(index) {
         console.log('deleting item',index,'from',props.name)
@@ -178,7 +210,8 @@ export default function AutomationColumn(props) {
                         :
                             <AutomationProperty key={item.endpointId+item.value} moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
                                 index={index} item={item} device={ item.endpointId===undefined ? undefined : deviceByEndpointId(item.endpointId) } 
-                                directives={directives} controllerProperties={ getControllerProperties(item)} wide={isMobile} 
+                                controllerForProperty={controllerForProperty}
+                                directives={directives} controllerProperties={ getControllerProperties(item.endpointId)} wide={isMobile} 
                                 />
                         }
                         </ErrorBoundary>

@@ -25,21 +25,37 @@ const BootstrapInput = withStyles(theme => ({
 
 export default function Input(props) {
     
-    console.log('input props',props)
-    
+    const inputs=getInputs()
+
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.input.value===undefined) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('')
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'InputController', 'SetInput', { "input" : inputs[0] }, {}, props.item.instance)
+        }
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
+    
+    function getInputs() {
+        
+        var choices=[]        
+        for (var k = 0; k < props.device.capabilities.length; k++) {
+            if (props.device.capabilities[k].interface.endsWith('InputController')) {
+                for (var j = 0; j < props.device.capabilities[k].inputs.length; j++) {
+                    choices.push(props.device.capabilities[k].inputs[j].name)
+                }
             }
         }
-    }, [props.interface])
+        console.log('inputs:',choices)
+        return choices
+    }    
     
+    function handleInputChange(e) {
+        props.directive(props.device.endpointId, 'InputController', 'SetInput', { "input" : e.target.value }, {}, props.item.instance)
+    }
+
     return (
-        <Select value={props.interface.input.value ? props.interface.input.value : ""} onChange={(e) => props.interface.directive('SetInput', {'input': e.target.value }) } input={<BootstrapInput name="input" id="input" />} >
-            { props.device.InputController.inputs.map( inp => 
-                <MenuItem key={inp.name} value={inp.name}>{inp.name}</MenuItem>
+        <Select value={props.item.value.input ? props.item.value.input : ""} onChange={handleInputChange} input={<BootstrapInput name="input" id="input" />} >
+            { inputs.map( inp => 
+                <MenuItem key={inp} value={inp}>{inp}</MenuItem>
             )}
         </Select>
     );

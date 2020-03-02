@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { DataContext } from './DataContext/DataProvider';
+import { DeviceContext } from './DataContext/DeviceProvider';
 
 import GridSection from './GridSection';
 import GridSearch from './GridSearch';
@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 
 export default function DeviceDialog(props) {
 
-    const { devicesByCategory, controllers, directives } = useContext(DataContext);
+    const { devicesByCategory, controllers, directives } = useContext(DeviceContext);
     const [mode] = useState('all');
     const [limit, setLimit] = useState(50);
     const [nameFilter, setNameFilter] = useState('')

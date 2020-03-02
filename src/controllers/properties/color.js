@@ -26,14 +26,15 @@ const useStyles = makeStyles({
 });
 
 const sketchPickerStyles = {
-  default: {
-    picker: { // See the individual picker source for which keys to use
-      boxShadow: 'none',
+    default: {
+        picker: { // See the individual picker source for which keys to use
+            boxShadow: 'none',
+        },
     },
-  },
 }
 
 export const sl2sb = (color) => {
+    if (color===undefined) { return undefined }
     var SL = {h:color.h, s:color.s, l:color.l};
     var SB = {hue:color.h, saturation:0, brightness:0};
     var t = SL.s * (SL.l<0.5 ? SL.l : 1-SL.l);
@@ -53,32 +54,30 @@ export const sb2sl = (color) => {
 
 export default function Color(props) {
     
-    console.log(props.interface.color.value, props.interface)
-
-
     const classes = useStyles();
-    const [color, setColor] = useState(props.interface.color.value);
+    const [color, setColor] = useState(undefined);
     const [openDialog, setOpenDialog] = useState(false);
-    
+
+    useEffect(() => {
+        if (props.item.value===undefined) {
+            setColor(sb2sl({hue: 43.5, saturation:0.27, brightness: 1}))
+        } else {
+            setColor(sb2sl(props.item.value.color))
+        }
+    }, [props.item.value] )
+
     useEffect(() => {
         const reveal = {hue: 43.5, saturation:0.27, brightness: 1}
         
-        if (props.interface.color.value===undefined) {
-            setColor(sb2sl(reveal))
-        } else {
-            //setColor(sb2sl(props.interface.color.value.color))
-            setColor(sb2sl(props.interface.color.value))
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'ColorController', 'SetColor', { "color" : reveal }, {}, props.item.instance)
         }
-
-    }, [props.interface.color.value]);
+    // eslint-disable-next-line    
+    }, [props.item, props.device, props.interface])
 
 
     function handleColorSliderChange(color, event) {
-        setColor(color.hsl);
-        if (props.live===true) {
-            var sendsb=sl2sb(color)
-            props.interface.directive('SetColor',{ "color": sendsb })
-        }
+        setColor(color.hsl)
     }
 
     function gethsl(sl) {
@@ -94,7 +93,7 @@ export default function Color(props) {
     
     function saveColor() { 
         var sendsb=sl2sb(color)
-        props.interface.directive('SetColor',{ "color": sendsb })
+        props.directive(props.device.endpointId, 'ColorController', 'SetColor', { "color" : sendsb }, {}, props.item.instance)
         setOpenDialog(false)
     }
 

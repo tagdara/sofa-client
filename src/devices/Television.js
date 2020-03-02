@@ -105,7 +105,7 @@ export function Television(props) {
             <ListItem className={classes.listItem}>
                 <ListItemIcon onClick={ () => setShowDetail(!showDetail) } ><TvIcon /></ListItemIcon>
             <ErrorBoundary>
-                <ListItemText className={classes.minLI} onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={subText()}/>
+                <ListItemText className={subText() ? classes.normal : classes.minLI}  onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={subText()}/>
             </ErrorBoundary>
                 <ListItemSecondaryAction>
                     { props.device.PowerController.powerState.value!=='ON' ? null :

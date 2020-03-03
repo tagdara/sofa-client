@@ -29,18 +29,23 @@ export default function PowerState(props) {
 
     useEffect(() => {
         if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'PowerController', 'TurnOn', {}, {}, props.item.instance)
+            props.directive(props.device.endpointId, 'PowerController', 'TurnOn', { "powerState" : "ON" }, {}, props.item.instance)
         }
     // eslint-disable-next-line
     }, [props.item, props.device, props.interface])
 
     
     function handleChange(e) {
-        props.directive(props.device.endpointId, 'PowerController', e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' , {}, {}, props.item.instance)
+        
+        console.log('changing',props.device.endpointId, 'PowerController', e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' , { "powerState" : e.target.value }, {}, props.item.instance)
+
+        props.directive(props.device.endpointId, 'PowerController', e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' , { "powerState" : e.target.value }, {}, props.item.instance)
     }
     
     function getValue() {
-        if (props.item.value==='ON' || props.item.value==='OFF') { return props.item.value }
+        if (props.item.value!==undefined) {
+            if (props.item.value.powerState==='ON' || props.item.value.powerState==='OFF') { return props.item.value.powerState }
+        }
         if (props.item.command==='TurnOn') {return 'ON'}
         if (props.item.command==='TurnOn') {return 'OFF'}
         return ''

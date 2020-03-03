@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import AutomationDevice from './AutomationDevice';
 import AutomationInput from './AutomationInput';
+import AutomationProperty from './AutomationProperty';
 import GridItem from '../GridItem';
 import Grid from '@material-ui/core/Grid';
 
@@ -34,16 +35,18 @@ export default function AutomationTrigger(props) {
 
     const classes = useStyles();
     const interfaceobj=getInterface()
-    const [propMod, setPropMod] = useState(loadPropMod(props.item.propertyName))
+    
+    console.log('at',props)
 
     function getInterface() {
-        
+        console.log('gi',props.device, props.item.controller)
         if (props.device===undefined) { return undefined }
         var dev=props.device
         if (dev.hasOwnProperty('capabilities')) {
             for (var j = 0; j < dev.capabilities.length; j++) {
                 if (dev.capabilities[j].interface.split('.')[1]===props.item.controller) {
                     if (props.item.instance===undefined && dev.capabilities[j].interface.instance===undefined) {
+                        console.log('gi FOUND',dev.capabilities[j])
                         return dev.capabilities[j]
                     }
                     if (props.item.hasOwnProperty('instance') && dev.capabilities[j].hasOwnProperty('instance')) {
@@ -58,22 +61,7 @@ export default function AutomationTrigger(props) {
         return undefined
     }
 
-    function errorBlock(modulename) {
-        return <TextField value={'failed'+modulename} />
-    }
 
-    function loadPropMod(name) {
-        if (name===undefined) { return undefined}
-        let pmod=React.lazy(() => { 
-                try { 
-                    return import('../controllers/properties/'+name).catch(() => ({ default: () => errorBlock(name) }))
-                }
-                catch {
-                    return <TextField value={'failed '+name} />
-                }
-            })
-        return pmod
-    }
 
 
     function propertyFromDirective(controllerName, directiveName) {
@@ -105,26 +93,9 @@ export default function AutomationTrigger(props) {
         return dirs
     }
     
-    function placeholder(modulename) {
-        return <TextField value={modulename} />
-    }
-    
-    function renderSuspenseModule( modulename ) {
-        if (propMod!==undefined) {
-            if (propMod===null) {
-                return null
-            }
-            let Module=propMod
-            return  <Suspense key={ modulename } fallback={ placeholder() }>
-                         <Module item={props.item} interface={ interfaceobj } device={props.device} instance={props.item.instance} directive={directive} />
-                    </Suspense>
-        } else {
-            return null
-        }
-    }
 
     function handleChangePropertyName(newval) {
-        setPropMod(loadPropMod(newval))
+        //setPropMod(loadPropMod(newval))
         props.save(props.index, {...props.item, "value": undefined, "controller":props.controllerForProperty(props.device.endpointId, newval), "propertyName": newval })
     }
 
@@ -132,18 +103,17 @@ export default function AutomationTrigger(props) {
     function selectDevice(newdevice) {
         console.log('selected new device',newdevice)
         var newitem={}
-        setPropMod(loadPropMod(propertyFromDirective(newdevice.capabilities[0].interface, directives(newdevice.capabilities[0].interface)[0])))
+        //setPropMod(loadPropMod(propertyFromDirective(newdevice.capabilities[0].interface, directives(newdevice.capabilities[0].interface)[0])))
         newitem={...props.item, instance: newdevice.capabilities[0].instance, name:newdevice.friendlyName, endpointId: newdevice.endpointId, controller:newdevice.capabilities[0], command:directives(newdevice.capabilities[0].interface)[0], value: undefined}
         props.save(props.index, newitem)
     }
 
     function directive (endpointId, controllerName, command, payload={}, cookie={}, instance) {
-        if (command==='TurnOn') { payload="ON"}
-        if (command==='TurnOff') { payload="OFF"}
+        if (command==='TurnOn') { payload={ "powerState": "ON"}}
+        if (command==='TurnOff') { payload={ "powerState": "OFF"}}
         console.log('placeholder', props.index, {...props.item, controller:controllerName, command:command, instance: instance, value: payload})
         props.save(props.index, {...props.item, controller:controllerName, command:command, instance: instance, value: payload})
     }
-
 
     return (
         <GridItem nolist={true} elevation={0} wide={true} xs={12}>
@@ -164,12 +134,8 @@ export default function AutomationTrigger(props) {
                     </ListItem>
                 </Grid>
             }
-            { props.device!==undefined &&
-                <Grid item xs={props.wide ? 12 : 4} className={classes.flex} >
-                    <ListItem >
-                        { renderSuspenseModule(props.item.propertyName) }
-                    </ListItem>
-                </Grid>
+            { (props.device!==undefined && props.item.propertyName!==undefined) &&
+                <AutomationProperty item={props.item} interface={ interfaceobj } device={props.device} instance={props.item.instance} directive={directive} />
             }
             { !props.wide && 
                 <>

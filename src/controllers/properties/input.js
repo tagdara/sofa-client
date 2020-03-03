@@ -29,7 +29,7 @@ export default function Input(props) {
 
     useEffect(() => {
         if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'InputController', 'SetInput', { "input" : inputs[0] }, {}, props.item.instance)
+            props.directive(props.device.endpointId, 'InputController', 'SelectInput', { "input" : inputs[0] }, {}, props.item.instance)
         }
     // eslint-disable-next-line
     }, [props.item, props.device, props.interface])
@@ -49,11 +49,11 @@ export default function Input(props) {
     }    
     
     function handleInputChange(e) {
-        props.directive(props.device.endpointId, 'InputController', 'SetInput', { "input" : e.target.value }, {}, props.item.instance)
+        props.directive(props.device.endpointId, 'InputController', 'SelectInput', { "input" : e.target.value }, {}, props.item.instance)
     }
 
     return (
-        <Select value={props.item.value.input ? props.item.value.input : ""} onChange={handleInputChange} input={<BootstrapInput name="input" id="input" />} >
+        <Select value={props.item.value ? props.item.value.input : ""} onChange={handleInputChange} input={<BootstrapInput name="input" id="input" />} >
             { inputs.map( inp => 
                 <MenuItem key={inp} value={inp}>{inp}</MenuItem>
             )}

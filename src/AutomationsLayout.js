@@ -158,7 +158,7 @@ export function AutomationsLayout(props) {
                             <ScheduleItem name={automation} automation={ automations[automation] } select={selectAutomation} run={runAutomation} />
                         }
                         { !scheduled &&
-                            <AutomationItem name={automation} automation={ automations[automation] } select={selectAutomation} edit={editing} delete={deleteAutomation} run={runAutomation} />
+                            <AutomationItem name={automation} deleting={remove} automation={ automations[automation] } select={selectAutomation} edit={editing} delete={deleteAutomation} run={runAutomation} />
                         }
                     </React.Fragment>
                 )

@@ -26,23 +26,22 @@ const BootstrapInput = withStyles(theme => ({
 
 export default function DetectionState(props) {
     
+    console.log('dstate props', props)
+    const controller=props.interface.interface.split('.')[1]
+    
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.detectionState.value===undefined) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('DETECTED')
-            }
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, controller, 'SetDetectionState', { 'detectionState': 'DETECTED' }, {}, props.item.instance)
         }
-    }, [props.interface])
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
 
     function handleDetectionStateChange(event) {
-        //props.interface.directive('SetDetectionState', { "detectionState" : event.target.value })
-        props.interface.directive('SetDetectionState', event.target.value)
-
+        props.directive(props.device.endpointId, controller, 'SetDetectionState', { "detectionState" : event.target.value }, {}, props.item.instance)
     }; 
     
     return (
-        <Select value={ props.interface.detectionState.value ? props.interface.detectionState.value : "" } onChange={handleDetectionStateChange} input={<BootstrapInput name="detectionState" id="detectionState" />} >
+        <Select value={ props.item.value ? props.item.value.detectionState : "" } onChange={handleDetectionStateChange} input={<BootstrapInput name="detectionState" id="detectionState" />} >
             <MenuItem value="DETECTED">DETECTED</MenuItem>
             <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
         </Select>

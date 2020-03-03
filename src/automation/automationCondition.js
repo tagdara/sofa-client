@@ -2,6 +2,7 @@ import React, { Suspense, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import AutomationInput from './AutomationInput';
 import AutomationDevice from './AutomationDevice';
+import AutomationProperty from './AutomationProperty';
 
 import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
@@ -40,13 +41,12 @@ export default function AutomationCondition(props) {
 
     const classes = useStyles();
     const interfaceobj=getInterface()
-    const [propMod, setPropMod] = useState(loadPropMod(props.item.propertyName))
-    
+
     console.log('cp device', props.controllerProperties)
     
     function directive (endpointId, controllerName, command, payload={}, cookie={}, instance) {
-        if (command==='TurnOn') { payload="ON"}
-        if (command==='TurnOff') { payload="OFF"}
+        if (command==='TurnOn') { payload={ "powerState": "ON"}}
+        if (command==='TurnOff') { payload={ "powerState": "OFF"}}
         props.save(props.index, {...props.item, controller:controllerName, command:command, instance: instance, value: payload})
     }
 
@@ -71,18 +71,6 @@ export default function AutomationCondition(props) {
         return undefined
     }
 
-    function loadPropMod(name) {
-        let pmod=React.lazy(() => { 
-                try { 
-                    return import('../controllers/properties/'+name).catch(() => ({ default: () => errorBlock(name) }))
-                }
-                catch {
-                    return <TextField value={'failed '+name} />
-                }
-            })
-        return pmod
-    }
-
     function errorBlock(modulename) {
         return <TextField value={'failed'+modulename} />
     }
@@ -91,27 +79,12 @@ export default function AutomationCondition(props) {
         return <TextField value={modulename} />
     }
     
-    function renderSuspenseModule( modulename ) {
-        
-        if (propMod!==undefined) {
-            if (propMod===null) {
-                return null
-            }
-            let Module=propMod
-            return  <Suspense key={ modulename } fallback={ placeholder() }>
-                        <Module item={props.item} interface={ interfaceobj } device={props.device} instance={props.item.instance} directive={directive} />
-                    </Suspense>
-        } else {
-            return <TextField value={'Loading...'} />
-        }
-    }
-     
+
     function editOperatorValue(value) {
         props.save(props.index, {...props.item, "operator": value})
     }
 
     function handleChangePropertyName(newval) {
-        setPropMod(loadPropMod(newval))
         props.save(props.index, {...props.item, "value": undefined, "controller":props.controllerForProperty(props.device.endpointId, newval), "propertyName": newval })
     }
     
@@ -149,7 +122,7 @@ export default function AutomationCondition(props) {
     function selectDevice(newdevice) {
         console.log('selected new device',newdevice)
         var newitem={}
-        setPropMod(loadPropMod(propertyFromDirective(newdevice.capabilities[0].interface, directives(newdevice.capabilities[0].interface)[0])))
+        //setPropMod(loadPropMod(propertyFromDirective(newdevice.capabilities[0].interface, directives(newdevice.capabilities[0].interface)[0])))
         newitem={...props.item, instance: newdevice.capabilities[0].instance, name:newdevice.friendlyName, endpointId: newdevice.endpointId, controller:newdevice.capabilities[0], command:directives(newdevice.capabilities[0].interface)[0], value: undefined}
         props.save(props.index, newitem)
     }
@@ -175,12 +148,8 @@ export default function AutomationCondition(props) {
                 </Grid>
             }
             { (props.device!==undefined && props.item.propertyName!==undefined) &&
-                <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
-                    <ListItem>
-                        { renderSuspenseModule(props.item.propertyName) }
-                    </ListItem>
-                </Grid>
-                }
+                <AutomationProperty item={props.item} interface={ interfaceobj } device={props.device} instance={props.item.instance} directive={directive} />
+            }
         </GridItem>
     )
 }

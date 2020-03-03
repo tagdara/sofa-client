@@ -22,6 +22,9 @@ const useStyles = makeStyles({
 
     flex: {
         display: "flex",
+        height: 72,
+        alignItems: "center",
+        padding: 16,
     },
     wideSelect: {
         width: "100%",
@@ -171,9 +174,7 @@ export default function AutomationAction(props) {
 
     function handleChangeDirectiveName(newval) {
         var directiveName=newval
-        //if (newval.startsWith('SetMode.')) {
-        //    directiveName="SetMode"
-        //}
+        console.log('setting new directive',newval)
         setPropMod(loadPropMod(propertyFromDirective(controllerForDirective(directiveName.split('.')[0]), directiveName.split('.')[0])))
         props.save(props.index, {...props.item, controller:controllerForDirective(directiveName.split('.')[0]), command:directiveName.split('.')[0], instance: directiveName.split('.')[1], value: undefined})
     }
@@ -187,10 +188,12 @@ export default function AutomationAction(props) {
     }
 
     function getCommand() {
+        console.log('getcommand',props.item)
         if (props.item.command!==undefined) {
             if (props.item.hasOwnProperty('instance') && props.item.instance!==undefined) {
                 return props.item.command+"."+props.item.instance
             }
+            console.log('getcommand result',props.item.command)
             return props.item.command
         }
         return ''
@@ -214,12 +217,9 @@ export default function AutomationAction(props) {
             }
             { props.device!==undefined &&
                 <Grid item xs={props.wide ? 12 : 4} className={classes.flex} >
-                    <ListItem >
-                        { interfaceobj ? 
-                            renderSuspenseModule( interfaceProperty)
-                            : null
-                        }
-                    </ListItem>
+                    { interfaceobj &&
+                        renderSuspenseModule( interfaceProperty)
+                    }
                 </Grid>
             }
             { !props.wide && 

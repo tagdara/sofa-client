@@ -20,10 +20,6 @@ export default function AutomationItem(props) {
     return (
         <GridItem wide={props.wide} >
         <ListItem button={props.launcher} >
-        { props.edit ?
-            <ToggleAvatar avatarState={"off"} onClick={ () => props.delete(props.name)}><CloseIcon /></ToggleAvatar>
-        :
-            <>
             { launched ?
                 <CircularProgress style={{ marginRight: 16 }} size={36} />
             :
@@ -31,16 +27,20 @@ export default function AutomationItem(props) {
                     { props.automation.favorite && props.icon!=="base" ? <FavoriteIcon/> : <ListIcon /> }
                 </ToggleAvatar>
             }
-            </>
-        }
             <ListItemText primary={props.name} secondary={props.automation.triggers.length+" triggers / "+props.automation.conditions.length+" conditions / "+props.automation.actions.length+' actions'}  
                             onClick={ () => { setLaunched(true); props.run(props.name) } } 
             />
         { props.allowEdit &&
             <ListItemSecondaryAction>
-                <IconButton size={"small"} onClick={ () => props.select(props.name) } >
-                    <EditIcon />
-                </IconButton>
+                { props.deleting ? 
+                    <IconButton size={"small"} onClick={ () => props.delete(props.name) } >
+                        <CloseIcon />
+                    </IconButton>
+                    :
+                    <IconButton size={"small"} onClick={ () => props.select(props.name) } >
+                        <EditIcon />
+                    </IconButton>
+                }
             </ListItemSecondaryAction>
         }
         </ListItem>
@@ -50,6 +50,7 @@ export default function AutomationItem(props) {
 
 AutomationItem.defaultProps = {
     launcher: false,
-    allowEdit: true
+    allowEdit: true,
+    deleting: false
 }
 

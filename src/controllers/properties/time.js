@@ -12,23 +12,29 @@ const useStyles = makeStyles({
 export default function Time(props) {
     
     const classes = useStyles();
-    
+
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.time.value===undefined) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault({"start": "08:00", "end":"20:00"})
-            }
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'TimeController', 'SetTime', { "time" : { "start" : "08:00", "end": "20:00"}}, {}, props.item.instance)
         }
-    }, [props.interface])
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
+    
+    function handleChange(part, val) {
+        var data=props.item.value
+        data[part]=val
+        props.directive(props.device.endpointId, 'TimeController', 'SetTime', { "time" : data }, {}, props.item.instance)
+    }
+    
+
 
     return (
         <>
-            <TextField className={classes.start} variant="outlined" onChange={(e) => props.interface.directive('SetTime', {"start": e.target.value, "end": props.value.end }) } 
-                    id="start" label="Start" type="time" defaultValue={props.interface.time.value.start ? props.interface.time.value.start : ""} 
+            <TextField className={classes.start} variant="outlined" onChange={(e) => handleChange('start',e.target.value) }
+                    id="start" label="Start" type="time" defaultValue={props.item.value.start ? props.item.value.start : ""} 
                     InputLabelProps={{ shrink: true, }} inputProps={{ step: 300, style: {padding: 10 } }}  />
-            <TextField variant="outlined" onChange={(e) => props.interface.directive('SetTime', {"start": props.interface.time.value.start, "end": e.target.value }) }
-                    id="end" label="End" type="time" defaultValue={ props.interface.time.value.end ? props.interface.time.value.end : ""} 
+            <TextField variant="outlined" onChange={(e) => handleChange('end',e.target.value) }
+                    id="end" label="End" type="time" defaultValue={ props.item.value.end ? props.item.value.end : ""} 
                     InputLabelProps={{ shrink: true, }} inputProps={{ step: 300, style: {padding: 10 } }}  />
         </>
     );

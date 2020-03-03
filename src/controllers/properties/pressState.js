@@ -5,7 +5,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
 
-
 const BootstrapInput = withStyles(theme => ({
     input: {
         minWidth: '100px',
@@ -27,20 +26,18 @@ const BootstrapInput = withStyles(theme => ({
 export default function PressState(props) {
     
     useEffect(() => {
-        // Set default if passed undefined
-        if (props.interface.pressState.value===undefined) {
-            if (props.interface.hasOwnProperty('setDefault')) {
-                props.interface.setDefault('ON')
-            }
+        if (props.item.value===undefined) {
+            props.directive(props.device.endpointId, 'ButtonController', 'SetPressState', { "pressState" : "OFF" }, {}, props.item.instance)
         }
-    }, [props.interface])
+    // eslint-disable-next-line
+    }, [props.item, props.device, props.interface])
 
     function handlePressStateChange(event) {
-        props.interface.directive('SetPressState', event.target.value)
+        props.directive(props.device.endpointId, 'ButtonController', 'SetPressState', { "pressState" : event.target.value }, {}, props.item.instance)
     }; 
     
     return (
-        <Select value={ props.interface.pressState.value ? props.interface.pressState.value : "" } onChange={handlePressStateChange} input={<BootstrapInput name="pressState" id="pressState" />} >
+        <Select value={ props.item.value.pressState ? props.item.value.pressState : "" } onChange={handlePressStateChange} input={<BootstrapInput name="pressState" id="pressState" />} >
             <MenuItem value="ON">ON</MenuItem>
             <MenuItem value="OFF">OFF</MenuItem>
         </Select>

@@ -9,6 +9,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import GridItem from './GridItem'
 import ReplayIcon from '@material-ui/icons/Replay';
+import ClearIcon from '@material-ui/icons/Clear';
 
 import Moment from 'react-moment';
 import 'moment-timezone';
@@ -74,6 +75,7 @@ export default function AdapterItem(props) {
                 <ListItemText primary={getStartupDate()} secondary={ getErrorCount()} />
                 <ListItemSecondaryAction>
                     <IconButton size={"small"} onClick={ () => props.directive(props.adapter.endpointId, "PowerController", 'TurnOn')} ><ReplayIcon /></IconButton>
+                    <IconButton size={"small"} onClick={ () => props.directive(props.adapter.endpointId, "PowerController", 'TurnOff')} ><ClearIcon /></IconButton>
                 </ListItemSecondaryAction>
             </ListItem>
        </GridItem>

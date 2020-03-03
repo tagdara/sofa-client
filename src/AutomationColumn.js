@@ -36,7 +36,7 @@ export default function AutomationColumn(props) {
 
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
-    //const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
+    const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
     const modmap={'Triggers': AutomationTrigger , 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
     const AutomationProperty = React.memo(modmap[props.name])
 
@@ -69,13 +69,17 @@ export default function AutomationColumn(props) {
             var dev=deviceByEndpointId(endpointId)
             for (var j = 0; j < dev.capabilities.length; j++) {
                 if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
-                    console.log('xxxxxxxx', Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]), controllerProperties[dev.capabilities[j].interface.split('.')[1]])
                     devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
                 }
+                if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
+                    devprops=devprops.concat( Object.keys( eventSources[dev.capabilities[j].interface.split('.')[1]]))
+                }
+    //                item.type="event"
+    //                return eventSources[item.propertyName]
+    //            }
                 //devprops.push(controllerProperties[dev.capabilities[j].interface.split('.')[1]])
             }
         }
-        console.log('devprops',devprops)
         return devprops
     }    
 
@@ -83,6 +87,11 @@ export default function AutomationColumn(props) {
         
         if (endpointId) {
             var dev=deviceByEndpointId(endpointId)
+            for (var es in eventSources) {
+                if (eventSources[es].hasOwnProperty(controllerProp)) {
+                    return es
+                }
+            }
             for (var j = 0; j < dev.capabilities.length; j++) {
                 if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
                     if (Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]).includes(controllerProp)) {
@@ -211,8 +220,8 @@ export default function AutomationColumn(props) {
                         { props.itemtype==='schedule' ?
                             <AutomationProperty key={item.endpointId+item.value} save={save} remove={remove} delete={deleteItem} index={index} item={item} wide={isMobile}/>
                         :
-                            <AutomationProperty key={item.endpointId+item.value} moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} delete={deleteItem} 
-                                index={index} item={item} device={ item.endpointId===undefined ? undefined : deviceByEndpointId(item.endpointId) } 
+                            <AutomationProperty key={item.endpointId+item.value} moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} 
+                                delete={deleteItem} index={index} item={item} device={ item.endpointId===undefined ? undefined : deviceByEndpointId(item.endpointId) } 
                                 controllerForProperty={controllerForProperty}
                                 directives={directives} controllerProperties={ getControllerProperties(item.endpointId)} wide={isMobile} 
                                 />

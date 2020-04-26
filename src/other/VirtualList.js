@@ -12,7 +12,7 @@ export default function VirtualList(props) {
             <React.Fragment>
                 { Object.keys(virtualDeviceStates).map((key, index) => (
                     virtualDeviceStates[key]['type']==='shade' ?
-                        <Shade directive={directive} key={ index } name={ key } endpointId={ virtualDeviceStates[key].endpointId } commands={ virtualDeviceStates[key].commands } />
+                        <Shade nested={props.nested} directive={directive} key={ index } name={ key } endpointId={ virtualDeviceStates[key].endpointId } commands={ virtualDeviceStates[key].commands } />
                         :null
                 ))}
             </React.Fragment>

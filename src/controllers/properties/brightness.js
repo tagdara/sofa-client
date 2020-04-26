@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import SmallSlider from '../../SmallSlider';
+import SofaAvatarSlider from '../../SofaAvatarSlider';
 
 export default function Brightness(props) {
 
@@ -16,11 +16,7 @@ export default function Brightness(props) {
     }; 
 
     return (
-        <SmallSlider
-            value={ props.item.value ? props.item.value.brightness : 50 } unit={"%"}
-            min={0} max={100} step={10}
-            change={ handleBrightnessChange }
-        />
+        <SofaAvatarSlider small={true} reverse={true} minWidth={64} value={ props.item.value ? props.item.value.brightness : 50 } change={ handleBrightnessChange } />
     );
 }
 

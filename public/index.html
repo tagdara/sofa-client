@@ -25,6 +25,41 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Home</title>
+    <style>
+
+
+    body, html {
+        height: 100%;
+        margin: 0;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+    
+    #fix {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: 0;
+        padding: 0;
+        overflow-y: hidden;
+        overflow-x: hidden;
+    }
+    
+    #root {
+        position: relative;
+        height: 100%;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        overflow-y: hidden;
+        overflow-x: hidden;
+        width: 100%;
+        flex-direction: column;
+    }
+
+    </style>
     
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/sofaicon.png">
     <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/icons/sofaicon152.png">
@@ -47,7 +82,9 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root" style="overflow-y: auto; margin-left: calc(100vw - 100%);"></div>
+    <div id="fix">
+        <div id="root"></div>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

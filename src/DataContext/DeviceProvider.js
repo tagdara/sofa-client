@@ -56,7 +56,7 @@ export default function DeviceProvider(props) {
     const [virtualDevices, setVirtualDevices] = useState({});     
     const [area, setArea] = useState("Main");     
     const [devices, deviceDispatch] = useReducer(deviceReducer, initialDevices);
- 
+    const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }} 
 
     useEffect(() => {
        addSubscriber(deviceDispatch)
@@ -84,6 +84,23 @@ export default function DeviceProvider(props) {
     // eslint-disable-next-line 
     }, [ loggedIn ] );
     
+    function interfaceDirectives(otherdev) {
+
+        var dev=props.device
+        if (otherdev) { dev=otherdev }
+        var dirs=[]
+        if (dev.hasOwnProperty('capabilities')) {
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                var shortIf=dev.capabilities[j].interface.split('.')[1]
+                if (shortIf==='ModeController') {
+                    dirs=dirs.concat('SetMode.'+dev.capabilities[j].instance.split('.')[1])
+                } else if (props.directives.hasOwnProperty(shortIf)) {
+                    dirs=dirs.concat(Object.keys(props.directives[shortIf]));
+                } 
+            }
+        }
+        return dirs
+    }   
 
     function devicesByCategory(categories, searchterm) {
 
@@ -248,6 +265,13 @@ export default function DeviceProvider(props) {
         }
         return modes
     }
+    function checkJSON(data) {
+        if (typeof(data)==='string') {
+            return JSON.parse(data)
+        } else {
+            return data
+        }
+    }
     
     function getChangeTimesForDevices(val,devs) {
         
@@ -261,6 +285,7 @@ export default function DeviceProvider(props) {
         }
 
         return postJSON('list/influx/last/'+val, endpointList)
+                .then(res=> checkJSON(res))
                 .then(res=> { return res;})
     }
     
@@ -275,12 +300,46 @@ export default function DeviceProvider(props) {
         }
         return getJSON(url)
     }
+
+    function historyQuery(qry) {
+        var query={"query":qry}
+        // Submits a history query. This requires the Influx adapter in order to see history.
+        return postJSON("list/influx/querylist", query)
+                            .then(res=>{ return res;})
+    }
+
+    function getSceneDetails(scene) {
+        return getJSON('list/logic/scene/'+scene)
+            .then(res=>{ return res;})
+    }
+    
+    function saveSceneDetails(scene, data) {
+        return postJSON('save/logic/scene/'+scene, data)
+            .then(res=>{ return res;})
+    }
+
+
     
     function newtoken() {
         return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
             (((c ^ crypto.getRandomValues(new Uint8Array(1))[0] ) & 15) >> c / 4).toString(16)
         )
     }
+    
+    function getDefaultCapability(dev) {
+        for (var j = 0; j < dev.capabilities.length; j++) {
+            if (dev.capabilities[j].interface!=='Alexa') {
+                return dev.capabilities[j]
+            }
+        }
+        return undefined
+    }
+
+    function getDefaultDirective(cap) {
+        var dirs=interfaceDirectives(cap.interface)
+        if (dirs.length>0) { return dirs[0] }
+        return undefined
+    } 
     
     function getController(endpointId, name) {
         
@@ -298,7 +357,149 @@ export default function DeviceProvider(props) {
         }
         return undefined
     }
- 
+
+    function getDeviceProperties(dev) {
+        
+        var devprops=[]        
+        if (dev) {
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                if (dev.capabilities[j].hasOwnProperty('instance')) {
+                    devprops=devprops.concat([dev.capabilities[j].instance.split('.')[1]])
+                } else if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
+                    devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
+                } else if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
+                    devprops=devprops.concat( Object.keys( eventSources[dev.capabilities[j].interface.split('.')[1]]))
+                }
+            }
+        }
+        return devprops
+    }    
+
+    
+    function getControllerProperties(endpointId) {
+        
+        var devprops=[]        
+        if (endpointId) {
+            var dev=deviceByEndpointId(endpointId)
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
+                    devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
+                }
+                if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
+                    devprops=devprops.concat( Object.keys( eventSources[dev.capabilities[j].interface.split('.')[1]]))
+                }
+            }
+        }
+        return devprops
+    }    
+
+    function controllerForProperty(endpointId, controllerProp) {
+        
+        if (endpointId) {
+            var dev=deviceByEndpointId(endpointId)
+            for (var es in eventSources) {
+                if (eventSources[es].hasOwnProperty(controllerProp)) {
+                    return es
+                }
+            }
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
+                    if (Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]).includes(controllerProp)) {
+                        return dev.capabilities[j].interface.split('.')[1]
+                    }
+                }
+                if (dev.capabilities[j].hasOwnProperty('instance') && dev.capabilities[j].instance.split('.')[1]===controllerProp) {
+                    return dev.capabilities[j].interface.split('.')[1]
+                }
+            }
+        }
+        return undefined
+    }    
+    
+    function getControllerInterface(device, item) {
+        
+        if (device===undefined) { return undefined }
+        if (device.hasOwnProperty('capabilities')) {
+            for (var j = 0; j < device.capabilities.length; j++) {
+                if (device.capabilities[j].interface.split('.')[1]===item.controller) {
+                    if (item.instance===undefined && device.capabilities[j].interface.instance===undefined) {
+                        return device.capabilities[j]
+                    }
+                    if (item.hasOwnProperty('instance') && device.capabilities[j].hasOwnProperty('instance')) {
+                        if (item.instance===device.capabilities[j].instance || item.instance===device.capabilities[j].instance.split('.')[1]) {
+                            return device.capabilities[j]
+                        }
+                    }               
+                }
+            }
+        }
+        console.log('failed get interface', device, item)
+        return undefined
+    }
+    
+    function instanceForProperty(device, name) {
+        
+        if (name===undefined) { return undefined }
+        if (device.hasOwnProperty('capabilities')) {
+            for (var j = 0; j < device.capabilities.length; j++) {
+                if (device.capabilities[j].hasOwnProperty('instance')) {
+                    if (name===device.capabilities[j].instance.split('.')[1]) {
+                        return device.capabilities[j].instance.split('.')[1]
+                    }
+                }               
+            }
+        }
+        return undefined
+    }
+
+    function propertyMap(dev) {
+        
+        var devprops=[]     
+        
+        if (dev===undefined) { return undefined }
+        
+        for (var j = 0; j < dev.capabilities.length; j++) {
+            if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
+                var cp=Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]])
+                for (var k = 0; k < cp.length; k++) {
+                    devprops.push({'instance':dev.capabilities[j].instance, 'controller':dev.capabilities[j].interface.split('.')[1], 'property': cp[k]})
+                }
+                //devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
+            }
+            if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
+                var ep=Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]])
+                for (var l = 0; l < ep.length; l++) {
+                    devprops.push({'instance':dev.capabilities[j].instance, 'controller':dev.capabilities[j].interface.split('.')[1], 'property': cp[l]})
+                }
+                //devprops=devprops.concat( Object.keys( eventSources[dev.capabilities[j].interface.split('.')[1]]))
+            }
+        }
+        
+        return devprops
+    }    
+    
+    function deviceDirectives(dev) {
+
+        if (dev===undefined) { return undefined }
+        var dirs=[]
+        if (dev.hasOwnProperty('capabilities')) {
+            for (var j = 0; j < dev.capabilities.length; j++) {
+                var shortIf=dev.capabilities[j].interface.split('.')[1]
+                if (directives.hasOwnProperty(shortIf)) {
+                    var idirs=Object.keys(directives[shortIf])
+                    for (var i = 0; i < idirs.length; i++) {
+                        if (dev.capabilities[j].hasOwnProperty('instance')) {
+                            dirs.push({"directive":idirs[i], "controller":shortIf, "instance":dev.capabilities[j].instance})
+                        } else {
+                            dirs.push({"directive":idirs[i], "controller":shortIf, "instance":undefined})
+                        }
+                    }
+                }
+            }
+        }
+        return dirs
+    }
+
 
     function directive (endpointId, controllerName, command, payload={}, cookie={}) {
         var controller=getController(endpointId, controllerName)
@@ -327,20 +528,31 @@ export default function DeviceProvider(props) {
                 virtualDevices: virtualDevices,
                 
                 directives: directives,
-                controllerProperties:controllerProperties,
-
+                controllerProperties: controllerProperties,
+                controllerForProperty: controllerForProperty,
+                getControllerProperties: getControllerProperties,
+                getDeviceProperties: getDeviceProperties,
+                
                 deviceByEndpointId: deviceByEndpointId,
                 deviceByFriendlyName: deviceByFriendlyName,
                 devicesByFriendlyName: devicesByFriendlyName,
-
+                
                 devicesByCategory: devicesByCategory,
                 devicesByController: devicesByController,
                 propertyNamesFromDevice: propertyNamesFromDevice,
                 sortByName: sortByName,
                 
+                deviceDirectives: deviceDirectives,
+                
+                propertyMap: propertyMap,
+                getControllerInterface: getControllerInterface,
+                instanceForProperty: instanceForProperty,
+                getDefaultCapability: getDefaultCapability,
+                getDefaultDirective: getDefaultDirective,
+                
                 getChangeTimesForDevices: getChangeTimesForDevices,                
                 getHistoryForDevice: getHistoryForDevice,
-
+                historyQuery: historyQuery,
                 setArea: setArea,
                 area: area,
                 
@@ -348,6 +560,9 @@ export default function DeviceProvider(props) {
                 getInputs: getInputs,
                 getController: getController,
                 directive: directive,
+                
+                getSceneDetails: getSceneDetails,
+                saveSceneDetails: saveSceneDetails,
             }}
         >
             {props.children}

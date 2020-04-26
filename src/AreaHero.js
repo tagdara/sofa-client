@@ -1,35 +1,36 @@
-import React, { useContext } from 'react';
-import { LayoutContext } from './layout/NewLayoutProvider';
+import React, { useContext, useState } from 'react';
 import { DataContext } from './DataContext/DataProvider';
+import { LayoutContext } from './layout/NewLayoutProvider';
 
-import LightbulbOutlineIcon from './LightbulbOutline';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-
-import Light from './light/Light';
 import AreaLine from './AreaLine';
-import ToggleAvatar from './ToggleAvatar';
+import AreaSummaryLine from './AreaSummaryLine';
+import AreaSummary from './AreaSummary';
 import GridItem from './GridItem';
+import CardControl from './CardControl';
 
 export default function AreaHero(props) {
 
+    const { setArea, deviceStatesByCategory, deviceStateByEndpointId, area } = useContext(DataContext);
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStateByEndpointId, lightCount, sortByName, area } = useContext(DataContext);
-    const lightsOn = lightCount('on');
     const thisarea = deviceStateByEndpointId('logic:area:'+area)
+    const allAreas = deviceStatesByCategory('AREA')
+    const [ previousArea, setPreviousArea]=useState('All')
 
     function selectArea(name) {
-        applyLayoutCard('AreaLayout',{"name": name})
+        setPreviousArea(area)
+        setArea(name);
+        //applyLayoutCard('AreaLayout',{"name": name})
     }
     
     function getAreaAreas() {
-        
+
         var areas=[]
+        if (area==='All') { 
+            console.log('returning all areas', allAreas)
+            return allAreas
+        }
         if (!area || thisarea===undefined) { return [] }
+
         var children=thisarea.AreaController.children.value
         if (children) {
             for (var i = 0; i < children.length; i++) {
@@ -42,48 +43,50 @@ export default function AreaHero(props) {
         return areas
     }
     
-    function getAreaLights() {
-
-        var areas=[]
-        if (!area || thisarea===undefined)  { return [] }
-        var children=thisarea.AreaController.children.value
-        if (children) {
-            for (var i = 0; i < children.length; i++) {
-                var child=deviceStateByEndpointId(children[i])
-                if (child && child.displayCategories.includes('LIGHT')) {
-                    areas.push(child)
-                }
+    function hasShortcuts() {
+        try {
+            if (thisarea.AreaController.shortcuts.value.length>0) {
+                return true
             }
-            return sortByName(areas)
         }
-        return areas
+        catch {
+            return false
+        }
+
+        return false
     }
     
-    return (
-        <GridItem wide={props.wide}>
-            { lightCount('all') ?
-                <ListItem>
-                    <ToggleAvatar noback={true} avatarState={lightsOn ? "on" : "off"} onClick={ () => applyLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
-                    <ListItemText primary={lightsOn ? lightsOn+" lights are on" : "All lights off" } onClick={ () => applyLayoutCard('LightLayout') } />
-                    <ListItemSecondaryAction>
-                        <IconButton onClick={(e) => applyLayoutCard('AreasLayout')}>
-                            <ViewModuleIcon />
-                        </IconButton>
-                    </ListItemSecondaryAction>
-                </ListItem>
-            :
-                <ListItem>
-                    <ToggleAvatar avatarState={"notready"} ><PriorityHighIcon/></ToggleAvatar>
-                    <ListItemText primary={'Waiting for light data'}/>
-                </ListItem>
-            }
-            {   getAreaAreas().map((area) => 
-                <AreaLine area={ area } key={ area.endpointId } selectArea={selectArea} ></AreaLine>
-            )}
-            {   getAreaLights().map((light) => 
-                <Light xs={12} nopaper={true} thinmargin={true} device={ light } key={ light.endpointId } />
-            )}
+    function homeArea() {
+        setPreviousArea('All')
+        setArea('Main')
+    }
 
-        </GridItem>
+    function backArea() {
+        var pp=previousArea
+        setPreviousArea(area)
+        setArea(pp)
+    }
+    
+    function expandArea(areaname) {
+        applyLayoutCard('AreaLayout',{"name": areaname})
+    }
+
+
+    return (
+            <GridItem wide={props.wide}>
+                <CardControl name={area} back={backArea} home={homeArea} expand={expandArea}/>
+                <>
+                    { hasShortcuts() &&
+                        <AreaSummaryLine area={thisarea} />
+                    }
+                
+                {   getAreaAreas().map((anarea) => 
+                    <AreaLine area={ anarea } key={ anarea.endpointId } selectArea={selectArea} ></AreaLine>
+                )}
+                { thisarea &&
+                    <AreaSummary showDetail={true} area={ thisarea } name={ thisarea.friendlyName } shortcuts={thisarea.shortcuts} selectArea={selectArea} noGrid={true} summaryLine={false} />
+                }
+                </>
+            </GridItem>
     );
 }

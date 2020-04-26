@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 
 import PlayerCard from './player/PlayerCard';
-import PlayerBase from './player/PlayerBase';
+import PlayerMini from './player/PlayerMini';
 import NoPlayer from './player/NoPlayer';
 
 function bestPlayerId(speakers, defaultPlayer, userPlayer) {
@@ -47,41 +47,31 @@ function bestPlayerId(speakers, defaultPlayer, userPlayer) {
 
 export default function PlayerHero(props) {
     
-    const { userPlayer, defaultPlayer, setUserPlayer, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
+    const { userPlayer, defaultPlayer, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
     const speakers = deviceStatesByCategory('SPEAKER')
-    const [mini, setMini] = useState(false);
+    const [mini, setMini] = useState(props.mini);
     const [playerId, setPlayerId] = useState('')
     const player=deviceStateByEndpointId(playerId)
 
     useEffect(()=> {
         setPlayerId(bestPlayerId(speakers, defaultPlayer, userPlayer))
     }, [speakers, defaultPlayer, userPlayer] )
-
-    function bigCard() {
-        
-        if (mini || !player) {
-            return false
-        }
-        if (!mini || (player.hasOwnProperty('MusicController') && player.MusicController.playbackState.value && player.MusicController.playbackState.value!=='STOPPED')) {
-            return true
-        }
-        return false
-    }
     
     return ( 
-        <React.Fragment>
-            { playerId ?
-            <>
-                { bigCard()===false ?
-                    <PlayerBase setUserPlayer={setUserPlayer} wide={props.wide} small={true} player={player} />
-                :
-                    <PlayerCard wide={props.wide} player={player} setMini={setMini} />
-                }
-            </>
+        playerId ?
+        <>
+            { mini ?
+                <PlayerMini wide={props.wide} small={true} player={player} setMini={setMini} />
             :
-            <NoPlayer wide={true} />
+                <PlayerCard wide={props.wide} player={player} setMini={setMini} />
             }
-        </React.Fragment>
+        </>
+        :
+        <NoPlayer wide={true} />
     );
+}
+
+PlayerHero.defaultProps = {
+    mini: false,
 }
 

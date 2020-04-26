@@ -1,17 +1,33 @@
 import React, { useContext } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, withTheme } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
+import Typography from '@material-ui/core/Typography';
 
-import Button from '@material-ui/core/Button';
-import GridItem from './GridItem';
+import IconButton from '@material-ui/core/IconButton';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
 const useStyles = makeStyles(theme => {
     return {        
+        iconRow: {
+            padding: 16,
+        },
+        summaryButton: {
+            width: 40,
+            height: 40,
+            padding: 8,
+            marginRight: 8,
+            color: theme.palette.primary.contrastText,
+        },
+        iconPad: {
+            fontSize: 18,
+            marginRight: 0,
+        },
+        count: {
+            fontSize: 12,
+        },
         mid: {
-            width: 96,
             color: "#558B2F",
             borderColor: "#558B2F",
             '&:hover': {
@@ -21,7 +37,6 @@ const useStyles = makeStyles(theme => {
                 
         },
         hot: {
-            width: 96,
             color: "#E65100",
             borderColor: "#E65100",
             '&:hover': {
@@ -29,13 +44,10 @@ const useStyles = makeStyles(theme => {
                 borderColor: "#E65100",
             }
         },
-        iconPad: {
-            marginRight: 8,
-        }
     }
 });
 
-export default function SecuritySummary(props) {
+export function SecuritySummary(props) {
     
     const { applyLayoutCard } = useContext(LayoutContext);
     const { deviceStatesByController } = useContext(DataContext);
@@ -72,18 +84,20 @@ export default function SecuritySummary(props) {
         return secZones
     }
 
-    function secColor(count) {
-        if (count>0) { return classes.hot }
-        return classes.mid;
-    }
-
     return (
-        <GridItem wide={false} nopaper={true}>
-            <Button variant="outlined" className={ secColor(zoneOpen) } onClick={ () => applyLayoutCard('ZoneLayout') }>
-                { zoneOpen ? <PriorityHighIcon className={classes.iconPad} /> : <VerifiedUserIcon/> }
-                { zoneOpen ? zoneCount('DETECTED') : "" }
-            </Button>
-        </GridItem>
+        <div className={classes.iconRow}>
+            <IconButton size={"small"} className={classes.summaryButton}
+                style={{'backgroundColor': props.theme.palette.avatar[zoneOpen ? 'hot' : 'mid']}}
+                    onClick={ () => applyLayoutCard('ZoneLayout') }>
+                { zoneOpen ? <PriorityHighIcon className={classes.iconPad} /> : <VerifiedUserIcon className={classes.iconPad} /> }
+                { zoneOpen &&
+                    <Typography className={classes.count}>
+                        {zoneCount('DETECTED') }
+                    </Typography>
+                }
+            </IconButton>
+        </div>
     );
 }
 
+export default withTheme(SecuritySummary)

@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import IconButton from '@material-ui/core/IconButton';
 
-import FavoriteIcon from '@material-ui/icons/Favorite';
+import FavoriteIcon from '@material-ui/icons/Star';
 import ListIcon from '@material-ui/icons/List';
 import EditIcon from '@material-ui/icons/Edit';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 
 import CloseIcon from '@material-ui/icons/Close';
 import GridItem from '../GridItem';
@@ -15,34 +16,44 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 export default function AutomationItem(props) {
     
-    const [launched,setLaunched] = useState(false);
+    
+    function summary() {
+        if (props.allowEdit) {
+            return props.automation.triggers.length+" triggers / "+props.automation.conditions.length+" conditions / "+props.automation.actions.length+' actions'
+        } else {
+            return " "
+        }
+    }
     
     return (
-        <GridItem wide={props.wide} >
-        <ListItem button={props.launcher} >
-            { launched ?
+        <GridItem wide={props.wide} nopad={true} hover={true}>
+        <ListItem >
+            { props.launched ?
                 <CircularProgress style={{ marginRight: 16 }} size={36} />
             :
-                <ToggleAvatar avatarState={props.automation.favorite ? "on": "off" } onClick={ () => { setLaunched(true); props.run(props.name) }}>
-                    { props.automation.favorite && props.icon!=="base" ? <FavoriteIcon/> : <ListIcon /> }
+                <ToggleAvatar noback={true} avatarState={props.favorite ? "on": "off" } onClick={() => props.makeFavorite('logic:activity:'+props.name, !props.favorite)}>
+                    { props.favorite && props.icon!=="base" ? <FavoriteIcon/> : <ListIcon /> }
                 </ToggleAvatar>
             }
-            <ListItemText primary={props.name} secondary={props.automation.triggers.length+" triggers / "+props.automation.conditions.length+" conditions / "+props.automation.actions.length+' actions'}  
-                            onClick={ () => { setLaunched(true); props.run(props.name) } } 
+            <ListItemText primary={props.name} secondary={summary()}
+                           
             />
-        { props.allowEdit &&
             <ListItemSecondaryAction>
-                { props.deleting ? 
+                { props.deleting &&
                     <IconButton size={"small"} onClick={ () => props.delete(props.name) } >
                         <CloseIcon />
                     </IconButton>
-                    :
+                }
+                { props.allowEdit ?
                     <IconButton size={"small"} onClick={ () => props.select(props.name) } >
                         <EditIcon />
                     </IconButton>
+                :
+                    <IconButton size={"small"} onClick={ () => { props.run(props.name) }} >
+                        <PlayArrowIcon />
+                    </IconButton>                
                 }
             </ListItemSecondaryAction>
-        }
         </ListItem>
         </GridItem>
     )

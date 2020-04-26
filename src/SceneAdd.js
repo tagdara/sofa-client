@@ -17,7 +17,7 @@ export default function Scene(props) {
     const [newName, setNewName] = useState('')
 
     function snapScene(sceneName) {
-        props.area.AreaController.directive("Snapshot", newName)
+        props.directive(props.area.endpointId,'AreaController','Snapshot', newName)
         props.setNewScene(false)
     }
     

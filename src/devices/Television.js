@@ -24,6 +24,7 @@ import Select from '@material-ui/core/Select';
 const useStyles = makeStyles({
     list: {
         width: "100%",
+        padding: 0,
     },
     bottomListItem: {
         flexWrap: "wrap",
@@ -101,7 +102,7 @@ export function Television(props) {
     }
      
     return (
-        <GridItem wide={props.wide}>
+        <GridItem wide={props.wide} nopad={true} >
             <ListItem className={classes.listItem}>
                 <ListItemIcon onClick={ () => setShowDetail(!showDetail) } ><TvIcon /></ListItemIcon>
             <ErrorBoundary>

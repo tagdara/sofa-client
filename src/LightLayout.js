@@ -58,7 +58,7 @@ export default function LightLayout(props) {
 
     return (    
         <React.Fragment>
-            <GridSection name={"Lights"}
+            <GridSection name={"Lights"} scroll={true}
                     secondary={
                         <>
                             <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
@@ -81,7 +81,7 @@ export default function LightLayout(props) {
                     }
             >
                 { filterByType(filter).map((device) =>
-                    <Light  key={ device.endpointId } device={ device } directive={ directive }
+                    <Light  key={ device.endpointId } device={ device } directive={ directive }  noMargin={true} nopaper={true} noPad={true} noback={true}
                             brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
                     />
                 )}

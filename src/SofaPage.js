@@ -16,17 +16,18 @@ const useStyles = makeStyles(theme => {
             overflowY: "hidden",
             alignContent: "start",
             padding: "3px !important",
-            backgroundColor: theme.palette.background.page,
+            backgroundColor: theme.palette.layer.section,
             borderRadius: "4px 4px 4px 4px",
-            maxWidth: "33%",
+            maxWidth: "24%",
         },
         mobileGridColumn: {
-            margin: 1,
+            height: "100%",
+            margin: 0,
             overflowX: "hidden",
             overflowY: "hidden",
             alignContent: "start",
             padding: "3px !important",
-            backgroundColor: theme.palette.background.page,
+            backgroundColor: theme.palette.layer.section,
             borderRadius: "4px 4px 4px 4px",
         },
         paddedToolbar: {
@@ -39,25 +40,27 @@ const useStyles = makeStyles(theme => {
 export default function SofaPage(props) {
     
     const classes = useStyles();
-    const { isMobile, renderSuspenseModule } = useContext(LayoutContext);
+    const { renderSuspenseModule } = useContext(LayoutContext);
 
     return (
-        <Grid container item spacing={1} key={props.name} xs={ isMobile ? 12 : 4 } className={ isMobile? classes.mobileGridColumn : classes.gridColumn}>
-            <ListItem>
-                <ListItemText primary={props.name} />
-            </ListItem>
-            { props.page.map( (item, i) => 
-				<ErrorBoundary wide={true} key={props.name+i} >
-					{ 
-					   //renderSuspenseModule(item, props.name, i) 
-					   renderSuspenseModule(item['module'], item['props']) 
-					}
-				</ErrorBoundary>
-            )}
-            {isMobile &&
-                <Toolbar className={classes.paddedToolbar}/>
-            }
-        </Grid>
+        <ErrorBoundary wide={props.wide}>
+            <Grid container item spacing={1} key={props.name} xs={ props.wide ? 12 : 3 } className={ props.wide ? classes.mobileGridColumn : classes.gridColumn}>
+                <ListItem>
+                    <ListItemText primary={props.name} />
+                </ListItem>
+                { props.page.map( (item, i) => 
+    				<ErrorBoundary wide={true} key={props.name+i} >
+    					{ 
+    					   //renderSuspenseModule(item, props.name, i) 
+    					   renderSuspenseModule(item['module'], item['props']) 
+    					}
+    				</ErrorBoundary>
+                )}
+                {1==2 &&
+                    <Toolbar className={classes.paddedToolbar}/>
+                }
+            </Grid>
+        </ErrorBoundary>
     );
 }
 

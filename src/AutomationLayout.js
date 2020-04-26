@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { NetworkContext } from './NetworkProvider';
+import { UserContext } from './user/UserProvider';
 
 import AutomationSave from "./automation/automationSave"
 import AutomationHeader from "./automation/automationHeader"
@@ -10,7 +11,6 @@ import GridSection from './GridSection';
 export default function AutomationLayout(props) {
 
     const [automation, setAutomation] = useState({})
-    const [favorite, setFavorite] = useState(false)
     const [actions, setActions] = useState([])
     const [conditions, setConditions] = useState([])
     const [triggers, setTriggers] = useState([])
@@ -21,6 +21,7 @@ export default function AutomationLayout(props) {
     const serverurl="https://"+window.location.hostname;
     const { applyLayoutCard, isMobile } = useContext(LayoutContext);
     const { getJSON, postJSON } = useContext(NetworkContext);
+    const { makeFavorite, isFavorite} = useContext(UserContext)
 
     useEffect(() => {
         function checkCallbackItems(itemtype) {
@@ -35,12 +36,6 @@ export default function AutomationLayout(props) {
             var changes=false
             
             setAutomation(newauto)
-            
-            if (newauto.hasOwnProperty('favorite')) {
-                setFavorite(newauto['favorite'])
-            } else {
-                setFavorite(false)
-            }
             
             if (newauto.hasOwnProperty('actions')) {
                 newactions=newauto['actions']
@@ -96,7 +91,6 @@ export default function AutomationLayout(props) {
             }
         }
 
-        console.log('Propsname',props.name)
         if (props.name!==undefined) {
             getJSON('list/logic/automation/'+props.name)
                 .then(result=>loadAutomation(result));
@@ -111,9 +105,6 @@ export default function AutomationLayout(props) {
 
         if (itemtype==='title') {
             setTitle(items)
-        } else if (itemtype==='favorite') {
-            console.log('SetFavorite',items)
-            setFavorite(items)
         } else if (itemtype==='action') {
             setActions(items)
         } else if (itemtype==='trigger') {
@@ -128,13 +119,8 @@ export default function AutomationLayout(props) {
     }
     
     function newSaveAutomation() {
-        postJSON('save/logic/automation/'+title, {"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules, "favorite": favorite})
+        postJSON('save/logic/automation/'+title, {"conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules})
             .then(setSaved(true))
-    }
-
-    
-    function saveFavorite(newfavorite) {
-        saveType('favorite',newfavorite)
     }
     
     function goBack() {
@@ -142,8 +128,8 @@ export default function AutomationLayout(props) {
     }
 
     return (
-        <GridSection xs={isMobile ? 12 : 9} background={false}>
-            <AutomationHeader name={title} save={saveType} favorite={favorite} saveFavorite={saveFavorite} automation={automation} />
+        <GridSection xs={isMobile ? 12 : 9} background={false} scroll={true}>
+            <AutomationHeader name={title} save={saveType} favorite={isFavorite('logic:activity:'+props.name)} makeFavorite={makeFavorite} automation={automation} />
             <AutomationColumn items={schedules} saved={saved} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
             <AutomationColumn items={triggers} saved={saved} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'AutomationTrigger'} itemtype={"trigger"} />
             <AutomationColumn items={conditions} saved={saved} save={saveType} automationName={props.name} name={"Conditions"} selector={'DevicePropertyLayout'} itemModule={'AutomationCondition'} itemtype={"condition"} />

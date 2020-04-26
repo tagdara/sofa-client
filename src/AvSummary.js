@@ -1,26 +1,38 @@
 import React, { useContext } from 'react';
-import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, withTheme } from '@material-ui/styles';
 
-import Button from '@material-ui/core/Button';
-import GridItem from './GridItem';
+import IconButton from '@material-ui/core/IconButton';
 
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
 import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
 import TvIcon from '@material-ui/icons/Tv';
 
-const useStyles = makeStyles({
-        
-    summaryButton: {
-        width: 96,
+const useStyles = makeStyles(theme => {
+    return {   
+        iconRow: {
+            padding: 16,
+            display: "flex",
+            justifyContent: "space-between",
+            overflow: "hidden",
+            flexWrap: "nowrap",
+        },
+        summaryButton: {
+            width: 36,
+            height: 36,
+            padding: 8,
+            color: theme.palette.primary.contrastText,
+        },
+        icon: {
+            fontSize: 18,
+            marginRight: 0,
+        },
     }
 });
 
-export default function AvSummary(props) {
+export function AvSummary(props) {
     
     const classes = useStyles();
-    const { applyHomePage } = useContext(LayoutContext);
     const { deviceStatesByCategory } = useContext(DataContext);
 
     function onTvs() {
@@ -58,24 +70,25 @@ export default function AvSummary(props) {
     
     return (
         <>
-        <GridItem wide={false} nopaper={true}>
-            <Button className={classes.summaryButton} variant="outlined" color={onSpeakers() ? "primary" : "default"} onClick={ () => applyHomePage('Audio Video') }>
-                <QueueMusicIcon />
-            </Button>
-        </GridItem>
+            <div className={classes.iconRow}>
+            <IconButton size={"small"} className={classes.summaryButton}
+                style={{'backgroundColor': props.theme.palette.avatar[onSpeakers() ? 'on' : 'off']}}>
+                <QueueMusicIcon className={classes.icon} />
+            </IconButton>
 
-        <GridItem wide={false} nopaper={true}>
-            <Button className={classes.summaryButton} variant="outlined" color={onReceivers() ? "primary" : "default"} onClick={ () => applyHomePage('Audio Video') }>
-                <SpeakerGroupIcon />
-            </Button>
-        </GridItem>
+            <IconButton size={"small"} className={classes.summaryButton}
+                style={{'backgroundColor': props.theme.palette.avatar[onReceivers() ? 'on' : 'off']}}>
+                <SpeakerGroupIcon className={classes.icon} />
+            </IconButton>
 
-        <GridItem wide={false} nopaper={true}>
-            <Button className={classes.summaryButton} variant="outlined" color={onTvs() ? "primary" : "default"} onClick={ () => applyHomePage('Audio Video') }>
-                <TvIcon />
-            </Button>
-        </GridItem>
+            <IconButton size={"small"} className={classes.summaryButton}
+                style={{'backgroundColor': props.theme.palette.avatar[onTvs() ? 'on' : 'off']}}>       
+                <TvIcon  className={classes.icon} />
+            </IconButton>
+            </div>
         </>
 
     );
 }
+
+export default withTheme(AvSummary)

@@ -5,9 +5,9 @@ import { makeStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
 
-import AutomationAction from "./automation/automationAction"
-import AutomationCondition from "./automation/automationCondition"
-import AutomationTrigger from "./automation/automationTrigger"
+import AutomationAction from "./automation/AutomationAction"
+import AutomationCondition from "./automation/AutomationCondition"
+import AutomationTrigger from "./automation/AutomationTrigger"
 import AutomationSchedule from "./automation/automationSchedule"
 
 import AddIcon from '@material-ui/icons/Add';
@@ -32,78 +32,12 @@ export default function AutomationColumn(props) {
 
     const classes = useStyles();
     const { isMobile } = useContext(LayoutContext);
-    const { deviceByEndpointId, controllerProperties, directives } = useContext(DeviceContext);
+    const { deviceByEndpointId, getControllerProperties, controllerForProperty, directives } = useContext(DeviceContext);
 
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
-    const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
     const modmap={'Triggers': AutomationTrigger , 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
     const AutomationProperty = React.memo(modmap[props.name])
-
-
-    // The current code needs to have the eventsource portion retrofitted back in
-    // Leaving this here in the meantime as a reminder
-    //function oldgetControllerProperties(item) {
-    //    try {
-    //        if (item.hasOwnProperty('propertyName')) {
-    //            if (controllerProperties[item.controller].hasOwnProperty(item.propertyName)) {
-    //                item.type="property"
-    //                return controllerProperties[item.controller][item.propertyName]
-    //            } else if (eventSources.hasOwnProperty(item.propertyName)) {
-    //                item.type="event"
-    //                return eventSources[item.propertyName]
-    //            }
-    //        }
-    //    }
-    //    catch(err) {
-    //        console.log('Error getting properties for',item)
-    //       return {'error': 'Invalid property: '+item.controller+"/"+item.propertyName}
-    //    }
-    //    return {}
-    //}    
-
-    function getControllerProperties(endpointId) {
-        
-        var devprops=[]        
-        if (endpointId) {
-            var dev=deviceByEndpointId(endpointId)
-            for (var j = 0; j < dev.capabilities.length; j++) {
-                if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
-                    devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
-                }
-                if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
-                    devprops=devprops.concat( Object.keys( eventSources[dev.capabilities[j].interface.split('.')[1]]))
-                }
-    //                item.type="event"
-    //                return eventSources[item.propertyName]
-    //            }
-                //devprops.push(controllerProperties[dev.capabilities[j].interface.split('.')[1]])
-            }
-        }
-        return devprops
-    }    
-
-    function controllerForProperty(endpointId, controllerProp) {
-        
-        if (endpointId) {
-            var dev=deviceByEndpointId(endpointId)
-            for (var es in eventSources) {
-                if (eventSources[es].hasOwnProperty(controllerProp)) {
-                    return es
-                }
-            }
-            for (var j = 0; j < dev.capabilities.length; j++) {
-                if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
-                    if (Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]).includes(controllerProp)) {
-                        return dev.capabilities[j].interface.split('.')[1]
-                    }
-                }
-            }
-        }
-        return undefined
-    }    
-
-
 
     function deleteItem(index) {
         console.log('deleting item',index,'from',props.name)
@@ -113,11 +47,10 @@ export default function AutomationColumn(props) {
     }
 
     function save(index, item) {
-        console.log('column saving',index,item)
+        console.log('saving',index,item)
         var newitems=[...props.items]
         newitems[index]=item
         props.save(props.itemtype, newitems)
-        console.log('Column value',props.itemtype,'is now:',newitems)
     }
     
     function moveUp(index) {

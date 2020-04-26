@@ -22,19 +22,12 @@ const useStyles = makeStyles({
     
 });
 
-const operators = [
-    '=',
-    '!=',
-    '>',
-    '>=',
-    '<',
-    '=<',
-];
 
 export default function OperatorButton(props) {
 
     const classes = useStyles();
     const [anchor, setAnchor] = useState(null)
+    const operatorList=['=','!=','>','>=','<','=<',]
 
 
     function handleClick(event) {
@@ -45,23 +38,32 @@ export default function OperatorButton(props) {
         setAnchor(null)
     };
     
-    function handleMenuSelect(event, item) {
+    function handleMenuSelect(item) {
         setAnchor(null)
-        props.setOperator(operators[item])
+        props.setOperator(item)
     };
+    
+    function operators() {
+        if (props.anyOp) {
+            console.log('any operators...', props.value)
+            return ['Any', ...operatorList]
+        }
+        console.log('operators...', props.value)
+        return operatorList
+    }
 
     return (
         <React.Fragment>
             <Button id={"op"+props.index} onClick={handleClick} className={classes.button} disabled={props.disabled}>
-                {props.value ? props.value : "="}
+                {props.value}
             </Button>
     
             <Menu id="lock-menu" anchorEl={anchor} open={Boolean(anchor)} onClose={handleClose}>
-                {operators.map((option, index) => (
+                {operators().map((option, index) => (
                     <MenuItem
                         key={option}
-                        selected={index === operators.indexOf(props.value)}
-                        onClick={event => handleMenuSelect(event, index)}
+                        selected={ option===props.value }
+                        onClick={event => handleMenuSelect(option)}
                         className={classes.bigtext}
                     >
                         {option}
@@ -70,4 +72,9 @@ export default function OperatorButton(props) {
             </Menu>
         </React.Fragment>
     )
+}
+
+OperatorButton.defaultProps = {
+    anyOp: false,
+    value: "",
 }

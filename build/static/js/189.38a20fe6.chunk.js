@@ -1,2 +1,0 @@
-(this["webpackJsonpsofa-client"]=this["webpackJsonpsofa-client"]||[]).push([[189],{302:function(s,e,o){s.exports=o.p+"static/media/logo.5d5d9eef.svg"}}]);
-//# sourceMappingURL=189.38a20fe6.chunk.js.map

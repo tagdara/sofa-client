@@ -1,33 +1,31 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useState} from 'react';
 
-import { DataContext } from './DataContext/DataProvider';
-import { NetworkContext } from './NetworkProvider';
+import { DeviceContext } from './DataContext/DeviceProvider';
 import { LayoutContext } from './layout/NewLayoutProvider';
-
+import { UserContext } from './user/UserProvider';
+import AutomationAll from './automation/AutomationAll';
 import AutomationItem from './automation/automationItem';
 import GridSection from './GridSection';
-import EditIcon from '@material-ui/icons/Edit';
-import IconButton from '@material-ui/core/IconButton';
 
 export default function AutomationsFavorites(props) {
 
     const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStateByEndpointId } = useContext(DataContext);
-    const { getJSON } = useContext(NetworkContext);
-
-    const [automations, setAutomations] = useState({})
-
-    const serverurl="https://"+window.location.hostname;
+    const { directive, deviceByEndpointId } = useContext(DeviceContext);
+    const { favorites } = useContext(UserContext);
+    const [ launched, setLaunched] = useState('')
     
-    useEffect(() => {
-        getJSON('list/logic/automations')
-            .then(result=>setAutomations(result))
-    }, [getJSON, serverurl]);
+    function checkLaunch(response) {
+        console.log('response',response)
+        //if response.hasOwnPropety
+        setTimeout(function() {
+            setLaunched("")
+        }, 500)
+    }
     
     function runAutomation(name) {
-        var auto=deviceStateByEndpointId('logic:activity:'+name)
-        console.log('auto',name, auto)
-        auto.SceneController.directive('Activate')
+        setLaunched('logic:activity:'+name)
+        directive('logic:activity:'+name, 'SceneController', 'Activate')
+            .then(result=> checkLaunch(result))
         return true
     }
     
@@ -35,19 +33,18 @@ export default function AutomationsFavorites(props) {
         applyBackPage('SystemLayout',{})
         applyLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
     }    
+    
+    function makeFavorite(automation, stat) {
+        // this is a stub we don't really want to change it from here
+    }
 
     return (    
-        <GridSection name={"Automations"} secondary={
-            <IconButton onClick={() => applyLayoutCard('AutomationsLayout', {'favorites':false})}>
-                <EditIcon fontSize="small" />
-            </IconButton>
-        }
-        >
-        { Object.keys(automations).sort().map(automation => 
-            ( automations[automation].favorite &&
-                <AutomationItem favorites={true} allowEdit={false} launcher={true} key={automation} icon={"base"} name={automation} automation={ automations[automation] } run={runAutomation} select={selectAutomation} />
-            )
-        )}
-        </GridSection>
+        favorites &&
+            <GridSection name={"Automations"}>
+            { favorites.map(automation => 
+                <AutomationItem launched={automation===launched} makeFavorite={makeFavorite} favorite={true} allowEdit={false} launcher={true} key={automation} icon={"base"} name={deviceByEndpointId(automation).friendlyName} automation={ null } run={runAutomation} select={selectAutomation} />
+            )}
+            <AutomationAll />
+            </GridSection>
     )
 };

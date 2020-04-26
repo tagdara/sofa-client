@@ -2,9 +2,8 @@ import React, { useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
-import GridBreak from './GridBreak';
-import AreaLine from './AreaLine';
-import GridItem from './GridItem';
+import GridSection from './GridSection';
+import AreaSummary from './AreaSummary';
 
 export default function AreasLayout(props) {
     
@@ -17,17 +16,12 @@ export default function AreasLayout(props) {
         applyLayout('Home');
     }
 
-    console.log('Areas',areas)
-
     return (    
-        <React.Fragment>
-            <GridBreak label={"Areas"} />
+        <GridSection name={"Areas"}>
             { areas.map((area) =>
-                <GridItem wide={props.wide} key={ area.endpointId } >
-                    <AreaLine area={ area } name={ area.friendlyName } shortcuts={area.shortcuts} selectArea={selectArea} ></AreaLine>
-                </GridItem>
+                <AreaSummary key={ area.endpointId } area={ area } name={ area.friendlyName } shortcuts={area.shortcuts} selectArea={selectArea} />
             )}
-        </React.Fragment>
+        </GridSection>
     )
 
 };

@@ -37,7 +37,7 @@ export default function ComputerHero(props) {
     }
 
     return (
-        <GridItem wide={props.wide}>
+        <GridItem wide={props.wide} noPad={true} nolist={true} >
             <ListItem onClick={ () => applyLayoutCard('ComputerLayout') } >
                 <ToggleAvatar noback={true} avatarState={ onCount() ? 'on' : 'off'}><DevicesOtherIcon /></ToggleAvatar>
                 <ListItemText primary={"Computers"} secondary={onCount() ? onCount()+" devices on" : null} />

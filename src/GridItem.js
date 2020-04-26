@@ -7,11 +7,7 @@ import List from '@material-ui/core/List'
 
 const useStyles = makeStyles(theme => {
     return {
-   
         content: {
-            borderWidth: "thin",
-            borderStyle: "solid",
-            borderColor: theme.palette.divider,
             display: 'flex',
             margin: 0,
             boxSizing: "border-box",
@@ -19,19 +15,30 @@ const useStyles = makeStyles(theme => {
             flexWrap: 'wrap',
             alignItems: "center",
             flexGrow: 1,
-            minWidth: "320px",
-            minHeight: 80,
             flexBasis: 0,
             position: "relative",
+            minWidth: "320px",
+            minHeight: 64,      
+            backgroundColor: theme.palette.layer.card,
+        },
+        border: {
+            borderWidth: "thin",
+            borderStyle: "solid",
+            borderColor: theme.palette.divider,
+        },
+        borderHover: {
+            '&:hover': {
+                borderColor: theme.palette.primary.dark,
+            }
         },
         hover: {
             '&:hover': {
                 backgroundColor: theme.palette.background.hover,
-                borderColor: theme.palette.primary.dark,
             }
         },
         nopad: {
             padding: 0,
+            minHeight: 64,
         },
         list: {
             width: "100%",
@@ -45,6 +52,10 @@ const useStyles = makeStyles(theme => {
         },
         thinmargin: {
             margin: 2,
+            padding: 0,
+        },
+        noMargin: {
+            margin: 0,
             padding: 0,
         },
         normal: {
@@ -63,6 +74,10 @@ const useStyles = makeStyles(theme => {
             borderBottomRightRadius: 0,
             borderBottomLeftRadius: 0,
             padding: 0,
+        },
+        flex: {
+            display: "flex",
+            width: "100%",
         }
     }
 });
@@ -87,11 +102,22 @@ export default function GridItem(props) {
         }
         </React.Fragment>
     )
+    
+    function checkMargin() {
+        if (props.noMargin) {
+            return classes.noMargin
+        }
+        if (props.thinmargin) {
+            return classes.thinmargin
+        }
+        return classes.normal
+    }
 
     return (
-        <Grid item xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 4) } className={classNames(props.inset ? classes.inset : classes.upper, props.thinmargin ? classes.thinmargin: classes.normal)}>
+        <Grid item container={ props.container } xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 3) } onClick={props.onClick}
+                className={classNames(props.flex && classes.flex, props.inset && classes.inset, checkMargin() )}>
             { !props.nopaper ?
-                <Paper elevation={props.elevation} className={classNames( !props.color && classes.content, props.color  && classes.color, props.hover && classes.hover, props.nopad && classes.nopad, props.colorband && classes.colorband)}  >
+                <Paper elevation={props.elevation} className={classNames( classes.content, props.hover && classes.hover, props.nopad && classes.nopad)}  >
                     { itemdata }
                 </Paper>
             :
@@ -110,4 +136,7 @@ GridItem.defaultProps = {
     nopaper: false,
     inset: false,
     color: false,
+    flex: false,
+    noMargin: false,
+    container: false,
 }

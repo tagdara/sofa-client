@@ -1,9 +1,10 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
+import debounce from 'lodash/debounce';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -41,15 +42,23 @@ export default function GridItem(props) {
     const mobileBreakpoint = 800
     const classes = useStyles();
     const isMobile = window.innerWidth <= mobileBreakpoint;
-
+    const delayedSearch = debounce(q => props.setSearchValue(q), 500);
+    const [ search, setSearch]=useState(props.searchValue)
+    
+    function handleChange(newsearch) {
+        setSearch(newsearch)
+        delayedSearch(newsearch)
+    }
+    
     return (
         <Grid item xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 4) } className={ props.thinmargin ? classes.thinmargin: classes.normal}>
             <Paper elevation={props.elevation} className={classes.content} >
                 <TextField
+                    autoFocus
                     fullWidth
                     label={'Search'}
-                    value={props.searchValue}
-                    onChange={(e) => props.setSearchValue(e.target.value)}
+                    value={search}
+                    onChange={(e) => handleChange(e.target.value)}
                 />
             </Paper>
         </Grid>

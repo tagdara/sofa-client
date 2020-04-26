@@ -10,7 +10,7 @@ import DialpadIcon from '@material-ui/icons/Dialpad';
 export default function StatusLock(props) {
 
     return (
-        <GridItem wide={props.wide}>
+        <GridItem wide={props.wide} noPad={true} nolist={true} >
             { props.status ?
                 <ListItem>
                     { props.status==='NOT_DETECTED' ?

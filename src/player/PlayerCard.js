@@ -30,18 +30,32 @@ export default function PlayerCard(props) {
 
     const [coverView, setCoverView] = useState(false);
     const coverDefault = '/image/'+props.player.endpointId.split(':')[0]+'/logo'
+    const jukebox = deviceStateByEndpointId('jukebox:player:jukebox')
 
     function handlePlayPause(event) {
         event.stopPropagation();
-        if (props.player.MusicController.playbackState.value ==='PLAYING') {
-            directive(props.player.endpointId, 'MusicController', 'Pause')
+
+        if (props.player.MusicController.title.value==='Line-In' ) {
+            if (jukebox.MusicController.playbackState.value ==='PLAYING') {
+                directive(jukebox.endpointId, 'MusicController', 'Pause')
+            } else {
+                directive(jukebox.endpointId, 'MusicController', 'Play')
+            }
         } else {
-            directive(props.player.endpointId, 'MusicController', 'Play')
+            if (props.player.MusicController.playbackState.value ==='PLAYING') {
+                directive(props.player.endpointId, 'MusicController', 'Pause')
+            } else {
+                directive(props.player.endpointId, 'MusicController', 'Play')
+            }
         }
     }; 
 
     function handleSkip(event) {
-        directive(props.player.endpointId, 'MusicController', "Skip")
+        if (props.player.MusicController.title.value==='Line-In' ) {
+            directive(jukebox.endpointId, 'MusicController', "Skip")
+        } else {
+            directive(props.player.endpointId, 'MusicController', "Skip")
+        }
     }; 
 
     function handleStop(event) {
@@ -81,15 +95,27 @@ export default function PlayerCard(props) {
     
     return (
         <GridItem wide={props.wide} nopad={true} >
-            <PlayerArtOverlay   art={props.player.MusicController.art.value ? props.player.MusicController.art.value : coverDefault }
-                                title={props.player.MusicController.title.value ? props.player.MusicController.title.value : ''}
-                                artist={props.player.MusicController.artist.value ? props.player.MusicController.artist.value : ''}
-                                cover={handleCover}
-                        >
-                <PlayerArtOverlayButtons min={props.setMini} cover={handleCover} stop={handleStop} players={handlePlayers}
-                                            playPause={handlePlayPause} skip={handleSkip} 
-                                            playbackState={ props.player.MusicController.playbackState.value ? props.player.MusicController.playbackState.value : 'Unknown'} />
-            </PlayerArtOverlay>
+            { props.player.MusicController.title.value==='Line-In' ?
+                <PlayerArtOverlay   art={jukebox.MusicController.art.value ? jukebox.MusicController.art.value : coverDefault }
+                                    title={jukebox.MusicController.title.value ? jukebox.MusicController.title.value : ''}
+                                    artist={jukebox.MusicController.artist.value ? jukebox.MusicController.artist.value : ''}
+                                    cover={handleCover} setMini={props.setMini}
+                >
+                    <PlayerArtOverlayButtons    min={props.setMini} cover={handleCover} stop={handleStop} players={handlePlayers}
+                                                playPause={handlePlayPause} skip={handleSkip} jukebox={true}
+                                                playbackState={ jukebox.MusicController.playbackState.value ? jukebox.MusicController.playbackState.value : 'Unknown'} />
+                </PlayerArtOverlay>
+            :
+                <PlayerArtOverlay   art={props.player.MusicController.art.value ? props.player.MusicController.art.value : coverDefault }
+                                    title={props.player.MusicController.title.value ? props.player.MusicController.title.value : ''}
+                                    artist={props.player.MusicController.artist.value ? props.player.MusicController.artist.value : ''}
+                                    cover={handleCover} setMini={props.setMini}
+                >
+                    <PlayerArtOverlayButtons    min={props.setMini} cover={handleCover} stop={handleStop} players={handlePlayers}
+                                                playPause={handlePlayPause} skip={handleSkip} 
+                                                playbackState={ props.player.MusicController.playbackState.value ? props.player.MusicController.playbackState.value : 'Unknown'} />
+                </PlayerArtOverlay>
+            }
             <Grid item xs={12}>
             <List className={classes.list} >
                 <PlayerVolume key={ props.player.endpointId } player={props.player} directive={directive} />

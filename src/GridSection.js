@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -23,13 +22,18 @@ const useStyles = makeStyles(theme => {
         },
         scrollColumn: {
             overflowY: "auto",
-            height: "100%",
+            maxHeight: "100%",
         },
-        nopad: {
-            padding: 0,
+        mobile: {
+            height: 16,
+        },
+        desktop: {
         },
         background: {
-            backgroundColor: theme.palette.background.page,
+            backgroundColor: theme.palette.layer.section,
+        },
+        center: {
+            justifyContent: "center",
         }
     }
 });
@@ -49,19 +53,17 @@ export default function GridSection(props) {
             {props.name &&
                 <Grid item xs={12} className={classes.nopad}>
                 <List className={classes.nopad} >
-                    <ListItem>
+                    <ListItem className={ isMobile ? classes.mobile : classes.desktop} >
                         <ListItemText primary={props.name} onClick={ () => setShow(!show) } />
                         { (!isMobile || !props.break) &&
-                            <ListItemSecondaryAction>
+                            <>
                                 {props.secondary}
-                            </ListItemSecondaryAction>
+                            </>
                         }
-                    </ListItem>
+                    </ListItem >
                     { (isMobile && props.break) &&
-                        <ListItem>
-                            <ListItemSecondaryAction>
+                        <ListItem className={classes.center}>
                                 {props.secondary}
-                            </ListItemSecondaryAction>
                         </ListItem>
                     }
                 </List>

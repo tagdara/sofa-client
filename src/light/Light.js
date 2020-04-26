@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import ToggleAvatar from '../ToggleAvatar';
+import IconButton from '@material-ui/core/IconButton';
+
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import Switch from '@material-ui/core/Switch';
 import LightbulbOutlineIcon from '../LightbulbOutline';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
+import ClearIcon from '@material-ui/icons/Clear';
+
 import LightSliderBrightness from "./LightSliderBrightness"
 import LightSliderTemperature from "./LightSliderTemperature"
 import LightSliderColor from "./LightSliderColor"
-import GridItem from "../GridItem"
+import ButtonItem from "../ButtonItem"
 
-const useStyles = makeStyles({
- 
+const useStyles = makeStyles(theme => {
+    return {        
     iconSize: {
         height: 24,
         width: 24,
@@ -66,13 +68,30 @@ const useStyles = makeStyles({
     listItem: {
         maxHeight: 64,
         width: "100%",
+        margin: 4,
+        padding: 8,
+    },
+    lightLabel: {
+        height: 48,
+        maxWidth: "50%",
+        flexGrow:1,
+        '&:hover': {
+            backgroundColor: theme.palette.background.hover,
+        },
+        borderRadius:4,
+        padding: 8,
+        boxSizing: "border-box",
+        alignItems: "center",
+        display: "flex",
     }
+
+}
 });
 
 export default function Light(props) {
     
     const classes = useStyles();
-    const [showAll, setShowAll] = useState(false)
+    const [showAll, setShowAll] = useState(props.showAll)
     
     function handlePowerChange(event) {
         props.directive(props.device.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
@@ -93,47 +112,59 @@ export default function Light(props) {
     }
     
     return (
-        <GridItem nopaper={props.nopaper} xs={props.xs} thinmargin={props.thinmargin} >
-            <ListItem className={classes.listItem} >
-                { isReachable() ?
-                    <ToggleAvatar noback={true} avatarState={props.device.PowerController.powerState.value==='ON' ? "on" : "off" } >
-                        <LightbulbOutlineIcon className={classes.iconSize} />
-                    </ToggleAvatar>
+            <ButtonItem noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true}
+                avatarIcon={ isReachable() ?
+                    <LightbulbOutlineIcon className={classes.iconSize} />
                 :
-                    <ToggleAvatar avatarState={ "off" } >
-                        <CloudOffIcon className={classes.iconSize} />
-                    </ToggleAvatar>
+                    <CloudOffIcon className={classes.iconSize} />
                 }                
-                <ListItemText onClick={() => setShowAll(!showAll) } primary={props.device.friendlyName} secondary={ isReachable() ? '': 'Off at switch' } />
-                { isReachable() &&
-                    <Switch color="primary" className={classes.lightSwitch} checked={props.device.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
+                avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }
+                label={ props.device.friendlyName }
+                labelSecondary={ isReachable() ? null : 'Off at switch' }
+                small={ props.small }
+                action={() => setShowAll(!showAll) }
+                secondary={
+                    <>
+                        { ( isReachable() && !props.deleting ) &&
+                            <Switch color="primary" className={classes.lightSwitch} checked={props.device.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
+                        }
+                        { props.deleting && 
+                            <IconButton size="small" onClick={()=>props.remove(props.device)} ><ClearIcon /></IconButton>
+                        }
+                    </>
                 }
-            </ListItem>
-            { !props.brightControl && !showAll ? null :
-                ( !props.device.hasOwnProperty('BrightnessController') ?
-                    <ListItem className={classes.placeholder} />
-                :
-                    <LightSliderBrightness device={props.device} directive={props.directive} />
-                )
-            }
-            { !props.tempControl && !showAll ? null :
-                ( !props.device.hasOwnProperty('ColorTemperatureController') ?
-                    <ListItem className={classes.placeholder} />
-                :
-                <LightSliderTemperature device={props.device} directive={props.directive}/>
-                )
-            }
-            { !props.colorControl && !showAll ? null :
-                ( !props.device.hasOwnProperty('ColorController') ?
-                    <ListItem className={classes.placeholder} />
-                :
-                    <LightSliderColor device={props.device} directive={props.directive}/>
-                )
-            }
-        </GridItem>
+                children={
+                    <>
+                        { !props.brightControl && !showAll ? null :
+                            ( !props.device.hasOwnProperty('BrightnessController') ?
+                                <ListItem className={classes.placeholder} />
+                            :
+                                <LightSliderBrightness device={props.device} directive={props.directive} />
+                            )
+                        }
+                        { !props.tempControl && !showAll ? null :
+                            ( !props.device.hasOwnProperty('ColorTemperatureController') ?
+                                <ListItem className={classes.placeholder} />
+                            :
+                            <LightSliderTemperature device={props.device} directive={props.directive}/>
+                            )
+                        }
+                        { !props.colorControl && !showAll ? null :
+                            ( !props.device.hasOwnProperty('ColorController') ?
+                                <ListItem className={classes.placeholder} />
+                            :
+                                <LightSliderColor device={props.device} directive={props.directive}/>
+                            )
+                        }
+                    </>
+                }
+
+            />
     );
+
 }
 
 Light.defaultProps = {
     nopaper: false,
+    showAll: false,
 }

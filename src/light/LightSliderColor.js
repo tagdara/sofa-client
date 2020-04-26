@@ -8,7 +8,9 @@ import Button from '@material-ui/core/Button';
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 import LensIcon from '@material-ui/icons/Lens';
 
-import { HuePicker } from 'react-color';
+import { SketchPicker } from 'react-color'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
 
 const useStyles = makeStyles({
         
@@ -16,18 +18,28 @@ const useStyles = makeStyles({
         width: "100%",
     },
     indent: {
-        paddingLeft: 40,
+        paddingLeft: 16,
         paddingRight: 8,
     },
     button: {
-        minWidth: 24
+        minWidth: 48,
+        flexGrow: 1,
     },
     revealIcon: {
         height: 24,
         width: 24,
-        color: "FFE4B5",
+        color: "#FFE4B5",
     }
 });
+
+
+const sketchPickerStyles = {
+    default: {
+        picker: { // See the individual picker source for which keys to use
+            boxShadow: 'none',
+        },
+    },
+}
 
 export const sl2sb = (color) => {
     var SL = {h:color.h, s:color.s, l:color.l};
@@ -51,16 +63,27 @@ export default function LightSliderColor(props) {
     const classes = useStyles();
     const reveal = {hue: 43.5, saturation:0.27, brightness: 1}
     const [color, setColor] = useState(reveal);
+    const [openDialog, setOpenDialog] = useState(false);
     
     useEffect(() => {
         setColor(sb2sl(props.device.ColorController.color.value))
     }, [props.device.ColorController.color.value]);
 
+    function gethsl(sl) {
+        if (sl) {
+            return { "backgroundColor":"hsl("+sl['h']+", "+(sl['s']*100)+"%, "+(sl['l']*100)+"%)"}
+        }
+        return { "backgroundColor":"hsl(255, 100%, 100%)"}
+    }
+    
+    function closeDialog() {
+        setOpenDialog(false)
+    }
 
     function handleColorSliderChange(color, event) {
         setColor(color.hsl);
         var sendsb=sl2sb(color.hsl)
-        sendsb.brightness=props.device.BrightnessController.brightness.value/100
+        //sendsb.brightness=props.device.BrightnessController.brightness.value/100
         props.directive(props.device.endpointId, "ColorController", "SetColor", { "color": sendsb })
     }
 
@@ -69,15 +92,34 @@ export default function LightSliderColor(props) {
         hsb.brightness=props.device.BrightnessController.brightness.value/100
         props.directive(props.device.endpointId, "ColorController", "SetColor", { "color": hsb })
     }
+    
+    function saveColor() { 
+        var sendsb=sl2sb(color)
+        props.directive(props.device.endpointId, 'ColorController', 'SetColor', { "color" : sendsb }, {})
+        setOpenDialog(false)
+    }
 
     return (
         <ListItem>
             <ListItemIcon className={classes.indent}><ColorLensIcon /></ListItemIcon>
-            <HuePicker
-                className={classes.wide}
-                color={ color }
-                onChangeComplete={ handleColorSliderChange }
-            />
+            <Button variant="outlined" size="small" onClick={ () => setOpenDialog(true) } style={gethsl(color)} className={classes.button }> &nbsp;
+            </Button>
+            <Dialog open={openDialog} close={closeDialog} maxWidth={'xs'} fullWidth={false} >
+                <SketchPicker
+                    disableAlpha styles={sketchPickerStyles}
+                    color={ color }
+                    onChangeComplete={ handleColorSliderChange }
+                    presetColors= { [   '#D0021B', '#F5A623', '#F8E71C', '#8B572A', 
+                                        '#7ED321', '#417505', '#BD10E0', '#9013FE', 
+                                        '#4A90E2', '#50E3C2', '#B8E986', '#FFFFFF', "#FEEBBA"
+                                    ] }
+                />
+                <DialogActions>
+                    <Button onClick={saveColor} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
             <Button size="small" onClick={ () => handleColorChange(reveal)} color={ color===reveal ? "primary" : "default"} className={classes.button }>
                 <LensIcon className={classes.revealIcon} />
             </Button>

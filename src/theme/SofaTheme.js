@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import lightTheme from './sofaThemeLight';
 import darkTheme from './sofaThemeDark';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { UserContext } from '../user/UserProvider';
 
 export const ThemeContext = React.createContext();
 
@@ -10,11 +11,12 @@ export default function SofaThemeProvider(props) {
     
     const [colorScheme, setColorScheme] = useState('');
     const [sofaTheme, setSofaTheme] = useState({});
-
+    const { chooseUserTheme, userTheme } = useContext(UserContext);
+    
     useEffect(() => {
         var d = new Date();
         var n = d.getHours();
-        if (n>17 || n<8) {
+        if (userTheme==='dark' || (n>17 || n<8)) {
             setColorScheme('dark')
             setSofaTheme(darkTheme)
         } else {
@@ -22,7 +24,7 @@ export default function SofaThemeProvider(props) {
             setSofaTheme(lightTheme)
         }
         
-    }, []);
+    }, [userTheme]);
     
     function getTheme() {
         if (sofaTheme.hasOwnProperty('palette')) { 
@@ -35,6 +37,12 @@ export default function SofaThemeProvider(props) {
         } else {
             return lightTheme
         }
+    }
+
+    function pickUserTheme(themeName) {
+        chooseUserTheme(themeName)
+        applyTheme(themeName)
+        console.log('set user theme to ', themeName)
     }
 
     function applyTheme(themeName) {
@@ -58,6 +66,7 @@ export default function SofaThemeProvider(props) {
                 sofaTheme: sofaTheme,
                 applyTheme: applyTheme,
                 getTheme: getTheme,
+                pickUserTheme: pickUserTheme,
             }}
         >
             <ThemeProvider theme={getTheme(colorScheme)}>
@@ -67,18 +76,3 @@ export default function SofaThemeProvider(props) {
         </ThemeContext.Provider>
     );
 }
-
-export function withThemeChange(Component) {
-    
-    return function ThemeComponent(props) {
-        return (
-            <ThemeContext.Consumer>
-                { context => <Component {...props} {...context} context={context} 
-                                colorScheme={context.colorScheme} sofaTheme={context.sofaTheme}
-                                applyTheme={context.applyTheme}
-                            /> }
-            </ThemeContext.Consumer>
-        );
-    };
-}
-

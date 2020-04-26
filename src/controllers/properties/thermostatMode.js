@@ -27,17 +27,29 @@ export default function ThermostatMode(props) {
     
     useEffect(() => {
         if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'ThermostatController', 'SetMode', {"thermostatMode" : { "value" : props.interface.configuration.supportedModes[0].value}}, {}, props.item.instance)
+            props.directive(props.device.endpointId, 'ThermostatController', 'SetThermostatMode', {"thermostatMode" : {"value": props.interface.configuration.supportedModes[0].value}}, {}, props.item.instance)
         }
     // eslint-disable-next-line
     }, [props.item, props.device, props.interface])
 
     function handleModeChange(event) {
-        props.directive(props.device.endpointId, 'ThermostatController', 'SetMode', {"thermostatMode" : { "value" : event.target.value}}, {}, props.item.instance)
+        props.directive(props.device.endpointId, 'ThermostatController', 'SetThermostatMode', {"thermostatMode" : {"value": event.target.value }}, {}, props.item.instance)
     }; 
+
+    function valueOrDefault() {
+        var val='OFF'
+        try {
+            if (props.item.value.hasOwnProperty('thermostatMode')) {
+                val=props.item.value.thermostatMode.value
+            }
+        } 
+        catch {}
+        return val
+    }
+
     
     return (
-        <Select value={props.item.value ? props.item.value.thermostatMode.value : ""} onChange={handleModeChange} input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
+        <Select value={ valueOrDefault() } onChange={handleModeChange} input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
             { props.interface.configuration.supportedModes.map( mode => 
                 <MenuItem key={mode} value={mode}>{mode}</MenuItem>
             )}

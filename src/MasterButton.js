@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => {
 export default function MasterButton(props) {
     
     const classes = useStyles();
-    const { applyLayoutCard, masterButtonState, goBack, goHome, backPage } = useContext(LayoutContext);
+    const { applyHomePage, masterButtonState, goBack, goHome, backPage } = useContext(LayoutContext);
     const { loggedIn, connectError } = useContext(NetworkContext);
     
     function callMaster() {
@@ -59,7 +59,7 @@ export default function MasterButton(props) {
             goHome()
         } 
         if (masterButtonState==='System') {
-            applyLayoutCard('SystemLayout')
+            applyHomePage('System')
         } 
     }
     

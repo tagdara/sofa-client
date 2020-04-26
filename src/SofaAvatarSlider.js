@@ -2,7 +2,6 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import SofaSlider from './SofaSlider';
@@ -15,14 +14,28 @@ const useStyles = makeStyles({
         flexGrow: 1,
         flexBasis: 0,
         minWidth: "35%",
+        alignItems: "center",
     },
     line: {
+        boxSizing: "border-box",
         display: "flex",
         width: '100%',
         maxWidth: '100%',
         flexGrow: 1,
         flexBasis: 0,
         minHeight: 48,
+        padding: "0 16px",
+        alignItems: "center",
+    },
+    noPad: {
+        boxSizing: "border-box",
+        display: "flex",
+        width: '100%',
+        maxWidth: '100%',
+        flexGrow: 1,
+        flexBasis: 0,
+        padding: 0,
+        alignItems: "center",
     }
 })
 
@@ -43,22 +56,26 @@ export default function SofaAvatarSlider(props) {
     }; 
     
     return (
-        <ListItem className={classes.line}>
+        <div className={props.noPad ? classes.noPad : classes.line}>
             { !props.reverse &&
                 <ToggleAvatar small={props.small} onClick={props.avatarClick} noback={props.noAvatarBack} avatarState={ props.avatarState }>
-                    {value}
+                    {value+props.avatarUnit}
                 </ToggleAvatar>
+            }
+            { props.iconLabel &&
+                props.iconLabel
             }
             { props.label &&
                 <ListItemText primary={props.label} className={classes.label} />
             }
+
             <SofaSlider {...props} preChange={handlePreChange} />
             { props.reverse &&
                 <ToggleAvatar reverse={props.reverse} small={props.small} onClick={props.avatarClick} noback={props.noAvatarBack} avatarState={ props.avatarState }>
-                    {value}
+                    {value+props.avatarUnit}
                 </ToggleAvatar>
             }
-        </ListItem>
+        </div>
     );
 }
 
@@ -68,5 +85,8 @@ SofaAvatarSlider.defaultProps = {
     avatarState: "on",
     reverse: true,
     small: false,
+    avatarUnit: "",
+    noPad: false,
+    
 }
 

@@ -10,7 +10,7 @@ import AcUnitIcon from '@material-ui/icons/AcUnit';
 const useStyles = makeStyles({
         
     indent: {
-        paddingLeft: 40,
+        paddingLeft: 16,
         paddingRight: 8,
     }
 });

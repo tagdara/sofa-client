@@ -153,7 +153,7 @@ export default function SecurityCamera(props) {
     }
     
     return (
-        <GridItem wide={props.wide} nopad={true} thinmargin={isMobile}>
+        <GridItem wide={props.wide} nopad={true} noMargin={props.top} thinmargin={isMobile}>
             { imageUri && 
                 <img
                     className={imageLoaded ? classes.im : classes.hiddenimage}

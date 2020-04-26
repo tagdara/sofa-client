@@ -22,7 +22,7 @@ const useStyles = makeStyles({
         flexWrap: "wrap",
         width: "100%",
         boxSizing: "border-box",
-        marginRight: 8,
+        marginRight: 0,
         overflowX: "hidden",
         overflowY: "hidden",
         alignItems: "center",

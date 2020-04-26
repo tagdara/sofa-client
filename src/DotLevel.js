@@ -14,6 +14,7 @@ const useStyles = makeStyles(theme => {
             boxSizing: "border-box",
             opacity: 1,
             color: theme.palette.dot.on,
+            zIndex: 6,
         },
         baseOff: {
             height: 48,
@@ -21,6 +22,7 @@ const useStyles = makeStyles(theme => {
             boxSizing: "border-box",
             opacity: 1,
             color: theme.palette.dot.off,
+            zIndex: 5,
         },
         onLine: {
                 position: "absolute",
@@ -30,7 +32,7 @@ const useStyles = makeStyles(theme => {
                 background: theme.palette.dot.on,
                 width: "calc(100% - 13px)",
                 display: "block",
-                zIndex:-1,
+                zIndex:1,
                 opacity: 1,
         },
         offLine: {
@@ -42,7 +44,7 @@ const useStyles = makeStyles(theme => {
                 content: "",
                 width: "calc(100% - 13px)",
                 display: "block",
-                zIndex:-1,
+                zIndex:1,
                 opacity: 1,
         },
     
@@ -70,6 +72,14 @@ const useStyles = makeStyles(theme => {
         },
         working: {
             margin: 0,
+        },
+        holder: {
+            position: "relative",
+            minWidth: 192,
+            padding: 0,
+            boxSizing: "border-box",
+            margin: 0,
+            zIndex: 2,
         }
     }
 });
@@ -93,7 +103,7 @@ export default function DotLevel(props) {
     }
 
     return (
-        <React.Fragment >
+        <div className={classes.holder} >
             { levels.map((lev) =>
             <IconButton key={lev} onClick={ () => applyLevel(lev) } className={ ( level>0 && lev<=level ) ? classes.baseOn : classes.baseOff}>
                 { lev===0  ?
@@ -123,7 +133,7 @@ export default function DotLevel(props) {
                 }
             </IconButton>
             )}
-        </React.Fragment >
+        </div >
     );
 }
 

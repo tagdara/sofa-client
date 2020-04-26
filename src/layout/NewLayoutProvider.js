@@ -1,19 +1,32 @@
 import React, {useContext, useState, useEffect, createContext, useReducer} from 'react';
 import { NetworkContext } from '../NetworkProvider';
 import PlaceholderCard from '../PlaceholderCard';
+import ErrorBoundary from '../ErrorBoundary';
 
 export const moduleReducer = (state, data) => {
 
-    function addSuspenseModule(modulename) {
-        return ( React.lazy(() => import('../'+modulename)))
+    function addSuspenseModule(modulepath) {
+        try {
+            return ( React.lazy(() => 
+                        import("../"+modulepath)
+                            .catch(err => {
+                                console.error('Error during loading module: ' + err)
+                            })
+            ))
+        }
+        catch {
+            return null
+        }
     }
 
     function addModules(modulelist) {
         var newmodules = {...state}
         modulelist.forEach( item => {
-            if (!newmodules.hasOwnProperty(item)) {
+            var moduleparts=item.split('/')
+            var modulename=moduleparts[moduleparts.length-1]
+            if (!newmodules.hasOwnProperty(modulename)) {
                 //console.log('adding module', item)
-                newmodules[item]=addSuspenseModule(item)
+                newmodules[modulename]=addSuspenseModule(item)
             }
         })
         return newmodules
@@ -120,7 +133,7 @@ export const LayoutProvider = (props) => {
     }, [ layout, isMobile ])
     
     function goHome() {
-        var newLayout={"name":'Home', "props":{}, "data":layouts['Home'], "page":layouts['Home']['order'][0]}
+        var newLayout={"name":'Home', "props":{}, "data":layouts['Home'], "page":""}
         if (isMobile && layouts['Home'].hasOwnProperty('mobile')) {
             //console.log('setting home to mobile')
             newLayout.page=layouts['Home'].mobile
@@ -215,17 +228,19 @@ export const LayoutProvider = (props) => {
     };
 
     function renderSuspenseModule( modulename, moduleprops ) {
-
-        if (modules.hasOwnProperty(modulename)) {
-            let Module = modules[modulename]
-            moduleprops['wide']=true
-            return <React.Suspense fallback={<PlaceholderCard name={ modulename } />}>
-                        <Module key={ modulename } {...moduleprops} />
-                    </React.Suspense>
-        } else {
-            //console.log('could not render', modulename)
-            return null
+        try {
+            if (modules.hasOwnProperty(modulename)) {
+                let Module = modules[modulename]
+                moduleprops['wide']=true
+                return  <ErrorBoundary>
+                            <React.Suspense fallback={<PlaceholderCard name={ modulename } />}>
+                                <Module key={ modulename } {...moduleprops} />
+                            </React.Suspense>
+                        </ErrorBoundary>
+            } 
         }
+        catch {}
+        return null
     }
 
 

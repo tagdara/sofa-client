@@ -4,13 +4,13 @@ import withMobileDialog from '@material-ui/core/withMobileDialog';
 
 import Dialog from '@material-ui/core/Dialog';
 import Slide from  '@material-ui/core/Slide';
-
 const useStyles = makeStyles({
 
     dialogPaper: {
         minHeight: '90vh',
         maxHeight: '90vh',
         overflowX: "hidden",
+        display: "flex",
     },
 });
 

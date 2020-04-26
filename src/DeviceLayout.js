@@ -9,7 +9,7 @@ import CompositeDevice from './CompositeDevice';
 
 export default function DeviceLayout(props) {
 
-    const { devicesByCategory, controllers, directives } = useContext(DataContext);
+    const { deviceStatesByCategory, controllers, directives } = useContext(DataContext);
     const [mode] = useState('all');
     const [limit, setLimit] = useState(50);
     const [nameFilter, setNameFilter] = useState('')
@@ -29,13 +29,14 @@ export default function DeviceLayout(props) {
     function filterByType(devtype) {
 
         if (devtype==='all' || devtype==='') {
-            var devs=devicesByCategory('ALL', nameFilter)
+            var devs=deviceStatesByCategory('ALL', nameFilter)
             return devs.slice(0, limit)
         }
-        return devicesByCategory(devtype)
+        return deviceStatesByCategory(devtype)
     }
 
     function executeDirective(iface, idir) {
+        console.log('ED',iface,idir)
         if (Object.keys(props.directives[iface][idir]).length===0) {
             props.device[iface].directive(idir)
         } else {

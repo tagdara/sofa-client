@@ -12,7 +12,6 @@ import UserProvider from './user/UserProvider';
 import SofaThemeProvider from './theme/SofaTheme';
 import NetworkProvider from './NetworkProvider';
 
-
 export default function SofaApp(props) {
     
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -32,23 +31,23 @@ export default function SofaApp(props) {
     };
 
     return (
-        <SofaThemeProvider>
-            <NetworkProvider>
-                <UserProvider>
+        <NetworkProvider>
+            <UserProvider>
+                <SofaThemeProvider>
                     <LayoutProvider>
                         <DeviceProvider>
                             <DataProvider>
-                                <MasterButton open={handleDrawerOpen} mobile={isMobile}/>
+                                { !isMobile && <MasterButton open={handleDrawerOpen} mobile={isMobile}/> }
                                 <ErrorBoundary>
                                     <SofaAppContent />
-                                </ErrorBoundary>   
+                                </ErrorBoundary>
                             </DataProvider>
                         </DeviceProvider>
                         <CssBaseline />
                     </LayoutProvider>
-                </UserProvider>
-            </NetworkProvider>
-        </SofaThemeProvider>
+                </SofaThemeProvider>    
+            </UserProvider>
+        </NetworkProvider>
     )
 }
 

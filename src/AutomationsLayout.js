@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
-import { DataContext } from './DataContext/DataProvider';
+import { DeviceContext } from './DataContext/DeviceProvider';
 import { NetworkContext } from './NetworkProvider';
+import { UserContext } from './user/UserProvider';
 
 import { makeStyles } from '@material-ui/styles';
 
 import AutomationItem from './automation/automationItem';
 import ScheduleItem from './automation/ScheduleItem';
 
-import AutomationAdd from './automation/automationAdd';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 
@@ -33,11 +33,11 @@ export function AutomationsLayout(props) {
 
     const classes = useStyles();
     const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStateByEndpointId } = useContext(DataContext);
+    const { directive } = useContext(DeviceContext);
     const { getJSON, postJSON } = useContext(NetworkContext);
+    const { makeFavorite, isFavorite} = useContext(UserContext)
 
     const [automations, setAutomations] = useState({})
-    const adding = false
     const editing = false
     const [remove, setRemove] = useState(false)
     const [favorites, setFavorites] = useState(props.favorites)
@@ -48,9 +48,6 @@ export function AutomationsLayout(props) {
     useEffect(() => {
         getJSON('list/logic/automations')
             .then(result=>fixAutomations(result))
-        //fetch(serverurl+'/list/logic/automations')
-        //    .then(result=>result.json())
-        //    .then(result=>fixAutomations(result))
 
     }, [getJSON, serverurl]);
     
@@ -73,25 +70,6 @@ export function AutomationsLayout(props) {
         applyLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
     }    
     
-    function addAutomation(automationName) {
-
-        if (automations.hasOwnProperty(automationName)) {
-            console.log('An automation with that name already exists',automationName)
-            return false
-        } else {
-            //var automations=automations
-            automations[automationName]={'actionCount': 0, 'conditionCount': 0}
-            console.log('Automations will be', automations)
-            postJSON('add/logic/automation/'+automationName, [])
-                .then(setAutomations(automations))
-    
-            //fetch(serverurl+'/add/logic/automation/'+automationName, {
-            //        method: 'post',
-            //        body: JSON.stringify([])
-            //    })
-            //    .then(setAutomations(automations))
-        }
-    } 
     
     function deleteAutomation(automationName) {
 
@@ -100,21 +78,11 @@ export function AutomationsLayout(props) {
         
         postJSON('del/logic/automation/'+automationName, [])
             .then(setAutomations(automations));
-
-        //fetch(serverurl+'/del/logic/automation/'+automationName, {
-         //       method: 'post',
-        //        headers: {
-        //            'Accept': 'application/json, text/plain, */*',
-        //            'Content-Type': 'application/json'
-        //        },
-        //        body: JSON.stringify([])
-        //    })
-        //    .then(setAutomations(automations));
     } 
         
     function runAutomation(name) {
-        var auto=deviceStateByEndpointId('logic:activity:'+name)
-        auto.SceneController.directive('Activate')
+        directive('logic:activity:'+name, 'SceneController', 'Activate')
+        return true
     }
 
     function newAutomation() {
@@ -135,7 +103,7 @@ export function AutomationsLayout(props) {
 
     return (    
         <React.Fragment>
-            <GridSection name={"Automations"} secondary={
+            <GridSection scroll={true} name={"Automations"} secondary={
                 <>
                     <IconButton onClick={ () => newAutomation() } className={classes.button }>
                         <AddIcon fontSize="small" />
@@ -152,20 +120,17 @@ export function AutomationsLayout(props) {
                 </> }
             >
             { Object.keys(automations).sort().map(automation => 
-                ( (automations[automation].favorite || !favorites) &&
+                ( (isFavorite('logic:activity:'+automation) || !favorites) &&
                     <React.Fragment key={ automation+'-reg' }>
                         { (scheduled && automations[automation].schedules.length>0 ) &&
                             <ScheduleItem name={automation} automation={ automations[automation] } select={selectAutomation} run={runAutomation} />
                         }
                         { !scheduled &&
-                            <AutomationItem name={automation} deleting={remove} automation={ automations[automation] } select={selectAutomation} edit={editing} delete={deleteAutomation} run={runAutomation} />
+                            <AutomationItem favorite={isFavorite('logic:activity:'+automation)} makeFavorite={makeFavorite} name={automation} deleting={remove} automation={ automations[automation] } select={selectAutomation} edit={editing} delete={deleteAutomation} run={runAutomation} />
                         }
                     </React.Fragment>
                 )
             )}
-            { adding ? 
-                <AutomationAdd add={addAutomation} />
-            : null }
             </GridSection>
         </React.Fragment>
     )

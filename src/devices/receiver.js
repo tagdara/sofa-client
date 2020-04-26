@@ -57,6 +57,7 @@ const useStyles = makeStyles(theme => {
             display: "flex",
             alignItems: "center",
             flexDirection: "column",
+            padding: 0,
         },
     }
 
@@ -97,16 +98,7 @@ export default function Receiver(props) {
     }
     
     function handleInputLockModeChoice(event,modechoice) {
-        console.log(event, modechoice)
-        for (var k = 0; k < props.device.interfaces.length; k++) {
-            if (props.device[props.device.interfaces[k]].controller==='ModeController') {
-                var mc=props.device[props.device.interfaces[k]]
-                var modename=mc.capabilityResources.friendlyNames[0].value.text
-                if (modename==="InputLock") {
-                    mc.directive('SetMode', { "mode": modechoice })
-                }
-            }
-        }
+        directive(props.device.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Receiver.InputLock')
     }; 
     
     function subText() {

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import SmallSlider from '../../SmallSlider';
+import SofaAvatarSlider from '../../SofaAvatarSlider';
 
 export default function TargetSetpoint(props) {
 
@@ -15,13 +15,18 @@ export default function TargetSetpoint(props) {
         props.directive(props.device.endpointId, 'ThermostatController', 'SetTargetSetpoint', { "targetSetpoint" : event }, {}, props.item.instance)
 
     }; 
+    
+    function valueOrDefault() {
+        var val=70
+        try {
+            val=parseInt(props.item.value.targetSetpoint.value)
+        } 
+        catch {}
+        return val
+    }
 
     return (
-        <SmallSlider
-            value={ props.item.value ? parseInt(props.item.value.targetSetpoint.value) : 70 } unit={"°"}
-            min={60} max={90} step={1}
-            change={ handleTargetSetpointChange }
-        />
+        <SofaAvatarSlider avatarUnit={"°"} min={60} max={90} small={true} reverse={true} minWidth={64} value={ valueOrDefault()  } change={ handleTargetSetpointChange } />
     );
 }
 

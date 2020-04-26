@@ -9,7 +9,7 @@ import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 const useStyles = makeStyles({
         
     indent: {
-        paddingLeft: 40,
+        paddingLeft: 16,
         paddingRight: 8,
     }
 });

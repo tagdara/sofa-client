@@ -1,29 +1,35 @@
 import React, { useEffect, useContext, useRef } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
+import { makeStyles } from '@material-ui/styles';
 
 import GridSection from './GridSection';
 import GridItem from './GridItem';
-
-import ErrorBoundary from './ErrorBoundary';
-
-import MusicVideoIcon from '@material-ui/icons/MusicVideo';
-import LightbulbOutlineIcon from './LightbulbOutline';
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ToggleAvatar from './ToggleAvatar'
+import Typography from '@material-ui/core/Typography';
 
 import AvSummary from './AvSummary'
 import LightSummary from './LightSummary'
-import ThermostatSummary from './ThermostatSummary'
-import DeviceSummary from './DeviceSummary'
 import SecuritySummary from './SecuritySummary'
-import CameraSummary from './CameraSummary'
-import AlertSummary from './AlertSummary'
+import SystemLaunch from './SystemLaunch'
+
+const useStyles = makeStyles(theme => {
+    return {        
+        label: {
+            padding: 16,  
+            width: "80%",
+            minHeight: 128,
+        },
+        hover: {
+            "&:hover" : {
+                backgroundColor: theme.palette.primary.light,
+            },
+        }
+    }
+})
 
 export default function SummaryLayout(props) {
 
-    const { setMasterButtonState, applyHomePage} = useRef(useContext(LayoutContext)).current;
+    const { setMasterButtonState, applyHomePage, applyLayoutCard} = useRef(useContext(LayoutContext)).current;
+    const classes = useStyles();
 
     useEffect(() => {
         setMasterButtonState('System')
@@ -31,49 +37,24 @@ export default function SummaryLayout(props) {
     
     return (    
         <GridSection name={"Summary"} >
-            <GridItem>
-                <ListItem onClick={() => applyHomePage('Audio Video') }>
-                    <ToggleAvatar avatarState="on">
-                        <MusicVideoIcon />
-                    </ToggleAvatar>
-                    <ListItemText primary="Audio Video" secondary={'Control Music and TV'} />
-                </ListItem>
-                <ListItem>
-                    <ErrorBoundary>
-                        <AvSummary />
-                    </ErrorBoundary>
-                </ListItem>
+            <GridItem hover={true} xs={6} flex={true} onClick={() => applyHomePage('Audio Video')}>
+                <Typography className={classes.label} variant="h5">Audio&nbsp;& Video</Typography>
+                <AvSummary />
             </GridItem>
-            <GridItem>
-                <ListItem onClick={() => applyHomePage('Lights and Comfort')}>
-                    <ToggleAvatar avatarState="on">
-                        <LightbulbOutlineIcon />
-                    </ToggleAvatar>
-                    <ListItemText primary="Lights and Comfort" secondary={'Lighting, Temperature and other devices'} />
-                </ListItem>
-                <ListItem>
-                    <ErrorBoundary>
-                        <LightSummary />
-                        <DeviceSummary />
-                        <ThermostatSummary />
-                    </ErrorBoundary>
-                </ListItem>
-            </GridItem>
-            <GridItem>
-                <ListItem onClick={() =>  applyHomePage('Security')}>
-                    <ToggleAvatar avatarState="on">
-                        <VerifiedUserIcon />
-                    </ToggleAvatar>
-                    <ListItemText primary="Security" secondary={'Cameras, Locks and Sensors'} />
-                </ListItem>
-                <ListItem>
-                    <ErrorBoundary>
-                        <SecuritySummary />
-                        <AlertSummary />
-                        <CameraSummary />
-                    </ErrorBoundary>
-                </ListItem>
 
+            <GridItem hover={true} xs={6} flex={true} onClick={() => applyHomePage('Lights and Comfort')}>
+                <Typography className={classes.label} variant="h5">Lights&nbsp;& Comfort</Typography>
+                <LightSummary />
+            </GridItem>
+
+            <GridItem hover={true} xs={6} flex={true} onClick={() =>  applyHomePage('Security')}>
+                <Typography className={classes.label} variant="h5">Security</Typography>
+                <SecuritySummary />
+            </GridItem>
+
+            <GridItem hover={true} xs={6} onClick={ () => applyLayoutCard('SystemLayout') }>
+                <Typography className={classes.label} variant="h5">System&nbsp;& Automation</Typography>
+                <SystemLaunch />
             </GridItem>
         </GridSection>
     )

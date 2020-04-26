@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import SmallSlider from '../../SmallSlider';
+import SofaAvatarSlider from '../../SofaAvatarSlider';
 
 export default function Volume(props) {
-    console.log( props.interface)
     
     useEffect(() => {
         if (props.item.value===undefined) {
@@ -16,11 +15,7 @@ export default function Volume(props) {
     }; 
 
     return (
-        <SmallSlider
-            value={ props.item.value ? props.item.value.volume : 50 } unit={"%"}
-            min={0} max={100} step={10}
-            change={ handleVolumeChange }
-        />
+        <SofaAvatarSlider small={true} reverse={true} minWidth={64} value={ props.item.value ? props.item.value.volume : 50 } change={ handleVolumeChange } />
     );
 }
 

@@ -26,7 +26,6 @@ const BootstrapInput = withStyles(theme => ({
 
 export default function DetectionState(props) {
     
-    console.log('dstate props', props)
     const controller=props.interface.interface.split('.')[1]
     
     useEffect(() => {

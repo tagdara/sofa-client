@@ -15,6 +15,9 @@ const useStyles = makeStyles({
         flexBasis: 1,
         boxSizing: "border-box",
     },
+    areaListItem: {
+        minHeight: 54,
+    }
 });
 
 export default function AreaLine(props) {

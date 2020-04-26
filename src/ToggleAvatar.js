@@ -8,6 +8,10 @@ import Avatar from '@material-ui/core/Avatar';
 const useStyles = makeStyles(theme => {
     
     return {
+        flex: {
+            display: "flex",
+            alignItems: "center",
+        },
         base: {
             padding: 0,
             minWidth: 56,
@@ -17,7 +21,7 @@ const useStyles = makeStyles(theme => {
             display: "flex",
         },
         sizeSmall: {
-            minWidth: 36,
+            minWidth: 26,
             fontSize: 10,
         },
         avatarSmall: {
@@ -42,26 +46,19 @@ function ToggleAvatar(props) {
 
     const styles = {
         back: {
-            backgroundColor: props.theme.palette.avatar[props.avatarState],
-            color: props.theme.palette.primary.contrastText,
+            backgroundColor: props.theme.palette.avatar[props.avatarState.toLowerCase()],
             },
         noback: {
-            color: props.theme.palette.avatar[props.avatarState]
+            backgroundColor: props.theme.palette.avatar.none,
+            color: props.theme.palette.avatar[props.avatarState.toLowerCase()]
         },
-        none: {}
     };
     
-    return (
-        <ListItemAvatar style={props.noback ? styles.noback : styles.none } onClick={props.onClick} className={ classNames(props.small ? classes.sizeSmall : classes.base, props.reverse && classes.reverse )}>
-            { props.noback ?
-                <>
-                    {props.children}
-                </>
-            :
-                <Avatar style={styles.back} className={ classNames(props.small && classes.avatarSmall) } onClick={props.onClick} >
-                    {props.children}
-                </Avatar>
-            }
+    return  (
+        <ListItemAvatar onClick={props.onClick} className={ classNames(classes.flex, props.small ? classes.sizeSmall : classes.base, props.reverse && classes.reverse )}>
+            <Avatar style={props.noback ? styles.noback : styles.back} className={ classNames(props.small && classes.avatarSmall) } onClick={props.onClick} >
+                {props.children}
+            </Avatar>
         </ListItemAvatar>
 
     )

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -24,35 +24,29 @@ const BootstrapInput = withStyles(theme => ({
 }))(InputBase);
 
 export default function PowerState(props) {
-    
-    console.log('props item', props.item)
 
-    useEffect(() => {
-        if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'PowerController', 'TurnOn', { "powerState" : "ON" }, {}, props.item.instance)
-        }
-    // eslint-disable-next-line
-    }, [props.item, props.device, props.interface])
+    function valueOrDefault() {
+
+        if (props.item.command==='TurnOn') {return 'ON'}
+        if (props.item.command==='TurnOn') {return 'OFF'}
+        var val='OFF'
+        try {
+            if (props.item.value.hasOwnProperty('powerState')) {
+                val=props.item.value.powerState
+            }
+        } 
+        catch {}
+        return val
+    }
 
     
     function handleChange(e) {
-        
         console.log('changing',props.device.endpointId, 'PowerController', e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' , { "powerState" : e.target.value }, {}, props.item.instance)
-
         props.directive(props.device.endpointId, 'PowerController', e.target.value ==='ON' ? 'TurnOn' : 'TurnOff' , { "powerState" : e.target.value }, {}, props.item.instance)
     }
     
-    function getValue() {
-        if (props.item.value!==undefined) {
-            if (props.item.value.powerState==='ON' || props.item.value.powerState==='OFF') { return props.item.value.powerState }
-        }
-        if (props.item.command==='TurnOn') {return 'ON'}
-        if (props.item.command==='TurnOn') {return 'OFF'}
-        return ''
-    }
-    
     return (
-        <Select value={getValue()} onChange={handleChange} input={<BootstrapInput name="powerState" id="powerState" />} >
+        <Select value={valueOrDefault()} onChange={handleChange} input={<BootstrapInput name="powerState" id="powerState" />} >
             <MenuItem value=""><em>Choose a property</em></MenuItem>
             <MenuItem value="ON">ON</MenuItem>
             <MenuItem value="OFF">OFF</MenuItem>

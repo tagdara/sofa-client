@@ -16,9 +16,6 @@ import 'moment-timezone';
 
 export default function AdapterItem(props) { 
 
-    console.log('Adapter',props.adapter)
-
-    
     function getErrorState(count) {
         try {
 

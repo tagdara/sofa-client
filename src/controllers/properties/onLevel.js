@@ -14,10 +14,21 @@ export default function OnLevel(props) {
         props.directive(props.device.endpointId, 'OnLevelController', 'SetOnLevel', { "onLevel" :  event }, {}, props.item.instance)
  
     }; 
+    
+    function valueOrDefault() {
+        var val=50
+        try {
+            if (props.item.value.hasOwnProperty('onLevel')) {
+                val=parseInt(props.item.value.onLevel)
+            }
+        } 
+        catch {}
+        return val
+    }
 
     return (
         <SmallSlider
-            value={ parseInt(props.item.value.onLevel) } unit={"%"}
+            value={ valueOrDefault() } unit={"%"}
             min={0} max={100} step={10}
             change={ handleOnLevelChange }
         />

@@ -3,13 +3,12 @@ import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
-import GridItem from './GridItem'
-import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => {
     return {        
         cool: {
-            width: 96,
             color: "#00796B",
             borderColor: "#00796B",
             '&:hover': {
@@ -18,7 +17,6 @@ const useStyles = makeStyles(theme => {
             }
         },
         mid: {
-            width: 96,
             color: "#558B2F",
             borderColor: "#558B2F",
             '&:hover': {
@@ -28,7 +26,6 @@ const useStyles = makeStyles(theme => {
                 
         },
         hot: {
-            width: 96,
             color: "#E65100",
             borderColor: "#E65100",
             '&:hover': {
@@ -44,6 +41,9 @@ const useStyles = makeStyles(theme => {
                 backgroundColor: "#666",
                 borderColor: "#444",
             }
+        },
+        count: {
+            fontSize: 16,
         }
     }
 });
@@ -61,13 +61,14 @@ export default function ThermostatSummary(props) {
         return classes.mid;
     }
     
-    return ( device ?
-            <GridItem wide={false} nopaper={true}>
-                <Button variant="outlined" color="primary" className={device.TemperatureSensor.temperature.value ? tempColor(device.TemperatureSensor.temperature.deepvalue) : classes.disabled } onClick={ () => applyLayoutCard('ThermostatLayout') }>
-                    {device.TemperatureSensor.temperature.value ? device.TemperatureSensor.temperature.deepvalue : '--'}&deg;
-                </Button>
-            </GridItem>
-            : null
+    return ( 
+        device ?
+            <IconButton className={device.TemperatureSensor.temperature.value ? tempColor(device.TemperatureSensor.temperature.deepvalue) : classes.disabled } onClick={ () => applyLayoutCard('ThermostatLayout') }>
+                <Typography className={classes.count}>
+                {device.TemperatureSensor.temperature.value ? device.TemperatureSensor.temperature.deepvalue : '--'}&deg;
+                </Typography>
+            </IconButton>
+        : null
     );
 }
 

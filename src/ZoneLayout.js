@@ -15,7 +15,7 @@ export default function ZoneLayout(props) {
     const [changeTimes, setChangeTimes] = useState({})
 
     useEffect(() => {
-        getChangeTimesForDevices('detectionState',allzones).then(result => setChangeTimes(result))
+        getChangeTimesForDevices('detectionState',allzones).then(result => { console.log('type change', typeof(result)); setChangeTimes(result) } )
     // eslint-disable-next-line 
     }, []);
     

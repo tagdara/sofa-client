@@ -157,7 +157,6 @@ export default function NetworkProvider(props) {
         }
         //setLoggedIn(true)
         setConnectError(false)
-        
         return response.json()
     }
     
@@ -185,6 +184,7 @@ export default function NetworkProvider(props) {
                 body: JSON.stringify(data)
             })
                 .then(result=>handleFetchErrors(result))
+                .then(result=> { return result })
         } else {
             setLoggedIn(false)
             var promise1 = new Promise(function(resolve, reject) {

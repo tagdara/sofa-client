@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 import ErrorBoundary from './ErrorBoundary';
-//import ComputerList from './other/ComputerList';
+import ComputerList from './other/ComputerList';
 import DeviceList from './other/DeviceList';
 import GridSection from './GridSection';
 import MatrixList from './other/MatrixList';
@@ -13,9 +13,10 @@ export default function MoreDevicesLayout(props) {
     //const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))
     const otherDevices=deviceStatesByCategory('OTHER')
     const switches=deviceStatesByFriendlyName(['PC1','PC2','PC3','PC4'], false, 'SWITCH')
+    const computers=deviceStatesByCategory('PC')
 
     //const matrixDevices=deviceStatesByCategory('MATRIX') 
-    const matrixDevices=deviceStatesByFriendlyName(['Living Room TV', 'Office 1', 'Office 2', 'Downstairs 1', 'Downstairs 2', 'Rack'], false)
+    const matrixDevices=deviceStatesByFriendlyName(['Living Room TV', 'Office 1', 'Office 2', 'Office 3', 'Office 4', 'Downstairs 1', 'Downstairs 2', 'Rack'], false)
  
     return (
         <React.Fragment>
@@ -34,6 +35,14 @@ export default function MoreDevicesLayout(props) {
                 </ErrorBoundary>
             </GridSection>
             }
+            { computers &&
+            <GridSection name={"Computers"} show={false}>
+                <ErrorBoundary wide={props.wide}>
+                    <ComputerList devices={ computers } directive={directive} />
+                </ErrorBoundary>
+            </GridSection>
+            }
+
             { otherDevices &&
             <GridSection name={"Services"} show={false}>
                 <ErrorBoundary wide={props.wide}>

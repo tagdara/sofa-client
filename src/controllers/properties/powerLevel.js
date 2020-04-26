@@ -1,26 +1,26 @@
-import React, { useEffect } from 'react';
-import SmallSlider from '../../SmallSlider';
+import React from 'react';
+import SofaAvatarSlider from '../../SofaAvatarSlider';
 
 export default function PowerLevel(props) {
 
-    useEffect(() => {
-        if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'PowerLevelController', 'SetPowerLevel', { "powerLevel" : 50 }, {}, props.item.instance)
-        }
-    // eslint-disable-next-line
-    }, [props.item, props.device, props.interface])
-    
     function handlePowerLevelChange(event) {
         props.directive(props.device.endpointId, 'PowerLevelController', 'SetPowerLevel', { "powerLevel" : event }, {}, props.item.instance)
 
     }; 
+    
+    function valueOrDefault() {
+        var val=50
+        try {
+            if (props.item.value.hasOwnProperty('powerLevel')) {
+                val=parseInt(props.item.value.powerLevel)
+            }
+        } 
+        catch {}
+        return val
+    }
 
     return (
-        <SmallSlider
-            value={ parseInt(props.item.value.powerLevel) } unit={"%"}
-            min={0} max={100} step={10}
-            change={ handlePowerLevelChange }
-        />
+        <SofaAvatarSlider avatarUnit={"%"} small={true} reverse={true} minWidth={64} value={ valueOrDefault() } change={ handlePowerLevelChange } />
     );
 }
 

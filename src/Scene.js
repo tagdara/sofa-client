@@ -1,30 +1,21 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
-import ListItem from '@material-ui/core/ListItem';
 import ListIcon from '@material-ui/icons/List';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CloseIcon from '@material-ui/icons/Close';
-
-import ListItemText from '@material-ui/core/ListItemText';
-import ToggleAvatar from './ToggleAvatar';
-import GridItem from "./GridItem"
+import EditIcon from '@material-ui/icons/Edit';
+import ButtonItem from "./ButtonItem"
+import IconButton from "@material-ui/core/IconButton"
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const useStyles = makeStyles({
-    
-    root: {
-        minHeight: 72,
-        display: "flex",
-        width: "100%",
-    },
-    listItem: {
-        padding: "8 24px",
-    },
-    working: {
-        margin: "4px 20px 4px 4px"
+const useStyles = makeStyles(theme => {
+    return {        
+        listItem: {
+            padding: "8px 8px",
+        },
+        working: {
+            marginLeft: 4,
+        },
     }
 });
 
@@ -39,33 +30,41 @@ export default function Scene(props) {
     }, [props.computedLevel]);
     
     function runScene() {
-        console.log('Activating', props.scene.friendlyName)
-        setWorking(true)
-        props.scene.SceneController.directive('Activate')
+        if (!props.editing && !props.remove) {
+            console.log('Activating', props.scene.friendlyName)
+            setWorking(true)
+            props.directive(props.scene.endpointId, 'SceneController', 'Activate')
+        }
     }
     
     function deleteScene(endpointId) {
-        props.scene.SceneController.directive("Delete")
+        props.directive(props.scene.endpointId, 'SceneController', 'Delete')
     }
-    
-    return (
-        <GridItem >
-            <ListItem onClick={ () => runScene()}>
-                { working ?
-                    <CircularProgress size={32} className={classes.working} />
-                :
-                    <ToggleAvatar avatarState={props.scene.endpointId===props.computedLevel ? 'on' : 'off'}>
-                        {props.shortcut==='x' ? <ListIcon /> : props.shortcut }
-                    </ToggleAvatar>
-                }
-                <ListItemText>{props.scene.friendlyName}</ListItemText>
+
+   return (
+        <ButtonItem noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} highlight={props.highlight} noback={true}
+            avatarIcon={ working ?
+                <CircularProgress size={props.small ? 24 : 32} className={classes.working} />
+            :   
+                <>
+                    {props.shortcut==='x' ? <ListIcon /> : props.shortcut }
+                </>
+            }
+            avatarState={props.scene.endpointId===props.computedLevel ? 'on' : 'off'}
+            label={props.scene.friendlyName}
+            action={runScene}
+            small={props.small}
+            secondary={
+                <>
                 { props.remove &&
-                    <ListItemSecondaryAction className={classes.listItem}>
-                        <ListItemIcon onClick={() => deleteScene() }><CloseIcon /></ListItemIcon>   
-                    </ListItemSecondaryAction>
+                    <IconButton size={"small"} onClick={() => deleteScene() }><CloseIcon /></IconButton>   
                 }
-            </ListItem>
-        </GridItem >
+                { props.editing &&
+                    <IconButton size={"small"} onClick={() => props.edit(props.scene) }><EditIcon /></IconButton>   
+                }
+                </>
+            }
+        />
     )
 };
 

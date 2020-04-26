@@ -13,19 +13,9 @@ import GridItem from './GridItem';
 export default function MiniLauncher(props) {
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStatesByCategory } = useContext(DataContext);
-    const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))
-
+    const { deviceStatesByFriendlyName } = useContext(DataContext);
+    const switches=deviceStatesByFriendlyName(['Bathroom Fan','Bathroom Heat Fan'], false, 'SWITCH')
     
-    function devsWithPowerState(devs) {
-        var outdevs=[]
-        for (var j = 0; j < devs.length; j++) {
-            if (devs[j].hasOwnProperty('PowerController')) {
-                outdevs.push(devs[j])
-            }
-        }
-        return outdevs
-    }
 
     function onCount() {
         var ondevs=0
@@ -38,7 +28,7 @@ export default function MiniLauncher(props) {
     }
 
     return (
-        <GridItem wide={props.wide}>
+        <GridItem wide={props.wide} noPad={true}>
             <ListItem onClick={ () => applyLayoutCard('MoreDevicesLayout') } >
                 <ToggleAvatar noback={true} avatarState={ onCount() ? 'on' : 'off'}><DevicesOtherIcon /></ToggleAvatar>
                 <ListItemText primary={"More Devices"} secondary={onCount() ? onCount()+" devices on" : null} />

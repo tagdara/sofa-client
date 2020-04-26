@@ -17,7 +17,7 @@ export default function ZoneHero(props) {
     const { deviceStatesByCategory } = useContext(DataContext);
     const devices=deviceStatesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
     const zoneOpen = zoneCount('DETECTED')>0;
-    
+   
     function getSecurityZones() {
         var secZones=[]
         for (var i = 0; i < devices.length; i++) { 
@@ -76,11 +76,11 @@ export default function ZoneHero(props) {
     return (
         <GridItem wide={props.wide}>
             { zoneReady() ?
-            <ListItem onClick={ (e) => applyLayoutCard('ZoneLayout')}>
-                <ToggleAvatar noback={!zoneOpen} avatarState={ (zoneOpen) ? "open" : "closed" } >
+            <ListItem>
+                <ToggleAvatar noback={!zoneOpen} avatarState={ (zoneOpen) ? "open" : "closed" } onClick={ (e) => applyLayoutCard('ZoneLayout')} >
                     { zoneOpen ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
                 </ToggleAvatar>
-                <ListItemText primary={zoneOpen ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
+                <ListItemText onClick={ (e) => applyLayoutCard('ZoneLayout')} primary={zoneOpen ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
             </ListItem>
             :
             <ListItem>

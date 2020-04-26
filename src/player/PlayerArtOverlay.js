@@ -1,20 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Typography from '@material-ui/core/Typography';
-
-import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles(theme => {
     return {
-        bigcover: {
+        oldbigcover: {
             width: "100%",
             maxHeight: 480,
             position: "relative",
             padding: 0,
             height: "auto",
             minHeight:100,
+        },
+        bigcover: {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            maxWidth: "100%",
+            maxHeight: "100%",
+            minWidth: "100%",
+            minHeight: "100%",
         },
         songTextBox: {
             position: "absolute",
@@ -29,6 +38,12 @@ const useStyles = makeStyles(theme => {
             position: "relative",
             padding: "16px 0 0 16px",
             margin: 0,
+        },
+        songImageAspect: {
+            position: "relative",
+            margin: 0,
+            width: "100%",
+            paddingTop: "100%", /* 1:1 Aspect Ratio */
         },
         songTextHolder: {
             paddingLeft: 16,
@@ -83,26 +98,25 @@ const useStyles = makeStyles(theme => {
 export default function PlayerArtOverlay(props) {
     
     const classes = useStyles();
-    const [imageLoaded, setImageLoaded] = useState(false)
+    //const [imageLoaded, setImageLoaded] = useState(false)
     const serverurl="https://"+window.location.hostname;
     
-
     return ( 
         <Grid container className={classes.topbox} >
             <Grid item xs={4} className={classes.songImageHolder}>
-                <Fade in={ imageLoaded } >
+                <div className={classes.songImageAspect} >
                 <img
                     className={classes.bigcover}
-                    src={ serverurl+props.art+"?title="+props.title }
+                    src={ props.art.startsWith('http') ? props.art : serverurl+props.art+"?title="+props.title }
                     title={ props.title }
                     alt={ props.title }
                     onClick={ (e) => props.cover(e)}
-                    onLoad={ () => setImageLoaded(true) }
+                    //onLoad={ () => setImageLoaded(true) }
                 />
-                </Fade>
+                </div>
             </Grid>
             <Grid item container xs={8} >
-                <Grid item xs={12} className={classes.songTextHolder}>
+                <Grid item xs={12} className={classes.songTextHolder} onClick={()=> props.setMini(true)}>
                     <Typography variant="subtitle1" className={classes.songText}>{props.title}</Typography>
                     <Typography variant="subtitle2" className={classes.songText}>{props.artist}</Typography>
                 </Grid>

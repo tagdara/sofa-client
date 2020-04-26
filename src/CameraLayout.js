@@ -7,6 +7,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import GridSection from './GridSection';
+import CameraQR from './CameraQR';
 
 
 export default function CameraLayout(props) {
@@ -22,17 +24,27 @@ export default function CameraLayout(props) {
     
     return (
         <React.Fragment>
+        <GridSection name={"Cameras"}>
             { cameras.map(camera => 
                 <SecurityCamera camera={camera} key={camera.endpointId} name={ camera.friendlyName } directive={directive} />
             )}
-            <List>
-                <ListItem button onClick={() => openNVR() }>
-                    <ListItemIcon>
-                        <VideocamIcon />
-                    </ListItemIcon>
-                    <ListItemText primary={'Unifi NVR'} />
-                </ListItem>
-            </List>
+        </GridSection>
+        <GridSection>
+        <List>
+            <ListItem button onClick={() => openNVR() }>
+                <ListItemIcon>
+                    <VideocamIcon />
+                </ListItemIcon>
+                <ListItemText primary={'Unifi NVR'} />
+            </ListItem>
+        </List>
+        </GridSection>
+        <GridSection name={"QR Codes"} show={false}>
+            { cameras.map(camera => 
+                <CameraQR cameraId={camera.endpointId} key={camera.endpointId} name={ camera.friendlyName } />
+            )}
+        </GridSection>
+
         </React.Fragment>
     )
 }

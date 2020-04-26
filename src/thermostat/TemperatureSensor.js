@@ -19,7 +19,7 @@ export default function TemperatureSensor(props) {
     
     function switchToHistory() {
         applyBackPage('ThermostatLayout',{})
-        applyLayoutCard('ThermostatHistory', { 'device':props.device, 'days':7})
+        applyLayoutCard('ThermostatHistory', { 'device':props.device, 'past':'7d'})
     }
     
     return (

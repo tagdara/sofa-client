@@ -17,8 +17,13 @@ export default createMuiTheme({
         },
         background: {
             page: "#eee",
-            hover: "rgba(255, 87, 34, 0.1)",
+            button: "#fff",
+            selectButton: deepOrange[300],
+            hover: deepOrange[100],
+            hover2: "rgba(255, 87, 34, 0.1)",
             card: "#efefef",
+            area: "#ddd",
+            header: "#e8e8e8",
         },
         dot: {
             off: "#bbb",
@@ -26,7 +31,7 @@ export default createMuiTheme({
         },
         avatar: {
             normal: deepOrange[500],
-            off: "#ccc",
+            off: "#aaa",
             on: deepOrange[500],
             notready: "#bbb",
             closed: "#6a6",
@@ -34,6 +39,17 @@ export default createMuiTheme({
             cool: "#00796B",
             mid: "#558B2F",
             hot: "#E65100",
+            good: "#558B2F",
+            fair: "#E65100",
+            bad: "#E60000", 
+            none: "rgba(255,255,255, 0)",
+        },
+        layer: {
+            body: "#ccc",
+            section: "#ddd",
+            card: "#e8e8e8",
+            item: "#eee",
+            itemHighlight: "#f4f4f4",
         },
 
         type: "light"

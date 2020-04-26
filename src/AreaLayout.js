@@ -9,14 +9,18 @@ import GridSection from './GridSection';
 
 import Scene from './Scene'
 import SceneAdd from './SceneAdd'
+import ButtonItem from './ButtonItem'
 
 import IconButton from '@material-ui/core/IconButton';
 import RemoveIcon from '@material-ui/icons/Remove';
+import AddIcon from '@material-ui/icons/Add';
+import EditIcon from '@material-ui/icons/Edit';
 
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
 import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 import CameraIcon from '@material-ui/icons/Camera';
+import DeviceDialog from './DeviceDialog'
 
 
 const useStyles = makeStyles({
@@ -40,15 +44,17 @@ const useStyles = makeStyles({
 export default function AreaLayout(props) {
 
     const classes = useStyles();
-    const { deviceStateByEndpointId } = useContext(DataContext);
-    const { layout } = useContext(LayoutContext);
-    
+    const { deviceStateByEndpointId, directive } = useContext(DataContext);
+    const { isMobile, applyLayoutCard, layout } = useContext(LayoutContext);
     const [edit, setEdit] = useState(false)
     const [filter, setFilter] = useState('ALL');
     const [brightControl, setBrightControl] = useState(false)
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
     const [newScene, setNewScene] = useState(false);
+    const [addingDevice, setAddingDevice] = useState(false);
+    const [deletingDevice, setDeletingDevice] = useState(false);
+    const [editingScene, setEditingScene] = useState(false);
     const area = deviceStateByEndpointId('logic:area:'+layout.props.name)
 
     function childrenByArea(filter) {
@@ -78,9 +84,9 @@ export default function AreaLayout(props) {
       return 0;
     }
 
-    function filterByType(filter) {
+    function filterByTypeState(deviceType, filter) {
         var lights=[]
-        var all=childrenByArea('LIGHT')
+        var all=childrenByArea(deviceType)
         if (filter.toUpperCase()==="ALL") { 
             return all.sort(nameSort) 
         }
@@ -122,20 +128,63 @@ export default function AreaLayout(props) {
         }
     }
     
+    function addDevice(){
+        setAddingDevice(true)
+    }
+    
+    function removeDevice() {
+        setDeletingDevice(!deletingDevice)
+    }
+
+    function toggleEditScenes() {
+        setEditingScene(!editingScene)
+    }
+
+    function editScene(scene) {
+        applyLayoutCard('SceneLayout', {'scene':scene})
+    }
+
+    
+    function closeDialog() {
+        setAddingDevice(false)
+    }
+    
+    function selectDevice(dev) {
+        console.log('selected device', dev)
+        console.log('current area', area.AreaController)
+        addChild(dev)
+        setAddingDevice(false)
+    }
+    
+    function addChild(newDevice) {
+        var ac=[...area.AreaController.children.value]
+        ac.push(newDevice.endpointId)
+        directive(area.endpointId, 'AreaController', 'SetChildren', { "children" : { "value": ac }}, {})
+    }
+    
+    function removeChild(newDevice) {
+        var ac=[...area.AreaController.children.value]
+        if (ac.includes(newDevice.endpointId)) {
+            console.log('Removing item',newDevice.endpointId,'from',ac)
+            ac.splice(ac.indexOf(newDevice.endpointId), 1);
+        }
+        directive(area.endpointId, 'AreaController', 'SetChildren', { "children" : { "value": ac }}, {})
+    }
+    
     return (    
         <React.Fragment>
             <GridSection name={layout.props.name+" Lights"} break={true}
                     secondary={
                         <>
-                            <Button onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
+                            <IconButton  size={"small"} onClick={ () => setBrightControl(!brightControl) } color={ brightControl ? "primary" : "default"} className={classes.button }>
                                 <BrightnessLowIcon className={classes.smallicon } />
-                            </Button>
-                            <Button onClick={ () => setTempControl(!tempControl) } color={ tempControl ? "primary" : "default"} className={classes.button }>
+                            </IconButton>
+                            <IconButton  size={"small"} onClick={ () => setTempControl(!tempControl) } color={ tempControl ? "primary" : "default"} className={classes.button }>
                                 <AcUnitIcon className={classes.smallicon } />
-                            </Button>
-                            <Button onClick={ () => setColorControl(!colorControl) } color={ colorControl ? "primary" : "default"} className={classes.buttonspacer }>
+                            </IconButton>
+                            <IconButton  size={"small"} onClick={ () => setColorControl(!colorControl) } color={ colorControl ? "primary" : "default"} className={classes.buttonspacer }>
                                 <ColorLensIcon className={classes.smallicon } />
-                            </Button>
+                            </IconButton>
             
                             <Button onClick={ () => setFilter('ALL')} color={ filter==='ALL' ? "primary" : "default"} className={classes.button }>
                                 All
@@ -146,9 +195,9 @@ export default function AreaLayout(props) {
                         </>
                     } 
             >
-                { filterByType(filter).map(device =>
-                    <Light key={ device.endpointId } device={ device }
-                        brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
+                { filterByTypeState('LIGHT', filter).map(device =>
+                    <Light key={ device.endpointId } device={ device } directive={directive} remove={removeChild} deleting={deletingDevice}
+                        brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}  noMargin={true} nopaper={true} noPad={true} noback={true}
                     />
                 )}
             </GridSection>
@@ -158,12 +207,21 @@ export default function AreaLayout(props) {
                     <IconButton onClick={ () => setNewScene(true) } className={classes.button }><CameraIcon fontSize="small" /></IconButton> 
                 </>
             }>
-                { newScene && <SceneAdd area={area} setNewScene={setNewScene} /> }
+                { newScene && <SceneAdd area={area} setNewScene={setNewScene} directive={directive} /> }
                 { sortByShortcuts().map(scene => 
-                    <Scene remove={edit} scene={scene} key={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} computedLevel={area.scene} />
+                    <Scene  remove={edit} scene={scene} key={scene.endpointId} shortcut={isAShortcut(scene.endpointId)}  noMargin={true} nopaper={true} noPad={true}
+                            computedLevel={area.AreaController.scene.value} directive={directive} editing={editingScene} edit={editScene} />
                 )}
             </GridSection>
-
+            <GridSection name={"Actions"} >
+                <ButtonItem xs={isMobile ? 6 : 2} label={"Add Device"} avatarIcon={<AddIcon />} action={addDevice} noMargin={true} nopaper={true} nolist={true} />
+                <ButtonItem xs={isMobile ? 6 : 2} label={"Delete Device"} avatarIcon={<RemoveIcon />} action={removeDevice} noMargin={true} nopaper={true} nolist={true} />
+                <ButtonItem xs={isMobile ? 6 : 2} label={"Create Scene"} avatarIcon={<AddIcon />} noMargin={true} nopaper={true} nolist={true} />
+                <ButtonItem xs={isMobile ? 6 : 2} label={"Edit Scene"} avatarIcon={<EditIcon />} action={toggleEditScenes} noMargin={true} nopaper={true} nolist={true} />
+            </GridSection>
+            { addingDevice &&
+                <DeviceDialog open={true} close={closeDialog} select={selectDevice} />
+            }
         </React.Fragment>
     )
 };

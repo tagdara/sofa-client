@@ -120,7 +120,7 @@ export const deviceStatesReducer = (state, data) => {
 export default function DataProvider(props) {
 
     
-    const { deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive } = useContext(DeviceContext);
+    const { getSceneDetails, saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive } = useContext(DeviceContext);
     const { getJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
 
     const initialDeviceStates=loadLocalStorageDevices();
@@ -216,6 +216,7 @@ export default function DataProvider(props) {
     function getStateForDevice(device) {
         
         var dev=undefined
+        if (device===undefined) { return undefined }
         if (deviceStates.hasOwnProperty(device.endpointId)) {
             dev={...device, ...deviceStates[device.endpointId]}
         } 
@@ -313,6 +314,9 @@ export default function DataProvider(props) {
                 
                 getModes: getModes,
                 directive: directive,
+                
+                getSceneDetails: getSceneDetails,
+                saveSceneDetails: saveSceneDetails,
             }}
         >
             {props.children}

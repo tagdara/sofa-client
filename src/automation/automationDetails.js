@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DataContext } from '../DataContext/DataProvider';
+import { DeviceContext } from '../DataContext/DeviceProvider';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -28,10 +28,10 @@ const useStyles = makeStyles({
 export default function AutomationDetails(props) {
 
     const classes = useStyles();
-    const { deviceByEndpointId } = useContext(DataContext);
+    const { directive } = useContext(DeviceContext);
     
     function runAutomation(conditions=true) {
-        deviceByEndpointId('logic:activity:'+props.name).SceneController.directive('Activate', {}, {"conditions": conditions})
+        directive('logic:activity:'+props.name, 'SceneController', 'Activate', {}, {"conditions": conditions})
     }
 
     return (    

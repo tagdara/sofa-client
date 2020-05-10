@@ -20,43 +20,41 @@ const useStyles = makeStyles({
     },
 });
 
-export default function SimpleBottomNavigation() {
+export default function SimpleBottomNavigation(props) {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
     const { applyHomePage} = useContext(LayoutContext);
+    
+    const sections=["Audio Video", "Lights and Comfort", "Climate", "Security", "System"]
+    const sectionData= {   "Audio Video": { "label": "AV", "icon": <QueueMusicIcon />}, 
+                            "Lights and Comfort": { "label": "Lights", "icon": <LightbulbOutlineIcon /> }, 
+                            "Climate": { "label": "Climate", "icon": <ThermostatIcon /> }, 
+                            "Security": { "label": "Security", "icon": <SecurityIcon /> }, 
+                            "System": { "label": "More", "icon": <MenuIcon /> }
+    }
     
     function changeSection(section) {
         console.log('section', section)
-        setValue(section);
-        if (section===0) {
-            applyHomePage('Audio Video')
-        }
-        if (section===1) {
-            applyHomePage('Lights and Comfort')
-        }
-        if (section===2) {
-            applyHomePage('Climate')
-        }
-        if (section===3) {
-            applyHomePage('Security')
-        }
-        if (section===4) {
-            applyHomePage('System')
-        }
+        props.chooseSection(section);
+        applyHomePage(sections[section])
+    }
+
+    function getSectionPosition(section) {
+        if (sections.includes(section)) {
+            return sections.indexOf(section)
+        } 
+        return 0
     }
 
     return (
         <BottomNavigation
-          value={value}
+          value={getSectionPosition(props.section)}
           onChange={ (event, newValue) => { changeSection(newValue) }}
           showLabels
           className={classes.mobileBar}
         >
-            <BottomNavigationAction label="AV" icon={<QueueMusicIcon />} />
-            <BottomNavigationAction label="Lights" icon={<LightbulbOutlineIcon />} />
-            <BottomNavigationAction label="Climate" icon={<ThermostatIcon />} />
-            <BottomNavigationAction label="Security" icon={<SecurityIcon />} />
-            <BottomNavigationAction label="More" icon={<MenuIcon />} />
+            { sections.map( item => 
+                <BottomNavigationAction key={item} label={sectionData[item].label} icon={sectionData[item].icon} />
+            )}
         </BottomNavigation>
     )
 }

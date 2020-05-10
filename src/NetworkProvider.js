@@ -7,12 +7,14 @@ export const useStream = (userToken) => {
     //const [connected, setConnected] = useState(false);
     const [subscribers, setSubscribers] = useState([])
     const [isConnecting, setIsConnecting] = useState(false)
+    const [streamToken, setStreamToken] = useState(userToken)
     
     const addSubscriber = (subscriber) => {
         // to see why this is needed for the closure issue
         // https://stackoverflow.com/questions/58193166/usestate-hook-setter-incorrectly-overwrites-state
         setSubscribers((subscribers) => ([...subscribers, subscriber] ));
     };
+
 
     function getStreamStatus() {
         
@@ -38,17 +40,18 @@ export const useStream = (userToken) => {
     
     const closeStream = () => {
         //setConnected(false)
-        setEventSource(undefined)
+        eventSource.close()
+        //setEventSource(undefined)
     }
 
     useEffect(() => {
         let unmounted = false;
 
         const connectStream = () => {
-            if (userToken && subscribers.length>0 && !isConnecting) {
+            if (streamToken && subscribers.length>0 && !isConnecting) {
                 setIsConnecting(true)
-                //console.log('.. Connecting event source:', userToken, subscribers)
-                var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': userToken }, withCredentials: true })
+                console.log('.. Connecting event source:', streamToken, subscribers)
+                var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': streamToken }, withCredentials: true })
                 esource.addEventListener('message', dataHandler);
                 esource.addEventListener('error', errorHandler);
                 esource.addEventListener('open', openHandler);
@@ -77,7 +80,7 @@ export const useStream = (userToken) => {
             //setHeartbeat(Date.now())
         };
 
-        if (!unmounted && !isConnecting && streamStatus!==1) {
+        if (streamToken && !unmounted && !isConnecting && streamStatus!==1) {
             connectStream()
         }
             
@@ -85,68 +88,63 @@ export const useStream = (userToken) => {
             unmounted = true;
         };
         
-    }, [ userToken, subscribers, isConnecting, streamConnected, streamStatus]);
+    }, [ streamToken, subscribers, isConnecting, streamConnected, streamStatus]);
     
     //return { connected, streamStatus, setToken, closeStream, addSubscriber };
-    return { streamConnected, streamStatus, closeStream, addSubscriber };
-};
-
-export const useApi = ( path, token, initialData ) => {
-    
-    const [isLoading, setIsLoading] = useState(true);
-    const [hasError, setHasError] = useState(false);
-    const [loggedIn, setLoggedIn] = useState(false);
-    const [fetchedData, setFetchedData] = useState(initialData);
-
-    useEffect(() => {
-        let unmounted = false;
-
-        const handleFetchResponse = response => {
-            if (unmounted) return initialData;
-            setLoggedIn(response.status!==400 && response.status!==401 )
-            setHasError(!response.ok);
-            setIsLoading(false);
-            
-            return response.status!==400 && response.status!==401 && response.ok && response.json ? response.json() : initialData;
-        };
-
-        const fetchData = () => {
-            setIsLoading(true);
-      	    return fetch(serverurl+'/'+path, { method: 'GET', headers: { 'authorization': token}})
-                .then(handleFetchResponse)
-                .catch(handleFetchResponse);
-        };
-
-        if (path && !unmounted)
-            fetchData().then(data => !unmounted && setFetchedData(data));
-
-        return () => {
-            unmounted = true;
-        };
-    }, [ path, token, initialData ]);
-
-    return { isLoading, hasError, loggedIn, data: fetchedData };
-    
+    return { streamConnected, streamStatus, closeStream, addSubscriber, setStreamToken };
 };
 
 
 export const NetworkContext = createContext();
 
 export default function NetworkProvider(props) {
-
-    const [loggedIn, setLoggedIn] = useState(true);
+    
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [token, setToken]= useState(null);
     const [connectError, setConnectError] = useState(false);
-    const [token, setToken]= useState(getCookie('token'));
-    const { streamConnected, streamStatus, closeStream, addSubscriber } = useStream(token, [])
+    const { streamConnected, streamStatus, closeStream, addSubscriber, setStreamToken } = useStream(token, [])
+    
+    useEffect(() => {
+        function getTokenCookie() {
+            var name = "token=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for(var i = 0; i <ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) === ' ') {
+                  c = c.substring(1);
+                }
+                if (c.indexOf(name) === 0) {
+                    console.log('returning',c.substring(name.length, c.length))
+                    if (c.substring(name.length, c.length)==='null') {
+                        return null
+                    }
+                    return c.substring(name.length, c.length);
+                }
+            }
+            console.log('returning blank')
+            return null
+        }
+        var newToken=getTokenCookie()
+        setToken(newToken)
+        setStreamToken(newToken)
+        if (newToken!==null) {
+            setLoggedIn(true)
+        }
+    },  [setStreamToken] )        
 
     function handleFetchErrors(response) {
         if (response.status===400) {
             setLoggedIn(false)
+            setToken("")
+            setStreamToken("")
             console.log('Not logged in', response.status, response.statusText)
             return { "error": "login" }
         }
         if (response.status===401) {
             setLoggedIn(false)
+            setToken("")
+            setStreamToken("")
             console.log('Not logged in', response.status, response.statusText)
             return { "error": "login" }
         }
@@ -165,6 +163,7 @@ export default function NetworkProvider(props) {
       	    return fetch(serverurl+"/"+path, { method: 'GET', headers: { 'authorization': token}})
      		    .then(result=>handleFetchErrors(result))
         } else {
+            console.log('not logged in')
             setLoggedIn(false)
             var promise1 = new Promise(function(resolve, reject) {
                 resolve(undefined);});
@@ -193,13 +192,29 @@ export default function NetworkProvider(props) {
         }
     }
 
+    function loginResult(response) {
+        if (response.status===401) {
+            setLoggedIn(false)
+            return null
+        } 
+        
+        return response.json()
+            .then(result => {
+                console.log('result',result)
+                if (result.hasOwnProperty('token')) {
+                    return result.token
+                }
+                return null
+            })
+    }
+
     function login(user, password) {
         console.log('Logging in as user',user,password)
         let formData = new FormData();
         formData.append('user',user);
         formData.append('password', password);
   	    return fetch(serverurl+'/login', { method: 'post', body: formData })
- 		            .then(result=>result.json())
+ 		            .then(result=>loginResult(result))
                     .then(result=>setTokenUserCookies(user, result))
     }
 
@@ -213,17 +228,12 @@ export default function NetworkProvider(props) {
         return value;
     };
     
-    function setTokenUserCookies(user, tokendata) {
-        console.log('tokendata',tokendata)
-        if (tokendata.hasOwnProperty('token')) {
-            writeCookie("token", tokendata.token, 365)
-            writeCookie("user", user, 365)
-            console.log('GetCookie', getCookie('token'))
-            setToken(tokendata.token)
-            if (!loggedIn) { setLoggedIn(true) }
-            return tokendata.token
-        }
-
+    function setTokenUserCookies(user, newToken) {
+        writeCookie("token", newToken, 365)
+        writeCookie("user", user, 365)
+        setToken(newToken)
+        if (newToken && !loggedIn) { setLoggedIn(true) }
+        return newToken
     }
     
     function getCookie(cname) {
@@ -236,19 +246,23 @@ export default function NetworkProvider(props) {
               c = c.substring(1);
             }
             if (c.indexOf(name) === 0) {
-              return c.substring(name.length, c.length);
+                if (c.substring(name.length, c.length)==='null') {
+                    return null
+                }
+                return c.substring(name.length, c.length);
             }
         }
-        return "";
+        return null;
     }
 
     function logout() {
-        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         console.log('logging out')
+        setStreamToken(null)
+        setLoggedIn(false)
+        closeStream()
+        document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
   	    fetch(serverurl+'/logout', {credentials: 'include'})
  		    .then(result=>result.json())
-            .then(result=>setLoggedIn(false))
-            .then(result=>closeStream())
     }
 
     return (

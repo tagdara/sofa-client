@@ -79,7 +79,8 @@ export default function DeviceProvider(props) {
                 .then(result=>setVirtualDevices(result))
                 //.then(result=>console.log('done getting virtual devices'));
         }
-        //console.log('logged in changed to',loggedIn) 
+        
+        console.log('logged in changed to',loggedIn) 
         if (loggedIn===true ) { getData() }
     // eslint-disable-next-line 
     }, [ loggedIn ] );

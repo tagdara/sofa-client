@@ -44,7 +44,7 @@ export const LayoutProvider = (props) => {
     const mobileBreakpoint = 800
     const isMobile = window.innerWidth <= mobileBreakpoint;
     const [layouts, setLayouts] = useState(undefined);     
-    const [layout, setLayout] = useState(getLayoutCookie()); 
+    const [layout, setLayout] = useState(undefined); 
     const [returnPage, setReturnPage] = useState({"name":"", "props":{}})
     const [backPage, setBackPage] = useState({"name":"", "props":{}})
     const [masterButtonState, setMasterButtonState] = useState('System')
@@ -53,8 +53,10 @@ export const LayoutProvider = (props) => {
 
     useEffect(() => {
       	getJSON('layout')
-            .then(result=> { setLayouts(result) } );
-    }, [getJSON])
+            .then(result=> setLayouts(result) );
+        setLayout(getLayoutCookie())
+        // eslint-disable-next-line 
+    }, [ loggedIn ])
             
     useEffect(() => {   
         
@@ -79,7 +81,7 @@ export const LayoutProvider = (props) => {
         }
         return
     // eslint-disable-next-line 
-    },[ layouts, isMobile ]);
+    }, [ layouts, isMobile ] );
 
 
     useEffect(() => {    
@@ -127,7 +129,6 @@ export const LayoutProvider = (props) => {
                 }
             }
         }
-        
         getModulesForLayout(layout)
     // eslint-disable-next-line    
     }, [ layout, isMobile ])
@@ -181,13 +182,13 @@ export const LayoutProvider = (props) => {
     }
     
     function applyLayoutPage(newPage) {
-        //console.log('Apply layout page',newPage)
         var newLayout={"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage}    
         setLayout(newLayout)
         writeLayoutCookie(newLayout)
     }
 
     function applyHomePage(newPage) {
+        console.log('layouts',layouts)
         setMasterButtonState('Home')
         var newLayout={"name":"Home", "props":layout.props, "data":layouts['Home'], "page":newPage}
         setLayout(newLayout)
@@ -228,6 +229,7 @@ export const LayoutProvider = (props) => {
     };
 
     function renderSuspenseModule( modulename, moduleprops ) {
+        
         try {
             if (modules.hasOwnProperty(modulename)) {
                 let Module = modules[modulename]
@@ -237,9 +239,12 @@ export const LayoutProvider = (props) => {
                                 <Module key={ modulename } {...moduleprops} />
                             </React.Suspense>
                         </ErrorBoundary>
-            } 
+            } else {
+                console.log('module not in modules', modulename, modules)
+            }
         }
-        catch {}
+        catch {
+        }
         return null
     }
 

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { NetworkContext } from './NetworkProvider';
 
@@ -58,9 +58,18 @@ export default function SofaAppContent(props) {
     
     const { layout, isMobile, renderSuspenseModule } = useContext(LayoutContext);
     const { streamStatus, streamConnected, connectError, loggedIn } = useContext(NetworkContext);
+    const [ barSelection, setBarSelection] = useState(undefined)
     const classes = useStyles();
 
+    useEffect(() => { 
+        if (layout && layout.hasOwnProperty('page')) {
+            setBarSelection(layout.page)
+        }
+    }, [layout] )
+
     function chooseDisplayPages() {
+        
+        if (!layout) { return null }
         if (layout.data.type==='single') {
             return renderSuspenseModule(layout.name, layout.props)
         }
@@ -99,7 +108,7 @@ export default function SofaAppContent(props) {
                 }
             </Grid>
             </div>
-            { isMobile && <BottomBar /> }
+            { isMobile && <BottomBar section={barSelection} chooseSection={setBarSelection} /> }
         </>
         :
         <>

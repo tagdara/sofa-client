@@ -3,7 +3,6 @@ import { useContext, useState} from 'react';
 import { NetworkContext } from './NetworkProvider';
 import { makeStyles } from '@material-ui/styles';
 
-import Grid from '@material-ui/core/Grid';
 import GridItem from './GridItem';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -58,7 +57,7 @@ export default function SofaLogin(props) {
     }
 
     return (
-            <Grid container spacing={2} justify="center" alignItems="center" className={classes.controlArea} >
+            <>
                 <GridItem wide={props.wide} className={classes.loginBox}>
                     <ListItem style={{display:'flex', justifyContent:'center'}} >
                         <Typography variant="h6">Sofa Login</Typography>
@@ -80,6 +79,6 @@ export default function SofaLogin(props) {
                         </Button>
                     </ListItem>
                 </GridItem>
-            </Grid>
+            </>
     )
 };

@@ -22,13 +22,20 @@ const useStyles = makeStyles(theme => {
             backgroundColor: theme.palette.background.button,
             borderColor: "rgba(255,255,255, 0) !important",
             marginRight: 1,
-            padding: "3px 8px"
+            padding: "3px 8px",
+            "&:hover" : {
+                backgroundColor: theme.palette.background.hoverButton
+            },
         },
         onButton: {
             backgroundColor: theme.palette.background.selectButton,
             borderColor: "rgba(255,255,255, 0) !important",
             marginRight: 1,
-            padding: "3px 8px"
+            padding: "3px 8px",
+            "&:hover" : {
+                backgroundColor: theme.palette.background.hoverSelectButton
+            },
+ 
         },
         buttonGroup: {
             paddingRight: 8,

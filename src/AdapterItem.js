@@ -50,6 +50,20 @@ export default function AdapterItem(props) {
             return ""
         }
     }
+
+    function getDataSize() {
+        try {
+            if (props.adapter.AdapterHealth.hasOwnProperty('datasize')) {
+                return "/ Data: "+props.adapter.AdapterHealth.datasize.value
+            } else {
+                return ""
+            }
+        }
+        catch {
+            return ""
+        }
+    }
+
     
     function getStartupDate() {
         try {
@@ -69,7 +83,7 @@ export default function AdapterItem(props) {
                 <ListItemText primary={props.adapter.friendlyName} secondary={props.adapter.AdapterHealth.url.value}/>
             </ListItem>
             <ListItem>
-                <ListItemText primary={getStartupDate()} secondary={ getErrorCount()} />
+                <ListItemText primary={getStartupDate()} secondary={ getErrorCount()+" "+getDataSize()} />
                 <ListItemSecondaryAction>
                     <IconButton size={"small"} onClick={ () => props.directive(props.adapter.endpointId, "PowerController", 'TurnOn')} ><ReplayIcon /></IconButton>
                     <IconButton size={"small"} onClick={ () => props.directive(props.adapter.endpointId, "PowerController", 'TurnOff')} ><ClearIcon /></IconButton>

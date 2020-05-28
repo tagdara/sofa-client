@@ -120,11 +120,11 @@ export const deviceStatesReducer = (state, data) => {
 export default function DataProvider(props) {
 
     
-    const { getSceneDetails, saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive } = useContext(DeviceContext);
-    const { getJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
+    const { getSceneDetails, saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive, virtualDevices } = useContext(DeviceContext);
+    const { addSubscriber } = useContext(NetworkContext);
 
     const initialDeviceStates=loadLocalStorageDevices();
-    const [virtualDeviceStates, setVirtualDeviceStates] = useState({});     
+    //const [virtualDeviceStates, setVirtualDeviceStates] = useState({});     
     const [area, setArea] = useState("Main");     
     const [deviceStates, deviceStatesDispatch] = useReducer(deviceStatesReducer, initialDeviceStates);
     const [defaultPlayer, setDefaultPlayer] = useState('sonos:player:RINCON_B8E937ECE1F001400');     
@@ -135,18 +135,6 @@ export default function DataProvider(props) {
     // eslint-disable-next-line 
     }, []);
 
-    useEffect(() => {
-        
-        function getData() {
-                
-      	    getJSON('list/logic/virtualDevices')
-                .then(result=>setVirtualDeviceStates(result))
-                //.then(result=>console.log('done getting virtual devices'));
-        }
-        //console.log('logged in changed to',loggedIn) 
-        if (loggedIn===true ) { getData() }
-    // eslint-disable-next-line 
-    }, [ loggedIn ] );
     
     function loadLocalStorageDevices() {
         
@@ -292,7 +280,7 @@ export default function DataProvider(props) {
         <DataContext.Provider
             value={{
                 deviceStates: deviceStates,
-                virtualDeviceStates: virtualDeviceStates,
+                virtualDevices: virtualDevices,
 
                 deviceStateByEndpointId: deviceStateByEndpointId,
                 deviceStateByFriendlyName: deviceStateByFriendlyName,

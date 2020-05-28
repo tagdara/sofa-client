@@ -90,8 +90,10 @@ export const LayoutProvider = (props) => {
             if (currentLayout.data.pages.hasOwnProperty(page)) {
                 var pageData=currentLayout.data.pages[page]
                 var newModules=[]
-                for(var i = 0; i <pageData.length; i++) {
-                    newModules.push(pageData[i].module)
+                if (pageData.hasOwnProperty('cards')) {
+                    for(var i = 0; i <pageData.cards.length; i++) {
+                        newModules.push(pageData.cards[i].module)
+                    }
                 }
                 moduleDispatch(newModules)
             } else {
@@ -108,6 +110,7 @@ export const LayoutProvider = (props) => {
     
         function getModulesForLayout(currentLayout) {
             if (loggedIn) {
+                if (!layout || !layout.data || !layout.data.type ) { return null }
                 if (layout.data.type==='pages') {
                     if (isMobile) {
                         if (currentLayout.hasOwnProperty('page')) {

@@ -48,7 +48,6 @@ const useStyles = makeStyles(theme => {
             marginLeft: "calc(100vw - 100%)",
             alignContent: "flex-start",
             flexDirection: "column",
-            minWidth: "100%",
             backgroundColor: theme.palette.layer.body,
         }
     }
@@ -60,6 +59,7 @@ export default function SofaAppContent(props) {
     const { streamStatus, streamConnected, connectError, loggedIn } = useContext(NetworkContext);
     const [ barSelection, setBarSelection] = useState(undefined)
     const classes = useStyles();
+    
 
     useEffect(() => { 
         if (layout && layout.hasOwnProperty('page')) {
@@ -69,7 +69,7 @@ export default function SofaAppContent(props) {
 
     function chooseDisplayPages() {
         
-        if (!layout) { return null }
+        if (!layout || !layout.data || !layout.data.type ) { return null }
         if (layout.data.type==='single') {
             return renderSuspenseModule(layout.name, layout.props)
         }

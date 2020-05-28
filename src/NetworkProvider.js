@@ -72,6 +72,7 @@ export const useStream = (userToken) => {
         }
 
         const dataHandler = event => {
+            //console.log('data', event.data)
             //deviceDispatch(JSON.parse(event.data));
             var data=JSON.parse(event.data)
             for (var i = 0; i < subscribers.length; i++) {
@@ -122,7 +123,6 @@ export default function NetworkProvider(props) {
                     return c.substring(name.length, c.length);
                 }
             }
-            console.log('returning blank')
             return null
         }
         var newToken=getTokenCookie()
@@ -134,6 +134,7 @@ export default function NetworkProvider(props) {
     },  [setStreamToken] )        
 
     function handleFetchErrors(response) {
+
         if (response.status===400) {
             setLoggedIn(false)
             setToken("")

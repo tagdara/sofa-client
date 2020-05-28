@@ -10,6 +10,7 @@ export default function UserProvider(props) {
     const [ favorites, setFavorites] = useState([])
     const [ userCamera, setUserCamera] = useState(undefined)
     const [ userTheme, setUserTheme] = useState(undefined)
+    const [ userPlayer, setUserPlayer] = useState(undefined)
     
     useEffect(() => {
         
@@ -20,6 +21,9 @@ export default function UserProvider(props) {
                 }
                 if (result.hasOwnProperty('camera')) {
                     setUserCamera(result.camera)
+                }
+                if (result.hasOwnProperty('player')) {
+                    setUserPlayer(result.player)
                 }
                 
                 if (result.hasOwnProperty('theme')) {
@@ -50,6 +54,15 @@ export default function UserProvider(props) {
             saveUserData({...userData, camera: cameraId })
         }
     }
+
+    function chooseUserPlayer(playerId) { 
+        if (playerId!==userPlayer) {
+            setUserPlayer(playerId)
+            setUserData({...userData, player: playerId })
+            saveUserData({...userData, player: playerId })
+        }
+    }
+
 
     function chooseUserTheme(themeName) { 
 
@@ -93,6 +106,8 @@ export default function UserProvider(props) {
                 chooseUserCamera: chooseUserCamera,
                 userTheme: userTheme,
                 chooseUserTheme: chooseUserTheme,
+                userPlayer: userPlayer,
+                chooseUserPlayer: chooseUserPlayer,
             }}
         >
             {props.children}

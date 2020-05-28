@@ -21,7 +21,9 @@ export default createMuiTheme({
         background: {
             default: "#000",
             button: "#333",
-            selectButton: deepOrange[700],
+            hoverButton: "#555",
+            selectButton: deepOrange[900],
+            hoverSelectButton: deepOrange[700],
             page: "#111",
             hover: "rgba(188, 54, 12, 0.1)",
             paper: "#222",

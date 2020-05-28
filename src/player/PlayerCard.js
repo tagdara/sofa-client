@@ -95,7 +95,7 @@ export default function PlayerCard(props) {
     
     return (
         <GridItem wide={props.wide} nopad={true} >
-            { props.player.MusicController.title.value==='Line-In' ?
+            { props.player.MusicController.title.value==='Line-In' && jukebox ?
                 <PlayerArtOverlay   art={jukebox.MusicController.art.value ? jukebox.MusicController.art.value : coverDefault }
                                     title={jukebox.MusicController.title.value ? jukebox.MusicController.title.value : ''}
                                     artist={jukebox.MusicController.artist.value ? jukebox.MusicController.artist.value : ''}

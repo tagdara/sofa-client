@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DataContext } from './DataContext/DataProvider';
+import { UserContext } from './user/UserProvider';
 
 import PlayerCard from './player/PlayerCard';
 import PlayerMini from './player/PlayerMini';
@@ -47,7 +48,8 @@ function bestPlayerId(speakers, defaultPlayer, userPlayer) {
 
 export default function PlayerHero(props) {
     
-    const { userPlayer, defaultPlayer, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
+    const { userPlayer } = useContext(UserContext);
+    const { defaultPlayer, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
     const speakers = deviceStatesByCategory('SPEAKER')
     const [mini, setMini] = useState(props.mini);
     const [playerId, setPlayerId] = useState('')
@@ -58,7 +60,7 @@ export default function PlayerHero(props) {
     }, [speakers, defaultPlayer, userPlayer] )
     
     return ( 
-        playerId ?
+        (playerId && player) ?
         <>
             { mini ?
                 <PlayerMini wide={props.wide} small={true} player={player} setMini={setMini} />

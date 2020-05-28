@@ -69,7 +69,7 @@ export default function PlayerBase(props) {
                     <React.Fragment>
                         <List className={classes.list} >
                         <ListItem className={classes.topListItem}> 
-                            <ListItemText variant="body2" primary={props.player.friendlyName}  onClick={ () => {  props.setUserPlayer(props.endpointId)} }/>
+                            <ListItemText variant="body2" primary={props.player.friendlyName}  onClick={ () => {  props.setUserPlayer(props.player.endpointId)} }/>
                         </ListItem>
                         {props.player.MusicController.linked.value.map(link =>
                             <ListItem className={classes.topListItem} key={ link+"link" }>

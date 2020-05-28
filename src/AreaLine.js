@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 
 import DotLevel from './DotLevel';
 
@@ -17,6 +16,7 @@ const useStyles = makeStyles({
     },
     areaListItem: {
         minHeight: 54,
+        paddingRight: 8,
     }
 });
 
@@ -54,9 +54,7 @@ export default function AreaLine(props) {
         <ListItem className={classes.areaListItem}>
             <ListItemText className={classes.halves} onClick={ () => props.selectArea(props.area.friendlyName)}>{props.area.friendlyName} </ListItemText>
             { hasShortcuts() &&
-                <ListItemSecondaryAction>
-                    <DotLevel half={true} level={currentLevel()} select={runShortcut} />
-                </ListItemSecondaryAction>
+                <DotLevel half={true} level={currentLevel()} select={runShortcut} />
             }
         </ListItem>
     );

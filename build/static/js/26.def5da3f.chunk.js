@@ -1,2 +1,0 @@
-(this["webpackJsonpsofa-client"]=this["webpackJsonpsofa-client"]||[]).push([[26],{128:function(n,t,e){"use strict";e.r(t),e.d(t,"default",(function(){return i}));var a=e(0),s=e.n(a),c=e(319);function i(n){return s.a.createElement(c.a,{disabled:!0},"Event")}}}]);
-//# sourceMappingURL=26.def5da3f.chunk.js.map

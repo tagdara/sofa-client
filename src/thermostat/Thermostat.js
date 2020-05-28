@@ -71,6 +71,9 @@ const useStyles = makeStyles(theme => {
         backgroundColor: theme.palette.background.button,
         borderColor: "rgba(255,255,255, 0) !important",
         marginRight: 1,
+        "&:hover" : {
+            backgroundColor: theme.palette.background.hoverButton
+        },
     },
     selectedButton: {
         minWidth: 36,
@@ -79,6 +82,10 @@ const useStyles = makeStyles(theme => {
         color: theme.palette.primary.contrastText,
         borderColor: "rgba(255,255,255, 0) !important",
         marginRight: 1,
+        "&:hover" : {
+            backgroundColor: theme.palette.background.hoverSelectButton
+        },
+
     },
     buttonGroup: {
         display: "flex",

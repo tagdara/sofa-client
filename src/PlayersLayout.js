@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
+import { UserContext } from './user/UserProvider';
 
 import GridBreak from './GridBreak';
 import PlayerBase from "./player/PlayerBase";
@@ -8,11 +9,14 @@ import PlayerBase from "./player/PlayerBase";
 
 export default function PlayersLayout(props) {
     const { applyLayout } = useContext(LayoutContext);
-    const { setUserPlayer, deviceStatesByCategory } = useContext(DataContext);
+    const { chooseUserPlayer } = useContext(UserContext);
+    const { deviceStatesByCategory } = useContext(DataContext);
     const speakers = deviceStatesByCategory('SPEAKER')
 
     function changePlayerHome(newplayer) {
-        setUserPlayer(newplayer)
+        //setUserPlayer(newplayer)
+        console.log('setting player to ',newplayer)
+        chooseUserPlayer(newplayer)
         applyLayout('Home')
     }
     
@@ -21,7 +25,6 @@ export default function PlayersLayout(props) {
     return (    
         <React.Fragment>
             <GridBreak label={"Players"} />
-
             { speakers.map((device) =>
                 device.friendlyName===device.InputController.input.value || device.InputController.input.value==='' ? 
                 <PlayerBase key={device.endpointId} player={device} setUserPlayer={changePlayerHome} devices={speakers} device={ device } />

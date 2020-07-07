@@ -7,6 +7,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
 import HistoryIcon from '@material-ui/icons/History';
+import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 
@@ -38,6 +39,10 @@ export default function AdminFeatures(props) {
 
     return (  
         <div className={classes.iconRow} >
+
+            <IconButton className={classes.systemButton} onClick={() => applyLayoutCard('ApiRegistration')}>
+                <SyncAltIcon />
+            </IconButton>
             <IconButton className={classes.systemButton} onClick={() => applyLayoutCard('DeviceHistory')}>
                 <HistoryIcon />
             </IconButton>

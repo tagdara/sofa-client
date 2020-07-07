@@ -48,7 +48,6 @@ export default function OperatorButton(props) {
             console.log('any operators...', props.value)
             return ['Any', ...operatorList]
         }
-        console.log('operators...', props.value)
         return operatorList
     }
 

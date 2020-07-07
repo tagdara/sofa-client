@@ -36,9 +36,8 @@ export default function Shade(props) {
 
     const classes = useStyles();
 
-    function handlePress(commandName) {
-        var command = props.commands[commandName]
-        props.directive(command.endpointId, command.controller, command.command, command.value)
+    function handlePress(modechoice) {
+        props.directive(props.device.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Blinds.Position')
     }
     
     function nestLine(item) {
@@ -49,11 +48,12 @@ export default function Shade(props) {
     return ( nestLine(
         <ListItem className={classes.item} >
             <ToggleAvatar noback={true} avatarState={ 'off' }>{ props.icon ? props.icon : <TonalityIcon />}</ToggleAvatar>
-            <ListItemText primary={props.name}/>
+            <ListItemText primary={props.device.friendlyName}/>
+
             <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >
-                <Button className={classes.button} onClick={ () => handlePress('down') }><ExpandMoreIcon /></Button>
-                <Button className={classes.button} onClick={ () => handlePress('stop') }><RemoveIcon /></Button>
-                <Button className={classes.buttonRight} onClick={ () => handlePress('up') }><ExpandLessIcon /></Button>
+                <Button className={classes.button} onClick={ () => handlePress('Position.Down') }><ExpandMoreIcon /></Button>
+                <Button className={classes.button} onClick={ () => handlePress('Position.Stop') }><RemoveIcon /></Button>
+                <Button className={classes.buttonRight} onClick={ () => handlePress('Position.Up') }><ExpandLessIcon /></Button>
             </ButtonGroup>
         </ListItem>
         )

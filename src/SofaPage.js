@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
-import ErrorBoundary from './ErrorBoundary';
 import PageActions from './PageActions';
 import Toolbar from '@material-ui/core/Toolbar';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Chip from '@material-ui/core/Chip';
+import ErrorBoundary from './ErrorBoundary';
 
 
 const useStyles = makeStyles(theme => {
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => {
             height: "100%",
             margin: 0,
             overflowX: "hidden",
-            overflowY: "hidden",
+            //overflowY: "hidden",
             alignContent: "start",
             padding: "3px !important",
             backgroundColor: theme.palette.layer.section,
@@ -53,7 +53,6 @@ export default function SofaPage(props) {
     const [showActions, setShowActions] = useState(false)
 
     return (
-        <ErrorBoundary wide={props.wide}>
             <Grid container item spacing={1} key={props.name} xs={ props.wide ? 12 : 3 } className={ props.wide ? classes.mobileGridColumn : classes.gridColumn}>
                 <ListItem>
                     <ListItemText primary={props.name} />
@@ -78,7 +77,6 @@ export default function SofaPage(props) {
                     <Toolbar className={classes.paddedToolbar}/>
                 }
             </Grid>
-        </ErrorBoundary>
     );
 }
 

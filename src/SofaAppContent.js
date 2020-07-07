@@ -11,6 +11,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import SofaLogin from './SofaLogin'
 import ErrorCard from './ErrorCard'
 import BottomBar from './BottomBar';
+import ErrorBoundary from './ErrorBoundary';
 
 
 const useStyles = makeStyles(theme => {
@@ -45,6 +46,7 @@ const useStyles = makeStyles(theme => {
             paddingBottom: 0,
             marginBottom: 0,
             overflowY: "auto",
+            overflowX: "hidden",
             marginLeft: "calc(100vw - 100%)",
             alignContent: "flex-start",
             flexDirection: "column",
@@ -94,11 +96,13 @@ export default function SofaAppContent(props) {
     }
 
     return (
-        loggedIn ?
+        (loggedIn && layout) ?
         <>
             <div className={classes.scrollHolder}>
             <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
+                <ErrorBoundary wide={props.wide}>
                 { chooseDisplayPages() }
+                </ErrorBoundary>
                 { !streamConnected && 
                     <Grid container spacing={2} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                         <ListItem>

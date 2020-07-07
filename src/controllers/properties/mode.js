@@ -20,7 +20,7 @@ export default function Mode(props) {
     }; 
 
     return (
-        <Select value={props.item.value!==undefined ? props.item.value.mode : ""} onChange={handleModeChange} input={<AutomationInput name="input" id="input" />} >
+        <Select value={props.item.value!==undefined ? props.item.value.mode : ""} onChange={handleModeChange} input={<AutomationInput name="input" />} >
             { props.interface.configuration.supportedModes.map( mode => 
                 <MenuItem key={mode.value} value={mode.value}>{mode.value.split('.')[1]}</MenuItem>
             )}

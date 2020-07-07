@@ -32,10 +32,7 @@ const deviceReducer = (state, data) => {
             localStorage.setItem('devices', JSON.stringify(devs));
             return devs
         case 'AddOrUpdateReport':
-            var local=getFromLocalStorage()
-            if (!local) {
-                local={}
-            }
+            var local={...state}
             for (i = 0; i < data.event.payload.endpoints.length; i++) {
                 local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
             }
@@ -67,6 +64,7 @@ export default function DeviceProvider(props) {
     useEffect(() => {
         
         function getData() {
+            console.log('logged in', loggedIn,'updating static data') 
             getJSON('directives')
                 .then(result=>setDirectives(result))
                 //.then(result=>console.log('done getting directives'));
@@ -80,7 +78,6 @@ export default function DeviceProvider(props) {
                 //.then(result=>console.log('done getting virtual devices'));
         }
         
-        console.log('logged in changed to',loggedIn) 
         if (loggedIn===true ) { getData() }
     // eslint-disable-next-line 
     }, [ loggedIn ] );
@@ -268,6 +265,7 @@ export default function DeviceProvider(props) {
     }
     function checkJSON(data) {
         if (typeof(data)==='string') {
+            console.log('parsing data', typeof(JSON.parse(data)))
             return JSON.parse(data)
         } else {
             return data
@@ -287,7 +285,7 @@ export default function DeviceProvider(props) {
 
         return postJSON('list/influx/last/'+val, endpointList)
                 .then(res=> checkJSON(res))
-                .then(res=> { return res;})
+                .then(res=> { console.log( typeof(res)); return res;})
     }
     
     function getHistoryForDevice(dev, prop, page) {
@@ -502,12 +500,14 @@ export default function DeviceProvider(props) {
     }
 
 
-    function directive (endpointId, controllerName, command, payload={}, cookie={}) {
+    function directive (endpointId, controllerName, command, payload={}, cookie={}, instance="") {
         var controller=getController(endpointId, controllerName)
         const serverurl="https://"+window.location.hostname;
         var header={"name": command, "namespace":controller.interface, 
                     "payloadVersion":"3", "messageId": newtoken(), "correlationToken": newtoken()}
-        if (controller.hasOwnProperty('instance')) {
+        if (instance) {
+            header.instance=instance
+        } else if (controller.hasOwnProperty('instance')) {
             header.instance=controller.instance
         }
         var endpoint={"endpointId": endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
@@ -521,6 +521,23 @@ export default function DeviceProvider(props) {
                     //.then(res=>this.device.responseHandler(res))
                     .then(res=> { return res;})
     }
+
+    function getActivations() {
+        return getJSON('activations')
+            .then(res=>{ return res;})
+    }
+
+    function approveActivation(name, short_key) {
+        return postJSON('activations/approve', {"name":name, "api_key":short_key} )
+            .then(res=>{ return res;})
+    }
+
+    function removeActivation(name, short_key) {
+        console.log('remove activation', name, short_key)
+        return postJSON('activations/remove', {"name":name, "api_key":short_key} )
+            .then(res=>{ return res;})
+    }
+
 
     return (
         <DeviceContext.Provider
@@ -564,6 +581,10 @@ export default function DeviceProvider(props) {
                 
                 getSceneDetails: getSceneDetails,
                 saveSceneDetails: saveSceneDetails,
+                
+                getActivations: getActivations,
+                approveActivation: approveActivation,
+                removeActivation: removeActivation,
             }}
         >
             {props.children}

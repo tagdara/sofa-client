@@ -49,7 +49,7 @@ export default function ThermostatMode(props) {
 
     
     return (
-        <Select value={ valueOrDefault() } onChange={handleModeChange} input={<BootstrapInput name="thermostatMode" id="thermostatMode" />} >
+        <Select value={ valueOrDefault() } onChange={handleModeChange} input={<BootstrapInput name="thermostatMode" />} >
             { props.interface.configuration.supportedModes.map( mode => 
                 <MenuItem key={mode} value={mode}>{mode}</MenuItem>
             )}

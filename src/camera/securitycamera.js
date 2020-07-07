@@ -8,9 +8,13 @@ import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import Videocam from '@material-ui/icons/Videocam';
+import CropOriginalIcon from '@material-ui/icons/CropOriginal';
 
 import CameraDialog from './cameraDialog';
 import GridItem from '../GridItem';
+
+import ReactHLS from 'react-hls-player';
 
 const useStyles = makeStyles({    
     
@@ -34,6 +38,12 @@ const useStyles = makeStyles({
         right: 8,
         bottom: 8,
     },
+    newVideoButton: {
+        position: "absolute",
+        right: 8,
+        top: 8,
+    },
+
 
     im: {
         width: "100%",
@@ -50,6 +60,7 @@ const useStyles = makeStyles({
         position: "relative",
         width: "100%",
         paddingTop: '56.25%', // 16:9
+        boxSizing: "border-box",
     },
     spinner: {
         position: "absolute",
@@ -90,15 +101,21 @@ export default function SecurityCamera(props) {
     const intervals = [1000, 500, 5000, 3000]
     const [imageLoaded, setImageLoaded] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
-    const [refreshInterval, setRefreshInterval] = useState(3000);
-    const live = true;
+    const [refreshInterval, setRefreshInterval] = useState(5000);
+    const [live, setLive] = useState(false);
     const [imageUri,setImageUri] = useState("")
+    const [videoUri,setVideoUri] = useState("")
     const [updateUrl, setUpdateUrl] = useState("");
     const [ready, setReady] = useState(false)
-
+    const ios=navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)
+    const video = useRef(null);
+    const image = useRef(null);
+    const holder = useRef(null);
+    const [lowHeight,setLowHeight]= useState(100)
+    
     useInterval(() => {
         // Your custom logic here
-        if (imageUri) {
+        if (imageUri && !showDialog) {
             setUpdateUrl(imageUri+"?time="+Date.now())
         }
     }, refreshInterval);
@@ -137,6 +154,9 @@ export default function SecurityCamera(props) {
         if (!imageLoaded) {
             setImageLoaded(true);
         }
+        if (image.current.offsetHeight>0) {
+            setLowHeight(image.current.offsetHeight)
+        }
     }
     
     function changeInterval() {
@@ -151,44 +171,117 @@ export default function SecurityCamera(props) {
     function handleClickOpen() {
         setShowDialog(true)
     }
+
+    function startStream() {
+        props.directive(props.camera.endpointId,"CameraStreamController", "InitializeCameraStreams", 
+            {
+                "cameraStreams": [
+                    {
+                        "protocol": "HLS",
+                        "resolution": {
+                            "width": 640,
+                            "height": 480
+                        },
+                        "authorizationType": "BASIC",
+                        "videoCodec": "H264",
+                        "audioCodec": "AAC"
+                    }
+                ]
+            }
+        ).then(response => { console.log('resp',response); setVideoUri(response.payload.cameraStreams[0].uri) });
+    }
     
+    function goLive(vid) {
+        if (vid) {
+            startStream()
+            setLive(true)
+        } else {
+            setLive(false)
+            setVideoUri("")
+        }
+    }
+    
+    function dateUri(uri) {
+        var date = new Date();
+        return uri+"?date="+date.toGMTString()
+    }
+   
     return (
         <GridItem wide={props.wide} nopad={true} noMargin={props.top} thinmargin={isMobile}>
-            { imageUri && 
-                <img
-                    className={imageLoaded ? classes.im : classes.hiddenimage}
-                    src={updateUrl}
-                    onLoad={ () => imageFinished() }
-                    onClick={ () => handleClickOpen()}
-                    alt={props.camera.friendlyName+" Security Camera"}
-                />
-            }
-            {imageLoaded ?
+            { live && videoUri && !showDialog ?
                 <React.Fragment>
-                    { props.prevCamera &&
-                        <IconButton color="primary" className={classes.prevbutton} onClick={ () => props.prevCamera()}>
-                            <ChevronLeftIcon />
-                        </IconButton>
+                    { ios ?
+                        <video controls muted autoPlay playsInline id="video" className={classes.im} ref={video}>
+                            <source src={dateUri(videoUri)} type="application/x-mpegURL" />
+                        </video>                    
+                    :
+                        <ReactHLS ref={video} className={classes.im} url={dateUri(videoUri)} 
+                                    videoProps={{ width: "100%", height: "100%", muted: true, autoPlay: true, playsInline: true, }} 
+                                    hlsConfig ={{ liveDurationInfinity: true, enableWorker: false, }} 
+                        />
                     }
-                    { props.nextCamera &&
-                        <IconButton color="primary" className={classes.nextbutton} onClick={ () => props.nextCamera()}>
-                            <ChevronRightIcon />
-                        </IconButton>
-                    }
-                    { props.selectButtons &&
-                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
-                            <ViewModuleIcon />
-                        </IconButton>
-                    }
-
+                    <IconButton color="primary" className={classes.newVideoButton} onClick={ () => goLive(false) } >
+                        <CropOriginalIcon />
+                    </IconButton>
                 </React.Fragment>
             :
-                <div className={classes.hidden}>
-                    <CircularProgress className={classes.spinner} size={50} />
-                </div>
+                <React.Fragment>
+                { imageUri && 
+                    <div ref={holder} style={{minHeight: `${lowHeight}`}}>
+                    <img
+                        ref={image}
+                        className={imageLoaded ? classes.im : classes.hiddenimage}
+                        src={updateUrl}
+                        onLoad={ () => imageFinished() }
+                        onClick={ () => handleClickOpen()}
+                        alt={props.camera.friendlyName+" Security Camera"}
+                    />
+                    </div>
+                }
+                {imageLoaded ?
+                    <React.Fragment>
+                        { props.prevCamera &&
+                            <IconButton color="primary" className={classes.prevbutton} onClick={ () => props.prevCamera()}>
+                                <ChevronLeftIcon />
+                            </IconButton>
+                        }
+                        { props.nextCamera &&
+                            <IconButton color="primary" className={classes.nextbutton} onClick={ () => props.nextCamera()}>
+                                <ChevronRightIcon />
+                            </IconButton>
+                        }
+                        { props.selectButtons &&
+                            <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
+                                <ViewModuleIcon />
+                            </IconButton>
+                        }
+                        { props.selectButtons &&
+                            <IconButton color="primary" className={classes.newVideoButton} onClick={ () => goLive(true) } >
+                                <Videocam />
+                            </IconButton>
+    
+                        }
+    
+                    </React.Fragment>
+                :
+                    <div className={classes.hidden} style={{minHeight: `${lowHeight}`}}>
+                        <CircularProgress className={classes.spinner} size={50} />
+                        { !live &&
+                            <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
+                                <ViewModuleIcon />
+                            </IconButton>
+                        }
+                    </div>
+                }
+                { !live &&
+                    <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
+                        <ViewModuleIcon />
+                    </IconButton>
+                }
+                </React.Fragment>
             }
             { showDialog &&
-                <CameraDialog directive={props.directive} live={live} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
+                <CameraDialog directive={props.directive} live={true} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
             }
         </GridItem>
     );

@@ -52,9 +52,11 @@ export const LayoutProvider = (props) => {
     const [modules, moduleDispatch] = useReducer(moduleReducer, []);
 
     useEffect(() => {
-      	getJSON('layout')
-            .then(result=> setLayouts(result) );
-        setLayout(getLayoutCookie())
+        if (loggedIn) {
+          	getJSON('layout')
+                .then(result=> setLayouts(result) );
+            setLayout(getLayoutCookie())
+        }
         // eslint-disable-next-line 
     }, [ loggedIn ])
             
@@ -243,7 +245,7 @@ export const LayoutProvider = (props) => {
                             </React.Suspense>
                         </ErrorBoundary>
             } else {
-                console.log('module not in modules', modulename, modules)
+                //console.log('module not in modules', modulename, modules)
             }
         }
         catch {

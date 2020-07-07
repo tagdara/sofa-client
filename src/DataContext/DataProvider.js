@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect, createContext, useReducer} from 
 import { NetworkContext } from '../NetworkProvider';
 import { DeviceContext } from './DeviceProvider';
 
-import AlexaDevice from './AlexaDevice'
+//import AlexaDevice from './AlexaDevice'
 export const DataContext = createContext();
 
 function getFromLocalStorage() {
@@ -32,10 +32,11 @@ export const deviceStatesReducer = (state, data) => {
                     if (devs.hasOwnProperty(dev)) {
                         newdev={...devs[dev]}
                     }
+
                     for (i = 0; i < data.state[dev].context.properties.length; i++) {
                         prop=data.state[dev].context.properties[i]
                         interfacename=prop.namespace.split('.')[1]
-                        if (prop.hasOwnProperty('instance')) {
+                        if (prop.hasOwnProperty('instance') && prop['instance']) {
                             interfacename=prop.instance.split('.')[1]
                         }
 
@@ -53,13 +54,16 @@ export const deviceStatesReducer = (state, data) => {
                         catch {
                             prop['deepvalue']=prop.value
                         }
-                        
+
                         newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
+
                     }
                     devs={...devs, [dev] : newdev }
-                }                
+                }               
+                localStorage.setItem('deviceStates', JSON.stringify(devs));
                 return devs;
             case 'ChangeReport':
+                //console.log(data.event.endpoint.endpointId)
                 if (data.event.endpoint.endpointId in devs) {
                     var pname=""
                     var devif={}
@@ -68,7 +72,7 @@ export const deviceStatesReducer = (state, data) => {
                     for (i = 0; i < data.event.payload.change.properties.length; i++) {
                         prop=data.event.payload.change.properties[i]
                         interfacename=prop.namespace.split('.')[1]
-                        if (prop.hasOwnProperty('instance')) {
+                        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
                             interfacename=prop.instance.split('.')[1]
                         }
                         pname=prop['name']
@@ -108,9 +112,10 @@ export const deviceStatesReducer = (state, data) => {
 
                         dev={...dev, [interfacename] : {...devif, [pname] : { ...devif[pname], 'value': prop['value'], "deepvalue": prop['deepvalue'], 'timeOfSample': prop['timeOfSample'] }}}
                     }
-                    //console.log('result',epid, dev)
+                    //console.log('result',data.event.endpoint.endpointId, epid, dev)
                     return {...devs, [epid]: dev };
                 }
+                //localStorage.setItem('deviceStates', JSON.stringify(state));
                 return state
             default:
                 return state
@@ -123,7 +128,7 @@ export default function DataProvider(props) {
     const { getSceneDetails, saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive, virtualDevices } = useContext(DeviceContext);
     const { addSubscriber } = useContext(NetworkContext);
 
-    const initialDeviceStates=loadLocalStorageDevices();
+    const initialDeviceStates=getFromLocalStorage();
     //const [virtualDeviceStates, setVirtualDeviceStates] = useState({});     
     const [area, setArea] = useState("Main");     
     const [deviceStates, deviceStatesDispatch] = useReducer(deviceStatesReducer, initialDeviceStates);
@@ -135,16 +140,6 @@ export default function DataProvider(props) {
     // eslint-disable-next-line 
     }, []);
 
-    
-    function loadLocalStorageDevices() {
-        
-        var devs={}
-        var local=getFromLocalStorage()
-        for (var dev in local) {
-            devs[local[dev].endpointId]=new AlexaDevice(local[dev])
-        }
-        return devs
-    }
 
     function isReachable(dev) {
         
@@ -159,16 +154,21 @@ export default function DataProvider(props) {
         var lights=deviceStatesByCategory('LIGHT')
 
         for (var id in lights) {
-            if (condition.toLowerCase()==='all') {
-                count=count+1
-            } else if (condition.toLowerCase()==='off') {
-                if (lights[id].PowerController.powerState.value==='OFF' || !isReachable(lights[id])) {
+            try {
+                if (condition.toLowerCase()==='all') {
                     count=count+1
+                } else if (condition.toLowerCase()==='off') {
+                    if (lights[id].PowerController.powerState.value==='OFF' || !isReachable(lights[id])) {
+                        count=count+1
+                    }
+                } else if (condition.toLowerCase()==='on') {
+                    if (lights[id].PowerController.powerState.value==='ON' && isReachable(lights[id])) {
+                        count=count+1
+                    }
                 }
-            } else if (condition.toLowerCase()==='on') {
-                if (lights[id].PowerController.powerState.value==='ON' && isReachable(lights[id])) {
-                    count=count+1
-                }
+            }
+            catch {
+                //console.log('error - light not ready', id, lights[id])
             }
         }
         return count

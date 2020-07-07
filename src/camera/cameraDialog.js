@@ -7,6 +7,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import TimerIcon from '@material-ui/icons/Timer';
 import Paper from '@material-ui/core/Paper';
 import Fab from '@material-ui/core/Fab';
+import ReactHLS from 'react-hls-player';
 
 const useStyles = makeStyles({    
     bigcamDialog: {
@@ -73,14 +74,16 @@ const useStyles = makeStyles({
     },
 });
 
-const Hls = window.Hls;
+// const Hls = window.Hls;
 
 export default function CameraDialog(props) {
 
     const classes = useStyles();
     const [rotation, setRotation]=useState(0)
     const [uri, setUri]=useState("")
+    //const [hls, setHls]=useState(null)
     const video = useRef(null);
+    const ios=navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)
 
     useEffect(()=> {
         enableScaling()
@@ -102,21 +105,37 @@ export default function CameraDialog(props) {
                     }
                 ]
             }
-        ).then(response => setUri(response.payload.cameraStreams[0].uri));
+        ).then(response => { console.log('resp',response); setUri(response.payload.cameraStreams[0].uri) });
     // eslint-disable-next-line     
-    },[props.camera]);
+    },[props.camera.endpointId]);
     
+    //function hls_error_handler(name, data) {
+    //    if (data.details===Hls.ErrorDetails.MANIFEST_LOAD_ERROR) {
+    //        setTimeout(hls_load_media(),2);
+    //    }
+    //}
     
-    useEffect(()=> {
-        console.log('uri update',uri)
-        enableScaling()
-        if (props.live && window.Hls.isSupported() ) {
-            var hls = new Hls();
-            hls.loadSource(uri);
-            hls.attachMedia(video.current);
-            hls.on(Hls.Events.MANIFEST_PARSED,function() { video.current.play(); });
-        }
-    }, [uri, props.live])
+    //function hls_load_media() {
+    //    var hls = new Hls();
+    //    hls.loadSource(dateUri(uri));
+     //   hls.attachMedia(video.current);
+     //   hls.on(Hls.Events.MANIFEST_PARSED,function() { video.current.play(); });
+    //    hls.on(Hls.Events.ERROR, hls_error_handler)
+    //    setHls(hls)
+    //}
+    
+    //useEffect(()=> {
+    //    enableScaling()
+    //    if (props.live && window.Hls.isSupported() ) {
+    //        hls_load_media()
+    //    }
+    // eslint-disable-next-line     
+    //}, [uri, props.live])
+    
+    function dateUri(uri) {
+        var date = new Date();
+        return uri+"?date="+date.toGMTString()
+    }
     
             
     function enableScaling() {
@@ -130,6 +149,7 @@ export default function CameraDialog(props) {
     }
     
     function closeDialog(e) {
+    //    if (hls) { hls.stopLoad() }
         disableScaling()
         props.close()
     }
@@ -145,7 +165,7 @@ export default function CameraDialog(props) {
         console.log('set rotate to ',rotation)
 
     }
-
+    
     return (
         <Dialog fullScreen open={props.show} onClose={() => closeDialog()} className={classes.bigcamDialog} PaperProps ={{ classes: { root: classes.paper}}}>
             { !props.live && 
@@ -156,14 +176,25 @@ export default function CameraDialog(props) {
             <Fab size="medium" color="primary" aria-label="Close" className={classes.closebutton} onClick={() => closeDialog()} >
                 <CloseIcon />
             </Fab>
-            <Fab size="medium" aria-label="Rotate" className={classes.rotatebutton} onClick={() => rotate()}>
-                <ScreenRotationIcon />
-            </Fab>
+            { ios &&
+                <Fab size="medium" aria-label="Rotate" className={classes.rotatebutton} onClick={() => rotate()}>
+                    <ScreenRotationIcon />
+                </Fab>
+            }
             <Paper className={classes.bigcamPaper} >
-                { props.live ?
-                <video controls muted autoPlay playsInline id="video" className={rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} ref={video}>
-                    <source src={uri} type="application/x-mpegURL" />
-                </video>
+                { (props.live && uri) ?
+                <React.Fragment>
+                    { ios ?
+                        <video controls muted autoPlay playsInline id="video" className={rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} ref={video}>
+                            <source src={dateUri(uri)} type="application/x-mpegURL" />
+                        </video>                    
+                    :
+                        <ReactHLS ref={video} className={rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} 
+                                            url={dateUri(uri)} 
+                                            videoProps={{ width: "100%", height: "100%", muted: true, autoPlay: true, playsInline: true, }} hlsConfig ={{ liveDurationInfinity: true, enableWorker: false, }} 
+                        />
+                    }
+                </React.Fragment>
                 :
                 <img alt={props.camera.friendlyName} className={rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} src={props.src}/>
                 }

@@ -3,7 +3,7 @@ import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 import { UserContext } from './user/UserProvider';
 
-import GridBreak from './GridBreak';
+import GridSection from './GridSection';
 import PlayerBase from "./player/PlayerBase";
 
 
@@ -24,12 +24,13 @@ export default function PlayersLayout(props) {
 
     return (    
         <React.Fragment>
-            <GridBreak label={"Players"} />
+            <GridSection name={"Player Groups"}>
             { speakers.map((device) =>
                 device.friendlyName===device.InputController.input.value || device.InputController.input.value==='' ? 
                 <PlayerBase key={device.endpointId} player={device} setUserPlayer={changePlayerHome} devices={speakers} device={ device } />
                 : null
             )}
+            </GridSection>
         </React.Fragment>
     )
 };

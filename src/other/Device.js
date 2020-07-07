@@ -28,8 +28,11 @@ export default function Device(props) {
     }; 
 
     function nestLine(item) {
-        if (props.nested) { return item }
-        return <GridItem>{item}</GridItem>
+        if (props.device.PowerController.powerState) {
+            if (props.nested) { return item }
+            return <GridItem>{item}</GridItem>
+        }
+        return null
     }
     
     function energy() {
@@ -39,7 +42,10 @@ export default function Device(props) {
         return null
     }
 
-    return ( nestLine(
+    return ( 
+        props.device.PowerController &&
+        <React.Fragment>
+            { nestLine(
             <ListItem className={classes.item} >
                 <ToggleAvatar noback={true} avatarState={ props.device.PowerController.powerState.value==='ON' ? 'on' : 'off'}>{ props.icon ? props.icon : <TuneIcon />}</ToggleAvatar>
                 <ListItemText primary={props.device.friendlyName} secondary={ energy()} />
@@ -47,6 +53,8 @@ export default function Device(props) {
                     <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
                 </ListItemSecondaryAction>
            </ListItem> )
+            }
+        </React.Fragment>
     );
 }
 

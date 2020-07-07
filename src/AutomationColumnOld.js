@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DeviceContext } from './DataContext/DeviceProvider';
+import { makeStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
-
 
 import AutomationAction from "./automation/AutomationAction"
 import AutomationCondition from "./automation/AutomationCondition"
@@ -17,8 +17,20 @@ import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 import GridSection from './GridSection';
 import ErrorBoundary from './ErrorBoundary'
 
+const useStyles = makeStyles({
+    
+    dialogActions: {
+        paddingBottom: "env(safe-area-inset-bottom)",
+    },
+    listDialogContent: {
+        padding: 0,
+    }
+
+});
+
 export default function AutomationColumn(props) {
 
+    const classes = useStyles();
     const { isMobile } = useContext(LayoutContext);
     const { deviceByEndpointId, getControllerProperties, controllerForProperty, directives } = useContext(DeviceContext);
 
@@ -115,16 +127,16 @@ export default function AutomationColumn(props) {
     }
     
     const headerButtons = <>
-                <IconButton onClick={ () => addItem() } >
+                <IconButton onClick={ () => addItem() } className={classes.button }>
                     <AddIcon fontSize="small" />
                 </IconButton>
                 { Object.keys(props.items).length>0 &&
-                <IconButton onClick={ () => { setRemove(!remove); setReorder(false); }} >
+                <IconButton onClick={ () => { setRemove(!remove); setReorder(false); }} className={classes.button }>
                     <RemoveIcon fontSize="small" />
                 </IconButton>
                 }
                 { (props.itemtype!=='trigger' && Object.keys(props.items).length>1) &&
-                <IconButton onClick={ () => { setRemove(false); setReorder(!reorder) }}>
+                <IconButton onClick={ () => { setRemove(false); setReorder(!reorder) }} className={classes.button }>
                     <UnfoldMoreIcon fontSize="small" />
                 </IconButton>
                 }

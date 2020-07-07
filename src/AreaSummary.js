@@ -24,7 +24,7 @@ export default function AreaSummary(props) {
             }
             return ads    
         } catch (e) {
-            console.log('Error getting children by area', e)
+            //console.log('Error getting children by area', e)
         } finally {
             return ads
         }
@@ -78,7 +78,7 @@ export default function AreaSummary(props) {
                 }
             }
         } catch (e) {
-            console.log('Error getting children by area', e)
+            //console.log('Error getting children by area', e)
         } finally {
             return outscenes
         }

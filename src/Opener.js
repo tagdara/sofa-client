@@ -15,10 +15,16 @@ export default function Opener(props) {
     };  
     
     function getStatusProp(statusDef) {
-        var dev=deviceStateByEndpointId(statusDef.endpointId)
-        if (dev!==undefined) {
-            return dev[statusDef['controller']][statusDef['property']].value
+        try {
+            var dev=deviceStateByEndpointId(statusDef.endpointId)
+            if (dev!==undefined) {
+                return dev[statusDef['controller']][statusDef['property']].value
+            }
         }
+        catch {
+        }
+        
+        return false
     }
     
     function pinCheck(trypin) {

@@ -71,12 +71,19 @@ export default function ControllerProperty(props) {
         return propItem.property
     }
     
+    //function OldcausesrenderissuesopDefaultOrValue() {
+    //    if (props.item.operator) { return props.item.operator}
+    //    if (props.anyOp) { editOperatorValue('Any'); return 'Any' }
+    //    editOperatorValue('=')
+    //    return '='
+    //}
+
     function opDefaultOrValue() {
         if (props.item.operator) { return props.item.operator}
-        if (props.anyOp) { editOperatorValue('Any'); return 'Any' }
-        editOperatorValue('=')
+        if (props.anyOp) { return 'Any' }
         return '='
     }
+
 
     return (
         props.device!==undefined ?
@@ -84,7 +91,7 @@ export default function ControllerProperty(props) {
                 <ListItem >
                     <Select className={classes.wideSelect} value={ defaultOrValue() } 
                             onChange={(e) => handleChangePropertyName(e.target.value)} 
-                            input={<AutomationInput name="command" id="command-select" />} >
+                            input={<AutomationInput name="command"/>} >
                     { propMap.map( propItem => 
                         <MenuItem key={propkey(propItem)} value={propItem}>{ propItem.instance ? propItem.instance.split('.')[1] : propItem.property }</MenuItem>
                     )}

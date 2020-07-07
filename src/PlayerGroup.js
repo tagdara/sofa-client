@@ -10,15 +10,16 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import SpeakerIcon from '@material-ui/icons/Speaker';
 
-import GridBreak from './GridBreak';
+import GridSection from './GridSection';
 import GridItem from './GridItem';
 import ToggleAvatar from './ToggleAvatar';
 
 import PlayerBase from "./player/PlayerBase";
 
+
 export default function PlayerGroup(props) {
 
-    const { deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
+    const { directive, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
     const speakers = deviceStatesByCategory('SPEAKER')
     const device = deviceStateByEndpointId(props.player)
     
@@ -32,17 +33,20 @@ export default function PlayerGroup(props) {
     
     function handleAddRemove(speaker, action) {
         var playerinput=''
+        console.log('device',device)
         if (action==='add') {
-            playerinput=props.player
+            playerinput=device.friendlyName
         }
-        speaker.InputController.directive("SelectInput", { "input": playerinput } )
+        directive(speaker.endpointId, 'InputController', 'SelectInput', { "input": playerinput })
+        //speaker.InputController.directive("SelectInput", { "input": playerinput } )
     }; 
 
     return (    
         <React.Fragment>
-            <GridBreak label={"Playing"} />
+            <GridSection name={"Group Coordinator"} >
             <PlayerBase small={true} setPlayer={props.setPlayer} devices={speakers} name={ device.friendlyName } player={ device } />
-            <GridBreak label={"In Group"} />
+            </GridSection>
+            <GridSection name={"In Group"}>
             { speakers.map(speaker =>
                 isLinked(speaker.endpointId) &&
                     <GridItem key={speaker.endpointId} >
@@ -57,7 +61,8 @@ export default function PlayerGroup(props) {
                         </ListItem>
                     </GridItem>
             )}
-            <GridBreak label={"Other Players"} />
+            </GridSection>
+            <GridSection name={"Other Players"}>
             { speakers.map(speaker =>
                 !isLinked(speaker.endpointId) &&
                     <GridItem key={speaker.endpointId} >
@@ -72,6 +77,7 @@ export default function PlayerGroup(props) {
                         </ListItem>
                     </GridItem>
             )}
+            </GridSection>
         </React.Fragment>
     )
 };

@@ -11,6 +11,7 @@ const useStyles = makeStyles(theme => {
         flex: {
             display: "flex",
             alignItems: "center",
+            zIndex: 6,
         },
         base: {
             padding: 0,

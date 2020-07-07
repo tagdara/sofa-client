@@ -5,6 +5,7 @@ import { DataContext } from './DataContext/DataProvider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import DotLevel from './DotLevel';
+import AreaColor from './AreaColor';
 
 
 const useStyles = makeStyles(theme => {
@@ -120,6 +121,9 @@ export default function AreaSummaryLine(props) {
                 }
                 { hasShortcuts() &&
                     <DotLevel level={currentLevel()} select={runShortcut} />
+                }
+                { props.colorLights &&
+                    <AreaColor directive={directive} colorLights={props.colorLights} />
                 }
             </ListItem>
 

@@ -168,6 +168,7 @@ export default function Thermostat(props) {
     }
 
     return ( 
+        props.device.TemperatureSensor &&
         <GridItem wide={props.wide}>
             <List className={classes.list} >
                 <ListItem>

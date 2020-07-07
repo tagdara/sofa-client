@@ -11,7 +11,6 @@ import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
-import DotAvatar from '../DotAvatar'
 import SofaAvatarSlider from '../SofaAvatarSlider'
 
 import GridItem from '../GridItem'
@@ -121,16 +120,6 @@ export default function Receiver(props) {
                     <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItem>
                 { (showDetail || props.device.PowerController.powerState.value==='ON' ) &&
-                        <DotAvatar   label={"Volume"} levelValues={[0,30,55,65,70,80]}
-                                            small={true} reverse={true} minWidth={64} 
-                                            value={props.device.SpeakerController.volume.value}
-                                            select={handleVolumeChange} 
-                                            disabled={ props.device.PowerController.powerState.value==='OFF' }
-                        />
-                }
-
-                { showDetail &&
-                    <>
                         <SofaAvatarSlider   label={"Volume"} 
                                             small={true} reverse={true} minWidth={64} 
                                             value={props.device.SpeakerController.volume.value}
@@ -139,6 +128,10 @@ export default function Receiver(props) {
                                             avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }
                                             disabled={ props.device.PowerController.powerState.value==='OFF' }
                         />
+                }
+
+                { showDetail &&
+                    <>
                         <ListItem>
                             <ListItemText primary={"Input"} />
                             { props.device.InputLock &&

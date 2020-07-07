@@ -30,20 +30,47 @@ export default function AreaHero(props) {
             return allAreas
         }
         if (!area || thisarea===undefined) { return [] }
+        try {
+            var children=thisarea.AreaController.children.value
+            if (children) {
+                for (var i = 0; i < children.length; i++) {
+                    var child=deviceStateByEndpointId(children[i])
+                    if (child && child.displayCategories.includes('AREA')) {
+                        areas.push(child)
+                    }
+                }
+            }
+        }
+        catch {}
+        return areas
+    }
+
+    function getAreaColor() {
+
+        var colorLights=[]
+        if (area==='All') { 
+            console.log('skip color in all areas', allAreas)
+            return []
+        }
+        if (!area || thisarea===undefined) { return [] }
 
         var children=thisarea.AreaController.children.value
         if (children) {
             for (var i = 0; i < children.length; i++) {
                 var child=deviceStateByEndpointId(children[i])
-                if (child && child.displayCategories.includes('AREA')) {
-                    areas.push(child)
+                if (child && child.displayCategories.includes('LIGHT')) {
+                    if (child.hasOwnProperty('ColorController')) {
+                        colorLights.push(child)
+                    }
                 }
             }
         }
-        return areas
+        return colorLights
     }
+
     
     function hasShortcuts() {
+        
         try {
             if (thisarea.AreaController.shortcuts.value.length>0) {
                 return true
@@ -77,7 +104,7 @@ export default function AreaHero(props) {
                 <CardControl name={area} back={backArea} home={homeArea} expand={expandArea}/>
                 <>
                     { hasShortcuts() &&
-                        <AreaSummaryLine area={thisarea} />
+                        <AreaSummaryLine area={thisarea} colorLights={ getAreaColor() } />
                     }
                 
                 {   getAreaAreas().map((anarea) => 

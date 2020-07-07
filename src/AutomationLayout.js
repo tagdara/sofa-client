@@ -128,7 +128,7 @@ export default function AutomationLayout(props) {
     }
 
     return (
-        <GridSection xs={isMobile ? 12 : 9} background={false} scroll={true}>
+        <GridSection xs={isMobile ? 12 : 9} scroll={true}>
             <AutomationHeader name={title} save={saveType} favorite={isFavorite('logic:activity:'+props.name)} makeFavorite={makeFavorite} automation={automation} />
             <AutomationColumn items={schedules} saved={saved} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
             <AutomationColumn items={triggers} saved={saved} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'AutomationTrigger'} itemtype={"trigger"} />

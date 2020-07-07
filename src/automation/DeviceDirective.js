@@ -67,7 +67,7 @@ export default function DeviceDirective(props) {
             <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
                 <ListItem>
                     <Select className={classes.wideSelect} value={defaultOrValue()} onChange={(e) => handleChangeDirectiveName(e.target.value)} 
-                            input={<AutomationInput name="command" id="command-select" />} >
+                            input={<AutomationInput name="command" />} >
                     { directiveMap.map( dirItem => 
                         <MenuItem key={propkey(dirItem)} value={dirItem}>{dirItem.instance ? dirItem.directive+"."+dirItem.instance.split('.')[1] : dirItem.directive}</MenuItem>
                     )}

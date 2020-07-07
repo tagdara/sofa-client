@@ -1,0 +1,117 @@
+import React, { useState } from 'react';
+import { makeStyles } from '@material-ui/styles';
+
+import Button from '@material-ui/core/Button';
+
+import { SketchPicker } from 'react-color'
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+
+const useStyles = makeStyles({
+        
+    wide: {
+        width: "100%",
+    },
+    indent: {
+        paddingLeft: 16,
+        paddingRight: 8,
+    },
+    button: {
+        minWidth: 48,
+        flexGrow: 0,
+    },
+    revealIcon: {
+        height: 24,
+        width: 24,
+        color: "#FFE4B5",
+    }
+});
+
+
+const sketchPickerStyles = {
+    default: {
+        picker: { // See the individual picker source for which keys to use
+            boxShadow: 'none',
+        },
+    },
+}
+
+export const sl2sb = (color) => {
+    var SL = {h:color.h, s:color.s, l:color.l};
+    var SB = {hue:color.h, saturation:0, brightness:0};
+    var t = SL.s * (SL.l<0.5 ? SL.l : 1-SL.l);
+    SB.brightness = SL.l+t;
+    SB.saturation = SL.l>0 ? 2*t/SB.brightness : SB.saturation ;
+    return SB
+}    
+
+export const sb2sl = (color) => {
+    var SB = {hue:color.hue, saturation:color.saturation, brightness:color.brightness};
+    var SL = {h:color.hue, s:0, l:0};
+    SL.l = (2 - SB.saturation) * SB.brightness / 2;
+    SL.s = SL.l&&SL.l<1 ? SB.saturation*SB.brightness/(SL.l<0.5 ? SL.l*2 : 2-SL.l*2) : SL.s;
+    return SL
+}
+
+export default function AreaColor(props) {
+
+    const classes = useStyles();
+    const [color, setColor] = useState(currentAverage());
+    const [openDialog, setOpenDialog] = useState(false);
+    
+    function currentAverage() {
+        // TODO/CHEESE - actuall compute average instead of this
+        for (var i = 0; i < props.colorLights.length; i++) {
+            var col=props.colorLights[i].ColorController.color.value
+            if (props.colorLights[i].PowerController.powerState.value==='OFF') {
+                col['brightness']=0.5
+            }
+            return col
+        }
+    }
+
+    function gethsl(sl) {
+        if (sl) {
+            return { "backgroundColor":"hsl("+sl['h']+", "+(sl['s']*100)+"%, "+(sl['l']*100)+"%)"}
+        }
+        return { "backgroundColor":"hsl(255, 100%, 100%)"}
+    }
+    
+    function closeDialog() {
+        setOpenDialog(false)
+    }
+
+    function handleColorSliderChange(color, event) {
+        setColor(color.hsl);
+        var hsb=sl2sb(color.hsl)
+        for (var i = 0; i < props.colorLights.length; i++) {
+            hsb.brightness=props.colorLights[i].BrightnessController.brightness.value/100
+            props.directive(props.colorLights[i].endpointId, 'ColorController', 'SetColor', { "color" : hsb }, {})
+        }
+    }
+
+    return (
+        <>
+            <Button variant="outlined" size="small" onClick={ () => setOpenDialog(true) } style={gethsl(color)} className={classes.button }> &nbsp;
+            </Button>
+            <Dialog open={openDialog} maxWidth={'xs'} fullWidth={false} >
+                <SketchPicker
+                    disableAlpha styles={sketchPickerStyles}
+                    color={ color }
+                    onChangeComplete={ handleColorSliderChange }
+                    presetColors= { [   '#D0021B', '#F5A623', '#F8E71C', '#8B572A', 
+                                        '#7ED321', '#417505', '#BD10E0', '#9013FE', 
+                                        '#4A90E2', '#50E3C2', '#B8E986', '#FFFFFF', "#FEEBBA"
+                                    ] }
+                />
+                <DialogActions>
+                    <Button onClick={closeDialog} color="primary">
+                        OK
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
+    );
+
+}
+

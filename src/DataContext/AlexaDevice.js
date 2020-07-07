@@ -9,6 +9,8 @@ export default class AlexaDevice {
         this.interfaces = []
         this.interfaceobjects = []
         
+        console.log('data', data)
+        
         for (var j = 0; j < data.capabilities.length; j++) {
             var interfacename=data.capabilities[j].interface.split('.')[1]
             if (data.capabilities[j].hasOwnProperty('instance')) {

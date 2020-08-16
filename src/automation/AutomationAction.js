@@ -23,7 +23,7 @@ export default function AutomationAction(props) {
     }
 
     return (
-        <GridItem nolist={true} elevation={0} wide={true} xs={12}>
+        <GridItem nolist={true} elevation={0} wide={true} xs={12} nopaper={false} >
             <AutomationDevice   device={props.device} index={props.index} selectDevice={selectDevice} wide={props.wide}
                                 remove={props.remove} reorder={props.reorder}
                                 moveUp={props.moveUp} moveDown={props.moveDown} delete={props.delete} />

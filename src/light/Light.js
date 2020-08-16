@@ -94,16 +94,17 @@ export default function Light(props) {
     const [showAll, setShowAll] = useState(props.showAll)
     
     function handlePowerChange(event) {
+        console.log('powerchange',props.device.endpointId, event.target.checked ? 'TurnOn' : 'TurnOff')
         props.directive(props.device.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     }; 
     
     function isReachable() {
         try {
-            if (props.device.hasOwnProperty('EndpointHealth')) {
-                if (props.device.EndpointHealth.connectivity.value.value==='OK') { return true }
+            if (props.deviceState.hasOwnProperty('EndpointHealth')) {
+                if (props.deviceState.EndpointHealth.connectivity.value.value==='OK') { return true }
                 return false
             }
-            console.log('no endpoint health', props.device)
+            console.log('no endpoint health', props.deviceState)
             return true
         } catch (e) {
             console.log('Error getting reachable state', e)
@@ -118,15 +119,16 @@ export default function Light(props) {
                 :
                     <CloudOffIcon className={classes.iconSize} />
                 }                
-                avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }
+                avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? "on" : "off" }
                 label={ props.device.friendlyName }
                 labelSecondary={ isReachable() ? null : 'Off at switch' }
                 small={ props.small }
                 action={() => setShowAll(!showAll) }
+                labelClick={true}
                 secondary={
                     <>
                         { ( isReachable() && !props.deleting ) &&
-                            <Switch color="primary" className={classes.lightSwitch} checked={props.device.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
+                            <Switch color="primary" className={classes.lightSwitch} checked={props.deviceState.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
                         }
                         { props.deleting && 
                             <IconButton size="small" onClick={()=>props.remove(props.device)} ><ClearIcon /></IconButton>
@@ -136,24 +138,24 @@ export default function Light(props) {
                 children={
                     <>
                         { !props.brightControl && !showAll ? null :
-                            ( !props.device.hasOwnProperty('BrightnessController') ?
+                            ( !props.deviceState.hasOwnProperty('BrightnessController') ?
                                 <ListItem className={classes.placeholder} />
                             :
-                                <LightSliderBrightness device={props.device} directive={props.directive} />
+                                <LightSliderBrightness device={props.device} deviceState={props.deviceState} directive={props.directive} />
                             )
                         }
                         { !props.tempControl && !showAll ? null :
-                            ( !props.device.hasOwnProperty('ColorTemperatureController') ?
+                            ( !props.deviceState.hasOwnProperty('ColorTemperatureController') ?
                                 <ListItem className={classes.placeholder} />
                             :
-                            <LightSliderTemperature device={props.device} directive={props.directive}/>
+                            <LightSliderTemperature device={props.device} deviceState={props.deviceState} directive={props.directive}/>
                             )
                         }
                         { !props.colorControl && !showAll ? null :
-                            ( !props.device.hasOwnProperty('ColorController') ?
+                            ( !props.deviceState.hasOwnProperty('ColorController') ?
                                 <ListItem className={classes.placeholder} />
                             :
-                                <LightSliderColor device={props.device} directive={props.directive}/>
+                                <LightSliderColor device={props.device} deviceState={props.deviceState} directive={props.directive}/>
                             )
                         }
                     </>

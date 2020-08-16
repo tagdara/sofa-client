@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 import { LayoutContext } from './layout/NewLayoutProvider';
 
@@ -8,13 +8,24 @@ import AreaSummary from './AreaSummary';
 import GridItem from './GridItem';
 import CardControl from './CardControl';
 
+
 export default function AreaHero(props) {
 
-    const { setArea, deviceStatesByCategory, deviceStateByEndpointId, area } = useContext(DataContext);
+    const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices, setArea, area } = useContext(DataContext);
     const { applyLayoutCard } = useContext(LayoutContext);
-    const thisarea = deviceStateByEndpointId('logic:area:'+area)
-    const allAreas = deviceStatesByCategory('AREA')
+    //const thisarea = deviceStateByEndpointId('logic:area:'+area)
+    const thisarea = 'logic:area:'+area
+    //const allAreas = deviceStatesByCategory('AREA')
     const [ previousArea, setPreviousArea]=useState('All')
+    const [ allAreas, setAllAreas]=useState([])
+ 
+    useEffect(() => {
+        setAllAreas(getEndpointIdsByCategory('AREA','AreaHero'))
+        return function cleanup() {
+            unregisterDevices('AreaHero');
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
 
     function selectArea(name) {
         setPreviousArea(area)
@@ -31,12 +42,12 @@ export default function AreaHero(props) {
         }
         if (!area || thisarea===undefined) { return [] }
         try {
-            var children=thisarea.AreaController.children.value
+            var children=deviceStates[thisarea].AreaController.children.value
             if (children) {
                 for (var i = 0; i < children.length; i++) {
-                    var child=deviceStateByEndpointId(children[i])
+                    var child=devices[children[i]]
                     if (child && child.displayCategories.includes('AREA')) {
-                        areas.push(child)
+                        areas.push(children[i])
                     }
                 }
             }
@@ -47,20 +58,23 @@ export default function AreaHero(props) {
 
     function getAreaColor() {
 
-        var colorLights=[]
+        var colorLights={}
         if (area==='All') { 
             console.log('skip color in all areas', allAreas)
             return []
         }
         if (!area || thisarea===undefined) { return [] }
 
-        var children=thisarea.AreaController.children.value
+        var children=deviceStates[thisarea].AreaController.children.value
         if (children) {
+            
             for (var i = 0; i < children.length; i++) {
-                var child=deviceStateByEndpointId(children[i])
-                if (child && child.displayCategories.includes('LIGHT')) {
+                
+                var child=deviceStates[children[i]]
+                
+                if (child && devices[children[i]].displayCategories.includes('LIGHT')) {
                     if (child.hasOwnProperty('ColorController')) {
-                        colorLights.push(child)
+                        colorLights[children[i]]=deviceStates[children[i]]
                     }
                 }
             }
@@ -72,7 +86,7 @@ export default function AreaHero(props) {
     function hasShortcuts() {
         
         try {
-            if (thisarea.AreaController.shortcuts.value.length>0) {
+            if (deviceStates[thisarea].AreaController.shortcuts.value.length>0) {
                 return true
             }
         }
@@ -100,20 +114,25 @@ export default function AreaHero(props) {
 
 
     return (
+        cardReady('AreaHero') ?
             <GridItem wide={props.wide}>
                 <CardControl name={area} back={backArea} home={homeArea} expand={expandArea}/>
                 <>
                     { hasShortcuts() &&
-                        <AreaSummaryLine area={thisarea} colorLights={ getAreaColor() } />
+                        <AreaSummaryLine device={devices[thisarea]} deviceState={ deviceStates[thisarea] } area={thisarea} colorLights={ getAreaColor() } />
                     }
                 
                 {   getAreaAreas().map((anarea) => 
-                    <AreaLine area={ anarea } key={ anarea.endpointId } selectArea={selectArea} ></AreaLine>
+                    <AreaLine device={devices[anarea]} deviceState={ deviceStates[anarea] }  area={ anarea } key={ anarea } selectArea={selectArea} ></AreaLine>
                 )}
                 { thisarea &&
-                    <AreaSummary showDetail={true} area={ thisarea } name={ thisarea.friendlyName } shortcuts={thisarea.shortcuts} selectArea={selectArea} noGrid={true} summaryLine={false} />
+                    <AreaSummary    device={devices[thisarea]} deviceState={deviceStates[thisarea]} showDetail={true} area={ thisarea } 
+                                    name={ devices[thisarea].friendlyName } shortcuts={deviceStates[thisarea].shortcuts} 
+                                    selectArea={selectArea} noGrid={true} summaryLine={false} />
                 }
                 </>
             </GridItem>
+        : 
+        null
     );
 }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import Toolbar from '@material-ui/core/Toolbar';
 import SaveIcon from '@material-ui/icons/Save';
 
 import Fab from '@material-ui/core/Fab';
@@ -28,7 +27,6 @@ export default function AutomationSave(props) {
 
     return (
         <React.Fragment>
-            <Toolbar className={classes.bottomSpacer} />
             { !props.saved &&
                 <Fab size="small" color="primary" onClick={ (e)=> props.save() } className={classes.fabSave} >
                     <SaveIcon />

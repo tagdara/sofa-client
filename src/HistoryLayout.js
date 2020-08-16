@@ -1,10 +1,10 @@
 import React from 'react';
-import { useState, useEffect, useContext, useRef } from 'react';
-import { DataContext } from './DataContext/DataProvider';
+import { useState, useEffect, useContext } from 'react';
+import { DeviceContext } from './DataContext/DeviceProvider';
 import Button from '@material-ui/core/Button';
 
 import HistoryLine from './HistoryLine';
-import GridBreak from './GridBreak';
+import GridSection from './GridSection';
 
 
 export default function HistoryLayout(props) {
@@ -13,11 +13,13 @@ export default function HistoryLayout(props) {
     const [page, setPage] = useState(0)
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-    const { getHistoryForDevice } = useRef(useContext(DataContext)).current;
+    //const { getHistoryForDevice } = useRef(useContext(DataContext)).current;
+    const { getHistoryForDevice } = useContext(DeviceContext)
     
     useEffect(() => {
         getHistoryForDevice(props.endpointId, props.property, 0).then(result => setHistory(result))
-    }, [getHistoryForDevice, props.property, props.endpointId]);
+    // eslint-disable-next-line 
+    }, [props.property, props.endpointId]);
     
 
     function getMore() {
@@ -29,27 +31,28 @@ export default function HistoryLayout(props) {
         var datesorted=[]
         var curmonth=''
         var curday=''
+        var current_parent=null
         for (var j = 0; j < history.length; j++) {
             var hdate=new Date(history[j].time)
             if (hdate.getMonth()!==curmonth || hdate.getDate()!==curday) {
+                if (current_parent) { datesorted.push(current_parent) }
                 curmonth=hdate.getMonth()
                 curday=hdate.getDate()
-                datesorted.push(<GridBreak key={'lab'+j} label={dayNames[hdate.getDay()]+", "+monthNames[curmonth]+" "+curday} />)
+                current_parent=<GridSection key={'lab'+hdate.toISOString()} name={dayNames[hdate.getDay()]+", "+monthNames[curmonth]+" "+curday} children={[]} />
             }
-            datesorted.push(<HistoryLine justTime={true} key={j} val={history[j][props.property]} time={ history[j].time } />)
+            current_parent.props.children.push(<HistoryLine justTime={true} key={hdate.toISOString()} val={history[j][props.property]} time={ history[j].time } />)
         }
+        datesorted.push(current_parent)
         return datesorted
     }
     
     return (    
         <React.Fragment>
-            <GridBreak label={"Device History for "+props.name} />
+            <GridSection name={"Device History for "+props.name} scroll={true} />
             { todayEvents(true) }
-            <GridBreak>
-                <Button onClick={ () => getMore() }>
-                    More
-                </Button>
-            </GridBreak>
+            <Button onClick={ () => getMore() }>
+                More
+            </Button>
         </React.Fragment>
     )
 

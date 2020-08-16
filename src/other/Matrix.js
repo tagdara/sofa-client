@@ -24,21 +24,19 @@ const useStyles = makeStyles(theme => {
 export default function Matrix(props) {
     
     const classes = useStyles();
-    const { deviceByEndpointId, directive, getInputs} = useContext(DeviceContext);
-    const device=deviceByEndpointId(props.device.endpointId)
-    const inputs=getInputs(device)   
+    const { getInputs} = useContext(DeviceContext);
     
     function handleInput(event, inputname) {
-        directive(props.device.endpointId, "InputController", 'SelectInput', { "input": inputname } )
+        props.directive(props.device.endpointId, "InputController", 'SelectInput', { "input": inputname } )
     }; 
         
     return (
         <GridItem >
             <ListItem>
-                <ToggleAvatar noback={true} avatarState={props.device.InputController.input.value!=='Blank' ? 'on': 'off'}><TvIcon /></ToggleAvatar>
+                <ToggleAvatar noback={true} avatarState={props.deviceState.InputController.input.value!=='Blank' ? 'on': 'off'}><TvIcon /></ToggleAvatar>
                 <ListItemText primary={props.device.friendlyName} />
-                <Select className={classes.select} displayEmpty value={props.device.InputController.input.value ? props.device.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
-                    { inputs.map(inp =>
+                <Select className={classes.select} displayEmpty value={props.deviceState.InputController.input.value ? props.deviceState.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
+                    { getInputs(props.device).map(inp =>
                         <MenuItem key={inp} value={inp}>{inp}</MenuItem>
                     )}
                 </Select>

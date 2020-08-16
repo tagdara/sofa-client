@@ -255,25 +255,16 @@ export default function SecurityCamera(props) {
                                 <ViewModuleIcon />
                             </IconButton>
                         }
-                        { props.selectButtons &&
-                            <IconButton color="primary" className={classes.newVideoButton} onClick={ () => goLive(true) } >
-                                <Videocam />
-                            </IconButton>
-    
-                        }
-    
+                        <IconButton color="primary" className={classes.newVideoButton} onClick={ () => goLive(true) } >
+                            <Videocam />
+                        </IconButton>
                     </React.Fragment>
                 :
                     <div className={classes.hidden} style={{minHeight: `${lowHeight}`}}>
                         <CircularProgress className={classes.spinner} size={50} />
-                        { !live &&
-                            <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
-                                <ViewModuleIcon />
-                            </IconButton>
-                        }
                     </div>
                 }
-                { !live &&
+                { (!live && props.selectButtons) &&
                     <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
                         <ViewModuleIcon />
                     </IconButton>
@@ -281,7 +272,7 @@ export default function SecurityCamera(props) {
                 </React.Fragment>
             }
             { showDialog &&
-                <CameraDialog directive={props.directive} live={true} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
+                <CameraDialog poster={updateUrl} directive={props.directive} live={true} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
             }
         </GridItem>
     );

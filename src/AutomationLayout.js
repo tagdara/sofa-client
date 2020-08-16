@@ -2,11 +2,11 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { NetworkContext } from './NetworkProvider';
 import { UserContext } from './user/UserProvider';
+import Grid from '@material-ui/core/Grid';
 
 import AutomationSave from "./automation/automationSave"
 import AutomationHeader from "./automation/automationHeader"
 import AutomationColumn from "./AutomationColumn"
-import GridSection from './GridSection';
 
 export default function AutomationLayout(props) {
 
@@ -127,15 +127,17 @@ export default function AutomationLayout(props) {
         applyLayoutCard('AutomationsLayout')
     }
 
+    //<GridSection xs={isMobile ? 12 : 9} scroll={true}>
+    //</GridSection>
     return (
-        <GridSection xs={isMobile ? 12 : 9} scroll={true}>
+        <Grid container item spacing={1} xs={isMobile ? 12 : 9} >
             <AutomationHeader name={title} save={saveType} favorite={isFavorite('logic:activity:'+props.name)} makeFavorite={makeFavorite} automation={automation} />
             <AutomationColumn items={schedules} saved={saved} save={saveType} automationName={props.name} name={"Schedules"} itemModule={'automationSchedule'} itemtype={"schedule"} />
             <AutomationColumn items={triggers} saved={saved} save={saveType} automationName={props.name} name={"Triggers"} selector={'DevicePropertyLayout'} itemModule={'AutomationTrigger'} itemtype={"trigger"} />
             <AutomationColumn items={conditions} saved={saved} save={saveType} automationName={props.name} name={"Conditions"} selector={'DevicePropertyLayout'} itemModule={'AutomationCondition'} itemtype={"condition"} />
             <AutomationColumn items={actions} saved={saved} save={saveType} automationName={props.name} name={"Actions"} selector={'DeviceDirectiveLayout'} itemModule={'AutomationAction'} itemtype={"action"} />
             <AutomationSave name={title} saved={saved} save={newSaveAutomation} goBack={goBack} />
-        </GridSection>
+        </Grid>
     )
     
 };

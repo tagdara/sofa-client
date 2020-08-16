@@ -40,7 +40,7 @@ export default function DetectionState(props) {
     }; 
     
     return (
-        <Select value={ props.item.value ? props.item.value.detectionState : "" } onChange={handleDetectionStateChange} input={<BootstrapInput name="detectionState" id="detectionState" />} >
+        <Select value={ props.item.value ? props.item.value.detectionState : "" } onChange={handleDetectionStateChange} input={<BootstrapInput name="detectionState" />} >
             <MenuItem value="DETECTED">DETECTED</MenuItem>
             <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
         </Select>

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 
 import GridSection from './GridSection';
@@ -8,21 +7,32 @@ import Thermostat from './thermostat/Thermostat';
 
 export default function ThermostatLayout(props) {
 
-    const { deviceStatesByCategory } = useContext(DataContext);
-    const thermostats=deviceStatesByCategory('THERMOSTAT')
-    const temperatureSensors=deviceStatesByCategory('TEMPERATURE_SENSOR')
+    const { devices, deviceStates, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
+    const [thermostats, setThermostats]=useState([])
+    const [temperatureSensors, setTemperatureSensors]=useState([])
+
+    useEffect(() => {
+        setThermostats(getEndpointIdsByCategory('THERMOSTAT','ThermostatLayout'))
+        setTemperatureSensors(getEndpointIdsByCategory('TEMPERATURE_SENSOR','ThermostatLayout'))
+        return function cleanup() {
+            unregisterDevices('ThermostatLayout');
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
+
+
 
     return (    
         <React.Fragment>
             <GridSection name={"Thermostats"}>
-                { thermostats.map((device) =>
-                    <Thermostat key={ device.endpointId } device={ device }  />
+                { thermostats.map((thermostat) =>
+                    <Thermostat key={ thermostat } device={ devices[thermostat] }  deviceState={ deviceStates[thermostat] }/>
                 )}
             </GridSection>
             
             <GridSection name={"Temperatures"}>
-                { temperatureSensors.map((device) =>
-                    <TemperatureSensor key={ device.endpointId } device={ device } />
+                { temperatureSensors.map((thermostat) =>
+                    <TemperatureSensor key={ thermostat } device={ devices[thermostat] }  deviceState={ deviceStates[thermostat] } />
                 )}
             </GridSection>
         </React.Fragment>

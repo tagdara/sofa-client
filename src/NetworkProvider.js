@@ -2,6 +2,16 @@ import React, {useState, useEffect, createContext, useRef, useCallback} from 're
 
 const serverurl="https://"+window.location.hostname;
 
+function writeCookie(key, value, days) {
+    var date = new Date();
+    // Default at 365 days.
+    days = days || 365;
+    // Get unix milliseconds at current time plus number of days
+    date.setTime(+ date + (days * 86400000)); //24 * 60 * 60 * 1000
+    window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
+    return value;
+};
+
 export const useStream = (accessToken) => {
 
     const [subscribers, setSubscribers] = useState([])
@@ -18,8 +28,10 @@ export const useStream = (accessToken) => {
     const eventSource = useRef(null)
     const listenEvent = useCallback(() => { 
         if (streamToken) {
+            // EventSource does not support passing headers so we must use a cookie to send the token
+            writeCookie("access_token", streamToken, 1)
             console.log('connecting SSE')
-            eventSource.current = new EventSource(serverurl+"/sse", { headers: { 'authorization': streamToken }, withCredentials: true })
+            eventSource.current = new EventSource(serverurl+"/sse", { withCredentials: true })
         }
     }, [streamToken] )
     
@@ -141,31 +153,17 @@ export default function NetworkProvider(props) {
     
     
     useEffect(() => {
-        function getTokenCookie(name) {
-            name = name+"="
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for(var i = 0; i <ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) === ' ') {
-                  c = c.substring(1);
-                }
-                if (c.indexOf(name) === 0) {
-                    //console.log('returning',c.substring(name.length, c.length))
-                    if (c.substring(name.length, c.length)==='null') {
-                        return null
-                    }
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return null
+        
+        function getTokenStorage(name) {
+            return localStorage.getItem(name)
         }
-        var newAccessToken=getTokenCookie("access_token")
+        
+        var newAccessToken=getTokenStorage("access_token")
         setAccessToken(newAccessToken)
         setStreamToken(newAccessToken)
-        var newRefreshToken=getTokenCookie("refresh_token")
+        var newRefreshToken=getTokenStorage("refresh_token")
         setRefreshToken(newRefreshToken)
-        var newUser=getTokenCookie("user")
+        var newUser=getTokenStorage("user")
         setUser(newUser)
 
         if (newAccessToken!==null) {
@@ -220,7 +218,7 @@ export default function NetworkProvider(props) {
             })
                     .then(result=>handleFetchErrors(result))
  		            .then(result=>loginResult(result))
-                    .then(result=>setTokenUserCookies(user, result))
+                    .then(result=>setTokenStorage(user, result))
         } else {
             setLoggedIn(false)
             var promise1 = new Promise(function(resolve, reject) {
@@ -265,10 +263,7 @@ export default function NetworkProvider(props) {
     }
 
     function loginResult(response) {
-        //if (response.status===401) {
-        //    setLoggedIn(false)
-        //    return null
-        //} 
+
         console.log('login result', response)
 
         if (response && response.hasOwnProperty('access_token')) { 
@@ -291,64 +286,38 @@ export default function NetworkProvider(props) {
   	    //return fetch(serverurl+'/login', { method: 'post', body: formData })
   	    return postJSON('login',data, true)
  		            .then(result=>loginResult(result))
-                    .then(result=>setTokenUserCookies(user, result))
+                    .then(result=>setTokenStorage(user, result))
     }
 
-    function writeCookie (key, value, days) {
-        var date = new Date();
-        // Default at 365 days.
-        days = days || 365;
-        // Get unix milliseconds at current time plus number of days
-        date.setTime(+ date + (days * 86400000)); //24 * 60 * 60 * 1000
-        window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
-        return value;
-    };
-    
-    function setTokenUserCookies(user, newTokens) {
+    function setTokenStorage(user, newTokens) {
         if (newTokens) {
             if (newTokens.hasOwnProperty('access_token')) {
-                writeCookie("access_token", newTokens.access_token, 365)
+                localStorage.setItem("access_token", newTokens.access_token)
                 setAccessToken(newTokens.access_token)
             }
             if (newTokens.hasOwnProperty('refresh_token')) {
-                writeCookie("refresh_token", newTokens.refresh_token, 365)
+                localStorage.setItem("refresh_token", newTokens.refresh_token)
                 setRefreshToken(newTokens.refresh_token)
             }
-            //writeCookie("token", newToken, 365)
-            writeCookie("user", user, 365)
+            localStorage.setItem("user", user)
             setUser(user)
-            //setToken(newToken)
             if (newTokens.access_token && newTokens.refresh_token && !loggedIn) { setLoggedIn(true) }
         }
         return newTokens
     }
     
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) === ' ') {
-              c = c.substring(1);
-            }
-            if (c.indexOf(name) === 0) {
-                if (c.substring(name.length, c.length)==='null') {
-                    return null
-                }
-                return c.substring(name.length, c.length);
-            }
-        }
-        return null;
+    function getStorage(item) {
+        return localStorage.getItem(item)
     }
+
 
     function logout() {
         console.log('logging out')
         setStreamToken(null)
         setLoggedIn(false)
         closeStream()
-        document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
-        document.cookie = "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+        localStorage.clear();
+        writeCookie('access_token',"",1)
   	    fetch(serverurl+'/logout', {credentials: 'include'})
  		    .then(result=>result.json())
     }
@@ -365,7 +334,7 @@ export default function NetworkProvider(props) {
                 login: login,
                 logout: logout,
                 addSubscriber: addSubscriber,
-                getCookie: getCookie,
+                getStorage: getStorage,
             }}
         >
             {props.children}

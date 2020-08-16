@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
@@ -12,8 +12,8 @@ import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 
 import GridItem from './GridItem';
 import VirtualList from './other/VirtualList';
-import DeviceList from './other/DeviceList';
 import FanIcon from '@material-ui/icons/Toys';
+import Device from './other/Device';
 
 const useStyles = makeStyles(theme => {
     
@@ -42,9 +42,19 @@ export default function MoreDevicesHero(props) {
     
     const classes = useStyles();
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStatesByFriendlyName, directive } = useContext(DataContext);
-    const switches=deviceStatesByFriendlyName(['Bathroom Fan','Bathroom Heat Fan'], false, 'SWITCH')
+    const { cardReady, devices, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices, directive } = useContext(DataContext);
+    const switchNames=['Bathroom Fan','Bathroom Heat Fan']
+    const [switches, setSwitches]=useState([])
     const [ showDetail, setShowDetail] = useState(props.showDetail)
+
+    useEffect(() => {
+        setSwitches(getEndpointIdsByFriendlyName(switchNames, 'MoreDevicesHero', true))
+        return function cleanup() {
+            unregisterDevices('MoreDevicesHero');
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
+
     
 
     function onCount() {
@@ -58,6 +68,7 @@ export default function MoreDevicesHero(props) {
     }
 
     return (
+        cardReady('MoreDevicesHero') ?
         <GridItem wide={props.wide} nopad={true} >
             <List className={classes.list} >
                 { !showDetail ?
@@ -68,14 +79,16 @@ export default function MoreDevicesHero(props) {
                 :
                     <>
                         <VirtualList directive={directive} nested={true} />
-                        { switches &&
-                            <DeviceList nested={true} icon={<FanIcon />} devices={ switches } directive={directive} />
-                        }
+                        { switches.map(switchId =>
+                            <Device nested={true} icon={<FanIcon />} key={ switchId } device={ devices[switchId] } deviceState={deviceStates[switchId]} directive={directive} />
+                        )}
                     </>
                 }
             </List>
             
         </GridItem>
+        : 
+        null
     );
 }
 

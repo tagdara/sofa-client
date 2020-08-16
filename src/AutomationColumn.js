@@ -115,16 +115,16 @@ export default function AutomationColumn(props) {
     }
     
     const headerButtons = <>
-                <IconButton onClick={ () => addItem() } >
+                <IconButton size="small" onClick={ () => addItem() } >
                     <AddIcon fontSize="small" />
                 </IconButton>
                 { Object.keys(props.items).length>0 &&
-                <IconButton onClick={ () => { setRemove(!remove); setReorder(false); }} >
+                <IconButton size="small" onClick={ () => { setRemove(!remove); setReorder(false); }} >
                     <RemoveIcon fontSize="small" />
                 </IconButton>
                 }
                 { (props.itemtype!=='trigger' && Object.keys(props.items).length>1) &&
-                <IconButton onClick={ () => { setRemove(false); setReorder(!reorder) }}>
+                <IconButton size="small" onClick={ () => { setRemove(false); setReorder(!reorder) }}>
                     <UnfoldMoreIcon fontSize="small" />
                 </IconButton>
                 }
@@ -132,7 +132,7 @@ export default function AutomationColumn(props) {
 
     return (    
 
-            <GridSection name={props.name} secondary={ headerButtons } >
+            <GridSection name={props.name} secondary={ headerButtons } margin={true}>
 
             { Object.keys(props.items).length>0 &&
                 <React.Fragment>

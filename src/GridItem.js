@@ -96,7 +96,7 @@ export default function GridItem(props) {
                     {props.children}
                 </List>
             :
-            <Grid container >
+            <Grid item container >
                 {props.children}
             </Grid>
         }

@@ -33,7 +33,6 @@ export default function SimpleBottomNavigation(props) {
     }
     
     function changeSection(section) {
-        console.log('section', section)
         props.chooseSection(section);
         applyHomePage(sections[section])
     }

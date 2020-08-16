@@ -25,6 +25,7 @@ export const deviceStatesReducer = (state, data) => {
         var prop='';
         var interfacename=""
         var dev={}
+
         switch (data.event.header.name) {
             case "Multistate":
                 for (dev in data.state) {
@@ -36,10 +37,9 @@ export const deviceStatesReducer = (state, data) => {
                     for (i = 0; i < data.state[dev].context.properties.length; i++) {
                         prop=data.state[dev].context.properties[i]
                         interfacename=prop.namespace.split('.')[1]
-                        if (prop.hasOwnProperty('instance') && prop['instance']) {
+                        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
                             interfacename=prop.instance.split('.')[1]
                         }
-
                         if (!newdev.hasOwnProperty(interfacename)) {
                             newdev[interfacename]={}
                         }
@@ -60,7 +60,7 @@ export const deviceStatesReducer = (state, data) => {
                     }
                     devs={...devs, [dev] : newdev }
                 }               
-                localStorage.setItem('deviceStates', JSON.stringify(devs));
+                //localStorage.setItem('deviceStates', JSON.stringify(devs));
                 return devs;
             case 'ChangeReport':
                 //console.log(data.event.endpoint.endpointId)
@@ -72,6 +72,7 @@ export const deviceStatesReducer = (state, data) => {
                     for (i = 0; i < data.event.payload.change.properties.length; i++) {
                         prop=data.event.payload.change.properties[i]
                         interfacename=prop.namespace.split('.')[1]
+                        //console.log('change interface', prop.namespace, interfacename)
                         if (prop.hasOwnProperty('instance') && prop.instance!=="") {
                             interfacename=prop.instance.split('.')[1]
                         }
@@ -93,7 +94,7 @@ export const deviceStatesReducer = (state, data) => {
                     for (i = 0; i < data.context.properties.length; i++) {
                         prop=data.context.properties[i]
                         interfacename=prop.namespace.split('.')[1]
-                        if (prop.hasOwnProperty('instance')) {
+                        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
                             interfacename=prop.instance.split('.')[1]
                         }
                         
@@ -122,10 +123,11 @@ export const deviceStatesReducer = (state, data) => {
         }
     }
 
+
 export default function DataProvider(props) {
 
     
-    const { getSceneDetails, saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive, virtualDevices } = useContext(DeviceContext);
+    const { registerEndpointIds, registeredDevices, getEndpointIdsByFriendlyName, unregisterDevices, devices, getEndpointIdsByCategory, getSceneDetails, saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive, virtualDevices } = useContext(DeviceContext);
     const { addSubscriber } = useContext(NetworkContext);
 
     const initialDeviceStates=getFromLocalStorage();
@@ -140,29 +142,65 @@ export default function DataProvider(props) {
     // eslint-disable-next-line 
     }, []);
 
+    function cardReady(cardname) {
+        var foundAny=false
+        //console.log('registered', registeredDevices)
+        for (var id in registeredDevices) { 
+            //console.log('checking', registeredDevices[id].includes(cardname), id, registeredDevices[id])
+            if (registeredDevices[id].includes(cardname)) {
+                //console.log('relevant', cardname, registeredDevices[id] )
+                if (!deviceStates || !deviceStates.hasOwnProperty(id) || deviceStates[id]===undefined) {
+                    return false
+                }
+                //console.log('Confirmed:',id, deviceStates[id])
+                foundAny=true
+                
+            }
+        }
+        return foundAny
+    }
+
+    function cardDevices(cardname) {
+        var found=[]
+        //console.log('registered', registeredDevices)
+        for (var id in registeredDevices) { 
+            //console.log('checking', registeredDevices[id].includes(cardname), id, registeredDevices[id])
+            if (registeredDevices[id].includes(cardname)) {
+                found.push(id)
+            }
+        }
+        return found
+    }
+
 
     function isReachable(dev) {
-        
+        if (typeof(dev)=='string') {
+            dev=deviceStates[dev]
+        }      
         if (dev.EndpointHealth.connectivity.value.value==='OK') {
             return true
         }
         return false
     }
     
-    function lightCount(condition) {
-        var count=0;
-        var lights=deviceStatesByCategory('LIGHT')
 
+    
+    function lightCount(condition, source) {
+        var count=0;
+        //var lights=deviceStatesByCategory('LIGHT', source)
+        var lights=getEndpointIdsByCategory('LIGHT', source)
+        
         for (var id in lights) {
             try {
+                var light=deviceStates[id]
                 if (condition.toLowerCase()==='all') {
                     count=count+1
                 } else if (condition.toLowerCase()==='off') {
-                    if (lights[id].PowerController.powerState.value==='OFF' || !isReachable(lights[id])) {
+                    if (light.PowerController.powerState.value==='OFF' || !isReachable(light)) {
                         count=count+1
                     }
                 } else if (condition.toLowerCase()==='on') {
-                    if (lights[id].PowerController.powerState.value==='ON' && isReachable(lights[id])) {
+                    if (light.PowerController.powerState.value==='ON' && isReachable(light)) {
                         count=count+1
                     }
                 }
@@ -201,21 +239,23 @@ export default function DataProvider(props) {
     }
 
 
-    function getStateForDevice(device) {
+    function getStateForDevice(device, registerSource) {
         
         var dev=undefined
         if (device===undefined) { return undefined }
+        if (deviceStates===null) { return undefined }
         if (deviceStates.hasOwnProperty(device.endpointId)) {
             dev={...device, ...deviceStates[device.endpointId]}
-        } 
+        }
+
         return dev
     }
 
 
-    function deviceStateByFriendlyName(subname) {
-
+    function deviceStateByFriendlyName(subname, registerSource) {
+        
         var categoryDevice=deviceByFriendlyName(subname)
-        return getStateForDevice(categoryDevice)
+        return getStateForDevice(categoryDevice, registerSource)
     }
 
 
@@ -247,12 +287,11 @@ export default function DataProvider(props) {
         return devlist
     }
 
-
-    function deviceStateByEndpointId(endpointId) {
+    function deviceStateByEndpointId(endpointId, registerSource) {
 
         var dev=deviceByEndpointId(endpointId)
         if (dev!==undefined) {
-            return getStateForDevice(dev)
+            return getStateForDevice(dev, registerSource)
         }
         //console.log('Did not find device with endpointId', endpointId, Object.keys(deviceStates))
         return undefined
@@ -279,6 +318,7 @@ export default function DataProvider(props) {
     return (
         <DataContext.Provider
             value={{
+                devices: devices,
                 deviceStates: deviceStates,
                 virtualDevices: virtualDevices,
 
@@ -305,6 +345,12 @@ export default function DataProvider(props) {
                 
                 getSceneDetails: getSceneDetails,
                 saveSceneDetails: saveSceneDetails,
+                unregisterDevices: unregisterDevices,
+                getEndpointIdsByCategory: getEndpointIdsByCategory,
+                getEndpointIdsByFriendlyName: getEndpointIdsByFriendlyName,
+                registerEndpointIds: registerEndpointIds,
+                cardReady:cardReady,
+                cardDevices: cardDevices,
             }}
         >
             {props.children}

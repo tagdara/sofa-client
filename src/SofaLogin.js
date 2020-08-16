@@ -30,8 +30,8 @@ const useStyles = makeStyles({
 
 export default function SofaLogin(props) {
     
-    const { login, getCookie } = useContext(NetworkContext);
-    const [user, setUser] = useState(getCookie("user"))
+    const { login, getStorage } = useContext(NetworkContext);
+    const [user, setUser] = useState(getStorage('user'))
     const [password, setPassword] = useState('')
     const [errorMessage, setErrorMessage] = useState('')
     const classes = useStyles();
@@ -64,7 +64,7 @@ export default function SofaLogin(props) {
                     </ListItem>
                     <ListItem>
                         <TextField fullWidth variant="outlined" onChange={(e) => setUser(e.target.value) } 
-                            value={user} id="user" label="User" type="mail"  />
+                            value={user? user : ""} id="user" label="User" type="mail"  />
                     </ListItem>
                     <ListItem>
                         <TextField fullWidth variant="outlined" onChange={(e) => setPassword(e.target.value)} onKeyDown={ (e) => keyPress(e.keyCode) } 

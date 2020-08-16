@@ -60,12 +60,13 @@ export default function ButtonItem(props) {
     const classes = useStyles();
 
     var ButtonObject =  (
-        <ListItem button className={classnames(classes.item, props.highlight && classes.highlight, props.noMargin && classes.noMargin, props.noPad && classes.noPad)} onClick={ () => props.action()}>
+        <ListItem   button className={classnames(classes.item, props.highlight && classes.highlight, props.noMargin && classes.noMargin, props.noPad && classes.noPad)} 
+                    onClick={ () =>  !props.labelClick && props.action()}>
             <div className={classes.sceneButton}>
                 <ToggleAvatar noback={props.noback===undefined ? true : props.noback} avatarState={props.avatarState ? props.avatarState : 'off'} small={props.small} >
                     { props.avatarIcon }
                 </ToggleAvatar>
-                <ListItemText className={props.small ? classes.padLabel : classes.label } primary={props.label} secondary={props.labelSecondary} />
+                <ListItemText onClick={ () => props.labelClick && props.action() } className={props.small ? classes.padLabel : classes.label } primary={props.label} secondary={props.labelSecondary} />
                 { props.secondary }
             </div>
         </ListItem>

@@ -6,7 +6,7 @@ import PlayerCard from './player/PlayerCard';
 import PlayerMini from './player/PlayerMini';
 import NoPlayer from './player/NoPlayer';
 
-function bestPlayerId(speakers, defaultPlayer, userPlayer) {
+function bestPlayer(speakers, defaultPlayer, userPlayer) {
 
     var defaultexists=false
     
@@ -49,18 +49,27 @@ function bestPlayerId(speakers, defaultPlayer, userPlayer) {
 export default function PlayerHero(props) {
     
     const { userPlayer } = useContext(UserContext);
-    const { defaultPlayer, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
-    const speakers = deviceStatesByCategory('SPEAKER')
+    const { cardReady, defaultPlayer, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
+    //const speakers = deviceStatesByCategory('SPEAKER')
     const [mini, setMini] = useState(props.mini);
-    const [playerId, setPlayerId] = useState('')
-    const player=deviceStateByEndpointId(playerId)
+    const [player, setPlayer] = useState('')
+    const [speakers, setSpeakers]=useState(undefined)
+    
+    useEffect(() => {
+        setSpeakers(getEndpointIdsByCategory('SPEAKER','PlayerHero'))
+        return function cleanup() {
+            unregisterDevices('PlayerHero');
+        };
+    // eslint-disable-next-line 
+    }, [])
 
     useEffect(()=> {
-        setPlayerId(bestPlayerId(speakers, defaultPlayer, userPlayer))
+        var best=bestPlayer(speakers, defaultPlayer, userPlayer)
+        setPlayer(best)
     }, [speakers, defaultPlayer, userPlayer] )
     
     return ( 
-        (playerId && player) ?
+        cardReady('PlayerHero') && player ?
         <>
             { mini ?
                 <PlayerMini wide={props.wide} small={true} player={player} setMini={setMini} />

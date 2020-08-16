@@ -3,6 +3,16 @@ import { NetworkContext } from '../NetworkProvider';
 import PlaceholderCard from '../PlaceholderCard';
 import ErrorBoundary from '../ErrorBoundary';
 
+function getFromLocalStorage() {
+    
+    try { 
+        return JSON.parse(localStorage.getItem('layout'))
+    }
+    catch {}
+    return {}
+    
+}
+
 export const moduleReducer = (state, data) => {
 
     function addSuspenseModule(modulepath) {
@@ -52,10 +62,24 @@ export const LayoutProvider = (props) => {
     const [modules, moduleDispatch] = useReducer(moduleReducer, []);
 
     useEffect(() => {
+        
+        function updateLayout(result) {
+            setLayouts(result)
+            if (!getFromLocalStorage()) {
+                var newLayout={"name":"Home", "props":{}, "data":result["Home"] }
+                setLayout(newLayout)
+            }
+        }
+        
         if (loggedIn) {
           	getJSON('layout')
-                .then(result=> setLayouts(result) );
-            setLayout(getLayoutCookie())
+                .then(result=> updateLayout(result) );
+            if (getFromLocalStorage()) {
+                setLayout(getFromLocalStorage())
+            } else {
+                console.log('no layout in local')
+            }
+                
         }
         // eslint-disable-next-line 
     }, [ loggedIn ])
@@ -69,7 +93,7 @@ export const LayoutProvider = (props) => {
                 return
             }
             if (isMobile) {
-                if (layout.name==="Home" && layouts['Home'].hasOwnProperty('mobile') && layout.page===(layouts['Home'].mobile)) {
+                if (layout && layout.name==="Home" && layouts['Home'].hasOwnProperty('mobile') && layout.page===(layouts['Home'].mobile)) {
                     setMasterButtonState('System')
                 } else {
                     setMasterButtonState('Home')
@@ -78,7 +102,7 @@ export const LayoutProvider = (props) => {
             }
             var newLayout={"name":"Home", "props":{}, "data":layouts["Home"] }
             setLayout(newLayout )
-            writeLayoutCookie(newLayout)
+            saveLocalLayout(newLayout)
             return
         }
         return
@@ -146,7 +170,7 @@ export const LayoutProvider = (props) => {
         }
         
         setLayout(newLayout)
-        writeLayoutCookie(newLayout)
+        saveLocalLayout(newLayout)
 //        if (isMobile) {
 //            if (layouts['Home'].hasOwnProperty('mobile')) {
 //                applyLayoutCard(layouts['Home']['mobile'],{},layouts['Home']) 
@@ -163,14 +187,14 @@ export const LayoutProvider = (props) => {
         }
         var newLayout={"name":name, "props":newProps, "data":layouts[name], "page":layout.page}
         setLayout(newLayout)
-        writeLayoutCookie(newLayout)
+        saveLocalLayout(newLayout)
     }
 
     function applyLayoutCard(name, newProps={}, data={ type: "single" }) {
         setMasterButtonState('Home')
         var newLayout={"name":name, "props":newProps, "data":data, "page":layout.page}
         setLayout(newLayout)
-        writeLayoutCookie(newLayout)
+        saveLocalLayout(newLayout)
     }
     
     function applyReturnPage(returnName, returnProps={}) {
@@ -189,49 +213,20 @@ export const LayoutProvider = (props) => {
     function applyLayoutPage(newPage) {
         var newLayout={"name":layout.name, "props":layout.props, "data":layout.data, "page":newPage}    
         setLayout(newLayout)
-        writeLayoutCookie(newLayout)
+        saveLocalLayout(newLayout)
     }
 
     function applyHomePage(newPage) {
-        console.log('layouts',layouts)
         setMasterButtonState('Home')
         var newLayout={"name":"Home", "props":layout.props, "data":layouts['Home'], "page":newPage}
         setLayout(newLayout)
-        writeLayoutCookie(newLayout)
+        saveLocalLayout(newLayout)
     }
     
-    function getLayoutCookie() {
-        var cookieLayout={"name":"Home", "props":{}, "data":{}, "page":""}
-        var name = "layout=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for(var i = 0; i <ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) === ' ') {
-              c = c.substring(1);
-            }
-            if (c.indexOf(name) === 0) {
-                cookieLayout=JSON.parse(c.substring(name.length, c.length));
-            }
-        }
-        
-        if (isMobile) {
-            if (cookieLayout.data.hasOwnProperty('mobile') && !cookieLayout.hasOwnProperty('page')) {
-                cookieLayout.page=cookieLayout.data.mobile
-            }
-        }
-        return cookieLayout
-    }    
+    function saveLocalLayout(data) {
+        localStorage.setItem('layout', JSON.stringify(data));
+    }
     
-    function writeLayoutCookie (value) {
-        var date = new Date();
-        // Default at 365 days.
-        var days = 1;
-        // Get unix milliseconds at current time plus number of days
-        date.setTime(+ date + (days * 86400000)); //24 * 60 * 60 * 1000
-        window.document.cookie = "layout=" + JSON.stringify(value) + "; expires=" + date.toGMTString() + "; path=/";
-        return value;
-    };
 
     function renderSuspenseModule( modulename, moduleprops ) {
         

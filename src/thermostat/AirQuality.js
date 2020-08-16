@@ -20,10 +20,10 @@ export default function AirQuality(props) {
         
         <GridItem wide={props.wide} >
             <ListItem onClick={showThermostats}>
-                <ToggleAvatar avatarState={ props.device['Air Quality'].mode.value }>
+                <ToggleAvatar avatarState={ props.deviceState['Air Quality'].mode.value }>
                     <EqualizerIcon />
                 </ToggleAvatar>
-                <ListItemText primary={'Air Quality: '+props.device['Air Quality'].mode.value} />
+                <ListItemText primary={'Air Quality: '+props.deviceState['Air Quality'].mode.value} />
            </ListItem>
         </GridItem>
     );

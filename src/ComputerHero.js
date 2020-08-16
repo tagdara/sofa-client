@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import { LayoutContext } from './layout/NewLayoutProvider';
@@ -49,25 +49,32 @@ export default function ComputerHero(props) {
     
     const classes = useStyles();
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { directive, deviceStatesByFriendlyName, deviceStatesByCategory } = useContext(DataContext);
-    const switches = devsWithPowerState(deviceStatesByCategory('SWITCH'))
-    const matrixDevices=deviceStatesByFriendlyName(['Living Room TV', 'Office 1', 'Office 2', 'Office 3', 'Office 4', 'Downstairs 1', 'Downstairs 2', 'Rack'], false)
+    const { cardReady,unregisterDevices, getEndpointIdsByFriendlyName, getEndpointIdsByCategory, devices, deviceStates, directive } = useContext(DataContext);
+    //const switches = devsWithPowerState(deviceStatesByCategory('SMARTPLUG'))
+    const [switches, setSwitches]=useState([])
+    const matrixDeviceNames=['Living Room TV', 'Office 1', 'Office 2', 'Office 3', 'Office 4', 'Downstairs 1', 'Downstairs 2', 'Rack']
+    const [matrixDevices, setMatrixDevices]=useState([])
+    //const matrixDevices=deviceStatesByFriendlyName(['Living Room TV', 'Office 1', 'Office 2', 'Office 3', 'Office 4', 'Downstairs 1', 'Downstairs 2', 'Rack'], false)
     const matrixDefaults={ 'Office 1':'PC1', 'Office 2':'PC2', 'Office 3':'PC3', 'Office 4':'PC4', 'Downstairs 1':'PC1', 'Downstairs 2':'PC2' }
 
-    function devsWithPowerState(devs) {
-        var outdevs=[]
-        for (var j = 0; j < devs.length; j++) {
-            if (devs[j].hasOwnProperty('PowerController')) {
-                outdevs.push(devs[j])
-            }
-        }
-        return outdevs
-    }
+    useEffect(() => {
+
+        var switchesEndpointIds=getEndpointIdsByCategory('SMARTPLUG', 'ComputerHero')
+        var matrixEndpointIds=getEndpointIdsByFriendlyName(matrixDeviceNames, false, 'ComputerHero')
+        setSwitches(switchesEndpointIds)
+        setMatrixDevices(matrixEndpointIds)
+        return function cleanup() {
+            unregisterDevices('ComputerHero');
+        };
+    // eslint-disable-next-line     
+    }, [])
+
+
 
     function onCount() {
         var ondevs=0
         for (var i = 0; i < switches.length; i++) {
-            if (switches[i].PowerController.powerState.value==='ON') {
+            if (deviceStates[switches[i]] && deviceStates[switches[i]].PowerController.powerState.value==='ON') {
                 ondevs+=1
             }
         }
@@ -76,12 +83,12 @@ export default function ComputerHero(props) {
 
     function toggleInput(devicename) {
         for (var i = 0; i < matrixDevices.length; i++) {
-            if (matrixDevices[i].friendlyName===devicename) {
-                if (matrixDevices[i].InputController.input.value===matrixDefaults[devicename]) {
-                    directive(matrixDevices[i].endpointId, "InputController", 'SelectInput', { "input": 'Blank' } )
+            if (devices[matrixDevices[i]].friendlyName===devicename) {
+                if (deviceStates[matrixDevices[i]] && deviceStates[matrixDevices[i]].InputController.input.value===matrixDefaults[devicename]) {
+                    directive(matrixDevices[i], "InputController", 'SelectInput', { "input": 'Blank' } )
                     return true
                 } else {
-                    directive(matrixDevices[i].endpointId, "InputController", 'SelectInput', { "input": matrixDefaults[devicename] } )
+                    directive(matrixDevices[i], "InputController", 'SelectInput', { "input": matrixDefaults[devicename] } )
                     return true
                 }
             }
@@ -90,8 +97,8 @@ export default function ComputerHero(props) {
     
     function isDefault(devicename) {
         for (var i = 0; i < matrixDevices.length; i++) {
-            if (matrixDevices[i].friendlyName===devicename) {
-                if (matrixDevices[i].InputController.input.value===matrixDefaults[devicename]) {
+            if (devices[matrixDevices[i]].friendlyName===devicename) {
+                if (deviceStates[matrixDevices[i]] && deviceStates[matrixDevices[i]].InputController.input.value===matrixDefaults[devicename]) {
                     return true
                 }
             }
@@ -102,6 +109,7 @@ export default function ComputerHero(props) {
     
 
     return (
+        cardReady('ComputerHero') ?
         <GridItem wide={props.wide} noPad={true} nolist={true} >
             <ListItem>
                 <ToggleAvatar onClick={ () => applyLayoutCard('ComputerLayout') } noback={true} avatarState={ onCount() ? 'on' : 'off'}><DevicesOtherIcon /></ToggleAvatar>
@@ -120,5 +128,6 @@ export default function ComputerHero(props) {
                 </ButtonGroup>
             </ListItem>
         </GridItem>
+        : null
     );
 }

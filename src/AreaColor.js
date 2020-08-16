@@ -61,9 +61,10 @@ export default function AreaColor(props) {
     
     function currentAverage() {
         // TODO/CHEESE - actuall compute average instead of this
-        for (var i = 0; i < props.colorLights.length; i++) {
-            var col=props.colorLights[i].ColorController.color.value
-            if (props.colorLights[i].PowerController.powerState.value==='OFF') {
+        for (var light in  props.colorLights) {
+        //for (var i = 0; i < props.colorLights.length; i++) {
+            var col=props.colorLights[light].ColorController.color.value
+            if (props.colorLights[light].PowerController.powerState.value==='OFF') {
                 col['brightness']=0.5
             }
             return col
@@ -84,9 +85,10 @@ export default function AreaColor(props) {
     function handleColorSliderChange(color, event) {
         setColor(color.hsl);
         var hsb=sl2sb(color.hsl)
-        for (var i = 0; i < props.colorLights.length; i++) {
-            hsb.brightness=props.colorLights[i].BrightnessController.brightness.value/100
-            props.directive(props.colorLights[i].endpointId, 'ColorController', 'SetColor', { "color" : hsb }, {})
+        for (var light in  props.colorLights) {
+        //for (var i = 0; i < Object.keys(props.colorLights).length; i++) {
+            hsb.brightness=props.colorLights[light].BrightnessController.brightness.value/100
+            props.directive(light, 'ColorController', 'SetColor', { "color" : hsb }, {})
         }
     }
 

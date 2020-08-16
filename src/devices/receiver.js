@@ -68,17 +68,18 @@ const useStyles = makeStyles(theme => {
 export default function Receiver(props) {
     
     const classes = useStyles();
-    const { deviceByEndpointId, getModes, directive, getInputs} = useContext(DeviceContext);
+    const { devices, getModes, directive, getInputs} = useContext(DeviceContext);
     const [showDetail, setShowDetail] = useState(false);
-    const device=deviceByEndpointId(props.device.endpointId)
-    const inputs=getInputs(device)
+    //const device=deviceByEndpointId(props.device.endpointId)
+    //const inputs=getInputs(device)
+    //const [inputs, setInputs]=useState()
     
     function handleVolumeChange(event) {
         directive(props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        directive(props.device.endpointId, 'SpeakerController', 'SetVolume', { "mute" : !props.device.SpeakerController.mute.value } )
+        directive(props.device.endpointId, 'SpeakerController', 'SetVolume', { "mute" : !props.deviceState.SpeakerController.mute.value } )
     }; 
     
     function handlePowerChange(event) {
@@ -91,41 +92,43 @@ export default function Receiver(props) {
 
     
     function surroundName() {
-        var surroundmodes=getModes(props.device).Surround
-        if (surroundmodes.hasOwnProperty(props.device.Surround.mode.value)) {
-            return surroundmodes[props.device.Surround.mode.value]
+        var surroundmodes=getModes(props.endpointId).Surround
+        if (surroundmodes.hasOwnProperty(props.deviceState.Surround.mode.value)) {
+            return surroundmodes[props.deviceState.Surround.mode.value]
         }
         return ""
     }
     
     function handleInputLockModeChoice(event,modechoice) {
-        directive(props.device.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Receiver.InputLock')
+        directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Receiver.InputLock')
     }; 
     
     function subText() {
-        if (showDetail || props.device.PowerController.powerState.value==='OFF') {
+        if (showDetail || props.deviceState.PowerController.powerState.value==='OFF') {
             return null
         }
-        if (props.device.PowerController.powerState.value!=='OFF') {
-            return props.device.InputController.input.value + " / "+ surroundName()
+        if (props.deviceState.PowerController.powerState.value!=='OFF') {
+            return props.deviceState.InputController.input.value + " / "+ surroundName()
         }
-        return props.device.SpeakerController.volume.value+"% / "+props.device.InputController.input.value + " / "+ surroundName()
+        return props.deviceState.SpeakerController.volume.value+"% / "+props.deviceState.InputController.input.value + " / "+ surroundName()
     }
 
     return (
+        props.deviceState ?
         <GridItem wide={props.wide} nopad={true} >
+            {props.deviceState &&
             <List className={classes.list} >
                 <ListItem className={ classes.cardline } >
                     <ListItemIcon onClick={ () => setShowDetail(!showDetail) } ><SpeakerGroupIcon /></ListItemIcon>
-                    <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={subText()} className={subText() ? classes.normal : classes.minLI} />
-                    <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
+                    <ListItemText onClick={ () => setShowDetail(!showDetail) } primary={devices[props.endpointId].friendlyName} secondary={subText()} className={subText() ? classes.normal : classes.minLI} />
+                    <Switch color="primary" checked={props.deviceState.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItem>
-                { (showDetail || props.device.PowerController.powerState.value==='ON' ) &&
+                { (showDetail || props.deviceState.PowerController.powerState.value==='ON' ) &&
                         <DotAvatar   label={"Volume"} levelValues={[0,30,55,65,70,80]}
                                             small={true} reverse={true} minWidth={64} 
-                                            value={props.device.SpeakerController.volume.value}
+                                            value={props.deviceState.SpeakerController.volume.value}
                                             select={handleVolumeChange} 
-                                            disabled={ props.device.PowerController.powerState.value==='OFF' }
+                                            disabled={ props.deviceState.PowerController.powerState.value==='OFF' }
                         />
                 }
 
@@ -133,32 +136,35 @@ export default function Receiver(props) {
                     <>
                         <SofaAvatarSlider   label={"Volume"} 
                                             small={true} reverse={true} minWidth={64} 
-                                            value={props.device.SpeakerController.volume.value}
+                                            value={props.deviceState.SpeakerController.volume.value}
                                             change={handleVolumeChange} 
-                                            avatarClick={ () => handleMuteChange(!props.device.SpeakerController.mute.value)} 
-                                            avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }
-                                            disabled={ props.device.PowerController.powerState.value==='OFF' }
+                                            avatarClick={ () => handleMuteChange(!props.deviceState.SpeakerController.mute.value)} 
+                                            avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? "on" : "off" }
+                                            disabled={ props.deviceState.PowerController.powerState.value==='OFF' }
                         />
                         <ListItem>
                             <ListItemText primary={"Input"} />
-                            { props.device.InputLock &&
+                            { props.deviceState.InputLock &&
                                 <ToggleIconButton
-                                    buttonState={ props.device.InputLock.mode.value==='InputLock.Locked' ? "on" : "off" } disabled={props.device.PowerController.powerState.value!=='ON'}
+                                    buttonState={ props.deviceState.InputLock.mode.value==='InputLock.Locked' ? "on" : "off" } disabled={props.deviceState.PowerController.powerState.value!=='ON'}
                                     onIcon={ <LockIcon fontSize={"small"} /> } offIcon={ <LockOpenIcon fontSize={"small"} /> }
-                                    onClick={ (e) => handleInputLockModeChoice(e, (props.device.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
+                                    onClick={ (e) => handleInputLockModeChoice(e, (props.deviceState.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
                                 />
                             }
-                            <Select disabled={props.device.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty value={props.device.InputController.input.value ? props.device.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
-                                { inputs.map(inp =>
+                            <Select disabled={props.deviceState.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty value={props.deviceState.InputController.input.value ? props.deviceState.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
+                                { getInputs(props.endpointId).map(inp =>
                                     <MenuItem key={inp} value={inp}>{inp}</MenuItem>
                                 )}
                             </Select>
                         </ListItem>
-                        <ModeLines directive={directive} disabled={props.device.PowerController.powerState.value!=='ON'} device={props.device} exclude={["InputLock"]} />
+                        <ModeLines directive={directive} disabled={props.deviceState.PowerController.powerState.value!=='ON'} device={props.device} deviceState={props.deviceState} exclude={["InputLock"]} />
                     </>
                 }
             </List>
+            }
         </GridItem>
+        :
+        null
     );
 }
 

@@ -38,7 +38,8 @@ export default function SystemButtons(props) {
     }
 
     function reloadPWA() {
-        
+        localStorage.removeItem('deviceStates');
+        localStorage.removeItem('devices')
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.ready.then(registration => {
                 registration.unregister();

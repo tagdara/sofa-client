@@ -28,7 +28,7 @@ export default function Device(props) {
     }; 
 
     function nestLine(item) {
-        if (props.device.PowerController.powerState) {
+        if (props.deviceState.PowerController.powerState) {
             if (props.nested) { return item }
             return <GridItem>{item}</GridItem>
         }
@@ -36,25 +36,27 @@ export default function Device(props) {
     }
     
     function energy() {
-        if (props.device.hasOwnProperty('EnergySensor')) {
-            return props.device.EnergySensor.power.value+"W"
+        if (props.deviceState.hasOwnProperty('EnergySensor')) {
+            return props.deviceState.EnergySensor.power.value+"W"
         }
         return null
     }
 
     return ( 
-        props.device.PowerController &&
+        props.deviceState ?
         <React.Fragment>
             { nestLine(
             <ListItem className={classes.item} >
-                <ToggleAvatar noback={true} avatarState={ props.device.PowerController.powerState.value==='ON' ? 'on' : 'off'}>{ props.icon ? props.icon : <TuneIcon />}</ToggleAvatar>
+                <ToggleAvatar noback={true} avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? 'on' : 'off'}>{ props.icon ? props.icon : <TuneIcon />}</ToggleAvatar>
                 <ListItemText primary={props.device.friendlyName} secondary={ energy()} />
                 <ListItemSecondaryAction>
-                    <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
+                    <Switch color="primary" checked={props.deviceState.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
                 </ListItemSecondaryAction>
            </ListItem> )
             }
         </React.Fragment>
+        :
+        null
     );
 }
 

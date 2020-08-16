@@ -9,8 +9,8 @@ import Grid from '@material-ui/core/Grid';
 const useStyles = makeStyles({
         
     flex: {
+        padding: "0px 4px",
         display: "flex",
-        height: 72,
         alignItems: "center",
     },
  

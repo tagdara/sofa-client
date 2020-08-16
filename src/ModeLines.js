@@ -33,12 +33,14 @@ export default function ModeLines(props) {
     function handleModeChoice(event, mode, modechoice) {
         props.directive(props.device.endpointId, mode, 'SetMode', { "mode": modechoice })
     }; 
-
+    
     return (
         Object.keys(modes).map(mode => 
             <ListItem key={mode}>
                 <ListItemText primary={mode} key={mode} />
-                <Select disabled={props.disabled} className={classes.select} displayEmpty value={props.device[mode].mode.value ? props.device[mode].mode.value : ""} onChange={ (e) => handleModeChoice(e, mode, e.target.value)} >
+                <Select disabled={props.disabled} className={classes.select} displayEmpty 
+                        value={props.deviceState[mode].mode.value ? props.deviceState[mode].mode.value : ""} 
+                        onChange={ (e) => handleModeChoice(e, mode, e.target.value)} >
                     { Object.keys(modes[mode]).map(modechoice => 
                         <MenuItem key = { modes[mode][modechoice] } value={modechoice}>{modes[mode][modechoice]}</MenuItem>
                     )}

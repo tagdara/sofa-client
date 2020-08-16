@@ -28,7 +28,7 @@ export default function LightSliderTemperature(props) {
             <ListItemIcon className={classes.indent}><AcUnitIcon /></ListItemIcon>
             <SofaSlider
                 name="Temperature" smallText={true} unit={"°"}
-                value={props.device.ColorTemperatureController.colorTemperatureInKelvin.value}
+                value={props.deviceState.ColorTemperatureController.colorTemperatureInKelvin.value}
                 min={2000} max={7000} step={100}
                 change={handleColorTemperatureChange}
                 disabled={!props.powerState}

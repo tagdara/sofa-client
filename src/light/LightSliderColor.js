@@ -66,8 +66,8 @@ export default function LightSliderColor(props) {
     const [openDialog, setOpenDialog] = useState(false);
     
     useEffect(() => {
-        setColor(sb2sl(props.device.ColorController.color.value))
-    }, [props.device.ColorController.color.value]);
+        setColor(sb2sl(props.deviceState.ColorController.color.value))
+    }, [props.deviceState.ColorController.color.value]);
 
     function gethsl(sl) {
         if (sl) {
@@ -89,7 +89,7 @@ export default function LightSliderColor(props) {
 
     function handleColorChange(hsb) {
         setColor(sb2sl(hsb));
-        hsb.brightness=props.device.BrightnessController.brightness.value/100
+        hsb.brightness=props.deviceState.BrightnessController.brightness.value/100
         props.directive(props.device.endpointId, "ColorController", "SetColor", { "color": hsb })
     }
     

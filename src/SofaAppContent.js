@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => {
             justifyContent: "center",
         },
         mobileControlArea: {
-            minHeight: "100%",
+            //minHeight: "100%",
             margin: "8px auto",
             maxWidth: 600,
             width: "100%",
@@ -100,16 +100,16 @@ export default function SofaAppContent(props) {
         <>
             <div className={classes.scrollHolder}>
             <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
-                <ErrorBoundary wide={props.wide}>
-                { chooseDisplayPages() }
-                </ErrorBoundary>
                 { !streamConnected && 
-                    <Grid container spacing={2} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
+                    <Grid container spacing={2} >
                         <ListItem>
                             <ListItemText primary="Network not ready" secondary={"Server Side Event Stream not connected:" +streamConnected+" " +streamStatus } />
                         </ListItem>
                     </Grid>
                 }
+                <ErrorBoundary wide={props.wide}>
+                { chooseDisplayPages() }
+                </ErrorBoundary>
             </Grid>
             </div>
             { isMobile && <BottomBar section={barSelection} chooseSection={setBarSelection} /> }

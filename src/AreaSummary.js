@@ -7,7 +7,7 @@ import AreaSummaryLine from './AreaSummaryLine';
 
 export default function AreaSummary(props) {
 
-    const { deviceStateByEndpointId, directive } = useContext(DataContext);
+    const { devices, deviceStates, directive } = useContext(DataContext);
     const [showDetail, setShowDetail] = useState(props.showDetail);
     //const area = deviceStateByEndpointId('logic:area:'+layout.props.name)
 
@@ -15,16 +15,15 @@ export default function AreaSummary(props) {
 
         var ads=[]
         try {
-            var children=props.area.AreaController.children.value
+            var children=props.deviceState.AreaController.children.value
             for (var i = 0; i < children.length; i++) {
-                var dev=deviceStateByEndpointId(children[i])
-                if (!filter || filter==='ALL' || (dev && dev.displayCategories.includes(filter))) {
-                    ads.push(dev)
+                if (!filter || filter==='ALL' || (devices[children[i]] && devices[children[i]].displayCategories.includes(filter))) {
+                    ads.push(children[i])
                 }
             }
             return ads    
         } catch (e) {
-            //console.log('Error getting children by area', e)
+            console.log('Error getting children by area', e)
         } finally {
             return ads
         }
@@ -39,6 +38,7 @@ export default function AreaSummary(props) {
     }
 
     function filterByTypeState(deviceType, filter="") {
+
         var lights=[]
         var all=childrenByArea(deviceType)
         if (filter.toUpperCase()==="ALL") { 
@@ -68,7 +68,7 @@ export default function AreaSummary(props) {
             var shortcutlist=[...props.area.AreaController.shortcuts.value].reverse()
             if (!skip) { 
                 for (var j = 0; j < shortcutlist.length; j++) {
-                    outscenes.push(deviceStateByEndpointId(shortcutlist[j]))
+                    outscenes.push( deviceStates[shortcutlist[j]] )
                 }
             }
     
@@ -92,12 +92,12 @@ export default function AreaSummary(props) {
     var AreaObject = (    
         <>
             { props.summaryLine &&
-                <AreaSummaryLine area={props.area} clickName={props.clickName ? props.clickName : toggleShowDetail} />
+                <AreaSummaryLine device={devices[props.area]} deviceState={ deviceStates[props.area] } area={props.area} clickName={props.clickName ? props.clickName : toggleShowDetail} />
             }
             { showDetail && 
             <>
                     { filterByTypeState('LIGHT').map(device =>
-                        <Light key={ device.endpointId } device={ device } directive={directive} noGrid={true} small={true}  />
+                        <Light key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={directive} noGrid={true} small={true}  />
                     )}
                     { sortByShortcuts(true).map(scene => 
                         <Scene  scene={scene} key={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} noGrid={true} noMargin={false} highlight={true}

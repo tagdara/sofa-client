@@ -51,7 +51,7 @@ export function Television(props) {
     const { deviceByEndpointId, directive, getInputs} = useContext(DeviceContext);
     const device=deviceByEndpointId(props.device.endpointId)
     const inputs=getInputs(device)  
-
+    
     function handleVolumeChange(event) {
         directive(props.device.endpointId,"SpeakerController", 'SetVolume', { "volume" : event} )
     }; 
@@ -73,9 +73,9 @@ export function Television(props) {
     }
     
     function localVolumeCheck() {
-        if ( props.device.hasOwnProperty('SpeakerController') ) {
-            if ( props.device.hasOwnProperty('Audio') ) {
-                if (props.device.Audio.mode.value==="Audio.audioSystem") {
+        if ( props.deviceState.hasOwnProperty('SpeakerController') ) {
+            if ( props.deviceState.hasOwnProperty('Audio') ) {
+                if (props.deviceState.Audio.mode.value==="Audio.speaker") {
                     return true
                 } else {
                     return false
@@ -90,18 +90,19 @@ export function Television(props) {
     }
     
     function subText() {
-        if (showDetail || props.device.PowerController.powerState.value==='OFF') {
+        if (showDetail || props.deviceState.PowerController.powerState.value==='OFF') {
             return null
         }
-        if (props.device.PowerController.powerState.value!=='OFF') {
+        if (props.deviceState.PowerController.powerState.value!=='OFF') {
             if (localVolumeCheck()) {
-                return props.device.SpeakerController.volume.value+"% / "+props.device.InputController.input.value
+                return props.deviceState.SpeakerController.volume.value+"% / "+props.deviceState.InputController.input.value
             }
         }
-        return props.device.InputController.input.value
+        return props.deviceState.InputController.input.value
     }
      
     return (
+        props.deviceState ? 
         <GridItem wide={props.wide} nopad={true} >
             <ListItem className={classes.listItem}>
                 <ListItemIcon onClick={ () => setShowDetail(!showDetail) } ><TvIcon /></ListItemIcon>
@@ -109,29 +110,29 @@ export function Television(props) {
                 <ListItemText className={subText() ? classes.normal : classes.minLI}  onClick={ () => setShowDetail(!showDetail) } primary={props.device.friendlyName} secondary={subText()}/>
             </ErrorBoundary>
                 <ListItemSecondaryAction>
-                    { props.device.PowerController.powerState.value!=='ON' ? null :
+                    { props.deviceState.PowerController.powerState.value!=='ON' ? null :
                     <IconButton onClick={ () => toggleRemote() } >
                         <ControlCameraIcon />
                     </IconButton>
                     }
 
-                    <Switch color="primary" checked={props.device.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
+                    <Switch color="primary" checked={props.deviceState.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
                 </ListItemSecondaryAction>
             </ListItem>
-        { localVolumeCheck() && ( props.device.PowerController.powerState.value==='ON' || showDetail ) &&
+        { localVolumeCheck() && ( props.deviceState.PowerController.powerState.value==='ON' || showDetail ) &&
             <SofaAvatarSlider   label={"Volume"} 
                                 small={true} reverse={true} minWidth={64} 
-                                value={props.device.SpeakerController.volume.value}
+                                value={props.deviceState.SpeakerController.volume.value}
                                 change={handleVolumeChange} 
-                                avatarClick={ () => handleMuteChange(!props.device.SpeakerController.mute.value)} 
-                                avatarState={ props.device.PowerController.powerState.value==='ON' ? "on" : "off" }
-                                disabled={ props.device.PowerController.powerState.value==='OFF' }
+                                avatarClick={ () => handleMuteChange(!props.deviceState.SpeakerController.mute.value)} 
+                                avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? "on" : "off" }
+                                disabled={ props.deviceState.PowerController.powerState.value==='OFF' }
             />
         }
         { showDetail &&
             <ListItem className={classes.bottomListItem}>
                 <ListItemText primary={"Input"} />
-                <Select disabled={props.device.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty value={props.device.InputController.input.value ? props.device.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
+                <Select disabled={props.deviceState.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty value={props.deviceState.InputController.input.value ? props.deviceState.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
                     { inputs.map(inp =>
                         <MenuItem key={inp} value={inp}>{inp}</MenuItem>
                     )}
@@ -139,7 +140,7 @@ export function Television(props) {
             </ListItem>
         }
         { showDetail &&
-            <ModeLines disabled={props.device.PowerController.powerState.value!=='ON'} device={props.device} directive={directive} />
+            <ModeLines disabled={props.deviceState.PowerController.powerState.value!=='ON'} device={props.device} deviceState={props.deviceState} directive={directive} />
         }
         { showRemote &&
             <ListItem className={classes.remoteListItem}>
@@ -147,6 +148,8 @@ export function Television(props) {
             </ListItem>
         }
         </GridItem>
+        : 
+        null
     )
 }
 

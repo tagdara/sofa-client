@@ -27,8 +27,8 @@ export default function TemperatureSensor(props) {
         <GridItem wide={props.wide} >
             <ListItem onClick={props.onClick}>
                 <ToggleAvatar onClick={ () => switchToHistory()} 
-                    avatarState={ tempColor(props.device.TemperatureSensor.temperature.deepvalue) }>
-                    {props.device.TemperatureSensor.temperature.value ? props.device.TemperatureSensor.temperature.deepvalue : '--'}
+                    avatarState={ tempColor(props.deviceState.TemperatureSensor.temperature.deepvalue) }>
+                    {props.deviceState.TemperatureSensor.temperature.value ? props.deviceState.TemperatureSensor.temperature.deepvalue : '--'}
                 </ToggleAvatar>
                 <ListItemText primary={props.device.friendlyName}  />
            </ListItem>

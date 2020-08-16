@@ -1,5 +1,4 @@
-import React from 'react';
-import { useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
@@ -14,36 +13,36 @@ import ToggleAvatar from './ToggleAvatar';
 export default function ZoneHero(props) {
 
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStatesByCategory } = useContext(DataContext);
-    const devices=deviceStatesByCategory(['CONTACT_SENSOR','MOTION_SENSOR'])
-    const zoneOpen = zoneCount('DETECTED')>0;
+    const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
+    const [zones, setZones]=useState([])
+    
+    useEffect(() => {
+        setZones(getEndpointIdsByCategory(['CONTACT_SENSOR','MOTION_SENSOR'],'ZoneHero'))
+        return function cleanup() {
+            unregisterDevices('ZoneHero');
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
+
    
     function getSecurityZones() {
         var secZones=[]
-        for (var i = 0; i < devices.length; i++) { 
-            if (!devices[i].description.includes('(Automation)')) {
-                secZones.push(devices[i])
+        for (var i = 0; i < zones.length; i++) { 
+            if (!devices[zones[i]].description.includes('(Automation)')) {
+                secZones.push(zones[i])
             } 
         }
         return secZones
-    }
-
-    function zoneReady() {
-        
-        if (!getSecurityZones()) {
-            return false
-        } 
-        return true
     }
     
     function zoneCount(condition) {
         var count=0;
         getSecurityZones().map(zone => {
             var controller=null
-            if (zone.hasOwnProperty('ContactSensor')) {
-                controller=zone.ContactSensor
-            } else if (zone.hasOwnProperty('MotionSensor')) {
-                controller=zone.MotionSensor
+            if (deviceStates[zone] && deviceStates[zone].hasOwnProperty('ContactSensor')) {
+                controller=deviceStates[zone].ContactSensor
+            } else if (deviceStates[zone] && deviceStates[zone].hasOwnProperty('MotionSensor')) {
+                controller=deviceStates[zone].MotionSensor
             } 
             
             //console.log('cont',controller.detectionState.value)
@@ -60,13 +59,13 @@ export default function ZoneHero(props) {
         var openzones=''
         getSecurityZones().map(zone => {
             var controller=null
-            if (zone.hasOwnProperty('ContactSensor')) {
-                controller=zone.ContactSensor
-            } else if (zone.hasOwnProperty('MotionSensor')) {
-                controller=zone.MotionSensor
+            if (deviceStates[zone] && deviceStates[zone].hasOwnProperty('ContactSensor')) {
+                controller=deviceStates[zone].ContactSensor
+            } else if (deviceStates[zone] && deviceStates[zone].hasOwnProperty('MotionSensor')) {
+                controller=deviceStates[zone].MotionSensor
             }
             if (controller &&  controller.detectionState.value==='DETECTED') {
-                openzones=openzones+zone.friendlyName+" "
+                openzones=openzones+devices[zone].friendlyName+" "
             }
             return ''
         })
@@ -75,12 +74,12 @@ export default function ZoneHero(props) {
 
     return (
         <GridItem wide={props.wide}>
-            { zoneReady() ?
+            { cardReady('ZoneHero') ?
             <ListItem>
-                <ToggleAvatar noback={!zoneOpen} avatarState={ (zoneOpen) ? "open" : "closed" } onClick={ (e) => applyLayoutCard('ZoneLayout')} >
-                    { zoneOpen ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
+                <ToggleAvatar noback={zoneCount('DETECTED')===0 } avatarState={ (zoneCount('DETECTED')>0) ? "open" : "closed" } onClick={ (e) => applyLayoutCard('ZoneLayout')} >
+                    { zoneCount('DETECTED')>0 ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
                 </ToggleAvatar>
-                <ListItemText onClick={ (e) => applyLayoutCard('ZoneLayout')} primary={zoneOpen ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
+                <ListItemText onClick={ (e) => applyLayoutCard('ZoneLayout')} primary={ (zoneCount('DETECTED')>0) ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
             </ListItem>
             :
             <ListItem>

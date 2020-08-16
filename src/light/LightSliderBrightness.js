@@ -26,10 +26,10 @@ export default function LightSliderBrightness(props) {
             <ListItem>
                 <ListItemIcon className={classes.indent}><BrightnessLowIcon /></ListItemIcon>
                 <SofaSlider
-                    name="Brightness" smallText={true} value={props.device.BrightnessController.brightness.value} unit="%"
+                    name="Brightness" smallText={true} value={props.deviceState.BrightnessController.brightness.value} unit="%"
                     min={0} max={100} step={10}
                     change={handleBrightnessChange}
-                    disabled={!props.device.PowerController.powerState.value}
+                    disabled={!props.deviceState.PowerController.powerState.value}
                 />
             </ListItem>
     );

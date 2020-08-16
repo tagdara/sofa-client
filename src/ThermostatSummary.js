@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
@@ -52,8 +52,13 @@ export default function ThermostatSummary(props) {
     
     const { applyLayoutCard } = useContext(LayoutContext);
     const { deviceStateByFriendlyName } = useContext(DataContext);
-    const device = deviceStateByFriendlyName('Main Thermostat')
     const classes = useStyles();
+
+    const [device, setDevice]=useState(undefined)
+    
+    useEffect(() => {
+        setDevice(deviceStateByFriendlyName('Main Thermostat'))
+    }, [ setDevice, deviceStateByFriendlyName ] )
     
     function tempColor(temp) {
         if (temp>=74) { return classes.hot }

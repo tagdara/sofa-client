@@ -106,15 +106,18 @@ export default function Thermostat(props) {
     //const device=deviceByEndpointId(props.device.endpointId)
 
     useEffect(() => {
-        if (props.device.ThermostatController.hasOwnProperty('upperSetpoint')) {
-            setTargetSetpoint([props.device.ThermostatController.lowerSetpoint.deepvalue, props.device.ThermostatController.upperSetpoint.deepvalue ])
-        } else {
-            setTargetSetpoint(props.device.ThermostatController.targetSetpoint.deepvalue)
+        if (props.deviceState) {
+            if (props.deviceState.ThermostatController.hasOwnProperty('upperSetpoint')) {
+                setTargetSetpoint([props.deviceState.ThermostatController.lowerSetpoint.deepvalue, props.device.ThermostatController.upperSetpoint.deepvalue ])
+            } else {
+                setTargetSetpoint(props.deviceState.ThermostatController.targetSetpoint.deepvalue)
+            }
+            if (props.deviceState.hasOwnProperty('PowerLevelController')) {
+                setPowerLevel(props.deviceState.PowerLevelController.powerLevel.value)
+            }
         }
-        if (props.device.hasOwnProperty('PowerLevelController')) {
-            setPowerLevel(props.device.PowerLevelController.powerLevel.value)
-        }
-    }, [props.device]);
+    // eslint-disable-next-line 
+    }, [props.deviceState]);
 
 
     function supportedModes() {
@@ -168,18 +171,18 @@ export default function Thermostat(props) {
     }
 
     return ( 
-        props.device.TemperatureSensor &&
+        props.deviceState ?
         <GridItem wide={props.wide}>
             <List className={classes.list} >
                 <ListItem>
                     <ToggleAvatar 
-                        avatarState={ tempColor(props.device.TemperatureSensor.temperature.deepvalue) }
+                        avatarState={ tempColor(props.deviceState.TemperatureSensor.temperature.deepvalue) }
                         onClick={ () => switchToHistory()} >
-                            {props.device.TemperatureSensor.temperature.deepvalue ? props.device.TemperatureSensor.temperature.deepvalue : '--'}
+                            {props.deviceState.TemperatureSensor.temperature.deepvalue ? props.deviceState.TemperatureSensor.temperature.deepvalue : '--'}
                     </ToggleAvatar>
                     <SofaSlider min={supportedRange()[0]} max={supportedRange()[1]} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.device.friendlyName}
                                 preChange={handlePreSetpointChange} change={handleSetpointChange} 
-                                disabled={ props.device.ThermostatController.thermostatMode.value==='OFF' } />
+                                disabled={ props.deviceState.ThermostatController.thermostatMode.value==='OFF' } />
                 </ListItem>
                 <ListItem className={classes.bottomListItem}>
                     <>
@@ -188,7 +191,7 @@ export default function Thermostat(props) {
                                 { fanSetMode ?
                                     <>
                                         <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(false)}>
-                                            {props.device.ThermostatController.thermostatMode.value}
+                                            {props.deviceState.ThermostatController.thermostatMode.value}
                                         </Button>
                                         <SofaAvatarSlider iconLabel={<ToysIcon className={classes.iconLabel} />} small={true} reverse={true} minWidth={64} 
                                                             value={powerLevel} step={10} noPad={true}
@@ -206,7 +209,7 @@ export default function Thermostat(props) {
                         {!fanSetMode &&
                         <ButtonGroup className={classes.buttonGroup} size="small" variant="text" >
                             { supportedModes().map((mode) => (
-                                <Button className={props.device.ThermostatController.thermostatMode.value===mode ? classes.selectedButton : classes.modeButton  } onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} >
+                                <Button className={props.deviceState.ThermostatController.thermostatMode.value===mode ? classes.selectedButton : classes.modeButton  } onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} >
                                 {mode}
                                 </Button>
                             ))}
@@ -216,5 +219,7 @@ export default function Thermostat(props) {
                 </ListItem>
             </List>
         </GridItem>
+        :
+        null
     );
 }

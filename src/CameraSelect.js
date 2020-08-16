@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 import { UserContext } from './user/UserProvider';
 
@@ -6,9 +6,17 @@ import SecurityCamera from './camera/securitycamera';
 
 export default function CameraSelect(props) {
 
-    const { deviceStatesByCategory, directive } = useContext(DataContext);
-    const cameras=deviceStatesByCategory(['CAMERA'])
+    const { devices, getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
+    const [cameras, setCameras]=useState([])
     const { chooseUserCamera, userCamera } = useContext(UserContext);
+
+    useEffect(() => {
+        setCameras(getEndpointIdsByCategory('CAMERA','CameraSelect'))
+        return function cleanup() {
+            unregisterDevices('CameraSelect');
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
     
     function currentCamera() {
         if (userCamera===undefined) {
@@ -20,8 +28,8 @@ export default function CameraSelect(props) {
         }
         
         for (var i = 0; i < cameras.length; i++) {
-            if (userCamera===cameras[i].endpointId) { 
-                return cameras[i]
+            if (userCamera===cameras[i]) { 
+                return devices[cameras[i]]
             }
         }
         

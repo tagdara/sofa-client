@@ -1,4 +1,4 @@
-import React, { useState, useContext }  from 'react';
+import React, { useState, useEffect, useContext }  from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { DataContext } from './DataContext/DataProvider';
 
@@ -32,27 +32,36 @@ const useStyles = makeStyles({
 
 export default function LightLayout(props) {
 
-    const { deviceStatesByCategory, isReachable, directive } = useContext(DataContext);
+    const { devices, deviceStates, getEndpointIdsByCategory, unregisterDevices, isReachable, directive } = useContext(DataContext);
     const classes = useStyles();
     const [filter, setFilter] = useState('ON');
     const [brightControl, setBrightControl] = useState(false)
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
+    const [lights, setLights] = useState([])
+    
+    useEffect(() => {
+        setLights(getEndpointIdsByCategory('LIGHT','LightLayout'))
+        return function cleanup() {
+            unregisterDevices('LightLayout');
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
 
     function filterByType(filter) {
-        var lights=[]
-        var all=deviceStatesByCategory('LIGHT')
         
-        for (var i = 0; i < all.length; i++) {   
-            if (filter.toLowerCase()==="all") { 
-                lights.push(all[i])
-            } else if (filter.toLowerCase()==='off' && (all[i].PowerController.powerState.value==='OFF' || !isReachable(all[i]))) {
-                lights.push(all[i])
-            } else if (filter.toLowerCase()==='on' && all[i].PowerController.powerState.value==='ON' && isReachable(all[i])) {
-                lights.push(all[i])
+        var result=[]
+        if (filter.toLowerCase()==="all") { 
+            return lights
+        }
+        for (var i = 0; i < lights.length; i++) {   
+            if (filter.toLowerCase()==='off' && (deviceStates[lights[i]].PowerController.powerState.value==='OFF' || !isReachable(lights[i]))) {
+                result.push(lights[i])
+            } else if (filter.toLowerCase()==='on' && deviceStates[lights[i]].PowerController.powerState.value==='ON' && isReachable(lights[i])) {
+                result.push(lights[i])
             }            
         }
-        return lights
+        return result
             
     }
 
@@ -81,7 +90,7 @@ export default function LightLayout(props) {
                     }
             >
                 { filterByType(filter).map((device) =>
-                    <Light  key={ device.endpointId } device={ device } directive={ directive }  noMargin={true} nopaper={true} noPad={true} noback={true}
+                    <Light  key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={ directive }  noMargin={true} nopaper={true} noPad={true} noback={true}
                             brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
                     />
                 )}

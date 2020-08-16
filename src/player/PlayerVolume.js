@@ -12,7 +12,7 @@ export default function PlayerVolume(props) {
     }; 
 
     return (
-        <SofaAvatarSlider label={props.player.friendlyName} small={true} reverse={true} minWidth={64} value={props.player.SpeakerController.volume.value } change={handleVolumeChange} 
+        <SofaAvatarSlider label={props.name} small={true} reverse={true} minWidth={64} value={props.player.SpeakerController.volume.value } change={handleVolumeChange} 
             avatarClick={handleMuteChange}
         />
     );

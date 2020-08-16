@@ -1,4 +1,4 @@
-import React, {useContext, useState } from 'react';
+import React, {useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 export default function AreaLayout(props) {
 
     const classes = useStyles();
-    const { deviceStateByEndpointId, directive } = useContext(DataContext);
+    const { registerEndpointIds, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices, directive } = useContext(DataContext);
     const { isMobile, applyLayoutCard, layout } = useContext(LayoutContext);
     const [edit, setEdit] = useState(false)
     const [filter, setFilter] = useState('ALL');
@@ -55,26 +55,61 @@ export default function AreaLayout(props) {
     const [addingDevice, setAddingDevice] = useState(false);
     const [deletingDevice, setDeletingDevice] = useState(false);
     const [editingScene, setEditingScene] = useState(false);
-    const area = deviceStateByEndpointId('logic:area:'+layout.props.name)
+    //const area = deviceStateByEndpointId('logic:area:'+layout.props.name)
+    const [area, setArea]=useState(undefined)
+    const [areaObject, setAreaObject]=useState(undefined)
+    //const [areaChildren, setAreaChildren]=useState([])
+    
+    useEffect(() => {
+        
+        console.log(getEndpointIdsByFriendlyName(layout.props.name, 'AreaLayout'))
+        setArea(getEndpointIdsByFriendlyName(layout.props.name, 'AreaLayout'))
+        console.log('PING')
+        if (deviceStates[area]) {
+            setAreaObject(deviceStates[area])
+            console.log('registering children')
+            registerEndpointIds(deviceStates[area].AreaController.children.value,'AreaLayout')
+        }
+        return function cleanup() {
+            unregisterDevices('AreaLayout');
+        };
+    // eslint-disable-next-line 
+    }, [ layout.props.name] )
+
+    useEffect(() => {
+        
+        console.log(getEndpointIdsByFriendlyName(layout.props.name, 'AreaLayout'))
+        setArea(getEndpointIdsByFriendlyName(layout.props.name, 'AreaLayout'))
+        console.log('PING')
+        if (deviceStates[area]) {
+            setAreaObject(deviceStates[area])
+            console.log('registering children')
+            registerEndpointIds(deviceStates[area].AreaController.children.value,'AreaLayout')
+        }
+        return function cleanup() {
+            unregisterDevices('AreaLayout');
+        };
+    // eslint-disable-next-line 
+    }, [ areaObject] )
+
 
     function childrenByArea(filter) {
 
         var ads=[]
-        try {
-            var children=area.AreaController.children.value
+        if (deviceStates[area]) {
+            var children=deviceStates[area].AreaController.children.value
             for (var i = 0; i < children.length; i++) {
-                var dev=deviceStateByEndpointId(children[i])
-                if (!filter || filter==='ALL' || (dev && dev.displayCategories.includes(filter))) {
-                    ads.push(dev)
+                if (deviceStates[children[i]]) {
+                    var dev=deviceStates[children[i]]
+                    if (!filter || filter==='ALL' || (dev && dev.displayCategories.includes(filter))) {
+                        ads.push(dev)
+                    }
                 }
             }
-            return ads    
-        } catch (e) {
-            console.log('Error getting children by area', e)
-        } finally {
-            return ads
         }
-}
+        return ads    
+    }
+
 
     function nameSort(a,b) {
       if (a.friendlyName < b.friendlyName)
@@ -87,6 +122,7 @@ export default function AreaLayout(props) {
     function filterByTypeState(deviceType, filter) {
         var lights=[]
         var all=childrenByArea(deviceType)
+        console.log('All',all)
         if (filter.toUpperCase()==="ALL") { 
             return all.sort(nameSort) 
         }
@@ -109,11 +145,11 @@ export default function AreaLayout(props) {
     function sortByShortcuts() {
 
         var outscenes=[]
-        try {
+        if (deviceStates[area]) {
             var allscenes=childrenByArea('SCENE_TRIGGER')
-            var shortcutlist=[...area.AreaController.shortcuts.value].reverse()
+            var shortcutlist=[...deviceStates[area].AreaController.shortcuts.value].reverse()
             for (var j = 0; j < shortcutlist.length; j++) {
-                outscenes.push(deviceStateByEndpointId(shortcutlist[j]))
+                outscenes.push(deviceStates[shortcutlist[j]])
             }
     
             for (j = 0; j < allscenes.length; j++) {
@@ -121,11 +157,8 @@ export default function AreaLayout(props) {
                     outscenes.push(allscenes[j])
                 }
             }
-        } catch (e) {
-            console.log('Error getting children by area', e)
-        } finally {
-            return outscenes
-        }
+        } 
+        return outscenes
     }
     
     function addDevice(){

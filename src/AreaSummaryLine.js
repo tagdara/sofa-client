@@ -84,24 +84,24 @@ const useStyles = makeStyles(theme => {
 export default function AreaSummaryLine(props) {
 
     const classes = useStyles();
-    const { deviceStateByEndpointId, directive } = useContext(DataContext);
+    const { directive } = useContext(DataContext);
     //const area = deviceStateByEndpointId('logic:area:'+layout.props.name)
 
     function runShortcut(level) {
-        var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
-        directive(scene.endpointId, 'SceneController', 'Activate')
+        //var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
+        directive(props.deviceState.AreaController.shortcuts.value[level], 'SceneController', 'Activate')
     }
     
     function currentLevel() {
-        if (props.area.AreaController.shortcuts.value.includes(props.area.AreaController.scene.value)) {
-            return props.area.AreaController.shortcuts.value.indexOf(props.area.AreaController.scene.value)
+        if (props.deviceState.AreaController.shortcuts.value.includes(props.deviceState.AreaController.scene.value)) {
+            return props.deviceState.AreaController.shortcuts.value.indexOf(props.deviceState.AreaController.scene.value)
         }
         return 0
     }
     
     function hasShortcuts() {
         try {
-            if (props.area.AreaController.shortcuts.value.length>0) {
+            if (props.deviceState.AreaController.shortcuts.value.length>0) {
                 return true
             }
         }
@@ -116,7 +116,7 @@ export default function AreaSummaryLine(props) {
             <ListItem className={props.showLabel ? classes.dotLine : classes.noLabel}>
                 {props.showLabel &&
                     <ListItemText className={props.clickName ? classes.dotClickLabel : classes.dotLabel} onClick={props.clickName}>
-                        {props.area.friendlyName}
+                        {props.device.friendlyName}
                     </ListItemText>
                 }
                 { hasShortcuts() &&

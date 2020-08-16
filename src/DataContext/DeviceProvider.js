@@ -43,9 +43,55 @@ const deviceReducer = (state, data) => {
     }
 }
 
+const registeredDeviceReducer = (state, data) => {
+
+    if (!data) { return state }
+    if (!data.hasOwnProperty('action')) { return state }
+    if (!data.hasOwnProperty('source')) { return state }
+    var regDevices={ ...state }
+    
+    var newDevices=[]
+    var removedDevices=[]
+    if (data.action==='add') {
+        if (!data.hasOwnProperty('devices')) { return state }
+        for (var i = 0; i < data.devices.length; i++) {
+            if (!regDevices.hasOwnProperty(data.devices[i])) {
+                regDevices[data.devices[i]] = [data.source]
+                if (!newDevices.includes(data.devices[i])) {
+                    newDevices.push(data.devices[i])
+                }
+            } else {
+                if (!regDevices[data.devices[i]].includes(data.source)) {
+                    regDevices[data.devices[i]] = [...state[data.devices[i]], data.source]
+                }
+            }
+        }
+    } else if (data.action==='remove') {
+        for (var item in regDevices) {
+            var index=regDevices[item].indexOf(data.source)
+            if (index>-1) {
+                regDevices[item].splice(index, 1)
+            }
+            if (regDevices[item].length===0) {
+                removedDevices.push(item)
+            }
+        }
+        for (var k = 0; k < removedDevices.length; k++) {
+            delete regDevices[removedDevices[k]]
+        }
+    }
+
+    if (newDevices.length>0 || removedDevices.length>0) {
+        //var changes={"add": newDevices, "remove": removedDevices}
+        //console.log('changes',changes)
+    }
+    return regDevices
+        
+}
+
 export default function DeviceProvider(props) {
    
-    const { getJSON, postJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
+    const { streamConnected, getJSON, postJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
 
     const initialDevices=getFromLocalStorage()
     const [controllerProperties, setControllerProperties] = useState({});     
@@ -54,11 +100,48 @@ export default function DeviceProvider(props) {
     const [area, setArea] = useState("Main");     
     const [devices, deviceDispatch] = useReducer(deviceReducer, initialDevices);
     const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }} 
-
+    const [registeredDevices, registeredDeviceDispatch] = useReducer(registeredDeviceReducer, {});
+    const [lastDevices, setLastDevices] = useState([])
+    
     useEffect(() => {
        addSubscriber(deviceDispatch)
     // eslint-disable-next-line 
     }, [] );
+    
+    useEffect(() => { 
+
+        function newDevices() {
+            
+            var newDevs=[]
+            for (var item in registeredDevices) {
+                if (!lastDevices.includes(item)) {
+                    newDevs.push(item)
+                }
+            }
+            return newDevs
+        }
+        
+        function removedDevices() {
+            
+            var removeDevs=[]
+            for (var j = 0; j < lastDevices.length; j++) {
+                if (!Object.keys(registeredDevices).includes(lastDevices[j])) {
+                    removeDevs.push(lastDevices[j])
+                }
+            }
+            return removeDevs
+        }
+        
+        //console.log('reg dev trigger', registeredDevices)
+        if (streamConnected) {
+            //console.log('registering devices', {"add":newDevices(), "remove": removedDevices() })
+            postJSON('register_devices', {"add":newDevices(), "remove": removedDevices() })
+            //postJSON('register_devices', Object.keys(registeredDevices))
+                .then(res=> { return res;})
+            setLastDevices(Object.keys(registeredDevices))
+        }
+    // eslint-disable-next-line 
+    }, [registeredDevices, streamConnected])
 
 
     useEffect(() => {
@@ -81,6 +164,7 @@ export default function DeviceProvider(props) {
         if (loggedIn===true ) { getData() }
     // eslint-disable-next-line 
     }, [ loggedIn ] );
+
     
     function interfaceDirectives(otherdev) {
 
@@ -129,6 +213,29 @@ export default function DeviceProvider(props) {
         
     }
 
+    function getEndpointIdsByCategory(categories, source, searchterm ) {
+        
+        var endpointIds=[]
+        var devs=devicesByCategory(categories, searchterm)
+        for (var j = 0; j < devs.length; j++) {
+            endpointIds.push(devs[j].endpointId)
+        }
+        registeredDeviceDispatch({"source":source, "devices": endpointIds, "action": "add"})
+        return endpointIds
+    }
+
+    function registerEndpointIds(endpointIds, source ) {
+        
+        registeredDeviceDispatch({"source":source, "devices": endpointIds, "action": "add"})
+        return endpointIds
+    }
+
+        
+    function unregisterDevices(source) {
+        registeredDeviceDispatch({"source":source, "action": "remove"})
+    }
+
+
 
     function devicesByFriendlyName(subname,sort=true, category) {
 
@@ -162,6 +269,16 @@ export default function DeviceProvider(props) {
         return subDevices
     }
 
+    function getEndpointIdsByFriendlyName(subname, source, sort=true) {
+        
+        var endpointIds=[]
+        var devs=devicesByFriendlyName(subname,sort)
+        for (var j = 0; j < devs.length; j++) {
+            endpointIds.push(devs[j].endpointId)
+        }
+        registeredDeviceDispatch({"source":source, "devices": endpointIds, "action": "add"})
+        return endpointIds
+    }
 
 
     function devicesByController(controllers, searchterm) {
@@ -233,19 +350,31 @@ export default function DeviceProvider(props) {
 
     function getInputs(dev,exclude=[]) {
         
+        if (typeof(dev)=='string') {
+            dev=devices[dev]
+        }        
+        
         var choices=[]        
-        for (var k = 0; k < dev.capabilities.length; k++) {
-            if (dev.capabilities[k].interface.endsWith('InputController')) {
-                for (var j = 0; j < dev.capabilities[k].inputs.length; j++) {
-                    choices.push(dev.capabilities[k].inputs[j].name)
+        if (dev && dev.hasOwnProperty('capabilities')) {
+            for (var k = 0; k < dev.capabilities.length; k++) {
+                if (dev.capabilities[k].interface.endsWith('InputController')) {
+                    for (var j = 0; j < dev.capabilities[k].inputs.length; j++) {
+                        choices.push(dev.capabilities[k].inputs[j].name)
+                    }
                 }
             }
+        } else {
+            console.log('No inputs for ', dev)
         }
         return choices
     }
 
 
     function getModes(dev,exclude=[]) {
+        
+        if (typeof(dev)=='string') {
+            dev=devices[dev]
+        }
         
         var modes={}
         for (var k = 0; k < dev.capabilities.length; k++) {
@@ -265,7 +394,6 @@ export default function DeviceProvider(props) {
     }
     function checkJSON(data) {
         if (typeof(data)==='string') {
-            console.log('parsing data', typeof(JSON.parse(data)))
             return JSON.parse(data)
         } else {
             return data
@@ -285,7 +413,7 @@ export default function DeviceProvider(props) {
 
         return postJSON('list/influx/last/'+val, endpointList)
                 .then(res=> checkJSON(res))
-                .then(res=> { console.log( typeof(res)); return res;})
+                .then(res=> { return res;})
     }
     
     function getHistoryForDevice(dev, prop, page) {
@@ -380,12 +508,14 @@ export default function DeviceProvider(props) {
         var devprops=[]        
         if (endpointId) {
             var dev=deviceByEndpointId(endpointId)
-            for (var j = 0; j < dev.capabilities.length; j++) {
-                if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
-                    devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
-                }
-                if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
-                    devprops=devprops.concat( Object.keys( eventSources[dev.capabilities[j].interface.split('.')[1]]))
+            if (dev) {
+                for (var j = 0; j < dev.capabilities.length; j++) {
+                    if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
+                        devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
+                    }
+                    if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
+                        devprops=devprops.concat( Object.keys( eventSources[dev.capabilities[j].interface.split('.')[1]]))
+                    }
                 }
             }
         }
@@ -466,9 +596,9 @@ export default function DeviceProvider(props) {
                 //devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
             }
             if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
-                var ep=Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]])
+                var ep=Object.keys(eventSources[dev.capabilities[j].interface.split('.')[1]])
                 for (var l = 0; l < ep.length; l++) {
-                    devprops.push({'instance':dev.capabilities[j].instance, 'controller':dev.capabilities[j].interface.split('.')[1], 'property': cp[l]})
+                    devprops.push({'instance':dev.capabilities[j].instance, 'controller':dev.capabilities[j].interface.split('.')[1], 'property': ep[l]})
                 }
                 //devprops=devprops.concat( Object.keys( eventSources[dev.capabilities[j].interface.split('.')[1]]))
             }
@@ -585,6 +715,11 @@ export default function DeviceProvider(props) {
                 getActivations: getActivations,
                 approveActivation: approveActivation,
                 removeActivation: removeActivation,
+                getEndpointIdsByCategory: getEndpointIdsByCategory,
+                getEndpointIdsByFriendlyName: getEndpointIdsByFriendlyName,
+                unregisterDevices: unregisterDevices,
+                registeredDevices: registeredDevices,
+                registerEndpointIds: registerEndpointIds,
             }}
         >
             {props.children}

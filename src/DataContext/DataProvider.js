@@ -2,7 +2,6 @@ import React, {useContext, useState, useEffect, createContext, useReducer} from 
 import { NetworkContext } from '../NetworkProvider';
 import { DeviceContext } from './DeviceProvider';
 
-//import AlexaDevice from './AlexaDevice'
 export const DataContext = createContext();
 
 function getFromLocalStorage() {

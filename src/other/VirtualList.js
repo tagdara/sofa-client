@@ -1,17 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { DataContext } from '../DataContext/DataProvider';
 
 import Shade from './Shade';
 
-export default function VirtualList(props) {
+export default function ShadeList(props) {
 
-    const { deviceStatesByCategory, directive } = useContext(DataContext);
-    var shades=deviceStatesByCategory('INTERIOR_BLIND')
+    const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
+    const [ shades, setShades]=useState([])
+
+    useEffect(() => {
+        setShades(getEndpointIdsByCategory('INTERIOR_BLIND','ShadeList'))
+        return function cleanup() {
+            unregisterDevices('ShadeList');
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
     
     return (
+        cardReady('ShadeList') ?
             <React.Fragment>
                 { shades.map( shade => (
-                    <Shade  device={shade} nested={props.nested} directive={directive} key={ shade.endpointId }  />
+                    <Shade inList={true} device={devices[shade]}  deviceState={ deviceStates[shade] } nested={props.nested} directive={directive} key={ shade }  />
                 ))}
             </React.Fragment>
         : null 

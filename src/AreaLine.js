@@ -17,6 +17,8 @@ const useStyles = makeStyles({
     areaListItem: {
         minHeight: 54,
         paddingRight: 8,
+        paddingTop: 0,
+        paddingBottom: 0,
     }
 });
 

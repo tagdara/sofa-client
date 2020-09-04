@@ -23,6 +23,11 @@ const useStyles = makeStyles({
     },
     typeLine: {
         fontSize: 10,
+    },
+    primary: {
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
     }
 });
 
@@ -44,7 +49,7 @@ export default function AutomationDevice(props) {
         <Grid item xs={props.wide ? 12 : 4 } className={classes.deviceLine} >
             <ListItem button onClick={() => setDeviceSelect(true) } className={classes.deviceButton} >
                 <ListItemIcon>{ props.device===undefined ? <CropFreeIcon /> : <DeviceIcon name={props.device.displayCategories[0]} /> }</ListItemIcon>
-                <ListItemText classes={{ secondary: classes.typeLine}} primary={props.device ? props.device.friendlyName : "Choose a device"} secondary={props.device && props.device.displayCategories[0]} />
+                <ListItemText classes={{ primary: classes.primary, secondary: classes.typeLine}} primary={props.device ? props.device.friendlyName : "Choose a device"} secondary={props.device && props.device.displayCategories[0]} />
             </ListItem>
             { deviceSelect &&
                 <DeviceDialog open={true} close={closeDialog} select={selectDevice} />

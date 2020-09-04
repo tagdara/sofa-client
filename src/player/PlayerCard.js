@@ -9,8 +9,10 @@ import PlayerArtOverlay from './PlayerArtOverlay';
 import PlayerArtOverlayButtons from './PlayerArtOverlayButtons';
 
 import PlayerVolume from './PlayerVolume';
+import PlayerLinks from './PlayerLinks';
 import PlayerCover from './PlayerCover';
 import GridItem from '../GridItem';
+import PlaceholderCard from '../PlaceholderCard';
 
 const useStyles = makeStyles({
 
@@ -90,23 +92,22 @@ export default function PlayerCard(props) {
     }
     
     function getLinkedPlayers() {
-        var linked=[]
+
         if (!deviceStates[props.player].MusicController.linked.value) {
             return []
         }
         if (!Array.isArray(deviceStates[props.player].MusicController.linked.value)) {
             return []
         }
-        for (var i = 0; i < deviceStates[props.player].MusicController.linked.value.length; i++) {
-            if (deviceStates[props.player].MusicController.linked.value[i]) {
-                linked.push(deviceStates[props.player].MusicController.linked.value[i])
-            }
-        }
-        return linked
+        console.log(deviceStates[props.player].MusicController.linked.value)
+        return deviceStates[props.player].MusicController.linked.value
+    }
+    
+    if (!cardReady('PlayerCard')) {
+        return <PlaceholderCard count={ 3 } />
     }
 
     return (
-        cardReady('PlayerCard') ?
         <GridItem wide={props.wide} nopad={true} >
             { deviceStates[props.player].MusicController.title.value==='Line-In' && jukebox ?
                 <PlayerArtOverlay   art={deviceStates[jukebox].MusicController.art.value ? deviceStates[jukebox].MusicController.art.value : coverDefault }
@@ -131,10 +132,8 @@ export default function PlayerCard(props) {
             }
             <Grid item xs={12}>
             <List className={classes.list} >
-                <PlayerVolume key={ props.player } name={ devices[props.player].friendlyName } player={deviceStates[props.player]} directive={directive} />
-                { getLinkedPlayers().map( linkedplayer => (
-                    <PlayerVolume key={ linkedplayer.endpointId} player={ linkedplayer } directive={directive} />
-                ))}
+                <PlayerVolume key={ props.player } name={ devices[props.player].friendlyName } device={ devices[props.player] } deviceState={deviceStates[props.player]} directive={directive} />
+                <PlayerLinks links={getLinkedPlayers()} />
             </List>
             { coverView ?
                 <PlayerCover    playbackState={deviceStates[props.player].MusicController.playbackState.value} handleSkip={ handleSkip} handlePlayPause={handlePlayPause} 
@@ -144,7 +143,5 @@ export default function PlayerCard(props) {
             }
             </Grid>
         </ GridItem >
-        : 
-        null
     );
 }

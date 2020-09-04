@@ -20,6 +20,7 @@ const useStyles = makeStyles(theme => {
             minWidth: "320px",
             minHeight: 64,      
             backgroundColor: theme.palette.layer.card,
+            width: "100%",
         },
         border: {
             borderWidth: "thin",
@@ -41,11 +42,15 @@ const useStyles = makeStyles(theme => {
             minHeight: 64,
         },
         list: {
+            display: "flex",
             width: "100%",
+            flexDirection: "column",
         },
         nopadlist: {
             padding: 0,
+            display: "flex",
             width: "100%",
+            flexDirection: "column",
         },
         colorband: {
             borderLeft: "solid 5px #44F",
@@ -88,11 +93,11 @@ export default function GridItem(props) {
     const mobileBreakpoint = 800
     const classes = useStyles();
     const isMobile = window.innerWidth <= mobileBreakpoint;
-
+    
     var itemdata = (
         <React.Fragment>
         { !props.nolist ?
-                <List className={ props.nopad ? classes.nopadlist : classes.list} >
+                <List className={ (props.noListPad || props.nopad) ? classes.nopadlist : classes.list} >
                     {props.children}
                 </List>
             :
@@ -101,8 +106,8 @@ export default function GridItem(props) {
             </Grid>
         }
         </React.Fragment>
-    )
-    
+    )    
+        
     function checkMargin() {
         if (props.noMargin) {
             return classes.noMargin
@@ -112,10 +117,11 @@ export default function GridItem(props) {
         }
         return classes.normal
     }
+    
 
     return (
         <Grid item container={ props.container } xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 3) } onClick={props.onClick}
-                className={classNames(props.flex && classes.flex, props.inset && classes.inset, checkMargin() )}>
+                className={classNames(props.hover && classes.hover, props.flex && classes.flex, props.inset && classes.inset, checkMargin() )}>
             { !props.nopaper ?
                 <Paper elevation={props.elevation} className={classNames( classes.content, props.hover && classes.hover, props.nopad && classes.nopad)}  >
                     { itemdata }

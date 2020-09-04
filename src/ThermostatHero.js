@@ -4,6 +4,7 @@ import { DataContext } from './DataContext/DataProvider';
 
 import Thermostat from './thermostat/Thermostat';
 import AirQuality from './thermostat/AirQuality';
+import PlaceholderCard from './PlaceholderCard';
 export default function ThermostatHero(props) {
     
     const { applyLayoutCard } = useContext(LayoutContext);
@@ -21,13 +22,15 @@ export default function ThermostatHero(props) {
         };
     // eslint-disable-next-line 
     }, [ ] )
+    
+    if (!cardReady('ThermostatHero')) {
+        return <><PlaceholderCard /><PlaceholderCard count={2}/></>
+    }
 
     return (
-        cardReady('ThermostatHero') ?
         <>
             <AirQuality device={ devices[aq] } deviceState={deviceStates[aq]} wide={props.wide } />
             <Thermostat device={ devices[device] } deviceState={deviceStates[device]} onClick={ () => applyLayoutCard('ThermostatLayout') } wide={props.wide } />
         </>
-        : null
-    );
+    ); 
 }

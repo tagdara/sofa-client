@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 
 export default function LightLayout(props) {
 
-    const { devices, deviceStates, getEndpointIdsByCategory, unregisterDevices, isReachable, directive } = useContext(DataContext);
+    const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices, isReachable, directive } = useContext(DataContext);
     const classes = useStyles();
     const [filter, setFilter] = useState('ON');
     const [brightControl, setBrightControl] = useState(false)
@@ -66,7 +66,7 @@ export default function LightLayout(props) {
     }
 
     return (    
-        <React.Fragment>
+        cardReady('LightLayout') ? 
             <GridSection name={"Lights"} scroll={true}
                     secondary={
                         <>
@@ -90,12 +90,13 @@ export default function LightLayout(props) {
                     }
             >
                 { filterByType(filter).map((device) =>
-                    <Light  key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={ directive }  noMargin={true} nopaper={true} noPad={true} noback={true}
+                    <Light  key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={ directive }  
+                            noMargin={true} nopaper={true} noPad={true} noback={true}
                             brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
                     />
                 )}
             </GridSection>
-        </React.Fragment>
+        : null
     )
 
 };

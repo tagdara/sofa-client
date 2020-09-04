@@ -15,61 +15,65 @@ import CameraDialog from './cameraDialog';
 import GridItem from '../GridItem';
 
 import ReactHLS from 'react-hls-player';
+import CameraQR from '../CameraQR';
 
-const useStyles = makeStyles({    
+const useStyles = makeStyles(theme => {
     
-    nextbutton: {
-        position: "absolute",
-        top: "40%",
-        right: 8,
-    },
-    prevbutton: {
-        position: "absolute",
-        top: "40%",
-        left: 8,
-    },
-    gridbutton: {
-        position: "absolute",
-        left: 8,
-        bottom: 8,
-    },
-    newgridbutton: {
-        position: "absolute",
-        right: 8,
-        bottom: 8,
-    },
-    newVideoButton: {
-        position: "absolute",
-        right: 8,
-        top: 8,
-    },
-
-
-    im: {
-        width: "100%",
-        height: "auto",
-        borderRadius: 4,
-        display: "flex",
-    },
-    hiddenimage: {
-        height: 0,
-        display: "none",
-    },
-    hidden: {
-        borderRadius: 4,
-        position: "relative",
-        width: "100%",
-        paddingTop: '56.25%', // 16:9
-        boxSizing: "border-box",
-    },
-    spinner: {
-        position: "absolute",
-        margin: "auto",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-    },
+    return {    
+        nextbutton: {
+            position: "absolute",
+            top: "40%",
+            right: 8,
+        },
+        prevbutton: {
+            position: "absolute",
+            top: "40%",
+            left: 8,
+        },
+        gridbutton: {
+            position: "absolute",
+            left: 8,
+            bottom: 8,
+        },
+        newgridbutton: {
+            position: "absolute",
+            right: 8,
+            bottom: 8,
+        },
+        newVideoButton: {
+            position: "absolute",
+            right: 8,
+            top: 8,
+        },
+    
+    
+        im: {
+            width: "100%",
+            height: "auto",
+            borderRadius: 4,
+            display: "flex",
+        },
+        hiddenimage: {
+            height: 0,
+            display: "none",
+        },
+        hidden: {
+            borderRadius: 4,
+            position: "relative",
+            width: "100%",
+            paddingTop: '56.25%', // 16:9
+            boxSizing: "border-box",
+        },
+        spinner: {
+            color: theme.palette.layer.itemHighlight,
+            position: "absolute",
+            margin: "auto",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+        },
+    }
 });
 
 function useInterval(callback, delay) {
@@ -116,6 +120,7 @@ export default function SecurityCamera(props) {
     useInterval(() => {
         // Your custom logic here
         if (imageUri && !showDialog) {
+            console.log('updating url to',imageUri+"?time="+Date.now())
             setUpdateUrl(imageUri+"?time="+Date.now())
         }
     }, refreshInterval);
@@ -123,14 +128,18 @@ export default function SecurityCamera(props) {
     useEffect(()=> {
         
         function updateUrlUri(data) {
-            setUpdateUrl(data.payload.imageUri+"?time="+Date.now());
-            setImageUri(data.payload.imageUri)
+            if (data.payload) {
+                setUpdateUrl(data.payload.imageUri+"?time="+Date.now());
+                setImageUri(data.payload.imageUri)
+            } else {
+                console.log('no payload in data',data)
+            }
         }
-        
-        if ((props.camera) && (ready!==props.camera.endpointId)) { 
-            setReady(props.camera.endpointId)
+ 
+        if ((props.camera) && (ready!==props.camera)) { 
+            setReady(props.camera)
             //props.camera.CameraStreamController.directive("InitializeCameraStreams", 
-            props.directive(props.camera.endpointId, "CameraStreamController", "InitializeCameraStreams",
+            props.directive(props.camera, "CameraStreamController", "InitializeCameraStreams",
                 {
                     "cameraStreams": [
                         {
@@ -173,7 +182,7 @@ export default function SecurityCamera(props) {
     }
 
     function startStream() {
-        props.directive(props.camera.endpointId,"CameraStreamController", "InitializeCameraStreams", 
+        props.directive(props.camera, "CameraStreamController", "InitializeCameraStreams", 
             {
                 "cameraStreams": [
                     {
@@ -207,7 +216,7 @@ export default function SecurityCamera(props) {
     }
    
     return (
-        <GridItem wide={props.wide} nopad={true} noMargin={props.top} thinmargin={isMobile}>
+        <GridItem wide={props.wide} nopad={true} noMargin={props.top} thinmargin={props.top && isMobile}>
             { live && videoUri && !showDialog ?
                 <React.Fragment>
                     { ios ?
@@ -271,6 +280,9 @@ export default function SecurityCamera(props) {
                 }
                 </React.Fragment>
             }
+            { props.qr &&
+                <CameraQR overlay={true} cameraId={props.camera} key={props.camera+"qr"} name={ props.camera.friendlyName } />
+            }            
             { showDialog &&
                 <CameraDialog poster={updateUrl} directive={props.directive} live={true} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
             }

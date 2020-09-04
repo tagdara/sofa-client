@@ -1,29 +1,39 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from "react";
 import { DataContext } from './DataContext/DataProvider';
 
 import AdapterItem from './AdapterItem';
 import AdapterStatus from './AdapterStatus';
-import GridBreak from './GridBreak';
+import GridSection from './GridSection';
 
 export default function AdapterLayout(props) {
-    
-    const { deviceStatesByCategory, directive} = useContext(DataContext);
-    const [adapterStatus, setAdapterStatus] = useState('');
-    const adapters = deviceStatesByCategory('ADAPTER')
-    
+
+    const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
+    const [ adapters, setAdapters]=useState([])
+    const [ adapterStatus, setAdapterStatus ]=useState([])
+
+    useEffect(() => {
+        setAdapters(getEndpointIdsByCategory('ADAPTER', 'AdapterLayout'))
+        return function cleanup() {
+            unregisterDevices('AdapterLayout');
+        };
+    // eslint-disable-next-line 
+    }, [])
+
     function clearAdapterStatus() {
         setAdapterStatus("")
     }
     
     return (
-        <React.Fragment>
-            <GridBreak label={"Adapters"} />
+        cardReady('AdapterLayout') ?
+        <GridSection name={"Adapters"} scroll={true}>
             { adapterStatus &&
                 <AdapterStatus status={adapterStatus} name={''} clear={clearAdapterStatus} />
             }
             { adapters.map( adapter => 
-                <AdapterItem key={adapter.endpointId} adapter={adapter} directive={directive} />
+                <AdapterItem key={adapter} device={ devices[adapter] } deviceState={ deviceStates[adapter] } directive={directive} />
             )}
-        </React.Fragment>
+        </GridSection>
+        :
+        null
     )
 }

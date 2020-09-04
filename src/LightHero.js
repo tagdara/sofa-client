@@ -3,17 +3,14 @@ import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
 import LightbulbOutlineIcon from './LightbulbOutline';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
-
-import ToggleAvatar from './ToggleAvatar';
 import GridItem from './GridItem';
+import SofaListItem from './SofaListItem';
+import PlaceholderCard from './PlaceholderCard';
 
 export default function LightHero(props) {
 
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStates, getEndpointIdsByCategory, unregisterDevices, isReachable } = useContext(DataContext);
+    const { cardReady, deviceStates, getEndpointIdsByCategory, unregisterDevices, isReachable } = useContext(DataContext);
     const [ lights, setLights]=useState([])
     
     useEffect(() => {
@@ -49,20 +46,18 @@ export default function LightHero(props) {
         }
         return count
     }    
+    
+    if (!cardReady('LightHero')) {
+        return <PlaceholderCard />
+    }
 
     return (
-            <GridItem wide={props.wide}>
-                { lightCount('all') ?
-                    <ListItem>
-                        <ToggleAvatar avatarState={lightCount('on') ? "on" : "none"} onClick={ () => applyLayoutCard('LightLayout') }><LightbulbOutlineIcon/></ToggleAvatar>
-                        <ListItemText primary={lightCount('on') ? lightCount('on')+" lights are on" : "All lights off" } onClick={ () => applyLayoutCard('LightLayout') } />
-                    </ListItem>
-                :
-                    <ListItem>
-                        <ToggleAvatar avatarState={"notready"} ><PriorityHighIcon/></ToggleAvatar>
-                        <ListItemText primary={'Waiting for light data'}/>
-                    </ListItem>
-                }
-            </GridItem>
+        <GridItem wide={props.wide} nolist={true} >
+            <SofaListItem   avatarState={lightCount('on') ? "on" : "none"} onClick={ () => applyLayoutCard('LightLayout') }
+                            avatar={<LightbulbOutlineIcon/>}
+                            primary={lightCount('on') ? lightCount('on')+" lights are on" : "All lights off" }
+            />
+        </GridItem>
+
     );
 }

@@ -53,7 +53,6 @@ const useStyles = makeStyles(theme => {
             justifyContent: "center",
             flexDirection: "column",
             position: "relative",
-            height: "60%",
         },
         songButtonHolder: {
             paddingLeft: 16,
@@ -84,8 +83,26 @@ const useStyles = makeStyles(theme => {
             width: "100%",
             minWidth:"100%",
         },
-        songText: {
+        xsongText: {
             width: "100%",
+            textWrap: "false",
+            maxLines: 1,
+        },
+        songText: {
+            display: "flex",
+            whiteSpace: "wrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            lineHeight: 1,
+            paddingBottom: 2,
+        },
+        artistText: {
+            display: "flex",
+            whiteSpace: "wrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            lineHeight: 1,
+            paddingBottom: 2,
         },
         topbox: {
             paddingBottom: 8,
@@ -118,7 +135,7 @@ export default function PlayerArtOverlay(props) {
             <Grid item container xs={8} >
                 <Grid item xs={12} className={classes.songTextHolder} onClick={()=> props.setMini(true)}>
                     <Typography variant="subtitle1" className={classes.songText}>{props.title}</Typography>
-                    <Typography variant="subtitle2" className={classes.songText}>{props.artist}</Typography>
+                    <Typography variant="subtitle2" className={classes.artistText}>{props.artist}</Typography>
                 </Grid>
                 <Grid item xs={12} className={classes.songButtonHolder}>
                     {props.children}

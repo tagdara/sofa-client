@@ -42,7 +42,7 @@ const useStyles = makeStyles({
 export default function SofaAvatarSlider(props) {
     
     const classes = useStyles();
-    const [value, setValue] = useState(0);
+    const [value, setValue] = useState(props.value);
 
     useEffect(() => {
   	    setValue(props.value)

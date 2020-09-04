@@ -126,8 +126,11 @@ export const deviceStatesReducer = (state, data) => {
 export default function DataProvider(props) {
 
     
-    const { registerEndpointIds, registeredDevices, getEndpointIdsByFriendlyName, unregisterDevices, devices, getEndpointIdsByCategory, getSceneDetails, saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, directive, virtualDevices } = useContext(DeviceContext);
-    const { addSubscriber } = useContext(NetworkContext);
+    const { registerEndpointIds, registeredDevices, getEndpointIdsByFriendlyName, unregisterDevices, devices, getEndpointIdsByCategory, getSceneDetails, 
+            saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, 
+            directive, virtualDevices } = useContext(DeviceContext);
+    
+    const { postJSON, addSubscriber } = useContext(NetworkContext);
 
     const initialDeviceStates=getFromLocalStorage();
     //const [virtualDeviceStates, setVirtualDeviceStates] = useState({});     
@@ -135,11 +138,48 @@ export default function DataProvider(props) {
     const [deviceStates, deviceStatesDispatch] = useReducer(deviceStatesReducer, initialDeviceStates);
     const [defaultPlayer, setDefaultPlayer] = useState('sonos:player:RINCON_B8E937ECE1F001400');     
     const [userPlayer, setUserPlayer] = useState('');     
-
+    const [lastDevices, setLastDevices] = useState([])
+    
     useEffect(() => {
        addSubscriber(deviceStatesDispatch)
     // eslint-disable-next-line 
     }, []);
+
+    useEffect(() => { 
+
+        function newDevices() {
+            
+            var newDevs=[]
+            for (var item in registeredDevices) {
+                if (!lastDevices.includes(item)) {
+                    newDevs.push(item)
+                }
+            }
+            return newDevs
+        }
+        
+        function removedDevices() {
+            
+            var removeDevs=[]
+            for (var j = 0; j < lastDevices.length; j++) {
+                if (!Object.keys(registeredDevices).includes(lastDevices[j])) {
+                    removeDevs.push(lastDevices[j])
+                }
+            }
+            return removeDevs
+        }
+        
+        //console.log('reg dev trigger', registeredDevices)
+        if (newDevices().length || removedDevices().length) {
+            //console.log('registering devices', {"add":newDevices(), "remove": removedDevices() })
+            postJSON('register_devices', {"add":newDevices(), "remove": removedDevices() })
+            //postJSON('register_devices', Object.keys(registeredDevices))
+                .then(res=> { deviceStatesDispatch(res) })
+            setLastDevices(Object.keys(registeredDevices))
+        }
+    // eslint-disable-next-line 
+    }, [registeredDevices])
+
 
     function cardReady(cardname) {
         var foundAny=false

@@ -4,14 +4,13 @@ import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
-import ToggleAvatar from './ToggleAvatar';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 import GridItem from './GridItem';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
-
+import PlaceholderCard from './PlaceholderCard';
+import SofaListItem from './SofaListItem';
 const useStyles = makeStyles(theme => {
     
     return {    
@@ -49,7 +48,7 @@ export default function ComputerHero(props) {
     
     const classes = useStyles();
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { cardReady,unregisterDevices, getEndpointIdsByFriendlyName, getEndpointIdsByCategory, devices, deviceStates, directive } = useContext(DataContext);
+    const { cardReady, unregisterDevices, getEndpointIdsByFriendlyName, getEndpointIdsByCategory, devices, deviceStates, directive } = useContext(DataContext);
     //const switches = devsWithPowerState(deviceStatesByCategory('SMARTPLUG'))
     const [switches, setSwitches]=useState([])
     const matrixDeviceNames=['Living Room TV', 'Office 1', 'Office 2', 'Office 3', 'Office 4', 'Downstairs 1', 'Downstairs 2', 'Rack']
@@ -107,14 +106,14 @@ export default function ComputerHero(props) {
     return false
     }
     
-
+    if (!cardReady('ComputerHero')) {
+        return <PlaceholderCard count={2 } />
+    }
+    
     return (
-        cardReady('ComputerHero') ?
         <GridItem wide={props.wide} noPad={true} nolist={true} >
-            <ListItem>
-                <ToggleAvatar onClick={ () => applyLayoutCard('ComputerLayout') } noback={true} avatarState={ onCount() ? 'on' : 'off'}><DevicesOtherIcon /></ToggleAvatar>
-                <ListItemText onClick={ () => applyLayoutCard('ComputerLayout') } primary={"Computers"} secondary={onCount() ? onCount()+" devices on" : null} />
-            </ListItem>
+            <SofaListItem   avatar={<DevicesOtherIcon />} onClick={ () => applyLayoutCard('ComputerLayout') } noback={true} avatarState={ onCount() ? 'on' : 'off'}
+                            primary={"Computers"} secondary={onCount() ? onCount()+" devices on" : null} />
             <ListItem>
                 <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >
                     <Button className={isDefault('Office 1') ? classes.onButton : classes.button} onClick={ () => toggleInput('Office 1','PC1') }>1</Button>
@@ -128,6 +127,5 @@ export default function ComputerHero(props) {
                 </ButtonGroup>
             </ListItem>
         </GridItem>
-        : null
     );
 }

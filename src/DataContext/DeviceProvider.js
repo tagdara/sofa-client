@@ -91,63 +91,26 @@ const registeredDeviceReducer = (state, data) => {
 
 export default function DeviceProvider(props) {
    
-    const { streamConnected, getJSON, postJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
+    const { getJSON, postJSON, loggedIn, addSubscriber } = useContext(NetworkContext);
 
     const initialDevices=getFromLocalStorage()
     const [controllerProperties, setControllerProperties] = useState({});     
     const [directives, setDirectives] = useState({});     
-    const [virtualDevices, setVirtualDevices] = useState({});     
     const [area, setArea] = useState("Main");     
     const [devices, deviceDispatch] = useReducer(deviceReducer, initialDevices);
     const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }} 
     const [registeredDevices, registeredDeviceDispatch] = useReducer(registeredDeviceReducer, {});
-    const [lastDevices, setLastDevices] = useState([])
+
     
     useEffect(() => {
        addSubscriber(deviceDispatch)
     // eslint-disable-next-line 
     }, [] );
-    
-    useEffect(() => { 
-
-        function newDevices() {
-            
-            var newDevs=[]
-            for (var item in registeredDevices) {
-                if (!lastDevices.includes(item)) {
-                    newDevs.push(item)
-                }
-            }
-            return newDevs
-        }
-        
-        function removedDevices() {
-            
-            var removeDevs=[]
-            for (var j = 0; j < lastDevices.length; j++) {
-                if (!Object.keys(registeredDevices).includes(lastDevices[j])) {
-                    removeDevs.push(lastDevices[j])
-                }
-            }
-            return removeDevs
-        }
-        
-        //console.log('reg dev trigger', registeredDevices)
-        if (streamConnected) {
-            //console.log('registering devices', {"add":newDevices(), "remove": removedDevices() })
-            postJSON('register_devices', {"add":newDevices(), "remove": removedDevices() })
-            //postJSON('register_devices', Object.keys(registeredDevices))
-                .then(res=> { return res;})
-            setLastDevices(Object.keys(registeredDevices))
-        }
-    // eslint-disable-next-line 
-    }, [registeredDevices, streamConnected])
-
 
     useEffect(() => {
         
         function getData() {
-            console.log('logged in', loggedIn,'updating static data') 
+            //console.log('logged in', loggedIn,'updating static data') 
             getJSON('directives')
                 .then(result=>setDirectives(result))
                 //.then(result=>console.log('done getting directives'));
@@ -155,10 +118,6 @@ export default function DeviceProvider(props) {
       	    getJSON('properties')
                 .then(result=>setControllerProperties(result))
                 //.then(result=>console.log('done getting properties'));
-                
-      	    getJSON('list/logic/virtualDevices')
-                .then(result=>setVirtualDevices(result))
-                //.then(result=>console.log('done getting virtual devices'));
         }
         
         if (loggedIn===true ) { getData() }
@@ -234,7 +193,12 @@ export default function DeviceProvider(props) {
     function unregisterDevices(source) {
         registeredDeviceDispatch({"source":source, "action": "remove"})
     }
-
+    
+    function cardDeviceCount(source) {
+        for (var id in registeredDevices) {
+            console.log(id, registeredDevices[id])
+        }
+    }
 
 
     function devicesByFriendlyName(subname,sort=true, category) {
@@ -269,15 +233,16 @@ export default function DeviceProvider(props) {
         return subDevices
     }
 
-    function getEndpointIdsByFriendlyName(subname, source, sort=true) {
+    function getEndpointIdsByFriendlyName(name, source, sort=true) {
         
         var endpointIds=[]
-        var devs=devicesByFriendlyName(subname,sort)
+        var devs=devicesByFriendlyName(name,sort)
         for (var j = 0; j < devs.length; j++) {
             endpointIds.push(devs[j].endpointId)
         }
         registeredDeviceDispatch({"source":source, "devices": endpointIds, "action": "add"})
         return endpointIds
+
     }
 
 
@@ -632,6 +597,14 @@ export default function DeviceProvider(props) {
 
     function directive (endpointId, controllerName, command, payload={}, cookie={}, instance="") {
         var controller=getController(endpointId, controllerName)
+        if (!controller || !controller.hasOwnProperty('interface')) {
+            console.log('!! could not get controller', controllerName, controller, 'for', endpointId)
+
+            var promise1 = new Promise(function(resolve, reject) {
+                resolve({});});
+            return promise1;
+        }
+        
         const serverurl="https://"+window.location.hostname;
         var header={"name": command, "namespace":controller.interface, 
                     "payloadVersion":"3", "messageId": newtoken(), "correlationToken": newtoken()}
@@ -673,7 +646,6 @@ export default function DeviceProvider(props) {
         <DeviceContext.Provider
             value={{
                 devices: devices,
-                virtualDevices: virtualDevices,
                 
                 directives: directives,
                 controllerProperties: controllerProperties,
@@ -720,6 +692,7 @@ export default function DeviceProvider(props) {
                 unregisterDevices: unregisterDevices,
                 registeredDevices: registeredDevices,
                 registerEndpointIds: registerEndpointIds,
+                cardDeviceCount: cardDeviceCount,
             }}
         >
             {props.children}

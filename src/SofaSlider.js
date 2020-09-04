@@ -40,7 +40,7 @@ const useStyles = makeStyles({
 export default function SofaSlider(props) {
     
     const classes = useStyles();
-    const [value, setValue] = useState(0)
+    const [value, setValue] = useState(props.value)
     
     useEffect(() => {
         if (props.value) {

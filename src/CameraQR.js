@@ -12,6 +12,12 @@ const useStyles = makeStyles(theme => {
             height: "auto",
             minHeight:100,
         },
+        overlay: {
+            position: "absolute",
+            top: 4,
+            bottom:4,
+            left: 4,
+        }
     }
 });
 
@@ -21,7 +27,7 @@ export default function CameraQR(props) {
     const serverurl="https://"+window.location.hostname;
     
     return ( 
-            <Grid item xs={4} className={classes.songImageHolder}>
+            <Grid item xs={4} className={props.overlay ? classes.overlay : classes.normal}>
 
             <img
                 className={classes.bigcover}

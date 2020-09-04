@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => {
         },
         scrollColumn: {
             overflowY: "auto",
+            paddingRight: 32,
         },
         mobile: {
             flexGrow: 1

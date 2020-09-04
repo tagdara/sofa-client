@@ -6,13 +6,13 @@ import { makeStyles } from '@material-ui/styles';
 
 import Grid from '@material-ui/core/Grid';
 import SofaPage from './SofaPage';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import SofaSinglePage from './SofaSinglePage';
 import SofaLogin from './SofaLogin'
+
 import ErrorCard from './ErrorCard'
 import BottomBar from './BottomBar';
 import ErrorBoundary from './ErrorBoundary';
-
+import ReconnectButton from './ReconnectButton';
 
 const useStyles = makeStyles(theme => {
     
@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => {
             boxSizing: "border-box",
             display: "flex",
             justifyContent: "center",
+            position: "relative",
         },
         mobileControlArea: {
             //minHeight: "100%",
@@ -35,6 +36,7 @@ const useStyles = makeStyles(theme => {
             boxSizing: "border-box",
             alignContent: "flex-start",
             display: "flex",
+            position: "relative",
         },
         version: {
             paddingLeft: 16,
@@ -51,14 +53,14 @@ const useStyles = makeStyles(theme => {
             alignContent: "flex-start",
             flexDirection: "column",
             backgroundColor: theme.palette.layer.body,
-        }
+        },
     }
 });
 
 export default function SofaAppContent(props) {
     
     const { layout, isMobile, renderSuspenseModule } = useContext(LayoutContext);
-    const { streamStatus, streamConnected, connectError, loggedIn } = useContext(NetworkContext);
+    const { streamConnected, connectError, loggedIn } = useContext(NetworkContext);
     const [ barSelection, setBarSelection] = useState(undefined)
     const classes = useStyles();
     
@@ -73,22 +75,24 @@ export default function SofaAppContent(props) {
         
         if (!layout || !layout.data || !layout.data.type ) { return null }
         if (layout.data.type==='single') {
-            return renderSuspenseModule(layout.name, layout.props)
+            return  <SofaSinglePage isMobile={ isMobile }>
+                        { renderSuspenseModule(layout.name, layout.props) }
+                    </SofaSinglePage>
         }
         
         if (layout.data.type==='pages') {
             if ( isMobile || layout.page) {
                 if (!layout.hasOwnProperty('page') || layout.page==="") {
-                    return <SofaPage wide={true} key={layout.data.order[0]} name={layout.data.order[0]} page={layout.data.pages[layout.data.order[0]]} />
+                    return <SofaPage wide={true} isMobile={isMobile} key={layout.data.order[0]} name={layout.data.order[0]} page={layout.data.pages[layout.data.order[0]]} />
                 }
                 // If we are on mobile or a specific page is selected, show that page
-                return <SofaPage wide={ true } key={layout.page} name={layout.page} page={layout.data.pages[layout.page]} />
+                return <SofaPage isMobile={isMobile} wide={ layout.data.pages[layout.page].wide } key={layout.page} name={layout.page} page={layout.data.pages[layout.page]} />
             }
             
             var pages=[]
             for (var i = 0; i < layout.data.order.length; i++) {
                 var pagename=layout.data.order[i]
-                pages.push(<SofaPage key={ pagename } name={ pagename } page={layout.data.pages[pagename]} />)
+                pages.push(<SofaPage isMobile={isMobile}  key={ pagename } name={ pagename } page={layout.data.pages[pagename]} />)
             }
             return pages
         }
@@ -100,13 +104,7 @@ export default function SofaAppContent(props) {
         <>
             <div className={classes.scrollHolder}>
             <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
-                { !streamConnected && 
-                    <Grid container spacing={2} >
-                        <ListItem>
-                            <ListItemText primary="Network not ready" secondary={"Server Side Event Stream not connected:" +streamConnected+" " +streamStatus } />
-                        </ListItem>
-                    </Grid>
-                }
+                { !streamConnected() && <ReconnectButton /> }
                 <ErrorBoundary wide={props.wide}>
                 { chooseDisplayPages() }
                 </ErrorBoundary>

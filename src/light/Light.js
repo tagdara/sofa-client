@@ -113,7 +113,7 @@ export default function Light(props) {
     }
     
     return (
-            <ButtonItem noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true}
+            <ButtonItem noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true} noPaper={false} button={false}
                 avatarIcon={ isReachable() ?
                     <LightbulbOutlineIcon className={classes.iconSize} />
                 :

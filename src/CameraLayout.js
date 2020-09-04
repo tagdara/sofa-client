@@ -1,20 +1,39 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState} from 'react';
 import { DataContext } from './DataContext/DataProvider';
-
+import { makeStyles } from '@material-ui/styles';
 import SecurityCamera from './camera/securitycamera';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
 import GridSection from './GridSection';
-import CameraQR from './CameraQR';
+import Button from '@material-ui/core/Button';
+import SofaListItem from './SofaListItem';
 
+// Current Material icons does not include the updated QrCode icon
+import QrCodeIcon from '@material-ui/icons/DeveloperMode';
 
+const useStyles = makeStyles({
+    smallicon: {
+        width: 18,
+    },
+    button: {
+        minWidth: 36
+    },
+}
+)
 export default function CameraLayout(props) {
     
-    const { deviceStatesByCategory, directive } = useContext(DataContext);
-    const cameras=deviceStatesByCategory(['CAMERA'])
+    const { cardReady, devices, getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
+    const [cameras, setCameras]=useState([])
+    const [ showQR, setShowQR]=useState(false)
+    const classes = useStyles();
+    
+    useEffect(() => {
+        setCameras(getEndpointIdsByCategory('CAMERA','CameraLayout'))
+        return function cleanup() {
+            unregisterDevices('CameraLayout');
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
 
     function openNVR() {
         var newurl="https://unifi-video.dayton.tech:7443"
@@ -23,28 +42,25 @@ export default function CameraLayout(props) {
     }
     
     return (
+        cardReady('CameraLayout') &&
         <React.Fragment>
-        <GridSection name={"Cameras"}>
+        <GridSection name={"Cameras"} secondary={
+            <Button onClick={ () => setShowQR(!showQR) } className={classes.button} >
+                <QrCodeIcon className={classes.smallicon } />
+            </Button> }
+        >
             { cameras.map(camera => 
-                <SecurityCamera camera={camera} key={camera.endpointId} name={ camera.friendlyName } directive={directive} />
+                <>
+                    <SecurityCamera qr={showQR} camera={camera} key={camera} device={ devices[camera] } name={ devices[camera].friendlyName } directive={directive} />
+                </>
             )}
+
         </GridSection>
         <GridSection>
         <List>
-            <ListItem button onClick={() => openNVR() }>
-                <ListItemIcon>
-                    <VideocamIcon />
-                </ListItemIcon>
-                <ListItemText primary={'Unifi NVR'} />
-            </ListItem>
+            <SofaListItem button onClick={() => openNVR() } avatar={<VideocamIcon />} avatarState={"off"} primary={'Unifi Protect'} />
         </List>
         </GridSection>
-        <GridSection name={"QR Codes"} show={false}>
-            { cameras.map(camera => 
-                <CameraQR cameraId={camera.endpointId} key={camera.endpointId} name={ camera.friendlyName } />
-            )}
-        </GridSection>
-
         </React.Fragment>
     )
 }

@@ -1,12 +1,7 @@
 import React from 'react';
 
-import ToggleAvatar from './ToggleAvatar';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-
 import IconButton from '@material-ui/core/IconButton';
-
+import SofaListItem from './SofaListItem'
 import GridItem from './GridItem'
 import ReplayIcon from '@material-ui/icons/Replay';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -19,12 +14,12 @@ export default function AdapterItem(props) {
     function getErrorState(count) {
         try {
 
-            if (props.adapter.PowerController.powerState.value==='OFF') {
+            if (props.deviceState.PowerController.powerState.value==='OFF') {
                 return 'disabled'
             }
             
-            if (props.adapter.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
-                if (props.adapter.AdapterHealth.logged.value.ERROR > count) {
+            if (props.deviceState.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
+                if (props.deviceState.AdapterHealth.logged.value.ERROR > count) {
                     return 'on'
                 } else {
                     return 'closed'
@@ -40,8 +35,8 @@ export default function AdapterItem(props) {
 
     function getErrorCount() {
         try {
-            if (props.adapter.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
-                return "Errors: "+props.adapter.AdapterHealth.logged.value.ERROR
+            if (props.deviceState.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
+                return "Errors: "+props.deviceState.AdapterHealth.logged.value.ERROR
             } else {
                 return "No Errors"
             }
@@ -53,8 +48,8 @@ export default function AdapterItem(props) {
 
     function getDataSize() {
         try {
-            if (props.adapter.AdapterHealth.hasOwnProperty('datasize')) {
-                return "/ Data: "+props.adapter.AdapterHealth.datasize.value
+            if (props.deviceState.AdapterHealth.hasOwnProperty('datasize')) {
+                return "/ Data: "+props.deviceState.AdapterHealth.datasize.value
             } else {
                 return ""
             }
@@ -67,28 +62,30 @@ export default function AdapterItem(props) {
     
     function getStartupDate() {
         try {
-            if (props.adapter.AdapterHealth.startup.value) {
-                return <Moment format="ddd MMM D h:mm:sa">{props.adapter.AdapterHealth.startup.value}</Moment>
+            if (props.deviceState.AdapterHealth.startup.value) {
+                return <Moment format="ddd MMM D h:mm:sa">{props.deviceState.AdapterHealth.startup.value}</Moment>
             }
         } 
         catch {}
-        return ""
+        return "Not started"
     }
 
 
     return (
         <GridItem wide={props.wide} >
-            <ListItem button onClick={ () => window.open(props.adapter.AdapterHealth.url.value, '_'+props.adapter.friendlyName) }>
-                <ToggleAvatar avatarState={ getErrorState(5) }>{props.adapter.friendlyName.charAt()}</ToggleAvatar>
-                <ListItemText primary={props.adapter.friendlyName} secondary={props.adapter.AdapterHealth.url.value}/>
-            </ListItem>
-            <ListItem>
-                <ListItemText primary={getStartupDate()} secondary={ getErrorCount()+" "+getDataSize()} />
-                <ListItemSecondaryAction>
-                    <IconButton size={"small"} onClick={ () => props.directive(props.adapter.endpointId, "PowerController", 'TurnOn')} ><ReplayIcon /></IconButton>
-                    <IconButton size={"small"} onClick={ () => props.directive(props.adapter.endpointId, "PowerController", 'TurnOff')} ><ClearIcon /></IconButton>
-                </ListItemSecondaryAction>
-            </ListItem>
+            <SofaListItem   button={true} onClick={ () => window.open(props.deviceState.AdapterHealth.url.value, '_'+props.device.friendlyName) }
+                            avatarState={ getErrorState(5) } avatar={props.device.friendlyName.charAt()}
+                            primary={props.device.friendlyName} secondary={props.deviceState.AdapterHealth.url.value}
+            />
+            <SofaListItem   button={false} 
+                            primary={getStartupDate()} secondary={ getErrorCount()+" "+getDataSize()}
+                            secondaryActions={ 
+                            <>
+                                <IconButton size={"small"} onClick={ () => props.directive(props.device.endpointId, "PowerController", 'TurnOn')} ><ReplayIcon /></IconButton>
+                                <IconButton size={"small"} onClick={ () => props.directive(props.device.endpointId, "PowerController", 'TurnOff')} ><ClearIcon /></IconButton>
+                            </>
+                            }
+            />
        </GridItem>
     );
 }

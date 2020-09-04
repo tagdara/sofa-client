@@ -7,6 +7,7 @@ import AreaSummaryLine from './AreaSummaryLine';
 import AreaSummary from './AreaSummary';
 import GridItem from './GridItem';
 import CardControl from './CardControl';
+import PlaceholderCard from './PlaceholderCard';
 
 
 export default function AreaHero(props) {
@@ -71,14 +72,15 @@ export default function AreaHero(props) {
             for (var i = 0; i < children.length; i++) {
                 
                 var child=deviceStates[children[i]]
-                
                 if (child && devices[children[i]].displayCategories.includes('LIGHT')) {
                     if (child.hasOwnProperty('ColorController')) {
+                        
                         colorLights[children[i]]=deviceStates[children[i]]
                     }
                 }
             }
         }
+
         return colorLights
     }
 
@@ -111,28 +113,28 @@ export default function AreaHero(props) {
     function expandArea(areaname) {
         applyLayoutCard('AreaLayout',{"name": areaname})
     }
-
+    
+    if (!cardReady('AreaHero')) {
+        return <PlaceholderCard count={ 6 } />
+    }
 
     return (
-        cardReady('AreaHero') ?
-            <GridItem wide={props.wide}>
-                <CardControl name={area} back={backArea} home={homeArea} expand={expandArea}/>
-                <>
-                    { hasShortcuts() &&
-                        <AreaSummaryLine device={devices[thisarea]} deviceState={ deviceStates[thisarea] } area={thisarea} colorLights={ getAreaColor() } />
-                    }
-                
-                {   getAreaAreas().map((anarea) => 
-                    <AreaLine device={devices[anarea]} deviceState={ deviceStates[anarea] }  area={ anarea } key={ anarea } selectArea={selectArea} ></AreaLine>
-                )}
-                { thisarea &&
-                    <AreaSummary    device={devices[thisarea]} deviceState={deviceStates[thisarea]} showDetail={true} area={ thisarea } 
-                                    name={ devices[thisarea].friendlyName } shortcuts={deviceStates[thisarea].shortcuts} 
-                                    selectArea={selectArea} noGrid={true} summaryLine={false} />
+        <GridItem wide={props.wide}>
+            <CardControl name={area} back={backArea} home={homeArea} expand={expandArea}/>
+            <>
+                { hasShortcuts() &&
+                    <AreaSummaryLine device={devices[thisarea]} deviceState={ deviceStates[thisarea] } area={thisarea} colorLights={ getAreaColor() } />
                 }
-                </>
-            </GridItem>
-        : 
-        null
+            
+            {   getAreaAreas().map((anarea) => 
+                <AreaLine device={devices[anarea]} deviceState={ deviceStates[anarea] }  area={ anarea } key={ anarea } selectArea={selectArea} ></AreaLine>
+            )}
+            { thisarea &&
+                <AreaSummary    device={devices[thisarea]} deviceState={deviceStates[thisarea]} showDetail={true} area={ thisarea } 
+                                name={ devices[thisarea].friendlyName } shortcuts={deviceStates[thisarea].shortcuts} 
+                                selectArea={selectArea} noGrid={true} summaryLine={false} />
+            }
+            </>
+        </GridItem>
     );
 }

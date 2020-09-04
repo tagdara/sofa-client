@@ -26,16 +26,17 @@ export const useStream = (accessToken) => {
     };
 
     const eventSource = useRef(null)
+    
     const listenEvent = useCallback(() => { 
-        if (streamToken) {
+        if (streamToken && !isConnecting) {
             // EventSource does not support passing headers so we must use a cookie to send the token
             writeCookie("access_token", streamToken, 1)
-            console.log('connecting SSE')
             eventSource.current = new EventSource(serverurl+"/sse", { withCredentials: true })
         }
-    }, [streamToken] )
-    
-    function getConnected() {
+    }, [streamToken, isConnecting] )
+
+
+    function streamConnected() {
         if (eventSource && eventSource.current!==undefined && eventSource.current!==null) {
             if (eventSource.current.readyState===1) {
                 return true
@@ -43,11 +44,11 @@ export const useStream = (accessToken) => {
         }
         return false
     }
+
     
-    const streamConnected = getConnected()
+    //const streamConnected = getConnected()
     
     useEffect(() => {
-        
         listenEvent() 
         return () => {
             if (eventSource.current) { eventSource.current.close() }
@@ -62,27 +63,24 @@ export const useStream = (accessToken) => {
         const connectStream = () => {
             if (streamToken && subscribers.length>0 && !isConnecting && eventSource.current) {
                 setIsConnecting(true)
-                console.log('.. Adding event source listeners', subscribers)
-                //var esource=new EventSource(serverurl+"/sse", { headers: { 'authorization': streamToken }, withCredentials: true })
+                //console.log('.. Adding event source listeners', subscribers)
                 eventSource.current.addEventListener('message', dataHandler);
                 eventSource.current.addEventListener('error', errorHandler);
                 eventSource.current.addEventListener('open', openHandler);
-                //setEventSource(esource)
+                //console.log('stream status',getStreamStatus())
                 setStreamStatus(getStreamStatus())
             }
         }
         
         const openHandler = () => {
-            console.log('SSE Opened')
-            //setConnected(true)
             setStreamStatus(getStreamStatus())
             setIsConnecting(false)
         }
 
 
         const errorHandler = (e,f) => {
-            console.log('ERROR with EventSource', e,f)
-            console.log('streamStatus',streamStatus)
+            console.log('ERROR with EventSource', streamStatus, e,f)
+            setIsConnecting(false)
             setStreamStatus(getStreamStatus())
         }
 
@@ -103,7 +101,7 @@ export const useStream = (accessToken) => {
             unmounted = true;
         };
     // eslint-disable-next-line     
-    }, [ streamToken, subscribers, isConnecting, streamConnected, streamStatus]);
+    }, [ streamToken, subscribers, isConnecting, streamStatus]);
 
     
     function getStreamStatus() {
@@ -133,21 +131,26 @@ export default function NetworkProvider(props) {
     const [refreshToken, setRefreshToken]= useState(null);
     const [accessToken, setAccessToken]= useState(null);
     const [connectError, setConnectError] = useState(false);
+    const [updatingToken, setUpdatingToken] = useState(false);
     const { streamConnected, streamStatus, closeStream, addSubscriber, setStreamToken } = useStream(accessToken, [])
+
+    const tokenUpdating = useRef(false)
+    
+    tokenUpdating.current = updatingToken
     
     
     useEffect(() => {
+        
         if (streamStatus===0 ) {
-            console.log('eventsource data stream connecting')
+            console.log('SSE data stream: connecting')
         }
         if (streamStatus===1 ) {
-            console.log('eventsource data stream connected')
+            console.log('SSE data stream: connected')
         }
         if (streamStatus===2 ) {
-            console.log('eventsource data stream closed')
+            console.log('SSE data stream: closed')
         }
 
-        getJSON('user')
     // eslint-disable-next-line 
     },  [streamStatus] )  
     
@@ -157,19 +160,29 @@ export default function NetworkProvider(props) {
         function getTokenStorage(name) {
             return localStorage.getItem(name)
         }
+
+        async function getAccessToken(newRefreshToken, newUser) {
+            return await refreshAccessToken(newRefreshToken, newUser)
+        }
         
-        var newAccessToken=getTokenStorage("access_token")
-        setAccessToken(newAccessToken)
-        setStreamToken(newAccessToken)
-        var newRefreshToken=getTokenStorage("refresh_token")
-        setRefreshToken(newRefreshToken)
         var newUser=getTokenStorage("user")
         setUser(newUser)
+        var newRefreshToken=getTokenStorage("refresh_token")
+        setRefreshToken(newRefreshToken)
 
-        if (newAccessToken!==null) {
-            setLoggedIn(true)
+        if (newRefreshToken) {
+            getAccessToken(newRefreshToken, newUser)
+                .then(result=> {    
+                        if (result) {
+                            setAccessToken(result.access_token)
+                            setLoggedIn(true)
+                            setStreamToken(result.access_token)
+                        }
+                })
         }
+    // eslint-disable-next-line 
     },  [setStreamToken] )        
+
 
     function handleFetchErrors(response) {
 
@@ -178,9 +191,9 @@ export default function NetworkProvider(props) {
             setAccessToken("")
             setStreamToken("")
             console.log('Not logged in', response.status, response.statusText)
-            if (refreshToken) {
+            if (refreshToken && !tokenUpdating.current) {
                 console.log('attempting to get access token using refresh token')
-                refreshAccessToken()
+                refreshAccessToken(refreshToken, user)
             }
             return { "error": "login" }
         }
@@ -189,9 +202,9 @@ export default function NetworkProvider(props) {
             setAccessToken("")
             setStreamToken("")
             console.log('Unauthorized / Not logged in', response.status, response.statusText)
-            if (refreshToken) {
+            if (refreshToken && !tokenUpdating.current) {
                 console.log('attempting to get access token using refresh token')
-                refreshAccessToken()
+                refreshAccessToken(refreshToken, user)
             }
             return { "error": "login" }
         }
@@ -205,21 +218,25 @@ export default function NetworkProvider(props) {
         return response.json()
     }
     
-    function refreshAccessToken() {
+    function refreshAccessToken(userRefreshToken, userLogin) {
+
         console.log('Refreshing Access Token')
-        if (refreshToken) {
+        if (userRefreshToken && !tokenUpdating.current) {
+            setUpdatingToken(true)
             return fetch(serverurl+'/auth/o2/token', {
                 method: 'post',
                 headers: {
                     'Accept': 'application/json, text/plain, */*',
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({"refresh_token":refreshToken, "user":user})
+                body: JSON.stringify({"refresh_token":userRefreshToken, "user":userLogin})
             })
                     .then(result=>handleFetchErrors(result))
  		            .then(result=>loginResult(result))
-                    .then(result=>setTokenStorage(user, result))
+                    .then(result=>setTokenStorage(userLogin, result))
+                    .then(result=>{ return result })
         } else {
+            console.log('Missing refresh token.')
             setLoggedIn(false)
             var promise1 = new Promise(function(resolve, reject) {
                 resolve(undefined);});
@@ -228,11 +245,11 @@ export default function NetworkProvider(props) {
     }
     
     function getJSON(path) {
-        if (accessToken && loggedIn ) {
+        if (accessToken && loggedIn && !tokenUpdating.current ) {
       	    return fetch(serverurl+"/"+path, { method: 'GET', headers: { 'authorization': accessToken}})
      		    .then(result=>handleFetchErrors(result))
         } else {
-            //console.log('not logged in. refusing to get ',path)
+            //console.log('not logged in or token updating. refusing to get ', path, loggedIn, tokenUpdating.current)
             setLoggedIn(false)
             var promise1 = new Promise(function(resolve, reject) {
                 resolve(undefined);});
@@ -242,7 +259,7 @@ export default function NetworkProvider(props) {
 
     function postJSON(path, data, skipToken) {
         
-        if (accessToken || skipToken===true) {
+        if ((accessToken && loggedIn && !tokenUpdating.current) || skipToken===true) {
             var headers={   'Accept': 'application/json, text/plain, */*', 'Content-Type': 'application/json'}
             if (!skipToken) {
                 headers.authorization=accessToken
@@ -264,8 +281,6 @@ export default function NetworkProvider(props) {
 
     function loginResult(response) {
 
-        console.log('login result', response)
-
         if (response && response.hasOwnProperty('access_token')) { 
             setAccessToken(response.access_token)
             setStreamToken(response.access_token)
@@ -279,21 +294,19 @@ export default function NetworkProvider(props) {
 
     function login(user, password) {
         console.log('Logging in as user',user,password)
-        //let formData = new FormData();
-        //formData.append('user',user);
-        //formData.append('password', password);
         var data={"user":user, "password": password}
-  	    //return fetch(serverurl+'/login', { method: 'post', body: formData })
   	    return postJSON('login',data, true)
  		            .then(result=>loginResult(result))
                     .then(result=>setTokenStorage(user, result))
     }
 
     function setTokenStorage(user, newTokens) {
+        //console.log('setting tokens in storage', user, newTokens)
         if (newTokens) {
             if (newTokens.hasOwnProperty('access_token')) {
                 localStorage.setItem("access_token", newTokens.access_token)
                 setAccessToken(newTokens.access_token)
+                setStreamToken(newTokens.access_token)
             }
             if (newTokens.hasOwnProperty('refresh_token')) {
                 localStorage.setItem("refresh_token", newTokens.refresh_token)
@@ -301,8 +314,10 @@ export default function NetworkProvider(props) {
             }
             localStorage.setItem("user", user)
             setUser(user)
-            if (newTokens.access_token && newTokens.refresh_token && !loggedIn) { setLoggedIn(true) }
+            if (newTokens.access_token && newTokens.refresh_token) { setLoggedIn(true) }
         }
+
+        setUpdatingToken(false)
         return newTokens
     }
     

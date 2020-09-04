@@ -7,7 +7,7 @@ import Thermostat from './thermostat/Thermostat';
 
 export default function ThermostatLayout(props) {
 
-    const { devices, deviceStates, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
+    const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
     const [thermostats, setThermostats]=useState([])
     const [temperatureSensors, setTemperatureSensors]=useState([])
 
@@ -23,6 +23,7 @@ export default function ThermostatLayout(props) {
 
 
     return (    
+        cardReady('ThermostatLayout') ?
         <React.Fragment>
             <GridSection name={"Thermostats"}>
                 { thermostats.map((thermostat) =>
@@ -36,5 +37,6 @@ export default function ThermostatLayout(props) {
                 )}
             </GridSection>
         </React.Fragment>
+        : null
     )
 };

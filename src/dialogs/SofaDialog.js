@@ -6,8 +6,13 @@ import Dialog from '@material-ui/core/Dialog';
 import Slide from  '@material-ui/core/Slide';
 const useStyles = makeStyles({
 
-    dialogPaper: {
+    dialogPaperFull: {
         minHeight: '90vh',
+        maxHeight: '90vh',
+        overflowX: "hidden",
+        display: "flex",
+    },
+    dialogPaper: {
         maxHeight: '90vh',
         overflowX: "hidden",
         display: "flex",
@@ -31,7 +36,7 @@ function SofaDialog(props) {
             open={props.open}  
             onClose={props.close}
             TransitionComponent={Transition}
-            classes={{ paper: classes.dialogPaper }}
+            classes={{ paper: props.fullHeight ? classes.dialogPaperFull : classes.dialogPaper }}
         >
             {props.children}
         </Dialog>
@@ -44,6 +49,7 @@ SofaDialog.defaultProps = {
     tabValue: '',
     tabChange: '',
     fullWidth: true,
+    fullHeight: true,
 }
 
 export default withMobileDialog()(SofaDialog);

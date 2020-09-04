@@ -31,8 +31,10 @@ export default createMuiTheme({
             area: "#000",
         },
         dot: {
-            off: "#444",
+            disabled: "#444",
             on: deepOrange[500],
+            more: "rgba(191, 54, 12, 0.4)",
+            off: "#444",
         },
         avatar: {
             normal: deepOrange[500],

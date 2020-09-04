@@ -81,6 +81,17 @@ const useStyles = makeStyles(theme => {
             boxSizing: "border-box",
             margin: 0,
             zIndex: 2,
+        },
+        centeredHolder: {
+            display: "flex",
+            width: "100%",
+            position: "relative",
+            minWidth: 192,
+            padding: 0,
+            boxSizing: "border-box",
+            margin: 0,
+            zIndex: 2,
+            justifyContent: "center",
         }
     }
 });
@@ -149,7 +160,7 @@ export default function DotAvatar(props) {
 
     
     return (
-        <div className={classes.holder} >
+        <div className={props.centered ? classes.centeredHolder : classes.holder} >
             { levels.map((lev) =>
             <IconButton key={lev} onClick={ () => applyLevel(lev) } className={ ( level>0 && lev<=level ) ? classes.baseOn : classes.baseOff}>
                 { lev===0  ?

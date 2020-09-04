@@ -60,7 +60,7 @@ export default function ButtonItem(props) {
     const classes = useStyles();
 
     var ButtonObject =  (
-        <ListItem   button className={classnames(classes.item, props.highlight && classes.highlight, props.noMargin && classes.noMargin, props.noPad && classes.noPad)} 
+        <ListItem   button={props.button} className={classnames(classes.item, props.highlight && classes.highlight, props.noMargin && classes.noMargin, props.noPad && classes.noPad)} 
                     onClick={ () =>  !props.labelClick && props.action()}>
             <div className={classes.sceneButton}>
                 <ToggleAvatar noback={props.noback===undefined ? true : props.noback} avatarState={props.avatarState ? props.avatarState : 'off'} small={props.small} >
@@ -75,7 +75,7 @@ export default function ButtonItem(props) {
     return (
         <>
         { !props.noGrid ?
-            <GridItem xs={props.xs} thinmargin={props.thinmargin} nopaper={true} noPad={props.noPad} nolist={props.nolist} >
+            <GridItem xs={props.xs} thinmargin={props.thinmargin} nopaper={ props.noPaper } noPad={props.noPad} nolist={props.nolist} >
                 { ButtonObject }
                 { props.children }
             </GridItem>
@@ -90,4 +90,7 @@ export default function ButtonItem(props) {
 
 };
 
-
+ButtonItem.defaultProps = {
+    noPaper: true,
+    button: true
+}

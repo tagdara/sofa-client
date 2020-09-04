@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => {
         dotLine: {
             display: "flex",
             justifyContent: "space-between",
-            padding: "8px 8px 8px 8px",
+            padding: 8,
             alignItems: "center",
             height: 64,
             boxSizing: "border-box",

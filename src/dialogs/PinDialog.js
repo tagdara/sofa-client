@@ -42,7 +42,10 @@ const useStyles = makeStyles({
         height: 72,
         alignItems: "flex-end",
         display: "flex",
-    }
+    },
+    dialogContent: {
+        padding: 16,
+    },
 });
 
 export default function PinDialog(props) {
@@ -51,7 +54,7 @@ export default function PinDialog(props) {
     const [pin, setPin] = useState([]);
 
     function addNumberToPin(dig) {
-        setPin(pin+dig);
+        setPin(pin+dig.toString());
     };  
  
     function submitPin() {
@@ -65,11 +68,10 @@ export default function PinDialog(props) {
     }
 
     return (
-        <SofaDialog maxWidth={'xs'} open={props.open} close={clearAndClose} >
-            <DialogContent>
+        <SofaDialog fullHeight={false} maxWidth={'xs'} open={props.open} close={clearAndClose} >
+            <DialogContent className={classes.dialogContent} >
                 <Grid container item spacing={1} xs={12} >
-                    <Grid item xs={12} />
-                    <SecurityCamera wide={true} camera={props.camera} selectButtons={false} directive={props.directive} />
+                    <SecurityCamera wide={true} camera={props.device.endpointId} selectButtons={false} directive={props.directive} />
                     <Grid item xs={12} className={classes.nameInput}>
                         <TextField
                             id="required"
@@ -80,33 +82,12 @@ export default function PinDialog(props) {
                             onChange={(e) => setPin(e.target.value) }
                         />
                     </Grid>
-                    <Grid item xs={4} >
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('1')}>1</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('2')}>2</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('3')}>3</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('4')}>4</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('5')}>5</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('6')}>6</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('7')}>7</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('8')}>8</Button>
-                    </Grid>
-                    <Grid item xs={4}>
-                        <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin('9')}>9</Button>
-                    </Grid>
+                        { [...Array(9).keys()].map( digit =>
+                        <Grid item xs={4} key={"dig"+digit} >
+                            <Button className={classes.bigButton} variant="outlined" color="primary" size={"large"} onClick={() => addNumberToPin(digit+1)}>{digit+1}</Button>
+                        </Grid>
+                        )}
+
                     <Grid item xs={4}>
                         <Button className={classes.bigButton} size={"large"} onClick={() => clearAndClose() } ><CloseIcon/></Button>
                     </Grid>

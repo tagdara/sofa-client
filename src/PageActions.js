@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { DataContext } from './DataContext/DataProvider';
-import ListIcon from '@material-ui/icons/List';
+import LabelIcon from '@material-ui/icons/Label';
 
 import ListItem from '@material-ui/core/ListItem';
 import Chip from '@material-ui/core/Chip';
@@ -28,33 +28,44 @@ const useStyles = makeStyles(theme => {
         },
         avatar: {
             color: theme.palette.layer.card,
-            backgroundColor: theme.palette.layer.card,
+            backgroundColor: "rgba(0,0,0,0)",
+            margin: "4px 16px !important",
         }
     }
 });
 
 export default function PageActions(props) {
     
-    const { directive, deviceStatesByFriendlyName } = useContext(DataContext);
+    const { cardReady, devices, directive, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DataContext);
 
     const classes = useStyles();
-    const allActions = deviceStatesByFriendlyName(props.actions)
+    //const allActions = deviceStatesByFriendlyName(props.actions)
+    const [allActions, setAllActions]=useState(undefined)
 
-    function runAutomation(name) {
-        directive(name, 'SceneController', 'Activate')
+    useEffect(() => {
+        setAllActions(getEndpointIdsByFriendlyName(props.actions, 'Actions-'+props.name))
+        return function cleanup() {
+            unregisterDevices('Actions-'+props.name);
+        };
+    // eslint-disable-next-line 
+    }, [ ] )
+
+    function runAutomation(item) {
+        directive(item, 'SceneController', 'Activate')
         return true
     }
 
     return (
+        cardReady('Actions-'+props.name) &&
         <ListItem className={classes.listItem} >
         { allActions.map( item => 
             <Chip
                 className={classes.chip}
-                key={ item.endpointId }
-                avatar={<Avatar  className={classes.avatar}> <ListIcon /></Avatar>}
-                label={ item.friendlyName }
+                key={ item }
+                avatar={<Avatar  className={classes.avatar}> <LabelIcon /></Avatar>}
+                label={ devices[item].friendlyName }
                 clickable
-                onClick={ () => runAutomation(item.endpointId) }
+                onClick={ () => runAutomation(item) }
               />        
         )}
         </ListItem>

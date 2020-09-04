@@ -98,7 +98,7 @@ export default function CameraDialog(props) {
     //},[refVideo.current]);
     
     useEffect(()=> {
-        props.directive(props.camera.endpointId,"CameraStreamController", "InitializeCameraStreams", 
+        props.directive(props.camera,"CameraStreamController", "InitializeCameraStreams", 
             {
                 "cameraStreams": [
                     {
@@ -113,9 +113,9 @@ export default function CameraDialog(props) {
                     }
                 ]
             }
-        ).then(response => { console.log('resp',response); setUri(response.payload.cameraStreams[0].uri) });
+        ).then(response => { console.log('resp',response.payload.cameraStreams[0].uri); setUri(response.payload.cameraStreams[0].uri) });
     // eslint-disable-next-line     
-    },[props.camera.endpointId]);
+    },[props.camera]);
     
     function dateUri(uri) {
         var date = new Date();
@@ -149,7 +149,7 @@ export default function CameraDialog(props) {
         console.log('set rotate to ',rotation)
 
     }
-    
+
     return (
         <Dialog fullScreen open={props.show} onClose={() => closeDialog()} className={classes.bigcamDialog} PaperProps ={{ classes: { root: classes.paper}}}>
             { !props.live && 
@@ -173,9 +173,9 @@ export default function CameraDialog(props) {
                             <source src={dateUri(uri)} type="application/x-mpegURL" />
                         </video>                    
                     :
-                        <ReactHLS   ref={refVideo} className={rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} 
+                        <ReactHLS   playerRef={refVideo}  className={rotation>0 ? classes.bigcamRotated : classes.bigcam} style={{transform: `rotate(${rotation}deg)`}} 
                                     url={dateUri(uri)} 
-                                    videoProps={{ width: "100%", height: "100%", muted: true, autoPlay: true, playsInline: true, poster: props.poster }} 
+                                    videoProps={{ height: "auto", width: "100%", muted: true, autoPlay: true, playsInline: true, poster: props.poster }} 
                                     hlsConfig ={{ liveDurationInfinity: true, enableWorker: false,  }} 
                         />
                     }

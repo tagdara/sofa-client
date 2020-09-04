@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 import Receiver from './devices/receiver';
+import PlaceholderCard from './PlaceholderCard';
 
 export default function ReceiverHero(props) {
     
@@ -14,15 +15,16 @@ export default function ReceiverHero(props) {
         };
     // eslint-disable-next-line 
     }, [ ] )
+    
+    if (!cardReady('ReceiverHero')) {
+        return <PlaceholderCard count={1} />
+    }
 
     return (
-        cardReady('ReceiverHero') ?
         <>
             { receivers.map( endpointId => 
                 <Receiver endpointId={endpointId} wide={props.wide} key={endpointId} device={ devices[endpointId] } deviceState={ deviceStates[endpointId] } />
             )}
         </>
-        : null
-    );
-    
+    )
 }

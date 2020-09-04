@@ -2,13 +2,12 @@ import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
+import SofaListItem from './SofaListItem';
 import GridItem from './GridItem';
-import ToggleAvatar from './ToggleAvatar';
+import PlaceholderCard from './PlaceholderCard';
 
 export default function ZoneHero(props) {
 
@@ -71,22 +70,19 @@ export default function ZoneHero(props) {
         })
         return openzones
     }
-
+    
+    if (!cardReady('ZoneHero')) {
+        return <PlaceholderCard count={1} />
+    }
+    
     return (
-        <GridItem wide={props.wide}>
-            { cardReady('ZoneHero') ?
-            <ListItem>
-                <ToggleAvatar noback={zoneCount('DETECTED')===0 } avatarState={ (zoneCount('DETECTED')>0) ? "open" : "closed" } onClick={ (e) => applyLayoutCard('ZoneLayout')} >
-                    { zoneCount('DETECTED')>0 ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
-                </ToggleAvatar>
-                <ListItemText onClick={ (e) => applyLayoutCard('ZoneLayout')} primary={ (zoneCount('DETECTED')>0) ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } secondary={listOfOpenZones()}/>
-            </ListItem>
-            :
-            <ListItem>
-                <ToggleAvatar avatarState={"notready"} ><PriorityHighIcon/></ToggleAvatar>
-                <ListItemText primary={'Waiting for zone data'}/>
-            </ListItem>
-            }
+        <GridItem wide={props.wide} nopad={true}>
+            <SofaListItem   avatarBackground={ zoneCount('DETECTED')>0 } avatarState={ (zoneCount('DETECTED')>0) ? "open" : "closed" } 
+                            onClick={ (e) => applyLayoutCard('ZoneLayout')} 
+                            avatar={ zoneCount('DETECTED')>0 ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
+                            primary={ (zoneCount('DETECTED')>0) ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } 
+                            secondary={listOfOpenZones()}
+            />
         </GridItem>
     );
 }

@@ -34,7 +34,7 @@ export default function UserProvider(props) {
         }
         
         if (loggedIn) {
-      	    getJSON('get-user')
+      	    getJSON('user')
                 .then(result=>parseResult(result))
         } else {
             setUserData({})
@@ -43,8 +43,8 @@ export default function UserProvider(props) {
     }, [ loggedIn] )
     
     function saveUserData(data) {
-        postJSON('save-user', data)
-            .then(result=>console.log(result))
+        postJSON('user/save', data)
+            .then(result=>console.log('saved user setting change',result))
     }
     
     function chooseUserCamera(cameraId) { 

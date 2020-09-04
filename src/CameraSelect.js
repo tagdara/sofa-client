@@ -6,7 +6,7 @@ import SecurityCamera from './camera/securitycamera';
 
 export default function CameraSelect(props) {
 
-    const { devices, getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
+    const { getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
     const [cameras, setCameras]=useState([])
     const { chooseUserCamera, userCamera } = useContext(UserContext);
 
@@ -29,7 +29,7 @@ export default function CameraSelect(props) {
         
         for (var i = 0; i < cameras.length; i++) {
             if (userCamera===cameras[i]) { 
-                return devices[cameras[i]]
+                return cameras[i]
             }
         }
         
@@ -40,7 +40,7 @@ export default function CameraSelect(props) {
 
         var curr=0
         for (var i = 0; i < cameras.length; i++) {
-            if (userCamera===cameras[i].endpointId) { 
+            if (userCamera===cameras[i]) { 
                 curr=i
                 break
             }
@@ -49,13 +49,13 @@ export default function CameraSelect(props) {
         var nextcam=curr+1
         if (nextcam>cameras.length-1) { nextcam=0; }
         if (nextcam<0) {nextcam=cameras.length-1; }
-        chooseUserCamera(cameras[nextcam].endpointId)
+        chooseUserCamera(cameras[nextcam])
     }
     
     function prevCamera() {
         var curr=0
         for (var i = 0; i < cameras.length; i++) {
-            if (userCamera===cameras[i].endpointId) { 
+            if (userCamera===cameras[i]) { 
                 curr=i
                 break
             }
@@ -64,14 +64,14 @@ export default function CameraSelect(props) {
         var nextcam=curr-1
         if (nextcam>cameras.length-1) { nextcam=0; }
         if (nextcam<0) {nextcam=cameras.length-1; }
-        chooseUserCamera(cameras[nextcam].endpointId)
+        chooseUserCamera(cameras[nextcam])
     }
 
     return (
         <React.Fragment>
             { currentCamera()!==undefined ?
             <SecurityCamera wide={props.wide} camera={currentCamera()} selectButtons={true} key={ userCamera } directive={ directive }
-                            name={ currentCamera().friendlyName } nextCamera={nextCamera} prevCamera={prevCamera} top={true} />
+                            name={ currentCamera().friendlyName } nextCamera={nextCamera} prevCamera={prevCamera} top={false} />
             :null }
         </React.Fragment> 
     );

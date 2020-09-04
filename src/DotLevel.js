@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
+import { useTheme } from "@material-ui/core/styles";
 import IconButton from '@material-ui/core/IconButton';
 import LensIcon from '@material-ui/icons/Lens';
 import TripOriginIcon from '@material-ui/icons/RadioButtonUnchecked';
@@ -24,6 +24,16 @@ const useStyles = makeStyles(theme => {
             color: theme.palette.dot.off,
             zIndex: 5,
         },
+        line: {
+                position: "absolute",
+                right: "calc(50% + 6px)",
+                top: "calc(50% - 1px)",
+                height: 2,
+                width: "calc(100% - 13px)",
+                display: "block",
+                zIndex:1,
+                opacity: 1,
+        },
         onLine: {
                 position: "absolute",
                 right: "calc(50% + 6px)",
@@ -36,6 +46,18 @@ const useStyles = makeStyles(theme => {
                 opacity: 1,
         },
         offLine: {
+                position: "absolute",
+                right: "calc(50% + 6px)",
+                top: "calc(50% - 1px)",
+                height: 1,
+                background: theme.palette.dot.off,
+                content: "",
+                width: "calc(100% - 13px)",
+                display: "block",
+                zIndex:1,
+                opacity: 1,
+        },
+        moreLine: {
                 position: "absolute",
                 right: "calc(50% + 6px)",
                 top: "calc(50% - 1px)",
@@ -87,6 +109,7 @@ const useStyles = makeStyles(theme => {
 export default function DotLevel(props) {
     
     const classes = useStyles();
+    const theme = useTheme();
     const levels = [0,1,2,3]
     const [level,setLevel] = useState(props.level);
     const [working,setWorking] = useState(false);
@@ -101,11 +124,17 @@ export default function DotLevel(props) {
         setLevel(lev)
         props.select(lev)
     }
+    
+    function getColorClass(lev, level) {
+        if (level===0) { return theme.palette.dot.off }
+        if (lev<= level) { return theme.palette.dot.on }
+        return theme.palette.dot.more
+    }
 
     return (
         <div className={classes.holder} >
             { levels.map((lev) =>
-            <IconButton key={lev} onClick={ () => applyLevel(lev) } className={ ( level>0 && lev<=level ) ? classes.baseOn : classes.baseOff}>
+            <IconButton size={"small"} key={lev} onClick={ () => applyLevel(lev) } className={ ( level>0 && lev<=level ) ? classes.baseOn : classes.baseOff}>
                 { lev===0  ?
                 <>
                     { working && lev===level ?
@@ -116,19 +145,19 @@ export default function DotLevel(props) {
                 </>
                 :
                 <>
-                    <div className={lev<=level ? classes.onLine: classes.offLine}></div>
+                    <div style={{ backgroundColor: getColorClass(lev, level) }} className={classes.line}></div>
                     { (working && lev===level) ?
                         <CircularProgress size={24} className={classes.working} />
                     :
                     <>
                         { lev===level ?
-                            <LensIcon className={ classes.selectedIcon} />
+                            <LensIcon style={{ color: getColorClass(lev, level) }} className={ classes.selectedIcon} />
                         :
-                            <LensIcon style={{  width: 8+(lev*2), height: 8+(lev*2), margin: 0 }} className={ classes.smallIcon} />
+                            <LensIcon style={{  color: getColorClass(lev, level), width: 8+(lev*2), height: 8+(lev*2), margin: 0 }} className={ classes.smallIcon} />
                         }
                     </>
                     }
-                    <div style={{ width : "calc(100% - "+(15-lev*2)+"px)" }} className={lev<=level ? classes.onLine: classes.offLine}></div>
+                    <div style={{ width : "calc(100% - "+(15-lev*2)+"px)", backgroundColor: getColorClass(lev, level) }} className={classes.line}></div>
                 </>
                 }
             </IconButton>

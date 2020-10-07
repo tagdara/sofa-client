@@ -24,18 +24,39 @@ export const deviceStatesReducer = (state, data) => {
         var prop='';
         var interfacename=""
         var dev={}
+        
+        //console.log('YY', data.event.header.name, data)
 
         switch (data.event.header.name) {
             case "Multistate":
+
                 for (dev in data.state) {
+                    
                     var newdev={}
                     if (devs.hasOwnProperty(dev)) {
                         newdev={...devs[dev]}
                     }
-
+                    
+                    try {
+                        if (data.state[dev] && data.state[dev].event.header.name==='ErrorResponse') {
+                            console.log('data',data.state[dev])
+                            console.log('error', data.state[dev].event.endpoint.endpointId, data.state[dev].event.payload.type, data.state[dev].event.payload.message)
+                            continue
+                        }
+                    }
+                    catch {
+                        console.log('could not check for error', data.state[dev])
+                    }
+                    
+                    if (!data.state[dev].hasOwnProperty("context")) { 
+                        console.log('!! no context in',data.state[dev])
+                        continue
+                    }
+                    
                     for (i = 0; i < data.state[dev].context.properties.length; i++) {
                         prop=data.state[dev].context.properties[i]
                         interfacename=prop.namespace.split('.')[1]
+
                         if (prop.hasOwnProperty('instance') && prop.instance!=="") {
                             interfacename=prop.instance.split('.')[1]
                         }
@@ -61,8 +82,137 @@ export const deviceStatesReducer = (state, data) => {
                 }               
                 //localStorage.setItem('deviceStates', JSON.stringify(devs));
                 return devs;
+
+            case "ErrorResponse":
+                console.log(data.event.payload.type)
+                dev=data.event.endpoint.endpointId
+                newdev={}
+                if (devs.hasOwnProperty(dev)) {
+                    newdev={...devs[dev]}
+
+                    if (data.event.payload.type==='BRIDGE_UNREACHABLE') {
+                        if (newdev.hasOwnProperty('EndpointHealth')) {
+                            console.log('Marking device as unreachable', dev)
+                            newdev.EndpointHealth={ "connectivity": { "value": { "value" : "UNREACHABLE" } }}
+                        }
+                    }
+                
+                    devs={...devs, [dev] : newdev }
+                    localStorage.setItem('deviceStates', JSON.stringify(devs));
+                }
+                return devs;
+
+            case "multiple StateReports":
+                for (var x = 0; x < data.data.length; x++) {
+                    var item=data.data[x]
+                    try {
+                        if (item.event.endpoint.endpointId==='pc1:pc:pc1') {
+                           console.log('Statereport', item)
+                        }
+                    }
+
+                    catch {
+                        console.log('multi-statereport item', item)
+                    }
+                    
+                    if (item.event===undefined) { continue } 
+                    
+                    dev=item.event.endpoint.endpointId
+                    newdev={}
+                    if (devs.hasOwnProperty(dev)) {
+                        newdev={...devs[dev]}
+                    }
+
+                    //console.log('Statereport', item.event.endpoint.endpointId)
+                    if (!item.hasOwnProperty('context')) {
+                        if (item.event.header.name==='ErrorResponse') {
+                            console.log(item.event.payload.type)
+                            if (item.event.payload.type==='BRIDGE_UNREACHABLE') {
+                                if (newdev.hasOwnProperty('EndpointHealth')) {
+                                    console.log('Marking device as unreachable', dev)
+                                    newdev.EndpointHealth={ "connectivity": { "value": { "value" : "UNREACHABLE" } }}
+                                }
+                            }
+                        } else {
+                            console.log('no context data for', item.event.endpoint.endpointId, item )
+                            continue
+                        }
+                    } else {
+                        for (i = 0; i < item.context.properties.length; i++) {
+                            prop=item.context.properties[i]
+                            interfacename=prop.namespace.split('.')[1]
+        
+                            if (prop.hasOwnProperty('instance') && prop.instance!=="") {
+                                interfacename=prop.instance.split('.')[1]
+                            }
+                            if (!newdev.hasOwnProperty(interfacename)) {
+                                newdev[interfacename]={}
+                            }
+                                
+                            try {
+                                if (prop['value'].hasOwnProperty('value')) {
+                                    prop['deepvalue']=prop.value.value
+                                } else {
+                                    prop['deepvalue']=prop.value
+                                }
+                            } 
+                            
+                            catch {
+                                prop['deepvalue']=prop.value
+                            }
+        
+                            newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
+        
+                        }
+                    }
+                    devs={...devs, [dev] : newdev }
+                }    
+                localStorage.setItem('deviceStates', JSON.stringify(devs));
+                return devs;
+                
+            case "StateReport":
+                console.log('Statereport', data.event.header.name, data.event.endpoint.endpointId, data.event )
+                if (!data.hasOwnProperty('context')) {
+                    console.log('no context data for', data.event.endpoint.endpointId )
+                    return state;
+                }
+                dev=data.event.endpoint.endpointId
+                newdev={}
+                if (devs.hasOwnProperty(dev)) {
+                    newdev={...devs[dev]}
+                }
+
+                for (i = 0; i < data.context.properties.length; i++) {
+                        prop=data.context.properties[i]
+                        interfacename=prop.namespace.split('.')[1]
+
+                        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
+                            interfacename=prop.instance.split('.')[1]
+                        }
+                        if (!newdev.hasOwnProperty(interfacename)) {
+                            newdev[interfacename]={}
+                        }
+                        
+                        try {
+                            if (prop['value'].hasOwnProperty('value')) {
+                                prop['deepvalue']=prop.value.value
+                            } else {
+                                prop['deepvalue']=prop.value
+                            }
+                        } 
+                        catch {
+                            prop['deepvalue']=prop.value
+                        }
+
+                        newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
+
+                    }
+                    devs={...devs, [dev] : newdev }
+                localStorage.setItem('deviceStates', JSON.stringify(devs));
+                return devs;
+
             case 'ChangeReport':
-                //console.log(data.event.endpoint.endpointId)
+
                 if (data.event.endpoint.endpointId in devs) {
                     var pname=""
                     var devif={}
@@ -115,7 +265,7 @@ export const deviceStatesReducer = (state, data) => {
                     //console.log('result',data.event.endpoint.endpointId, epid, dev)
                     return {...devs, [epid]: dev };
                 }
-                //localStorage.setItem('deviceStates', JSON.stringify(state));
+                localStorage.setItem('deviceStates', JSON.stringify(state));
                 return state
             default:
                 return state
@@ -141,7 +291,7 @@ export default function DataProvider(props) {
     const [lastDevices, setLastDevices] = useState([])
     
     useEffect(() => {
-       addSubscriber(deviceStatesDispatch)
+        addSubscriber(deviceStatesDispatch)
     // eslint-disable-next-line 
     }, []);
 
@@ -171,24 +321,25 @@ export default function DataProvider(props) {
         
         //console.log('reg dev trigger', registeredDevices)
         if (newDevices().length || removedDevices().length) {
-            //console.log('registering devices', {"add":newDevices(), "remove": removedDevices() })
+            console.log('registering devices', {"add":newDevices(), "remove": removedDevices() })
             postJSON('register_devices', {"add":newDevices(), "remove": removedDevices() })
             //postJSON('register_devices', Object.keys(registeredDevices))
-                .then(res=> { deviceStatesDispatch(res) })
+                .then(res=> { deviceStatesDispatch({ "event": {"header": {"name": "multiple StateReports"}}, "data": res }) } )
             setLastDevices(Object.keys(registeredDevices))
         }
     // eslint-disable-next-line 
     }, [registeredDevices])
 
 
-    function cardReady(cardname) {
+    function cardReady(cardname, skips=[]) {
         var foundAny=false
-        //console.log('registered', registeredDevices)
+
         for (var id in registeredDevices) { 
             //console.log('checking', registeredDevices[id].includes(cardname), id, registeredDevices[id])
-            if (registeredDevices[id].includes(cardname)) {
+            if (skips.indexOf(id)<0 && registeredDevices[id].includes(cardname)) {
                 //console.log('relevant', cardname, registeredDevices[id] )
                 if (!deviceStates || !deviceStates.hasOwnProperty(id) || deviceStates[id]===undefined) {
+                    //console.log('Failed:',id)
                     return false
                 }
                 //console.log('Confirmed:',id, deviceStates[id])
@@ -315,7 +466,6 @@ export default function DataProvider(props) {
         
         return getStatesForDevices(categoryDevices)
     }
-
     
     function sortByName(devlist) {
         devlist.sort(function(a, b)  {

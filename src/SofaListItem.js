@@ -33,11 +33,10 @@ const useStyles = makeStyles(theme => {
             fontSize: 12,
         },
         primary: {
-            display: "flex",
-            flexGrow: 1,
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            maxWidth: "100%",
         },
         flex: {
             display: "flex",
@@ -53,24 +52,42 @@ export default function SofaListItem(props) {
     
     const classes = useStyles();
 
+    function handleAvatarClick(e) {
+        console.log('avatar click')
+        e.stopPropagation(); 
+        if (props.avatarClick) {
+            props.avatarClick()
+        } else if (props.onClick) {
+            props.onClick()
+        }
+    }
+
     return (
-        <ListItem className={ (props.inList || props.noPad) ? classes.listItemNoPad : classes.listItem } button={props.button} onClick={ props.onClick }>
+        <ListItem className={ (props.inList || props.noPad) ? classes.listItemNoPad : classes.listItem } button={props.button} onClick={ props.avatarClick ? null : props.onClick }>
             { props.avatar &&
                 <>
                 { props.loading ?
                     <CircularProgress style={{ marginRight: 16 }} size={36} />
                 :
-                    <ToggleAvatar avatarState={ props.avatarState } noback={!props.avatarBackground} >
+                    <ToggleAvatar avatarState={ props.avatarState } noback={!props.avatarBackground} onClick={ (e) => handleAvatarClick(e) } >
                         { props.avatar }
                     </ToggleAvatar>
                 }
                 </>
             }
-            <ListItemText classes={{ root: classes.flex, primary: classes.primary, secondary : classes.smallSecondary }} primary={ props.primary } secondary={ props.secondary } />
+            <ListItemText onClick={ props.avatarClick ? props.onClick : null } classes={{ root: classes.flex, primary: classes.primary, secondary : classes.smallSecondary }} primary={ props.primary } secondary={ props.secondary } />
             { props.secondaryActions && 
-                <ListItemSecondaryAction>
-                    { props.secondaryActions }
-                </ListItemSecondaryAction>
+                <>
+                {props.inlineSecondary ?
+                    <>
+                        { props.secondaryActions }
+                    </>
+                :
+                    <ListItemSecondaryAction>
+                        { props.secondaryActions }
+                    </ListItemSecondaryAction>
+                }
+                </>
             }
             { props.children}
         </ListItem>
@@ -81,6 +98,7 @@ SofaListItem.defaultProps = {
     avatarState: "off",
     button: false,
     avatarBackground: true,
+    inlineSecondary: true,
 }
 
 

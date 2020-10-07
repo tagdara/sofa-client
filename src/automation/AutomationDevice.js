@@ -19,7 +19,9 @@ const useStyles = makeStyles({
         borderRadius: 4,
     },
     deviceLine: {
-        padding: "0px 4px",
+        display: "flex",
+        height: 64,
+        alignItems: "center",
     },
     typeLine: {
         fontSize: 10,

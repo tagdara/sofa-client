@@ -36,13 +36,18 @@ export default function PlayerHero(props) {
         }
     
         if (hotplayer) { 
-            if (hotplayer.InputController.input.value===hotplayer.friendlyName || hotplayer.InputController.input.value==="") {
-                return hotplayer.endpointId
-            }
-            for (var t = 0; t < speakers.length; t++) {
-                if (speakers[t].friendlyName===hotplayer.InputController.input.value) {
-                    return speakers[t].endpointId
+            try {
+                if (hotplayer.InputController.input.value===hotplayer.friendlyName || hotplayer.InputController.input.value==="") {
+                    return hotplayer.endpointId
                 }
+                for (var t = 0; t < speakers.length; t++) {
+                    if (speakers[t].friendlyName===hotplayer.InputController.input.value) {
+                        return speakers[t].endpointId
+                    }
+                }
+            } 
+            catch {
+                console.log('Error getting input details from hotplayer', hotplayer)
             }
         }
     

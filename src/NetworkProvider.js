@@ -18,6 +18,30 @@ export const useStream = (accessToken) => {
     const [isConnecting, setIsConnecting] = useState(false)
     const [streamToken, setStreamToken] = useState(accessToken)
     const [streamStatus, setStreamStatus] = useState(10)
+    const [logSSE, setLogSSE] = useState(false)
+    
+    const logEnabled = useRef(false)
+    
+    logEnabled.current = logSSE
+    
+    useEffect( () => {
+        try {
+            setLogSSE(JSON.parse(localStorage.getItem('console_log_sse')))
+        } 
+        catch {
+            localStorage.setItem('console_log_sse', false);
+            setLogSSE(false)
+        }
+    }, [])
+
+    function toggleLogSSE(val) {
+        if (val===undefined) {
+            val=!logSSE
+        } 
+        console.log('setting SSE logging to',val)
+        localStorage.setItem('console_log_sse', val);
+        setLogSSE(val)
+    }
     
     const addSubscriber = (subscriber) => {
         // to see why this is needed for the closure issue
@@ -45,7 +69,6 @@ export const useStream = (accessToken) => {
         return false
     }
 
-    
     //const streamConnected = getConnected()
     
     useEffect(() => {
@@ -87,6 +110,22 @@ export const useStream = (accessToken) => {
 
         const dataHandler = event => {
             var data=JSON.parse(event.data)
+            
+            if (logEnabled.current) {
+                try {
+                    if (data.event.header.name!=="Heartbeat") {
+                        if (data.event.hasOwnProperty('endpoint')) {
+                            console.log(data.event.header.name, data.event.endpoint.endpointId, data)
+                        } else if (data.event.header.namespace==="Alexa.Discovery") {
+                            console.log(data.event.header.name, data.event.payload.endpoints.length, data)
+                        }
+                    }
+                }
+                catch {
+                    console.log(data)
+                }
+            }
+
             for (var i = 0; i < subscribers.length; i++) {
                 subscribers[i](data)
             }
@@ -118,7 +157,7 @@ export const useStream = (accessToken) => {
         eventSource.current.close()
     }
 
-    return { streamConnected, streamStatus, closeStream, addSubscriber, setStreamToken };
+    return { streamConnected, streamStatus, closeStream, addSubscriber, setStreamToken, toggleLogSSE };
 };
 
 
@@ -132,13 +171,12 @@ export default function NetworkProvider(props) {
     const [accessToken, setAccessToken]= useState(null);
     const [connectError, setConnectError] = useState(false);
     const [updatingToken, setUpdatingToken] = useState(false);
-    const { streamConnected, streamStatus, closeStream, addSubscriber, setStreamToken } = useStream(accessToken, [])
+    const { streamConnected, streamStatus, closeStream, addSubscriber, setStreamToken, toggleLogSSE } = useStream(accessToken, [])
 
     const tokenUpdating = useRef(false)
     
     tokenUpdating.current = updatingToken
-    
-    
+
     useEffect(() => {
         
         if (streamStatus===0 ) {
@@ -183,9 +221,8 @@ export default function NetworkProvider(props) {
     // eslint-disable-next-line 
     },  [setStreamToken] )        
 
-
     function handleFetchErrors(response) {
-
+        
         if (response.status===400) {
             setLoggedIn(false)
             setAccessToken("")
@@ -272,6 +309,7 @@ export default function NetworkProvider(props) {
                 .then(result=>handleFetchErrors(result))
                 .then(result=> { return result })
         } else {
+            console.log('skipped postJSON',accessToken, loggedIn, !tokenUpdating.current)
             setLoggedIn(false)
             var promise1 = new Promise(function(resolve, reject) {
                 resolve(undefined);});
@@ -281,15 +319,18 @@ export default function NetworkProvider(props) {
 
     function loginResult(response) {
 
-        if (response && response.hasOwnProperty('access_token')) { 
-            setAccessToken(response.access_token)
-            setStreamToken(response.access_token)
-            setLoggedIn(true)
-            return response 
-        }
+        //if (response && response.hasOwnProperty('access_token')) { 
+        //    setAccessToken(response.access_token)
+        //    setStreamToken(response.access_token)
+        //    setLoggedIn(true)
+        //    return response 
+        //}
         
-        setLoggedIn(false)
-        return null
+        //setLoggedIn(false)
+        //return null
+        
+        // TODO/CHEESE 10/4/20 This happens during settokenstorage anyway
+        return response 
     }
 
     function login(user, password) {
@@ -314,10 +355,13 @@ export default function NetworkProvider(props) {
             }
             localStorage.setItem("user", user)
             setUser(user)
+            setUpdatingToken(false)
             if (newTokens.access_token && newTokens.refresh_token) { setLoggedIn(true) }
-        }
 
-        setUpdatingToken(false)
+        } else {
+            setUpdatingToken(false)
+            setLoggedIn(false)
+        }
         return newTokens
     }
     
@@ -350,6 +394,7 @@ export default function NetworkProvider(props) {
                 logout: logout,
                 addSubscriber: addSubscriber,
                 getStorage: getStorage,
+                toggleLogSSE: toggleLogSSE,
             }}
         >
             {props.children}

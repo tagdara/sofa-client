@@ -71,7 +71,7 @@ export default function CameraSelect(props) {
         <React.Fragment>
             { currentCamera()!==undefined ?
             <SecurityCamera wide={props.wide} camera={currentCamera()} selectButtons={true} key={ userCamera } directive={ directive }
-                            name={ currentCamera().friendlyName } nextCamera={nextCamera} prevCamera={prevCamera} top={false} />
+                            name={ currentCamera().friendlyName } nextCamera={nextCamera} prevCamera={prevCamera} top={false}  />
             :null }
         </React.Fragment> 
     );

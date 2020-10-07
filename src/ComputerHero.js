@@ -59,7 +59,7 @@ export default function ComputerHero(props) {
     useEffect(() => {
 
         var switchesEndpointIds=getEndpointIdsByCategory('SMARTPLUG', 'ComputerHero')
-        var matrixEndpointIds=getEndpointIdsByFriendlyName(matrixDeviceNames, false, 'ComputerHero')
+        var matrixEndpointIds=getEndpointIdsByFriendlyName(matrixDeviceNames, 'ComputerHero', false)
         setSwitches(switchesEndpointIds)
         setMatrixDevices(matrixEndpointIds)
         return function cleanup() {

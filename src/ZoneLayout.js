@@ -9,21 +9,36 @@ import GridSection from './GridSection';
 export default function ZoneLayout(props) {
 
     const { applyLayoutCard, applyBackPage } = useContext(LayoutContext);
+    const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
     const { getChangeTimesForDevices } = useContext(DeviceContext)
-    const { deviceStatesByController } = useContext(DataContext)
-    const allzones = deviceStatesByController(['ContactSensor','MotionSensor'])
+    //const { deviceStatesByController } = useContext(DataContext)
+    //const allzones = deviceStatesByController(['ContactSensor','MotionSensor'])
+    const [allZones, setAllZones]=useState(undefined)
     const [changeTimes, setChangeTimes] = useState({})
 
     useEffect(() => {
-        getChangeTimesForDevices('detectionState',allzones).then(result => { setChangeTimes(result) } )
+        var contactSensors=getEndpointIdsByCategory('CONTACT_SENSOR','ZoneLayout')
+        var motionSensors=getEndpointIdsByCategory('MOTION_SENSOR','ZoneLayout')
+        setAllZones([...contactSensors, ...motionSensors])
+        return function cleanup() {
+            unregisterDevices('ZoneLayout');
+        };
     // eslint-disable-next-line 
-    }, []);
+    }, [ ] )
+
+
+    useEffect(() => {
+        if (allZones) {
+            getChangeTimesForDevices('detectionState',allZones).then(result => { setChangeTimes(result) } )
+        }
+    // eslint-disable-next-line 
+    }, [allZones]);
     
     function getSecurityZones() {
         var secZones=[]
-        for (var i = 0; i < allzones.length; i++) {
-            if (!allzones[i].description.includes('(Automation)')) {
-                secZones.push(allzones[i])
+        for (var i = 0; i < allZones.length; i++) {
+            if (!devices[allZones[i]].description.includes('(Automation)')) {
+                secZones.push(allZones[i])
             } 
         }
         return secZones
@@ -31,9 +46,9 @@ export default function ZoneLayout(props) {
     
     function getAutomationZones() {
         var autoZones=[]
-        for (var i = 0; i < allzones.length; i++) { 
-            if (allzones[i].description.includes('(Automation)')) {
-                autoZones.push(allzones[i])
+        for (var i = 0; i < allZones.length; i++) { 
+            if (devices[allZones[i]].description.includes('(Automation)')) {
+                autoZones.push(allZones[i])
             } 
         }
         return autoZones
@@ -44,18 +59,21 @@ export default function ZoneLayout(props) {
         applyLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"detectionState"})
     }
 
-    return (    
+
+    return (   
+         cardReady('ZoneLayout') ? 
         <React.Fragment>
             <GridSection name={"Security Zones"} >
-                { getSecurityZones().map(device =>
-                    <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"}  />
+                { getSecurityZones().map(dev =>
+                    <Zone history={historyZone} key={ dev } endpointId={ dev } name={ devices[dev].friendlyName } device={ devices[dev] } deviceState={deviceStates[dev]} changeTime={(changeTimes && (dev in changeTimes)) ? changeTimes[dev].time : "Unknown"}  />
                 )}
             </GridSection>
             <GridSection name={"Automation Zones"} >
-                { getAutomationZones().map(device =>
-                    <Zone history={historyZone} key={ device.endpointId } endpointId={ device.endpointId } name={ device.friendlyName } device={ device } changeTime={(changeTimes && (device.endpointId in changeTimes)) ? changeTimes[device.endpointId].time : "Unknown"}  />
+                { getAutomationZones().map(dev =>
+                    <Zone history={historyZone} key={ dev } endpointId={ dev } name={ devices[dev].friendlyName } device={ devices[dev] } deviceState={deviceStates[dev]} changeTime={(changeTimes && (dev in changeTimes)) ? changeTimes[dev].time : "Unknown"}  />
                 )}
             </GridSection>
         </React.Fragment>
+        : null
     )
 };

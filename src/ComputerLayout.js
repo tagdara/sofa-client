@@ -12,31 +12,40 @@ export default function ComputerLayout(props) {
     const { cardReady, unregisterDevices, getEndpointIdsByFriendlyName, getEndpointIdsByCategory, devices, deviceStates, directive } = useContext(DataContext);
     const [switches, setSwitches]=useState([])
     const [otherDevices, setOtherDevices]=useState([])
-    const computers=[]
-    //const [computers, setComputers]=useState([])
+    const [computers, setComputers]=useState([])
     const matrixDeviceNames=['Living Room TV', 'Office 1', 'Office 2', 'Office 3', 'Office 4', 'Downstairs 1', 'Downstairs 2', 'Rack']
     const [matrixDevices, setMatrixDevices]=useState([])
 
     useEffect(() => {
-        //var computerEndpoints=getEndpointIdsByCategory('COMPUTER', 'ComputerLayout')
+        var computerEndpoints=getEndpointIdsByCategory('COMPUTER', 'ComputerLayout')
         var otherEndpointIds=getEndpointIdsByCategory('OTHER', 'ComputerLayout')
         var switchesEndpointIds=getEndpointIdsByCategory('SMARTPLUG', 'ComputerLayout')
         var matrixEndpointIds=getEndpointIdsByFriendlyName(matrixDeviceNames, 'ComputerLayout', false)
-        //setComputers(computerEndpoints)
+        setComputers(computerEndpoints)
         setOtherDevices(otherEndpointIds)
         setSwitches(switchesEndpointIds)
         setMatrixDevices(matrixEndpointIds)
+        
+        console.log('computers', computerEndpoints,computers)
         
         return function cleanup() {
             unregisterDevices('ComputerLayout');
         };
     // eslint-disable-next-line     
     }, [])
-    
- 
+
     return (
-        cardReady('ComputerLayout') ?
+        cardReady('ComputerLayout', ['pc1:pc:pc1', 'pc2:pc:pc2']) ?
         <React.Fragment>
+
+            <GridSection name={"Computers"} show={true}>
+                <ErrorBoundary wide={props.wide}>
+                    { computers.map((device) =>
+                        <Computer key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={ directive }  />
+                    )}
+                </ErrorBoundary>
+            </GridSection>
+
             <GridSection name={"Plugs"} >
                 <ErrorBoundary wide={props.wide}>
                     { switches.map(device =>
@@ -49,14 +58,6 @@ export default function ComputerLayout(props) {
                 <ErrorBoundary wide={props.wide}>
                     { matrixDevices.map(device =>
                         <Matrix key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={directive} />
-                    )}
-                </ErrorBoundary>
-            </GridSection>
-            
-            <GridSection name={"Computers"} show={false}>
-                <ErrorBoundary wide={props.wide}>
-                    { computers.map((device) =>
-                        <Computer key={ device } device={ device } directive={props.directive} />
                     )}
                 </ErrorBoundary>
             </GridSection>

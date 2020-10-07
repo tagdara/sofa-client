@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     },
     flex: {
         display: "flex",
-        height: 72,
+        height: 64,
         alignItems: "center",
     },
     wideSelect: {

@@ -20,6 +20,10 @@ export default function Device(props) {
     }
     
     function energy() {
+        if (props.deviceState.hasOwnProperty('Energy Level')) {
+            return props.deviceState["Energy Level"].mode.value
+        }
+
         if (props.deviceState.hasOwnProperty('EnergySensor')) {
             return props.deviceState.EnergySensor.power.value+"W"
         }

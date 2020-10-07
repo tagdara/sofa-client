@@ -120,7 +120,6 @@ export default function SecurityCamera(props) {
     useInterval(() => {
         // Your custom logic here
         if (imageUri && !showDialog) {
-            console.log('updating url to',imageUri+"?time="+Date.now())
             setUpdateUrl(imageUri+"?time="+Date.now())
         }
     }, refreshInterval);
@@ -130,7 +129,7 @@ export default function SecurityCamera(props) {
         function updateUrlUri(data) {
             if (data.payload) {
                 setUpdateUrl(data.payload.imageUri+"?time="+Date.now());
-                setImageUri(data.payload.imageUri)
+                setImageUri(data.payload.imageUri+"?width=480")
             } else {
                 console.log('no payload in data',data)
             }
@@ -139,22 +138,10 @@ export default function SecurityCamera(props) {
         if ((props.camera) && (ready!==props.camera)) { 
             setReady(props.camera)
             //props.camera.CameraStreamController.directive("InitializeCameraStreams", 
-            props.directive(props.camera, "CameraStreamController", "InitializeCameraStreams",
-                {
-                    "cameraStreams": [
-                        {
-                            "protocol": "HLS",
-                            "resolution": {
-                                "width": 640,
-                                "height": 480
-                            },
-                            "authorizationType": "BASIC",
-                            "videoCodec": "H264",
-                            "audioCodec": "AAC"
-                        }
-                    ]
-                }
-            ).then(response => updateUrlUri(response))
+            
+            // This should get the static image URI without starting streams unnecessarily
+            props.directive(props.camera, "CameraStreamController", "InitializeCameraStreams",{ "cameraStreams": [] })
+                .then(response => updateUrlUri(response))
         } 
     // eslint-disable-next-line 
     }, [props.camera, ready]);

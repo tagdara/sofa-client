@@ -17,29 +17,44 @@ function getFromLocalStorage() {
     
 const deviceReducer = (state, data) => {
     
-    if (data==={}) { return state }
-    if (!data.hasOwnProperty('event')) { return state }
+    try {
+        if (data==={}) { return state }
+        if (!data.hasOwnProperty('event')) { return state }
+            
+        var i=0;
+        var devs={...state}
+        var local={}
         
-    var i=0;
-    var devs={...state}
-    switch (data.event.header.name) {
-        case 'DeleteReport':
-            for (i = 0; i < data.event.payload.endpoints.length; i++) {
-                if (data.event.payload.endpoints[i].endpointId in devs) {
-                    delete devs[data.event.payload.endpoints[i].endpointId]
+        switch (data.event.header.name) {
+            case 'DeleteReport':
+                for (i = 0; i < data.event.payload.endpoints.length; i++) {
+                    if (data.event.payload.endpoints[i].endpointId in devs) {
+                        delete devs[data.event.payload.endpoints[i].endpointId]
+                    }
                 }
-            }
-            localStorage.setItem('devices', JSON.stringify(devs));
-            return devs
-        case 'AddOrUpdateReport':
-            var local={...state}
-            for (i = 0; i < data.event.payload.endpoints.length; i++) {
-                local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
-            }
-            localStorage.setItem('devices', JSON.stringify(local));
-            return local;
-        default:
-            return state
+                localStorage.setItem('devices', JSON.stringify(devs));
+                return devs
+            case 'Discovery.Response':
+                for (i = 0; i < data.event.payload.endpoints.length; i++) {
+                    local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
+                }
+                localStorage.setItem('devices', JSON.stringify(local));
+                return local;
+
+            case 'AddOrUpdateReport':
+                local={...state}
+                for (i = 0; i < data.event.payload.endpoints.length; i++) {
+                    local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
+                }
+                localStorage.setItem('devices', JSON.stringify(local));
+                return local;
+            default:
+                return state
+        }
+    }
+    catch {
+        console.log('!! Bad data', data)
+        return state
     }
 }
 
@@ -118,6 +133,9 @@ export default function DeviceProvider(props) {
       	    getJSON('properties')
                 .then(result=>setControllerProperties(result))
                 //.then(result=>console.log('done getting properties'));
+      	    discovery()
+                //.then(result=>console.log('done getting properties'));
+
         }
         
         if (loggedIn===true ) { getData() }
@@ -172,7 +190,7 @@ export default function DeviceProvider(props) {
         
     }
 
-    function getEndpointIdsByCategory(categories, source, searchterm ) {
+    function getEndpointIdsByCategory(categories, source, searchterm, wait ) {
         
         var endpointIds=[]
         var devs=devicesByCategory(categories, searchterm)
@@ -191,6 +209,7 @@ export default function DeviceProvider(props) {
 
         
     function unregisterDevices(source) {
+        //console.log('unregistering', source)
         registeredDeviceDispatch({"source":source, "action": "remove"})
     }
     
@@ -201,7 +220,7 @@ export default function DeviceProvider(props) {
     }
 
 
-    function devicesByFriendlyName(subname,sort=true, category) {
+    function devicesByFriendlyName(subname, sort=true, category=undefined, exact=true) {
 
         var subDevices=[]
         if (typeof(subname)==='object') {
@@ -217,8 +236,14 @@ export default function DeviceProvider(props) {
             } 
         } else {
             for (var devid in devices) {
-                if (subname==="" || devices[devid]['friendlyName'].includes(subname)) {
-                    subDevices.push(devices[devid])
+                if (exact && devices[devid]['friendlyName']===subname) { 
+                    if (category===undefined || devices[devid].displayCategories.includes(category)) {
+                        subDevices.push(devices[devid])
+                    }
+                } else if (!exact && (subname==="" || devices[devid]['friendlyName'].includes(subname))) {
+                    if (category===undefined || devices[devid].displayCategories.includes(category)) {
+                        subDevices.push(devices[devid])
+                    }
                 } 
             }
         }
@@ -233,10 +258,10 @@ export default function DeviceProvider(props) {
         return subDevices
     }
 
-    function getEndpointIdsByFriendlyName(name, source, sort=true) {
+    function getEndpointIdsByFriendlyName(name, source, sort=true, category=undefined, exact=true) {
         
         var endpointIds=[]
-        var devs=devicesByFriendlyName(name,sort)
+        var devs=devicesByFriendlyName(name, sort, category, exact)
         for (var j = 0; j < devs.length; j++) {
             endpointIds.push(devs[j].endpointId)
         }
@@ -371,12 +396,12 @@ export default function DeviceProvider(props) {
         // in order to see history.
 
         //console.log('gctfd',val,devs)
-        var endpointList=[]
-        for (var i = 0; i < devs.length; i++) {   
-           endpointList.push(devs[i].endpointId)
-        }
+        //var endpointList=[]
+        //for (var i = 0; i < devs.length; i++) {   
+        //   endpointList.push(devs[i].endpointId)
+        //}
 
-        return postJSON('list/influx/last/'+val, endpointList)
+        return postJSON('list/influx/last/'+val, devs)
                 .then(res=> checkJSON(res))
                 .then(res=> { return res;})
     }
@@ -594,6 +619,29 @@ export default function DeviceProvider(props) {
         return dirs
     }
 
+    function discovery() {
+        var discoveryDirective = {
+                "directive": {
+                    "header": {
+                        "namespace": "Alexa.Discovery",
+                        "name": "Discover",
+                        "messageId": newtoken(),
+                        "payloadVersion": "3"
+                    },
+                    "payload": {
+                        "scope": {
+                            "type": "BearerToken",
+                            "token": "sofa-interchange-token"
+                        }
+                    }
+                }
+            }
+
+        console.log('Discovering devices')
+        return postJSON('', discoveryDirective)
+            .then(res=> deviceDispatch(res)  )
+    }
+
 
     function directive (endpointId, controllerName, command, payload={}, cookie={}, instance="") {
         var controller=getController(endpointId, controllerName)
@@ -605,24 +653,22 @@ export default function DeviceProvider(props) {
             return promise1;
         }
         
-        const serverurl="https://"+window.location.hostname;
         var header={"name": command, "namespace":controller.interface, 
                     "payloadVersion":"3", "messageId": newtoken(), "correlationToken": newtoken()}
+        
         if (instance) {
             header.instance=instance
         } else if (controller.hasOwnProperty('instance')) {
             header.instance=controller.instance
         }
+        
         var endpoint={"endpointId": endpointId, "cookie": cookie, "scope":{ "type":"BearerToken", "token":"sofa-interchange-token" }}
         var data={"directive": {"header": header, "endpoint": endpoint, "payload": payload }}
         //console.log('Sending device-based alexa command:',data)
-    
-        return fetch(serverurl+'/directive', { withCredentials: true, credentials: 'include', method: 'post',
-                    body: JSON.stringify(data)
-                })
-                    .then(res=>res.json())
-                    //.then(res=>this.device.responseHandler(res))
-                    .then(res=> { return res;})
+
+        return postJSON('', data)
+            .then(res=> { return res })
+
     }
 
     function getActivations() {

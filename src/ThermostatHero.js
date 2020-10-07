@@ -3,6 +3,7 @@ import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
 import Thermostat from './thermostat/Thermostat';
+import TemperatureSensor from './thermostat/TemperatureSensor';
 import AirQuality from './thermostat/AirQuality';
 import PlaceholderCard from './PlaceholderCard';
 export default function ThermostatHero(props) {
@@ -13,10 +14,12 @@ export default function ThermostatHero(props) {
     //const aq = deviceStateByFriendlyName(props.airQuality)
     const [device, setDevice]=useState(undefined)
     const [aq, setAQ]=useState(undefined)
+    const [outdoor, setOutdoor]=useState(undefined)
     
     useEffect(() => {
         setDevice(getEndpointIdsByFriendlyName(props.Primary, 'ThermostatHero'))
         setAQ(getEndpointIdsByFriendlyName(props.airQuality, 'ThermostatHero'))
+        setOutdoor(getEndpointIdsByFriendlyName(props.outdoor, 'ThermostatHero'))
         return function cleanup() {
             unregisterDevices('ThermostatHero');
         };
@@ -29,8 +32,9 @@ export default function ThermostatHero(props) {
 
     return (
         <>
-            <AirQuality device={ devices[aq] } deviceState={deviceStates[aq]} wide={props.wide } />
+            <TemperatureSensor device={ devices[outdoor] } deviceState={deviceStates[outdoor]} onClick={ () => applyLayoutCard('ThermostatLayout') } wide={props.wide } />
             <Thermostat device={ devices[device] } deviceState={deviceStates[device]} onClick={ () => applyLayoutCard('ThermostatLayout') } wide={props.wide } />
+            <AirQuality device={ devices[aq] } deviceState={deviceStates[aq]} wide={props.wide } />
         </>
     ); 
 }

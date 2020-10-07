@@ -36,7 +36,7 @@ export default function CameraLayout(props) {
     }, [ ] )
 
     function openNVR() {
-        var newurl="https://unifi-video.dayton.tech:7443"
+        var newurl="https://unifi.dayton.tech:7443/"
         var tabname="_nvr"
         window.open(newurl,tabname);
     }
@@ -50,9 +50,7 @@ export default function CameraLayout(props) {
             </Button> }
         >
             { cameras.map(camera => 
-                <>
-                    <SecurityCamera qr={showQR} camera={camera} key={camera} device={ devices[camera] } name={ devices[camera].friendlyName } directive={directive} />
-                </>
+                <SecurityCamera qr={showQR} camera={camera} key={camera} device={ devices[camera] } name={ devices[camera].friendlyName } directive={directive} />
             )}
 
         </GridSection>

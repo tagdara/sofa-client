@@ -11,21 +11,21 @@ import GridItem from '../GridItem';
 export default function Zone(props) {    
 
     function getSensorController() {
-        if (props.device.hasOwnProperty('ContactSensor')) {
-            return props.device.ContactSensor
-        } else if (props.device.hasOwnProperty('MotionSensor')) {
-            return props.device.MotionSensor
+        if (props.deviceState.hasOwnProperty('ContactSensor')) {
+            return props.deviceState.ContactSensor
+        } else if (props.deviceState.hasOwnProperty('MotionSensor')) {
+            return props.deviceState.MotionSensor
         }
         return null
     }
 
     return (
         <GridItem >
-            <ListItem onClick={() => props.history(props.name, props.endpointId)}>
+            <ListItem onClick={() => props.history(props.device.friendlyName, props.endpointId)}>
                 <ToggleAvatar avatarState={ getSensorController().detectionState.value==='NOT_DETECTED' ? 'closed' : 'open' } > 
                     { getSensorController().detectionState.value==='NOT_DETECTED' ? <DoneIcon /> : <ClearIcon /> }
                 </ToggleAvatar>
-                <ListItemText primary={props.name} secondary={props.changeTime==='Unknown' ? 'Unknown':<Moment format="ddd MMM D h:mm:sa">{props.changeTime}</Moment>} />
+                <ListItemText primary={props.device.friendlyName} secondary={props.changeTime==='Unknown' ? 'Unknown':<Moment format="ddd MMM D h:mm:sa">{props.changeTime}</Moment>} />
             </ListItem>
         </GridItem>
     );

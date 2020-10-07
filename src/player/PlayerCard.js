@@ -38,7 +38,7 @@ export default function PlayerCard(props) {
     
     useEffect(() => {
         getEndpointIdsByCategory('SPEAKER','PlayerCard')
-        setJukebox(getEndpointIdsByFriendlyName('Jukebox', 'PlayerCard'))
+        setJukebox(getEndpointIdsByFriendlyName('Jukebox', 'PlayerCard')[0])
         return function cleanup() {
             unregisterDevices('PlayerCard');
         };
@@ -99,7 +99,6 @@ export default function PlayerCard(props) {
         if (!Array.isArray(deviceStates[props.player].MusicController.linked.value)) {
             return []
         }
-        console.log(deviceStates[props.player].MusicController.linked.value)
         return deviceStates[props.player].MusicController.linked.value
     }
     

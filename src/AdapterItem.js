@@ -75,7 +75,7 @@ export default function AdapterItem(props) {
         <GridItem wide={props.wide} >
             <SofaListItem   button={true} onClick={ () => window.open(props.deviceState.AdapterHealth.url.value, '_'+props.device.friendlyName) }
                             avatarState={ getErrorState(5) } avatar={props.device.friendlyName.charAt()}
-                            primary={props.device.friendlyName} secondary={props.deviceState.AdapterHealth.url.value}
+                            primary={props.device.friendlyName+" ("+props.deviceState.ServiceController.activeState.value+")"} secondary={props.deviceState.AdapterHealth.url.value}
             />
             <SofaListItem   button={false} 
                             primary={getStartupDate()} secondary={ getErrorCount()+" "+getDataSize()}

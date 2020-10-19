@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { useTheme } from "@material-ui/core/styles";
 import IconButton from '@material-ui/core/IconButton';
@@ -106,6 +106,28 @@ const useStyles = makeStyles(theme => {
     }
 });
 
+function useInterval(callback, delay) {
+    
+    const savedCallback = useRef();
+
+    // Remember the latest function.
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval.
+    useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+
+    }, [delay]);
+}
+
 export default function DotLevel(props) {
     
     const classes = useStyles();
@@ -113,6 +135,10 @@ export default function DotLevel(props) {
     const levels = [0,1,2,3]
     const [level,setLevel] = useState(props.level);
     const [working,setWorking] = useState(false);
+
+    useInterval(() => {
+        setWorking(false)
+    }, working ? 5000 : null);
 
     useEffect(() => {
         setLevel(props.level)

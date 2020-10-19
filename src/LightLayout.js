@@ -91,7 +91,6 @@ export default function LightLayout(props) {
             >
                 { filterByType(filter).map((device) =>
                     <Light  key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={ directive }  
-                            noMargin={true} nopaper={true} noPad={true} noback={true}
                             brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}
                     />
                 )}

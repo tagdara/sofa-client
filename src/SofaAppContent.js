@@ -13,6 +13,9 @@ import ErrorCard from './ErrorCard'
 import BottomBar from './BottomBar';
 import ErrorBoundary from './ErrorBoundary';
 import ReconnectButton from './ReconnectButton';
+import SofaDrawer from './SofaDrawer';
+import RightDrawer from './RightDrawer';
+import TopBar from './TopBar';
 
 const useStyles = makeStyles(theme => {
     
@@ -54,12 +57,27 @@ const useStyles = makeStyles(theme => {
             flexDirection: "column",
             backgroundColor: theme.palette.layer.body,
         },
+        innerDrawer: {
+            display: "flex",
+            maxWidth: 400,
+            //minHeight: "100%",
+            margin: "8px auto",
+            width: "100%",
+            marginTop: "env(safe-area-inset-top)",
+            marginBottom: "env(safe-area-inset-top)",
+            boxSizing: "border-box",
+            alignContent: "flex-start",
+            position: "relative",
+        },
+        drawerInset: {
+            width:400,
+        }
     }
 });
 
 export default function SofaAppContent(props) {
     
-    const { layout, isMobile, renderSuspenseModule } = useContext(LayoutContext);
+    const { layout, isMobile, renderSuspenseModule, toggleDrawer } = useContext(LayoutContext);
     const { streamConnected, connectError, loggedIn } = useContext(NetworkContext);
     const [ barSelection, setBarSelection] = useState(undefined)
     const classes = useStyles();
@@ -98,10 +116,13 @@ export default function SofaAppContent(props) {
         }
         return null
     }
-
+    
     return (
         (loggedIn && layout) ?
         <>
+            { !isMobile && <RightDrawer /> }
+            { !isMobile && <TopBar section={barSelection} chooseSection={setBarSelection} toggleDrawer={toggleDrawer} /> }
+            { !isMobile && <SofaDrawer /> }
             <div className={classes.scrollHolder}>
             <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                 { !streamConnected() && <ReconnectButton /> }

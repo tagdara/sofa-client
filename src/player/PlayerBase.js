@@ -41,7 +41,7 @@ export default function PlayerBase(props) {
     
     console.log('player',props.player)
     const classes = useStyles();
-    const { applyLayoutCard } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
     const serverurl="https://"+window.location.hostname;
     
     function addDefaultSrc(ev){
@@ -50,7 +50,7 @@ export default function PlayerBase(props) {
     }
     
     function setGroupPlayer(thisplayer) {
-        applyLayoutCard('PlayerGroup',{ 'player': thisplayer})
+        selectPage('PlayerGroup',{ 'player': thisplayer})
     }
     
     function getPlayerByEndpointId(endpointId) {
@@ -92,7 +92,7 @@ export default function PlayerBase(props) {
                     }
                     { !props.small ? null : 
                         <ListItemSecondaryAction>
-                            <IconButton onClick={(e) => applyLayoutCard('PlayersLayout',{'player':props.player.endpointId})} >
+                            <IconButton onClick={(e) => selectPage('PlayersLayout',{'player':props.player.endpointId})} >
                                 <ViewModuleIcon />
                             </IconButton>
                         </ListItemSecondaryAction>

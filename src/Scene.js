@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import ListIcon from '@material-ui/icons/List';
 import CloseIcon from '@material-ui/icons/Close';
@@ -19,12 +18,37 @@ const useStyles = makeStyles(theme => {
     }
 });
 
+function useInterval(callback, delay) {
+    
+    const savedCallback = useRef();
+
+    // Remember the latest function.
+    useEffect(() => {
+        savedCallback.current = callback;
+    }, [callback]);
+
+    // Set up the interval.
+    useEffect(() => {
+        function tick() {
+            savedCallback.current();
+        }
+        if (delay !== null) {
+            let id = setInterval(tick, delay);
+            return () => clearInterval(id);
+        }
+
+    }, [delay]);
+}
 
 export default function Scene(props) {
     
     const classes = useStyles();
     const [working, setWorking] = useState(false)
-    
+
+    useInterval(() => {
+        setWorking(false)
+    }, working ? 5000 : null);
+
     useEffect(() => {
         setWorking(false)
     }, [props.computedLevel]);
@@ -41,8 +65,10 @@ export default function Scene(props) {
         props.directive(props.scene.endpointId, 'SceneController', 'Delete')
     }
 
-   return (
-        <ButtonItem noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} highlight={props.highlight} noback={true}
+    // noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true} noPaper={false} button={false} 
+
+    return (
+        <ButtonItem highlight={props.highlight} avatarBackground={false}
             avatarIcon={ working ?
                 <CircularProgress size={props.small ? 24 : 32} className={classes.working} />
             :   

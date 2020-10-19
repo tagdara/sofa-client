@@ -2,7 +2,7 @@ import React from 'react';
 
 import Switch from '@material-ui/core/Switch';
 import TuneIcon from '@material-ui/icons/Tune';
-import GridItem from '../GridItem';
+import CardBase from '../CardBase';
 import SofaListItem from '../SofaListItem';
 
 export default function Device(props) {
@@ -14,7 +14,7 @@ export default function Device(props) {
     function nestLine(item) {
         if (props.deviceState.PowerController.powerState) {
             if (props.nested) { return item }
-            return <GridItem>{item}</GridItem>
+            return <CardBase>{item}</CardBase>
         }
         return null
     }
@@ -32,7 +32,7 @@ export default function Device(props) {
 
     return (
         nestLine(
-                <SofaListItem   inList={true} avatarBackground={false} avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? 'on' : 'off'}
+                <SofaListItem   avatarBackground={false} avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? 'on' : 'off'} noPad={true}
                                 avatar={ props.icon ? props.icon : <TuneIcon />}
                                 primary={props.device.friendlyName} secondary={ energy()}
                                 secondaryActions={

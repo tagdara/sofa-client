@@ -2,6 +2,7 @@ import React, { useContext}  from 'react';
 import { DeviceContext } from './DataContext/DeviceProvider';
 import { makeStyles } from '@material-ui/styles';
 
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,6 +19,9 @@ const useStyles = makeStyles(theme => {
         },
         select: {
             minWidth: "50%",
+        },
+        modeGroup: {
+            width: "100%",
         }
     }
 
@@ -26,7 +30,7 @@ const useStyles = makeStyles(theme => {
 export default function ModeLines(props) {
 
     const classes = useStyles();
-    const { getModes, deviceByEndpointId } = useContext(DeviceContext);
+    const { getModes, deviceByEndpointId, isModeNonControllable } = useContext(DeviceContext);
     const device=deviceByEndpointId(props.device.endpointId)
     const modes=getModes(device, props.exclude)
     
@@ -35,18 +39,22 @@ export default function ModeLines(props) {
     }; 
     
     return (
-        Object.keys(modes).map(mode => 
-            <ListItem key={mode}>
-                <ListItemText primary={mode} key={mode} />
-                <Select disabled={props.disabled} className={classes.select} displayEmpty 
-                        value={props.deviceState[mode].mode.value ? props.deviceState[mode].mode.value : ""} 
-                        onChange={ (e) => handleModeChoice(e, mode, e.target.value)} >
-                    { Object.keys(modes[mode]).map(modechoice => 
-                        <MenuItem key = { modes[mode][modechoice] } value={modechoice}>{modes[mode][modechoice]}</MenuItem>
-                    )}
-                </Select>
-            </ListItem>
-        )
+        Object.keys(modes).length>0 ?
+            <List className={classes.modeGroup}>
+            { Object.keys(modes).map(mode => 
+                <ListItem key={mode}  >
+                    <ListItemText primary={mode} key={mode} />
+                    <Select disabled={props.disabled || isModeNonControllable(device,mode)} className={classes.select} displayEmpty 
+                            value={props.deviceState[mode].mode.value ? props.deviceState[mode].mode.value : ""} 
+                            onChange={ (e) => handleModeChoice(e, mode, e.target.value)} >
+                        { Object.keys(modes[mode]).map(modechoice => 
+                            <MenuItem key = { modes[mode][modechoice] } value={modechoice}>{modes[mode][modechoice]}</MenuItem>
+                        )}
+                    </Select>
+                </ListItem>
+            )}
+            </List>
+            : null
     )
 }
 

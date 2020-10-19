@@ -94,84 +94,99 @@ export const deviceStatesReducer = (state, data) => {
                         if (newdev.hasOwnProperty('EndpointHealth')) {
                             console.log('Marking device as unreachable', dev)
                             newdev.EndpointHealth={ "connectivity": { "value": { "value" : "UNREACHABLE" } }}
+                            devs={...devs, [dev] : newdev }
                         }
                     }
-                
-                    devs={...devs, [dev] : newdev }
+                    
+                    if (data.event.payload.type==='NO_SUCH_ENDPOINT') {
+                        console.log('Removing NO_SUCH_ENDPOINT device', dev)
+                        delete devs[dev]
+                    }      
+
                     localStorage.setItem('deviceStates', JSON.stringify(devs));
                 }
+
                 return devs;
 
             case "multiple StateReports":
-                for (var x = 0; x < data.data.length; x++) {
-                    var item=data.data[x]
-                    try {
-                        if (item.event.endpoint.endpointId==='pc1:pc:pc1') {
-                           console.log('Statereport', item)
+            
+                if (data.data) {
+                    //console.log('multiple statereports',data.data.length)
+                    for (var x = 0; x < data.data.length; x++) {
+                        var item=data.data[x]
+                        try {
+                            if (item.event.endpoint.endpointId==='pc1:pc:pc1') {
+                               console.log('Statereport', item)
+                            }
                         }
-                    }
-
-                    catch {
-                        console.log('multi-statereport item', item)
-                    }
-                    
-                    if (item.event===undefined) { continue } 
-                    
-                    dev=item.event.endpoint.endpointId
-                    newdev={}
-                    if (devs.hasOwnProperty(dev)) {
-                        newdev={...devs[dev]}
-                    }
-
-                    //console.log('Statereport', item.event.endpoint.endpointId)
-                    if (!item.hasOwnProperty('context')) {
-                        if (item.event.header.name==='ErrorResponse') {
-                            console.log(item.event.payload.type)
-                            if (item.event.payload.type==='BRIDGE_UNREACHABLE') {
-                                if (newdev.hasOwnProperty('EndpointHealth')) {
-                                    console.log('Marking device as unreachable', dev)
-                                    newdev.EndpointHealth={ "connectivity": { "value": { "value" : "UNREACHABLE" } }}
+    
+                        catch {
+                            console.log('multi-statereport item', item)
+                        }
+                        
+                        if (item.event===undefined) { continue } 
+                        
+                        dev=item.event.endpoint.endpointId
+                        newdev={}
+                        if (devs.hasOwnProperty(dev)) {
+                            newdev={...devs[dev]}
+                        }
+                        if (!item.hasOwnProperty('context')) {
+                            if (item.event.header.name==='ErrorResponse') {
+                                console.log(item.event.payload.type)
+                                
+                                if (item.event.payload.type==='BRIDGE_UNREACHABLE') {
+                                    if (newdev.hasOwnProperty('EndpointHealth')) {
+                                        console.log('Marking device as unreachable', dev)
+                                        newdev.EndpointHealth={ "connectivity": { "value": { "value" : "UNREACHABLE" } }}
+                                    }
                                 }
+                                
+                                if (item.event.payload.type==='NO_SUCH_ENDPOINT') {
+                                    console.log('Removing NO_SUCH_ENDPOINT device', dev)
+                                    delete devs[dev]
+                                    continue
+                                }
+                            } else {
+                                console.log('no context data for', item.event.endpoint.endpointId, item )
+                                continue
                             }
                         } else {
-                            console.log('no context data for', item.event.endpoint.endpointId, item )
-                            continue
-                        }
-                    } else {
-                        for (i = 0; i < item.context.properties.length; i++) {
-                            prop=item.context.properties[i]
-                            interfacename=prop.namespace.split('.')[1]
-        
-                            if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-                                interfacename=prop.instance.split('.')[1]
-                            }
-                            if (!newdev.hasOwnProperty(interfacename)) {
-                                newdev[interfacename]={}
-                            }
+                            for (i = 0; i < item.context.properties.length; i++) {
+                                prop=item.context.properties[i]
+                                interfacename=prop.namespace.split('.')[1]
+            
+                                if (prop.hasOwnProperty('instance') && prop.instance!=="") {
+                                    interfacename=prop.instance.split('.')[1]
+                                }
+                                if (!newdev.hasOwnProperty(interfacename)) {
+                                    newdev[interfacename]={}
+                                }
+                                    
+                                try {
+                                    if (prop['value'].hasOwnProperty('value')) {
+                                        prop['deepvalue']=prop.value.value
+                                    } else {
+                                        prop['deepvalue']=prop.value
+                                    }
+                                } 
                                 
-                            try {
-                                if (prop['value'].hasOwnProperty('value')) {
-                                    prop['deepvalue']=prop.value.value
-                                } else {
+                                catch {
                                     prop['deepvalue']=prop.value
                                 }
-                            } 
-                            
-                            catch {
-                                prop['deepvalue']=prop.value
+            
+                                newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
+            
                             }
-        
-                            newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
-        
                         }
+                        devs={...devs, [dev] : newdev }
                     }
-                    devs={...devs, [dev] : newdev }
-                }    
-                localStorage.setItem('deviceStates', JSON.stringify(devs));
+                    localStorage.setItem('deviceStates', JSON.stringify(devs));
+                }
                 return devs;
                 
             case "StateReport":
-                console.log('Statereport', data.event.header.name, data.event.endpoint.endpointId, data.event )
+                //console.log('Statereport', data.event.header.name, data.event.endpoint.endpointId, data.event )
                 if (!data.hasOwnProperty('context')) {
                     console.log('no context data for', data.event.endpoint.endpointId )
                     return state;
@@ -278,7 +293,7 @@ export default function DataProvider(props) {
     
     const { registerEndpointIds, registeredDevices, getEndpointIdsByFriendlyName, unregisterDevices, devices, getEndpointIdsByCategory, getSceneDetails, 
             saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, 
-            directive, virtualDevices } = useContext(DeviceContext);
+            directive, virtualDevices, isModeNonControllable } = useContext(DeviceContext);
     
     const { postJSON, addSubscriber } = useContext(NetworkContext);
 
@@ -291,6 +306,7 @@ export default function DataProvider(props) {
     const [lastDevices, setLastDevices] = useState([])
     
     useEffect(() => {
+    
         addSubscriber(deviceStatesDispatch)
     // eslint-disable-next-line 
     }, []);
@@ -331,22 +347,71 @@ export default function DataProvider(props) {
     }, [registeredDevices])
 
 
+    function deviceState(endpointId) {
+        
+        // This attempts to fill in the various controllers for a device that might not have state provided yet.
+        // by applying unreachable to the endpoint controller, cards can check for health before displaying data
+        // otherwise all controllers are available but produce undefined for any request.
+        
+        // without this shim, a lot of javascript errors with nested dot notation can occur due to data delays
+        // cards should generally use deviceState(endpointId) instead of deviceStates[endpointId]
+        
+        // TODO/CHEESE - this should be the underlying basis for other state collectors but needs to ask for data
+        // when it is determined not to exist
+        
+        var pdev={}
+        var dev=deviceByEndpointId(endpointId)
+        if (dev) {
+            if (deviceStates.hasOwnProperty(endpointId)) {
+                pdev={...deviceStates[endpointId]}
+            }
+            for (var j = 0; j < dev.capabilities.length; j++) {
+
+                var cap=dev.capabilities[j]
+                if (cap.interface.indexOf('.') <0) { continue }
+                if (!pdev.hasOwnProperty(cap.interface.split('.')[1])) {
+                    pdev[cap.interface.split('.')[1]]={}
+                    if (!cap.properties.hasOwnProperty('supported')) { continue }
+                    for (var k = 0; k < cap.properties.supported.length; k++) {
+                        if (cap.interface.split('.')[1]==='EndpointHealth' && cap.properties.supported[k].name==="connectivity") {
+                            pdev[cap.interface.split('.')[1]][cap.properties.supported[k]]={"value": 'UNREACHABLE', "deepvalue": 'UNREACHABLE', "timeOfSampleValue": undefined } // TODO/CHEESE use now
+                        } else {
+                            pdev[cap.interface.split('.')[1]][cap.properties.supported[k].name]={ "value": undefined, "timeOfSampleValue": undefined}
+                        }
+                    }
+                }
+            }
+        }
+        return pdev
+    }
+
+
+
     function cardReady(cardname, skips=[]) {
         var foundAny=false
+        var removes=[]
+        var fail=false
 
         for (var id in registeredDevices) { 
             //console.log('checking', registeredDevices[id].includes(cardname), id, registeredDevices[id])
             if (skips.indexOf(id)<0 && registeredDevices[id].includes(cardname)) {
+                if (!deviceByEndpointId(id)) {
+                    removes.push(id)
+                    continue
+                }
                 //console.log('relevant', cardname, registeredDevices[id] )
                 if (!deviceStates || !deviceStates.hasOwnProperty(id) || deviceStates[id]===undefined) {
-                    //console.log('Failed:',id)
-                    return false
+                    fail=true
                 }
-                //console.log('Confirmed:',id, deviceStates[id])
                 foundAny=true
-                
             }
         }
+        if (removes.length>0) {
+            for (var j = 0; j < removes.length; j++) {
+                delete registeredDevices[id]
+            }
+        }
+        if (fail) { return false }
         return foundAny
     }
 
@@ -486,9 +551,25 @@ export default function DataProvider(props) {
         return undefined
     }
 
+    function modeDisplayName(dev, instance, value) {
+        
+        for (var k = 0; k < dev.capabilities.length; k++) {
+            if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance===instance) {
+                try {
+                    for (var j = 0; j < dev.capabilities[k].configuration.supportedModes.length; j++) {
+                        if (dev.capabilities[k].configuration.supportedModes[j].value===value) {
+                            return dev.capabilities[k].configuration.supportedModes[j].modeResources.friendlyNames[0].value.text
+                        }
+                    }
+                }
+                catch { console.log('could not get display value for', value) }
+            }
+        }
+        return value
+    }
 
     function getModes(dev) {
-        
+
         var modes={}
         for (var k = 0; k < dev.interfaces.length; k++) {
             if (dev[dev.interfaces[k]].controller==='ModeController') {
@@ -538,8 +619,12 @@ export default function DataProvider(props) {
                 getEndpointIdsByCategory: getEndpointIdsByCategory,
                 getEndpointIdsByFriendlyName: getEndpointIdsByFriendlyName,
                 registerEndpointIds: registerEndpointIds,
+                registeredDevices: registeredDevices,
                 cardReady:cardReady,
                 cardDevices: cardDevices,
+                deviceState: deviceState,
+                modeDisplayName: modeDisplayName,
+                isModeNonControllable:isModeNonControllable,
             }}
         >
             {props.children}

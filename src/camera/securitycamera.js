@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { LayoutContext } from '../layout/NewLayoutProvider';
+import { NetworkContext } from '../NetworkProvider';
+
 import { makeStyles } from '@material-ui/styles';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -12,7 +14,7 @@ import Videocam from '@material-ui/icons/Videocam';
 import CropOriginalIcon from '@material-ui/icons/CropOriginal';
 
 import CameraDialog from './cameraDialog';
-import GridItem from '../GridItem';
+import CardBase from '../CardBase';
 
 import ReactHLS from 'react-hls-player';
 import CameraQR from '../CameraQR';
@@ -73,6 +75,11 @@ const useStyles = makeStyles(theme => {
             right: 0,
             bottom: 0,
         },
+        sizerDiv: {
+            width: "100%",
+            height: 0,
+            maxHeight: 0,
+        }
     }
 });
 
@@ -101,7 +108,8 @@ function useInterval(callback, delay) {
 export default function SecurityCamera(props) {
 
     const classes = useStyles();
-    const { isMobile, applyLayoutCard } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
+    const { checkAuthentication } = useContext(NetworkContext);
     const intervals = [1000, 500, 5000, 3000]
     const [imageLoaded, setImageLoaded] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
@@ -115,20 +123,34 @@ export default function SecurityCamera(props) {
     const video = useRef(null);
     const image = useRef(null);
     const holder = useRef(null);
-    const [lowHeight,setLowHeight]= useState(100)
+    const [lowHeight,setLowHeight]= useState(210)
+    const sizerRef = useRef(false)    
+
+    useEffect(() => { 
+        
+        try {
+            if (sizerRef.current.parentNode.offsetWidth>0) { setLowHeight(Math.ceiling(sizerRef.current.parentNode.offsetWidth * 0.66)) }
+        } 
+        catch {
+            // offsetWidth is not always available on first check
+        }
+
+    // eslint-disable-next-line 
+    }, [ sizerRef.current ] )
     
+
     useInterval(() => {
-        // Your custom logic here
         if (imageUri && !showDialog) {
             setUpdateUrl(imageUri+"?time="+Date.now())
         }
-    }, refreshInterval);
+    }, (imageUri && !showDialog) ? refreshInterval : null);
+
     
     useEffect(()=> {
         
         function updateUrlUri(data) {
             if (data.payload) {
-                setUpdateUrl(data.payload.imageUri+"?time="+Date.now());
+                setUpdateUrl(data.payload.imageUri+"?width=480&time="+Date.now());
                 setImageUri(data.payload.imageUri+"?width=480")
             } else {
                 console.log('no payload in data',data)
@@ -201,9 +223,14 @@ export default function SecurityCamera(props) {
         var date = new Date();
         return uri+"?date="+date.toGMTString()
     }
+    
+    function imageError(e) {
+        checkAuthentication().then(res => {console.log('image error auth check', res)})
+    }
    
     return (
-        <GridItem wide={props.wide} nopad={true} noMargin={props.top} thinmargin={props.top && isMobile}>
+        <CardBase noPad={true}>
+            <div className={ classes.sizerDiv} ref={sizerRef} />
             { live && videoUri && !showDialog ?
                 <React.Fragment>
                     { ios ?
@@ -228,6 +255,7 @@ export default function SecurityCamera(props) {
                         ref={image}
                         className={imageLoaded ? classes.im : classes.hiddenimage}
                         src={updateUrl}
+                        onError={ (e) => imageError(e) }
                         onLoad={ () => imageFinished() }
                         onClick={ () => handleClickOpen()}
                         alt={props.camera.friendlyName+" Security Camera"}
@@ -247,7 +275,7 @@ export default function SecurityCamera(props) {
                             </IconButton>
                         }
                         { props.selectButtons &&
-                            <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
+                            <IconButton color="primary" className={classes.newgridbutton} onClick={ () => selectPage('CameraLayout')}>
                                 <ViewModuleIcon />
                             </IconButton>
                         }
@@ -256,14 +284,17 @@ export default function SecurityCamera(props) {
                         </IconButton>
                     </React.Fragment>
                 :
+                    <>
                     <div className={classes.hidden} style={{minHeight: `${lowHeight}`}}>
                         <CircularProgress className={classes.spinner} size={50} />
                     </div>
-                }
-                { (!live && props.selectButtons) &&
-                    <IconButton color="primary" className={classes.newgridbutton} onClick={ () => applyLayoutCard('CameraLayout')}>
-                        <ViewModuleIcon />
-                    </IconButton>
+
+                    { (!live && props.selectButtons) &&
+                        <IconButton color="primary" className={classes.newgridbutton} onClick={ () => selectPage('CameraLayout')}>
+                            <ViewModuleIcon />
+                        </IconButton>
+                    }
+                    </>
                 }
                 </React.Fragment>
             }
@@ -273,6 +304,6 @@ export default function SecurityCamera(props) {
             { showDialog &&
                 <CameraDialog poster={updateUrl} directive={props.directive} live={true} camera={props.camera} name={props.name} refreshInterval={refreshInterval} changeInterval={changeInterval} show={showDialog} close={closeDialog} src={imageUri} />
             }
-        </GridItem>
+        </CardBase>
     );
 }

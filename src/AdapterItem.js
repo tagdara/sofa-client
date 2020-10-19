@@ -2,7 +2,7 @@ import React from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
 import SofaListItem from './SofaListItem'
-import GridItem from './GridItem'
+import CardBase from './CardBase'
 import ReplayIcon from '@material-ui/icons/Replay';
 import ClearIcon from '@material-ui/icons/Clear';
 
@@ -72,7 +72,7 @@ export default function AdapterItem(props) {
 
 
     return (
-        <GridItem wide={props.wide} >
+        <CardBase >
             <SofaListItem   button={true} onClick={ () => window.open(props.deviceState.AdapterHealth.url.value, '_'+props.device.friendlyName) }
                             avatarState={ getErrorState(5) } avatar={props.device.friendlyName.charAt()}
                             primary={props.device.friendlyName+" ("+props.deviceState.ServiceController.activeState.value+")"} secondary={props.deviceState.AdapterHealth.url.value}
@@ -86,7 +86,7 @@ export default function AdapterItem(props) {
                             </>
                             }
             />
-       </GridItem>
+       </CardBase>
     );
 }
 

@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 export function AutomationsLayout(props) {
 
     const classes = useStyles();
-    const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
     const { directive } = useContext(DeviceContext);
     const { getJSON, postJSON } = useContext(NetworkContext);
     const { makeFavorite, isFavorite} = useContext(UserContext)
@@ -66,8 +66,7 @@ export function AutomationsLayout(props) {
     }
     
     function selectAutomation(automation) {
-        applyBackPage('AutomationsLayout',{})
-        applyLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
+        selectPage('AutomationLayout', {'name':automation, 'noBottom':true } )
     }    
     
     
@@ -86,8 +85,7 @@ export function AutomationsLayout(props) {
     }
 
     function newAutomation() {
-        applyBackPage('AutomationsLayout',{})
-        applyLayoutCard('AutomationLayout', {'noBottom':true})        
+        selectPage('AutomationLayout', {'noBottom':true})        
     }
 
     function toggleFavorites() {

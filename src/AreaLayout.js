@@ -17,7 +17,7 @@ import DeviceDialog from './DeviceDialog';
 export default function AreaLayout(props) {
 
     const { cardReady, devices, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices, directive } = useContext(DataContext);
-    const { isMobile, applyLayoutCard, layout } = useContext(LayoutContext);
+    const { selectPage, currentProps } = useContext(LayoutContext);
     const [edit, setEdit] = useState(false)
     const [addingDevice, setAddingDevice] = useState(false);
     const [deletingDevice, setDeletingDevice] = useState(false);
@@ -27,13 +27,13 @@ export default function AreaLayout(props) {
     //const [areaChildren, setAreaChildren]=useState([])
     
     useEffect(() => {
-        console.log(getEndpointIdsByFriendlyName(layout.props.name, 'AreaLayout', true, 'AREA', true))
-        setArea(getEndpointIdsByFriendlyName(layout.props.name, 'AreaLayout', true, 'AREA', true))
+        console.log(getEndpointIdsByFriendlyName(currentProps.name, 'AreaLayout', true, 'AREA', true))
+        setArea(getEndpointIdsByFriendlyName(currentProps.name, 'AreaLayout', true, 'AREA', true))
         return function cleanup() {
             unregisterDevices('AreaLayout');
         };
     // eslint-disable-next-line 
-    }, [ layout.props.name] )
+    }, [ currentProps ] )
 
 
     function getChildren(filter) {
@@ -64,7 +64,7 @@ export default function AreaLayout(props) {
     }
 
     function editScene(scene) {
-        applyLayoutCard('SceneLayout', {'scene':scene})
+        selectPage('SceneLayout', {'scene':scene})
     }
 
     
@@ -107,10 +107,10 @@ export default function AreaLayout(props) {
                             />
 
             <GridSection name={"Actions"} >
-                <ButtonItem xs={isMobile ? 6 : 2} label={"Add Device"} avatarIcon={<AddIcon />} action={addDevice} noMargin={true} nopaper={true} nolist={true} />
-                <ButtonItem xs={isMobile ? 6 : 2} label={"Delete Device"} avatarIcon={<RemoveIcon />} action={removeDevice} noMargin={true} nopaper={true} nolist={true} />
-                <ButtonItem xs={isMobile ? 6 : 2} label={"Create Scene"} avatarIcon={<AddIcon />} noMargin={true} nopaper={true} nolist={true} />
-                <ButtonItem xs={isMobile ? 6 : 2} label={"Edit Scene"} avatarIcon={<EditIcon />} action={toggleEditScenes} noMargin={true} nopaper={true} nolist={true} />
+                <ButtonItem label={"Add Device"} avatarIcon={<AddIcon />} action={addDevice} small={true} />
+                <ButtonItem label={"Delete Device"} avatarIcon={<RemoveIcon />} action={removeDevice} small={true} />
+                <ButtonItem label={"Create Scene"} avatarIcon={<AddIcon />} small={true} />
+                <ButtonItem label={"Edit Scene"} avatarIcon={<EditIcon />} action={toggleEditScenes} small={true} />
             </GridSection>
             { addingDevice &&
                 <DeviceDialog open={true} close={closeDialog} select={selectDevice} />

@@ -58,6 +58,10 @@ const useStyles = makeStyles(theme => {
             padding: 8,
             display: "flex",
             flexGrow: 2,
+        },
+        pageHeader: {
+            width: "100%",
+            display: "flex",
         }
     }
 });
@@ -67,14 +71,15 @@ export default function SofaPage(props) {
     const classes = useStyles();
     const { renderSuspenseModule } = useContext(LayoutContext);
     const [showActions, setShowActions] = useState(false)
-
+    
     return (
-            <Grid   container item spacing={0} key={props.name} xs={ ( props.isMobile || props.wide ) ? 12 : 3 } 
+            <Grid   container item spacing={0} key={props.name} xs={ ( props.isMobile || props.wide || props.singlePage ) ? 12 : 3 } 
                     className={ classNames(
                                     (props.isMobile) && classes.mobileGridColumn,
-                                    (props.wide && !props.isMobile) && classes.gridWide,
-                                    (!props.wide && !props.isMobile) && classes.gridColumn
+                                    (props.singlePage || (props.wide && !props.isMobile)) && classes.gridWide,
+                                    (!props.singlePage && !props.wide && !props.isMobile) && classes.gridColumn
                     )} >
+                <div className={classes.pageHeader}>
                 <Typography variant="subtitle1" className={classes.title} >{props.name}</Typography>
                 { ( props.page && props.page.hasOwnProperty('actions') ) && 
                    <Chip
@@ -87,7 +92,8 @@ export default function SofaPage(props) {
                 { (props.page && props.page.hasOwnProperty('actions') && showActions) && 
                     <PageActions actions={props.page.actions} name={props.name} />
                 }
-                { props.page && props.page.cards.map( (item, i) => 
+                </div>
+                { props.page && props.page.cards && props.page.cards.map( (item, i) => 
     				<ErrorBoundary wide={true} key={props.name+i} >
     					{ renderSuspenseModule(item['module'], item['props']) }
     				</ErrorBoundary>
@@ -101,5 +107,6 @@ export default function SofaPage(props) {
 
 SofaPage.defaultProps = {
     wide: false,
+    singlePage: false,
 }
 

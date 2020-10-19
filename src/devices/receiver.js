@@ -13,7 +13,7 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import DotAvatar from '../DotAvatar'
 import SofaAvatarSlider from '../SofaAvatarSlider'
 
-import GridItem from '../GridItem'
+import CardBase from '../CardBase'
 import ToggleIconButton from '../ToggleIconButton'
 import SofaListItem from '../SofaListItem'
 import ModeLines from '../ModeLines'
@@ -110,8 +110,7 @@ export default function Receiver(props) {
     }
 
     return (
-        props.deviceState ?
-        <GridItem wide={props.wide} nopad={true}>
+        <CardBase>
             <SofaListItem   avatar={<SpeakerGroupIcon />} avatarState={props.deviceState.PowerController.powerState.value==='ON' ? 'on' : 'off'} onClick={ () => setShowDetail(!showDetail) }
                             avatarBackground={false} primary={devices[props.endpointId].friendlyName} secondary={subText()}
                             secondaryActions={<Switch color="primary" checked={props.deviceState.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } /> }
@@ -152,9 +151,7 @@ export default function Receiver(props) {
                     <ModeLines directive={directive} disabled={props.deviceState.PowerController.powerState.value!=='ON'} device={props.device} deviceState={props.deviceState} exclude={["InputLock"]} />
                 </>
             }
-        </GridItem>
-        :
-        null
+        </CardBase>
     );
 }
 

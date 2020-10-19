@@ -2,10 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
 import Button from '@material-ui/core/Button';
-
-import ColorLensIcon from '@material-ui/icons/ColorLens';
+import IconButton from '@material-ui/core/IconButton';
 import LensIcon from '@material-ui/icons/Lens';
 
 import { SketchPicker } from 'react-color'
@@ -22,13 +21,18 @@ const useStyles = makeStyles({
         paddingRight: 8,
     },
     button: {
+        height: 20,
         minWidth: 48,
         flexGrow: 1,
+        marginRight:4,
     },
     revealIcon: {
         height: 24,
         width: 24,
         color: "#FFE4B5",
+    },
+    smallText: {
+        fontSize: 12,
     }
 });
 
@@ -101,7 +105,7 @@ export default function LightSliderColor(props) {
 
     return (
         <ListItem>
-            <ListItemIcon className={classes.indent}><ColorLensIcon /></ListItemIcon>
+            <ListItemText classes={{primary:classes.smallText}} primary={"Color"} />
             <Button variant="outlined" size="small" onClick={ () => setOpenDialog(true) } style={gethsl(color)} className={classes.button }> &nbsp;
             </Button>
             <Dialog open={openDialog} close={closeDialog} maxWidth={'xs'} fullWidth={false} >
@@ -120,9 +124,9 @@ export default function LightSliderColor(props) {
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Button size="small" onClick={ () => handleColorChange(reveal)} color={ color===reveal ? "primary" : "default"} className={classes.button }>
+            <IconButton size="small" onClick={ () => handleColorChange(reveal)} color={ color===reveal ? "primary" : "default"} >
                 <LensIcon className={classes.revealIcon} />
-            </Button>
+            </IconButton>
         </ListItem>
     );
 

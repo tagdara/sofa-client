@@ -390,6 +390,11 @@ export default function DeviceProvider(props) {
         }
     }
     
+    function getRecent(scene) {
+        return getJSON('list/hub/recent')
+            .then(res=>{ return res;})
+    }
+     
     function getChangeTimesForDevices(val,devs) {
         
         // Requests the last time the value changed for a set of devices.  This requires the Influx adapter
@@ -687,6 +692,21 @@ export default function DeviceProvider(props) {
             .then(res=>{ return res;})
     }
 
+    function isModeNonControllable(dev, instance) {
+
+        for (var k = 0; k < dev.capabilities.length; k++) {
+            if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.split('.')[1]===instance) {
+                try {
+                    return dev.capabilities[k].properties.nonControllable
+                }
+                catch { console.log('could not get noncontrollable for', instance) }
+            }
+        }
+        return false
+
+    }
+
+   
 
     return (
         <DeviceContext.Provider
@@ -739,6 +759,8 @@ export default function DeviceProvider(props) {
                 registeredDevices: registeredDevices,
                 registerEndpointIds: registerEndpointIds,
                 cardDeviceCount: cardDeviceCount,
+                getRecent: getRecent,
+                isModeNonControllable: isModeNonControllable,
             }}
         >
             {props.children}

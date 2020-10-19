@@ -9,7 +9,7 @@ import SofaAvatarSlider from '../SofaAvatarSlider'
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
 import { makeStyles } from '@material-ui/styles';
-import GridItem from '../GridItem';
+import CardBase from '../CardBase';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => {
@@ -76,11 +76,10 @@ export default function Computer(props) {
         } 
         return 'Powered off'
     }
- 
-    
+
     return (
         props.deviceState ?
-            <GridItem >
+            <CardBase >
                 <SofaListItem   inList={true} avatarBackground={false} avatarState={ (props.deviceState.PowerController.powerState.value==='ON' && props.deviceState.EndpointHealth.connectivity.deepvalue==='OK') ? 'on' : 'off'}
                                 avatar={ <DesktopWindowsIcon />}
                                 primary={props.device.friendlyName} secondary={ secondaryText() }
@@ -125,9 +124,9 @@ export default function Computer(props) {
                                         disabled={ props.deviceState.PowerController.powerState.value==='OFF' }
                     />
                 }
-            </GridItem>   
+            </CardBase>   
         :
-            <GridItem >
+            <CardBase >
                 <SofaListItem   inList={true} avatarBackground={false} avatarState={ 'off'}
                                 avatar={ <DesktopWindowsIcon />}
                                 primary={props.device.friendlyName}
@@ -143,6 +142,6 @@ export default function Computer(props) {
                                         </>
                                 }
                 />
-            </GridItem>   
+            </CardBase>   
     );
 }

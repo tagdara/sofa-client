@@ -21,8 +21,9 @@ const useStyles = makeStyles({
 });
 
 export default function SimpleBottomNavigation(props) {
+
     const classes = useStyles();
-    const { applyHomePage} = useContext(LayoutContext);
+    const { currentStack, selectStack } = useContext(LayoutContext);
     
     const sections=["Audio Video", "Lights and Comfort", "Climate", "Security", "System"]
     const sectionData= {   "Audio Video": { "label": "AV", "icon": <QueueMusicIcon />}, 
@@ -32,9 +33,8 @@ export default function SimpleBottomNavigation(props) {
                             "System": { "label": "More", "icon": <MenuIcon /> }
     }
     
-    function changeSection(section) {
-        props.chooseSection(section);
-        applyHomePage(sections[section])
+    function changeSection(sectionNumber) {
+        selectStack(sections[sectionNumber])
     }
 
     function getSectionPosition(section) {
@@ -46,7 +46,7 @@ export default function SimpleBottomNavigation(props) {
 
     return (
         <BottomNavigation
-          value={getSectionPosition(props.section)}
+          value={getSectionPosition(currentStack)}
           onChange={ (event, newValue) => { changeSection(newValue) }}
           showLabels
           className={classes.mobileBar}

@@ -16,7 +16,8 @@ const useStyles = makeStyles(theme => {
             minHeight: 56,
         },
         listItemNoPad: {
-            boxSizing: "border-box",
+            boxSizing: "content-box",
+            //boxSizing: "border-box",
             padding: "0 16px",
             height: 56,
             minHeight: 56,
@@ -24,9 +25,10 @@ const useStyles = makeStyles(theme => {
             flexGrow: 1,
         },
         listItem: {
-            boxSizing: "border-box",
-            height: 72,
-            minHeight: 72,
+            boxSizing: "content-box",
+            //boxSizing: "border-box",
+            //height: 72,
+            minHeight: 56,
             padding: "8px 16px"
         },
         smallSecondary: {
@@ -44,6 +46,10 @@ const useStyles = makeStyles(theme => {
             width: "100%",
             flexWrap: "wrap",
             flexDirection: "column",
+            minHeight: 41,
+            maxHeight: 41,
+            justifyContent: "center",
+            margin: 0,
         }
     }
 });

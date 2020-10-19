@@ -5,7 +5,7 @@ import PlaceholderCard from './PlaceholderCard';
 
 export default function TvHero(props) {
  
-    const { cardReady, cardDevices, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
+    const { cardReady, cardDevices, devices, deviceState, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
     //const tvs= deviceStatesByCategory('TV')
     const [tvs, setTvs]=useState([])
     
@@ -23,7 +23,7 @@ export default function TvHero(props) {
      
     return (
         tvs.map(tv => 
-            <Television wide={props.wide} key={tv}  device={ devices[tv] } deviceState={ deviceStates[tv] } />
+            <Television wide={props.wide} key={tv}  device={ devices[tv] } deviceState={ deviceState(tv) } />
         )
     );
 }

@@ -9,7 +9,7 @@ import ComputerIcon from '@material-ui/icons/Computer';
 
 export default function ComputerLayout(props) {
 
-    const { cardReady, unregisterDevices, getEndpointIdsByFriendlyName, getEndpointIdsByCategory, devices, deviceStates, directive } = useContext(DataContext);
+    const { cardReady, unregisterDevices, getEndpointIdsByFriendlyName, getEndpointIdsByCategory, devices, deviceStates, deviceState, directive } = useContext(DataContext);
     const [switches, setSwitches]=useState([])
     const [otherDevices, setOtherDevices]=useState([])
     const [computers, setComputers]=useState([])
@@ -34,14 +34,16 @@ export default function ComputerLayout(props) {
     // eslint-disable-next-line     
     }, [])
 
+    //console.log(cardReady('ComputerLayout', ['pc1:pc:pc1', 'pc2:pc:pc2', 'pc3:pc:p3', 'pc4:pc:pc4']))
+
     return (
-        cardReady('ComputerLayout', ['pc1:pc:pc1', 'pc2:pc:pc2']) ?
+        cardReady('ComputerLayout', ['pc1:pc:pc1', 'pc2:pc:pc2', 'pc3:pc:pc3', 'pc4:pc:pc4']) ?
         <React.Fragment>
 
             <GridSection name={"Computers"} show={true}>
                 <ErrorBoundary wide={props.wide}>
                     { computers.map((device) =>
-                        <Computer key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={ directive }  />
+                        <Computer key={ device } device={ devices[device] } deviceState={ deviceState(device) } directive={ directive }  />
                     )}
                 </ErrorBoundary>
             </GridSection>

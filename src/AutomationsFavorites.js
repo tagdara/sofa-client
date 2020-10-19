@@ -42,7 +42,11 @@ export default function AutomationsFavorites(props) {
         favorites &&
             <GridSection name={"Automations"}>
             { favorites.map(automation => 
-                <AutomationItem launched={automation===launched} makeFavorite={makeFavorite} favorite={true} allowEdit={false} launcher={true} key={automation} icon={"base"} name={deviceByEndpointId(automation).friendlyName} automation={ null } run={runAutomation} select={selectAutomation} />
+                <AutomationItem small={true}
+                                launched={automation===launched} makeFavorite={makeFavorite} favorite={true} allowEdit={false} 
+                                launcher={true} key={automation} icon={"base"} name={deviceByEndpointId(automation).friendlyName} 
+                                automation={ null } run={runAutomation} select={selectAutomation} 
+                />
             )}
             <AutomationAll />
             </GridSection>

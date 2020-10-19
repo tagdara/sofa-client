@@ -1,31 +1,32 @@
 import React, { useContext } from 'react';
 import { LayoutContext } from '../layout/NewLayoutProvider';
+import { DataContext } from '../DataContext/DataProvider';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-
-import GridItem from '../GridItem'
-import ToggleAvatar from '../ToggleAvatar';
+import SofaListItem from '../SofaListItem';
+import CardBase from '../CardBase'
 import EqualizerIcon from '@material-ui/icons/Equalizer';
+
 
 export default function AirQuality(props) { 
     
-    const { applyLayoutCard } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
+    const { modeDisplayName } = useContext(DataContext);
     
-    function showThermostats() {
-        applyLayoutCard('ThermostatLayout')
+    function aqValueName() {
+        try {
+            return modeDisplayName(props.device,'Thermostat.Air Quality',props.deviceState['Air Quality'].mode.value)
+        }
+        catch {
+            return props.deviceState['Air Quality'].mode.value
+        }
     }
     
     return (
         
-        <GridItem wide={props.wide} >
-            <ListItem onClick={showThermostats}>
-                <ToggleAvatar avatarState={ props.deviceState['Air Quality'].mode.value }>
-                    <EqualizerIcon />
-                </ToggleAvatar>
-                <ListItemText primary={'Air Quality: '+props.deviceState['Air Quality'].mode.value} />
-           </ListItem>
-        </GridItem>
+        <CardBase >
+            <SofaListItem   avatar={<EqualizerIcon />} onClick={() => selectPage('ThermostatLayout')} avatarState={ aqValueName() }
+                            primary={'Air Quality: '+aqValueName() } />
+        </CardBase>
     );
 }
 

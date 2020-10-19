@@ -186,7 +186,7 @@ export default function AreaLayout(props) {
                         )}
                         { sortByShortcuts().map(scene => 
                             <Scene  scene={scene} key={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} noGrid={true}
-                                    computedLevel={props.area.AreaController.scene.value} directive={directive} small={true} />
+                                    computedLevel={props.area.AreaController.scene.value} directive={directive}  />
                         )}
                 </>
                 }

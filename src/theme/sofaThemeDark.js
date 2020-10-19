@@ -4,6 +4,7 @@ import yellow from '@material-ui/core/colors/yellow';
 
 export default createMuiTheme({
     direction: "ltr",
+    spacing: 8,
     palette: {
         primary: {
             light: deepOrange[300],
@@ -43,6 +44,8 @@ export default createMuiTheme({
             notready: "#bbb",
             closed: "#6a6",
             open: "#e66",
+            auto: "#777777",
+            heat: "#E65100",
             cool: "#00796B",
             mid: "#558B2F",
             hot: "#E65100",

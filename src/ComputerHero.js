@@ -6,7 +6,7 @@ import { DataContext } from './DataContext/DataProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
-import GridItem from './GridItem';
+import CardBase from './CardBase';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import PlaceholderCard from './PlaceholderCard';
@@ -47,13 +47,11 @@ const useStyles = makeStyles(theme => {
 export default function ComputerHero(props) {
     
     const classes = useStyles();
-    const { applyLayoutCard } = useContext(LayoutContext);
-    const { cardReady, unregisterDevices, getEndpointIdsByFriendlyName, getEndpointIdsByCategory, devices, deviceStates, directive } = useContext(DataContext);
-    //const switches = devsWithPowerState(deviceStatesByCategory('SMARTPLUG'))
+    const { selectPage } = useContext(LayoutContext);
+    const { cardReady, unregisterDevices, getEndpointIdsByFriendlyName, getEndpointIdsByCategory, devices, deviceState, directive } = useContext(DataContext);
     const [switches, setSwitches]=useState([])
     const matrixDeviceNames=['Living Room TV', 'Office 1', 'Office 2', 'Office 3', 'Office 4', 'Downstairs 1', 'Downstairs 2', 'Rack']
     const [matrixDevices, setMatrixDevices]=useState([])
-    //const matrixDevices=deviceStatesByFriendlyName(['Living Room TV', 'Office 1', 'Office 2', 'Office 3', 'Office 4', 'Downstairs 1', 'Downstairs 2', 'Rack'], false)
     const matrixDefaults={ 'Office 1':'PC1', 'Office 2':'PC2', 'Office 3':'PC3', 'Office 4':'PC4', 'Downstairs 1':'PC1', 'Downstairs 2':'PC2' }
 
     useEffect(() => {
@@ -73,7 +71,7 @@ export default function ComputerHero(props) {
     function onCount() {
         var ondevs=0
         for (var i = 0; i < switches.length; i++) {
-            if (deviceStates[switches[i]] && deviceStates[switches[i]].PowerController.powerState.value==='ON') {
+            if (deviceState(switches[i]).PowerController.powerState.value==='ON') {
                 ondevs+=1
             }
         }
@@ -83,7 +81,7 @@ export default function ComputerHero(props) {
     function toggleInput(devicename) {
         for (var i = 0; i < matrixDevices.length; i++) {
             if (devices[matrixDevices[i]].friendlyName===devicename) {
-                if (deviceStates[matrixDevices[i]] && deviceStates[matrixDevices[i]].InputController.input.value===matrixDefaults[devicename]) {
+                if (deviceState(matrixDevices[i]).InputController.input.value===matrixDefaults[devicename]) {
                     directive(matrixDevices[i], "InputController", 'SelectInput', { "input": 'Blank' } )
                     return true
                 } else {
@@ -97,7 +95,7 @@ export default function ComputerHero(props) {
     function isDefault(devicename) {
         for (var i = 0; i < matrixDevices.length; i++) {
             if (devices[matrixDevices[i]].friendlyName===devicename) {
-                if (deviceStates[matrixDevices[i]] && deviceStates[matrixDevices[i]].InputController.input.value===matrixDefaults[devicename]) {
+                if (deviceState(matrixDevices[i]).InputController.input.value===matrixDefaults[devicename]) {
                     return true
                 }
             }
@@ -111,8 +109,8 @@ export default function ComputerHero(props) {
     }
     
     return (
-        <GridItem wide={props.wide} noPad={true} nolist={true} >
-            <SofaListItem   avatar={<DevicesOtherIcon />} onClick={ () => applyLayoutCard('ComputerLayout') } noback={true} avatarState={ onCount() ? 'on' : 'off'}
+        <CardBase >
+            <SofaListItem   avatar={<DevicesOtherIcon />} onClick={ () => selectPage('ComputerLayout') } noback={true} avatarState={ onCount() ? 'on' : 'off'}
                             primary={"Computers"} secondary={onCount() ? onCount()+" devices on" : null} />
             <ListItem>
                 <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >
@@ -126,6 +124,6 @@ export default function ComputerHero(props) {
                     <Button className={isDefault('Downstairs 2') ? classes.onButton : classes.button} onClick={ () => toggleInput('Downstairs 2','PC2') }>D2</Button>
                 </ButtonGroup>
             </ListItem>
-        </GridItem>
+        </CardBase>
     );
 }

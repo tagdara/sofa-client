@@ -3,17 +3,21 @@ import { LayoutContext } from '../layout/NewLayoutProvider';
 import { makeStyles } from '@material-ui/styles';
 import { DeviceContext } from '../DataContext/DeviceProvider';
 
-import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 import ToggleAvatar from '../ToggleAvatar';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
-import ToysIcon from '@material-ui/icons/Toys';
 import SofaAvatarSlider from '../SofaAvatarSlider'
 
-import GridItem from '../GridItem'
-import SofaSlider from '../SofaSlider'
+import CardBase from '../CardBase'
+import ModeLines from '../ModeLines'
+import SofaListItem from '../SofaListItem'
+
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 
 const useStyles = makeStyles(theme => {
     return {      
@@ -97,13 +101,12 @@ const useStyles = makeStyles(theme => {
 export default function Thermostat(props) {
     
     const classes = useStyles();
-    const { applyLayoutCard } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
     const { directive, getController} = useContext(DeviceContext);
 
     const [targetSetpoint, setTargetSetpoint] = useState(70);
     const [powerLevel, setPowerLevel] = useState(false)
-    const [fanSetMode, setFanSetMode] = useState(false);
-    //const device=deviceByEndpointId(props.device.endpointId)
+    const [showDetail, setShowDetail] = useState(false)
 
     useEffect(() => {
         if (props.deviceState) {
@@ -118,25 +121,23 @@ export default function Thermostat(props) {
         }
     // eslint-disable-next-line 
     }, [props.deviceState]);
-
-
+ 
     function supportedModes() {
         try { return getController(props.device.endpointId, "ThermostatController").configuration.supportedModes }
         catch {}
         return []
     }
 
-
-    function supportedRange() {
-        try {
-            return getController(props.device.endpointId, "ThermostatController").configuration.supportedRange
-        }
-        catch {}
-        
-        return [60,90]
-    }
+    //function supportedRange() {
+        //needs to be applied to the button version but stubbed for now
+    //    try {
+    //        return getController(props.device.endpointId, "ThermostatController").configuration.supportedRange
+    //    }
+    //    catch {}
+    //    
+    //    return [60,90]
+    //}
                     
-    
     function tempColor(temp) {
         if (!temp) { return 'disabled' } 
         if (temp>=74) { return "hot" }
@@ -152,9 +153,9 @@ export default function Thermostat(props) {
         directive(props.device.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
     }; 
 
-    function handlePreSetpointChange(event) {
-        setTargetSetpoint(event);
-    }; 
+    //function handlePreSetpointChange(event) {
+    //    setTargetSetpoint(event);
+    //}; 
     
     function handleSetpointChange(event) {
         directive(props.device.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
@@ -165,48 +166,19 @@ export default function Thermostat(props) {
     }; 
     
     function switchToHistory() {
-        //applyBackPage('ThermostatLayout',{})
-        //applyLayoutCard('ThermostatHistory', { 'device':props.device, 'past':'7d' })
-        applyLayoutCard('ThermostatLayout')
+        selectPage('ThermostatLayout')
     }
 
     return ( 
-        props.deviceState ?
-        <GridItem wide={props.wide}>
-            <List className={classes.list} >
-                <ListItem>
-                    <ToggleAvatar 
-                        avatarState={ tempColor(props.deviceState.TemperatureSensor.temperature.deepvalue) }
-                        onClick={ () => switchToHistory()} >
-                            {props.deviceState.TemperatureSensor.temperature.deepvalue ? props.deviceState.TemperatureSensor.temperature.deepvalue : '--'}
-                    </ToggleAvatar>
-                    <SofaSlider min={supportedRange()[0]} max={supportedRange()[1]} defaultValue={70} value={targetSetpoint} unit={"°"} name={props.device.friendlyName}
-                                preChange={handlePreSetpointChange} change={handleSetpointChange} 
-                                disabled={ props.deviceState.ThermostatController.thermostatMode.value==='OFF' } />
-                </ListItem>
+        <CardBase>
+                <SofaListItem   avatarState={ tempColor(props.deviceState.TemperatureSensor.temperature.deepvalue) }
+                                onClick={ () => setShowDetail(!showDetail)}
+                                avatar={ props.deviceState.TemperatureSensor.temperature.deepvalue ? props.deviceState.TemperatureSensor.temperature.deepvalue : '--'}
+                                avatarClick={ () => switchToHistory()} 
+                                primary={ props.device.friendlyName } 
+                />
                 <ListItem className={classes.bottomListItem}>
                     <>
-                        { powerLevel!==false &&
-                            <>
-                                { fanSetMode ?
-                                    <>
-                                        <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(false)}>
-                                            {props.deviceState.ThermostatController.thermostatMode.value}
-                                        </Button>
-                                        <SofaAvatarSlider iconLabel={<ToysIcon className={classes.iconLabel} />} small={true} reverse={true} minWidth={64} 
-                                                            value={powerLevel} step={10} noPad={true}
-                                                            preChange={handlePrePowerLevelChange} change={handlePowerLevelChange} />
-                                    </>
-                                :
-                                    <Button size="small" className={classes.fanButton } onClick={ ()=> setFanSetMode(true)}>
-                                        <ToysIcon />{powerLevel}%
-                                    </Button>                        
-                                }
-                            </>
-                        }
-                    </>
-                    <>
-                        {!fanSetMode &&
                         <ButtonGroup className={classes.buttonGroup} size="small" variant="text" >
                             { supportedModes().map((mode) => (
                                 <Button className={props.deviceState.ThermostatController.thermostatMode.value===mode ? classes.selectedButton : classes.modeButton  } onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} >
@@ -214,12 +186,36 @@ export default function Thermostat(props) {
                                 </Button>
                             ))}
                         </ButtonGroup>
+                        { props.deviceState.ThermostatController.thermostatMode.value!=='OFF' &&
+                            <ToggleAvatar small={true} onClick={() => setShowDetail(!showDetail) } reverse={true} 
+                                avatarState={props.deviceState.ThermostatController.thermostatMode.value}>
+                                {targetSetpoint}
+                            </ToggleAvatar>
                         }
                     </>
                 </ListItem>
-            </List>
-        </GridItem>
-        :
-        null
+                { showDetail &&
+                    <SofaListItem primary={'Heat Set point'}
+                        inlineSecondary={true} secondaryActions={
+                            <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >
+                                <Button className={classes.button} onClick={ () => handleSetpointChange(targetSetpoint-1) }><ExpandMoreIcon /></Button>
+                                <Button className={classes.button} >{targetSetpoint}</Button>
+                                <Button className={classes.buttonRight} onClick={ () => handleSetpointChange(targetSetpoint+1) }><ExpandLessIcon /></Button>
+                            </ButtonGroup>
+                        }
+                    />
+                }
+                { showDetail && powerLevel!==false &&
+                    <ListItem>
+                        <ListItemText primary={"Fan"} />
+                        <SofaAvatarSlider  small={true} reverse={true} minWidth={160} 
+                                            value={powerLevel} step={10} noPad={true}
+                                            preChange={handlePrePowerLevelChange} change={handlePowerLevelChange} />
+                    </ListItem> 
+                }
+                { showDetail &&
+                    <ModeLines directive={directive} device={props.device} deviceState={props.deviceState}  />
+                }
+        </CardBase>
     );
 }

@@ -55,7 +55,12 @@ export const useStream = (accessToken) => {
         if (streamToken && !isConnecting) {
             // EventSource does not support passing headers so we must use a cookie to send the token
             writeCookie("access_token", streamToken, 1)
-            eventSource.current = new EventSource(serverurl+"/sse", { withCredentials: true })
+            try {
+                eventSource.current = new EventSource(serverurl+"/sse", { withCredentials: true })
+            } 
+            catch {
+                console.log('~~~~~~~~~~~~~ ERROR SSEing')
+            }
         }
     }, [streamToken, isConnecting] )
 
@@ -187,6 +192,7 @@ export default function NetworkProvider(props) {
         }
         if (streamStatus===2 ) {
             console.log('SSE data stream: closed')
+            getJSON('user').then(res => { console.log(res)})
         }
 
     // eslint-disable-next-line 
@@ -369,6 +375,10 @@ export default function NetworkProvider(props) {
         return localStorage.getItem(item)
     }
 
+    function checkAuthentication() {
+        return getJSON('user')
+            .then(res=>{ return res;})
+    }
 
     function logout() {
         console.log('logging out')
@@ -395,6 +405,7 @@ export default function NetworkProvider(props) {
                 addSubscriber: addSubscriber,
                 getStorage: getStorage,
                 toggleLogSSE: toggleLogSSE,
+                checkAuthentication: checkAuthentication,
             }}
         >
             {props.children}

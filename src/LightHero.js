@@ -3,13 +3,13 @@ import { LayoutContext } from './layout/NewLayoutProvider';
 import { DataContext } from './DataContext/DataProvider';
 
 import LightbulbOutlineIcon from './LightbulbOutline';
-import GridItem from './GridItem';
+import CardBase from './CardBase';
 import SofaListItem from './SofaListItem';
 import PlaceholderCard from './PlaceholderCard';
 
 export default function LightHero(props) {
 
-    const { applyLayoutCard } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
     const { cardReady, deviceStates, getEndpointIdsByCategory, unregisterDevices, isReachable } = useContext(DataContext);
     const [ lights, setLights]=useState([])
     
@@ -52,12 +52,12 @@ export default function LightHero(props) {
     }
 
     return (
-        <GridItem wide={props.wide} nolist={true} >
-            <SofaListItem   avatarState={lightCount('on') ? "on" : "none"} onClick={ () => applyLayoutCard('LightLayout') }
-                            avatar={<LightbulbOutlineIcon/>}
+        <CardBase >
+            <SofaListItem   avatarState={lightCount('on') ? "on" : "none"} onClick={ () => selectPage('LightLayout') }
+                            avatar={<LightbulbOutlineIcon/>} noPad={true}
                             primary={lightCount('on') ? lightCount('on')+" lights are on" : "All lights off" }
             />
-        </GridItem>
+        </CardBase>
 
     );
 }

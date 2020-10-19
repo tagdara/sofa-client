@@ -36,6 +36,9 @@ const useStyles = makeStyles({
         flexBasis: 0,
         padding: 0,
         alignItems: "center",
+    },
+    smallText: {
+        fontSize: 12,
     }
 })
 
@@ -66,7 +69,7 @@ export default function SofaAvatarSlider(props) {
                 props.iconLabel
             }
             { props.label &&
-                <ListItemText primary={props.label} className={classes.label} />
+                <ListItemText classes={ props.smallText && {primary:classes.smallText}} primary={props.label} className={classes.label} />
             }
 
             <SofaSlider {...props} preChange={handlePreChange} />

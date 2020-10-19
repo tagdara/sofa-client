@@ -11,7 +11,7 @@ import TvIcon from '@material-ui/icons/Tv';
 import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
 import SofaAvatarSlider from '../SofaAvatarSlider'
-import GridItem from '../GridItem'
+import CardBase from '../CardBase'
 import TvRemote from './TvRemote';
 import ModeLines from '../ModeLines'
 import SofaListItem from '../SofaListItem'
@@ -96,10 +96,9 @@ export function Television(props) {
     }
      
     return (
-        props.deviceState ? 
-        <GridItem wide={props.wide} nopad={true} >
+        <CardBase nopad={true}>
             <SofaListItem   avatar={ <TvIcon /> } avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? 'on' : 'off' } avatarBackground={false}
-                            onClick={ () => setShowDetail(!showDetail) } 
+                            onClick={ () => setShowDetail(!showDetail) }
                             primary={props.device.friendlyName} secondary={subText()}
                             secondaryActions={
                                 <>
@@ -146,9 +145,7 @@ export function Television(props) {
                 <TvRemote device={props.device} />
             </ListItem>
         }
-        </GridItem>
-        : 
-        null
+        </CardBase>
     )
 }
 

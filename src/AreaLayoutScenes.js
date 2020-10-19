@@ -77,7 +77,7 @@ export default function AreaLayoutScenes(props) {
         }>
             { props.newScene && <SceneAdd area={props.area} setNewScene={props.setNewScene} directive={directive} /> }
             { sortByShortcuts().map(scene => 
-                <Scene  remove={props.edit} scene={devices[scene]} key={scene} shortcut={isAShortcut(scene)}  noMargin={true} nopaper={true} noPad={true}
+                <Scene  remove={props.edit} scene={devices[scene]} key={scene} shortcut={isAShortcut(scene)} small={true}
                         computedLevel={props.areaScene} directive={directive} editing={props.editingScene} edit={props.editScene} />
             )}
         </GridSection>

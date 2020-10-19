@@ -8,7 +8,7 @@ import GridSection from './GridSection';
 
 export default function ZoneLayout(props) {
 
-    const { applyLayoutCard, applyBackPage } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
     const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
     const { getChangeTimesForDevices } = useContext(DeviceContext)
     //const { deviceStatesByController } = useContext(DataContext)
@@ -55,8 +55,7 @@ export default function ZoneLayout(props) {
     }
 
     function historyZone(name, endpointId) {
-        applyBackPage('ZoneLayout', {} )
-        applyLayoutCard('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"detectionState"})
+        selectPage('HistoryLayout', {"name": name, "endpointId": endpointId, "property":"detectionState"})
     }
 
 

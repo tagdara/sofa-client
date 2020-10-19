@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { DataContext } from './DataContext/DataProvider';
 
-import GridItem from './GridItem';
+import CardBase from './CardBase';
 import FanIcon from '@material-ui/icons/Toys';
 import Device from './other/Device';
 import PlaceholderCard from './PlaceholderCard';
@@ -30,14 +30,14 @@ export default function MoreDevicesHero(props) {
     }
 
     return (
-        <GridItem wide={props.wide}>
+        <CardBase>
             { shades.map( shade => (
                 <Shade  nested={true} inList={true} device={devices[shade]}  deviceState={ deviceStates[shade] } directive={directive} key={ shade }  />
             ))}
             { switches.map(switchId =>
                 <Device nested={true} icon={<FanIcon />} key={ switchId } device={ devices[switchId] } deviceState={deviceStates[switchId]} directive={directive} />
             )}
-        </GridItem>
+        </CardBase>
     );
 }
 

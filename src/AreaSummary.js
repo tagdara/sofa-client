@@ -27,7 +27,7 @@ export default function AreaSummary(props) {
         } finally {
             return ads
         }
-}
+    }
 
     function nameSort(a,b) {
       if (a.friendlyName < b.friendlyName)
@@ -53,19 +53,20 @@ export default function AreaSummary(props) {
     }
 
     function isAShortcut(scene) {
-        if (props.area.AreaController.shortcuts.value.indexOf(scene) >= 0) {
-            return props.area.AreaController.shortcuts.value.indexOf(scene)
+        if (deviceStates[props.area].AreaController.shortcuts.value.indexOf(scene) >= 0) {
+            return deviceStates[props.area].AreaController.shortcuts.value.indexOf(scene)
         } else {
             return 'x'
         }
     }
 
-    function sortByShortcuts(skip=false) {
+    function sortByShortcuts(skip) {
 
         var outscenes=[]
+        
         try {
             var allscenes=childrenByArea('SCENE_TRIGGER')
-            var shortcutlist=[...props.area.AreaController.shortcuts.value].reverse()
+            var shortcutlist=[...deviceStates[props.area].AreaController.shortcuts.value].reverse()
             if (!skip) { 
                 for (var j = 0; j < shortcutlist.length; j++) {
                     outscenes.push( deviceStates[shortcutlist[j]] )
@@ -73,12 +74,12 @@ export default function AreaSummary(props) {
             }
     
             for (j = 0; j < allscenes.length; j++) {
-                if (!shortcutlist.includes(allscenes[j].endpointId)) {
+                if (!shortcutlist.includes(allscenes[j])) {
                     outscenes.push(allscenes[j])
                 }
             }
         } catch (e) {
-            //console.log('Error getting children by area', e)
+            console.log('Error getting children by area', e)
         } finally {
             return outscenes
         }
@@ -97,11 +98,11 @@ export default function AreaSummary(props) {
             { showDetail && 
             <>
                     { filterByTypeState('LIGHT').map(device =>
-                        <Light key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={directive} noGrid={true} small={true}  />
+                        <Light key={ device } device={ devices[device] } deviceState={ deviceStates[device] } directive={directive} noGrid={true} small={true}  highlight={true} />
                     )}
                     { sortByShortcuts(true).map(scene => 
-                        <Scene  scene={scene} key={scene.endpointId} shortcut={isAShortcut(scene.endpointId)} noGrid={true} noMargin={false} highlight={true}
-                                computedLevel={props.area.AreaController.scene.value} directive={directive} small={true} />
+                        <Scene  scene={devices[scene]} key={scene} shortcut={isAShortcut(devices[scene].endpointId)} noGrid={true} noMargin={false} highlight={true}
+                                computedLevel={deviceStates[props.area].AreaController.scene.value} directive={directive} small={true} />
                     )}
             </>
             }

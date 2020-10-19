@@ -70,6 +70,7 @@ ToggleAvatar.defaultProps = {
     reverse: false,
     noback: false,
     small: false,
+    avatarState: "off",
 }
 
 export default withTheme(ToggleAvatar)

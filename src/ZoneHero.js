@@ -6,12 +6,12 @@ import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
 import SofaListItem from './SofaListItem';
-import GridItem from './GridItem';
+import CardBase from './CardBase';
 import PlaceholderCard from './PlaceholderCard';
 
 export default function ZoneHero(props) {
 
-    const { applyLayoutCard } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
     const { cardReady, devices, deviceStates, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
     const [zones, setZones]=useState([])
     
@@ -76,14 +76,14 @@ export default function ZoneHero(props) {
     }
     
     return (
-        <GridItem wide={props.wide} nopad={true}>
+        <CardBase>
             <SofaListItem   avatarBackground={ zoneCount('DETECTED')>0 } avatarState={ (zoneCount('DETECTED')>0) ? "open" : "closed" } 
-                            onClick={ (e) => applyLayoutCard('ZoneLayout')} 
+                            onClick={ (e) => selectPage('ZoneLayout')}
                             avatar={ zoneCount('DETECTED')>0 ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
                             primary={ (zoneCount('DETECTED')>0) ? zoneCount('DETECTED')+' zones are not secure' : 'All zones secure' } 
                             secondary={listOfOpenZones()}
             />
-        </GridItem>
+        </CardBase>
     );
 }
 

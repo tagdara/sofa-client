@@ -12,12 +12,16 @@ import SyncAltIcon from '@material-ui/icons/SyncAlt';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import SubjectIcon from '@material-ui/icons/Subject';
+import AvTimerIcon from '@material-ui/icons/AvTimer';
 
 const useStyles = makeStyles(theme => {
     return {   
         iconRow: {
             display: "flex",
             padding: 16,
+            boxSizing: "border-box",
+            width: "100%",
+            flexWrap: "wrap",
         },
         spacer: {
             flexGrow:1
@@ -31,7 +35,7 @@ const useStyles = makeStyles(theme => {
 export default function AdminFeatures(props) {
     
     const classes = useStyles();
-    const { applyLayoutCard } = useContext(LayoutContext);
+    const { selectPage } = useContext(LayoutContext);
     const { toggleLogSSE } = useContext(NetworkContext);
 
     function otherPort(portnumber, tabname) {
@@ -41,22 +45,25 @@ export default function AdminFeatures(props) {
 
     return (  
         <div className={classes.iconRow} >
+            <IconButton className={classes.systemButton} onClick={() => selectPage('RecentLayout')}>
+                <AvTimerIcon />
+            </IconButton>
             <IconButton className={classes.systemButton} onClick={() => toggleLogSSE()}>
                 <SubjectIcon />
             </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => applyLayoutCard('ApiRegistration')}>
+            <IconButton className={classes.systemButton} onClick={() => selectPage('ApiRegistration')}>
                 <SyncAltIcon />
             </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => applyLayoutCard('DeviceHistory')}>
+            <IconButton className={classes.systemButton} onClick={() => selectPage('DeviceHistory')}>
                 <HistoryIcon />
             </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => applyLayoutCard('AdapterLayout')}>
+            <IconButton className={classes.systemButton} onClick={() => selectPage('AdapterLayout')}>
                 <SettingsEthernetIcon />
             </IconButton>
             <IconButton className={classes.systemButton} onClick={()=> otherPort('8443','_editor')}>
                 <EditIcon />
             </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => applyLayoutCard('DeviceLayout')}>
+            <IconButton className={classes.systemButton} onClick={() => selectPage('DeviceLayout')}>
                 <DevicesOtherIcon />
             </IconButton>
             <Button>{process.env.REACT_APP_VERSION}</Button>

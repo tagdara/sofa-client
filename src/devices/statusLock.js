@@ -1,5 +1,5 @@
 import React from 'react';
-import GridItem from '../GridItem';
+import CardBase from '../CardBase';
 import SofaListItem from '../SofaListItem';
 import DialpadIcon from '@material-ui/icons/Dialpad';
 
@@ -17,12 +17,12 @@ export default function StatusLock(props) {
     const closed=getSensorController().detectionState.value==='NOT_DETECTED'
 
     return (
-        <GridItem wide={props.wide} noPad={true} nolist={true} >
+        <CardBase>
             <SofaListItem   avatarBackground={!closed} avatarState={closed ? "on" : "open"} avatar={<DialpadIcon />}
-                            onClick={props.handlePress} 
+                            onClick={props.handlePress}
                             primary={props.name} secondary={ getSensorController().detectionState.value==='NOT_DETECTED' ? 'Closed' : 'Open' }
             />
-        </GridItem>
+        </CardBase>
     );
 
 }

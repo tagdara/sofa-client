@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -109,6 +110,22 @@ const useStyles = makeStyles(theme => {
             borderBottom: "0px solid",
             borderBottomColor: theme.palette.divider,
         },
+        spinner: {
+            color: theme.palette.layer.itemHighlight,
+            position: "absolute",
+            margin: "auto",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+        },
+        hidden: {
+            borderRadius: 4,
+            position: "relative",
+            width: "100%",
+            paddingTop: '56.25%', // 16:9
+            boxSizing: "border-box",
+        },
     }
 });
 
@@ -122,14 +139,20 @@ export default function PlayerArtOverlay(props) {
         <Grid container className={classes.topbox} >
             <Grid item xs={4} className={classes.songImageHolder}>
                 <div className={classes.songImageAspect} >
-                <img
-                    className={classes.bigcover}
-                    src={ props.art.startsWith('http') ? props.art : serverurl+props.art+"?title="+props.title }
-                    title={ props.title }
-                    alt={ props.title }
-                    onClick={ (e) => props.cover(e)}
-                    //onLoad={ () => setImageLoaded(true) }
-                />
+                { props.art ?
+                    <img
+                        className={classes.bigcover}
+                        src={ props.art.startsWith('http') ? props.art : serverurl+props.art+"?title="+props.title }
+                        title={ props.title }
+                        alt={ props.title }
+                        onClick={ (e) => props.cover(e)}
+                        //onLoad={ () => setImageLoaded(true) }
+                    />
+                    :
+                    <div className={classes.hidden}>
+                        <CircularProgress className={classes.spinner} size={50} />
+                    </div>
+                }
                 </div>
             </Grid>
             <Grid item container xs={8} >

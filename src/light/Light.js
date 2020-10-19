@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
 
+import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import Switch from '@material-ui/core/Switch';
 import LightbulbOutlineIcon from '../LightbulbOutline';
@@ -83,8 +84,14 @@ const useStyles = makeStyles(theme => {
         boxSizing: "border-box",
         alignItems: "center",
         display: "flex",
+    },
+    controlPad: {
+        paddingBottom: 8,
+    },
+    controlList: {
+        paddingTop: 0,
+        width: "100%",
     }
-
 }
 });
 
@@ -92,6 +99,7 @@ export default function Light(props) {
     
     const classes = useStyles();
     const [showAll, setShowAll] = useState(props.showAll)
+    const expanded = showAll || props.brightControl || props.tempControl || props.colorControl
     
     function handlePowerChange(event) {
         console.log('powerchange',props.device.endpointId, event.target.checked ? 'TurnOn' : 'TurnOff')
@@ -112,19 +120,25 @@ export default function Light(props) {
         }
     }
     
+    // noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true} noPaper={false} button={false}
+    
     return (
-            <ButtonItem noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true} noPaper={false} button={false}
+            <ButtonItem
                 avatarIcon={ isReachable() ?
                     <LightbulbOutlineIcon className={classes.iconSize} />
                 :
                     <CloudOffIcon className={classes.iconSize} />
                 }                
+                avatarBackground={false}
+                avatarClick={true}
                 avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? "on" : "off" }
                 label={ props.device.friendlyName }
                 labelSecondary={ isReachable() ? null : 'Off at switch' }
                 small={ props.small }
                 action={() => setShowAll(!showAll) }
                 labelClick={true}
+                noPad={ props.noPad }
+                highlight={ expanded }
                 secondary={
                     <>
                         { ( isReachable() && !props.deleting ) &&
@@ -135,8 +149,8 @@ export default function Light(props) {
                         }
                     </>
                 }
-                children={
-                    <>
+                children={ expanded && 
+                    <List className={classes.controlList}>
                         { !props.brightControl && !showAll ? null :
                             ( !props.deviceState.hasOwnProperty('BrightnessController') ?
                                 <ListItem className={classes.placeholder} />
@@ -158,7 +172,8 @@ export default function Light(props) {
                                 <LightSliderColor device={props.device} deviceState={props.deviceState} directive={props.directive}/>
                             )
                         }
-                    </>
+                        <div className={classes.controlPad} />
+                    </List>
                 }
 
             />
@@ -169,4 +184,5 @@ export default function Light(props) {
 Light.defaultProps = {
     nopaper: false,
     showAll: false,
+    small: true,
 }

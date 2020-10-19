@@ -8,8 +8,8 @@ import AirQuality from './thermostat/AirQuality';
 import PlaceholderCard from './PlaceholderCard';
 export default function ThermostatHero(props) {
     
-    const { applyLayoutCard } = useContext(LayoutContext);
-    const { cardReady, devices, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DataContext);
+    const { selectPage } = useContext(LayoutContext);
+    const { cardReady, devices, deviceState, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DataContext);
     //const device = deviceStateByFriendlyName(props.Primary)
     //const aq = deviceStateByFriendlyName(props.airQuality)
     const [device, setDevice]=useState(undefined)
@@ -32,9 +32,9 @@ export default function ThermostatHero(props) {
 
     return (
         <>
-            <TemperatureSensor device={ devices[outdoor] } deviceState={deviceStates[outdoor]} onClick={ () => applyLayoutCard('ThermostatLayout') } wide={props.wide } />
-            <Thermostat device={ devices[device] } deviceState={deviceStates[device]} onClick={ () => applyLayoutCard('ThermostatLayout') } wide={props.wide } />
-            <AirQuality device={ devices[aq] } deviceState={deviceStates[aq]} wide={props.wide } />
+            <TemperatureSensor device={ devices[outdoor] } deviceState={deviceState(outdoor)} onClick={ () => selectPage('ThermostatLayout') } wide={props.wide } />
+            <Thermostat device={ devices[device] } deviceState={deviceState(device)} onClick={ () => selectPage('ThermostatLayout') } wide={props.wide } />
+            <AirQuality device={ devices[aq] } deviceState={deviceState(aq)} wide={props.wide } />
         </>
     ); 
 }

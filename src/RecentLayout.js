@@ -22,8 +22,8 @@ export default function RecentLayout(props) {
         recent.length>0 ?
         <React.Fragment>
             <GridSection name={"Recent Activity"} >
-                { recent.reverse().map((dev, index) =>
-                    <Recent key={ dev.event.endpoint.endpointId+index } item={dev} device={ devices[dev.event.endpoint.endpointId] } />
+                { recent.map((dev, index) =>
+                    <Recent key={ index } item={dev} device={ devices[dev.event.endpoint.endpointId] } />
                 )}
             </GridSection>
         </React.Fragment>

@@ -36,7 +36,7 @@ export default function BrightnessController(props) {
                     value={props.interface.brightness.value}
                     min={0} max={100} step={10}
                     change={handleBrightnessChange}
-                    disabled={!props.device.PowerController.powerState.value}
+                    disabled={!props.deviceState.PowerController.powerState.value}
                 />
             </TableCell>
         </TableRow>

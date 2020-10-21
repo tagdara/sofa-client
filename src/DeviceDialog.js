@@ -53,8 +53,8 @@ export default function DeviceDialog(props) {
 
         if (devtype==='all' || devtype==='') {
             var devs=devicesByCategory('ALL', nameFilter)
-            //return devs
-            return devs.slice(0, limit)
+            return devs
+            //return devs.slice(0, limit)
         }
         
         return devicesByCategory(devtype)
@@ -95,7 +95,9 @@ export default function DeviceDialog(props) {
             <DialogContent className={classes.scroller}>
                 <div ref={infiniteRef} className={classes.holder}>
                 { filterByType('all').map((device) =>
-                    <Device key={ device.endpointId } device={device} mode={mode} controllers={controllers} select={props.select ? props.select : executeDirective} directives={directives} showDevice={setShowDevice} />
+                    <Device key={ device.endpointId } device={device} mode={mode} 
+                            controllers={controllers} select={props.select ? props.select : executeDirective} 
+                            directives={directives} showDevice={setShowDevice} />
                 )}
                 { showDevice && 
                     <CompositeDevice device={showDevice} close={closeDevice} directives={directives} />

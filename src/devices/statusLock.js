@@ -18,7 +18,7 @@ export default function StatusLock(props) {
 
     return (
         <CardBase>
-            <SofaListItem   avatarBackground={!closed} avatarState={closed ? "on" : "open"} avatar={<DialpadIcon />}
+            <SofaListItem   avatarBackground={!closed} avatarState={closed ? "closed" : "open"} avatar={<DialpadIcon />}
                             onClick={props.handlePress}
                             primary={props.name} secondary={ getSensorController().detectionState.value==='NOT_DETECTED' ? 'Closed' : 'Open' }
             />

@@ -33,7 +33,8 @@ export default function Recent(props) {
     
     const today=moment()
     const classes = useStyles();
-    const excludeItems=["url","art","pid","startTime","album","color"]
+    const excludeItems=["url", "art", "pid", "startTime", "album", "color", "connectivity", "activeState", "subState", "process", "logged",
+                        "Humidity", "Light Level", "Wind Speed"]
     
     function getChangeTime() {
         try {
@@ -50,12 +51,14 @@ export default function Recent(props) {
         var results=[]
         for (var i = 0; i < props.item.event.payload.change.properties.length; i++) {
             if (!excludeItems.includes(props.item.event.payload.change.properties[i].name)) {
-                if (props.item.event.payload.change.properties[i].value.hasOwnProperty('value')) {
-                    var newitem={...props.item.event.payload.change.properties[i]}
-                    newitem.value=newitem.value.value
-                    results.push(newitem)
-                } else {
-                    results.push(props.item.event.payload.change.properties[i])
+                if (!props.item.event.payload.change.properties[i].hasOwnProperty('instance') || !excludeItems.includes(props.item.event.payload.change.properties[i].instance.split('.')[1])) {
+                    if (props.item.event.payload.change.properties[i].value.hasOwnProperty('value')) {
+                        var newitem={...props.item.event.payload.change.properties[i]}
+                        newitem.value=newitem.value.value
+                        results.push(newitem)
+                    } else {
+                        results.push(props.item.event.payload.change.properties[i])
+                    }
                 }
             }
         }
@@ -63,6 +66,7 @@ export default function Recent(props) {
     }
 
     return (
+        filterChanges().length>0 ?
         <CardBase >
             <ListItem className={classes.header} >
                 <ToggleAvatar avatarState={ 'closed' } > 
@@ -80,5 +84,6 @@ export default function Recent(props) {
             )}
             </div>
         </CardBase>
+        : null
     );
 }

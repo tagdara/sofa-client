@@ -110,7 +110,7 @@ export default function ComputerHero(props) {
     
     return (
         <CardBase >
-            <SofaListItem   avatar={<DevicesOtherIcon />} onClick={ () => selectPage('ComputerLayout') } noback={true} avatarState={ onCount() ? 'on' : 'off'}
+            <SofaListItem   avatar={<DevicesOtherIcon />} onClick={ () => selectPage('ComputerLayout') } avatarBackground={false} avatarState={ onCount() ? 'on' : 'off'}
                             primary={"Computers"} secondary={onCount() ? onCount()+" devices on" : null} />
             <ListItem>
                 <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >

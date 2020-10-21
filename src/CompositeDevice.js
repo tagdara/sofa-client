@@ -93,22 +93,30 @@ export default function CompositeDevice(props) {
     const classes = useStyles();
     const isMobile = window.innerWidth <= 800;
     const [modules, setModules] = useState({})
+    const [capabilitites, setCapabilities]=useState([])
 
     useEffect(() => {
     
         var mods={}
-        for (var j = 0; j < props.device.interfaces.length; j++) {
-            let modulename=props.device.interfaces[j]
-            mods[modulename]=React.lazy(() => { 
-                try { 
-                    return import('./controllers/'+modulename).catch(() => ({ default: () => errorBlock(modulename) }))
-                }
-                catch {
-                    return errorBlock(modulename)
-                }
-            })
+        var caps=[]
+        for (var j = 0; j < props.device.capabilities.length; j++) {
+            console.log(props.device.capabilities[j])
+            if (props.device.capabilities[j].interface.split('.').length>1) {
+                let modulename=props.device.capabilities[j].interface.split('.')[1]
+                caps.push(modulename)
+                mods[modulename]=React.lazy(() => { 
+                    try { 
+                        return import('./controllers/'+modulename).catch(() => ({ default: () => errorBlock(modulename) }))
+                    }
+                    catch {
+                        return errorBlock(modulename)
+                    }
+                })
+            }
         }
+        setCapabilities(caps)
         setModules(mods)
+    // eslint-disable-next-line 
     }, [props.device.interfaces])
 
     function errorBlock(modulename) {
@@ -120,12 +128,14 @@ export default function CompositeDevice(props) {
         if (modules.hasOwnProperty(modulename)) {
             var Module=modules[modulename]
             return  <Suspense key={ modulename } fallback={placeholder}>
-                        <Module interface={ props.device[modulename] } device={props.device} />
+                        <Module interface={ props.deviceState[modulename] } device={props.device} deviceState={props.deviceState} />
                     </Suspense>
         } else {
             return <TableRow key={modulename} ><TableCell>Loading...</TableCell></TableRow>
         }
     }
+    
+    console.log(props.device)
     
     return (
         <Dialog fullScreen={isMobile} fullWidth maxWidth={'sm'}  open={true} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
@@ -139,7 +149,7 @@ export default function CompositeDevice(props) {
                                 <TableCell className={classes.colc} >Set</TableCell>
                             </TableRow>
 
-                        { props.device.interfaces.map( iface => 
+                        { capabilitites.map( iface => 
                             renderSuspenseModule(iface)
                         )}
                     </TableBody>

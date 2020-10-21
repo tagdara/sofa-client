@@ -9,7 +9,7 @@ import CompositeDevice from './CompositeDevice';
 
 export default function DeviceLayout(props) {
 
-    const { deviceStatesByCategory, controllers, directives } = useContext(DataContext);
+    const { devices, deviceStatesByCategory, deviceStates, controllers, directives } = useContext(DataContext);
     const [mode] = useState('all');
     const [limit, setLimit] = useState(50);
     const [nameFilter, setNameFilter] = useState('')
@@ -30,14 +30,16 @@ export default function DeviceLayout(props) {
 
         if (devtype==='all' || devtype==='') {
             var devs=deviceStatesByCategory('ALL', nameFilter)
-            return devs.slice(0, limit)
+            return devs
+            //return devs.slice(0, limit)
         }
         return deviceStatesByCategory(devtype)
     }
 
     function executeDirective(iface, idir) {
         console.log('ED',iface,idir)
-        if (Object.keys(props.directives[iface][idir]).length===0) {
+        if (!iface || !idir) {return false}
+        if (Object.keys(directives[iface][idir]).length===0) {
             props.device[iface].directive(idir)
         } else {
             console.log('directive requires parameters', props.directives[iface][idir])
@@ -48,26 +50,15 @@ export default function DeviceLayout(props) {
         setShowDevice(null)
     }
  
-    //function select(itemtype, deviceName, endpointId, controller, directive) { 
-    //    if (mode==='action') {
-    //        var item={  "type": itemtype,
-    //                    "endpointId": endpointId,
-    //                    "command": directive,
-    //                    "controller": controller,
-    //                    "deviceName": deviceName
-    //        }
-    //    }
-    //    applyLayoutCard(returnPage.name, {...returnPage.props, 'item':item, 'noBottom':'true'} )
-    //}
-    
     return (    
         <GridSection name={"Devices"}>
         <GridSearch wide={true} searchValue={nameFilter} setSearchValue={setNameFilter} />
             { filterByType('all').map((device) =>
-                <Device key={ device.endpointId } device={device} mode={mode} controllers={controllers} select={executeDirective} directives={directives} showDevice={setShowDevice} />
+                <Device key={ device.endpointId } device={device} mode={mode} controllers={controllers} small={true}
+                        select={executeDirective} directives={directives} showDevice={setShowDevice} />
             )}
             { showDevice && 
-                <CompositeDevice device={showDevice} close={closeDevice} directives={directives} />
+                <CompositeDevice endpointId={showDevice} deviceState={deviceStates[showDevice]} device={ devices[showDevice] } close={closeDevice} directives={directives} />
             }
         </GridSection>
     )

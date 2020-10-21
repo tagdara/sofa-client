@@ -53,7 +53,7 @@ export default function LightHero(props) {
 
     return (
         <CardBase >
-            <SofaListItem   avatarState={lightCount('on') ? "on" : "none"} onClick={ () => selectPage('LightLayout') }
+            <SofaListItem   avatarState={lightCount('on') ? "on" : "off"} onClick={ () => selectPage('LightLayout') }
                             avatar={<LightbulbOutlineIcon/>} noPad={true}
                             primary={lightCount('on') ? lightCount('on')+" lights are on" : "All lights off" }
             />

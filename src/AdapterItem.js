@@ -36,7 +36,7 @@ export default function AdapterItem(props) {
     function getErrorCount() {
         try {
             if (props.deviceState.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
-                return "Errors: "+props.deviceState.AdapterHealth.logged.value.ERROR
+                return "Errors: "+props.deviceState.AdapterHealth.logged.value['ERROR']
             } else {
                 return "No Errors"
             }
@@ -63,6 +63,7 @@ export default function AdapterItem(props) {
     function getStartupDate() {
         try {
             if (props.deviceState.AdapterHealth.startup.value) {
+                if (props.deviceState.AdapterHealth.startup.value==="Remote") { return "Remote" }
                 return <Moment format="ddd MMM D h:mm:sa">{props.deviceState.AdapterHealth.startup.value}</Moment>
             }
         } 
@@ -71,19 +72,30 @@ export default function AdapterItem(props) {
     }
 
 
+    function getActiveState() {
+        try {
+            if (props.deviceState.ServiceController.activeState.value!=="unknown") {
+                return " ("+props.deviceState.ServiceController.activeState.value+")"
+            }
+        }
+        catch {}
+        return ""
+    }
+
     return (
         <CardBase >
             <SofaListItem   button={true} onClick={ () => window.open(props.deviceState.AdapterHealth.url.value, '_'+props.device.friendlyName) }
                             avatarState={ getErrorState(5) } avatar={props.device.friendlyName.charAt()}
-                            primary={props.device.friendlyName+" ("+props.deviceState.ServiceController.activeState.value+")"} secondary={props.deviceState.AdapterHealth.url.value}
+                            primary={ props.device.friendlyName + getActiveState() } secondary={props.deviceState.AdapterHealth.url.value}
             />
             <SofaListItem   button={false} 
                             primary={getStartupDate()} secondary={ getErrorCount()+" "+getDataSize()}
                             secondaryActions={ 
-                            <>
-                                <IconButton size={"small"} onClick={ () => props.directive(props.device.endpointId, "PowerController", 'TurnOn')} ><ReplayIcon /></IconButton>
-                                <IconButton size={"small"} onClick={ () => props.directive(props.device.endpointId, "PowerController", 'TurnOff')} ><ClearIcon /></IconButton>
-                            </>
+                                getStartupDate()!=='Remote' &&
+                                <>
+                                    <IconButton size={"small"} onClick={ () => props.directive(props.device.endpointId, "PowerController", 'TurnOn')} ><ReplayIcon /></IconButton>
+                                    <IconButton size={"small"} onClick={ () => props.directive(props.device.endpointId, "PowerController", 'TurnOff')} ><ClearIcon /></IconButton>
+                                </>
                             }
             />
        </CardBase>

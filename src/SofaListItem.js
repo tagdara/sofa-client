@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => {
             minHeight: 56,
         },
         listItemNoPad: {
+            cursor: "pointer",
             boxSizing: "content-box",
             //boxSizing: "border-box",
             padding: "0 16px",
@@ -23,8 +24,10 @@ const useStyles = makeStyles(theme => {
             minHeight: 56,
             display: "flex",
             flexGrow: 1,
+            overflow: "hidden",
         },
         listItem: {
+            cursor: "pointer",
             boxSizing: "content-box",
             //boxSizing: "border-box",
             //height: 72,
@@ -69,13 +72,13 @@ export default function SofaListItem(props) {
     }
 
     return (
-        <ListItem className={ (props.inList || props.noPad) ? classes.listItemNoPad : classes.listItem } button={props.button} onClick={ props.avatarClick ? null : props.onClick }>
+        <ListItem component={"div"} className={ (props.inList || props.noPad) ? classes.listItemNoPad : classes.listItem } button={props.button} onClick={ props.avatarClick ? null : props.onClick }>
             { props.avatar &&
                 <>
                 { props.loading ?
                     <CircularProgress style={{ marginRight: 16 }} size={36} />
                 :
-                    <ToggleAvatar avatarState={ props.avatarState } noback={!props.avatarBackground} onClick={ (e) => handleAvatarClick(e) } >
+                    <ToggleAvatar wideAvatar={props.wideAvatar} avatarState={ props.avatarState } noback={!props.avatarBackground} onClick={ (e) => handleAvatarClick(e) } >
                         { props.avatar }
                     </ToggleAvatar>
                 }
@@ -95,7 +98,11 @@ export default function SofaListItem(props) {
                 }
                 </>
             }
-            { props.children}
+            { props.children &&
+            <>
+                { props.children}
+            </>
+            }
         </ListItem>
     );
 }
@@ -105,6 +112,7 @@ SofaListItem.defaultProps = {
     button: false,
     avatarBackground: true,
     inlineSecondary: true,
+    wideAvatar: false,
 }
 
 

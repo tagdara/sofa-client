@@ -14,6 +14,16 @@ function getFromLocalStorage() {
     
 }
 
+function writeCookie(key, value, days) {
+    var date = new Date();
+    // Default at 365 days.
+    days = days || 365;
+    // Get unix milliseconds at current time plus number of days
+    date.setTime(+ date + (days * 86400000)); //24 * 60 * 60 * 1000
+    window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
+    return value;
+};
+
 export const deviceStatesReducer = (state, data) => {
 
         if (data==={}) { return state }
@@ -24,9 +34,9 @@ export const deviceStatesReducer = (state, data) => {
         var prop='';
         var interfacename=""
         var dev={}
-        
         //console.log('YY', data.event.header.name, data)
-
+        var date = new Date();
+        writeCookie("last_update", date.toISOString(), 1)
         switch (data.event.header.name) {
             case "Multistate":
 
@@ -293,7 +303,7 @@ export default function DataProvider(props) {
     
     const { registerEndpointIds, registeredDevices, getEndpointIdsByFriendlyName, unregisterDevices, devices, getEndpointIdsByCategory, getSceneDetails, 
             saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, 
-            directive, virtualDevices, isModeNonControllable } = useContext(DeviceContext);
+            directive, virtualDevices, isModeNonControllable, getModes } = useContext(DeviceContext);
     
     const { postJSON, addSubscriber } = useContext(NetworkContext);
 
@@ -369,6 +379,7 @@ export default function DataProvider(props) {
 
                 var cap=dev.capabilities[j]
                 if (cap.interface.indexOf('.') <0) { continue }
+                if (!cap.hasOwnProperty('properties')) { continue }
                 if (!pdev.hasOwnProperty(cap.interface.split('.')[1])) {
                     pdev[cap.interface.split('.')[1]]={}
                     if (!cap.properties.hasOwnProperty('supported')) { continue }
@@ -391,6 +402,8 @@ export default function DataProvider(props) {
         var foundAny=false
         var removes=[]
         var fail=false
+        
+        //console.log('cardready',cardname,registeredDevices)
 
         for (var id in registeredDevices) { 
             //console.log('checking', registeredDevices[id].includes(cardname), id, registeredDevices[id])
@@ -566,23 +579,6 @@ export default function DataProvider(props) {
             }
         }
         return value
-    }
-
-    function getModes(dev) {
-
-        var modes={}
-        for (var k = 0; k < dev.interfaces.length; k++) {
-            if (dev[dev.interfaces[k]].controller==='ModeController') {
-                var mc=dev[dev.interfaces[k]]
-                var modename=mc.capabilityResources.friendlyNames[0].value.text
-                var modechoices=[]
-                for (var j = 0; j < mc.configuration.supportedModes.length; j++) {
-                    modechoices[mc.configuration.supportedModes[j].value] = mc.configuration.supportedModes[j].modeResources.friendlyNames[0].value.text
-                }
-                modes[modename]=modechoices
-            }
-        }
-        return modes
     }
 
     return (

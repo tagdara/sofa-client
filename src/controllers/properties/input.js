@@ -44,7 +44,7 @@ export default function Input(props) {
                 }
             }
         }
-        console.log('inputs:',choices)
+
         return choices
     }    
     
@@ -53,7 +53,7 @@ export default function Input(props) {
     }
 
     return (
-        <Select value={props.item.value ? props.item.value.input : ""} onChange={handleInputChange} input={<BootstrapInput name="input" id="input" />} >
+        <Select value={props.item.value ? props.item.value.input : ""} onChange={handleInputChange} input={<BootstrapInput name="input" />} >
             { inputs.map( inp => 
                 <MenuItem key={inp} value={inp}>{inp}</MenuItem>
             )}

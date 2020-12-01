@@ -6,7 +6,7 @@ import SecurityCamera from './camera/securitycamera';
 
 export default function CameraSelect(props) {
 
-    const { getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
+    const { getEndpointIdsByCategory, deviceState, unregisterDevices, directive } = useContext(DataContext);
     const [cameras, setCameras]=useState([])
     const { chooseUserCamera, userCamera } = useContext(UserContext);
 
@@ -70,8 +70,8 @@ export default function CameraSelect(props) {
     return (
         <React.Fragment>
             { currentCamera()!==undefined ?
-            <SecurityCamera wide={props.wide} camera={currentCamera()} selectButtons={true} key={ userCamera } directive={ directive }
-                            name={ currentCamera().friendlyName } nextCamera={nextCamera} prevCamera={prevCamera} top={false}  />
+            <SecurityCamera wide={props.wide} camera={currentCamera()} selectButtons={true} key={ userCamera } directive={ directive } deviceState={ deviceState(currentCamera()) }
+                            name={ currentCamera().friendlyName } nextCamera={nextCamera} prevCamera={prevCamera} top={false} showOffline={true} />
             :null }
         </React.Fragment> 
     );

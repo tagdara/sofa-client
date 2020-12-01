@@ -4,9 +4,7 @@ import Select from '@material-ui/core/Select';
 import AutomationInput from '../../automation/AutomationInput';
 
 export default function Mode(props) {
-    
-    console.log('mode props',props)
-    
+
     useEffect(() => {
         if (props.item.value===undefined) {
             props.directive(props.device.endpointId, 'ModeController', 'SetMode', {"mode" : props.interface.configuration.supportedModes[0].value}, {}, props.item.instance)
@@ -19,6 +17,13 @@ export default function Mode(props) {
         props.directive(props.device.endpointId, 'ModeController', 'SetMode', {"mode" : event.target.value}, {}, props.item.instance)
     }; 
 
+    if (props.compact) {
+        if (props.item.value!==undefined) {
+            return props.item.value.mode.split('.')[1]
+        }
+        return ""
+    }
+    
     return (
         <Select value={props.item.value!==undefined ? props.item.value.mode : ""} onChange={handleModeChange} input={<AutomationInput name="input" />} >
             { props.interface.configuration.supportedModes.map( mode => 

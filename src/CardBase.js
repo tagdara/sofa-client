@@ -99,6 +99,15 @@ const useStyles = makeStyles(theme => {
                 paddingBottom: 0,
             },
         },
+        collapseGrid: {
+            '& > :first-child': {
+                paddingTop: 0,
+            },
+            '& > :nth-last-child(2)' : {
+                paddingBottom: 0,
+            }
+            
+        },
         highlight: {
             backgroundColor: theme.palette.background.button,
         }
@@ -127,6 +136,7 @@ export default function CardBase(props) {
     
     function detectWideParent() {
         if (isMobile) { return 12 }
+        if (props.wide) { return 12 }
         if (sizerRef.current.parentNode===undefined) { return 12 }
         if (sizerRef.current.parentNode.offsetWidth>=1300) { return 3 }
         if (sizerRef.current.parentNode.offsetWidth>=800) { return 4 }
@@ -138,7 +148,7 @@ export default function CardBase(props) {
             className={classes.outer}>
             { ready &&
             <Paper elevation={props.elevation} className={classNames( classes.content, props.highlight && classes.highlight, props.hover && classes.hover, props.noPad && classes.nopad)}  >
-                <Grid item container className={classes.paperGrid} >
+                <Grid item container className={ props.hasCollapse ? classes.collapseGrid : classes.paperGrid } >
                     {props.children}
                 </Grid>
             </Paper>

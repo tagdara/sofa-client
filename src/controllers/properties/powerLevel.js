@@ -18,6 +18,10 @@ export default function PowerLevel(props) {
         catch {}
         return val
     }
+    
+    if (props.compact) {
+        return valueOrDefault() + "%"
+    }
 
     return (
         <SofaAvatarSlider avatarUnit={"%"} small={true} reverse={true} minWidth={64} value={ valueOrDefault() } change={ handlePowerLevelChange } />

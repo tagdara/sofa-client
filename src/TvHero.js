@@ -8,7 +8,7 @@ export default function TvHero(props) {
     const { cardReady, cardDevices, devices, deviceState, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
     //const tvs= deviceStatesByCategory('TV')
     const [tvs, setTvs]=useState([])
-    
+
     useEffect(() => {
         setTvs(getEndpointIdsByCategory('TV', 'TvHero'))
         return function cleanup() {
@@ -22,8 +22,11 @@ export default function TvHero(props) {
     }
      
     return (
+        <>
+        {
         tvs.map(tv => 
             <Television wide={props.wide} key={tv}  device={ devices[tv] } deviceState={ deviceState(tv) } />
-        )
+        )}
+        </>
     );
 }

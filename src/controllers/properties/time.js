@@ -23,8 +23,8 @@ export default function Time(props) {
     
     return (
         <>
-            <TimeEntry label={"start"} updateValue={handleChange} value={ props.item.start }/>
-            <TimeEntry label={"end"} updateValue={handleChange} value={ props.item.end }/>            
+            <TimeEntry label={"start"} updateValue={handleChange} value={ props.item.value.start }/>
+            <TimeEntry label={"end"} updateValue={handleChange} value={ props.item.value.end }/>            
         </>
     );
 

@@ -33,8 +33,8 @@ export default function Recent(props) {
     
     const today=moment()
     const classes = useStyles();
-    const excludeItems=["url", "art", "pid", "startTime", "album", "color", "connectivity", "activeState", "subState", "process", "logged",
-                        "Humidity", "Light Level", "Wind Speed"]
+    const excludeItems=["errors","url", "art", "pid", "startTime", "album", "color", "connectivity", "activeState", "subState", "process", "logged",
+                        "Humidity", "Light Level", "Wind Speed", "datasize"]
     
     function getChangeTime() {
         try {

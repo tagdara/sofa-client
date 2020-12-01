@@ -13,6 +13,7 @@ const useStyles = makeStyles({
         flexGrow: 1,
         flexBasis: 1,
         boxSizing: "border-box",
+        cursor: "pointer",
     },
     areaListItem: {
         minHeight: 54,

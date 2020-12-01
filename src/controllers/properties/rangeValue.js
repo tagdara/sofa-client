@@ -12,7 +12,7 @@ export default function RangeValue(props) {
 
     
     function handleChange(e) {
-        props.directive(props.device.endpointId, props.interface.interface.split('.')[1], props.item.command, { "rangeValue" : e.target.value }, {}, props.item.instance)
+        props.directive(props.device.endpointId, props.interface.interface.split('.')[1], props.item.command, { "rangeValue" : parseInt(e.target.value) }, {}, props.item.instance)
     }
     
     function valueOrDefault() {
@@ -26,14 +26,9 @@ export default function RangeValue(props) {
         return val
     }
     
-    console.log('prop dir', props.directive)
-    
     return (
-        <>
-            <TextField variant="outlined" onChange={handleChange} 
-                    id="rangeValue" label="Value" type="number" defaultValue={valueOrDefault() } 
-                    InputLabelProps={{ shrink: true, }} inputProps={{ style: {padding: 10 } }}  />
-        </>
+        <TextField key={'rv'+props.index} variant="outlined" onChange={handleChange} label="Value" type="number" value={valueOrDefault() } 
+                InputLabelProps={{ shrink: true, }} inputProps={{ style: {padding: 10 } }}  />
     );
 
 }

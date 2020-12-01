@@ -3,13 +3,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import TuneIcon from '@material-ui/icons/Tune';
-import GridItem from '../GridItem'
+import CardBase from '../CardBase'
 import ToggleAvatar from '../ToggleAvatar'
 
 function ScheduleItem(props) {
     
-    console.log('sa', props.automation.schedules)
-
     const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];  
    
     function dateOnly(full) {
@@ -63,18 +61,18 @@ function ScheduleItem(props) {
     }
 
     return (
-        <GridItem>
+        <CardBase>
             <ListItem>
                 <ToggleAvatar avatarState={'on'} onClick={ () => props.select(props.name) }><TuneIcon /></ToggleAvatar>
                 <ListItemText onClick={ () => props.select(props.name) } primary={props.name} secondary={"Last: "+dateOnly(props.automation.lastrun)+" "+timeOnly(props.automation.lastrun)} />
             </ListItem>
-            { props.automation.schedules.map( sched =>
-            <ListItem>
+            { props.automation.schedules.map((sched,index) =>
+            <ListItem key={index} >
                 <ToggleAvatar noback={true} onClick={ () => props.select(props.name) }><ScheduleIcon /></ToggleAvatar>
                 <ListItemText onClick={ () => props.select(props.name) } primary={textSched(sched)} secondary={"Next: "+dateOnly(props.automation.nextrun)+" "+timeOnly(props.automation.nextrun)} />
             </ListItem>
             )}
-        </GridItem>
+        </CardBase>
     )
 }
 

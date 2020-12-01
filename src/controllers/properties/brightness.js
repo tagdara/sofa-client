@@ -14,6 +14,10 @@ export default function Brightness(props) {
     function handleBrightnessChange(event) {
         props.directive(props.device.endpointId, 'BrightnessController', 'SetBrightness', { "brightness" : event }, {}, props.item.instance)
     }; 
+    
+    if (props.compact) {
+        return <div>{ props.item.value ? props.item.value.brightness : 50 }</div>
+    }
 
     return (
         <SofaAvatarSlider small={true} reverse={true} minWidth={64} value={ props.item.value ? props.item.value.brightness : 50 } change={ handleBrightnessChange } />

@@ -13,6 +13,7 @@ import ClearIcon from '@material-ui/icons/Clear';
 import LightSliderBrightness from "./LightSliderBrightness"
 import LightSliderTemperature from "./LightSliderTemperature"
 import LightSliderColor from "./LightSliderColor"
+import LightSliderOnLevel from "./LightSliderOnLevel"
 import ButtonItem from "../ButtonItem"
 
 const useStyles = makeStyles(theme => {
@@ -170,6 +171,13 @@ export default function Light(props) {
                                 <ListItem className={classes.placeholder} />
                             :
                                 <LightSliderColor device={props.device} deviceState={props.deviceState} directive={props.directive}/>
+                            )
+                        }
+                        { !showAll ? null :
+                            ( !props.deviceState.hasOwnProperty('On Level') ?
+                                <ListItem className={classes.placeholder} />
+                            :
+                                <LightSliderOnLevel device={props.device} deviceState={props.deviceState} directive={props.directive} />
                             )
                         }
                         <div className={classes.controlPad} />

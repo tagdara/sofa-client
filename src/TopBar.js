@@ -29,6 +29,7 @@ export default function TopBar(props) {
     const { loggedIn } = useContext(NetworkContext);
     const {  goBack, currentPage, goHome, toggleDrawer, toggleRightDrawer } = useContext(LayoutContext);
 
+
       return (
           <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none', borderBottom: "1px solid #222"}}>
             <Toolbar>
@@ -57,6 +58,7 @@ export default function TopBar(props) {
                 </div>
               )}
             </Toolbar>
+
           </AppBar>
       );
 }

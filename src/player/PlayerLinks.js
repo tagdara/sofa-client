@@ -5,7 +5,7 @@ import PlaceholderCard from '../PlaceholderCard';
 
 export default function PlayerLinks(props) {
     
-    const { registerEndpointIds, cardReady, devices, deviceStates, directive, unregisterDevices } = useContext(DataContext);
+    const { registerEndpointIds, cardReady, devices, deviceState, directive, unregisterDevices } = useContext(DataContext);
     const [speakers, setSpeakers]=useState([])
     
     useEffect(() => {
@@ -23,7 +23,7 @@ export default function PlayerLinks(props) {
     return (
         <>
             { speakers.map( linkedplayer => (
-                <PlayerVolume key={ linkedplayer } device={ devices[linkedplayer] } deviceState={ deviceStates[linkedplayer] } directive={directive} />
+                <PlayerVolume key={ linkedplayer } device={ devices[linkedplayer] } deviceState={ deviceState(linkedplayer) } directive={directive} />
             ))}
         </>
     );

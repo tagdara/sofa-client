@@ -36,7 +36,6 @@ export default function AreaHero(props) {
 
         var areas=[]
         if (area==='All') { 
-            console.log('returning all areas', allAreas)
             return allAreas
         }
         if (!area || thisarea===undefined) { return [] }
@@ -59,7 +58,6 @@ export default function AreaHero(props) {
 
         var colorLights={}
         if (area==='All') { 
-            console.log('skip color in all areas', allAreas)
             return []
         }
         if (!area || thisarea===undefined) { return [] }

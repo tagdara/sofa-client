@@ -19,6 +19,7 @@ import SofaListItem from '../SofaListItem'
 import ModeLines from '../ModeLines'
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import Collapse from '@material-ui/core/Collapse';
 
 
 const useStyles = makeStyles(theme => {
@@ -58,6 +59,10 @@ const useStyles = makeStyles(theme => {
             alignItems: "center",
             flexDirection: "column",
             padding: 0,
+        },
+        detail: {
+            width: "100%",
+            paddingTop: -8,
         },
     }
 
@@ -123,34 +128,32 @@ export default function Receiver(props) {
                                     disabled={ props.deviceState.PowerController.powerState.value==='OFF' }
                 />
             }
-            { showDetail &&
-                <>
-                    <SofaAvatarSlider   label={"Volume"} 
-                                        small={true} reverse={true} minWidth={64} 
-                                        value={props.deviceState.SpeakerController.volume.value}
-                                        change={handleVolumeChange} 
-                                        avatarClick={ () => handleMuteChange(!props.deviceState.SpeakerController.mute.value)} 
-                                        avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? "on" : "off" }
-                                        disabled={ props.deviceState.PowerController.powerState.value==='OFF' }
-                    />
-                    <ListItem>
-                        <ListItemText primary={"Input"} />
-                        { props.deviceState.InputLock &&
-                            <ToggleIconButton
-                                buttonState={ props.deviceState.InputLock.mode.value==='InputLock.Locked' ? "on" : "off" } disabled={props.deviceState.PowerController.powerState.value!=='ON'}
-                                onIcon={ <LockIcon fontSize={"small"} /> } offIcon={ <LockOpenIcon fontSize={"small"} /> }
-                                onClick={ (e) => handleInputLockModeChoice(e, (props.deviceState.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
-                            />
-                        }
-                        <Select disabled={props.deviceState.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty value={props.deviceState.InputController.input.value ? props.deviceState.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
-                            { getInputs(props.endpointId).map(inp =>
-                                <MenuItem key={inp} value={inp}>{inp}</MenuItem>
-                            )}
-                        </Select>
-                    </ListItem>
-                    <ModeLines directive={directive} disabled={props.deviceState.PowerController.powerState.value!=='ON'} device={props.device} deviceState={props.deviceState} exclude={["InputLock"]} />
-                </>
-            }
+            <Collapse in={showDetail} className={classes.detail}>
+                        <SofaAvatarSlider   label={"Volume"} 
+                                            small={true} reverse={true} minWidth={64} 
+                                            value={props.deviceState.SpeakerController.volume.value}
+                                            change={handleVolumeChange} 
+                                            avatarClick={ () => handleMuteChange(!props.deviceState.SpeakerController.mute.value)} 
+                                            avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? "on" : "off" }
+                                            disabled={ props.deviceState.PowerController.powerState.value==='OFF' }
+                        />
+                        <ListItem>
+                            <ListItemText primary={"Input"} />
+                            { props.deviceState.InputLock &&
+                                <ToggleIconButton
+                                    buttonState={ props.deviceState.InputLock.mode.value==='InputLock.Locked' ? "on" : "off" } disabled={props.deviceState.PowerController.powerState.value!=='ON'}
+                                    onIcon={ <LockIcon fontSize={"small"} /> } offIcon={ <LockOpenIcon fontSize={"small"} /> }
+                                    onClick={ (e) => handleInputLockModeChoice(e, (props.deviceState.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
+                                />
+                            }
+                            <Select disabled={props.deviceState.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty value={props.deviceState.InputController.input.value ? props.deviceState.InputController.input.value : ""} onChange={ (e) => handleInput(e, e.target.value) } >
+                                { getInputs(props.endpointId).map(inp =>
+                                    <MenuItem key={inp} value={inp}>{inp}</MenuItem>
+                                )}
+                            </Select>
+                        </ListItem>
+                        <ModeLines directive={directive} disabled={props.deviceState.PowerController.powerState.value!=='ON'} device={props.device} deviceState={props.deviceState} exclude={["InputLock"]} />
+            </Collapse>
         </CardBase>
     );
 }

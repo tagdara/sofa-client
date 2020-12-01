@@ -107,14 +107,14 @@ export function AutomationsLayout(props) {
                         <AddIcon fontSize="small" />
                     </IconButton>
                         { Object.keys(automations).length>0 &&
-                        <IconButton onClick={ () => { setRemove(!remove); }} className={classes.button }>
+                        <IconButton color={ remove ? "primary" : "inherit" } onClick={ () => { setRemove(!remove); }} className={classes.button }>
                             <RemoveIcon fontSize="small" />
                         </IconButton>
                         }
                     <IconButton onClick={ () => toggleScheduled() } className={classes.button }>
-                        <ScheduleIcon fontSize="small" />
+                        <ScheduleIcon color={ scheduled ? "primary" : "inherit" } fontSize="small" />
                     </IconButton>
-                    <Button onClick={ () => toggleFavorites() }>ALL</Button>
+                    <Button color={ !favorites ? "primary" : "inherit" } onClick={ () => toggleFavorites() }>ALL</Button>
                 </> }
             >
             { Object.keys(automations).sort().map(automation => 

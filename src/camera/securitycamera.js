@@ -75,6 +75,15 @@ const useStyles = makeStyles(theme => {
             right: 0,
             bottom: 0,
         },
+        unreachable: {
+            position: "absolute",
+            margin: "auto",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+        },
+
         sizerDiv: {
             width: "100%",
             height: 0,
@@ -119,6 +128,7 @@ export default function SecurityCamera(props) {
     const [videoUri,setVideoUri] = useState("")
     const [updateUrl, setUpdateUrl] = useState("");
     const [ready, setReady] = useState(false)
+    const [unreachable, setUnreachable] = useState(false)
     const ios=navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform)
     const video = useRef(null);
     const image = useRef(null);
@@ -158,15 +168,21 @@ export default function SecurityCamera(props) {
         }
  
         if ((props.camera) && (ready!==props.camera)) { 
-            setReady(props.camera)
-            //props.camera.CameraStreamController.directive("InitializeCameraStreams", 
             
-            // This should get the static image URI without starting streams unnecessarily
-            props.directive(props.camera, "CameraStreamController", "InitializeCameraStreams",{ "cameraStreams": [] })
-                .then(response => updateUrlUri(response))
+            if (props.deviceState.EndpointHealth.connectivity.value.value==='OK') {
+                setReady(props.camera)
+                //props.camera.CameraStreamController.directive("InitializeCameraStreams", 
+                
+                // This should get the static image URI without starting streams unnecessarily
+                props.directive(props.camera, "CameraStreamController", "InitializeCameraStreams",{ "cameraStreams": [] })
+                    .then(response => updateUrlUri(response))
+            } else {
+                console.log('camera is unreachable', props.camera)
+                setUnreachable(true)
+            }
         } 
     // eslint-disable-next-line 
-    }, [props.camera, ready]);
+    }, [props.camera, ready, props.deviceState]);
 
     function imageFinished() {
         if (!imageLoaded) {
@@ -229,6 +245,7 @@ export default function SecurityCamera(props) {
     }
    
     return (
+        unreachable && !props.showOffline ? null :
         <CardBase noPad={true}>
             <div className={ classes.sizerDiv} ref={sizerRef} />
             { live && videoUri && !showDialog ?
@@ -262,8 +279,14 @@ export default function SecurityCamera(props) {
                     />
                     </div>
                 }
-                {imageLoaded ?
+                { imageLoaded || unreachable ?
                     <React.Fragment>
+                        { unreachable &&
+                            <div className={classes.hidden} style={{minHeight: `${lowHeight}`}}>
+                                <span className={classes.unreachable}>Offline</span>
+                            </div>
+                        }
+
                         { props.prevCamera &&
                             <IconButton color="primary" className={classes.prevbutton} onClick={ () => props.prevCamera()}>
                                 <ChevronLeftIcon />
@@ -283,8 +306,8 @@ export default function SecurityCamera(props) {
                             <Videocam />
                         </IconButton>
                     </React.Fragment>
-                :
-                    <>
+                :   
+                <>
                     <div className={classes.hidden} style={{minHeight: `${lowHeight}`}}>
                         <CircularProgress className={classes.spinner} size={50} />
                     </div>

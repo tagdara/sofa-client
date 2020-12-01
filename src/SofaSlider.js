@@ -23,8 +23,8 @@ const useStyles = makeStyles({
         width: "100%",
         boxSizing: "border-box",
         marginRight: 0,
-        overflowX: "hidden",
-        overflowY: "hidden",
+        //overflowX: "hidden",
+        //overflowY: "hidden",
         alignItems: "center",
         paddingRight: 8,
     },
@@ -82,6 +82,7 @@ export default function SofaSlider(props) {
                 onChange={handlePreChange}
                 onChangeCommitted={handleChange}
                 disabled={props.disabled}
+                valueLabelDisplay={props.tooltip}
             />
         </div>
     );
@@ -101,6 +102,7 @@ SofaSlider.defaultProps = {
     half: false,
     minWidth: 240,
     smallText: false,
+    tooltip: "auto",
 }
 
 

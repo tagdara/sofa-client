@@ -1,5 +1,4 @@
-import React from 'react';
-import { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 import { NetworkContext } from './NetworkProvider';
@@ -13,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import SubjectIcon from '@material-ui/icons/Subject';
 import AvTimerIcon from '@material-ui/icons/AvTimer';
+import DeviceDialog from './DeviceDialog';
 
 const useStyles = makeStyles(theme => {
     return {   
@@ -37,10 +37,15 @@ export default function AdminFeatures(props) {
     const classes = useStyles();
     const { selectPage } = useContext(LayoutContext);
     const { toggleLogSSE } = useContext(NetworkContext);
+    const [ showDialog, setShowDialog] = useState(false);
 
     function otherPort(portnumber, tabname) {
         var newurl=window.location.protocol+"//"+window.location.hostname+":"+portnumber;
         window.open(newurl,tabname);
+    }
+    
+    function closeDialog() {
+        setShowDialog(false)
     }
 
     return (  
@@ -66,7 +71,14 @@ export default function AdminFeatures(props) {
             <IconButton className={classes.systemButton} onClick={() => selectPage('DeviceLayout')}>
                 <DevicesOtherIcon />
             </IconButton>
+            <IconButton className={classes.systemButton} onClick={() => selectPage('ActionLayout')}>
+                <AvTimerIcon />
+            </IconButton>
+            <IconButton className={classes.systemButton} onClick={() => setShowDialog(true)}>
+                <DevicesOtherIcon />
+            </IconButton>
             <Button>{process.env.REACT_APP_VERSION}</Button>
+            <DeviceDialog open={showDialog} close={closeDialog} />
         </div>
     )
 };

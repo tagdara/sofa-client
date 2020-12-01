@@ -1,4 +1,4 @@
-import React, { useState,useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { DeviceContext } from './DataContext/DeviceProvider';
 import { useInfiniteScroll } from "react-infinite-scroll-hook"
@@ -16,6 +16,7 @@ const useStyles = makeStyles({
 
     scroller: {
         overflowY: "auto",
+        position: "relative",
     },
     holder: {
         display: "flex",
@@ -23,7 +24,7 @@ const useStyles = makeStyles({
     },
     searchtitle: {
         display: "flex",
-    }
+    },
 });
 
 export default function DeviceDialog(props) {
@@ -37,28 +38,25 @@ export default function DeviceDialog(props) {
     const [showDevice, setShowDevice] = useState(null)
     const [loading, setLoading] = useState(false);
     const devs=devicesByCategory('ALL', nameFilter)
-    //useEffect(() => {
-    //    function handleScroll() {
-    //        //var lastDiv = document.querySelector("#scroll-content > div:last-child");
-    //        if (window.innerHeight + document.documentElement.scrollTop !== document.documentElement.offsetHeight) return;
-    //        console.log('Fetch more devices', limit, limit+24);
-    //        setLimit(limit+24)
-    //    }   
-    //    console.log('adding scroll handler')
-    //    window.addEventListener('scroll', handleScroll, true);
-    //    return () => window.removeEventListener('scroll', handleScroll);
-    //}, []);
+    const [displayDevs, setDisplayDevs]=useState([])
+    const hasNextPage = displayDevs.length!==devs.length
+    
+    useEffect(() => {
+        var devs=devicesByCategory('ALL', nameFilter)
+        setDisplayDevs(devs.slice(0, limit))
+    // eslint-disable-next-line 
+    }, [ limit ])
 
-    function filterByType(devtype) {
+    //function filterByType(devtype) {
 
-        if (devtype==='all' || devtype==='') {
-            var devs=devicesByCategory('ALL', nameFilter)
-            return devs
-            //return devs.slice(0, limit)
-        }
+    //    if (devtype==='all' || devtype==='') {
+    //        var devs=devicesByCategory('ALL', nameFilter)
+            //return devs
+    //        return devs.slice(0, limit)
+    //    }
         
-        return devicesByCategory(devtype)
-    }
+    //    return devicesByCategory(devtype)
+    //}
 
     function executeDirective(iface, idir) {
         if (Object.keys(props.directives[iface][idir]).length===0) {
@@ -73,6 +71,7 @@ export default function DeviceDialog(props) {
     }
     
     function handleLoadMore() {
+        console.log('handle it?')
         if (limit<devs.length) { 
             setLoading(true)
             setLimit(limit+50)
@@ -82,7 +81,7 @@ export default function DeviceDialog(props) {
 
     const infiniteRef = useInfiniteScroll({
         loading,
-        hasNextPage: true,
+        hasNextPage,
         onLoadMore: handleLoadMore,
         scrollContainer: 'parent'
     });    
@@ -94,8 +93,8 @@ export default function DeviceDialog(props) {
             </GridItem>
             <DialogContent className={classes.scroller}>
                 <div ref={infiniteRef} className={classes.holder}>
-                { filterByType('all').map((device) =>
-                    <Device key={ device.endpointId } device={device} mode={mode} 
+                { displayDevs.map((device) =>
+                    <Device key={ 'XX'+device.endpointId } device={device} mode={mode} 
                             controllers={controllers} select={props.select ? props.select : executeDirective} 
                             directives={directives} showDevice={setShowDevice} />
                 )}

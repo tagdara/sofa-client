@@ -48,8 +48,6 @@ export default function AreaLayoutLights(props) {
         };
     // eslint-disable-next-line 
     }, [])
-    
-    console.log(props.lights)
 
     return (
         cardReady('AreaLayoutLights') ?
@@ -77,7 +75,7 @@ export default function AreaLayoutLights(props) {
         >
             { props.lights.map(dev =>
                 <Light key={ dev } device={ devices[dev] } deviceState={ deviceStates[dev] } directive={directive} 
-                    brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}  noMargin={true} nopaper={true} noPad={true} noback={true}
+                    brightControl={brightControl} tempControl={tempControl} colorControl={colorControl}  noMargin={true} nopaper={true} small={true} noback={true}
                 />
             )}        
         </GridSection>

@@ -10,7 +10,7 @@ import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 
 import SofaAvatarSlider from '../SofaAvatarSlider'
-
+import Collapse from '@material-ui/core/Collapse';
 import CardBase from '../CardBase'
 import ModeLines from '../ModeLines'
 import SofaListItem from '../SofaListItem'
@@ -94,7 +94,14 @@ const useStyles = makeStyles(theme => {
     buttonGroup: {
         display: "flex",
         flexGrow: 1,
+    },
+    detail: {
+        width: "100%",
+    },
+    setpoint: {
+        fontSize: 16,
     }
+    
     }
 });
 
@@ -168,6 +175,21 @@ export default function Thermostat(props) {
     function switchToHistory() {
         selectPage('ThermostatLayout')
     }
+    
+    function showFanPowerLevel() {
+
+        if (!props.deviceState.hasOwnProperty('PowerLevelController')) {
+            return false
+        }
+        
+        // This is for Dyson
+        if (getController(props.device.endpointId, 'Fan Mode')) {
+            if (props.deviceState['Fan Mode'].mode.value!=='FAN') {
+                return false
+            } 
+        }
+        return true
+    }
 
     return ( 
         <CardBase>
@@ -194,28 +216,26 @@ export default function Thermostat(props) {
                         }
                     </>
                 </ListItem>
-                { showDetail &&
-                    <SofaListItem primary={'Heat Set point'}
-                        inlineSecondary={true} secondaryActions={
-                            <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >
-                                <Button className={classes.button} onClick={ () => handleSetpointChange(targetSetpoint-1) }><ExpandMoreIcon /></Button>
-                                <Button className={classes.button} >{targetSetpoint}</Button>
-                                <Button className={classes.buttonRight} onClick={ () => handleSetpointChange(targetSetpoint+1) }><ExpandLessIcon /></Button>
-                            </ButtonGroup>
-                        }
-                    />
-                }
-                { showDetail && powerLevel!==false &&
+                <Collapse in={showDetail} className={classes.detail}>
                     <ListItem>
-                        <ListItemText primary={"Fan"} />
-                        <SofaAvatarSlider  small={true} reverse={true} minWidth={160} 
-                                            value={powerLevel} step={10} noPad={true}
-                                            preChange={handlePrePowerLevelChange} change={handlePowerLevelChange} />
+                        <ListItemText primary={'Heat Set point'} />
+                        <ButtonGroup size="small" variant="text"  >
+                            <Button onClick={ () => handleSetpointChange(targetSetpoint-1) }><ExpandMoreIcon /></Button>
+                            <Button className={classes.setpoint} >{targetSetpoint}</Button>
+                            <Button  onClick={ () => handleSetpointChange(targetSetpoint+1) }><ExpandLessIcon /></Button>
+                        </ButtonGroup>
                     </ListItem> 
-                }
-                { showDetail &&
+                    { showFanPowerLevel() &&
+                        <ListItem>
+                            <ListItemText primary={"Fan"} />
+                            <SofaAvatarSlider  small={true} reverse={true} minWidth={160} 
+                                                value={powerLevel} step={10} noPad={true}
+                                                preChange={handlePrePowerLevelChange} change={handlePowerLevelChange} />
+                        </ListItem> 
+                    }
+
                     <ModeLines directive={directive} device={props.device} deviceState={props.deviceState}  />
-                }
+                </Collapse>
         </CardBase>
     );
 }

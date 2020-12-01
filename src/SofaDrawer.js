@@ -71,7 +71,7 @@ export default function SofaDrawer(props) {
             </div>
             <Scrollbars>
             <div className={classes.drawerScroll}>
-                <Stack stack={'System'} />
+                <Stack stack={'System'} showTitle={false} />
             </div>
             </Scrollbars>
         </Drawer> 

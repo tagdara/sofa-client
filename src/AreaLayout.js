@@ -22,12 +22,10 @@ export default function AreaLayout(props) {
     const [addingDevice, setAddingDevice] = useState(false);
     const [deletingDevice, setDeletingDevice] = useState(false);
     const [editingScene, setEditingScene] = useState(false);
-    //const area = deviceStateByEndpointId('logic:area:'+layout.props.name)
     const [area, setArea]=useState(undefined)
-    //const [areaChildren, setAreaChildren]=useState([])
+
     
     useEffect(() => {
-        console.log(getEndpointIdsByFriendlyName(currentProps.name, 'AreaLayout', true, 'AREA', true))
         setArea(getEndpointIdsByFriendlyName(currentProps.name, 'AreaLayout', true, 'AREA', true))
         return function cleanup() {
             unregisterDevices('AreaLayout');
@@ -73,8 +71,6 @@ export default function AreaLayout(props) {
     }
     
     function selectDevice(dev) {
-        console.log('selected device', dev)
-        console.log('current area', area.AreaController)
         addChild(dev)
         setAddingDevice(false)
     }
@@ -88,13 +84,10 @@ export default function AreaLayout(props) {
     function removeChild(newDevice) {
         var ac=[...area.AreaController.children.value]
         if (ac.includes(newDevice.endpointId)) {
-            console.log('Removing item',newDevice.endpointId,'from',ac)
             ac.splice(ac.indexOf(newDevice.endpointId), 1);
         }
         directive(area.endpointId, 'AreaController', 'SetChildren', { "children" : { "value": ac }}, {})
     }
-    
-    if (cardReady('AreaLayout')) { console.log(area); console.log( deviceStates[area]) }
     
     return (    
         cardReady('AreaLayout') ?

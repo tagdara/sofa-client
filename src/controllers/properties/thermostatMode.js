@@ -50,6 +50,9 @@ export default function ThermostatMode(props) {
         return val
     }
 
+    if (props.compact) {
+        return valueOrDefault()
+    }
     
     return (
         <Select value={ valueOrDefault() } onChange={handleModeChange} input={<BootstrapInput name="thermostatMode" />} >

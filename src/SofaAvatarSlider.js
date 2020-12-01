@@ -26,6 +26,7 @@ const useStyles = makeStyles({
         minHeight: 48,
         padding: "0 16px",
         alignItems: "center",
+        overflow: "visible",
     },
     noPad: {
         boxSizing: "border-box",

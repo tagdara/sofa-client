@@ -61,7 +61,7 @@ export default function DeviceDirective(props) {
         catch {}
         return props.device.endpointId+dirItem.directive
     }
-
+    
     return (
         props.device!==undefined ?
             <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >

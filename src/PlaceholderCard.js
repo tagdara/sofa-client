@@ -1,8 +1,9 @@
 import React from "react";
 import { makeStyles } from '@material-ui/styles';
 import ToggleAvatar from './ToggleAvatar'
-import GridItem from './GridItem';
+import CardBase from './CardBase';
 import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles(theme => {
     
@@ -54,11 +55,13 @@ export default function PlaceholderCard(props){
     
     function isInset(children) {
         if (props.inset) {
-            return <> {children} </>
+            return <Fade in={true}> {children} </Fade>
         } else {
-            return  <GridItem wide={true} inset={props.inset} >
+            return  <Fade in={true}>
+                    <CardBase wide={true} inset={props.inset} >
                         { children }
-                    </GridItem>
+                    </CardBase>
+                    </Fade>
         }
     }
     

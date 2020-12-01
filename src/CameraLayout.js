@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState} from 'react';
 import { DataContext } from './DataContext/DataProvider';
 import { makeStyles } from '@material-ui/styles';
 import SecurityCamera from './camera/securitycamera';
+import Laundry from './camera/laundry';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import List from '@material-ui/core/List';
 import GridSection from './GridSection';
@@ -22,7 +23,7 @@ const useStyles = makeStyles({
 )
 export default function CameraLayout(props) {
     
-    const { cardReady, devices, getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
+    const { cardReady, devices, deviceState, getEndpointIdsByCategory, unregisterDevices, directive } = useContext(DataContext);
     const [cameras, setCameras]=useState([])
     const [ showQR, setShowQR]=useState(false)
     const classes = useStyles();
@@ -41,6 +42,15 @@ export default function CameraLayout(props) {
         window.open(newurl,tabname);
     }
     
+    function getLaundry() {
+        for (var i = 0; i < cameras.length; i++) {
+            if (devices[cameras[i]].friendlyName==='Laundry Camera') {
+                return cameras[i]
+            }
+        }
+        return false
+    }
+    
     return (
         cardReady('CameraLayout') &&
         <React.Fragment>
@@ -50,11 +60,15 @@ export default function CameraLayout(props) {
             </Button> }
         >
             { cameras.map(camera => 
-                <SecurityCamera qr={showQR} camera={camera} key={camera} device={ devices[camera] } name={ devices[camera].friendlyName } directive={directive} />
+                <SecurityCamera qr={showQR} camera={camera} key={camera} device={ devices[camera] } deviceState={ deviceState(camera) } name={ devices[camera].friendlyName } directive={directive} />
             )}
 
         </GridSection>
         <GridSection>
+        { getLaundry() &&
+            <Laundry qr={showQR} camera={ getLaundry() } key={'laundryzoom'} device={ devices[getLaundry()] } 
+                    name={ 'Laundry' } directive={directive} />
+        }
         <List>
             <SofaListItem button onClick={() => openNVR() } avatar={<VideocamIcon />} avatarState={"off"} primary={'Unifi Protect'} />
         </List>

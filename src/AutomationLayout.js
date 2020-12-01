@@ -97,7 +97,8 @@ export default function AutomationLayout(props) {
         } else {
             console.log('This is a blank automation.')
         }
-    }, [props.name, props.item, gotReturn, props.type, serverurl, getJSON]);
+    // eslint-disable-next-line
+    }, [ props.name, props.item, gotReturn, props.type, serverurl ]);
 
 
 
@@ -127,8 +128,6 @@ export default function AutomationLayout(props) {
         applyLayoutCard('AutomationsLayout')
     }
 
-    //<GridSection xs={isMobile ? 12 : 9} scroll={true}>
-    //</GridSection>
     return (
         <Grid container item spacing={1} xs={isMobile ? 12 : 9} >
             <AutomationHeader name={title} save={saveType} favorite={isFavorite('logic:activity:'+props.name)} makeFavorite={makeFavorite} automation={automation} />

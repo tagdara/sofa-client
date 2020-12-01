@@ -3,10 +3,11 @@ import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from './layout/NewLayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
-import PageActions from './PageActions';
 import Chip from '@material-ui/core/Chip';
 import ErrorBoundary from './ErrorBoundary';
 import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 
 const useStyles = makeStyles(theme => {
@@ -67,12 +68,17 @@ const useStyles = makeStyles(theme => {
             marginBottom: "env(safe-area-inset-bottom)",
         },
         actionsChip: {
+            justifyContent: "center",
             margin: 6,
             backgroundColor: theme.palette.layer.card,
             '&:hover': {
                 borderColor: theme.palette.primary.dark,
             }  
         },
+        actionsChipIcon: {
+            height: 28,
+            width: 28,
+        }
     }
 });
 
@@ -80,8 +86,8 @@ export default function Stack(props) {
     
     const classes = useStyles();
     const { getStack, renderSuspenseModule } = useContext(LayoutContext);
-    const [showActions, setShowActions] = useState(false)
     const [ stack, setStack ]=useState({})
+    const [ expand, setExpand ]=useState(false)
 
     useEffect(() => { 
         if (props.stack) {
@@ -91,31 +97,51 @@ export default function Stack(props) {
     // eslint-disable-next-line             
     }, [ props.stack] )
 
+    
+    function expandable() {
+        if (stack.cards) {
+            for (var i = 0; i < stack.cards.length; i++) {
+                if (stack.cards[i].hasOwnProperty('expand')) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
     return (
         stack ?
             <Grid container item spacing={0} key={props.name} xs={ props.xs } className={ classes.stack } >
                 <div className={classes.pageHeader}>
-                    <Typography variant="subtitle1" className={classes.title} >{stack.name}</Typography>
-                    { ( stack.hasOwnProperty('actions') ) && 
+                    {props.showTitle &&
+                        <Typography variant="subtitle1" className={classes.title} >{stack.name}</Typography>
+                    }
+                    { expandable() &&
                        <Chip
                             className={classes.actionsChip}
-                            label={ !showActions ? "Actions" : "Close" }
+                            label={ !expand ? "More" : "Less" }
+                            icon={ !expand ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
                             clickable
-                            onClick={ () => setShowActions(!showActions) }
+                            onClick={ () => setExpand(!expand) }
                           />
                     }
                 </div>
-                { (stack.hasOwnProperty('actions') && showActions) && 
-                    <PageActions actions={stack.actions} name={stack.name} />
-                }
                 { stack.cards && stack.cards.map( (card, i) => 
-                    <ErrorBoundary key={"card"+i}>
+                    <React.Fragment key={"card"+i}>
+                    { (!card.hasOwnProperty('expand') || card['expand']===expand ) ?
+                    <ErrorBoundary>
                         { renderSuspenseModule(card['module'], card['props']) }
                     </ErrorBoundary>
+                    :
+                    null
+                    }
+                    </React.Fragment >
                 )}
             </Grid>
         : null
     );
 }
 
-
+Stack.defaultProps = {
+    showTitle: true,
+}

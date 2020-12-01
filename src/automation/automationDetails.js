@@ -1,49 +1,61 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { DeviceContext } from '../DataContext/DeviceProvider';
 
-import { makeStyles } from '@material-ui/styles';
-
-import Grid from '@material-ui/core/Grid';
 import Moment from 'react-moment';
-import Button from '@material-ui/core/Button';
-import GridItem from '../GridItem';
+import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import LowPriorityIcon from '@material-ui/icons/LowPriority';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 
-const useStyles = makeStyles({
-    
-    root: {
-        alignItems: "flex-end",
-        display: "flex",
-    },
-    label: {
-        display: "flex",
-        flexGrow:1,
-    }
-});
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function AutomationDetails(props) {
 
-    const classes = useStyles();
     const { directive } = useContext(DeviceContext);
+    const [ showResult, setShowResult]=useState(false)
+    const [ resultMessage, setResultMessage]=useState('')
+    const [ severity, setSeverity]=useState('info')
     
     function runAutomation(conditions=true) {
         directive('logic:activity:'+props.name, 'SceneController', 'Activate', {}, {"conditions": conditions})
+            .then(result=> { parseResult(result) })
+    }
+    
+    function parseResult(result) {
+        try {
+            if (result.event.header.name==='ErrorResponse') {
+                setResultMessage(result.event.payload.message); 
+                setSeverity('error')
+                setShowResult(true); 
+            }
+            if (result.event.header.name==='ActivationStarted') {
+                setResultMessage('Activation started'); 
+                setSeverity('success')
+                setShowResult(true); 
+            }
+        }
+        catch {}
+    }
+    
+    function handleClose() {
+        setShowResult(false)
     }
 
     return (    
-        <GridItem nolist={true} elevation={0} wide={true}>
-            <Grid item xs={ 12 } className={classes.root}>
-                <ListItem>
-                    <ListItemText primary={"Last Run"} secondary={ props.automation.lastrun!=='never' ? <Moment format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment> : 'Never'} />
-                    <Button onClick={() => runAutomation()}><PlaylistPlayIcon /></Button>
-                    <Button onClick={() => runAutomation(false)}><LowPriorityIcon /></Button>
-                </ListItem>
-            </Grid>
-        </GridItem>
+        <ListItem>
+            <ListItemText primary={"Last Run"} secondary={ props.automation.lastrun!=='never' ? <Moment utc format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment> : 'Never'} />
+            <IconButton onClick={() => runAutomation()}><PlaylistPlayIcon /></IconButton>
+            <IconButton onClick={() => runAutomation(false)}><LowPriorityIcon /></IconButton>
+            <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}} open={showResult} autoHideDuration={6000} onClose={handleClose}>
+                <Alert severity={severity}>{resultMessage}</Alert>
+            </Snackbar>
+        </ListItem>
     )
 
 };

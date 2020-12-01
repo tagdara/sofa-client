@@ -19,6 +19,7 @@ export const useStream = (accessToken) => {
     const [streamToken, setStreamToken] = useState(accessToken)
     const [streamStatus, setStreamStatus] = useState(10)
     const [logSSE, setLogSSE] = useState(false)
+    //const [lastUpdate, setLastUpdate] = useState("")
     
     const logEnabled = useRef(false)
     
@@ -26,6 +27,7 @@ export const useStream = (accessToken) => {
     
     useEffect( () => {
         try {
+            writeCookie("last_update", "", 1)
             setLogSSE(JSON.parse(localStorage.getItem('console_log_sse')))
         } 
         catch {
@@ -55,14 +57,16 @@ export const useStream = (accessToken) => {
         if (streamToken && !isConnecting) {
             // EventSource does not support passing headers so we must use a cookie to send the token
             writeCookie("access_token", streamToken, 1)
+            //writeCookie("last_update", lastUpdate, 1)
             try {
                 eventSource.current = new EventSource(serverurl+"/sse", { withCredentials: true })
             } 
             catch {
-                console.log('~~~~~~~~~~~~~ ERROR SSEing')
+                console.log('!! error creating SSE EventSource')
             }
         }
-    }, [streamToken, isConnecting] )
+    // eslint-disable-next-line 
+    }, [streamToken, isConnecting ] )
 
 
     function streamConnected() {
@@ -134,6 +138,7 @@ export const useStream = (accessToken) => {
             for (var i = 0; i < subscribers.length; i++) {
                 subscribers[i](data)
             }
+            
         };
 
 

@@ -3,8 +3,6 @@ import { LayoutContext } from './layout/NewLayoutProvider';
 import { DeviceContext } from './DataContext/DeviceProvider';
 
 import IconButton from '@material-ui/core/IconButton';
-
-
 import AutomationAction from "./automation/AutomationAction"
 import AutomationCondition from "./automation/AutomationCondition"
 import AutomationTrigger from "./automation/AutomationTrigger"
@@ -25,7 +23,8 @@ export default function AutomationColumn(props) {
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)
     const modmap={'Triggers': AutomationTrigger , 'Conditions':AutomationCondition, 'Actions':AutomationAction, 'Schedules':AutomationSchedule}
-    const AutomationProperty = React.memo(modmap[props.name])
+    //const AutomationProperty = React.memo(modmap[props.name])
+    const AutomationProperty = modmap[props.name]
 
     function deleteItem(index) {
         console.log('deleting item',index,'from',props.name)
@@ -129,28 +128,25 @@ export default function AutomationColumn(props) {
                 </IconButton>
                 }
                 </>
-
+                
     return (    
-
+        Object.keys(props.items).length>0 ?
             <GridSection name={props.name} secondary={ headerButtons } margin={true}>
-
-            { Object.keys(props.items).length>0 &&
-                <React.Fragment>
-                    { props.items.map((item,index) =>
-                        <ErrorBoundary key={props.itemtype+index} >
-                        { props.itemtype==='schedule' ?
-                            <AutomationProperty key={item.endpointId+item.value} save={save} remove={remove} delete={deleteItem} index={index} item={item} wide={isMobile}/>
-                        :
-                            <AutomationProperty key={item.endpointId+item.value} moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} 
-                                delete={deleteItem} index={index} item={item} device={ item.endpointId===undefined ? undefined : deviceByEndpointId(item.endpointId) } 
-                                controllerForProperty={controllerForProperty}
-                                directives={directives} controllerProperties={ getControllerProperties(item.endpointId)} wide={isMobile} 
-                                />
-                        }
-                        </ErrorBoundary>
-                    )}
-                </React.Fragment>
-            }
+                { props.items.map((item,index) =>
+                    <ErrorBoundary key={item.endpointId+index} >
+                    { props.itemtype==='schedule' ?
+                        <AutomationProperty key={"ap"+item.endpointId+index} save={save} remove={remove} delete={deleteItem} index={index} item={item} wide={isMobile}/>
+                    :
+                        <AutomationProperty key={"ap"+item.endpointId+index} moveUp={moveUp} moveDown={moveDown} save={save} remove={remove} reorder={reorder} 
+                            delete={deleteItem} index={index} item={item} device={ item.endpointId===undefined ? undefined : deviceByEndpointId(item.endpointId) } 
+                            controllerForProperty={controllerForProperty}
+                            directives={directives} controllerProperties={ getControllerProperties(item.endpointId)} wide={isMobile} 
+                            />
+                    }
+                    </ErrorBoundary>
+                )}
             </GridSection>
+        :
+        null
     )
 };

@@ -18,8 +18,8 @@ export default function AdapterItem(props) {
                 return 'disabled'
             }
             
-            if (props.deviceState.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
-                if (props.deviceState.AdapterHealth.logged.value.ERROR > count) {
+            if (props.deviceState.AdapterHealth.hasOwnProperty('errors')) {
+                if (props.deviceState.AdapterHealth.errors.value > count) {
                     return 'on'
                 } else {
                     return 'closed'
@@ -35,8 +35,8 @@ export default function AdapterItem(props) {
 
     function getErrorCount() {
         try {
-            if (props.deviceState.AdapterHealth.logged.value.hasOwnProperty('ERROR')) {
-                return "Errors: "+props.deviceState.AdapterHealth.logged.value['ERROR']
+            if (props.deviceState.AdapterHealth.hasOwnProperty('errors')) {
+                return "Errors: "+props.deviceState.AdapterHealth.errors.value
             } else {
                 return "No Errors"
             }

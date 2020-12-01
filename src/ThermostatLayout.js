@@ -4,6 +4,7 @@ import { DataContext } from './DataContext/DataProvider';
 import GridSection from './GridSection';
 import TemperatureSensor from './thermostat/TemperatureSensor';
 import Thermostat from './thermostat/Thermostat';
+import Forecast from './thermostat/Forecast';
 
 export default function ThermostatLayout(props) {
 
@@ -36,6 +37,12 @@ export default function ThermostatLayout(props) {
                     <TemperatureSensor key={ thermostat } device={ devices[thermostat] }  deviceState={ deviceStates[thermostat] } />
                 )}
             </GridSection>
+
+            <GridSection name={"Forecast"}>
+                <Forecast Primary={"Rainmachine"}  />
+            </GridSection>
+
+
         </React.Fragment>
         : null
     )

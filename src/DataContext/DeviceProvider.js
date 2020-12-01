@@ -34,7 +34,7 @@ const deviceReducer = (state, data) => {
                 }
                 localStorage.setItem('devices', JSON.stringify(devs));
                 return devs
-            case 'Discovery.Response':
+            case 'Discover.Response':
                 for (i = 0; i < data.event.payload.endpoints.length; i++) {
                     local[data.event.payload.endpoints[i].endpointId]=data.event.payload.endpoints[i]
                 }
@@ -197,6 +197,7 @@ export default function DeviceProvider(props) {
         for (var j = 0; j < devs.length; j++) {
             endpointIds.push(devs[j].endpointId)
         }
+        //console.log('registering',categories, source, searchterm, wait)
         registeredDeviceDispatch({"source":source, "devices": endpointIds, "action": "add"})
         return endpointIds
     }

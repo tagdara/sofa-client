@@ -24,6 +24,10 @@ export default function TargetSetpoint(props) {
         catch {}
         return val
     }
+    
+    if (props.compact) {
+        return valueOrDefault() + "°"
+    }
 
     return (
         <SofaAvatarSlider avatarUnit={"°"} min={60} max={90} small={true} reverse={true} minWidth={64} value={ valueOrDefault()  } change={ handleTargetSetpointChange } />

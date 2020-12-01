@@ -82,8 +82,8 @@ export default function PropertyValue(props) {
                 return null
             }
             let Module=propMod
-            return  <Suspense key={ modulename } fallback={ placeholder() }>
-                        <Module item={props.item} interface={ props.interface } device={props.device} instance={props.item.instance} directive={props.directive} />
+            return  <Suspense key={ modulename+props.index } fallback={ placeholder() }>
+                        <Module index={props.index} item={props.item} interface={ props.interface } device={props.device} instance={props.item.instance} directive={props.directive} />
                     </Suspense>
         } else {
             return <Button disabled>Loading...</Button>

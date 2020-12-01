@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import DeviceDetail from './DeviceDetail';
-import CardBase from '../CardBase';
-import SofaListItem from '../SofaListItem';
+import SofaListItem from '../SofaListItemNoChildren';
 
 import CommentIcon from '@material-ui/icons/Comment';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
@@ -18,10 +16,10 @@ import LightbulbOutlineIcon from '../LightbulbOutline';
 import IconButton from '@material-ui/core/IconButton';
 
 
-export default function Device(props) {
+
+function Device(props) {
 
     const icons = {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
-    const [showDetail, setShowDetail] = useState(false);     
 
     function getIcon(category, size='default') {
             
@@ -36,13 +34,14 @@ export default function Device(props) {
 
         return <RealIcon size={pxSize} fontSize={size} />
     }
+    
+    console.log('~~~~', props.key, props.device)
 
     return (
-        <CardBase>
             <SofaListItem   avatar={ getIcon(props.device.displayCategories) } 
                             avatarState={'off'} small={props.small}
                             avatarBackground={false}
-                            onClick={props.select? () => props.select(props.device) : () => setShowDetail(!showDetail)}
+                            onClick={() => props.select(props.device)}
                             primary={props.device.friendlyName} secondary={props.device.displayCategories}
                             secondaryActions={
                                 <IconButton edge="end" aria-label="See Details" onClick={() => props.showDevice(props.device.endpointId) }>
@@ -50,10 +49,7 @@ export default function Device(props) {
                                 </IconButton>
                             }
             />
-            { showDetail &&
-                <DeviceDetail device={props.device} />
-            }
-        </CardBase>
     )
 }
 
+export default React.memo(Device);

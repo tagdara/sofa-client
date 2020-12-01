@@ -25,7 +25,7 @@ export default function AirQuality(props) {
         
         <CardBase >
             <SofaListItem   avatar={<EqualizerIcon />} onClick={() => selectPage('ThermostatLayout')} avatarState={ aqValueName() }
-                            primary={'Air Quality: '+aqValueName() } />
+                            primary={aqValueName()+' indoor air quality'} />
         </CardBase>
     );
 }

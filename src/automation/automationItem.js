@@ -22,22 +22,22 @@ export default function AutomationItem(props) {
             <ButtonItem
                 avatarIcon={ props.favorite && props.icon!=="base" ? <FavoriteIcon/> : <ListIcon /> }
                 avatarState={props.favorite ? "on": "off" }
-                avatarClick={() => props.makeFavorite('logic:activity:'+props.name, !props.favorite)}
+                avatarClick={() => props.makeFavorite(props.endpointId, !props.favorite)}
                 avatarBackground={false}
                 label={ props.name }
                 labelSecondary={ summary() }
                 small={ props.small }
-                action={() => props.select(props.name) }
+                action={() => props.select(props.endpointId) }
                 labelClick={true}
                 loading={props.launched}
                 secondary={
                     <>
                         { props.deleting ?
-                            <IconButton size={"small"} onClick={ () => props.delete(props.name) } >
+                            <IconButton size={"small"} onClick={ () => props.delete(props.endpointId) } >
                                 <CloseIcon />
                             </IconButton>
                         :
-                            <IconButton size={"small"} onClick={ () => { props.run(props.name) }} >
+                            <IconButton size={"small"} onClick={ () => { props.run(props.endpointId) }} >
                                 <PlayArrowIcon />
                             </IconButton>                
                         }
@@ -51,6 +51,7 @@ export default function AutomationItem(props) {
 AutomationItem.defaultProps = {
     launcher: false,
     allowEdit: true,
-    deleting: false
+    deleting: false,
+    small: true,
 }
 

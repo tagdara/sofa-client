@@ -3,31 +3,23 @@ import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from 'layout/LayoutProvider';
 import { NetworkContext } from 'network/NetworkProvider';
 
+import ListItem from '@material-ui/core/ListItem';
+
 import EditIcon from '@material-ui/icons/Edit';
 import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
 import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
 import HistoryIcon from '@material-ui/icons/History';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import SubjectIcon from '@material-ui/icons/Subject';
 import AvTimerIcon from '@material-ui/icons/AvTimer';
 import DeviceDialog from 'dialogs/DeviceDialog';
 
+
 const useStyles = makeStyles(theme => {
     return {   
-        iconRow: {
-            display: "flex",
-            padding: 16,
-            boxSizing: "border-box",
-            width: "100%",
-            flexWrap: "wrap",
-        },
-        spacer: {
-            flexGrow:1
-        },
-        systemButton: {
-            marginRight: 8,
+        versionLine: {
+            justifyContent: "space-around",
         }
     }
 })
@@ -48,37 +40,57 @@ export default function AdminFeatures(props) {
         setShowDialog(false)
     }
 
-    return (  
-        <div className={classes.iconRow} >
-            <IconButton className={classes.systemButton} onClick={() => selectPage('RecentLayout')}>
-                <AvTimerIcon />
-            </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => toggleLogSSE()}>
-                <SubjectIcon />
-            </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => selectPage('ApiRegistration')}>
-                <SyncAltIcon />
-            </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => selectPage('DeviceHistory')}>
-                <HistoryIcon />
-            </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => selectPage('AdapterLayout')}>
-                <SettingsEthernetIcon />
-            </IconButton>
-            <IconButton className={classes.systemButton} onClick={()=> otherPort('8443','_editor')}>
-                <EditIcon />
-            </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => selectPage('DeviceLayout')}>
-                <DevicesOtherIcon />
-            </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => selectPage('ActionLayout')}>
-                <AvTimerIcon />
-            </IconButton>
-            <IconButton className={classes.systemButton} onClick={() => setShowDialog(true)}>
-                <DevicesOtherIcon />
-            </IconButton>
-            <Button>{process.env.REACT_APP_VERSION}</Button>
+    return (
+        <>
+            <ListItem className={classes.versionLine}>
+                <Button>{"Version " + process.env.REACT_APP_VERSION}</Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<SettingsEthernetIcon />} onClick={() => selectPage('AdapterLayout')}>
+                    Adapter Management
+                </Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<EditIcon />} onClick={()=> otherPort('8444','_editor')}>
+                    Editor
+                </Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<AvTimerIcon />} onClick={() => selectPage('RecentLayout')}>
+                    Recent Activity
+                </Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<SubjectIcon />} onClick={() => toggleLogSSE()}>
+                    Toggle SSE Log
+                </Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<SyncAltIcon />} onClick={() => selectPage('ApiRegistration')}>
+                    Adapter Registration
+                </Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<HistoryIcon />} onClick={() => selectPage('DeviceHistory')}>
+                    Device History
+                </Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<DevicesOtherIcon />} onClick={() => selectPage('DeviceLayout')}>
+                    Device Management
+                </Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<AvTimerIcon />} onClick={() => selectPage('ActionLayout')}>
+                    Actions
+                </Button>
+            </ListItem>
+            <ListItem>
+                <Button fullWidth variant="outlined" startIcon = {<DevicesOtherIcon />} onClick={() => setShowDialog(true)}>
+                    Device Dialog
+                </Button>
+            </ListItem>
             <DeviceDialog open={showDialog} close={closeDialog} />
-        </div>
+        </>
     )
 };

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { LayoutContext } from './layout/NewLayoutProvider';
+import { LayoutContext } from 'layout/LayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
 import PageActions from './PageActions';

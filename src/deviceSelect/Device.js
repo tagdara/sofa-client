@@ -1,6 +1,6 @@
 import React from 'react';
 
-import SofaListItem from '../SofaListItemNoChildren';
+import IconButton from '@material-ui/core/IconButton';
 
 import CommentIcon from '@material-ui/icons/Comment';
 import DataUsageIcon from '@material-ui/icons/DataUsage';
@@ -11,9 +11,9 @@ import TouchAppIcon from '@material-ui/icons/TouchApp';
 import TuneIcon from '@material-ui/icons/Tune';
 import ListIcon from '@material-ui/icons/List';
 import TvIcon from '@material-ui/icons/Tv';
-import LightbulbOutlineIcon from '../LightbulbOutline';
 
-import IconButton from '@material-ui/core/IconButton';
+import LightbulbOutlineIcon from 'resources/LightbulbOutline';
+import SofaListItem from 'components/SofaListItemNoChildren';
 
 
 
@@ -34,8 +34,6 @@ function Device(props) {
 
         return <RealIcon size={pxSize} fontSize={size} />
     }
-    
-    console.log('~~~~', props.key, props.device)
 
     return (
             <SofaListItem   avatar={ getIcon(props.device.displayCategories) } 

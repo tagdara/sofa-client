@@ -24,11 +24,16 @@ const useStyles = makeStyles({
 export default function AutomationSave(props) {
 
     const classes = useStyles();
+    
+    function okToSave() {
+        if (!props.name) { return false }
+        return true
+    }
 
     return (
         <React.Fragment>
             { !props.saved &&
-                <Fab size="small" color="primary" onClick={ (e)=> props.save() } className={classes.fabSave} >
+                <Fab size="small" color="primary" disabled={ !okToSave() } onClick={ (e)=> props.save() } className={classes.fabSave} >
                     <SaveIcon />
                 </Fab>
             }

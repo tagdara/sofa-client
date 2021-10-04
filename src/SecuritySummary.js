@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles, withTheme } from '@material-ui/styles';
-import { LayoutContext } from './layout/NewLayoutProvider';
-import { DataContext } from './DataContext/DataProvider';
+import { LayoutContext } from 'layout/LayoutProvider';
+import { DataContext } from 'DataContext/DataProvider';
 import Typography from '@material-ui/core/Typography';
 
 import IconButton from '@material-ui/core/IconButton';

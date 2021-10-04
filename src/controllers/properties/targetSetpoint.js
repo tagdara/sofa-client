@@ -1,18 +1,18 @@
 import React, { useEffect } from 'react';
-import SofaAvatarSlider from '../../SofaAvatarSlider';
+import SofaAvatarSlider from 'components/SofaAvatarSlider';
 
 export default function TargetSetpoint(props) {
 
     useEffect(() => {
         if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'ThermostatController', 'SetTargetSetpoint', { "targetSetpoint" : 70 }, {}, props.item.instance)
+            props.directive(props.device.endpointId, 'ThermostatController', 'SetTargetTemperature', { "targetSetpoint" : { "value": 70, "scale": "FAHRENHEIT" }}, {}, props.item.instance)
         }
     // eslint-disable-next-line
     }, [props.item, props.device, props.interface])
 
     
     function handleTargetSetpointChange(event) {
-        props.directive(props.device.endpointId, 'ThermostatController', 'SetTargetSetpoint', { "targetSetpoint" : event }, {}, props.item.instance)
+        props.directive(props.device.endpointId, 'ThermostatController', 'SetTargetTemperature', { "targetSetpoint" :  { "value": event, "scale": "FAHRENHEIT" }}, {}, props.item.instance)
 
     }; 
     

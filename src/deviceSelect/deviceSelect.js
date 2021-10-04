@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { DataContext } from '../DataContext/DataProvider';
+import { DataContext } from 'DataContext/DataProvider';
 import { makeStyles } from '@material-ui/styles';
 
 import List from '@material-ui/core/List';

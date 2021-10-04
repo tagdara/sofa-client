@@ -1,5 +1,5 @@
 import React from 'react';
-import SofaAvatarSlider from '../../SofaAvatarSlider';
+import SofaAvatarSlider from 'components/SofaAvatarSlider';
 
 export default function PowerLevel(props) {
 

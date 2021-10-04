@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import SmallSlider from '../../SmallSlider';
+import SmallSlider from 'components/SmallSlider';
 
 export default function OnLevel(props) {
 

@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { DeviceContext } from '../DataContext/DeviceProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider';
 
 import AutomationDevice from './AutomationDevice';
 import AutomationMove from './AutomationMove';
 import PropertyValue from './PropertyValue';
 import ControllerProperty from './ControllerProperty';
-import GridItem from '../GridItem';
+import GridItem from 'components/GridItem';
 
 export default function AutomationTrigger(props) {
 

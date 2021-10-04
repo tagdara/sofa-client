@@ -1,17 +1,18 @@
 import React,{ useContext } from 'react';
-import { DeviceContext } from '../DataContext/DeviceProvider';
-
-import Switch from '@material-ui/core/Switch';
-import AirplayIcon from '@material-ui/icons/Airplay';
-
-import CardBase from '../CardBase'
-import SofaListItem from '../SofaListItem'
 import { makeStyles } from '@material-ui/styles';
+
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
+import Switch from '@material-ui/core/Switch';
+
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
+import AirplayIcon from '@material-ui/icons/Airplay';
+
+import { DeviceContext } from 'DataContext/DeviceProvider';
+import CardBase from 'components/CardBase'
+import SofaListItem from 'components/SofaListItem'
 
 const useStyles = makeStyles(theme => {
     return {        

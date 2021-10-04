@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect, createContext, useReducer} from 'react';
-import { NetworkContext } from '../NetworkProvider';
+import { NetworkContext } from 'network/NetworkProvider';
 import { DeviceContext } from './DeviceProvider';
 
 export const DataContext = createContext();
@@ -14,288 +14,194 @@ function getFromLocalStorage() {
     
 }
 
-function writeCookie(key, value, days) {
-    var date = new Date();
-    // Default at 365 days.
-    days = days || 365;
-    // Get unix milliseconds at current time plus number of days
-    date.setTime(+ date + (days * 86400000)); //24 * 60 * 60 * 1000
-    window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
-    return value;
-};
-
 export const deviceStatesReducer = (state, data) => {
 
-        if (data==={}) { return state }
-        if (!data.hasOwnProperty('event')) { return state }
-        
-        var i=0;
-        var devs={...state}
-        var prop='';
-        var interfacename=""
-        var dev={}
-        //console.log('YY', data.event.header.name, data)
-        var date = new Date();
-        writeCookie("last_update", date.toISOString(), 1)
-        switch (data.event.header.name) {
-            case "Multistate":
-
-                for (dev in data.state) {
-                    
-                    var newdev={}
-                    if (devs.hasOwnProperty(dev)) {
-                        newdev={...devs[dev]}
-                    }
-                    
-                    try {
-                        if (data.state[dev] && data.state[dev].event.header.name==='ErrorResponse') {
-                            console.log('data',data.state[dev])
-                            console.log('error', data.state[dev].event.endpoint.endpointId, data.state[dev].event.payload.type, data.state[dev].event.payload.message)
-                            continue
-                        }
-                    }
-                    catch {
-                        console.log('could not check for error', data.state[dev])
-                    }
-                    
-                    if (!data.state[dev].hasOwnProperty("context")) { 
-                        console.log('!! no context in',data.state[dev])
-                        continue
-                    }
-                    
-                    for (i = 0; i < data.state[dev].context.properties.length; i++) {
-                        prop=data.state[dev].context.properties[i]
-                        interfacename=prop.namespace.split('.')[1]
-
-                        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-                            interfacename=prop.instance.split('.')[1]
-                        }
-                        if (!newdev.hasOwnProperty(interfacename)) {
-                            newdev[interfacename]={}
-                        }
-                        
-                        try {
-                            if (prop['value'].hasOwnProperty('value')) {
-                                prop['deepvalue']=prop.value.value
-                            } else {
-                                prop['deepvalue']=prop.value
-                            }
-                        } 
-                        catch {
-                            prop['deepvalue']=prop.value
-                        }
-
-                        newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
-
-                    }
-                    devs={...devs, [dev] : newdev }
-                }               
-                //localStorage.setItem('deviceStates', JSON.stringify(devs));
-                return devs;
-
-            case "ErrorResponse":
-                console.log(data.event.payload.type)
-                dev=data.event.endpoint.endpointId
-                newdev={}
-                if (devs.hasOwnProperty(dev)) {
-                    newdev={...devs[dev]}
-
-                    if (data.event.payload.type==='BRIDGE_UNREACHABLE') {
-                        if (newdev.hasOwnProperty('EndpointHealth')) {
-                            console.log('Marking device as unreachable', dev)
-                            newdev.EndpointHealth={ "connectivity": { "value": { "value" : "UNREACHABLE" } }}
-                            devs={...devs, [dev] : newdev }
-                        }
-                    }
-                    
-                    if (data.event.payload.type==='NO_SUCH_ENDPOINT') {
-                        console.log('Removing NO_SUCH_ENDPOINT device', dev)
-                        delete devs[dev]
-                    }      
-
-                    localStorage.setItem('deviceStates', JSON.stringify(devs));
-                }
-
-                return devs;
-
-            case "multiple StateReports":
-            
-                if (data.data) {
-                    //console.log('multiple statereports',data.data.length)
-                    for (var x = 0; x < data.data.length; x++) {
-                        var item=data.data[x]
-                        try {
-                            if (item.event.endpoint.endpointId==='pc1:pc:pc1') {
-                               console.log('Statereport', item)
-                            }
-                        }
-    
-                        catch {
-                            console.log('multi-statereport item', item)
-                        }
-                        
-                        if (item.event===undefined) { continue } 
-                        
-                        dev=item.event.endpoint.endpointId
-                        newdev={}
-                        if (devs.hasOwnProperty(dev)) {
-                            newdev={...devs[dev]}
-                        }
-                        if (!item.hasOwnProperty('context')) {
-                            if (item.event.header.name==='ErrorResponse') {
-                                console.log(item.event.payload.type)
-                                
-                                if (item.event.payload.type==='BRIDGE_UNREACHABLE') {
-                                    if (newdev.hasOwnProperty('EndpointHealth')) {
-                                        console.log('Marking device as unreachable', dev)
-                                        newdev.EndpointHealth={ "connectivity": { "value": { "value" : "UNREACHABLE" } }}
-                                    }
-                                }
-                                
-                                if (item.event.payload.type==='NO_SUCH_ENDPOINT') {
-                                    console.log('Removing NO_SUCH_ENDPOINT device', dev)
-                                    delete devs[dev]
-                                    continue
-                                }
-                            } else {
-                                console.log('no context data for', item.event.endpoint.endpointId, item )
-                                continue
-                            }
-                        } else {
-                            for (i = 0; i < item.context.properties.length; i++) {
-                                prop=item.context.properties[i]
-                                interfacename=prop.namespace.split('.')[1]
-            
-                                if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-                                    interfacename=prop.instance.split('.')[1]
-                                }
-                                if (!newdev.hasOwnProperty(interfacename)) {
-                                    newdev[interfacename]={}
-                                }
-                                    
-                                try {
-                                    if (prop['value'].hasOwnProperty('value')) {
-                                        prop['deepvalue']=prop.value.value
-                                    } else {
-                                        prop['deepvalue']=prop.value
-                                    }
-                                } 
-                                
-                                catch {
-                                    prop['deepvalue']=prop.value
-                                }
-            
-                                newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
-            
-                            }
-                        }
-                        devs={...devs, [dev] : newdev }
-                    }
-                    localStorage.setItem('deviceStates', JSON.stringify(devs));
-                }
-                return devs;
-                
-            case "StateReport":
-                //console.log('Statereport', data.event.header.name, data.event.endpoint.endpointId, data.event )
-                if (!data.hasOwnProperty('context')) {
-                    console.log('no context data for', data.event.endpoint.endpointId )
-                    return state;
-                }
-                dev=data.event.endpoint.endpointId
-                newdev={}
-                if (devs.hasOwnProperty(dev)) {
-                    newdev={...devs[dev]}
-                }
-
-                for (i = 0; i < data.context.properties.length; i++) {
-                        prop=data.context.properties[i]
-                        interfacename=prop.namespace.split('.')[1]
-
-                        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-                            interfacename=prop.instance.split('.')[1]
-                        }
-                        if (!newdev.hasOwnProperty(interfacename)) {
-                            newdev[interfacename]={}
-                        }
-                        
-                        try {
-                            if (prop['value'].hasOwnProperty('value')) {
-                                prop['deepvalue']=prop.value.value
-                            } else {
-                                prop['deepvalue']=prop.value
-                            }
-                        } 
-                        catch {
-                            prop['deepvalue']=prop.value
-                        }
-
-                        newdev={...newdev, [interfacename] : { ...newdev[interfacename], [prop.name] : { "value": prop['value'], "deepvalue": prop['deepvalue'], "timeOfSample" : prop['timeOfSample'] } } }
-
-                    }
-                    devs={...devs, [dev] : newdev }
-                localStorage.setItem('deviceStates', JSON.stringify(devs));
-                return devs;
-
-            case 'ChangeReport':
-
-                if (data.event.endpoint.endpointId in devs) {
-                    var pname=""
-                    var devif={}
-                    var epid=data.event.endpoint.endpointId
-                    dev={...devs[data.event.endpoint.endpointId]}
-                    for (i = 0; i < data.event.payload.change.properties.length; i++) {
-                        prop=data.event.payload.change.properties[i]
-                        interfacename=prop.namespace.split('.')[1]
-                        //console.log('change interface', prop.namespace, interfacename)
-                        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-                            interfacename=prop.instance.split('.')[1]
-                        }
-                        pname=prop['name']
-                        devif={...dev[interfacename]}
-                        try {
-                            if (prop['value'] && prop['value'].hasOwnProperty('value')) {
-                                prop['deepvalue']=prop.value.value
-                            } else {
-                                prop['deepvalue']=prop.value
-                            }
-                        } 
-                        catch {
-                            prop['deepvalue']=prop.value
-                        }
-
-                        dev={...dev, [interfacename]: { ...devif, [pname] : { ...devif[pname], 'value': prop['value'], "deepvalue": prop['deepvalue'], 'timeOfSample': prop['timeOfSample'] }}}
-                    }
-                    for (i = 0; i < data.context.properties.length; i++) {
-                        prop=data.context.properties[i]
-                        interfacename=prop.namespace.split('.')[1]
-                        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-                            interfacename=prop.instance.split('.')[1]
-                        }
-                        
-                        pname=prop['name']
-                        devif={...dev[interfacename]}
-                        try {
-                            if (prop['value'] && prop['value'].hasOwnProperty('value')) {
-                                prop['deepvalue']=prop.value.value
-                            } else {
-                                prop['deepvalue']=prop.value
-                            }
-                        } 
-                        catch {
-                            prop['deepvalue']=prop.value
-                        }
-
-                        dev={...dev, [interfacename] : {...devif, [pname] : { ...devif[pname], 'value': prop['value'], "deepvalue": prop['deepvalue'], 'timeOfSample': prop['timeOfSample'] }}}
-                    }
-                    //console.log('result',data.event.endpoint.endpointId, epid, dev)
-                    return {...devs, [epid]: dev };
-                }
-                localStorage.setItem('deviceStates', JSON.stringify(state));
-                return state
-            default:
-                return state
+    function getDeepValue(valueProp) {
+        try {
+            if (valueProp && valueProp.hasOwnProperty('value')) {
+                return valueProp.value
+            }
+            return valueProp
+        } 
+        catch {
+            return valueProp
         }
     }
+
+    function updateProperty(device, prop) {
+        var interfaceName = prop.namespace.split('.')[1]
+
+        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
+            interfaceName=prop.instance.split('.')[1]
+        }
+
+        var propertyName = prop['name']
+        var deviceInterface={...device[interfaceName]}
+        
+        //var older = deviceInterface[propertyName].timeOfSample > prop.timeOfSample
+        // TODO Jukebox especially seemed to have a race between response and changereport so keep an eye on this
+        // console.log('samples', propertyName, older, 'old', deviceInterface[propertyName].timeOfSample, 'new',prop.timeOfSample)
+
+        try {
+            if (deviceInterface[propertyName].timeOfSample && deviceInterface[propertyName].timeOfSample > prop.timeOfSample) {
+                console.log('update refused on timeOfSample check', deviceInterface[propertyName].timeOfSample, prop.timeOfSample)
+                return deviceInterface
+            }
+        }
+        catch {}
+
+        var result = {  
+                        ...deviceInterface, 
+                        [propertyName] : {
+                            ...deviceInterface[propertyName], 
+                            'value': prop.value, 
+                            "deepvalue": getDeepValue(prop.value), 
+                            'timeOfSample': prop.timeOfSample
+                        }
+                    }
+
+        return result
+ 
+    }
+
+    function getInterfaceName(prop) {
+        var interfaceName = prop.namespace.split('.')[1]
+
+        if (prop.hasOwnProperty('instance') && prop.instance!=="") {
+            interfaceName=prop.instance.split('.')[1]
+        }       
+        return interfaceName 
+    }
+
+    function handleReportProperties(device, data) {
+    
+        var updatedDevice = {}
+        if (device) {
+            updatedDevice = { ...device }
+        }
+
+        try {
+            for (var p = 0; p < data.event.payload.change.properties.length; p++) {
+                var changeProperty = data.event.payload.change.properties[p]
+                var changeInterfaceName = getInterfaceName(changeProperty)
+                updatedDevice = { ...updatedDevice, [changeInterfaceName]: updateProperty(updatedDevice, changeProperty) }
+            }
+        }
+        catch(err) {
+            
+        }
+
+        try {
+            for (var c = 0; c < data.context.properties.length; c++) {
+                var contextProperty = data.context.properties[c]
+                var contextInterfaceName = getInterfaceName(contextProperty)
+                updatedDevice = { ...updatedDevice, [contextInterfaceName]: updateProperty(updatedDevice, contextProperty) }
+            }
+        }
+        catch(err) {}
+
+        try {
+            if (data.payload && data.payload.imageUri) {
+                updatedDevice = { ...updatedDevice, CameraStreamController: data.payload }
+            }
+        }
+        catch(err) {}
+        updatedDevice = { ...updatedDevice, last_update: date.toISOString() }
+        return updatedDevice
+    }
+
+    function markUnreachable(device) {
+        var updatedDevice = {...device}
+        if (updatedDevice.hasOwnProperty('EndpointHealth')) {
+            console.log('Marking device as unreachable', updatedDevice)
+            updatedDevice = { ...updatedDevice, EndpointHealth: { "connectivity": { "value": { "value" : "UNREACHABLE" } }}}
+            updatedDevice = { ...updatedDevice, last_update: date.toISOString() }
+        }
+        return updatedDevice       
+    }
+
+    function handleErrorResponse(endpointId, reason, deviceStates) {
+        var updatedDeviceStates = {...deviceStates}
+        if (deviceStates.hasOwnProperty(endpointId)) {
+            if (reason === 'BRIDGE_UNREACHABLE') {
+                updatedDeviceStates = {...updatedDeviceStates, [endpointId]: markUnreachable(updatedDeviceStates[endpointId])}
+            }
+            
+            if (reason === 'NO_SUCH_ENDPOINT') {
+                console.log('Removing NO_SUCH_ENDPOINT device', endpointId)
+                delete updatedDeviceStates[endpointId]
+            }      
+        }
+        return updatedDeviceStates
+    }
+
+    try {
+        var reportType = data.event.header.name
+    }
+    catch {
+        console.log('invalid report - no header name:', data)
+        return state
+    }
+
+    var date = new Date();
+    var deviceStates = { ...state }
+    var endpointId = undefined
+
+    switch (reportType) {
+        case "StateReport":
+        case "Response":
+        case "ChangeReport":
+            endpointId = data.event.endpoint.endpointId
+            if (endpointId in deviceStates) {
+                deviceStates = {...deviceStates, [endpointId] : handleReportProperties(deviceStates[endpointId], data) }
+            }
+            localStorage.setItem('deviceStates', JSON.stringify(deviceStates));
+            localStorage.setItem('last_update', date.toISOString())
+            return deviceStates;
+
+        case 'ActivationStarted':
+            console.log('ActivationStarted', data)
+            return deviceStates;
+
+        case "ErrorResponse":
+            endpointId = data.event.endpoint.endpointId
+            deviceStates = handleErrorResponse(endpointId, data.event.payload.type, deviceStates)
+            localStorage.setItem('deviceStates', JSON.stringify(deviceStates));
+            localStorage.setItem('last_update', date.toISOString())
+            return deviceStates;
+
+        case 'DeleteReport':
+            for (var i = 0; i < data.event.payload.endpoints.length; i++) {
+                endpointId = data.event.endpoint.endpointId
+                if (endpointId in deviceStates) {
+                    console.log('XXX DELETEREPORT - REMOVING DEVICESTATE', endpointId)
+                    delete deviceStates[endpointId]
+                }
+            }
+            localStorage.setItem('deviceStates', JSON.stringify(deviceStates));
+            localStorage.setItem('last_update', date.toISOString())
+            return deviceStates
+
+        case "multiple StateReports":
+            if (data.data) {
+                for (var x = 0; x < data.data.length; x++) {
+                    var deviceItem = data.data[x]
+                    endpointId = deviceItem.event.endpoint.endpointId
+                    if (deviceItem.event.header.name === 'ErrorResponse') {
+                        deviceStates = handleErrorResponse(endpointId, deviceItem.event.payload.type, deviceStates)
+                    } else {
+                        deviceStates = {...deviceStates, [endpointId] : handleReportProperties(deviceStates[endpointId], deviceItem) }
+                    }
+                }
+                localStorage.setItem('deviceStates', JSON.stringify(deviceStates));
+                localStorage.setItem('last_update', date.toISOString())
+            }
+            return deviceStates;
+
+        default:
+            return deviceStates;
+    }
+}
 
 
 export default function DataProvider(props) {
@@ -303,7 +209,7 @@ export default function DataProvider(props) {
     
     const { registerEndpointIds, registeredDevices, getEndpointIdsByFriendlyName, unregisterDevices, devices, getEndpointIdsByCategory, getSceneDetails, 
             saveSceneDetails, deviceByEndpointId, devicesByCategory, devicesByFriendlyName, devicesByController, deviceByFriendlyName, 
-            directive, virtualDevices, isModeNonControllable, getModes } = useContext(DeviceContext);
+            deviceDirective, virtualDevices, isModeNonControllable, getModes } = useContext(DeviceContext);
     
     const { postJSON, addSubscriber } = useContext(NetworkContext);
 
@@ -347,7 +253,7 @@ export default function DataProvider(props) {
         
         //console.log('reg dev trigger', registeredDevices)
         if (newDevices().length || removedDevices().length) {
-            console.log('registering devices', {"add":newDevices(), "remove": removedDevices() })
+            //console.log('registering devices', {"add":newDevices(), "remove": removedDevices() })
             postJSON('register_devices', {"add":newDevices(), "remove": removedDevices() })
             //postJSON('register_devices', Object.keys(registeredDevices))
                 .then(res=> { deviceStatesDispatch({ "event": {"header": {"name": "multiple StateReports"}}, "data": res }) } )
@@ -372,7 +278,7 @@ export default function DataProvider(props) {
         var pdev={}
         var dev=deviceByEndpointId(endpointId)
         if (dev) {
-            if (deviceStates.hasOwnProperty(endpointId)) {
+            if (deviceStates && deviceStates.hasOwnProperty(endpointId)) {
                 pdev={...deviceStates[endpointId]}
             }
             for (var j = 0; j < dev.capabilities.length; j++) {
@@ -403,8 +309,6 @@ export default function DataProvider(props) {
         var removes=[]
         var fail=false
         
-        //console.log('cardready',cardname,registeredDevices)
-
         for (var id in registeredDevices) { 
             //console.log('checking', registeredDevices[id].includes(cardname), id, registeredDevices[id])
             if (skips.indexOf(id)<0 && registeredDevices[id].includes(cardname)) {
@@ -414,6 +318,7 @@ export default function DataProvider(props) {
                 }
                 //console.log('relevant', cardname, registeredDevices[id] )
                 if (!deviceStates || !deviceStates.hasOwnProperty(id) || deviceStates[id]===undefined) {
+                    //console.log(cardname, 'ready failed on', id)
                     fail=true
                 }
                 foundAny=true
@@ -581,13 +486,18 @@ export default function DataProvider(props) {
         return value
     }
 
+    function directive (endpointId, controllerName, command, payload={}, cookie={}, instance="") {
+        return deviceDirective(endpointId, controllerName, command, payload, cookie, instance)
+            .then(result=> { deviceStatesDispatch(result); return result; })
+    }
+
     return (
         <DataContext.Provider
             value={{
                 devices: devices,
                 deviceStates: deviceStates,
                 virtualDevices: virtualDevices,
-
+                deviceByEndpointId: deviceByEndpointId,
                 deviceStateByEndpointId: deviceStateByEndpointId,
                 deviceStateByFriendlyName: deviceStateByFriendlyName,
                 deviceStatesByFriendlyName: deviceStatesByFriendlyName,

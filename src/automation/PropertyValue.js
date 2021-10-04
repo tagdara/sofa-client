@@ -1,6 +1,6 @@
 import React, { Suspense, useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from '../DataContext/DeviceProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
@@ -29,6 +29,9 @@ export default function PropertyValue(props) {
         function propertyFromDirective(controller, directive) {
             if (controller===undefined || directive===undefined) {
                 return undefined
+                }
+                if (controller.includes('.')) {
+                    controller = controller.split('.')[1]
                 }
                 if (directives.hasOwnProperty(controller) && directives[controller].hasOwnProperty(directive)) {
                     var actionValues = directives[controller][directive]

@@ -13,7 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import DeviceIcon from '../DeviceIcon';
 import OperatorButton from "./operatorButton";
-import GridItem from '../GridItem';
+import GridItem from 'components/GridItem';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';

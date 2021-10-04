@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useRef } from 'react';
-import { LayoutContext } from './layout/NewLayoutProvider';
+import { LayoutContext } from 'layout/LayoutProvider';
 import { makeStyles } from '@material-ui/styles';
 
-import GridSection from './GridSection';
-import GridItem from './GridItem';
+import GridSection from 'components/GridSection';
+import GridItem from 'components/GridItem';
 import Typography from '@material-ui/core/Typography';
 
 import AvSummary from './AvSummary'

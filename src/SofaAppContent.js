@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { LayoutContext } from './layout/NewLayoutProvider';
-import { NetworkContext } from './NetworkProvider';
+import { LayoutContext } from 'layout/LayoutProvider';
+import { NetworkContext } from 'network/NetworkProvider';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -116,7 +116,7 @@ export default function SofaAppContent(props) {
         }
         return null
     }
-    
+    alert('test!')
     return (
         (loggedIn && layout) ?
         <>
@@ -124,12 +124,12 @@ export default function SofaAppContent(props) {
             { !isMobile && <TopBar section={barSelection} chooseSection={setBarSelection} toggleDrawer={toggleDrawer} /> }
             { !isMobile && <SofaDrawer /> }
             <div className={classes.scrollHolder}>
-            <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
-                { !streamConnected() && <ReconnectButton /> }
-                <ErrorBoundary wide={props.wide}>
-                { chooseDisplayPages() }
-                </ErrorBoundary>
-            </Grid>
+                <Grid container spacing={ isMobile && layout.data.type==='single' ? 2: 8} className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
+                    { !streamConnected() && <ReconnectButton /> }
+                    <ErrorBoundary wide={props.wide}>
+                    { chooseDisplayPages() }
+                    </ErrorBoundary>
+                </Grid>
             </div>
             { isMobile && <BottomBar section={barSelection} chooseSection={setBarSelection} /> }
         </>

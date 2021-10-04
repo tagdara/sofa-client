@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from '../DataContext/DeviceProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider';
 
 import AutomationInput from './AutomationInput';
 

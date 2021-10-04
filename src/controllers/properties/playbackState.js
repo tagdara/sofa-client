@@ -46,6 +46,7 @@ export default function PlaybackState(props) {
             <MenuItem value="PLAYING">PLAYING</MenuItem>
             <MenuItem value="PAUSED">PAUSED</MenuItem>
             <MenuItem value="STOPPED">STOPPED</MenuItem>
+            <MenuItem value="IDLE">IDLE</MenuItem>
         </Select>
     );
 

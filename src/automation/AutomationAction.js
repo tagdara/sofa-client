@@ -1,18 +1,23 @@
 import React, { useContext } from 'react';
-import { DeviceContext } from '../DataContext/DeviceProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider';
 
 import AutomationDevice from './AutomationDevice';
 import PropertyValue from './PropertyValue';
 import AutomationMove from './AutomationMove';
 import DeviceDirective from './DeviceDirective';
-import GridItem from '../GridItem';
+import GridItem from 'components/GridItem';
 
 export default function AutomationAction(props) {
     
     const { getControllerInterface } = useContext(DeviceContext);
 
     function directive (endpointId, controllerName, command, payload={}, cookie={}, instance) {
-        if (controllerName!==props.item.controller) { return false}
+        console.log('fake directive', controllerName, props.item.controller)
+        var itemController = props.item.controller
+        if (itemController.includes('.')) {
+            itemController = itemController.split('.')[1]
+        }
+        if (controllerName!==itemController) { return false}
         props.save(props.index, {...props.item, controller:controllerName, command:command, instance: instance, value: payload})
     }
 

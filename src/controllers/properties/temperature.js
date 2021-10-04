@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import SofaAvatarSlider from '../../SofaAvatarSlider';
+import SofaAvatarSlider from 'components/SofaAvatarSlider';
 
 export default function Temperature(props) {
 

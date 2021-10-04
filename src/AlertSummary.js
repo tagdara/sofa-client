@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
-import { LayoutContext } from './layout/NewLayoutProvider';
+import { LayoutContext } from 'layout/LayoutProvider';
 import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
-import GridItem from './GridItem';
+import GridItem from 'components/GridItem';
 import Message from '@material-ui/icons/Message';
 
 const useStyles = makeStyles(theme => {

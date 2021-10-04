@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Grid from '@material-ui/core/Grid';
-import GridItem from '../GridItem'
+import GridItem from 'components/GridItem'
 import ScheduleStart from './ScheduleStart'
 import ScheduleInterval from './ScheduleInterval'
 import ScheduleDays from './ScheduleDays'
@@ -30,12 +30,12 @@ export default function AutomationSchedule(props) {
 
     function changeValue(aspect, value) {
         console.log('changevalue',aspect, value)
-        var newschedule={ ...props.item, [aspect] : value}
-        props.save(props.index, newschedule)
+        var newSchedule={ ...props.item, [aspect] : value}
+        props.save(props.index, newSchedule)
+        setSchedule(newSchedule)
     }
 
     function toggleType() {
-        console.log('toggle')
         if (schedule.hasOwnProperty('type') && schedule.type==='interval') {
             changeValue('type','days')
         } else {

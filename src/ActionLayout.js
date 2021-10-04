@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import ActionAction from './action/ActionAction';
 //import ActionFooter from './action/ActionFooter';
 import TreeHeader from './action/TreeHeader';
-import { NetworkContext } from './NetworkProvider';
+import { NetworkContext } from 'network/NetworkProvider';
 //import { SortableList } from "./action/SortableList"
 //import SortableTree from 'react-sortable-tree';
 import IconButton from '@material-ui/core/IconButton';
@@ -27,18 +27,39 @@ const useStyles = makeStyles(theme => {
             height: 24,
         },
         dragZoneItem: {
-            height: 24,
-            backgroundColor: "#000",
+            //transition: background-color 0.2s ease;
+            //background-color: transparent;
+            width: "100%",
+            height: "100%",
+            backgroundColor: "transparent",
         },
         dragZoneItemSelect: {
-            height: 24,
-            backgroundColor: "#F00",
+            width: "100%",
+            height: "100%",
+            //backgroundColor: "#F00",
+            backgroundColor: "rgba(179, 255, 192, 0.5)",
         },
         dragZoneVisible: {
+            position: "absolute",
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
             display: "flex",
+            flexDirection: "column",
+            visibility: "visible",
+            opacity: 1,
         },
         dragZoneInvisible: {
-            display: "none",
+            position: "absolute",
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+            display: "flex",
+            flexDirection: "column",
+            visibility: "hidden",
+            opacity: 0,
         }
     }
 });
@@ -68,27 +89,60 @@ export default function Action(props) {
     
     const getDepthPx = (depth: number, depthGap: number): string => `${depth * depthGap}px`
     
-    const renderDragZone = useCallback(({ depth, depthGap, isDragging, node, onDragEnterAfter, onDragEnterBefore, onDragEnterChildren, onDragLeave }) => (
-        <div
-            className={!!isDragging ? classes.dragZoneInvisible : classes.dragZoneVisible }
-            style={{ marginLeft: getDepthPx(depth, depthGap) }}
-            onDragLeave={onDragLeave}
-          >
+    const renderDragZone = useCallback( ({ depth, depthGap, isDragging, node, onDragEnterAfter, onDragEnterBefore, onDragEnterChildren, onDragLeave }) => 
+        {
+        
+        function checkNodeType(node, pos) {
+            if (pos==="before") {
+                try {
+                    if (node.data.data.type==="command") { return true }
+                }
+                catch {}
+            }
+            if (pos==="children") {
+                try {
+                    if (['Actions', 'Then', 'Else'].includes(node.data.name)) { return true }
+                }
+                catch {}
+            }
+            if (pos==="after") {
+                try {
+                    if (node.data.data.type==="command") { return true }
+                }
+                catch {}
+            }
+            return false
+        }    
+        
+        return (
+        
             <div
-                className={node.getNodeDropContainer() === 'before' ? classes.dragZoneItemSelect : classes.dragZoneItem }
-                onDragEnter={onDragEnterBefore}
-            />
-            <div
-                className={node.getNodeDropContainer() === 'children' ? classes.dragZoneItemSelect : classes.dragZoneItem }
-                onDragEnter={onDragEnterChildren}
-            />
-            <div
-                className={node.getNodeDropContainer() === 'after' ? classes.dragZoneItemSelect : classes.dragZoneItem }
-                onDragEnter={onDragEnterAfter}
-            />
-          </div>
+                className={!!isDragging ? classes.dragZoneVisible : classes.dragZoneInvisible }
+                style={{ marginLeft: getDepthPx(depth, depthGap) }}
+                onDragLeave={onDragLeave}
+              >
+                { checkNodeType(node, 'before') &&
+                <div
+                    className={node.getNodeDropContainer() === 'before' ? classes.dragZoneItemSelect : classes.dragZoneItem }
+                    onDragEnter={onDragEnterBefore}
+                />
+                }
+                { checkNodeType(node, 'children') &&
+                <div
+                    className={node.getNodeDropContainer() === 'children' ? classes.dragZoneItemSelect : classes.dragZoneItem }
+                    onDragEnter={onDragEnterChildren}
+                />
+                }
+                { checkNodeType(node, 'after') &&
+                <div
+                    className={node.getNodeDropContainer() === 'after' ? classes.dragZoneItemSelect : classes.dragZoneItem }
+                    onDragEnter={onDragEnterAfter}
+                />
+                }
+              </div>
+            )
         // eslint-disable-next-line    
-        ), [])
+        }, [])
 
     const renderNode = useCallback(({ node, onToggle, }) => (
         <div className={classes.node} key={node.data.title}>
@@ -121,10 +175,10 @@ export default function Action(props) {
                 var ifelses=[]
                 console.log('j',actiondata[j])
                 for (var k = 0; k < actiondata[j]['value']['then'].length; k++) {
-                    ifthens.push({ id: j*100 + k, name: actiondata[j]['value']['then'][k].endpointId, title: "XX", data: actiondata[j]['value']['then'][k] })
+                    ifthens.push({ id: j*100 + k, name: actiondata[j]['value']['then'][k].endpointId, title: "XX", data: actiondata[j]['value']['then'][k], type: "action" })
                 }
                 for (var l = 0; l < actiondata[j]['value']['else'].length; l++) {
-                    ifelses.push({ id: j*100 + l+k, name: actiondata[j]['value']['else'][l].endpointId, title: "XX", data: actiondata[j]['value']['else'][l]})
+                    ifelses.push({ id: j*100 + l+k, name: actiondata[j]['value']['else'][l].endpointId, title: "XX", data: actiondata[j]['value']['else'][l], type: "action"})
                 }  
                     
                 var ifblock={
@@ -167,6 +221,8 @@ export default function Action(props) {
         multipleSelect: false,
     })
     
+    
+    //renderDragZone={renderDragZone}
     return (
         <Grid container item spacing={1} xs={12} >
             <Grid item xs={12} >

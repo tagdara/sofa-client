@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect, createContext, useReducer} from 'react';
-import { NetworkContext } from '../NetworkProvider';
+import { NetworkContext } from 'network/NetworkProvider';
 
 export const DeviceContext = createContext();
 
@@ -29,6 +29,7 @@ const deviceReducer = (state, data) => {
             case 'DeleteReport':
                 for (i = 0; i < data.event.payload.endpoints.length; i++) {
                     if (data.event.payload.endpoints[i].endpointId in devs) {
+                        console.log('XXX REMOVING DEVICE', data.event.payload.endpoints[i].endpointId)
                         delete devs[data.event.payload.endpoints[i].endpointId]
                     }
                 }
@@ -137,8 +138,8 @@ export default function DeviceProvider(props) {
                 //.then(result=>console.log('done getting properties'));
 
         }
-        
-        if (loggedIn===true ) { getData() }
+        console.log('Logged in toggled to ', loggedIn)
+        if (loggedIn === true ) { getData() }
     // eslint-disable-next-line 
     }, [ loggedIn ] );
 
@@ -202,7 +203,7 @@ export default function DeviceProvider(props) {
         return endpointIds
     }
 
-    function registerEndpointIds(endpointIds, source ) {
+    function registerEndpointIds( endpointIds, source ) {
         
         registeredDeviceDispatch({"source":source, "devices": endpointIds, "action": "add"})
         return endpointIds
@@ -546,7 +547,7 @@ export default function DeviceProvider(props) {
         if (device===undefined) { return undefined }
         if (device.hasOwnProperty('capabilities')) {
             for (var j = 0; j < device.capabilities.length; j++) {
-                if (device.capabilities[j].interface.split('.')[1]===item.controller) {
+                if (device.capabilities[j].interface.split('.')[1]===item.controller || device.capabilities[j].interface===item.controller || device.capabilities[j].interface.split('.')[1]===item.controller.split('.')[1]) {
                     if (item.instance===undefined && device.capabilities[j].interface.instance===undefined) {
                         return device.capabilities[j]
                     }
@@ -649,7 +650,7 @@ export default function DeviceProvider(props) {
     }
 
 
-    function directive (endpointId, controllerName, command, payload={}, cookie={}, instance="") {
+    function deviceDirective (endpointId, controllerName, command, payload={}, cookie={}, instance="") {
         var controller=getController(endpointId, controllerName)
         if (!controller || !controller.hasOwnProperty('interface')) {
             console.log('!! could not get controller', controllerName, controller, 'for', endpointId)
@@ -746,7 +747,7 @@ export default function DeviceProvider(props) {
                 getModes: getModes,
                 getInputs: getInputs,
                 getController: getController,
-                directive: directive,
+                deviceDirective: deviceDirective,
                 
                 getSceneDetails: getSceneDetails,
                 saveSceneDetails: saveSceneDetails,

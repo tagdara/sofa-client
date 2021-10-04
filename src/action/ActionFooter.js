@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import CardBase from '../CardBase';
+import CardBase from 'components/CardBase';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';

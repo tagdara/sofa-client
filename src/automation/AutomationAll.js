@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { LayoutContext } from '../layout/NewLayoutProvider';
+import { LayoutContext } from 'layout/LayoutProvider';
 
-import SofaListItem from '../SofaListItem';
-import CardBase from '../CardBase';
+import SofaListItem from 'components/SofaListItem';
+import CardBase from 'components/CardBase';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 
 export default function AutomationAll(props) {

@@ -1,11 +1,12 @@
 import React from 'react';
-import CardBase from '../CardBase';
-import SofaListItem from '../SofaListItem';
+import CardBase from 'components/CardBase';
+import SofaListItem from 'components/SofaListItem';
 import DialpadIcon from '@material-ui/icons/Dialpad';
 
 export default function StatusLock(props) {
 
     function getSensorController() {
+        // console.log('sensor ', props.device, props.deviceState)
         if (props.deviceState.hasOwnProperty('ContactSensor')) {
             return props.deviceState.ContactSensor
         } else if (props.device.hasOwnProperty('MotionSensor')) {
@@ -13,8 +14,13 @@ export default function StatusLock(props) {
         }
         return null
     }
-    
-    const closed=getSensorController().detectionState.value==='NOT_DETECTED'
+    const sensorController = getSensorController()
+
+    if (!sensorController) {
+        return null
+    }
+
+    const closed = sensorController.detectionState.value==='NOT_DETECTED'
 
     return (
         <CardBase>

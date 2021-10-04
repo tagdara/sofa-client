@@ -4,7 +4,7 @@
     "homepage": "http://home.dayton.home/client",
     "private": true,
     "dependencies": {
-        "@material-ui/core": "^4.11.0",
+        "@material-ui/core": "^4.11.2",
         "@material-ui/icons": "^4.9.1",
         "@material-ui/lab": "^4.0.0-alpha.56",
         "array-move": "^3.0.1",
@@ -33,7 +33,10 @@
         "eject": "react-scripts eject"
     },
     "eslintConfig": {
-        "extends": "react-app"
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
     },
     "browserslist": {
         "production": [

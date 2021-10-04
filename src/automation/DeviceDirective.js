@@ -1,6 +1,6 @@
 import React, {  useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from '../DataContext/DeviceProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider';
 import ListItem from '@material-ui/core/ListItem';
 import AutomationInput from './AutomationInput';
 import Grid from '@material-ui/core/Grid';
@@ -44,8 +44,12 @@ export default function DeviceDirective(props) {
     }
     
     function defaultOrValue() { 
+        var controller = props.item.controller
+        if (controller.includes('.')) {
+            controller = controller.split('.')[1]
+        }
         for (var j = 0; j < directiveMap.length; j++) {
-            if ((directiveMap[j].instance===props.item.instance) && (directiveMap[j].controller===props.item.controller) && (directiveMap[j].directive===props.item.command)) {
+            if ((directiveMap[j].instance===props.item.instance) && (directiveMap[j].controller === controller) && (directiveMap[j].directive===props.item.command)) {
                 return directiveMap[j]
             }
         }

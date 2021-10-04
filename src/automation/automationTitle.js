@@ -40,7 +40,7 @@ export default function AutomationTitle(props) {
     }
 
     return (    
-             !edit ?
+             !edit && props.name ?
                 <Grid item xs={ 12 } className={classes.display} onClick={ ()=> setEdit(true) }>
                     <Typography variant="h6" className={classes.typo}>{ props.name } </Typography>
                 </Grid>

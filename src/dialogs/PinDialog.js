@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import DialogContent from '@material-ui/core/DialogContent';
@@ -8,8 +7,9 @@ import CheckIcon from '@material-ui/icons/Check';
 import CloseIcon from '@material-ui/icons/Close';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import SecurityCamera from '../camera/securitycamera'
-import SofaDialog from "./SofaDialog"
+
+import SecurityCamera from 'devices/Camera/SecurityCamera'
+import SofaDialog from "dialogs/SofaDialog"
 
 const useStyles = makeStyles({
     

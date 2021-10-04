@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DataContext } from './DataContext/DataProvider';
+import { DataContext } from 'DataContext/DataProvider';
 import { makeStyles, withTheme } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';

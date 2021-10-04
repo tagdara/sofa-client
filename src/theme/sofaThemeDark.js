@@ -54,6 +54,7 @@ export default createMuiTheme({
             good: "#558B2F",
             fair: "#E65100",
             bad: "#E60000",     
+            poor: "#a90000",
             none: "rgba(0,0,0, 0)",
         },
         layer: {

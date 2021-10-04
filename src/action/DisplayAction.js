@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
-import { DeviceContext } from '../DataContext/DeviceProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider';
 import { makeStyles } from '@material-ui/styles';
 
-import CardBase from '../CardBase';
+import CardBase from 'components/CardBase';
 import DeviceIcon from '../DeviceIcon';
 import CompactPropertyValue from './CompactPropertyValue';
 import ListItem from '@material-ui/core/ListItem';

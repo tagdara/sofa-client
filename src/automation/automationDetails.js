@@ -1,10 +1,11 @@
 import React, { useState, useContext } from 'react';
-import { DeviceContext } from '../DataContext/DeviceProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider';
 
 import Moment from 'react-moment';
 import IconButton from '@material-ui/core/IconButton';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Typography from '@material-ui/core/Typography';
 
 import LowPriorityIcon from '@material-ui/icons/LowPriority';
 import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
@@ -23,7 +24,7 @@ export default function AutomationDetails(props) {
     const [ severity, setSeverity]=useState('info')
     
     function runAutomation(conditions=true) {
-        directive('logic:activity:'+props.name, 'SceneController', 'Activate', {}, {"conditions": conditions})
+        directive(props.endpointId, 'SceneController', 'Activate', {}, {"conditions": conditions})
             .then(result=> { parseResult(result) })
     }
     
@@ -49,7 +50,8 @@ export default function AutomationDetails(props) {
 
     return (    
         <ListItem>
-            <ListItemText primary={"Last Run"} secondary={ props.automation.lastrun!=='never' ? <Moment utc format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment> : 'Never'} />
+            <ListItemText primary={"Last Run"} secondary={ props.automation.lastrun && props.automation.lastrun!=='never' ? <Moment utc format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment> : 'Never'} />
+            <Typography variant="overline">{ props.endpointId }</Typography>
             <IconButton onClick={() => runAutomation()}><PlaylistPlayIcon /></IconButton>
             <IconButton onClick={() => runAutomation(false)}><LowPriorityIcon /></IconButton>
             <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}} open={showResult} autoHideDuration={6000} onClose={handleClose}>

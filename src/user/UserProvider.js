@@ -1,5 +1,6 @@
 import React, {useState, useEffect, useContext, createContext} from 'react';
-import { NetworkContext } from '../NetworkProvider';
+import { NetworkContext } from 'network/NetworkProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider';
 
 export const UserContext = createContext();
 
@@ -7,6 +8,7 @@ export default function UserProvider(props) {
 
     const [ userData, setUserData ] = useState({});
     const { getJSON, postJSON, loggedIn } = useContext(NetworkContext);
+    const { deviceByEndpointId } = useContext(DeviceContext);
     const [ favorites, setFavorites] = useState([])
     const [ userCamera, setUserCamera] = useState(undefined)
     const [ userTheme, setUserTheme] = useState(undefined)
@@ -76,6 +78,7 @@ export default function UserProvider(props) {
         
     
     function makeFavorite(deviceId, fav=true) {
+        console.log('favoriting', deviceId, fav)
         var newfavorites=[...favorites]
         if (fav && !userData.favorites.includes(deviceId)) {
             newfavorites=[...newfavorites, deviceId]
@@ -92,7 +95,17 @@ export default function UserProvider(props) {
     }
     
     function isFavorite(deviceId) {
-        return favorites.includes(deviceId)
+        return getFavorites().includes(deviceId)
+    }
+    
+    function getFavorites() {
+        var validated=[]
+        for (var i = 0; i < favorites.length; i++) {
+            if (deviceByEndpointId(favorites[i])) {
+                validated.push(favorites[i])
+            }
+        }
+        return validated
     }
 
     return (
@@ -102,6 +115,7 @@ export default function UserProvider(props) {
                 makeFavorite: makeFavorite,
                 isFavorite: isFavorite,
                 favorites: favorites,
+                getFavorites: getFavorites,
                 userCamera: userCamera,
                 chooseUserCamera: chooseUserCamera,
                 userTheme: userTheme,

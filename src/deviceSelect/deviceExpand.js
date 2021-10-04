@@ -13,7 +13,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Collapse from '@material-ui/core/Collapse';
 
-import GridItem from '../GridItem';
+import GridItem from 'components/GridItem';
 
 import DataUsageIcon from '@material-ui/icons/DataUsage';
 import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';

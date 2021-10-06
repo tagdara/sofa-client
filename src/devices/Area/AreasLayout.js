@@ -4,7 +4,7 @@ import { LayoutContext } from 'layout/LayoutProvider';
 import { DataContext } from 'DataContext/DataProvider';
 
 import GridSection from 'components/GridSection';
-import AreaSummary from 'devices/Area/AreaSummary';
+import AreaSummary from '../archive/AreaSummary';
 
 export default function AreasLayout(props) {
     

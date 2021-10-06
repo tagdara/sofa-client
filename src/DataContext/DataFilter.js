@@ -142,9 +142,12 @@ export const dataFilter = (WrappedComponent) => {
             return result
         }
 
+        const deviceState = getEndpointStates()
+        const deviceStateReady = Object.keys(deviceState).length > 0;
+
         return (
-            <WrappedComponent {...props} deviceState={getEndpointStates()} devices={localDevices} unregisterDevices={unregisterDevices}
-                                addEndpointIds={addEndpointIds} directive={directive} />
+            <WrappedComponent {...props} deviceState={deviceState} devices={localDevices} unregisterDevices={unregisterDevices}
+                                addEndpointIds={addEndpointIds} directive={directive} deviceStateReady={deviceStateReady} />
         );
     }
      

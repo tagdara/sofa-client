@@ -303,12 +303,30 @@ export default function DeviceProvider(props) {
         
     }
 
-    
+    function hasCapability(endpointId, controller) {
+        var result = devices[endpointId].capabilities.filter(cap => cap.interface.endsWith(controller))
+        return result.length > 0
+    }
+
+    function hasDisplayCategory(endpointId, category) {
+        return devices[endpointId].displayCategories.includes( category.toUpperCase() )
+    }    
+
     function sortByName(devlist) {
         devlist.sort(function(a, b)  {
-		    var x=a['friendlyName'].toLowerCase(),
-			y=b['friendlyName'].toLowerCase();
-		    return x<y ? -1 : x>y ? 1 : 0;
+            var x = undefined
+            var y = undefined
+            if (typeof a === 'string') { 
+                x = devices[a].friendlyName.toLowerCase()
+            } else {
+                x = a.friendlyName.toLowerCase()
+            }
+            if (typeof b === 'string') { 
+                y = devices[b].friendlyName.toLowerCase()
+            } else {
+                y = b.friendlyName.toLowerCase()
+            }
+		    return x < y ? -1 : x>y ? 1 : 0;
 	    });    
         return devlist
     }
@@ -763,6 +781,8 @@ export default function DeviceProvider(props) {
                 cardDeviceCount: cardDeviceCount,
                 getRecent: getRecent,
                 isModeNonControllable: isModeNonControllable,
+                hasCapability: hasCapability,
+                hasDisplayCategory: hasDisplayCategory,
             }}
         >
             {props.children}

@@ -1,14 +1,12 @@
-import React, { useContext } from 'react';
-
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { DataContext } from 'DataContext/DataProvider';
+import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
 
 import DotLevel from 'components/DotLevel';
-
 
 const useStyles = makeStyles({
     
@@ -26,41 +24,48 @@ const useStyles = makeStyles({
     }
 });
 
-export default function AreaLine(props) {
+const AreaLine = React.memo(props => {
+
+    const classes = useStyles(); 
+
+    useEffect(() => {
+        props.addEndpointIds('id', props.endpointId, 'AreaSummaryLine')
+        return function cleanup() {
+            props.unregisterDevices('AreaSummaryLine');
+        };
+    // eslint-disable-next-line 
+    }, [])    
+
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
+    if (isEmpty(props.deviceState)) { return null }
     
-    const classes = useStyles();
-    const { directive } = useContext(DataContext);
+    const shortcuts = props.deviceState[props.endpointId].AreaController.shortcuts.value
+    const scene = props.deviceState[props.endpointId].AreaController.scene.value
+    const name = props.devices[props.endpointId].friendlyName
 
     function runShortcut(level) {
-        directive(props.deviceState.AreaController.shortcuts.value[level], 'SceneController', 'Activate')
+        //var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
+        props.directive(shortcuts[level], 'SceneController', 'Activate')
     }
     
     function currentLevel() {
-        if (props.deviceState.AreaController.shortcuts.value.includes(props.deviceState.AreaController.scene.value)) {
-            return props.deviceState.AreaController.shortcuts.value.indexOf(props.deviceState.AreaController.scene.value)
+        if (shortcuts.includes(scene)) {
+            return shortcuts.indexOf(scene)
         }
         return 0
-    }
-    
-    function hasShortcuts() {
-        try {
-            if (props.deviceState.AreaController.shortcuts.value.length>0) {
-                return true
-            }
-        }
-        catch {
-            return false
-        }
-
-        return false
-    }
+    }   
 
     return (
         <ListItem className={classes.areaListItem}>
-            <ListItemText className={classes.halves} onClick={ () => props.selectArea(props.device.friendlyName)}>{props.device.friendlyName} </ListItemText>
-            { hasShortcuts() &&
+            <ListItemText className={classes.halves} onClick={ () => props.selectArea(props.endpointId)}>{name} </ListItemText>
+            { (shortcuts.length > 0) &&
                 <DotLevel half={true} level={currentLevel()} select={runShortcut} />
             }
         </ListItem>
     );
-}
+}, deviceStatesAreEqual);
+
+export default dataFilter(AreaLine)

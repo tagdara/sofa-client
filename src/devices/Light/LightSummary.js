@@ -1,87 +1,76 @@
-import React, { useContext } from 'react';
-
-import { makeStyles, withTheme } from '@material-ui/styles';
-
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-
+import React, { useEffect } from 'react';
+import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
-import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import SofaListItem from 'components/SofaListItem';
+import PlaceholderCard from 'layout/PlaceholderCard';
+import LightChristmasButton from 'devices/Light/LightChristmasButton';
 
+const LightSummary = React.memo(props => {
 
-const useStyles = makeStyles(theme => {
-    return {   
-        iconRow: {
-            padding: 16,
-        },
-        summaryButton: {
-            width: 36,
-            height: 36,
-            padding: 8,
-            marginRight: 8,
-            color: theme.palette.primary.contrastText,
-        },
-        iconPad: {
-            fontSize: 18,
-            marginRight: 0,
-        },
-        count: {
-            fontSize: 12,
-        },
-  
-        disabled: {
-            width: 96,
-            color: "#444",
-            borderColor: "#444",
-            '&:hover': {
-                backgroundColor: "#666",
-                borderColor: "#444",
-            }
-        },
-    }
-});
+    useEffect(() => {
+        props.addEndpointIds("category", "LIGHT", "LightSummary")
+        return function cleanup() {
+            props.unregisterDevices("LightSummary");
+        };
+    // eslint-disable-next-line 
+    }, [])
 
-
-export function LightSummary(props) {
+    if (!props.deviceState || Object.keys(props.deviceState).length < 1) { return <PlaceholderCard /> }
     
-    const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStateByFriendlyName, lightCount } = useContext(DataContext);
-    const thermostat = deviceStateByFriendlyName('Main Thermostat')
-
-    const lightsOn = lightCount('on');
-    const classes = useStyles();
-
-    function tempColor(temp) {
-        if (temp>=74) { return 'hot' }
-        if (temp<70) { return 'cool'}
-        return 'mid';
+    function lightCount(condition, source) {
+        var count = 0;
+        for (var dev in props.deviceState) {
+            var light = props.deviceState[dev]
+            switch (condition.toUpperCase()) {
+                case "OFF":
+                    if (light.PowerController.powerState.value === "OFF" || !isReachable(light)) {
+                        count=count+1
+                    }
+                    break;
+                case "ON":
+                    if (light.PowerController.powerState.value === "ON" && isReachable(light)) {
+                        count=count+1
+                    } 
+                    break;                   
+                default:
+                    count = count + 1
+                    break;
+            }
+        }
+        return count
     }
 
-    return (            
-            <div className={classes.iconRow}>
-                <IconButton size={"small"} className={classes.summaryButton}
-                        style={{'backgroundColor': props.theme.palette.avatar[lightsOn ? 'on' : 'off']}}
-                        onClick={ () => applyLayoutCard('LightLayout') }>
-                    <LightbulbOutlineIcon className={classes.iconPad} />
-                    { lightsOn &&
-                        <Typography className={classes.count}>
-                            {lightsOn }
-                        </Typography>
-                    }
-                </IconButton>
-                { thermostat &&
-                <IconButton size={"small"}  className={classes.summaryButton}
-                    style={{'backgroundColor': props.theme.palette.avatar[tempColor(thermostat.TemperatureSensor.temperature.value)]}}
-                    onClick={ () => applyLayoutCard('ThermostatLayout') }>
-                    <Typography className={classes.count}>
-                        {thermostat.TemperatureSensor.temperature.value ? thermostat.TemperatureSensor.temperature.deepvalue : '--'}&deg;
-                    </Typography>
-                </IconButton>
-                }
-            </div>
-    );
-}
+    function isReachable(dev) {
+        try {
+            if (dev.EndpointHealth.connectivity.value.value==='OK') {
+                return true
+            }
+        }
+        catch {}
+        return false
+    }
 
-export default withTheme(LightSummary)
+    function checkHoliday() {
+        if (2==1) {
+            return <LightChristmasButton />
+        }
+        return null
+    }
+
+    const labelText = lightCount('on') === 1 ? lightCount('on')+" light is on" : lightCount('on')+" lights are on"
+
+    return (
+        <SofaListItem   avatarState={lightCount('on') ? "on" : "off"} 
+                        avatarClick={ props.onClick } 
+                        labelClick={ props.onClick }
+                        avatar={<LightbulbOutlineIcon/>} 
+                        noPad={true}
+                        primary={lightCount('on') ? labelText : "All lights off" }
+                        inlineSecondary={true}
+                        secondaryActions={ checkHoliday() }
+        />
+    );
+}, deviceStatesAreEqual);
+
+export default dataFilter(LightSummary);

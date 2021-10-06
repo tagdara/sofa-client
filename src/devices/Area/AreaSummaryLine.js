@@ -1,133 +1,74 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
 import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceContext } from 'DataContext/DeviceProvider'
+import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
 import DotLevel from 'components/DotLevel';
-import AreaColor from 'devices/Area/AreaColor';
-
+import MultiLightColor from 'devices/Light/MultiLightColor';
 
 const useStyles = makeStyles(theme => {
     return {        
-        dialogActions: {
-            paddingBottom: "env(safe-area-inset-bottom)",
-        },
-        listDialogContent: {
-            padding: 0,
-        },
-        button: {
-            minWidth: 36
-        },
-        buttonspacer: {
-            minWidth: 36,
-            marginRight: 18
-        },
-        halves: {
-            flexGrow: 1,
-            flexBasis: 1,
-            boxSizing: "border-box",
-        },
         dotLine: {
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "center",
             padding: 8,
             alignItems: "center",
             height: 64,
             boxSizing: "border-box",
         },
-        noLabel: {
-            display: "flex",
-            justifyContent: "center",
-            padding: 8,
-            alignItems: "center",
-            height: 54,
-            boxSizing: "border-box",
-        },
-        dotLabel: {
-            height: 48,
-            maxWidth: "50%",
-            flexGrow:1,
-            padding: 8,
-            boxSizing: "border-box",
-            alignItems: "center",
-            display: "flex",
-        },
-        dotClickLabel: {
-            height: 48,
-            maxWidth: "50%",
-            flexGrow:1,
-            '&:hover': {
-                backgroundColor: theme.palette.background.hover,
-            },
-            borderRadius:4,
-            padding: 8,
-            boxSizing: "border-box",
-            alignItems: "center",
-            display: "flex",
-        },
-
-        details: {
-            display: "flex",
-            flexDirection: "column",
-            padding: 0,
-        },
-        paper: {
-            display: "flex",
-            flexDirection: "column",
-            flexGrow: 0,
-            width: "100%",
-        }
     }
 });
 
-export default function AreaSummaryLine(props) {
+const AreaSummaryLine = React.memo(props => {
 
     const classes = useStyles();
-    const { directive } = useContext(DataContext);
-    //const area = deviceStateByEndpointId('logic:area:'+layout.props.name)
+    const { hasCapability } = useContext(DeviceContext);       
+
+    useEffect(() => {
+        props.addEndpointIds('id', props.endpointId, 'AreaSummaryLine')
+        return function cleanup() {
+            props.unregisterDevices('AreaSummaryLine');
+        };
+    // eslint-disable-next-line 
+    }, [ props.endpointId ])    
+
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
+
+    if (isEmpty(props.deviceState) || !props.deviceState[props.endpointId]) { return null }
+    
+    const children = props.deviceState[props.endpointId].AreaController.children.value
+    const shortcuts = props.deviceState[props.endpointId].AreaController.shortcuts.value
+    const scene = props.deviceState[props.endpointId].AreaController.scene.value
+    const colorLights = children.filter(endpointId => hasCapability(endpointId, "ColorController"))
 
     function runShortcut(level) {
         //var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
-        directive(props.deviceState.AreaController.shortcuts.value[level], 'SceneController', 'Activate')
+        props.directive(shortcuts[level], 'SceneController', 'Activate')
     }
     
     function currentLevel() {
-        if (props.deviceState.AreaController.shortcuts.value.includes(props.deviceState.AreaController.scene.value)) {
-            return props.deviceState.AreaController.shortcuts.value.indexOf(props.deviceState.AreaController.scene.value)
+        if (shortcuts.includes(scene)) {
+            return shortcuts.indexOf(scene)
         }
         return 0
     }
-    
-    function hasShortcuts() {
-        try {
-            if (props.deviceState.AreaController.shortcuts.value.length>0) {
-                return true
-            }
-        }
-        catch {
-            return false
-        }
 
-        return false
-    }
-    
+    if (shortcuts.length === 0 && colorLights.length===  0) { return null }
+
     return (
-            <ListItem className={props.showLabel ? classes.dotLine : classes.noLabel}>
-                {props.showLabel &&
-                    <ListItemText className={props.clickName ? classes.dotClickLabel : classes.dotLabel} onClick={props.clickName}>
-                        {props.device.friendlyName}
-                    </ListItemText>
-                }
-                { hasShortcuts() &&
-                    <DotLevel level={currentLevel()} select={runShortcut} />
-                }
-                { props.colorLights &&
-                    <AreaColor directive={directive} colorLights={props.colorLights} />
-                }
-            </ListItem>
-
+        <ListItem className={classes.dotLine}>
+            { (shortcuts.length > 0) &&
+                <DotLevel level={currentLevel()} select={runShortcut} />
+            }
+            { (colorLights.length > 0) &&
+                <MultiLightColor endpointIds={colorLights} />
+            }
+        </ListItem>
     )
 
-};
+}, deviceStatesAreEqual);
+
+export default dataFilter(AreaSummaryLine)

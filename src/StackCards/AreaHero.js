@@ -1,136 +1,84 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { DataContext } from 'DataContext/DataProvider';
 import { LayoutContext } from 'layout/LayoutProvider';
+import { UserContext } from 'user/UserProvider';
+import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { DeviceContext } from 'DataContext/DeviceProvider'
+
+import ListItem from '@material-ui/core/ListItem';
 
 import AreaLine from 'devices/Area/AreaLine';
 import AreaSummaryLine from 'devices/Area/AreaSummaryLine';
-import AreaSummary from 'devices/Area/AreaSummary';
+// import AreaSummary from 'devices/Area/AreaSummary';
 import CardBase from 'components/CardBase';
 import CardControl from 'components/CardControl';
 import PlaceholderCard from 'layout/PlaceholderCard';
+import LightButton from 'devices/Light/LightButton';
+import SceneButton from 'devices/Scene/SceneButton';
 
+const AreaHero = React.memo(props => {
 
-export default function AreaHero(props) {
-
-    const { cardReady, devices, deviceState, getEndpointIdsByCategory, unregisterDevices, setArea, area } = useContext(DataContext);
+    const { userArea } = useContext(UserContext);
+    const { sortByName, hasDisplayCategory, hasCapability } = useContext(DeviceContext);       
     const { selectPage } = useContext(LayoutContext);
-    const thisarea = 'logic:area:'+area
-    const [ previousArea, setPreviousArea]=useState('All')
-    const [ allAreas, setAllAreas]=useState([])
- 
+    const [ currentArea, setCurrentArea] = useState('logic:area:Main')
+
     useEffect(() => {
-        setAllAreas(getEndpointIdsByCategory('AREA','AreaHero'))
+        props.addEndpointIds('id',currentArea, 'AreaHero')
         return function cleanup() {
-            unregisterDevices('AreaHero');
+            props.unregisterDevices('AreaHero');
         };
     // eslint-disable-next-line 
-    }, [ ] )
+    }, [ currentArea ])    
 
-    function selectArea(name) {
-        setPreviousArea(area)
-        setArea(name);
-        //selectPage('AreaLayout',{"name": name})
-    }
+    if (isEmpty(props.deviceState) || !props.deviceState[currentArea] ) { return <PlaceholderCard count={ 6 } /> }
     
-    function getAreaAreas() {
+    const children = sortByName(props.deviceState[currentArea].AreaController.children.value)
+    const shortcuts = props.deviceState[currentArea].AreaController.shortcuts.value
+    const currentScene = props.deviceState[currentArea].AreaController.scene.value
+    const areas = children.filter(endpointId => hasCapability(endpointId, "AreaController"))
+    const lights = children.filter(endpointId => hasDisplayCategory(endpointId, "LIGHT"))
+    const scenes = children.filter(endpointId => hasDisplayCategory(endpointId, "SCENE_TRIGGER"))
+    const nonShortcuts = scenes.filter(endpointId => !shortcuts.includes(endpointId))
+    const name = props.devices[currentArea].friendlyName
 
-        var areas=[]
-        if (area==='All') { 
-            return allAreas
-        }
-        if (!area || thisarea===undefined) { return [] }
-        try {
-            var children=deviceState(thisarea).AreaController.children.value
-            if (children) {
-                for (var i = 0; i < children.length; i++) {
-                    var child=devices[children[i]]
-                    if (child && child.displayCategories.includes('AREA')) {
-                        areas.push(children[i])
-                    }
-                }
-            }
-        }
-        catch {}
-        return areas
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
     }
 
-    function getAreaColor() {
+    function shortcutId(scene) {
+        if (shortcuts.includes(scene)) { return shortcuts.indexOf(scene)}
+        return "x"
+    }
+    //const scenes = []
 
-        var colorLights={}
-        if (area==='All') { 
-            return []
-        }
-        if (!area || thisarea===undefined) { return [] }
-
-        var children=deviceState(thisarea).AreaController.children.value
-        if (children) {
-            
-            for (var i = 0; i < children.length; i++) {
-                
-                var child=deviceState(children[i])
-                if (child && devices[children[i]].displayCategories.includes('LIGHT')) {
-                    if (child.hasOwnProperty('ColorController')) {
-                        
-                        colorLights[children[i]]=deviceState(children[i])
-                    }
-                }
-            }
-        }
-
-        return colorLights
+    function selectArea(endpointId) {
+        setCurrentArea(endpointId)
     }
 
-    
-    function hasShortcuts() {
-        
-        try {
-            if (deviceState(thisarea).AreaController.shortcuts.value.length>0) {
-                return true
-            }
-        }
-        catch {
-            return false
-        }
-
-        return false
-    }
-    
-    function homeArea() {
-        setPreviousArea('All')
-        setArea('Main')
-    }
-
-    function backArea() {
-        var pp=previousArea
-        setPreviousArea(area)
-        setArea(pp)
-    }
-    
     function expandArea(areaname) {
         selectPage('AreaLayout',{"name": areaname})
-    }
-    
-    if (!cardReady('AreaHero')) {
-        return <PlaceholderCard count={ 6 } />
     }
 
     return (
         <CardBase>
-            <CardControl name={area} back={backArea} home={homeArea} expand={expandArea}/>
-            <>
-                { hasShortcuts() &&
-                    <AreaSummaryLine device={devices[thisarea]} deviceState={ deviceState(thisarea) } area={thisarea} colorLights={ getAreaColor() } />
-                }
-            
-            {   getAreaAreas().map((anarea) => 
-                <AreaLine device={devices[anarea]} deviceState={ deviceState(anarea) }  area={ anarea } key={ anarea } selectArea={selectArea} ></AreaLine>
+            <CardControl name={ name } home={userArea} currentArea={currentArea} selectArea={selectArea} expand={expandArea} />
+            <AreaSummaryLine endpointId={currentArea} />
+            { areas.map(area =>
+                <AreaLine key={area} endpointId={area} selectArea={selectArea} />
             )}
-            { thisarea &&
-                <AreaSummary    device={devices[thisarea]} deviceState={deviceState(thisarea)} showDetail={true} area={ thisarea } 
-                                name={ devices[thisarea].friendlyName } shortcuts={deviceState(thisarea).shortcuts} 
-                                selectArea={selectArea} noGrid={true} summaryLine={false} />
-            }
-            </>
+            { nonShortcuts.map(scene =>
+                <ListItem key={scene}>
+                    <SceneButton  endpointId={scene} shortcut={shortcutId(scene)} small={true}
+                                    computedLevel={currentScene} highlight={true} />
+                </ListItem>
+            )}
+            { lights.map(light =>
+                <ListItem key={light}>
+                    <LightButton endpointId={light} skipPrefix={name} />
+                </ListItem>
+            )}
         </CardBase>
     );
-}
+}, deviceStatesAreEqual);
+
+export default dataFilter(AreaHero)

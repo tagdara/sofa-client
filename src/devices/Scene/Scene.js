@@ -5,6 +5,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from "@material-ui/core/IconButton"
 import CircularProgress from '@material-ui/core/CircularProgress';
+
+import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+
 import SofaListItem from "components/SofaListItem"
 import CardBase from "components/CardBase"
 
@@ -41,10 +44,20 @@ function useInterval(callback, delay) {
     }, [delay]);
 }
 
-export default function Scene(props) {
+const Scene = React.memo(props => {
     
     const classes = useStyles();
     const [working, setWorking] = useState(false)
+
+    console.log('scene endpointid', props.endpointId)
+
+    useEffect(() => {
+        props.addEndpointIds('id', props.endpointId, 'Scene-'+props.endpointId)
+        return function cleanup() {
+            props.unregisterDevices('Scene-'+props.endpointId);
+        };
+    // eslint-disable-next-line 
+    }, [])    
 
     useInterval(() => {
         setWorking(false)
@@ -53,17 +66,21 @@ export default function Scene(props) {
     useEffect(() => {
         setWorking(false)
     }, [props.computedLevel]);
-    
+
+    if (!props.deviceStateReady) { return null }
+
+    const name = props.devices[props.endpointId].friendlyName
+
     function runScene() {
         if (!props.editing && !props.remove) {
-            console.log('Activating', props.scene.friendlyName)
+            console.log('Activating', name)
             setWorking(true)
-            props.directive(props.scene.endpointId, 'SceneController', 'Activate')
+            props.directive(props.endpointId, 'SceneController', 'Activate')
         }
     }
     
-    function deleteScene(endpointId) {
-        props.directive(props.scene.endpointId, 'SceneController', 'Delete')
+    function deleteScene() {
+        props.directive(props.endpointId, 'SceneController', 'Delete')
     }
 
     // noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true} noPaper={false} button={false} 
@@ -75,14 +92,12 @@ export default function Scene(props) {
             avatar={ working ?
                 <CircularProgress size={props.small ? 24 : 32} className={classes.working} />
             :   
-                <>
-                    {props.shortcut==='x' ? <ListIcon /> : props.shortcut }
-                </>
+                <>{props.shortcut==='x' ? <ListIcon /> : props.shortcut }</>
             }
-            avatarState={props.scene.endpointId===props.computedLevel ? 'on' : 'off'}
+            avatarState={props.endpointId === props.computedLevel ? 'on' : 'off'}
             avatarClick={runScene}
             labelClick={runScene}
-            primary={props.scene.friendlyName}
+            primary={name}
             small={props.small}
             secondaryActions={
                 <>
@@ -90,13 +105,13 @@ export default function Scene(props) {
                     <IconButton size={"small"} onClick={() => deleteScene() }><CloseIcon /></IconButton>   
                 }
                 { props.editing &&
-                    <IconButton size={"small"} onClick={() => props.edit(props.scene) }><EditIcon /></IconButton>   
+                    <IconButton size={"small"} onClick={() => props.edit(props.endpointId) }><EditIcon /></IconButton>   
                 }
                 </>
             }
         />
         </CardBase>
     )
-};
+}, deviceStatesAreEqual);
 
-
+export default dataFilter(Scene)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
@@ -8,6 +8,8 @@ import Switch from '@material-ui/core/Switch';
 
 import CloudOffIcon from '@material-ui/icons/CloudOff';
 import ClearIcon from '@material-ui/icons/Clear';
+
+import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
@@ -99,36 +101,63 @@ const useStyles = makeStyles(theme => {
 }
 });
 
-export default function Light(props) {
-    
+const Light = React.memo(props => {
+
     const classes = useStyles();
     const [showAll, setShowAll] = useState(props.showAll)
     const expanded = showAll || props.brightControl || props.tempControl || props.colorControl
-    
+    const light = props.devices[props.endpointId]
+    const lightState = props.deviceState[ props.endpointId ]
+    const name = light ? light.friendlyName : "Unknown"
+
+    useEffect(() => {
+        props.addEndpointIds("id", props.endpointId, "Light"+props.endpointId)
+        return function cleanup() {
+            props.unregisterDevices("Light"+props.endpointId);
+        };
+    // eslint-disable-next-line 
+    }, [])    
+
+
     function handlePowerChange(event) {
-        console.log('powerchange',props.device.endpointId, event.target.checked ? 'TurnOn' : 'TurnOff')
-        props.directive(props.device.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
+        props.directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     }; 
     
     function isReachable() {
         try {
-            if (props.deviceState.hasOwnProperty('EndpointHealth')) {
-                if (props.deviceState.EndpointHealth.connectivity.value.value==='OK') { return true }
-                return false
+            if (lightState.EndpointHealth.connectivity.value.value==='OK') {
+                return true
             }
-            console.log('no endpoint health', props.deviceState)
-            return true
-        } catch (e) {
-            console.log('Error getting reachable state', e)
-            return false
         }
+        catch {}
+        return false
     }
-    
-    // noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true} noPaper={false} button={false}
+
+    function filtered(filter) {
+        
+        filter = filter ? filter.toUpperCase() : "TRUE"
+        switch (filter) {
+            case "ON":
+                if (lightState && lightState.PowerController.powerState.value==='ON' && isReachable()) {
+                    return false
+                }
+                break;
+            case "OFF":
+                if (!lightState || lightState.PowerController.powerState.value==='OFF' || !isReachable()) {
+                    return false
+                }
+                break;
+            default:
+                return false     
+        }
+        return true
+    }
+
+    if (!lightState || filtered(props.filter)) { return null}
 
     return (
         <CardBase noPad={ props.small } highlight={props.highlight}>
-        <SofaListItem   avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? "on" : "off" }
+        <SofaListItem   avatarState={ lightState.PowerController.powerState.value==='ON' ? "on" : "off" }
                         avatarBackground={false} 
                         avatarClick={() => setShowAll(!showAll) }
                         labelClick={() => setShowAll(!showAll) }
@@ -137,7 +166,7 @@ export default function Light(props) {
                             :
                                 <CloudOffIcon className={classes.iconSize} />
                         }                
-                        primary={ props.device.friendlyName } 
+                        primary={ name } 
                         secondary={ isReachable() ? null : 'Off at switch' }
                         small={props.small} 
                         noPad={props.small}
@@ -145,7 +174,8 @@ export default function Light(props) {
                         secondaryActions={ 
                             <>
                                 { ( isReachable() && !props.deleting ) &&
-                                    <Switch color="primary" className={classes.lightSwitch} checked={props.deviceState.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
+                                    <Switch color="primary" className={classes.lightSwitch} checked={lightState.PowerController.powerState.value==='ON'} 
+                                            onChange={handlePowerChange} />
                                 }
                                 { props.deleting && 
                                 <IconButton size="small" onClick={()=>props.remove(props.device)} ><ClearIcon /></IconButton>
@@ -156,35 +186,35 @@ export default function Light(props) {
             { expanded && 
                     <List className={classes.controlList}>
                         { !props.brightControl && !showAll ? null :
-                            ( !props.deviceState.hasOwnProperty('BrightnessController') ?
+                            ( !lightState.hasOwnProperty('BrightnessController') ?
                                 <ListItem className={classes.placeholder} />
                             :
-                                <LightSliderBrightness device={props.device} deviceState={props.deviceState} directive={props.directive} />
+                                <LightSliderBrightness device={light} deviceState={lightState} directive={props.directive} />
                             )
                         }
                         { !props.tempControl && !showAll ? null :
-                            ( !props.deviceState.hasOwnProperty('ColorTemperatureController') ?
+                            ( !lightState.hasOwnProperty('ColorTemperatureController') ?
                                 <ListItem className={classes.placeholder} />
                             :
-                            <LightSliderTemperature device={props.device} deviceState={props.deviceState} directive={props.directive}/>
+                            <LightSliderTemperature device={light} deviceState={lightState} directive={props.directive}/>
                             )
                         }
                         { !props.colorControl && !showAll ? null :
-                            ( !props.deviceState.hasOwnProperty('ColorController') ?
+                            ( !lightState.hasOwnProperty('ColorController') ?
                                 <ListItem className={classes.placeholder} />
                             :
-                                <LightSliderColor device={props.device} deviceState={props.deviceState} directive={props.directive}/>
+                                <LightSliderColor device={light} deviceState={lightState} directive={props.directive}/>
                             )
                         }
                         { !showAll ? null :
-                            ( !props.deviceState.hasOwnProperty('On Level') ?
+                            ( !lightState.hasOwnProperty('On Level') ?
                                 <ListItem className={classes.placeholder} />
                             :
-                                <LightSliderOnLevel device={props.device} deviceState={props.deviceState} directive={props.directive} />
+                                <LightSliderOnLevel device={light} deviceState={lightState} directive={props.directive} />
                             )
                         }
                         { !props.remove ? null :
-                            <SofaListItem primary={"Remove"} avatar={ <ClearIcon /> } avatarClick={() => props.remove(props.device.endpointId)} className={classes.iconSize} />
+                            <SofaListItem primary={"Remove"} avatar={ <ClearIcon /> } avatarClick={() => props.remove(props.endpointId)} className={classes.iconSize} />
                         }
                         
                         <div className={classes.controlPad} />
@@ -192,7 +222,9 @@ export default function Light(props) {
                 }
         </CardBase>
     )
-}
+}, deviceStatesAreEqual);
+
+export default dataFilter(Light);
 
 Light.defaultProps = {
     nopaper: false,

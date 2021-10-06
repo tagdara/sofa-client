@@ -33,6 +33,9 @@ const useStyles = makeStyles(theme => {
             height: 24,
             padding: 0,
             minWidth: 150,
+        },
+        placeholder: {
+            width: 18,
         }
     }
 });
@@ -45,7 +48,11 @@ export default function CardControl(props) {
             <div className={classes.controlLine}>
                 <IconButton size="small" className={classes.backButton} onClick={props.back}><ArrowBackIcon className={classes.tinyIcon} /></IconButton>
                 <Button className={classes.tinyButton} onClick={() => props.expand(props.name)} ><Typography variant="body2" className={classes.label} >{props.name}</Typography></Button>
-                <IconButton size="small" className={classes.backButton}  onClick={props.home}><HomeIcon className={classes.tinyIcon} /></IconButton>
+                { props.currentArea !== props.home ?
+                    <IconButton size="small" className={classes.backButton} onClick={()=>props.selectArea(props.home)}><HomeIcon className={classes.tinyIcon} /></IconButton>
+                    :
+                    <div className={classes.placeholder} />
+                }
             </div>
 
     )

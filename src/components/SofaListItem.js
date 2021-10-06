@@ -69,7 +69,6 @@ export default function SofaListItem(props) {
     const classes = useStyles();
 
     function handleAvatarClick(e) {
-        console.log('avatar click')
         e.stopPropagation(); 
         if (props.avatarClick) {
             props.avatarClick()

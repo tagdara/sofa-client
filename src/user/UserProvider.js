@@ -13,6 +13,7 @@ export default function UserProvider(props) {
     const [ userCamera, setUserCamera] = useState(undefined)
     const [ userTheme, setUserTheme] = useState(undefined)
     const [ userPlayer, setUserPlayer] = useState(undefined)
+    const [ userArea, setUserArea] = useState("logic:area:Main")
     
     useEffect(() => {
         
@@ -30,6 +31,9 @@ export default function UserProvider(props) {
                 
                 if (result.hasOwnProperty('theme')) {
                     setUserTheme(result.theme)
+                }
+                if (result.hasOwnProperty('area')) {
+                    setUserTheme(result.area)
                 }
                 setUserData(result)
             }
@@ -75,7 +79,12 @@ export default function UserProvider(props) {
         }
     }
 
-        
+    function chooseArea(areaName) {
+        if (areaName !== userArea) {
+            setUserArea(areaName)
+            //saveUserData({...userData, area: areaName}) - Do we want to persist this change? Probably not
+        }
+    }
     
     function makeFavorite(deviceId, fav=true) {
         console.log('favoriting', deviceId, fav)
@@ -122,6 +131,8 @@ export default function UserProvider(props) {
                 chooseUserTheme: chooseUserTheme,
                 userPlayer: userPlayer,
                 chooseUserPlayer: chooseUserPlayer,
+                userArea: userArea,
+                chooseArea: chooseArea,
             }}
         >
             {props.children}

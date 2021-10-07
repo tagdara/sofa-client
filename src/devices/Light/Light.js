@@ -9,7 +9,7 @@ import Switch from '@material-ui/core/Switch';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
 import ClearIcon from '@material-ui/icons/Clear';
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 

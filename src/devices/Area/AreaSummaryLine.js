@@ -2,8 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import ListItem from '@material-ui/core/ListItem';
 
-import { DeviceContext } from 'DataContext/DeviceProvider'
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { DeviceContext } from 'context/DeviceContext'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import DotLevel from 'components/DotLevel';
 import MultiLightColor from 'devices/Light/MultiLightColor';
 
@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => {
     return {        
         dotLine: {
             display: "flex",
-            justifyContent: "center",
+            justifyContent: "space-around",
             padding: 8,
             alignItems: "center",
             height: 64,

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -19,7 +19,7 @@ import PlayerBase from "./player/PlayerBase";
 
 export default function PlayerGroup(props) {
 
-    const { directive, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DataContext);
+    const { directive, deviceStatesByCategory, deviceStateByEndpointId } = useContext(DeviceStateContext);
     const speakers = deviceStatesByCategory('SPEAKER')
     const device = deviceStateByEndpointId(props.player)
     

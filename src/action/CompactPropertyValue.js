@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect, useContext } from 'react';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';

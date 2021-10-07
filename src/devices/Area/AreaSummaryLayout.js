@@ -5,7 +5,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import DotLevel from 'components/DotLevel';
 import Light from 'devices/Light/Light';
@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => {
 export default function AreaLayout(props) {
 
     const classes = useStyles();
-    const { deviceStateByEndpointId, directive } = useContext(DataContext);
+    const { deviceStateByEndpointId, directive } = useContext(DeviceStateContext);
     const { isMobile } = useContext(LayoutContext);;
     const [ showDetail, setShowDetail ] = useState(false);
     //const area = deviceStateByEndpointId('logic:area:'+layout.props.name)

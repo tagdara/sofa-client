@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import GridSection from 'components/GridSection';
 import GridSearch from './GridSearch';
@@ -9,7 +9,7 @@ import CompositeDevice from './CompositeDevice';
 
 export default function DeviceLayout(props) {
 
-    const { devices, deviceStatesByCategory, deviceStates, controllers, directives } = useContext(DataContext);
+    const { devices, deviceStatesByCategory, deviceStates, controllers, directives } = useContext(DeviceStateContext);
     const [mode] = useState('all');
     const [limit, setLimit] = useState(50);
     const [nameFilter, setNameFilter] = useState('')

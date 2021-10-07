@@ -11,14 +11,14 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 import SofaAvatarSlider from 'components//SofaAvatarSlider'
 import CardBase from 'components/CardBase'
 import ModeLines from 'devices/Mode/ModeLines'
 import SofaListItem from 'components/SofaListItem'
 import ToggleAvatar from 'components/ToggleAvatar';
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 const useStyles = makeStyles(theme => {
     return {      

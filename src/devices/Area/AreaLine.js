@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 import DotLevel from 'components/DotLevel';
 

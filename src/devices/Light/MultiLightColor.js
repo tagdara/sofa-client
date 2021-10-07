@@ -8,7 +8,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 
 import { SketchPicker } from 'react-color'
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 const useStyles = makeStyles({
         

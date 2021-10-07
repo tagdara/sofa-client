@@ -8,7 +8,7 @@ import ColorLensIcon from '@material-ui/icons/ColorLens';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
 import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
 
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import GridSection from 'components/GridSection';
 import Light from 'devices/Light/Light'
@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 export default function AreaLayoutLights(props) {
 
     const classes = useStyles();
-    const { cardReady, registerEndpointIds, devices, deviceStates, unregisterDevices, directive } = useContext(DataContext);
+    const { cardReady, registerEndpointIds, devices, deviceStates, unregisterDevices, directive } = useContext(DeviceStateContext);
     const [ brightControl, setBrightControl ] = useState(false)
     const [ tempControl, setTempControl ] = useState(false)
     const [ colorControl, setColorControl ] = useState(false);

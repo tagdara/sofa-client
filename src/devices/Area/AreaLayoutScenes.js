@@ -5,7 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import RemoveIcon from '@material-ui/icons/Remove';
 import CameraIcon from '@material-ui/icons/Camera';
 
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 import GridSection from 'components/GridSection';
 import Scene from 'devices/Scene/Scene'
 import SceneAdd from 'devices/Scene/SceneAdd'
@@ -32,7 +32,7 @@ const useStyles = makeStyles({
 export default function AreaLayoutScenes(props) {
 
     const classes = useStyles();
-    const { cardReady, registerEndpointIds, devices, unregisterDevices, directive } = useContext(DataContext);
+    const { cardReady, registerEndpointIds, devices, unregisterDevices, directive } = useContext(DeviceStateContext);
 
     useEffect(() => {
         registerEndpointIds(props.scenes,'AreaLayoutScenes')

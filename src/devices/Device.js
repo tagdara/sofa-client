@@ -1,46 +1,53 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import Switch from '@material-ui/core/Switch';
 import TuneIcon from '@material-ui/icons/Tune';
-import CardBase from 'components/CardBase';
-import SofaListItem from 'components/SofaListItem';
 
-export default function Device(props) {
- 
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+
+import SofaItem from 'components/SofaItem';
+
+const Device = React.memo(props => {
+
+
+    useEffect(() => {
+        props.addEndpointIds('id', props.endpointId, 'Device-'+props.endpointId)
+        return function cleanup() {
+            props.unregisterDevices('Device-'+props.endpointId);
+        };
+    // eslint-disable-next-line 
+    }, []) 
+    
+    if (!props.deviceState || !props.deviceState[props.endpointId]) { return null }
+
+    const deviceState = props.deviceState[props.endpointId]
+    const device = props.devices[props.endpointId]
+
     function handlePowerChange(event) {
-        props.directive(props.device.endpointId, "PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
+        props.directive(props.endpointId, "PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
     }; 
 
-    function nestLine(item) {
-        if (props.deviceState.PowerController.powerState) {
-            if (props.nested) { return item }
-            return <CardBase>{item}</CardBase>
-        }
-        return null
-    }
-    
     function energy() {
-        if (props.deviceState.hasOwnProperty('Energy Level')) {
-            return props.deviceState["Energy Level"].mode.value
+        if (deviceState.hasOwnProperty('Energy Level')) {
+            return deviceState["Energy Level"].mode.value
         }
 
-        if (props.deviceState.hasOwnProperty('EnergySensor')) {
-            return props.deviceState.EnergySensor.power.value+"W"
+        if (deviceState.hasOwnProperty('EnergySensor')) {
+            return deviceState.EnergySensor.power.value+"W"
         }
         return null
     }
 
-    return (
-        nestLine(
-                <SofaListItem   avatarBackground={false} avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? 'on' : 'off'} noPad={true}
-                                avatar={ props.icon ? props.icon : <TuneIcon />}
-                                primary={props.device.friendlyName} secondary={ energy()}
-                                secondaryActions={
-                                    <Switch color="primary" checked={props.deviceState.PowerController.powerState.value==='ON'} onChange={handlePowerChange} />
-                                }
+    return (    <SofaItem avatarBackground={false} avatarState={ deviceState.PowerController.powerState.value === 'ON' ? 'on' : 'off' } noPad={true}
+                    avatar={ props.icon ? props.icon : <TuneIcon />} nested={ props.nested }
+                    primary={ device.friendlyName } secondary={ energy()}
+                    secondaryActions={
+                        <Switch color="primary" checked={ deviceState.PowerController.powerState.value === 'ON' } onChange={ handlePowerChange } />
+                    }
                 />
-        )
-    );
-}
+    )
+}, deviceStatesAreEqual);
+
+export default dataFilter(Device);
 
 

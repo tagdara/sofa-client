@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Button from '@material-ui/core/Button';
@@ -7,6 +7,8 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RemoveIcon from '@material-ui/icons/Remove';
 import TonalityIcon from '@material-ui/icons/Tonality';
+
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 import SofaListItem from 'components/SofaListItem';
 
@@ -29,17 +31,27 @@ const useStyles = makeStyles(theme => {
     }
 })
 
-export default function Shade(props) {
+const Shade = React.memo(props => {
 
     const classes = useStyles();
 
+    useEffect(() => {
+        props.addEndpointIds('id', props.endpointId, 'Shade-'+props.endpointId)
+        return function cleanup() {
+            props.unregisterDevices('Shade-'+props.endpointId);
+        };
+    // eslint-disable-next-line 
+    }, [])
+
+    if (!props.deviceState || !props.deviceState[props.endpointId]) { return null }
+
     function handlePress(modechoice) {
-        props.directive(props.device.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Blinds.Position')
+        props.directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Blinds.Position')
     }
     
     return ( 
         <SofaListItem   inList={props.inList} avatarBackground={false} avatarState={ 'off' } avatar={ props.icon ? props.icon : <TonalityIcon />}
-                        primary={props.device.friendlyName}>
+                        primary={props.devices[props.endpointId].friendlyName}>
 
             <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >
                 <Button className={classes.button} onClick={ () => handlePress('Position.Down') }><ExpandMoreIcon /></Button>
@@ -48,7 +60,9 @@ export default function Shade(props) {
             </ButtonGroup>
         </SofaListItem>
     );
-}
+}, deviceStatesAreEqual);
+
+export default dataFilter(Shade);
 
 Shade.defaultProps ={
     inList: false,

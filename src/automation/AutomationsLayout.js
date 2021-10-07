@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 import { NetworkContext } from 'network/NetworkProvider';
 import { UserContext } from './user/UserProvider';
 
@@ -20,7 +20,7 @@ import GridSection from 'components/GridSection';
 export function AutomationsLayout(props) {
 
     const { selectPage } = useContext(LayoutContext);
-    const { directive, deviceState, getEndpointIdsByCategory, unregisterDevices } = useContext(DataContext);
+    const { directive, deviceState, getEndpointIdsByCategory, unregisterDevices } = useContext(DeviceStateContext);
     const { getJSON, postJSON } = useContext(NetworkContext);
     const { makeFavorite, isFavorite} = useContext(UserContext)
     const [ automations, setAutomations ] = useState([])

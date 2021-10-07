@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useContext } from 'react';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
 import GridItem from 'components/GridItem';
@@ -8,7 +8,7 @@ import GridItem from 'components/GridItem';
 
 export default function PlayerInput(props) {
 
-    const { deviceState, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DataContext);
+    const { deviceState, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DeviceStateContext);
     const [mca, setMca]=useState(undefined)
 
     useEffect(() => {

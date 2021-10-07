@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import SofaListItem from 'components/SofaListItem';
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 const ComputerSummary = React.memo(props => {
 

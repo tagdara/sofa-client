@@ -10,7 +10,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import AirplayIcon from '@material-ui/icons/Airplay';
 
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 import CardBase from 'components/CardBase'
 import SofaListItem from 'components/SofaListItem'
 

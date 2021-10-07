@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button"
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -15,6 +15,7 @@ const useStyles = makeStyles(theme => {
             marginRight: 10,
         },
         button: {
+            minHeight: 48,
             display: "flex",
             justifyContent: "flex-start"
         }
@@ -61,7 +62,7 @@ const LightButton = React.memo(props => {
     const on = lightState.PowerController.powerState.value === 'ON'
 
     return (
-        <Button fullWidth variant={ on ? "contained" : "outlined" } color={on ? "primary" : undefined } 
+        <Button fullWidth variant={ "outlined" } color={on ? "primary" : undefined } 
                 startIcon={startIcon()} className={classes.button} onClick = {togglePower}>
             { name }
         </Button>

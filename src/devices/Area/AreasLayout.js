@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import GridSection from 'components/GridSection';
 import AreaSummary from '../archive/AreaSummary';
@@ -9,7 +9,7 @@ import AreaSummary from '../archive/AreaSummary';
 export default function AreasLayout(props) {
     
     const { applyLayout } = useContext(LayoutContext);
-    const { setArea, deviceStatesByCategory } = useContext(DataContext);
+    const { setArea, deviceStatesByCategory } = useContext(DeviceStateContext);
     const areas = deviceStatesByCategory('AREA')
 
     function selectArea(name) {

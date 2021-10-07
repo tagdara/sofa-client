@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 import IconButton from '@material-ui/core/IconButton';
 import AutomationAction from "./automation/AutomationAction"

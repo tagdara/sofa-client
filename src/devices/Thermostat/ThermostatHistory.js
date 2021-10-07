@@ -13,7 +13,7 @@ import 'moment-timezone';
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Text } from 'recharts';
 
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 import GridSection from 'components/GridSection';
 import GridItem from "components/GridItem";
 

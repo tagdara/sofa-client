@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import Speaker from 'devices/Speaker/Speaker';
 
 const SpeakerList = React.memo(props => {

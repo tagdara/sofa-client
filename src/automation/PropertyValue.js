@@ -1,6 +1,6 @@
 import React, { Suspense, useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';

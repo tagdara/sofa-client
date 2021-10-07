@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -25,7 +25,7 @@ const useStyles = makeStyles({
 export default function Sprinkler(props) {
 
     const classes = useStyles();
-    const { deviceByEndpointId } = useContext(DataContext);
+    const { deviceByEndpointId } = useContext(DeviceStateContext);
 
     function handlePress(commandName) {
         var command = props.commands[commandName]

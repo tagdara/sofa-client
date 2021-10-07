@@ -12,8 +12,8 @@ import Select from '@material-ui/core/Select';
 import TvIcon from '@material-ui/icons/Tv';
 import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import { DeviceContext } from 'context/DeviceContext';
 
 import DotAvatar from 'components/DotAvatar'
 import CardBase from 'components/CardBase'
@@ -53,8 +53,7 @@ const Television = React.memo(props => {
     const classes = useStyles();
     const [ showRemote, setShowRemote ] = useState(false)
     const [ showDetail, setShowDetail ] = useState(false);
-    const { getInputs } = useContext(DeviceContext);
-    const inputs = getInputs(props.endpointId)  
+    const { getInputs } = useContext(DeviceContext);  
     const tv = props.deviceState[props.endpointId]
 
     useEffect(() => {
@@ -68,6 +67,9 @@ const Television = React.memo(props => {
     if (!tv) { 
         return <PlaceholderCard count={ 1 } />
     }
+
+    const inputs = getInputs(props.endpointId)     
+    // const on = tv.PowerController.powerState.value === "ON"
 
     function handleVolumeChange(event) {
         props.directive(props.endpointId,"SpeakerController", 'SetVolume', { "volume" : event} )

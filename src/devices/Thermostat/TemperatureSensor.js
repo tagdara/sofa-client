@@ -29,7 +29,7 @@ export default function TemperatureSensor(props) {
     
     const classes = useStyles();
     const { selectPage } = useContext(LayoutContext);
-    const [showDetail, setShowDetail] = useState(false)
+    const [ showDetail, setShowDetail ] = useState(false)
     
     function tempColor(temp) {
         if (!temp) { return 'disabled' }

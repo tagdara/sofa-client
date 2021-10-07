@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect }from 'react';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import CardBase from 'components/CardBase'
 import SofaListItem from 'components/SofaListItem';
@@ -7,7 +7,7 @@ import PlaceholderCard from 'layout/PlaceholderCard';
 
 export default function Forecast(props) { 
     
-    const { getModes, cardReady, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DataContext);
+    const { getModes, cardReady, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DeviceStateContext);
     const [ device, setDevice ]=useState(undefined)
 
     useEffect(() => {

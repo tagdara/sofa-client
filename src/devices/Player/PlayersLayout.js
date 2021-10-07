@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 import { UserContext } from './user/UserProvider';
 
 import GridSection from 'components/GridSection';
@@ -10,7 +10,7 @@ import PlayerBase from "./player/PlayerBase";
 export default function PlayersLayout(props) {
     const { goBack } = useContext(LayoutContext);
     const { chooseUserPlayer } = useContext(UserContext);
-    const { deviceStatesByCategory } = useContext(DataContext);
+    const { deviceStatesByCategory } = useContext(DeviceStateContext);
     const speakers = deviceStatesByCategory('SPEAKER')
 
     function changePlayerHome(newplayer) {

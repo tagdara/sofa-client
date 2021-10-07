@@ -1,6 +1,6 @@
 import React, {  useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 import ListItem from '@material-ui/core/ListItem';
 import AutomationInput from './AutomationInput';
 import Grid from '@material-ui/core/Grid';

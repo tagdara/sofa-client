@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import DialogContent from '@material-ui/core/DialogContent';
 
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 import GridSearch from 'components/GridSearch';
 import GridItem from 'components/GridItem';

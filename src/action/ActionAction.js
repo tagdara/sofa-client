@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 import AutomationDevice from '../automation/AutomationDevice';
 import PropertyValue from '../automation/PropertyValue';

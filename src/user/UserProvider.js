@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext, createContext} from 'react';
 import { NetworkContext } from 'network/NetworkProvider';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 export const UserContext = createContext();
 

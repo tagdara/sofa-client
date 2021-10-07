@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 import SofaAvatarSlider from 'components/SofaAvatarSlider'
 

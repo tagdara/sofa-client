@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect } from 'react';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import ButtonItem from 'components/ButtonItem';
 import Light from './light/Light';
@@ -10,7 +10,7 @@ import CardBase from 'components/CardBase';
 
 export default function SceneLayout(props) {
 
-    const { saveSceneDetails, getSceneDetails, deviceStateByEndpointId } = useContext(DataContext);
+    const { saveSceneDetails, getSceneDetails, deviceStateByEndpointId } = useContext(DeviceStateContext);
     const [ sceneDetails, setSceneDetails ] = useState(undefined)
     const [ sceneLights, setSceneLights ] = useState([])
     

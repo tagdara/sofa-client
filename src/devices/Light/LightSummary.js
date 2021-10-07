@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
 import SofaListItem from 'components/SofaListItem';

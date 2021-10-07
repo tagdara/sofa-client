@@ -14,9 +14,9 @@ export default function SofaThemeProvider(props) {
     const { chooseUserTheme, userTheme } = useContext(UserContext);
     
     useEffect(() => {
-        var d = new Date();
-        var n = d.getHours();
-        if (userTheme==='dark' || (n>17 || n<8)) {
+        var pref = getPreferredColorScheme()
+        if (pref === "dark") {
+        //if (userTheme==='dark') {
             setColorScheme('dark')
             setSofaTheme(darkTheme)
         } else {
@@ -25,7 +25,18 @@ export default function SofaThemeProvider(props) {
         }
         
     }, [userTheme]);
-    
+
+    function getPreferredColorScheme() {
+        if (window.matchMedia) {
+            if(window.matchMedia('(prefers-color-scheme: dark)').matches){
+                return 'dark';
+            } else {
+                return 'light';
+            }
+        }
+        return 'light';
+      }
+
     function getTheme() {
         if (sofaTheme.hasOwnProperty('palette')) { 
             return sofaTheme 

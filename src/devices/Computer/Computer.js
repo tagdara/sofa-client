@@ -1,17 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import SofaListItem from 'components/SofaListItem';
+import React, {useEffect } from 'react';
+import { makeStyles } from '@material-ui/styles';
 
 import IconButton from '@material-ui/core/IconButton';
+
+import MouseIcon from '@material-ui/icons/Mouse';
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
-import SofaAvatarSlider from 'components/SofaAvatarSlider'
 import NightsStayIcon from '@material-ui/icons/NightsStay';
-import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
-import { makeStyles } from '@material-ui/styles';
+
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import SofaListItem from 'components/SofaListItem';
 import CardBase from 'components/CardBase';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import MouseIcon from '@material-ui/icons/Mouse';
+import ComputerWol from 'devices/Computer/ComputerWol';
+import ComputerVolume from 'devices/Computer/ComputerVolume';
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -24,135 +26,99 @@ const useStyles = makeStyles(theme => {
     }
 })
 
-export default function Computer(props) {
-    
+const Computer = React.memo(props => {
+
     const classes = useStyles();
-    const [wolFlip, setWolFlip]=useState(false)
-    
+
     useEffect(() => {
-        try {
-            if (props.deviceState.PowerController.powerState.value==='ON') {
-                setWolFlip(false)
-            }
-        }
-        
-        catch {}
-        
-    // eslint-disable-next-line     
-    }, [ wolFlip, props.deviceState ])
+        props.addEndpointIds('id', props.endpointId, 'Computer-'+props.endpointId)
+        return function cleanup() {
+            props.unregisterDevices('Computer-'+props.endpointId);
+        };
+    // eslint-disable-next-line 
+    }, [])
 
+    const name = props.devices && props.devices[props.endpointId] ? props.devices[props.endpointId].friendlyName : "Unknown"
+
+    if (!props.deviceState || !props.deviceState[props.endpointId]) {
+        return  <CardBase >
+                    <SofaListItem   inList={true} avatarBackground={false} avatarState={ 'off'}
+                                    avatar={ <DesktopWindowsIcon />}
+                                    primary={ name }
+                                    secondaryActions={
+                                        <ComputerWol endpointId={props.endpointId} directive={props.directive} />
+                                    }
+                    />
+                </CardBase>   
+    }    
+
+    const computerState = props.deviceState[props.endpointId]
+    const speakerController = computerState.SpeakerController
+    const on = computerState.PowerController ? computerState.PowerController.powerState.value === "ON" : false
     
-    function turnOn() {
-        setWolFlip(true)
-        props.directive(props.device.endpointId, "PowerController", "TurnOn", {}, {}, "")
-
-    }; 
-
     function turnOff() {
         props.directive(props.device.endpointId, "PowerController", "TurnOff", {}, {}, "")
     }; 
  
     function handleLockButton(event) {
-
         if (event) {
-            props.directive(props.device.endpointId, "LockController" , "Lock", {}, {}, "")
+            props.directive(props.endpointId, "LockController" , "Lock", {}, {}, "")
         } else {
-            props.directive(props.device.endpointId, "LockController" , "Unlock", {}, {}, "")
+            props.directive(props.endpointId, "LockController" , "Unlock", {}, {}, "")
         }
     }; 
 
     
-    function handleVolumeChange(event) {
-        props.directive(props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
-    }; 
-
-    function handleMuteChange(event) {
-        props.directive(props.device.endpointId, 'SpeakerController', 'SetMute', { "mute" : !props.deviceState.SpeakerController.mute.value } )
-    }; 
-    
     function secondaryText() {
-        if (props.deviceState.PowerController.powerState.value==='ON' && props.deviceState.EndpointHealth.connectivity.deepvalue==='OK') {
-            if (props.deviceState.LockController.lockState.value==='LOCKED') { return 'Locked' }
+        if (computerState.PowerController.powerState.value==='ON' && computerState.EndpointHealth.connectivity.deepvalue==='OK') {
+            if (computerState.LockController.lockState.value==='LOCKED') { return 'Locked' }
             return 'Unlocked'
         } 
         return 'Powered off'
     }
     
     function openWebmouse() {
-        var newurl="https://"+props.device.friendlyName+".dayton.tech:9998"
+        var newurl="https://"+name+".dayton.tech:9998"
         var safariWindow = window.open();
         safariWindow.location.href = newurl
         //window.open(newurl,'_mouse');
     }
-    
+
     return (
-        props.deviceState ?
-            <CardBase >
-                <SofaListItem   inList={true} avatarBackground={false} avatarState={ (props.deviceState.PowerController.powerState.value==='ON' && props.deviceState.EndpointHealth.connectivity.deepvalue==='OK') ? 'on' : 'off'}
-                                avatar={ <DesktopWindowsIcon />}
-                                primary={props.device.friendlyName} secondary={ secondaryText() }
-                                secondaryActions={
+        <CardBase >
+            <SofaListItem   inList={true} avatarBackground={false} 
+                            avatarState={ (computerState.PowerController.powerState.value==='ON' && computerState.EndpointHealth.connectivity.deepvalue==='OK') ? 'on' : 'off'}
+                            avatar={ <DesktopWindowsIcon />}
+                            primary={ name } secondary={ secondaryText() }
+                            secondaryActions={
+                                <>
+                                { (computerState.PowerController.powerState.value==='ON' && computerState.EndpointHealth.connectivity.deepvalue==='OK') ?
                                     <>
-                                    { (props.deviceState.PowerController.powerState.value==='ON' && props.deviceState.EndpointHealth.connectivity.deepvalue==='OK') ?
-                                        <>
-                                            <IconButton size={"small"} className={classes.middleButton} onClick={openWebmouse} >
-                                                <MouseIcon />
+                                        <IconButton size={"small"} className={classes.middleButton} onClick={openWebmouse} >
+                                            <MouseIcon />
+                                        </IconButton>  
+                                        { computerState.LockController.lockState.value==='LOCKED' ?
+                                            <IconButton size={"small"} className={classes.middleButton} onClick={ () => handleLockButton(false) } >
+                                                <LockOpenIcon />
+                                            </IconButton>    
+                                            :
+                                            <IconButton size={"small"} className={classes.middleButton} onClick={ () => handleLockButton(true) } >
+                                                <LockIcon />
                                             </IconButton>  
-                                            { props.deviceState.LockController.lockState.value==='LOCKED' ?
-                                                <IconButton size={"small"} className={classes.middleButton} onClick={ () => handleLockButton(false) } >
-                                                    <LockOpenIcon />
-                                                </IconButton>    
-                                                :
-                                                <IconButton size={"small"} className={classes.middleButton} onClick={ () => handleLockButton(true) } >
-                                                    <LockIcon />
-                                                </IconButton>  
-                                            }
-                                            <IconButton size={"small"} onClick={ () => turnOff() } >
-                                                <NightsStayIcon />
-                                            </IconButton>        
-                                        </>
-                                    :
-                                        <>
-                                        { wolFlip ? 
-                                        <CircularProgress size={24} onClick={ () => turnOn() } />
-                                        :
-                                        <IconButton size={"small"} onClick={ () => turnOn() } >
-                                            <WifiTetheringIcon />
-                                        </IconButton>  
                                         }
-                                        </>
-                                    }
+                                        <IconButton size={"small"} onClick={ () => turnOff() } >
+                                            <NightsStayIcon />
+                                        </IconButton>        
                                     </>
-                                }
-                />
-                { (props.deviceState.PowerController.powerState.value==='ON' && props.deviceState.EndpointHealth.connectivity.deepvalue==='OK') &&
-                    <SofaAvatarSlider   label={"Volume"} 
-                                        small={true} reverse={true} minWidth={64} 
-                                        value={props.deviceState.SpeakerController.volume.value}
-                                        change={handleVolumeChange} 
-                                        avatarClick={ () => handleMuteChange(!props.deviceState.SpeakerController.mute.value)} 
-                                        avatarState={ props.deviceState.SpeakerController.mute.value===false ? "on" : "off" }
-                                        disabled={ props.deviceState.PowerController.powerState.value==='OFF' }
-                    />
-                }
-            </CardBase>   
-        :
-            <CardBase >
-                <SofaListItem   inList={true} avatarBackground={false} avatarState={ 'off'}
-                                avatar={ <DesktopWindowsIcon />}
-                                primary={props.device.friendlyName}
-                                secondaryActions={
-                                        <>
-                                        { wolFlip ? 
-                                        <CircularProgress size={24} className={classes.spinner} onClick={ () => turnOn() } />
-                                        :
-                                        <IconButton size={"small"} onClick={ () => turnOn() } >
-                                            <WifiTetheringIcon />
-                                        </IconButton>  
-                                        }
-                                        </>
-                                }
-                />
-            </CardBase>   
+                                    :
+                                    <ComputerWol endpointId={props.endpointId} directive={props.directive} />
+                                    }
+                                </>
+                            }
+            />
+            { (speakerController && on ) && <ComputerVolume speakerController ={ speakerController } /> }
+        </CardBase>   
     );
-}
+}, deviceStatesAreEqual);
+
+export default dataFilter(Computer);

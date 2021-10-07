@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 import PlayerVolume from './PlayerVolume';
 
 import PlaceholderCard from 'layout/PlaceholderCard';
 
 export default function PlayerLinks(props) {
     
-    const { registerEndpointIds, cardReady, devices, deviceState, directive, unregisterDevices } = useContext(DataContext);
+    const { registerEndpointIds, cardReady, devices, deviceState, directive, unregisterDevices } = useContext(DeviceStateContext);
     const [speakers, setSpeakers]=useState([])
     
     useEffect(() => {

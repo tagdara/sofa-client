@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
@@ -28,7 +28,7 @@ export default function PlayerCard(props) {
     
     const classes = useStyles();
     const { selectPage } = useContext(LayoutContext);
-    const { cardReady, devices, deviceState, getEndpointIdsByCategory, getEndpointIdsByFriendlyName, directive, unregisterDevices } = useContext(DataContext);
+    const { cardReady, devices, deviceState, getEndpointIdsByCategory, getEndpointIdsByFriendlyName, directive, unregisterDevices } = useContext(DeviceStateContext);
 
     const [coverView, setCoverView] = useState(false);
     var coverDefault = undefined

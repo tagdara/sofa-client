@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import SofaApp from './SofaApp';
+import Sofa from './Sofa';
 import "typeface-roboto";
 
 import * as serviceWorker from './serviceWorker';
 
-ReactDOM.render(<SofaApp />, document.getElementById('root'));
+ReactDOM.render(<Sofa />, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

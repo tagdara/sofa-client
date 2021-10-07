@@ -1,5 +1,5 @@
 import React, { useContext}  from 'react';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 import { makeStyles } from '@material-ui/styles';
 
 import List from '@material-ui/core/List';

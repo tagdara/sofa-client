@@ -5,13 +5,10 @@ import Button from "@material-ui/core/Button"
 import Avatar from "@material-ui/core/Avatar"
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 const useStyles = makeStyles(theme => {
     return {        
-        listItem: {
-            padding: "8px 8px",
-        },
         working: {
             marginLeft: 4,
         },
@@ -33,6 +30,7 @@ const useStyles = makeStyles(theme => {
             marginRight: 10,
         },
         button: {
+            minHeight: 48,
             display: "flex",
             justifyContent: "flex-start"
         }
@@ -106,7 +104,7 @@ const SceneButton = React.memo(props => {
 
 
     return (
-        <Button fullWidth variant={active ? "contained" : "outlined"} color={active ? "primary" : undefined } startIcon={startIcon()} 
+        <Button fullWidth variant={"outlined"} color={active ? "primary" : undefined } startIcon={startIcon()} 
                 className={classes.button} onClick={runScene}>
             { name }
         </Button>

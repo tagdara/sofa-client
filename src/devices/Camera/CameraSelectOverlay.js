@@ -8,6 +8,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import VideocamIcon from '@material-ui/icons/Videocam';
+import CameraQR from 'devices/Camera/CameraQR';
 
 const useStyles = makeStyles(theme => {
     
@@ -41,7 +42,7 @@ export default function CameraSelectOverlay(props) {
     const { selectPage } = useContext(LayoutContext);
 
     return (
-        <React.Fragment>
+        <>
             { props.prev &&
                 <IconButton color="primary" className={classes.prevbutton} onClick={ () => props.prev()}>
                     <ChevronLeftIcon />
@@ -60,6 +61,9 @@ export default function CameraSelectOverlay(props) {
             <IconButton color="primary" className={classes.videoButton} onClick={ () => props.goLive(true) } >
                 <VideocamIcon />
             </IconButton>
-        </React.Fragment>
+            { ( props.showQR && props.endpointId) &&
+                <CameraQR overlay={true} endpointId={props.endpointId} />
+            } 
+        </>
     );
 }

@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => {
 export default function ThermostatSummary(props) { 
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStateByFriendlyName } = useContext(DataContext);
+    const { deviceStateByFriendlyName } = useContext(DeviceStateContext);
     const classes = useStyles();
 
     const [device, setDevice]=useState(undefined)

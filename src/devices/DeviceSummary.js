@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import Button from '@material-ui/core/Button';
 import GridItem from 'components/GridItem';
@@ -26,7 +26,7 @@ export default function DeviceSummary(props) {
     const [onCount, setOnCount] = useState(0)
     
     const { applyLayoutCard } = useContext(LayoutContext);
-    const { deviceStatesByCategory } = useContext(DataContext);
+    const { deviceStatesByCategory } = useContext(DeviceStateContext);
     const switches = deviceStatesByCategory('SWITCH')
     
     useEffect(() => {

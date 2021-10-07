@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useState, useEffect } from 'react';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 import { LayoutContext } from 'layout/LayoutProvider';
 
 import {makeStyles, withStyles } from '@material-ui/styles';

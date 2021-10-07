@@ -8,7 +8,7 @@ import Drawer from '@material-ui/core/Drawer';
 import ChevronRightIcon from '@material-ui/icons/ChevronLeft';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import RecentLayout from 'pages/RecentLayout';
+import RecentLayout from 'layout/pages/RecentLayout';
 
 import { Scrollbars } from 'react-custom-scrollbars';
 

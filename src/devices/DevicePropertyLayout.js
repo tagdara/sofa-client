@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import TextField from '@material-ui/core/TextField';
 import ListItem from '@material-ui/core/ListItem';
@@ -16,7 +16,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 export default function DevicePropertyLayout(props) {
 
     const { applyLayoutCard, returnPage } = useContext(LayoutContext);
-    const { devices, devicesByCategory, controllers, directives } = useContext(DataContext);
+    const { devices, devicesByCategory, controllers, directives } = useContext(DeviceStateContext);
     const [mode] = useState('property');
     const [searchTerm, setSearchTerm] = useState('');
 

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 import AutomationDevice from './AutomationDevice';
 import AutomationMove from './AutomationMove';

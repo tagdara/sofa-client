@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import ChristmasTreeIcon from 'resources/ChristmasTreeIcon';
 
-import { deviceStatesAreEqual, dataFilter } from 'DataContext/DataFilter'
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles(theme => {

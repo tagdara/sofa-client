@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { DeviceContext } from 'DataContext/DeviceProvider';
+import { DeviceContext } from 'context/DeviceContext';
 
 import Moment from 'react-moment';
 import IconButton from '@material-ui/core/IconButton';

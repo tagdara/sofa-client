@@ -3,13 +3,12 @@ import { NetworkContext } from 'network/NetworkProvider';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import ErrorBoundary from 'error/ErrorBoundary';
 
-
 export const stackModuleReducer = (state, data) => {
 
     function addSuspenseModule(modulepath) {
         try {
             return ( React.lazy(() => 
-                        import("StackCards/"+modulepath)
+                        import("layout/cards/"+modulepath)
                             .catch(err => {
                                 console.error('Error during loading module: ' + err)
                             })
@@ -31,7 +30,6 @@ export const stackModuleReducer = (state, data) => {
         })
         return newmodules
     }
-    
     return addModules(data)
 }
 
@@ -40,7 +38,7 @@ export const moduleReducer = (state, data) => {
     function addSuspenseModule(modulepath) {
         try {
             return ( React.lazy(() => 
-                        import("pages/"+modulepath)
+                        import("layout/pages/"+modulepath)
                             .catch(err => {
                                 console.error('Error during loading module: ' + err)
                             })

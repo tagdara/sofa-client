@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect }from 'react';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 import ListItem from '@material-ui/core/ListItem';
 import { makeStyles } from '@material-ui/styles';
 
@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => {
 export default function Weather(props) { 
 
     const classes = useStyles();
-    const { getModes, cardReady, devices, deviceState, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices, modeDisplayName } = useContext(DataContext);
+    const { getModes, cardReady, devices, deviceState, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices, modeDisplayName } = useContext(DeviceStateContext);
     const [ currentDevice, setCurrentDevice ]=useState(undefined)
     const [ forecastDevice, setForecastDevice ]=useState(undefined)
     const [ indoorAQ, setIndoorAQ ]=useState(undefined)

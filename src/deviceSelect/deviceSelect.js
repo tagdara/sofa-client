@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 import { makeStyles } from '@material-ui/styles';
 
 import List from '@material-ui/core/List';
@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 export default function DeviceSelect(props) {
 
     const [filter, setFilter] = useState('');
-    const { controllers, directives } = useContext(DataContext);
+    const { controllers, directives } = useContext(DeviceStateContext);
     const classes = useStyles();
 
     function filterDevices(mode, filter, devices) {

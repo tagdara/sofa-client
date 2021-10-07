@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DataContext } from 'DataContext/DataProvider';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import GridBreak from './GridBreak';
 import DeviceExpand from './deviceSelect/deviceExpand';
@@ -8,7 +8,7 @@ import DeviceExpand from './deviceSelect/deviceExpand';
 export default function DeviceDirectiveLayout(props) {
 
     const { applyLayoutCard, returnPage } = useContext(LayoutContext);
-    const { devices, devicesByCategory, controllers, directives } = useContext(DataContext);
+    const { devices, devicesByCategory, controllers, directives } = useContext(DeviceStateContext);
     const [mode] = useState('action');
     const [limit, setLimit] = useState(20);
 

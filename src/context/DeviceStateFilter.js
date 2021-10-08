@@ -4,7 +4,9 @@ import { DeviceStateContext } from './DeviceStateContext';
 import { DeviceContext } from './DeviceContext';
 
 export const deviceStatesAreEqual = (prevProps, nextProps) => {
+
     const skips = ['deviceState', 'addEndpointIds', 'directive']
+    
     if (prevProps && nextProps) {
         for (var prop in nextProps) {
             if (!skips.includes(prop)) {

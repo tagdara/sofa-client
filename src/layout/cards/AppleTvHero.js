@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 
 import { DeviceContext } from 'context/DeviceContext';
 
-import AppleTV from 'devices/AppleTV';
+import AppleTV from 'devices/AppleTV/AppleTV';
 import PlaceholderCard from 'layout/PlaceholderCard';
 
 export default function AppleTvHero(props) {

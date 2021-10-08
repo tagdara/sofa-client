@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => {
             backgroundColor: theme.palette.layer.card,
             width: "100%",
             alignItems: "flex-start",
+            borderRadius: 8,
         },
         border: {
             borderWidth: "thin",

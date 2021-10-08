@@ -8,6 +8,7 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { LayoutContext } from 'layout/LayoutProvider';
 
 import CardBase from 'components/CardBase';
+import Spacer from 'components/Spacer';
 import ComputerSummary from 'devices/Computer/ComputerSummary';
 import MonitorButtonGroup from 'devices/Computer/MonitorButtonGroup';
 import MatrixList from 'devices/Matrix/MatrixList';
@@ -39,6 +40,7 @@ export default function ComputerHero(props) {
             <ComputerSummary outlets={computerPlugs} onClick={ () => selectPage('ComputerLayout') } />
             <ListItem>
                 <MonitorButtonGroup buttonLayout={buttonLayout} />
+                <Spacer />
                 <IconButton size={"small"} onClick = { ()=> setExpandMonitors(!expandMonitors) }>{ expandMonitors ? <ExpandLessIcon/> : <ExpandMoreIcon />}</IconButton>
             </ListItem>
             { expandMonitors &&

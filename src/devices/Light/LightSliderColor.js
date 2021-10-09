@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import LensIcon from '@material-ui/icons/Lens';
 
 import { SketchPicker } from 'react-color'
-
+import LightPropertyPlaceholder from 'devices/Light/LightPropertyPlaceholder';
 
 const useStyles = makeStyles({
         
@@ -73,8 +73,11 @@ export default function LightSliderColor(props) {
     const [openDialog, setOpenDialog] = useState(false);
     
     useEffect(() => {
-        setColor(sb2sl(props.deviceState.ColorController.color.value))
-    }, [props.deviceState.ColorController.color.value]);
+        try {
+            setColor(sb2sl(props.deviceState.ColorController.color.value))
+        }
+        catch {}
+    }, [ props.deviceState ]);
 
     function gethsl(sl) {
         if (sl) {
@@ -104,6 +107,13 @@ export default function LightSliderColor(props) {
         var sendsb=sl2sb(color)
         props.directive(props.device.endpointId, 'ColorController', 'SetColor', { "color" : sendsb }, {})
         setOpenDialog(false)
+    }
+
+    if (props.hide || !props.deviceState || !props.deviceState.BrightnessController || !props.deviceState.ColorController ) {
+        if (props.placeholder) {
+            return <LightPropertyPlaceholder />
+        }
+        return null
     }
 
     return (

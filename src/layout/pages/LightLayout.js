@@ -31,11 +31,12 @@ const useStyles = makeStyles({
         width: 18,
     }
 });
+
 const LightLayout = props => {
 
     const classes = useStyles();
-    const { devicesByCategory } = useContext(DeviceContext);
-    const lights = devicesByCategory('LIGHT')
+    const { endpointIdsByCategory } = useContext(DeviceContext);
+    const lights = endpointIdsByCategory('LIGHT')
     const [filter, setFilter] = useState(props.filter);
     const [brightControl, setBrightControl] = useState(false)
     const [tempControl, setTempControl] = useState(false)
@@ -64,8 +65,10 @@ const LightLayout = props => {
                     </>
                 }
         >
-            { lights.map((device) =>
-                <Light  key={ device.endpointId } endpointId={device.endpointId} brightControl={brightControl} tempControl={tempControl} colorControl={colorControl} filter={filter} />
+            { lights.map( endpointId =>
+                <Light  key={ endpointId } endpointId={endpointId} brightControl={brightControl} small={true}
+                        tempControl={tempControl} colorControl={colorControl} filter={filter} 
+                />
             )}
         </GridSection>
     )

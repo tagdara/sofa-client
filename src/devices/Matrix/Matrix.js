@@ -7,13 +7,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 
 import TvIcon from '@material-ui/icons/Tv';
-
-import { nested } from 'components/Nested';
 import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import { DeviceContext } from 'context/DeviceContext';
 
 import ToggleAvatar from 'components/ToggleAvatar';
-
+import ItemBase from "components/ItemBase";
 
 const useStyles = makeStyles(theme => {
     
@@ -53,19 +51,21 @@ const Matrix = React.memo(props => {
     }; 
         
     return (
-        <ListItem className={classes.flex}>
-            <ToggleAvatar noback={true} avatarState={matrixState.InputController.input.value !== 'Blank' ? 'on': 'off'}><TvIcon /></ToggleAvatar>
-            <ListItemText className={classes.flex} primary={ name } />
-            <Select className={classes.select} displayEmpty 
-                    value={ matrixState.InputController.input.value ? matrixState.InputController.input.value : ""} 
-                    onChange={ (e) => handleInput(e, e.target.value) } >
-                { getInputs(matrixDevice).map(inp =>
-                    <MenuItem key={inp} value={inp}>{inp}</MenuItem>
-                )} 
-            </Select>
-        </ListItem>
+        <ItemBase itemType={props.itemType}>
+            <ListItem className={classes.flex}>
+                <ToggleAvatar noback={true} avatarState={matrixState.InputController.input.value !== 'Blank' ? 'on': 'off'}><TvIcon /></ToggleAvatar>
+                <ListItemText className={classes.flex} primary={ name } />
+                <Select className={classes.select} displayEmpty 
+                        value={ matrixState.InputController.input.value ? matrixState.InputController.input.value : ""} 
+                        onChange={ (e) => handleInput(e, e.target.value) } >
+                    { getInputs(matrixDevice).map(inp =>
+                        <MenuItem key={inp} value={inp}>{inp}</MenuItem>
+                    )} 
+                </Select>
+            </ListItem>
+        </ItemBase>
     );
 }, deviceStatesAreEqual);
 
-export default nested(dataFilter(Matrix));
+export default dataFilter(Matrix);
 

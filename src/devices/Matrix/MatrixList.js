@@ -25,7 +25,7 @@ export default function MatrixList(props) {
     return (
         <List className={classes.flex}>
             { matrix.map(device =>
-                <Matrix key={ device } endpointId={device} nested={true} />
+                <Matrix key={ device } endpointId={device} nested={true} itemType={"listItem"} />
             )}
         </List>
     )

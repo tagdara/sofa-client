@@ -12,6 +12,5 @@ export default function LightHero(props) {
         <CardBase >
             <LightSummary onClick={ ()=> selectPage('LightLayout') } />
         </CardBase>
-
     );
 }

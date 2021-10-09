@@ -9,10 +9,11 @@ import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'devices/Player/PlayerArtOverlayButtons';
-import CardBase from 'components/CardBase';
+import ItemBase from 'components/ItemBase';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import SofaListItem from 'components/SofaListItem';
 import SpeakerList from 'devices/Speaker/SpeakerList';
+import Spacer from 'components/Spacer';
 
 
 const JukeboxHero = React.memo(props => {
@@ -74,7 +75,7 @@ const JukeboxHero = React.memo(props => {
     }
 
     return (
-        <CardBase nopad={true} >
+        <ItemBase>
             { (isIdle() && !showIdle) ?
                 <SofaListItem   avatar={ jukeboxState.MusicController.art.value ? 
                                          <img height={64} width={64} src={serverurl + jukeboxState.MusicController.art.value} alt={"idle"} />
@@ -87,6 +88,7 @@ const JukeboxHero = React.memo(props => {
                                         <IconButton size={"small"} onClick={toggleSpeakerFilter}>
                                             <SpeakerIcon />
                                         </IconButton>
+                                        <Spacer width={8} />
                                         <IconButton size={"small"} onClick={openJukebox}>
                                             <QueueMusicIcon />
                                         </IconButton>
@@ -102,7 +104,7 @@ const JukeboxHero = React.memo(props => {
             }
             <SpeakerList filterOff={filterOff} />
 
-        </ CardBase >
+        </ ItemBase >
     );
 }, deviceStatesAreEqual);
 

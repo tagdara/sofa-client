@@ -115,6 +115,9 @@ const useStyles = makeStyles(theme => {
             //backgroundColor: theme.palette.primary.dark+"10",
             border: "solid 1px "+theme.palette.primary.dark+"30",
             margin: 1,
+        },
+        test: {
+            backgroundColor: "#F00",
         }
     }
 });
@@ -147,7 +150,7 @@ export default function CardBase(props) {
         if (sizerRef.current.parentNode.offsetWidth>=800) { return 4 }
         return 12
     }
-        
+
     return (
         <Grid item container xs={ detectWideParent() } onClick={props.onClick} ref={sizerRef}
             className={classes.outer}>
@@ -156,7 +159,7 @@ export default function CardBase(props) {
                     className={classNames( classes.content, 
                                             props.highlight && classes.highlight, 
                                             props.hover && classes.hover, 
-                                            props.noPad && classes.nopad
+                                            (props.small || props.noPad) && classes.nopad
                                         )}  >
                 <Grid item container className={ props.hasCollapse ? classes.collapseGrid : classes.paperGrid } >
                     {props.children}
@@ -168,6 +171,7 @@ export default function CardBase(props) {
 }
 
 CardBase.defaultProps = {
+    small: false,
     noPad: false,
     elevation: 0,
     wide: false,

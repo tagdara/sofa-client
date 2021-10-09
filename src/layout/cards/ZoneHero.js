@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
 
-import CardBase from 'components/CardBase';
+import ItemBase from 'components/ItemBase';
 import ZoneSummary from 'devices/Zone/ZoneSummary';
 
 export default function ZoneHero(props) {
@@ -9,8 +9,8 @@ export default function ZoneHero(props) {
     const { selectPage } = useContext(LayoutContext);
 
     return (
-        <CardBase >
+        <ItemBase >
             <ZoneSummary onClick={ ()=> selectPage('ZoneLayout') } />
-        </CardBase>
+        </ItemBase>
     );
 }

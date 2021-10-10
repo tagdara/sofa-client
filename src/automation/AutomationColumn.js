@@ -1,19 +1,21 @@
 import React, { useState, useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceContext } from 'context/DeviceContext';
 
 import IconButton from '@material-ui/core/IconButton';
-import AutomationAction from "./automation/AutomationAction"
-import AutomationCondition from "./automation/AutomationCondition"
-import AutomationTrigger from "./automation/AutomationTrigger"
-import AutomationSchedule from "./automation/automationSchedule"
 
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 
+import { LayoutContext } from 'layout/LayoutProvider';
+import { DeviceContext } from 'context/DeviceContext';
+
+import AutomationAction from "automation/AutomationAction"
+import AutomationCondition from "automation/AutomationCondition"
+import AutomationTrigger from "automation/AutomationTrigger"
+import AutomationSchedule from "automation/AutomationSchedule"
+
 import GridSection from 'components/GridSection';
-import ErrorBoundary from './ErrorBoundary'
+import ErrorBoundary from 'error/ErrorBoundary'
 
 export default function AutomationColumn(props) {
 

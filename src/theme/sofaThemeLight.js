@@ -21,7 +21,7 @@ export default createMuiTheme({
             selectButton: deepOrange[300],
             hover: deepOrange[100],
             hover2: "rgba(255, 87, 34, 0.1)",
-            card: "#efefef",
+            card: "#f6f6f6",
             area: "#ddd",
             header: "#e8e8e8",
         },

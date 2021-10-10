@@ -4,13 +4,10 @@ import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from 'layout/LayoutProvider';
 
 import Grid from '@material-ui/core/Grid';
-import Chip from '@material-ui/core/Chip';
 import Typography from '@material-ui/core/Typography';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-
 import ErrorBoundary from 'error/ErrorBoundary';
+import StackMoreButton from 'layout/StackMoreButton';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -18,14 +15,14 @@ const useStyles = makeStyles(theme => {
             overflowX: "hidden",
             overflowY: "hidden",
             alignContent: "start",
-            padding: "3px !important",
-            backgroundColor: theme.palette.layer.section,
+            padding: "4px !important",
+            //border: "1px solid "+ theme.palette.layer.section,
+            //backgroundColor: theme.palette.layer.section,
             //display: "flex",
             borderRadius: "4px 4px 4px 4px",
-            border: "1px solid "+theme.palette.background.default,
+            //border: "1px solid "+theme.palette.background.default,
         },
         title: {
-            padding: 8,
             display: "flex",
             flexGrow: 2,
             whiteSpace: "nowrap",
@@ -33,6 +30,8 @@ const useStyles = makeStyles(theme => {
         pageHeader: {
             width: "100%",
             display: "flex",
+            alignItems: "end",
+            padding: 6,
         },
 
         gridColumn: {
@@ -71,7 +70,7 @@ const useStyles = makeStyles(theme => {
         },
         actionsChip: {
             justifyContent: "center",
-            margin: 6,
+            marginRight: 6,
             backgroundColor: theme.palette.layer.card,
             '&:hover': {
                 borderColor: theme.palette.primary.dark,
@@ -118,15 +117,7 @@ export default function Stack(props) {
                     {props.showTitle &&
                         <Typography variant="subtitle1" className={classes.title} >{stack.name}</Typography>
                     }
-                    { expandable() &&
-                       <Chip
-                            className={classes.actionsChip}
-                            label={ !expand ? "More" : "Less" }
-                            icon={ !expand ? <ExpandMoreIcon /> : <ExpandLessIcon /> }
-                            clickable
-                            onClick={ () => setExpand(!expand) }
-                          />
-                    }
+                    { expandable() && <StackMoreButton expand={expand} onClick={ () => setExpand(!expand)} /> } 
                 </div>
                 { stack.cards && stack.cards.map( (card, i) => 
                     <React.Fragment key={"card"+i}>

@@ -8,12 +8,20 @@ import TouchAppIcon from '@material-ui/icons/TouchApp';
 import TuneIcon from '@material-ui/icons/Tune';
 import ListIcon from '@material-ui/icons/List';
 import TvIcon from '@material-ui/icons/Tv';
-import LightbulbOutlineIcon from './LightbulbOutline';
+import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
 
 export default function DeviceIcon(props) {
 
-    const icons = {'SCENE_TRIGGER':TuneIcon, 'ACTIVITY_TRIGGER':ListIcon, 'LIGHT':LightbulbOutlineIcon, 'BUTTON':TouchAppIcon, 'SPEAKER':SpeakerIcon, 'THERMOSTAT':DataUsageIcon, 'RECEIVER':SpeakerGroupIcon, 'TV':TvIcon}
+    const icons = { 'SCENE_TRIGGER':TuneIcon, 
+                    'ACTIVITY_TRIGGER':ListIcon, 
+                    'LIGHT':LightbulbOutlineIcon, 
+                    'BUTTON':TouchAppIcon, 
+                    'SPEAKER':SpeakerIcon, 
+                    'THERMOSTAT':DataUsageIcon, 
+                    'RECEIVER':SpeakerGroupIcon, 
+                    'TV':TvIcon
+                }
 
     function getIcon(category, size='default') {
         

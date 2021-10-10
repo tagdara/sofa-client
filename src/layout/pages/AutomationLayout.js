@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
-import { NetworkContext } from 'network/NetworkProvider';
-import { UserContext } from './user/UserProvider';
+
 import Grid from '@material-ui/core/Grid';
 
-import AutomationSave from "./automation/automationSave"
-import AutomationHeader from "./automation/automationHeader"
-import AutomationColumn from "./AutomationColumn"
+import { LayoutContext } from 'layout/LayoutProvider';
+import { NetworkContext } from 'network/NetworkProvider';
+import { UserContext } from 'user/UserProvider';
+
+import AutomationSave from "automation/AutomationSave"
+import AutomationHeader from "automation/AutomationHeader"
+import AutomationColumn from "automation/AutomationColumn"
 
 export default function AutomationLayout(props) {
 

@@ -1,4 +1,4 @@
-import React,{ useContext } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -10,9 +10,10 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 import AirplayIcon from '@material-ui/icons/Airplay';
 
-import { DeviceContext } from 'context/DeviceContext';
-import CardBase from 'components/CardBase'
+import ItemBase from 'components/ItemBase'
 import SofaListItem from 'components/SofaListItem'
+
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -30,51 +31,70 @@ const useStyles = makeStyles(theme => {
     }
 })
 
-export function AppleTV(props) {
+const AppleTV = React.memo(props => {
 
     const classes = useStyles();
-    const { directive } = useContext(DeviceContext);
+
+    useEffect(() => {
+        props.addEndpointIds('id', props.endpointId, 'AppleTV-'+props.endpointId)
+        return function cleanup() {
+            props.unregisterDevices('AppleTV-'+props.endpointId);
+        };
+    // eslint-disable-next-line 
+    }, [])
+
+    if (!props.deviceState || !props.deviceState[props.endpointId]) { return null }
+
+    const serverurl="https://"+window.location.hostname;
+    const deviceState = props.deviceState[props.endpointId]
+    const name = props.devices[props.endpointId].friendlyName
+    const playing = deviceState.MediaController.playbackState.value === 'PLAYING'
+    const on = deviceState.PowerController.powerState.value==='ON'
+    const title = deviceState.MediaController.title.value 
 
     function handlePowerChange(event) {
-        directive(props.device.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
+        props.directive(props.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
     };
     
     function handleCommand(command) {
-        directive(props.device.endpointId, 'MediaController', command)
+        props.directive(props.endpointId, 'MediaController', command)
     }; 
 
 
-    const serverurl="https://"+window.location.hostname;
-
     return (
-        <CardBase nopad={true}>
-            <SofaListItem   avatar={ <AirplayIcon /> } avatarState={ props.deviceState.PowerController.powerState.value==='ON' ? 'on' : 'off' } avatarBackground={false}
-                            primary={props.device.friendlyName}
+        <ItemBase small={true}>
+            <SofaListItem   avatar={ <AirplayIcon /> } 
+                            avatarState={ on ? 'on' : 'off' } 
+                            avatarBackground={false}
+                            primary={ name }
                             secondaryActions={
                                 <>
-                                    <Switch color="primary" checked={props.deviceState.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
+                                    <Switch color="primary" checked={ on } onChange={ (e) => handlePowerChange(e) } />
                                 </>
                             }
             />
-            { (props.deviceState.PowerController.powerState.value==='ON' && props.deviceState.MediaController.title.value) &&
+            { ( on && title ) &&
                 <Grid container className={classes.media} >
                     <Grid item xs={4} >
-                        <img className={classes.art} src={serverurl+props.deviceState.MediaController.art.value+"?title="+props.deviceState.MediaController.title.value} alt={ props.deviceState.MediaController.title.value} />
+                        <img    className={classes.art} 
+                                src={ serverurl + title + "?title=" + title} 
+                                alt={ title } />
                     </Grid>
                     <Grid item container xs={8} className={classes.mediaText}>
                         <Grid item xs={12}>
-                            <Typography variant="subtitle1">{props.deviceState.MediaController.title.value}</Typography>
+                            <Typography variant="subtitle1">{ title }</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                            <IconButton size={"small"} aria-label="play" className={classes.playButton} onClick={ () => handleCommand(props.deviceState.MediaController.playbackState.value==='PLAYING' ? 'Pause': 'Play' )}>
-                                { props.deviceState.MediaController.playbackState.value==='PLAYING' ? <PauseIcon /> : <PlayArrowIcon /> }
+                            <IconButton size={"small"} aria-label="play" className={classes.playButton} 
+                                        onClick={ () => handleCommand(playing ? 'Pause': 'Play' )}>
+                                { playing ? <PauseIcon /> : <PlayArrowIcon /> }
                             </IconButton>
                         </Grid>
                     </Grid>
                 </Grid>
             }
-        </CardBase>
+        </ItemBase>
     )
-}
+}, deviceStatesAreEqual);
 
-export default React.memo(AppleTV);
+export default dataFilter(AppleTV);

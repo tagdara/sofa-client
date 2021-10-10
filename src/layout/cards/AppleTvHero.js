@@ -5,10 +5,10 @@ import { DeviceContext } from 'context/DeviceContext';
 import AppleTV from 'devices/AppleTV/AppleTV';
 import PlaceholderCard from 'layout/PlaceholderCard';
 
-export default function AppleTvHero(props) {
+const AppleTvHero = props => {
 
-    const { devicesByCategory } = useContext(DeviceContext);
-    const appleTVs = devicesByCategory('MEDIA_PLAYER')    
+    const { endpointIdsByCategory } = useContext(DeviceContext);
+    const appleTVs = endpointIdsByCategory('MEDIA_PLAYER')    
 
     if (!appleTVs) { return <PlaceholderCard count={ 1 } /> }
      
@@ -20,3 +20,5 @@ export default function AppleTvHero(props) {
         </>
     );
 }
+
+export default AppleTvHero

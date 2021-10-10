@@ -1,9 +1,12 @@
 import React from 'react';
-import AutomationTitle from "./automationTitle"
-import AutomationDetails from "./automationDetails"
-import GridSection from 'components/GridSection';
+
 import FavoriteIcon from '@material-ui/icons/Star';
-import ToggleButton from '../ToggleButton'
+
+import AutomationTitle from "automation/AutomationTitle"
+import AutomationDetails from "automation/AutomationDetails"
+
+import GridSection from 'components/GridSection';
+import ToggleButton from 'components/ToggleButton'
 import CardBase from 'components/CardBase';
 
 export default function AutomationHeader(props) {

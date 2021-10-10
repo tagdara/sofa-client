@@ -1,15 +1,16 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
+import Grid from '@material-ui/core/Grid';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+
 import CropFreeIcon from '@material-ui/icons/CropFree';
 
-import DeviceDialog from '../DeviceDialog';
-import DeviceIcon from '../DeviceIcon';
-import Grid from '@material-ui/core/Grid';
+import DeviceDialog from 'dialogs/DeviceDialog';
+import DeviceIcon from 'components/DeviceIcon';
+
 
 const useStyles = makeStyles({
 

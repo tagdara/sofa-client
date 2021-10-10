@@ -9,3 +9,10 @@ body {
 code {
     font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+html {
+    height: 100vh;
+    margin: 0;
+    padding-top: "env(safe-area-inset-top)";
+    padding-bottom: "env(safe-area-inset-bottom)";
+}

@@ -1,6 +1,7 @@
 import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
-import ToggleButton from '../ToggleButton';
+
+import ToggleButton from 'components/ToggleButton';
 
 export default function ScheduleDays(props) {
 

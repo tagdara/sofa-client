@@ -10,7 +10,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import AreaLine from 'devices/Area/AreaLine';
 import AreaSummaryLine from 'devices/Area/AreaSummaryLine';
 // import AreaSummary from 'devices/Area/AreaSummary';
-import CardBase from 'components/CardBase';
+import ItemBase from 'components/ItemBase';
 import CardControl from 'components/CardControl';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import LightButton from 'devices/Light/LightButton';
@@ -61,7 +61,7 @@ const AreaHero = React.memo(props => {
     }
 
     return (
-        <CardBase>
+        <ItemBase>
             <CardControl name={ name } home={userArea} currentArea={currentArea} selectArea={selectArea} expand={expandArea} />
             <AreaSummaryLine endpointId={currentArea} />
             { areas.map(area =>
@@ -88,7 +88,7 @@ const AreaHero = React.memo(props => {
                     <LightButton endpointId={light} skipPrefix={name} />
                 </ListItem>
             )}
-        </CardBase>
+        </ItemBase>
     );
 }, deviceStatesAreEqual);
 

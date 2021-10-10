@@ -35,7 +35,6 @@ const useStyles = makeStyles(theme => {
             maxWidth: 600,
             width: "100%",
             marginTop: "env(safe-area-inset-top)",
-            marginBottom: "env(safe-area-inset-top)",
             boxSizing: "border-box",
             alignContent: "flex-start",
             display: "flex",
@@ -57,7 +56,7 @@ const useStyles = makeStyles(theme => {
             //marginLeft: "calc(100vw - 20px - 100%)",
             alignContent: "flex-start",
             flexDirection: "column",
-            backgroundColor: theme.palette.layer.body,
+            //backgroundColor: theme.palette.layer.body,
         },
     }
 });

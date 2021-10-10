@@ -1,11 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceStateContext } from 'context/DeviceStateContext';
-import { NetworkContext } from 'network/NetworkProvider';
-import { UserContext } from './user/UserProvider';
-
-import AutomationItem from './automation/automationItem';
-import ScheduleItem from './automation/ScheduleItem';
 
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -14,13 +7,16 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
+import { LayoutContext } from 'layout/LayoutProvider';
+import { NetworkContext } from 'network/NetworkProvider';
+import { UserContext } from 'user/UserProvider';
+
+import AutomationItem from 'automation/AutomationItem';
 import GridSection from 'components/GridSection';
 
-
-export function AutomationsLayout(props) {
+const AutomationsLayout = props => {
 
     const { selectPage } = useContext(LayoutContext);
-    const { directive, deviceState, getEndpointIdsByCategory, unregisterDevices } = useContext(DeviceStateContext);
     const { getJSON, postJSON } = useContext(NetworkContext);
     const { makeFavorite, isFavorite} = useContext(UserContext)
     const [ automations, setAutomations ] = useState([])
@@ -30,18 +26,11 @@ export function AutomationsLayout(props) {
     const [scheduled, setScheduled] = useState(false)
 
     useEffect(() => {
-        getEndpointIdsByCategory('ACTIVITY_TRIGGER','AutomationsLayout')
-        return function cleanup() {
-            unregisterDevices('AutomationsLayout');
-        };
-    // eslint-disable-next-line 
-    }, [ ] )
-
-    useEffect(() => {
         getJSON('list/logic/automations')
             .then(result=>fixAutomations(result))
     // eslint-disable-next-line 
     }, []);
+
     
     function fixAutomations(autos) {
 
@@ -60,7 +49,6 @@ export function AutomationsLayout(props) {
     }
     
     function selectAutomation(automation) {
-        console.log('endpointId',automation)
         selectPage('AutomationLayout', {'endpointId':automation, 'noBottom':true } )
     }    
     
@@ -87,11 +75,6 @@ export function AutomationsLayout(props) {
         }
     } 
         
-    function runAutomation(endpointId) {
-        directive(endpointId, 'SceneController', 'Activate').then(result=> { console.log('result of run', result)})
-        return true
-    }
-
     function newAutomation() {
         selectPage('AutomationLayout', {'noBottom':true})        
     }
@@ -109,8 +92,10 @@ export function AutomationsLayout(props) {
 
     //console.log('automations', automations)
 
+    const automationList = favorites ? automations.filter(automation => isFavorite(automation.endpointId)) : automations 
+
     return (    
-        <React.Fragment>
+        <>
             <GridSection scroll={true} name={"Automations"} secondary={
                 <>
                     <IconButton onClick={ () => newAutomation() } >
@@ -127,29 +112,20 @@ export function AutomationsLayout(props) {
                     <Button color={ !favorites ? "primary" : "inherit" } onClick={ () => toggleFavorites() }>ALL</Button>
                 </> }
             >
-            { automations.map(automation => 
-                ( (isFavorite(automation.endpointId) || !favorites) &&
-                    <React.Fragment key={ automation.id_code+'-reg' }>
-                        { (scheduled && automation.schedules.length>0 ) &&
-                            <ScheduleItem name={automation.name} automation={ automation } endpointId={ automation.endpointId}
-                                            select={selectAutomation} run={runAutomation} />
-                        }
-                        { !scheduled &&
-                            <AutomationItem favorite={isFavorite(automation.endpointId)} endpointId={automation.endpointId} id_code={ automation.id_code } name={automation.name}
-                                            automation={ automation } deviceState={ deviceState(automation.endpointId) }
-                                            makeFavorite={makeFavorite} deleting={remove} select={selectAutomation} edit={editing} delete={deleteAutomation} run={runAutomation} />
-                        }
-                    </React.Fragment>
-                )
+            { automationList.map(automation => 
+                <AutomationItem small={true} endpointId={automation.endpointId} key={automation.endpointId}
+                                favorite={isFavorite(automation.endpointId)} 
+                                allowEdit={true} 
+                                select={selectAutomation}
+                                automation={ automation }
+                                makeFavorite={makeFavorite} deleting={remove} 
+                                edit={editing} delete={deleteAutomation} 
+                            />
             )}
             </GridSection>
-        </React.Fragment>
+        </>
     )
-};
-
-AutomationsLayout.defaultProps = {
-    favorites: false,
 }
 
-export default React.memo(AutomationsLayout);
+export default AutomationsLayout;
 

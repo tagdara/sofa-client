@@ -17,52 +17,57 @@ import { LayoutContext } from 'layout/LayoutProvider';
 
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
+	appBar: {
+		boxShadow: 'none', 
+	},
+	toolbar: {
+		borderBottom: "1px solid "+theme.palette.background.page,
+	},
+	root: {
+		flexGrow: 1,
+	},
+	menuButton: {
+		marginRight: theme.spacing(2),
+	},
+	title: {
+		flexGrow: 1,
+	},
 }));
 
 export default function TopBar(props) {
-    const classes = useStyles();
-    const { loggedIn } = useContext(NetworkContext);
-    const {  goBack, currentPage, goHome, toggleDrawer, toggleRightDrawer } = useContext(LayoutContext);
+	const classes = useStyles();
+	const { loggedIn } = useContext(NetworkContext);
+	const { goBack, currentPage, goHome, toggleDrawer, toggleRightDrawer } = useContext(LayoutContext);
 
 
-      return (
-          <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none', borderBottom: "1px solid #222"}}>
-            <Toolbar>
-              <IconButton edge="start" className={classes.menuButton} onClick={ () => toggleDrawer() } color="inherit" aria-label="menu">
-                <MenuIcon />
-              </IconButton>
-              <Typography variant="h6" className={classes.title}>
-                Home
-              </Typography>
-              {loggedIn && (
-                <div>
-                    { currentPage!=='Stacks' && 
-                        <IconButton onClick={ () => goBack() }>
-                            <ArrowBackIcon /> 
-                        </IconButton>
-                    }
-                    { currentPage!=='Stacks' && 
-                        <IconButton onClick={ () => goHome() }>
-                            <HomeIcon /> 
-                        </IconButton>
-                    }
+	return (
+		<AppBar className={classes.AppBar} position="static" color="transparent" elevation={0}>
+			<Toolbar className={classes.toolbar}>
+				<IconButton edge="start" className={classes.menuButton} onClick={() => toggleDrawer()} color="inherit" aria-label="menu">
+					<MenuIcon />
+				</IconButton>
+				<Typography variant="h6" className={classes.title}>
+					Home
+				</Typography>
+				{loggedIn && (
+					<div>
+						{ currentPage !== 'Stacks' &&
+							<IconButton onClick={() => goBack()}>
+								<ArrowBackIcon />
+							</IconButton>
+						}
+						{ currentPage !== 'Stacks' &&
+							<IconButton onClick={() => goHome()}>
+								<HomeIcon />
+							</IconButton>
+						}
 
-                  <IconButton  onClick={ () => toggleRightDrawer() }>
-                    <NotesIcon />
-                  </IconButton>
-                </div>
-              )}
-            </Toolbar>
-
-          </AppBar>
-      );
+						<IconButton onClick={() => toggleRightDrawer()}>
+							<NotesIcon />
+						</IconButton>
+					</div>
+				)}
+			</Toolbar>
+		</AppBar>
+	);
 }

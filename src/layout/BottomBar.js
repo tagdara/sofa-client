@@ -14,13 +14,31 @@ import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
 import { LayoutContext } from 'layout/LayoutProvider';
 
-const useStyles = makeStyles({
-    mobileBar: {
-        boxSizing: "border-box",
-        alignContent: "flex-start",
-        zIndex: 1000,
-        display: "flex",
-    },
+const useStyles = makeStyles(theme => {
+    
+    return {
+        mobileBar: {
+            //position: "fixed",
+            //bottom: 0,
+            //left: 0,
+            //right: 0,
+            //alignContent: "flex-start",
+            zIndex: 1000,
+            display: "flex",
+            width: "100%",
+            //padding: 16,
+            //paddingBottom: "calc( 32px + env(safe-area-inset-bottom))",
+        },
+        bottomFrame: {
+            position: "fixed",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            paddingBottom: "env(safe-area-inset-bottom)",
+            backgroundColor: theme.palette.background.paper,
+            display: "flex",
+        }
+    }
 });
 
 export default function SimpleBottomNavigation(props) {
@@ -48,15 +66,17 @@ export default function SimpleBottomNavigation(props) {
     }
 
     return (
-        <BottomNavigation
-          value={getSectionPosition(currentStack)}
-          onChange={ (event, newValue) => { changeSection(newValue) }}
-          showLabels
-          className={classes.mobileBar}
-        >
-            { sections.map( item => 
-                <BottomNavigationAction key={item} label={sectionData[item].label} icon={sectionData[item].icon} />
-            )}
-        </BottomNavigation>
+        <div class={classes.bottomFrame}>
+            <BottomNavigation
+                value={getSectionPosition(currentStack)}
+                onChange={ (event, newValue) => { changeSection(newValue) }}
+                showLabels
+                className={classes.mobileBar}
+            >
+                { sections.map( item => 
+                    <BottomNavigationAction key={item} label={sectionData[item].label} icon={sectionData[item].icon} />
+                )}
+            </BottomNavigation>
+        </div>
     )
 }

@@ -22,20 +22,22 @@ const LightSummary = React.memo(props => {
         var count = 0;
         for (var dev in props.deviceState) {
             var light = props.deviceState[dev]
-            switch (condition.toUpperCase()) {
-                case "OFF":
-                    if (light.PowerController.powerState.value === "OFF" || !isReachable(light)) {
-                        count=count+1
-                    }
-                    break;
-                case "ON":
-                    if (light.PowerController.powerState.value === "ON" && isReachable(light)) {
-                        count=count+1
-                    } 
-                    break;                   
-                default:
-                    count = count + 1
-                    break;
+            if (light) {
+                switch (condition.toUpperCase()) {
+                    case "OFF":
+                        if (light.PowerController.powerState.value === "OFF" || !isReachable(light)) {
+                            count=count+1
+                        }
+                        break;
+                    case "ON":
+                        if (light.PowerController.powerState.value === "ON" && isReachable(light)) {
+                            count=count+1
+                        } 
+                        break;                   
+                    default:
+                        count = count + 1
+                        break;
+                }
             }
         }
         return count

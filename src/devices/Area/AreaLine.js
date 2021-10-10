@@ -40,7 +40,7 @@ const AreaLine = React.memo(props => {
         return Object.keys(obj).length === 0;
     }
 
-    if (isEmpty(props.deviceState)) { return null }
+    if (isEmpty(props.deviceState) || !props.deviceState[props.endpointId]) { return null }
     
     const shortcuts = props.deviceState[props.endpointId].AreaController.shortcuts.value
     const scene = props.deviceState[props.endpointId].AreaController.scene.value

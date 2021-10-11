@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 
 import MouseIcon from '@material-ui/icons/Mouse';
-import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+import WindowsIcon from 'resources/WindowsIcon';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
@@ -43,7 +43,7 @@ const Computer = React.memo(props => {
     if (!props.deviceState || !props.deviceState[props.endpointId]) {
         return  <CardBase >
                     <SofaListItem   inList={true} avatarBackground={false} avatarState={ 'off'}
-                                    avatar={ <DesktopWindowsIcon />}
+                                    avatar={ <WindowsIcon />}
                                     primary={ name }
                                     secondaryActions={
                                         <ComputerWol endpointId={props.endpointId} directive={props.directive} />
@@ -88,7 +88,7 @@ const Computer = React.memo(props => {
         <CardBase >
             <SofaListItem   inList={true} avatarBackground={false} 
                             avatarState={ (computerState.PowerController.powerState.value==='ON' && computerState.EndpointHealth.connectivity.deepvalue==='OK') ? 'on' : 'off'}
-                            avatar={ <DesktopWindowsIcon />}
+                            avatar={ <WindowsIcon />}
                             primary={ name } secondary={ secondaryText() }
                             secondaryActions={
                                 <>
@@ -116,7 +116,7 @@ const Computer = React.memo(props => {
                                 </>
                             }
             />
-            { (speakerController && on ) && <ComputerVolume speakerController ={ speakerController } /> }
+            { (speakerController && on ) && <ComputerVolume endpointId={props.endpointId} directive={props.directive} speakerController ={ speakerController } /> }
         </CardBase>   
     );
 }, deviceStatesAreEqual);

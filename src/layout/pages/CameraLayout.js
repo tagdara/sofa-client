@@ -5,9 +5,9 @@ import { makeStyles } from '@material-ui/styles';
 import List from '@material-ui/core/List';
 import Button from '@material-ui/core/Button';
 
-import VideocamIcon from '@material-ui/icons/Videocam';
 import QrCodeIcon from '@material-ui/icons/DeveloperMode'; // Current Material icons does not include the updated QrCode icon
 
+import UbiquitiIcon from 'resources/UbiquitiIcon';
 import { DeviceContext } from 'context/DeviceContext';
 
 import SofaListItem from 'components/SofaListItem';
@@ -51,7 +51,7 @@ export default function CameraLayout(props) {
             </GridSection>
             <GridSection>
                 <List>
-                    <SofaListItem button onClick={() => openNVR() } avatar={<VideocamIcon />} avatarState={"off"} primary={'Unifi Protect'} />
+                    <SofaListItem noPad={true} button onClick={() => openNVR() } avatar={<UbiquitiIcon />} avatarBackground={false} primary={'Unifi Protect'} />
                 </List>
             </GridSection>
         </>

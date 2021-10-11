@@ -4,17 +4,11 @@ import { makeStyles } from '@material-ui/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ToggleAvatar from 'components/ToggleAvatar'
-import CircularProgress from '@material-ui/core/CircularProgress';
+
+import ListItemAvatar from 'components/ListItemAvatar';
 
 const useStyles = makeStyles(theme => {
     return {        
-        xlistItemNoPad: {
-            boxSizing: "border-box",
-            padding: 0,
-            height: 56,
-            minHeight: 56,
-        },
         listItemNoPad: {
             cursor: "pointer",
             boxSizing: "content-box",
@@ -25,6 +19,7 @@ const useStyles = makeStyles(theme => {
             display: "flex",
             flexGrow: 1,
             overflow: "hidden",
+            borderRadius: 8,
         },
         listItem: {
             cursor: "pointer",
@@ -80,17 +75,7 @@ export default function SofaListItem(props) {
     return (
         <ListItem component={"div"} className={ (props.inList || props.noPad) ? classes.listItemNoPad : classes.listItem } button={props.button} onClick={ props.avatarClick ? null : props.onClick }>
             { props.avatar &&
-                <>
-                { props.loading ?
-                    <div style={{ marginLeft: 8, marginTop: 8, marginRight: 24 }} >
-                        <CircularProgress size={24} />
-                    </div>
-                :
-                    <ToggleAvatar small={props.smallAvatar} wideAvatar={props.wideAvatar} avatarState={ props.avatarState } noback={!props.avatarBackground} onClick={ (e) => handleAvatarClick(e) } >
-                        { props.avatar }
-                    </ToggleAvatar>
-                }
-                </>
+                <ListItemAvatar avatar={props.avatar} small={props.smallAvatar} wide={props.wideAvatar} state={props.avatarState} noBackground={!props.avatarBackground} onClick={(e) => handleAvatarClick(e) } />
             }
             <ListItemText   onClick={ props.labelClick ? props.labelClick : null } classes={{ root: classes.flex, primary: classes.primary, secondary : classes.smallSecondary }} 
                             primary={ props.primary } secondary={ props.secondary } />

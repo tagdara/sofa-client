@@ -16,12 +16,14 @@ import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import { DeviceContext } from 'context/DeviceContext';
 
 import DotAvatar from 'components/DotAvatar'
-import CardBase from 'components/CardBase'
+import ItemBase from 'components/ItemBase'
 import TvRemote from 'devices/Television/TvRemote';
 import ModeLines from 'devices/Mode/ModeLines'
 import SofaAvatarSlider from 'components/SofaAvatarSlider'
 import SofaListItem from 'components/SofaListItem'
 import PlaceholderCard from 'layout/PlaceholderCard';
+
+import Computer from 'devices/Computer/Computer.js';
 
 const useStyles = makeStyles({
     list: {
@@ -116,60 +118,65 @@ const Television = React.memo(props => {
     }
      
     return (
-        <CardBase nopad={true}>
-            <SofaListItem   avatar={ <TvIcon /> } avatarState={ tv.PowerController.powerState.value==='ON' ? 'on' : 'off' } avatarBackground={false}
-                            avatarClick={ () => setShowDetail(!showDetail) } labelClick={ () => setShowDetail(!showDetail) } noPad={true}
-                            primary={props.devices[props.endpointId].friendlyName} secondary={subText()}
-                            secondaryActions={
-                                <>
-                                    { tv.PowerController.powerState.value!=='ON' ? null :
-                                    <IconButton onClick={ () => toggleRemote() } >
-                                        <ControlCameraIcon />
-                                    </IconButton>
-                                    }
-                                    <Switch color="primary" checked={tv.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
-                                </>
-                            }
-            />
-        { localVolumeCheck() && ( tv.PowerController.powerState.value==='ON' || showDetail ) &&
-            <DotAvatar   label={"Volume"} levelValues={[0,5,7,10,20,50]} centered={true}
-                                small={true} reverse={true} minWidth={64} 
-                                value={ tv.SpeakerController.volume.value }
-                                select={handleVolumeChange} 
-                                disabled={ !localVolumeCheck() || tv.PowerController.powerState.value==='OFF' }
-            />
-        }
-        <Collapse in={showDetail || showRemote } className={classes.detail}>
-            { showDetail &&
-                <>
-                    <SofaAvatarSlider   label={"Volume"} 
-                                        small={true} reverse={true} minWidth={64} 
-                                        value={ tv.SpeakerController.volume.value }
-                                        change={handleVolumeChange} 
-                                        avatarClick={ () => handleMuteChange(!tv.SpeakerController.mute.value)} 
-                                        avatarState={ tv.PowerController.powerState.value==='ON' ? "on" : "off" }
-                                        disabled={ !localVolumeCheck() || tv.PowerController.powerState.value==='OFF' }
-                    />
-                    <ListItem className={classes.bottomListItem}>
-                        <ListItemText primary={"Input"} />
-                        <Select disabled={ tv.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty 
-                                value={tv.InputController.input.value ? tv.InputController.input.value : ""} 
-                                onChange={ (e) => handleInput(e, e.target.value) } >
-                            { inputs.map(inp =>
-                                <MenuItem key={inp} value={inp}>{inp}</MenuItem>
-                            )}
-                        </Select>
+        <>
+            <ItemBase nopad={true}>
+                <SofaListItem   avatar={ <TvIcon /> } avatarState={ tv.PowerController.powerState.value==='ON' ? 'on' : 'off' } avatarBackground={false}
+                                avatarClick={ () => setShowDetail(!showDetail) } labelClick={ () => setShowDetail(!showDetail) } noPad={true}
+                                primary={props.devices[props.endpointId].friendlyName} secondary={subText()}
+                                secondaryActions={
+                                    <>
+                                        { tv.PowerController.powerState.value!=='ON' ? null :
+                                        <IconButton onClick={ () => toggleRemote() } >
+                                            <ControlCameraIcon />
+                                        </IconButton>
+                                        }
+                                        <Switch color="primary" checked={tv.PowerController.powerState.value==='ON'} onChange={ (e) => handlePowerChange(e) } />
+                                    </>
+                                }
+                />
+            { localVolumeCheck() && ( tv.PowerController.powerState.value==='ON' || showDetail ) &&
+                <DotAvatar   label={"Volume"} levelValues={[0,5,7,10,20,50]} centered={true}
+                                    small={true} reverse={true} minWidth={64} 
+                                    value={ tv.SpeakerController.volume.value }
+                                    select={handleVolumeChange} 
+                                    disabled={ !localVolumeCheck() || tv.PowerController.powerState.value==='OFF' }
+                />
+            }
+            <Collapse in={showDetail || showRemote } className={classes.detail}>
+                { showDetail &&
+                    <>
+                        <SofaAvatarSlider   label={"Volume"} 
+                                            small={true} reverse={true} minWidth={64} 
+                                            value={ tv.SpeakerController.volume.value }
+                                            change={handleVolumeChange} 
+                                            avatarClick={ () => handleMuteChange(!tv.SpeakerController.mute.value)} 
+                                            avatarState={ tv.PowerController.powerState.value==='ON' ? "on" : "off" }
+                                            disabled={ !localVolumeCheck() || tv.PowerController.powerState.value==='OFF' }
+                        />
+                        <ListItem className={classes.bottomListItem}>
+                            <ListItemText primary={"Input"} />
+                            <Select disabled={ tv.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty 
+                                    value={tv.InputController.input.value ? tv.InputController.input.value : ""} 
+                                    onChange={ (e) => handleInput(e, e.target.value) } >
+                                { inputs.map(inp =>
+                                    <MenuItem key={inp} value={inp}>{inp}</MenuItem>
+                                )}
+                            </Select>
+                        </ListItem>
+                        <ModeLines disabled={tv.PowerController.powerState.value!=='ON'} device={props.devices[props.endpointId]} deviceState={tv} directive={props.directive} />
+                    </>
+                }
+                { showRemote &&
+                    <ListItem className={classes.remoteListItem}>
+                        <TvRemote device={props.device} />
                     </ListItem>
-                    <ModeLines disabled={tv.PowerController.powerState.value!=='ON'} device={props.devices[props.endpointId]} deviceState={tv} directive={props.directive} />
-                </>
+                }
+            </Collapse>
+            </ItemBase>
+            { tv.InputController.input.value === "Matrix" &&
+                <Computer endpointId={"pc2:windows"} />
             }
-            { showRemote &&
-                <ListItem className={classes.remoteListItem}>
-                    <TvRemote device={props.device} />
-                </ListItem>
-            }
-        </Collapse>
-        </CardBase>
+        </>
     )
 }, deviceStatesAreEqual);
 

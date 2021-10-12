@@ -25,7 +25,6 @@ const AreaHero = React.memo(props => {
 
     useEffect(() => {
         props.addEndpointIds('id',currentArea, 'AreaHero')
-
         return function cleanup() {
             props.unregisterDevices('AreaHero');
         };
@@ -56,8 +55,8 @@ const AreaHero = React.memo(props => {
         setCurrentArea(endpointId)
     }
 
-    function expandArea(areaname) {
-        selectPage('AreaLayout',{"name": areaname})
+    function expandArea(endpointId) {
+        selectPage('AreaLayout', {"endpointId": endpointId})
     }
 
     return (

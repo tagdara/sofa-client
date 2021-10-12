@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 import Drawer from '@material-ui/core/Drawer';
 
-import ChevronRightIcon from '@material-ui/icons/ChevronLeft';
+import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
 import { LayoutContext } from 'layout/LayoutProvider';
 import RecentLayout from 'layout/pages/RecentLayout';
@@ -36,14 +36,6 @@ const useStyles = makeStyles(theme => {
             padding: '0 8px 0 12px',
             ...theme.mixins.toolbar,
         },
-        breadCrumbs: {
-            display: 'flex',
-            alignItems: 'center',
-            padding: '4px 16px 4px 16px',
-        },
-        spacer: {
-            flexGrow: 1,
-        },
     }
 });
 
@@ -60,9 +52,9 @@ export default function RightDrawer(props) {
                 </IconButton>
             </div>
             <Scrollbars>
-            <div className={classes.drawerScroll}>
-                <RecentLayout />
-            </div>
+                <div className={classes.drawerScroll}>
+                    <RecentLayout />
+                </div>
             </Scrollbars>
         </Drawer> 
     );

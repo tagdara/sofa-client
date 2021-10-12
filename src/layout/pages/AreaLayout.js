@@ -5,49 +5,41 @@ import EditIcon from '@material-ui/icons/Edit';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceStateContext } from 'context/DeviceStateContext';
-
+import { DeviceContext } from 'context/DeviceContext';
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import GridSection from 'components/GridSection';
-import AreaLayoutScenes from 'devices/Area/AreaLayoutScenes';
-import AreaLayoutLights from 'devices/Area/AreaLayoutLights';
 
-import ButtonItem from 'components/ButtonItem';
+import SectionHeaderButton from 'components/SectionHeaderButton';
 import DeviceDialog from 'dialogs/DeviceDialog';
+import LightLayout from 'layout/pages/LightLayout';
+import SceneLayout from 'layout/pages/SceneLayout';
 
+const AreaLayout = React.memo(props => {
 
-export default function AreaLayout(props) {
-
-    const { cardReady, devices, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices, directive } = useContext(DeviceStateContext);
-    const { selectPage, currentProps } = useContext(LayoutContext);
-    const [edit, setEdit] = useState(false)
+    const { selectPage } = useContext(LayoutContext);
+    const { sortByName, hasDisplayCategory } = useContext(DeviceContext);
     const [addingDevice, setAddingDevice] = useState(false);
     const [deletingDevice, setDeletingDevice] = useState(false);
     const [editingScene, setEditingScene] = useState(false);
-    const [area, setArea]=useState(undefined)
+    const currentArea = props.endpointId
 
-    
     useEffect(() => {
-        setArea(getEndpointIdsByFriendlyName(currentProps.name, 'AreaLayout', true, 'AREA', true))
+        props.addEndpointIds('id', currentArea, 'AreaHero')
         return function cleanup() {
-            unregisterDevices('AreaLayout');
+            props.unregisterDevices('AreaHero');
         };
     // eslint-disable-next-line 
-    }, [ currentProps ] )
+    }, [ currentArea ]) 
 
+    if (isEmpty(props.deviceState) || !props.deviceState[currentArea] ) { return null }
 
-    function getChildren(filter) {
+    const children = sortByName(props.deviceState[currentArea].AreaController.children.value)
+    const lights = children.filter(endpointId => hasDisplayCategory(endpointId, "LIGHT"))
+    const scenes = children.filter(endpointId => hasDisplayCategory(endpointId, "SCENE_TRIGGER"))
+    const name = props.devices[currentArea].friendlyName
 
-        var ads=[]
-        if (cardReady('AreaLayout')) {
-            var children=deviceStates[area].AreaController.children.value
-            for (var i = 0; i < children.length; i++) {
-                var dev=devices[children[i]]
-                if (!filter || filter==='ALL' || (dev && dev.displayCategories.includes(filter))) {
-                    ads.push(children[i])
-                }
-            }
-        }
-        return ads    
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
     }
 
     function addDevice(){
@@ -59,7 +51,6 @@ export default function AreaLayout(props) {
     }
 
     function toggleEditScenes() {
-        console.log('editing', editingScene)
         setEditingScene(!editingScene)
     }
 
@@ -77,40 +68,47 @@ export default function AreaLayout(props) {
         setAddingDevice(false)
     }
     
-    function addChild(newDevice) {
-        var ac=[...area.AreaController.children.value]
-        ac.push(newDevice.endpointId)
-        directive(area.endpointId, 'AreaController', 'SetChildren', { "children" : { "value": ac }}, {})
-    }
-    
-    function removeChild(newDevice) {
-        var ac=[...area.AreaController.children.value]
-        if (ac.includes(newDevice.endpointId)) {
-            ac.splice(ac.indexOf(newDevice.endpointId), 1);
+    function addChild(endpointId) {
+        if (!children.includes(endpointId)) {
+            var updateChildren = [...children, endpointId ]
+            props.directive(currentArea, 'AreaController', 'SetChildren', { "children" : { "value": updateChildren }}, {})
         }
-        directive(area.endpointId, 'AreaController', 'SetChildren', { "children" : { "value": ac }}, {})
     }
     
-    return (    
-        cardReady('AreaLayout') ?
-         <React.Fragment>
-            <AreaLayoutLights   area={area} areaScene={ deviceStates[area].AreaController.scene.value } lights={ getChildren('LIGHT') } edit={edit}
-                                    editing={editingScene} editScene={editScene}  setEdit={setEdit} removeChild={removeChild}
-                            />
-            <AreaLayoutScenes   area={area} areaScene={ deviceStates[area].AreaController.scene.value } scenes={ getChildren('SCENE_TRIGGER') } edit={edit}
-                                editing={editingScene} editScene={editScene}  setEdit={setEdit} 
-                            />
+    function removeChild(endpointId) {
+        if (children.includes(endpointId)) {
+            var updateChildren = [...children]
+            updateChildren.splice(updateChildren.indexOf(endpointId), 1);
+            props.directive(currentArea, 'AreaController', 'SetChildren', { "children" : { "value": updateChildren }}, {})
+        }
+    }
 
-            <GridSection name={"Actions"} >
-                <ButtonItem label={"Add Device"} avatarIcon={<AddIcon />} action={addDevice} small={true} />
-                <ButtonItem label={"Delete Device"} avatarIcon={<RemoveIcon />} action={removeDevice} small={true} />
-                <ButtonItem label={"Create Scene"} avatarIcon={<AddIcon />} small={true} />
-                <ButtonItem label={"Edit Scene"} avatarIcon={<EditIcon />} action={toggleEditScenes} small={true} />
-            </GridSection>
+    const remove = deletingDevice ? removeChild : undefined
+    const edit = editingScene ? editScene : undefined
+
+    return (    
+        <GridSection name={name} 
+            secondary={
+                <>
+                    <SectionHeaderButton onClick={addDevice} > 
+                        <AddIcon />
+                    </SectionHeaderButton>
+                    <SectionHeaderButton on={deletingDevice} onClick={removeDevice} >
+                        <RemoveIcon />
+                    </SectionHeaderButton>
+                    <SectionHeaderButton onClick={toggleEditScenes} >
+                        <EditIcon />
+                    </SectionHeaderButton>
+                </>
+            }
+        >
+            <LightLayout lights={ lights } remove={remove} filter={"ALL"} />
+            <SceneLayout scenes={ scenes } remove={remove} edit={edit} />
             { addingDevice &&
                 <DeviceDialog open={true} close={closeDialog} select={selectDevice} />
             }
-        </React.Fragment>
-        : null
+        </GridSection>
     )
-};
+}, deviceStatesAreEqual);
+
+export default dataFilter(AreaLayout);

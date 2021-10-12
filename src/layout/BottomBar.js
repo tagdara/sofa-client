@@ -66,7 +66,7 @@ export default function SimpleBottomNavigation(props) {
     }
 
     return (
-        <div class={classes.bottomFrame}>
+        <div className={classes.bottomFrame}>
             <BottomNavigation
                 value={getSectionPosition(currentStack)}
                 onChange={ (event, newValue) => { changeSection(newValue) }}

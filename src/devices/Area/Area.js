@@ -10,7 +10,7 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-import { DeviceStateContext } from 'context/DeviceStateContext';
+import { DeviceContext } from 'context/DeviceContext';
 
 import ToggleAvatar from 'components/ToggleAvatar';
 import DotLevel from 'components/DotLevel';
@@ -85,7 +85,7 @@ const useStyles = makeStyles({
 export default function Area(props) {
     
     const classes = useStyles();
-    const { deviceByEndpointId } = useContext(DeviceStateContext);
+    const { deviceByEndpointId } = useContext(DeviceContext);
 
     function runScene(sceneName) {
         deviceByEndpointId("logic:scene:"+sceneName).SceneController.directive("Activate")

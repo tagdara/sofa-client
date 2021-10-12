@@ -70,6 +70,9 @@ const Television = React.memo(props => {
         return <PlaceholderCard count={ 1 } />
     }
 
+    const on = tv.PowerController.powerState.value === 'ON'
+    const matrixSet = on && tv.InputController.input.value === "Matrix"
+
     const inputs = getInputs(props.endpointId)     
     // const on = tv.PowerController.powerState.value === "ON"
 
@@ -116,7 +119,7 @@ const Television = React.memo(props => {
         }
         return tv.InputController.input.value
     }
-     
+    
     return (
         <>
             <ItemBase nopad={true}>
@@ -173,7 +176,7 @@ const Television = React.memo(props => {
                 }
             </Collapse>
             </ItemBase>
-            { tv.InputController.input.value === "Matrix" &&
+            { matrixSet &&
                 <Computer endpointId={"pc2:windows"} />
             }
         </>

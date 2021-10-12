@@ -100,19 +100,19 @@ const Light = React.memo(props => {
                             highlight={ expanded }
                             secondaryActions={ 
                                 <>
-                                    { ( isReachable() && !props.deleting ) &&
+                                    { ( isReachable() && !props.remove ) &&
                                         <Switch color="primary" className={classes.lightSwitch} checked={lightState.PowerController.powerState.value==='ON'} 
                                                 onChange={handlePowerChange} />
                                     }
-                                    { props.deleting && 
-                                    <IconButton size="small" onClick={()=>props.remove(props.device)} ><ClearIcon /></IconButton>
+                                    { props.remove && 
+                                        <IconButton size="small" onClick={()=>props.remove(props.device)} ><ClearIcon /></IconButton>
                                     }
                                 </>
                             }
             />
             <LightProperties    endpointId={props.endpointId} deviceState={lightState}
                                 showAll={showAll} brightControl={props.brightControl} tempControl={props.tempControl} colorControl={props.colorControl}
-                                onLevelControl={props.onLevelControl} remove={props.remove} />
+                                onLevelControl={props.onLevelControl} />
         </ItemBase>
     )
 }, deviceStatesAreEqual);

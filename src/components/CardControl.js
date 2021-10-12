@@ -51,7 +51,7 @@ export default function CardControl(props) {
                     :
                     <div className={classes.placeholder} />
                 }
-                <Button className={classes.tinyButton} onClick={() => props.expand(props.name)} ><Typography variant="body2" className={classes.label} >{props.name}</Typography></Button>
+                <Button className={classes.tinyButton} onClick={() => props.expand(props.currentArea)} ><Typography variant="body2" className={classes.label} >{props.name}</Typography></Button>
                 { props.currentArea !== props.home ?
                     <IconButton size="small" className={classes.backButton} onClick={()=>props.selectArea(props.home)}><HomeIcon className={classes.tinyIcon} /></IconButton>
                     :

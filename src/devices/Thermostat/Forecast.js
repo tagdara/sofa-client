@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect }from 'react';
 import { DeviceStateContext } from 'context/DeviceStateContext';
 
-import CardBase from 'components/CardBase'
+import ItemBase from 'components/ItemBase'
 import SofaListItem from 'components/SofaListItem';
 import PlaceholderCard from 'layout/PlaceholderCard';
 
@@ -42,13 +42,12 @@ export default function Forecast(props) {
     conLabel()
     
     return (
-        
-        <CardBase >
+        <ItemBase >
             <SofaListItem   avatar={!deviceStates[device]['Forecast High'].rangeValue.value ? '--' :
                                         deviceStates[device]['Forecast Low'].rangeValue.value + ' - '+deviceStates[device]['Forecast High'].rangeValue.value } 
                             avatarState={ tempColor(deviceStates[device]['Forecast High'].rangeValue.value) }
                             primary={ conLabel() } wideAvatar={true}/>
-        </CardBase>
+        </ItemBase>
     );
 }
 

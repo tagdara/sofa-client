@@ -49,8 +49,6 @@ const Scene = React.memo(props => {
     const classes = useStyles();
     const [working, setWorking] = useState(false)
 
-    console.log('scene endpointid', props.endpointId)
-
     useEffect(() => {
         props.addEndpointIds('id', props.endpointId, 'Scene-'+props.endpointId)
         return function cleanup() {
@@ -92,7 +90,7 @@ const Scene = React.memo(props => {
             avatar={ working ?
                 <CircularProgress size={props.small ? 24 : 32} className={classes.working} />
             :   
-                <>{props.shortcut==='x' ? <ListIcon /> : props.shortcut }</>
+                <>{ (!props.shortcut || props.shortcut==='x') ? <ListIcon /> : props.shortcut }</>
             }
             avatarState={props.endpointId === props.computedLevel ? 'on' : 'off'}
             avatarClick={runScene}
@@ -104,7 +102,7 @@ const Scene = React.memo(props => {
                 { props.remove &&
                     <IconButton size={"small"} onClick={() => deleteScene() }><CloseIcon /></IconButton>   
                 }
-                { props.editing &&
+                { props.edit &&
                     <IconButton size={"small"} onClick={() => props.edit(props.endpointId) }><EditIcon /></IconButton>   
                 }
                 </>

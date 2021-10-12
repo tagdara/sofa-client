@@ -23,7 +23,7 @@ export default function ColorTemperatureController(props) {
                 value={props.interface.colorTemperatureInKelvin.value}
                 min={2000} max={7000} step={100}
                 change={handleColorTemperatureChange}
-                disabled={!props.device.PowerController.powerState.value==='ON'}
+                disabled={!props.deviceState.PowerController.powerState.value==='ON'}
                 />
             </TableCell>
         </TableRow>

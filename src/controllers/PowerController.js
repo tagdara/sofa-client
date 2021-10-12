@@ -16,7 +16,7 @@ export default function PowerController(props) {
     
     function isReachable() {
         if (props.device.hasOwnProperty('EndpointHealth')) {
-            if (props.device.EndpointHealth.connectivity.value.value==='OK') { return true }
+            if (props.deviceState.EndpointHealth.connectivity.value.value==='OK') { return true }
             return false
         }
         console.log('no endpoint health', props.device)

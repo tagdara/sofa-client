@@ -23,7 +23,6 @@ const useStyles = makeStyles(theme => {
             //left: 0,
             //right: 0,
             //alignContent: "flex-start",
-            zIndex: 1000,
             display: "flex",
             width: "100%",
             //padding: 16,
@@ -37,6 +36,7 @@ const useStyles = makeStyles(theme => {
             paddingBottom: "env(safe-area-inset-bottom)",
             backgroundColor: theme.palette.background.paper,
             display: "flex",
+            zIndex: 1000,
         }
     }
 });

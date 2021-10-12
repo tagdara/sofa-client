@@ -13,6 +13,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
+import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+
 const placeholder = <TableRow><TableCell>Loading...</TableCell></TableRow>
 
 const useStyles = makeStyles({
@@ -88,22 +90,37 @@ const useStyles = makeStyles({
 
 });
 
-export default function CompositeDevice(props) {
+const CompositeDevice = React.memo(props => {
     
     const classes = useStyles();
     const isMobile = window.innerWidth <= 800;
     const [modules, setModules] = useState({})
-    const [capabilitites, setCapabilities]=useState([])
+    const device = props.devices ? props.devices[props.endpointId] : undefined
 
     useEffect(() => {
+        props.addEndpointIds('id', props.endpointId, 'Composite-'+props.endpointId)
+        return function cleanup() {
+            props.unregisterDevices('Composite-'+props.endpointId);
+        };
+    // eslint-disable-next-line 
+    }, [])
+ 
+    useEffect(() => {
+        if (device) { getCapabilityModules() }
+    // eslint-disable-next-line 
+    }, [ device ])    
     
+    if (!device) { return null }
+
+    const deviceState = props.deviceState[props.endpointId]
+    const capabilities = device.capabilities
+    const name = device.friendlyName
+
+    function getCapabilityModules() {
         var mods={}
-        var caps=[]
-        for (var j = 0; j < props.device.capabilities.length; j++) {
-            console.log(props.device.capabilities[j])
-            if (props.device.capabilities[j].interface.split('.').length>1) {
-                let modulename=props.device.capabilities[j].interface.split('.')[1]
-                caps.push(modulename)
+        for (var j = 0; j < device.capabilities.length; j++) {
+            if (device.capabilities[j].interface.split('.').length>1) {
+                let modulename=device.capabilities[j].interface.split('.')[1]
                 mods[modulename]=React.lazy(() => { 
                     try { 
                         return import('controllers/'+modulename).catch(() => ({ default: () => errorBlock(modulename) }))
@@ -114,32 +131,34 @@ export default function CompositeDevice(props) {
                 })
             }
         }
-        setCapabilities(caps)
         setModules(mods)
-    // eslint-disable-next-line 
-    }, [props.device.interfaces])
+    }
+
 
     function errorBlock(modulename) {
         return <TableRow key={modulename+'e'}><TableCell>-</TableCell><TableCell>-</TableCell><TableCell>Loading failed - {modulename}</TableCell></TableRow>;
     }
         
-    function renderSuspenseModule( modulename ) {
+    function renderSuspenseModule( interfaceName, instance ) {
 
-        if (modules.hasOwnProperty(modulename)) {
-            var Module=modules[modulename]
-            return  <Suspense key={ modulename } fallback={placeholder}>
-                        <Module interface={ props.deviceState[modulename] } device={props.device} deviceState={props.deviceState} />
-                    </Suspense>
-        } else {
-            return <TableRow key={modulename} ><TableCell>Loading...</TableCell></TableRow>
+        if (interfaceName.split('.').length>1) {
+            let modulename = interfaceName.split('.')[1]
+            if (modules.hasOwnProperty(modulename)) {
+                var Module=modules[modulename]
+                var interfaceState = instance ? deviceState[instance.split('.')[1]] : deviceState[modulename]
+                return  <Suspense key={ modulename } fallback={placeholder}>
+                            <Module interface={ interfaceState } device={device} deviceState={deviceState} instance={ instance } />
+                        </Suspense>
+            } else {
+                return <TableRow key={modulename} ><TableCell>Loading...</TableCell></TableRow>
+            }
         }
     }
     
-    console.log(props.device)
     
     return (
         <Dialog fullScreen={isMobile} fullWidth maxWidth={'sm'}  open={true} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-            <DialogTitle id="composite-device">{props.device.friendlyName}</DialogTitle>
+            <DialogTitle id="composite-device">{ name }</DialogTitle>
             <DialogContent className={isMobile? classes.nopad : null} >
                 <Table size="small" className={classes.tableAuto} >
                     <TableBody>
@@ -149,8 +168,8 @@ export default function CompositeDevice(props) {
                                 <TableCell className={classes.colc} >Set</TableCell>
                             </TableRow>
 
-                        { capabilitites.map( iface => 
-                            renderSuspenseModule(iface)
+                        { capabilities.map( capability => 
+                            renderSuspenseModule(capability.interface, capability.instance)
                         )}
                     </TableBody>
                 </Table>
@@ -162,5 +181,7 @@ export default function CompositeDevice(props) {
             </DialogActions>
         </Dialog>
     );
-}
+}, deviceStatesAreEqual);
+
+export default dataFilter(CompositeDevice);
 

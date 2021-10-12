@@ -35,6 +35,11 @@ function Device(props) {
         return <RealIcon size={pxSize} fontSize={size} />
     }
 
+    function secondaryClick(event) {
+        event.stopPropagation()
+        props.showDevice(props.device.endpointId)
+    }
+
     return (
             <SofaListItem   avatar={ getIcon(props.device.displayCategories) } 
                             avatarState={'off'} small={props.small}
@@ -42,7 +47,7 @@ function Device(props) {
                             onClick={() => props.select(props.device)}
                             primary={props.device.friendlyName} secondary={props.device.displayCategories}
                             secondaryActions={
-                                <IconButton edge="end" aria-label="See Details" onClick={() => props.showDevice(props.device.endpointId) }>
+                                <IconButton edge="end" aria-label="See Details" onClick={secondaryClick}>
                                     <CommentIcon />
                                 </IconButton>
                             }

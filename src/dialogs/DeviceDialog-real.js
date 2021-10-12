@@ -28,7 +28,7 @@ const useStyles = makeStyles({
     },
 });
 
-const DeviceDialog = props => {
+export default function DeviceDialog(props) {
 
     const { devicesByCategory, controllers, directives } = useContext(DeviceContext);
     const classes = useStyles();
@@ -46,7 +46,7 @@ const DeviceDialog = props => {
         var devs=devicesByCategory('ALL', nameFilter)
         setDisplayDevs(devs.slice(0, limit))
     // eslint-disable-next-line 
-    }, [ limit, nameFilter ])
+    }, [ limit ])
 
     //function filterByType(devtype) {
 
@@ -88,7 +88,7 @@ const DeviceDialog = props => {
     });    
  
     return (
-        <SofaDialog open={props.open} close={props.close} maxWidth={'md'} >
+        <SofaDialog open={props.open} close={props.close} maxWidth={'lg'} >
             <GridItem wide={true} nopaper={true}>
                 <GridSearch wide={true} searchValue={nameFilter} setSearchValue={setNameFilter} />
             </GridItem>
@@ -100,7 +100,7 @@ const DeviceDialog = props => {
                             directives={directives} showDevice={setShowDevice} />
                 )}
                 { showDevice && 
-                    <CompositeDevice endpointId={showDevice} close={closeDevice} directives={directives} />
+                    <CompositeDevice device={showDevice} close={closeDevice} directives={directives} />
                 }
                 </div>
             </DialogContent>
@@ -108,5 +108,3 @@ const DeviceDialog = props => {
     )
 
 };
-
-export default DeviceDialog;

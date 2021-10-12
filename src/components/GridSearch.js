@@ -55,6 +55,7 @@ export default function GridItem(props) {
             <Paper elevation={props.elevation} className={classes.content} >
                 <TextField
                     autoFocus
+                    InputProps={{ disableUnderline: true }}
                     fullWidth
                     label={'Search'}
                     value={search}

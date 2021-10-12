@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => {
             alignContent: "flex-start",
             display: "flex",
             position: "relative",
+            paddingBottom: 64,
         },
         version: {
             paddingLeft: 16,

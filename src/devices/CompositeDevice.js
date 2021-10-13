@@ -140,19 +140,25 @@ const CompositeDevice = React.memo(props => {
     }
         
     function renderSuspenseModule( interfaceName, instance ) {
+        if (!interfaceName || interfaceName.split('.').length<2) {
+            return null
+        }
 
-        if (interfaceName.split('.').length>1) {
+        try {
             let modulename = interfaceName.split('.')[1]
             if (modules.hasOwnProperty(modulename)) {
                 var Module=modules[modulename]
-                var interfaceState = instance ? deviceState[instance.split('.')[1]] : deviceState[modulename]
-                return  <Suspense key={ modulename } fallback={placeholder}>
+                var detailName = instance ? instance.split('.')[1] : modulename
+                var interfaceState = deviceState[detailName]
+                return  <Suspense key={ detailName } fallback={placeholder}>
                             <Module interface={ interfaceState } device={device} deviceState={deviceState} instance={ instance } />
                         </Suspense>
-            } else {
-                return <TableRow key={modulename} ><TableCell>Loading...</TableCell></TableRow>
             }
         }
+        catch {
+            return <TableRow key={interfaceName} ><TableCell>Error with {interfaceName}</TableCell></TableRow>
+        }
+        return <TableRow key={interfaceName} ><TableCell>Loading...</TableCell></TableRow>
     }
     
     

@@ -24,7 +24,8 @@ const ModeController = props => {
     
     const classes = useStyles();
     const { getModes, isModeNonControllable } = useContext(DeviceContext);
-    const on = props.deviceState ? props.deviceState.PowerController.powerState.value !== 'ON' : false
+    const hasPower = props.deviceState && props.deviceState.hasOwnProperty('PowerController')
+    const on = hasPower ? props.deviceState.PowerController.powerState.value !== 'ON' : true
     const modes = getModes(props.device, props.exclude)
     const mode = props.instance.split('.')[1]
     const controllable = isModeNonControllable(props.device, props.instance)

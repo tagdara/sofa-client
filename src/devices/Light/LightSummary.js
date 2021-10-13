@@ -63,6 +63,7 @@ const LightSummary = React.memo(props => {
     const labelText = lightCount('on') === 1 ? lightCount('on')+" light is on" : lightCount('on')+" lights are on"
 
     return (
+        <>
         <SofaListItem   avatarState={lightCount('on') ? "on" : "off"} 
                         avatarClick={ props.onClick } 
                         labelClick={ props.onClick }
@@ -72,6 +73,7 @@ const LightSummary = React.memo(props => {
                         inlineSecondary={true}
                         secondaryActions={ checkHoliday() }
         />
+        </>
     );
 }, deviceStatesAreEqual);
 

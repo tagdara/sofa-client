@@ -58,14 +58,6 @@ const DeviceDialog = props => {
         
     //    return devicesByCategory(devtype)
     //}
-
-    function executeDirective(iface, idir) {
-        if (Object.keys(props.directives[iface][idir]).length===0) {
-            props.device[iface].directive(idir)
-        } else {
-            console.log('directive requires parameters', props.directives[iface][idir])
-        }
-    }
     
     function closeDevice() {
         setShowDevice(null)
@@ -95,8 +87,8 @@ const DeviceDialog = props => {
             <DialogContent className={classes.scroller}>
                 <div ref={infiniteRef} className={classes.holder}>
                 { displayDevs.map((device) =>
-                    <Device key={ 'XX'+device.endpointId } device={device} mode={mode} 
-                            controllers={controllers} select={props.select ? props.select : executeDirective} 
+                    <Device key={ 'XX'+device.endpointId } small={true} device={device} mode={mode} 
+                            controllers={controllers} select={props.select ? props.select : () => setShowDevice(device.endpointId)} 
                             directives={directives} showDevice={setShowDevice} />
                 )}
                 { showDevice && 

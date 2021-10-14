@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { DeviceContext } from 'context/DeviceContext';
+import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import Moment from 'react-moment';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,7 +18,7 @@ function Alert(props) {
 
 export default function AutomationDetails(props) {
 
-    const { directive } = useContext(DeviceContext);
+    const { directive } = useContext(DeviceStateContext);
     const [ showResult, setShowResult]=useState(false)
     const [ resultMessage, setResultMessage]=useState('')
     const [ severity, setSeverity]=useState('info')

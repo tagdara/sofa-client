@@ -11,27 +11,39 @@ import TvIcon from '@material-ui/icons/Tv';
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
 
-export default function DeviceIcon(props) {
+const DeviceIcon = props => {
 
-    const icons = { 'SCENE_TRIGGER':TuneIcon, 
-                    'ACTIVITY_TRIGGER':ListIcon, 
-                    'LIGHT':LightbulbOutlineIcon, 
-                    'BUTTON':TouchAppIcon, 
-                    'SPEAKER':SpeakerIcon, 
-                    'THERMOSTAT':DataUsageIcon, 
-                    'RECEIVER':SpeakerGroupIcon, 
-                    'TV':TvIcon
-                }
+    const icons = { 
+        'SCENE_TRIGGER':TuneIcon, 
+        'ACTIVITY_TRIGGER':ListIcon, 
+        'LIGHT':LightbulbOutlineIcon, 
+        'BUTTON':TouchAppIcon, 
+        'SPEAKER':SpeakerIcon, 
+        'THERMOSTAT':DataUsageIcon, 
+        'RECEIVER':SpeakerGroupIcon, 
+        'TV':TvIcon
+    }
 
     function getIcon(category, size='default') {
-        
+
         var RealIcon=DeveloperBoardIcon
         if (icons.hasOwnProperty(category)) {
             RealIcon=icons[category]
         }
-        return <RealIcon size={24} fontSize={size} />
+        return <RealIcon size={size} fontSize={props.fontSize} />
+    }
+
+    if (props.displayCategories) {
+        return getIcon(props.displayCategories, props.size)
     }
 
     return getIcon(props.name)
 
+}
+
+export default DeviceIcon
+
+DeviceIcon.defaultProps = {
+    size: 'default',
+    fontSize: 'default',
 }

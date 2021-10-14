@@ -45,6 +45,7 @@ export default function DeviceDirective(props) {
     
     function defaultOrValue() { 
         var controller = props.item.controller
+        if (!controller) { return "" }
         if (controller.includes('.')) {
             controller = controller.split('.')[1]
         }

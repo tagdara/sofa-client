@@ -5,13 +5,13 @@ export default function Volume(props) {
     
     useEffect(() => {
         if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : 50 }, {}, props.item.instance)
+            props.directive(props.device.endpointId, 'Speaker', 'SetVolume', { "volume" : 50 }, {}, props.item.instance)
         }
     // eslint-disable-next-line
     }, [props.item, props.device, props.interface])
     
     function handleVolumeChange(event) {
-        props.directive(props.device.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event }, {}, props.item.instance)
+        props.directive(props.device.endpointId, 'Speaker', 'SetVolume', { "volume" : event }, {}, props.item.instance)
     }; 
 
     return (

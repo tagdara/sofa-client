@@ -730,7 +730,11 @@ export default function DeviceProvider(props) {
     }
 
     function isModeNonControllable(dev, instance) {
-
+        
+        if (typeof(dev)=='string') {
+            dev=devices[dev]
+        }
+        
         for (var k = 0; k < dev.capabilities.length; k++) {
             if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.split('.')[1]===instance) {
                 try {

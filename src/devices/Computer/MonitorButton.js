@@ -50,7 +50,7 @@ const MonitorButton = React.memo(props => {
     const classes = useStyles();
     const outlet = props.deviceState[props.outletEndpointId]
     const monitor = props.deviceState[props.endpointId]
-    const monitorDefault = monitor && monitor.InputController.input.value === props.defaultInput
+    const monitorDefault = monitor && monitor.Input.mode.value === props.defaultInput
     const outletOn = outlet && outlet.PowerController.powerState.value === "ON"
     const outletStandby = outlet && outlet.hasOwnProperty('Energy Level') && outlet['Energy Level'].mode.value === "Standby"
 
@@ -68,9 +68,9 @@ const MonitorButton = React.memo(props => {
 
     function toggleInput(devicename) {
         if (monitorDefault) {
-            props.directive(props.endpointId, "InputController", 'SelectInput', { "input": 'Blank' } )
+            props.directive(props.endpointId, "ModeController", 'SetMode', { "mode": 'Input.I8' }, {}, 'Matrix.Input' )
         } else {
-            props.directive(props.endpointId, "InputController", 'SelectInput', { "input": props.defaultInput } )
+            props.directive(props.endpointId, "ModeController", 'SetMode', { "mode": props.defaultInput }, {}, 'Matrix.Input' )
         }
     }; 
     

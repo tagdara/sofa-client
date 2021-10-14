@@ -77,11 +77,11 @@ const Television = React.memo(props => {
     // const on = tv.PowerController.powerState.value === "ON"
 
     function handleVolumeChange(event) {
-        props.directive(props.endpointId,"SpeakerController", 'SetVolume', { "volume" : event} )
+        props.directive(props.endpointId,"Speaker", 'SetVolume', { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        props.directive(props.endpointId,"SpeakerController", 'SetVolume', { "mute" : event} )
+        props.directive(props.endpointId,"Speaker", 'SetVolume', { "mute" : event} )
     }; 
     
     function handlePowerChange(event) {
@@ -97,7 +97,7 @@ const Television = React.memo(props => {
     }
     
     function localVolumeCheck() {
-        if ( tv.hasOwnProperty('SpeakerController') ) {
+        if ( tv.hasOwnProperty('Speaker') ) {
             if ( tv.hasOwnProperty('Audio') ) {
                 if ( tv.Audio.mode.value==="Audio.speaker") {
                     return true
@@ -140,7 +140,7 @@ const Television = React.memo(props => {
             { localVolumeCheck() && ( tv.PowerController.powerState.value==='ON' || showDetail ) &&
                 <DotAvatar   label={"Volume"} levelValues={[0,5,7,10,20,50]} centered={true}
                                     small={true} reverse={true} minWidth={64} 
-                                    value={ tv.SpeakerController.volume.value }
+                                    value={ tv.Speaker.volume.value }
                                     select={handleVolumeChange} 
                                     disabled={ !localVolumeCheck() || tv.PowerController.powerState.value==='OFF' }
                 />
@@ -150,9 +150,9 @@ const Television = React.memo(props => {
                     <>
                         <SofaAvatarSlider   label={"Volume"} 
                                             small={true} reverse={true} minWidth={64} 
-                                            value={ tv.SpeakerController.volume.value }
+                                            value={ tv.Speaker.volume.value }
                                             change={handleVolumeChange} 
-                                            avatarClick={ () => handleMuteChange(!tv.SpeakerController.mute.value)} 
+                                            avatarClick={ () => handleMuteChange(!tv.Speaker.mute.value)} 
                                             avatarState={ tv.PowerController.powerState.value==='ON' ? "on" : "off" }
                                             disabled={ !localVolumeCheck() || tv.PowerController.powerState.value==='OFF' }
                         />

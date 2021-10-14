@@ -90,11 +90,11 @@ const Receiver = React.memo(props => {
     if (!receiver) { return null }
 
     function handleVolumeChange(event) {
-        props.directive(props.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
+        props.directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
     }; 
 
     //function handleMuteChange(event) {
-    //    props.directive(props.device.endpointId, 'SpeakerController', 'SetVolume', { "mute" : !props.deviceState.SpeakerController.mute.value } )
+    //    props.directive(props.device.endpointId, 'Speaker', 'SetVolume', { "mute" : !props.deviceState.Speaker.mute.value } )
     //}; 
     
     function handlePowerChange(event) {
@@ -130,7 +130,7 @@ const Receiver = React.memo(props => {
         if (receiver.PowerController.powerState.value!=='OFF') {
             return receiver.InputController.input.value + " / "+ surroundName()
         }
-        return receiver.SpeakerController.volume.value+"% / "+receiver.InputController.input.value + " / "+ surroundName()
+        return receiver.Speaker.volume.value+"% / "+receiver.InputController.input.value + " / "+ surroundName()
     }
 
     return (
@@ -144,7 +144,7 @@ const Receiver = React.memo(props => {
             { (showDetail || receiver.PowerController.powerState.value==='ON' ) &&
                 <DotAvatar   label={"Volume"} levelValues={volumeMode==='presets' ? volumePresets : undefined } centered={true}
                                     small={true} reverse={true} minWidth={64} 
-                                    value={receiver.SpeakerController.volume.value}
+                                    value={receiver.Speaker.volume.value}
                                     select={handleVolumeChange} 
                                     disabled={ receiver.PowerController.powerState.value==='OFF' }
                 />

@@ -24,11 +24,11 @@ const Speaker = React.memo(props => {
     }
 
     function handleVolumeChange(event) {
-        directive(props.endpointId, 'SpeakerController', 'SetVolume', { "volume" : event} )
+        directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        directive(props.endpointId, 'SpeakerController', 'SetVolume', { "mute" : !speaker.SpeakerController.mute.value } )
+        directive(props.endpointId, 'Speaker', 'SetVolume', { "mute" : !speaker.Speaker.mute.value } )
     }; 
 
     function togglePower(event) {
@@ -47,9 +47,9 @@ const Speaker = React.memo(props => {
             <SofaAvatarSlider   label = { name } 
                                 labelClick = {togglePower}
                                 small = {true} reverse = {true} minWidth = { 64 } noPad = { true }
-                                value = { speaker.SpeakerController.volume.value }
+                                value = { speaker.Speaker.volume.value }
                                 change = {handleVolumeChange} 
-                                avatarClick={ () => handleMuteChange(!speaker.SpeakerController.mute.value)} 
+                                avatarClick={ () => handleMuteChange(!speaker.Speaker.mute.value)} 
                                 avatarState={ speaker.PowerController.powerState.value==='ON' ? "on" : "off" }
                                 disabled={ speaker.PowerController.powerState.value==='OFF' }
             />

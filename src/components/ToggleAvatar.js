@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => {
             display: "flex",
             alignItems: "center",
             zIndex: 6,
+            padding: 8,
         },
         base: {
             padding: 0,
@@ -70,6 +71,7 @@ function ToggleAvatar(props) {
             backgroundColor: props.theme.palette.avatar[props.avatarState.toLowerCase()],
             },
         noback: {
+            padding: 8,
             backgroundColor: props.theme.palette.avatar.none,
             color: props.theme.palette.avatar[props.avatarState.toLowerCase()]
         },
@@ -88,9 +90,7 @@ function ToggleAvatar(props) {
             </Avatar>
             }
         </ListItemAvatar>
-
     )
-
 }
 
 ToggleAvatar.defaultProps = {

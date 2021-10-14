@@ -53,7 +53,7 @@ const Computer = React.memo(props => {
     }    
 
     const computerState = props.deviceState[props.endpointId]
-    const speakerController = computerState.SpeakerController
+    const Speaker = computerState.Speaker
     const on = computerState.PowerController ? computerState.PowerController.powerState.value === "ON" : false
     
     function turnOff() {
@@ -116,7 +116,7 @@ const Computer = React.memo(props => {
                                 </>
                             }
             />
-            { (speakerController && on ) && <ComputerVolume endpointId={props.endpointId} directive={props.directive} speakerController ={ speakerController } /> }
+            { (Speaker && on ) && <ComputerVolume endpointId={props.endpointId} directive={props.directive} Speaker ={ Speaker } /> }
         </CardBase>   
     );
 }, deviceStatesAreEqual);

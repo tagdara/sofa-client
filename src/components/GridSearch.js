@@ -5,10 +5,22 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import debounce from 'lodash/debounce';
+import InputAdornment from '@material-ui/core/InputAdornment';
 
 const useStyles = makeStyles(theme => {
     return {
-   
+       smallContent: {
+            display: 'flex',
+            margin: 0,
+            boxSizing: "border-box",
+            padding: 0,
+            flexWrap: 'wrap',
+            alignItems: "center",
+            flexGrow: 1,
+            flexBasis: 0,
+            position: "relative",
+            overflowY: "auto",
+        },   
         content: {
             borderWidth: "thin",
             borderStyle: "solid",
@@ -32,6 +44,11 @@ const useStyles = makeStyles(theme => {
         },
         normal: {
             padding: "4px !important",
+        },
+        textField: {
+            backgroundColor: theme.palette.background.default,
+            borderRadius: 4,
+            padding: 4,
         }
     }
 });
@@ -48,6 +65,27 @@ export default function GridItem(props) {
     function handleChange(newsearch) {
         setSearch(newsearch)
         delayedSearch(newsearch)
+    }
+
+    if (props.small) {
+        return (
+            <Grid   item xs={props.xs ? props.xs : (isMobile || props.wide ? 12 : 4) } 
+                    className={ classes.thinmargin }>
+                <Paper elevation={props.elevation} className={classes.smallContent} >
+                    <TextField
+                        className={classes.textField}
+                        autoFocus
+                        InputProps={{   disableUnderline: true,
+                                        startAdornment: <InputAdornment position="start">{ props.startIcon }</InputAdornment>,
+                        }}
+                        fullWidth
+                        label={'Search'}
+                        value={search}
+                        onChange={(e) => handleChange(e.target.value)}
+                    />
+                </Paper>
+            </Grid>
+        )
     }
     
     return (

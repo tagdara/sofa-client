@@ -23,11 +23,25 @@ export default function Mode(props) {
         }
         return ""
     }
+
+    function getModeName(mode) {
+        try {
+            for (var n = 0; n < mode.modeResources.friendlyNames.length; n++) {
+                if (mode.modeResources.friendlyNames[n]["@type"] === "text") {
+                    var name = mode.modeResources.friendlyNames[n].value.text
+                    return name
+                }
+            }
+        }
+        catch {}
+        return mode.value.split('.')[1]
+    }
+
     
     return (
         <Select value={props.item.value!==undefined ? props.item.value.mode : ""} onChange={handleModeChange} input={<AutomationInput name="input" />} >
             { props.interface.configuration.supportedModes.map( mode => 
-                <MenuItem key={mode.value} value={mode.value}>{mode.value.split('.')[1]}</MenuItem>
+                <MenuItem key={mode.value} value={mode.value}>{ getModeName(mode) }</MenuItem>
             )}
         </Select>
     );

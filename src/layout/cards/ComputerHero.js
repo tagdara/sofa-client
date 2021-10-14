@@ -23,14 +23,14 @@ export default function ComputerHero(props) {
 
     const buttonLayout = {
         upstairs:   [   
-            { endpointId: "matrix:output:O1", label: "1", defaultInput: "PC1", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E00"},
-            { endpointId: "matrix:output:O3", label: "2", defaultInput: "PC2", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E01"},
-            { endpointId: "matrix:output:O6", label: "3", defaultInput: "PC3", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E02"},
-            { endpointId: "matrix:output:O7", label: "4", defaultInput: "PC4", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E03"}
+            { endpointId: "matrix:output:O1", label: "1", defaultInput: "Input.I1", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E00"},
+            { endpointId: "matrix:output:O3", label: "2", defaultInput: "Input.I2", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E01"},
+            { endpointId: "matrix:output:O6", label: "3", defaultInput: "Input.I3", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E02"},
+            { endpointId: "matrix:output:O7", label: "4", defaultInput: "Input.I4", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E03"}
         ],
         downstairs: [   
-            { endpointId: "matrix:output:O2", label: "D1", defaultInput: "PC1", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E00"},
-            { endpointId: "matrix:output:O4", label: "D2", defaultInput: "PC2", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E01"},
+            { endpointId: "matrix:output:O2", label: "D1", defaultInput: "Input.I1", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E00"},
+            { endpointId: "matrix:output:O4", label: "D2", defaultInput: "Input.I2", outletEndpointId: "tplink:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E01"},
         ]
     }
 

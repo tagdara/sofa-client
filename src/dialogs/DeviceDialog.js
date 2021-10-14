@@ -2,22 +2,37 @@ import React, { useState, useContext, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 import { DeviceContext } from 'context/DeviceContext';
+import List from '@material-ui/core/List';
+import SearchIcon from '@material-ui/icons/Search';
 
 import GridSearch from 'components/GridSearch';
-import GridItem from 'components/GridItem';
 import Device from 'deviceSelect/Device';
 import CompositeDevice from 'devices/CompositeDevice';
 import SofaDialog from "dialogs/SofaDialog";
 
-import { useInfiniteScroll } from "react-infinite-scroll-hook"
+import { Scrollbar } from 'react-scrollbars-custom';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles({
-
+    xscroller: {
+        flexGrow: 1,
+        display: "flex",
+        flexDirection: "column",
+        padding: 0,
+        borderRadius: 4,
+        boxSizing: "border-box",
+        overflow: "hidden",
+        justifyContent: "flex-start",   
+    },
     scroller: {
-        overflowY: "auto",
-        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+        boxSizing: "border-box",
+        width: "100%",
     },
     holder: {
         display: "flex",
@@ -26,6 +41,23 @@ const useStyles = makeStyles({
     searchtitle: {
         display: "flex",
     },
+    scrollHolder: {
+        display: "flex",
+        flex:3,
+        boxSizing: "border-box",
+        //padding: "0px 20px",
+        paddingBottom: 0,
+        marginBottom: 0,
+        overflowY: "auto",
+        overflowX: "hidden",
+        //marginLeft: "calc(100vw - 20px - 100%)",
+        alignContent: "flex-start",
+        flexDirection: "column",
+        //backgroundColor: theme.palette.layer.body,
+    },
+    scrollContent: {
+        display: "flex",
+    }
 });
 
 const DeviceDialog = props => {
@@ -40,7 +72,6 @@ const DeviceDialog = props => {
     const [loading, setLoading] = useState(false);
     const devs=devicesByCategory('ALL', nameFilter)
     const [displayDevs, setDisplayDevs]=useState([])
-    const hasNextPage = displayDevs.length!==devs.length
     
     useEffect(() => {
         var devs=devicesByCategory('ALL', nameFilter)
@@ -64,37 +95,41 @@ const DeviceDialog = props => {
     }
     
     function handleLoadMore() {
-        console.log('handle it?')
-        if (limit<devs.length) { 
+        if ( limit < devs.length ) { 
             setLoading(true)
             setLimit(limit+50)
             setLoading(false)
         }
     }
 
-    const infiniteRef = useInfiniteScroll({
-        loading,
-        hasNextPage,
-        onLoadMore: handleLoadMore,
-        scrollContainer: 'parent'
-    });    
- 
+    function handleScroll(e) {
+        const bottom = e.scrollHeight - e.scrollTop === e.clientHeight;
+        if (bottom) {
+            handleLoadMore()
+        }
+    }
+
     return (
         <SofaDialog open={props.open} close={props.close} maxWidth={'md'} >
-            <GridItem wide={true} nopaper={true}>
-                <GridSearch wide={true} searchValue={nameFilter} setSearchValue={setNameFilter} />
-            </GridItem>
+            <DialogTitle>
+                <GridSearch small={true} wide={true} searchValue={nameFilter} setSearchValue={setNameFilter} startIcon={<SearchIcon />} />
+            </DialogTitle>
             <DialogContent className={classes.scroller}>
-                <div ref={infiniteRef} className={classes.holder}>
-                { displayDevs.map((device) =>
-                    <Device key={ 'XX'+device.endpointId } small={true} device={device} mode={mode} 
-                            controllers={controllers} select={props.select ? props.select : () => setShowDevice(device.endpointId)} 
-                            directives={directives} showDevice={setShowDevice} />
-                )}
-                { showDevice && 
-                    <CompositeDevice endpointId={showDevice} close={closeDevice} directives={directives} />
-                }
-                </div>
+                <Scrollbar  contentProps={{ style: {'display': 'flex', 'flexDirection': 'column'} }} className={classes.scrollContent} onScroll={ handleScroll } noScrollX translateContentSizeYToHolder >
+                    <List>
+                    { displayDevs.map((device) =>
+                        <Device key={ 'XX'+device.endpointId } small={true} device={device} mode={mode} 
+                                controllers={controllers} select={props.select ? props.select : () => setShowDevice(device.endpointId)} 
+                                directives={directives} showDevice={setShowDevice} />
+                    )}
+                    { showDevice && 
+                        <CompositeDevice endpointId={showDevice} close={closeDevice} directives={directives} />
+                    }
+                    { loading &&
+                        <CircularProgress size={24} />
+                    }
+                    </List>
+                </Scrollbar>
             </DialogContent>
         </SofaDialog>
     )

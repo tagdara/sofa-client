@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import {withStyles } from '@material-ui/styles';
+import { withStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import InputBase from '@material-ui/core/InputBase';
@@ -53,10 +53,14 @@ export default function ThermostatMode(props) {
     if (props.compact) {
         return valueOrDefault()
     }
+
+    const supportedModes = props.interface.configuration ? props.interface.configuration.supportedModes : []
+    
+    console.log('tmode ocnifg', props.interface)
     
     return (
         <Select value={ valueOrDefault() } onChange={handleModeChange} input={<BootstrapInput name="thermostatMode" />} >
-            { props.interface.configuration.supportedModes.map( mode => 
+            { supportedModes.map( mode => 
                 <MenuItem key={mode} value={mode}>{mode}</MenuItem>
             )}
         </Select>

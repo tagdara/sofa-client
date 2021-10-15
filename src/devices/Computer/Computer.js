@@ -57,7 +57,7 @@ const Computer = React.memo(props => {
     const on = computerState.PowerController ? computerState.PowerController.powerState.value === "ON" : false
     
     function turnOff() {
-        props.directive(props.device.endpointId, "PowerController", "TurnOff", {}, {}, "")
+        props.directive(props.endpointId, "PowerController", "TurnOff", {}, {}, "")
     }; 
  
     function handleLockButton(event) {

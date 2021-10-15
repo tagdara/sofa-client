@@ -16,7 +16,7 @@ export default function ComputerLayout(props) {
     const serviceNames=['3D Printer', 'Dishwasher outlet', 'NUC1 outlet', 'NUC2 outlet']
     const computers = sortByName(endpointIdsByCategory('COMPUTER'))    
     const plugs =  endpointIdsByFriendlyName(plugNames)
-    const matrix = endpointIdsByFriendlyName(matrixDeviceNames)
+    const matrix = sortByName(endpointIdsByFriendlyName(matrixDeviceNames))
     const services = endpointIdsByFriendlyName(serviceNames)
 
     return (

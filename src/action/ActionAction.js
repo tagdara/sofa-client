@@ -1,11 +1,11 @@
 import React, { useState, useContext } from 'react';
 import { DeviceContext } from 'context/DeviceContext';
 
-import AutomationDevice from '../automation/AutomationDevice';
-import PropertyValue from '../automation/PropertyValue';
-import DeviceDirective from '../automation/DeviceDirective';
+import AutomationDevice from 'automation/AutomationDevice';
+import PropertyValue from 'automation/PropertyValue';
+import DeviceDirective from 'automation/DeviceDirective';
 import CardBase from 'components/CardBase';
-import DisplayAction from './DisplayAction';
+import DisplayAction from 'action/DisplayAction';
 
 export default function ActionAction(props) {
     

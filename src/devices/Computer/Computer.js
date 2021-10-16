@@ -78,7 +78,9 @@ const Computer = React.memo(props => {
     }
     
     function openWebmouse() {
-        var newurl="https://"+name+".dayton.tech:9998"
+        var domain = window.location.hostname.split('.').slice(1).join('.')
+        var newurl = "https://"+window.location.hostname+"/windows?pc="+name+"."+domain
+        console.log('new url', newurl)
         var safariWindow = window.open();
         safariWindow.location.href = newurl
         //window.open(newurl,'_mouse');

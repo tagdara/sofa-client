@@ -21,11 +21,11 @@ const JukeboxHero = React.memo(props => {
     const [showIdle, setShowIdle]=useState(false)
     const serverurl="https://"+window.location.hostname;
     const [ filterOff, setFilterOff] = useState(true)
-    const jukebox = 'jukebox:player:jukebox'
+    const jukebox = 'jukebox'
     const jukeboxState = props.deviceState[jukebox]
 
     useEffect(() => {
-        props.addEndpointIds('id','jukebox:player:jukebox','JukeboxHero')
+        props.addEndpointIds('id',jukebox,'JukeboxHero')
     // eslint-disable-next-line 
     }, [])
 

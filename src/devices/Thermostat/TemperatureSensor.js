@@ -30,7 +30,7 @@ const TemperatureSensor = React.memo(props => {
     const classes = useStyles();
     const { selectPage } = useContext(LayoutContext);
     const [ showDetail, setShowDetail ] = useState(false)
-    const additionalAttributes = ['Light Level', 'Humidity', 'Wind Speed', 'UV Index']
+    const additionalAttributes = ['Light Level', 'Humidity', 'Wind Speed', 'UV Index', 'Rainfall']
 
     useEffect(() => {
         props.addEndpointIds('id', props.endpointId, 'TemperatureSensor-'+props.endpointId)
@@ -68,7 +68,7 @@ const TemperatureSensor = React.memo(props => {
                             primary={ name } />
             <Collapse in={showDetail} className={classes.detail}>
                 { deviceAttributes.map( attribName => 
-                    <ListItem className={classes.listItem}>
+                    <ListItem className={classes.listItem} key={attribName}>
                         <ListItemText primary={attribName} />
                         <Typography>{ deviceState[attribName].rangeValue.value }</Typography>
                     </ListItem>

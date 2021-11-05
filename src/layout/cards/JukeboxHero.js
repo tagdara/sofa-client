@@ -5,27 +5,33 @@ import IconButton from '@material-ui/core/IconButton';
 import QueueMusicIcon from '@material-ui/icons/QueueMusic';
 import SpeakerIcon from '@material-ui/icons/Speaker';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
+import ItemBase from 'components/ItemBase';
 import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'devices/Player/PlayerArtOverlayButtons';
-import ItemBase from 'components/ItemBase';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import SofaListItem from 'components/SofaListItem';
 import SpeakerList from 'devices/Speaker/SpeakerList';
 import Spacer from 'components/Spacer';
 
+import useDeviceStateStore from 'store/deviceStateStore'
+import useRegisterStore from 'store/registerStore'
+import { directive } from 'store/directive'
 
-const JukeboxHero = React.memo(props => {
+const JukeboxHero = props => {
     
     const [showIdle, setShowIdle]=useState(false)
     const serverurl="https://"+window.location.hostname;
     const [ filterOff, setFilterOff] = useState(true)
     const jukebox = 'jukebox'
-    const jukeboxState = props.deviceState[jukebox]
+    const jukeboxState = useDeviceStateStore( state => state.deviceStates[jukebox] )
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
-        props.addEndpointIds('id',jukebox,'JukeboxHero')
+        register(jukebox, 'jukeboxhero')
+        return function cleanup() {
+            unregister(jukebox, 'jukeboxhero')
+        };
     // eslint-disable-next-line 
     }, [])
 
@@ -36,18 +42,18 @@ const JukeboxHero = React.memo(props => {
     function handlePlayPause(event) {
         event.stopPropagation();
         if (jukeboxState.MusicController.playbackState.value ==='PLAYING') {
-            props.directive(jukebox, 'MusicController', 'Pause')
+            directive(jukebox, 'MusicController', 'Pause')
         } else {
-            props.directive(jukebox, 'MusicController', 'Play')
+            directive(jukebox, 'MusicController', 'Play')
         }
     }; 
 
     function handleSkip(event) {
-        props.directive(jukebox, 'MusicController', "Skip")
+        directive(jukebox, 'MusicController', "Skip")
     }; 
 
     function handleStop(event) {
-        props.directive(jukebox, 'MusicController', "Stop")
+        directive(jukebox, 'MusicController', "Stop")
     }; 
 
     function handleCover() {
@@ -106,7 +112,7 @@ const JukeboxHero = React.memo(props => {
 
         </ ItemBase >
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(JukeboxHero);
+export default JukeboxHero;
 

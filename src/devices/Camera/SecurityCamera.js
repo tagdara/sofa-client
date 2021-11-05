@@ -5,9 +5,7 @@ import CameraCard from 'devices/Camera/CameraCard';
 import CameraImage from 'devices/Camera/CameraImage';
 import CameraVideo from 'devices/Camera/CameraVideo';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
-const SecurityCamera = React.memo(props => {
+const SecurityCamera = props => {
 
     // const intervals = [1000, 500, 5000, 3000]
     const [showDialog, setShowDialog] = useState(false);
@@ -57,6 +55,6 @@ const SecurityCamera = React.memo(props => {
             }
         </CameraCard>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(SecurityCamera);
+export default SecurityCamera;

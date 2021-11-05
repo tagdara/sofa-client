@@ -4,17 +4,17 @@ import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 
 import { Scrollbars } from 'react-custom-scrollbars';
-
-import { LayoutContext } from 'layout/LayoutProvider';
-import { NetworkContext } from 'network/NetworkProvider';
-import SofaLogin from 'user/SofaLogin'
-import ErrorCard from 'error/ErrorCard'
 import BottomBar from 'layout/BottomBar';
 import ReconnectButton from 'network/ReconnectButton';
 import SofaDrawer from 'layout/SofaDrawer';
 import RightDrawer from 'layout/RightDrawer';
 import TopBar from 'layout/TopBar';
+import useStream from 'store/useStream'
+import storeUpdater from 'store/storeUpdater'
+import useLayoutStore from 'store/layoutStore'
 
+import { LayoutContext } from 'layout/LayoutProvider';
+import { discovery, refreshDirectives } from 'store/directive'
 
 const useStyles = makeStyles(theme => {
     
@@ -64,9 +64,19 @@ const useStyles = makeStyles(theme => {
 
 export default function SofaFrame(props) {
     
-    const { addModule, currentPage, currentProps, isMobile, renderSuspenseModule, maxScreenWidth } = useContext(LayoutContext);
-    const { streamConnected, connectError, loggedIn } = useContext(NetworkContext);
+    const { addModule, isMobile, renderSuspenseModule, maxScreenWidth } = useContext(LayoutContext);
+    const { streamConnected } = useStream(storeUpdater)
+    const currentPage = useLayoutStore(state => state.currentPage)
+    const currentProps = useLayoutStore(state => state.currentProps)
+
+    console.log('streamconnected', streamConnected )
+
     const classes = useStyles(maxScreenWidth);
+    
+    useEffect(() => {
+        refreshDirectives()
+        discovery()
+    }, [])
 
     useEffect(() => { 
         if (currentPage) {
@@ -76,29 +86,19 @@ export default function SofaFrame(props) {
     }, [currentPage] )
     
     return (
-        (loggedIn) ?
         <>
             { !isMobile && <RightDrawer /> }
             { !isMobile && <TopBar /> }
             { !isMobile && <SofaDrawer /> }
             <Scrollbars>
             <div className={classes.scrollHolder}>
-                { !streamConnected() && <ReconnectButton /> }
+                { !streamConnected && <ReconnectButton /> }
                 <Grid container spacing={ 1 } className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                     { renderSuspenseModule(currentPage, currentProps) }
                 </Grid>
             </div>
             </Scrollbars>
             { isMobile && <BottomBar /> }
-        </>
-        :
-        <>
-            { connectError &&
-                <ErrorCard />
-            }
-            <Grid container spacing={2} >
-                <SofaLogin />
-            </Grid>
         </>
     );
 }

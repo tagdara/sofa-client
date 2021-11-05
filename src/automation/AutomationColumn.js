@@ -7,8 +7,6 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceContext } from 'context/DeviceContext';
-
 import AutomationAction from "automation/AutomationAction"
 import AutomationCondition from "automation/AutomationCondition"
 import AutomationTrigger from "automation/AutomationTrigger"
@@ -16,11 +14,12 @@ import AutomationSchedule from "automation/AutomationSchedule"
 
 import GridSection from 'components/GridSection';
 import ErrorBoundary from 'error/ErrorBoundary'
+import { directives } from 'store/directive';
+import { deviceByEndpointId, getControllerProperties, controllerForProperty } from 'store/deviceHelpers'
 
 export default function AutomationColumn(props) {
 
     const { isMobile } = useContext(LayoutContext);
-    const { deviceByEndpointId, getControllerProperties, controllerForProperty, directives } = useContext(DeviceContext);
 
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)

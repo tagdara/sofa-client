@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -12,9 +12,6 @@ import Select from '@material-ui/core/Select';
 import TvIcon from '@material-ui/icons/Tv';
 import ControlCameraIcon from '@material-ui/icons/ControlCamera';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-import { DeviceContext } from 'context/DeviceContext';
-
 import DotAvatar from 'components/DotAvatar'
 import ItemBase from 'components/ItemBase'
 import TvRemote from 'devices/Television/TvRemote';
@@ -24,6 +21,11 @@ import SofaListItem from 'components/SofaListItem'
 import PlaceholderCard from 'layout/PlaceholderCard';
 
 import Computer from 'devices/Computer/Computer.js';
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import useRegisterStore from 'store/registerStore'
+import { directive } from 'store/directive'
+import { getInputs } from 'store/deviceHelpers'
 
 const useStyles = makeStyles({
     list: {
@@ -50,21 +52,24 @@ const useStyles = makeStyles({
 
 
 
-const Television = React.memo(props => {
+const Television = props => {
     
     const classes = useStyles();
     const [ showRemote, setShowRemote ] = useState(false)
     const [ showDetail, setShowDetail ] = useState(false);
-    const { getInputs } = useContext(DeviceContext);  
-    const tv = props.deviceState[props.endpointId]
+
+    const device = useDeviceStore( state => state.devices[props.endpointId] )
+    const tv = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Television-'+props.endpointId)
+        register(props.endpointId, 'television')
         return function cleanup() {
-            props.unregisterDevices('Television-'+props.endpointId);
+            unregister(props.endpointId, 'television');
         };
     // eslint-disable-next-line 
-    }, [])
+    }, [props.endpointId])
 
     if (!tv) { 
         return <PlaceholderCard count={ 1 } />
@@ -77,19 +82,19 @@ const Television = React.memo(props => {
     // const on = tv.PowerController.powerState.value === "ON"
 
     function handleVolumeChange(event) {
-        props.directive(props.endpointId,"Speaker", 'SetVolume', { "volume" : event} )
+        directive(props.endpointId,"Speaker", 'SetVolume', { "volume" : event} )
     }; 
 
     function handleMuteChange(event) {
-        props.directive(props.endpointId,"Speaker", 'SetVolume', { "mute" : event} )
+        directive(props.endpointId,"Speaker", 'SetVolume', { "mute" : event} )
     }; 
     
     function handlePowerChange(event) {
-        props.directive(props.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
+        directive(props.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
     };
 
     function handleInput(event, inputname) {
-        props.directive(props.endpointId,"InputController", 'SelectInput', { "input": inputname } )
+        directive(props.endpointId,"InputController", 'SelectInput', { "input": inputname } )
     }; 
 
     function toggleRemote() {
@@ -125,7 +130,7 @@ const Television = React.memo(props => {
             <ItemBase nopad={true}>
                 <SofaListItem   avatar={ <TvIcon /> } avatarState={ tv.PowerController.powerState.value==='ON' ? 'on' : 'off' } avatarBackground={false}
                                 avatarClick={ () => setShowDetail(!showDetail) } labelClick={ () => setShowDetail(!showDetail) } noPad={true}
-                                primary={props.devices[props.endpointId].friendlyName} secondary={subText()}
+                                primary={device.friendlyName} secondary={subText()}
                                 secondaryActions={
                                     <>
                                         { tv.PowerController.powerState.value!=='ON' ? null :
@@ -166,12 +171,12 @@ const Television = React.memo(props => {
                                 )}
                             </Select>
                         </ListItem>
-                        <ModeLines disabled={tv.PowerController.powerState.value!=='ON'} device={props.devices[props.endpointId]} deviceState={tv} directive={props.directive} />
+                        <ModeLines disabled={tv.PowerController.powerState.value!=='ON'} device={device} deviceState={tv} directive={directive} />
                     </>
                 }
                 { showRemote &&
                     <ListItem className={classes.remoteListItem}>
-                        <TvRemote device={props.device} />
+                        <TvRemote device={device} />
                     </ListItem>
                 }
             </Collapse>
@@ -181,6 +186,6 @@ const Television = React.memo(props => {
             }
         </>
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Television);
+export default Television;

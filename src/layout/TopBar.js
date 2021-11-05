@@ -11,10 +11,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotesIcon from '@material-ui/icons/Notes';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HomeIcon from '@material-ui/icons/Home';
-
-import { NetworkContext } from 'network/NetworkProvider';
 import { LayoutContext } from 'layout/LayoutProvider';
-
+import useUserStore from 'store/userStore'
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -36,9 +34,8 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TopBar(props) {
 	const classes = useStyles();
-	const { loggedIn } = useContext(NetworkContext);
+	const loggedIn = useUserStore(state => state.logged_in)
 	const { goBack, currentPage, goHome, toggleDrawer, toggleRightDrawer } = useContext(LayoutContext);
-
 
 	return (
 		<AppBar className={classes.AppBar} position="static" color="transparent" elevation={0}>

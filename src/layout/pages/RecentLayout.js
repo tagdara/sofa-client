@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import { DeviceContext } from 'context/DeviceContext';
+import { getRecent } from 'store/deviceHelpers';
 
 import Recent from 'history/Recent';
 import GridSection from 'components/GridSection';
 
 export default function RecentLayout(props) {
 
-    const { devices, getRecent } = useContext(DeviceContext)
     const [ recent, setRecent ] = useState([])
 
     useEffect(() => {
@@ -16,11 +15,11 @@ export default function RecentLayout(props) {
     }, []);
 
     if (recent.length<1) { return null }
-
+    
     return (  
         <GridSection name={"Recent Activity"} >
             { recent.map((dev, index) =>
-                <Recent key={ index } item={dev} device={ devices[dev.event.endpoint.endpointId] } />
+                <Recent key={ index } item={dev} endpointId={ dev.event.endpoint.endpointId } />
             )}
         </GridSection>
     )

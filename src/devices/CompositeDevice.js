@@ -13,7 +13,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import useDeviceStateStore from 'store/deviceStateStore'
 
 const placeholder = <TableRow><TableCell>Loading...</TableCell></TableRow>
 
@@ -90,20 +91,22 @@ const useStyles = makeStyles({
 
 });
 
-const CompositeDevice = React.memo(props => {
+const CompositeDevice = props => {
     
     const classes = useStyles();
     const isMobile = window.innerWidth <= 800;
     const [modules, setModules] = useState({})
-    const device = props.devices ? props.devices[props.endpointId] : undefined
+
+    const device = deviceByEndpointId(props.endpointId)
+    const deviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Composite-'+props.endpointId)
+        register(props.endpointId, "composite-"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('Composite-'+props.endpointId);
+            unregister(props.endpointId, "composite-"+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])
+    }, [props.endpointId])
  
     useEffect(() => {
         if (device) { getCapabilityModules() }
@@ -112,7 +115,6 @@ const CompositeDevice = React.memo(props => {
     
     if (!device) { return null }
 
-    const deviceState = props.deviceState[props.endpointId]
     const capabilities = device.capabilities
     const name = device.friendlyName
 
@@ -187,7 +189,7 @@ const CompositeDevice = React.memo(props => {
             </DialogActions>
         </Dialog>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(CompositeDevice);
+export default CompositeDevice;
 

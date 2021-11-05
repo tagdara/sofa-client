@@ -6,7 +6,9 @@ import Button from "@material-ui/core/Button"
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -22,18 +24,19 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-const LightButton = React.memo(props => {
+const LightButton = props => {
 
     const classes = useStyles();
-    const light = props.devices[props.endpointId]
-    const lightState = props.deviceState[ props.endpointId ]
+    const light = useDeviceStore( state => state.devices[props.endpointId] )
+    const lightState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+
     const fullName = light ? light.friendlyName : "Unknown"
     const name = props.skipPrefix && fullName.startsWith(props.skipPrefix+" ") ? fullName.slice(props.skipPrefix.length) : fullName
 
     useEffect(() => {
-        props.addEndpointIds("id", props.endpointId, "Light"+props.endpointId)
+        register(props.endpointId, "Light"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices("Light"+props.endpointId);
+            unregister(props.endpointId, "Light"+props.endpointId);
         };
     // eslint-disable-next-line 
     }, [])    
@@ -68,8 +71,8 @@ const LightButton = React.memo(props => {
         </Button>
     )
 
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(LightButton);
+export default LightButton;
 
 

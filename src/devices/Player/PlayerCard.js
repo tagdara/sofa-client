@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceStateContext } from 'context/DeviceStateContext';
 
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
@@ -13,6 +12,9 @@ import PlayerLinks from './PlayerLinks';
 import PlayerCover from './PlayerCover';
 import CardBase from 'components/CardBase';
 import PlaceholderCard from 'layout/PlaceholderCard';
+import { directive } from 'store/directive'
+import { register, unregister, endpointIdsByDisplayCategory, endpointIdsByFriendlyName, compareState } from 'store/deviceHelpers'
+import useDeviceStateStore from 'store/deviceStateStore'
 
 const useStyles = makeStyles({
 
@@ -28,8 +30,9 @@ export default function PlayerCard(props) {
     
     const classes = useStyles();
     const { selectPage } = useContext(LayoutContext);
-    const { cardReady, devices, deviceState, getEndpointIdsByCategory, getEndpointIdsByFriendlyName, directive, unregisterDevices } = useContext(DeviceStateContext);
-
+    const jukebox = endpointIdsByFriendlyName('Jukebox')[0]
+    const speakers = endpointIdsByDisplayCategory('SPEAKER')
+    const states = useDeviceStateStore(state => Object.fromEntries([jukebox, ...speakers].filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
     const [coverView, setCoverView] = useState(false);
     var coverDefault = undefined
     try {
@@ -37,29 +40,26 @@ export default function PlayerCard(props) {
     } 
     catch {}
 
-    const [jukebox, setJukebox]=useState(undefined)
-    
     useEffect(() => {
-        getEndpointIdsByCategory('SPEAKER','PlayerCard')
-        setJukebox(getEndpointIdsByFriendlyName('Jukebox', 'PlayerCard')[0])
+        register([jukebox, ...speakers], "playercard")
         return function cleanup() {
-            unregisterDevices('PlayerCard');
+            unregister([jukebox, ...speakers], "playercard")
         };
     // eslint-disable-next-line 
-    }, [] )
+    }, []) 
 
 
     function handlePlayPause(event) {
         event.stopPropagation();
 
-        if (deviceState(props.player).MusicController.title.value==='Line-In' ) {
-            if (deviceState(jukebox).MusicController.playbackState.value ==='PLAYING') {
+        if (states[props.player].MusicController.title.value==='Line-In' ) {
+            if (states[jukebox].MusicController.playbackState.value ==='PLAYING') {
                 directive(jukebox, 'MusicController', 'Pause')
             } else {
                 directive(jukebox, 'MusicController', 'Play')
             }
         } else {
-            if (deviceState(props.player).MusicController.playbackState.value ==='PLAYING') {
+            if (states[props.player].MusicController.playbackState.value ==='PLAYING') {
                 directive(props.player, 'MusicController', 'Pause')
             } else {
                 directive(props.player, 'MusicController', 'Play')
@@ -68,7 +68,7 @@ export default function PlayerCard(props) {
     }; 
 
     function handleSkip(event) {
-        if (deviceState(props.player).MusicController.title.value==='Line-In' ) {
+        if (states[props.player].MusicController.title.value==='Line-In' ) {
             directive(jukebox, 'MusicController', "Skip")
         } else {
             directive(props.player, 'MusicController', "Skip")
@@ -96,51 +96,51 @@ export default function PlayerCard(props) {
     
     function getLinkedPlayers() {
 
-        if (!deviceState(props.player).MusicController.linked.value) {
+        if (!states[props.player].MusicController.linked.value) {
             return []
         }
-        if (!Array.isArray(deviceState(props.player).MusicController.linked.value)) {
+        if (!Array.isArray(states[props.player].MusicController.linked.value)) {
             return []
         }
-        return deviceState(props.player).MusicController.linked.value
+        return states[props.player].MusicController.linked.value
     }
     
-    if (!cardReady('PlayerCard') || !props.player) {
+    if (!states || !props.player) {
         return <PlaceholderCard count={ 3 } />
     }
 
     return (
         <CardBase nopad={true} >
-            { deviceState(props.player).MusicController.title.value==='Line-In' && jukebox ?
-                <PlayerArtOverlay   art={deviceState(jukebox).MusicController.art.value ? deviceState(jukebox).MusicController.art.value : coverDefault }
-                                    title={deviceState(jukebox).MusicController.title.value ? deviceState(jukebox).MusicController.title.value : ''}
-                                    artist={deviceState(jukebox).MusicController.artist.value ? deviceState(jukebox).MusicController.artist.value : ''}
+            { states[props.player].MusicController.title.value==='Line-In' && jukebox ?
+                <PlayerArtOverlay   art={states[jukebox].MusicController.art.value ? states[jukebox].MusicController.art.value : coverDefault }
+                                    title={states[jukebox].MusicController.title.value ? states[jukebox].MusicController.title.value : ''}
+                                    artist={states[jukebox].MusicController.artist.value ? states[jukebox].MusicController.artist.value : ''}
                                     cover={handleCover} setMini={props.setMini}
                 >
                     <PlayerArtOverlayButtons    min={props.setMini} cover={handleCover} stop={handleStop} players={handlePlayers}
                                                 playPause={handlePlayPause} skip={handleSkip} jukebox={true}
-                                                playbackState={ deviceState(jukebox).MusicController.playbackState.value ? deviceState(jukebox).MusicController.playbackState.value : 'Unknown'} />
+                                                playbackState={ states[jukebox].MusicController.playbackState.value ? states[jukebox].MusicController.playbackState.value : 'Unknown'} />
                 </PlayerArtOverlay>
             :
-                <PlayerArtOverlay   art={deviceState(props.player).MusicController.art.value ? deviceState(props.player).MusicController.art.value : coverDefault }
-                                    title={deviceState(props.player).MusicController.title.value ? deviceState(props.player).MusicController.title.value : ''}
-                                    artist={deviceState(props.player).MusicController.artist.value ? deviceState(props.player).MusicController.artist.value : ''}
+                <PlayerArtOverlay   art={states[props.player].MusicController.art.value ? states[props.player].MusicController.art.value : coverDefault }
+                                    title={states[props.player].MusicController.title.value ? states[props.player].MusicController.title.value : ''}
+                                    artist={states[props.player].MusicController.artist.value ? states[props.player].MusicController.artist.value : ''}
                                     cover={handleCover} setMini={props.setMini}
                 >
                     <PlayerArtOverlayButtons    min={props.setMini} cover={handleCover} stop={handleStop} players={handlePlayers}
                                                 playPause={handlePlayPause} skip={handleSkip} 
-                                                playbackState={ deviceState(props.player).MusicController.playbackState.value ? deviceState(props.player).MusicController.playbackState.value : 'Unknown'} />
+                                                playbackState={ states[props.player].MusicController.playbackState.value ? states[props.player].MusicController.playbackState.value : 'Unknown'} />
                 </PlayerArtOverlay>
             }
             <Grid item xs={12}>
             <List className={classes.list} >
-                <PlayerVolume key={ props.player } name={ devices[props.player].friendlyName } device={ devices[props.player] } deviceState={deviceState(props.player)} directive={directive} />
+                <PlayerVolume key={ props.player } endpointId={props.player} />
                 <PlayerLinks links={getLinkedPlayers()} />
             </List>
             { coverView ?
-                <PlayerCover    playbackState={deviceState(props.player).MusicController.playbackState.value} handleSkip={ handleSkip} handlePlayPause={handlePlayPause} 
-                                title={deviceState(props.player).MusicController.title.value} artist={deviceState(props.player).MusicController.artist.value} 
-                                src={deviceState(props.player).MusicController.art.value} open={coverView} close={ closeCover } />
+                <PlayerCover    playbackState={states[props.player].MusicController.playbackState.value} handleSkip={ handleSkip} handlePlayPause={handlePlayPause} 
+                                title={states[props.player].MusicController.title.value} artist={states[props.player].MusicController.artist.value} 
+                                src={states[props.player].MusicController.art.value} open={coverView} close={ closeCover } />
                 :null
             }
             </Grid>

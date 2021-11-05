@@ -1,31 +1,34 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import SyncAltIcon from '@material-ui/icons/SyncAlt';
 
-import { DeviceContext } from 'context/DeviceContext';
-
 import GridSection from 'components/GridSection';
 import GridItem from 'components/GridItem';
 import ToggleAvatar from 'components/ToggleAvatar';
 
+import useActivationStore from 'store/activationStore'
+
 
 export default function ApiRegistration(props) {
 
-    const { getActivations, approveActivation, removeActivation } = useContext(DeviceContext)
-    const [ activations, setActivations] = useState({})
+    const activations = useActivationStore(state => state.activations)
+    const refreshActivations = useActivationStore(state => state.refreshActivations)
+    const removeActivation = useActivationStore(state => state.removeActivation)
+    const approveActivation = useActivationStore(state => state.approveActivation)
+
 
     useEffect(() => {
-        getActivations().then(result => { setActivations(result) } )
+        refreshActivations()
     // eslint-disable-next-line 
     }, []);
     
     function approveAndRefresh(command, name, short_key) {
         if (command==='remove') {
-            removeActivation(name, short_key).then(result=>setActivations(result))
+            removeActivation(name, short_key)
         } else {
-            approveActivation(name, short_key).then(result=>setActivations(result))
+            approveActivation(name, short_key)
         }
 
     }

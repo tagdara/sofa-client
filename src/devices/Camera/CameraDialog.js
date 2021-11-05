@@ -10,10 +10,10 @@ import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
 import CloseIcon from '@material-ui/icons/Close';
 import TimerIcon from '@material-ui/icons/Timer';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
 import CameraImage from 'devices/Camera/CameraImage';
 import CameraVideo from 'devices/Camera/CameraVideo';
+
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles({    
     bigcamDialog: {
@@ -82,7 +82,7 @@ const useStyles = makeStyles({
     },
 });
 
-const CameraDialog = React.memo(props => {
+const CameraDialog = props => {
 
     const classes = useStyles();
     const [rotation, setRotation]=useState(0)
@@ -92,12 +92,12 @@ const CameraDialog = React.memo(props => {
     const [lowHeight,setLowHeight] = useState(200)
 
     useEffect(() => {
-        props.addEndpointIds("id", props.endpointId, "camera"+props.endpointId)
+        register(props.endpointId, "cameradialog-"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices("camera"+props.endpointId);
+            unregister(props.endpointId, "cameradialog-"+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [ props.endpointId])    
+    }, [props.endpointId])  
 
     useEffect(()=> {
         enableScaling()
@@ -166,6 +166,6 @@ const CameraDialog = React.memo(props => {
             </Paper>
         </Dialog>
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(CameraDialog);
+export default CameraDialog;

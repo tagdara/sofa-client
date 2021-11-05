@@ -9,8 +9,8 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import RefreshIcon from '@material-ui/icons/Refresh';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { NetworkContext } from 'network/NetworkProvider';
-
+import { NetworkContext } from '../archive/NetworkProvider';
+import useUserStore from 'store/userStore'
 
 const useStyles = makeStyles(theme => {
     return {
@@ -55,8 +55,8 @@ export default function MasterButton(props) {
     
     const classes = useStyles();
     const { applyHomePage, masterButtonState, goBack, goHome, backPage } = useContext(LayoutContext);
-    const { loggedIn, connectError } = useContext(NetworkContext);
-    
+    const { connectError } = useContext(NetworkContext);
+    const loggedIn = useUserStore(state => state.loggedin)
     function callMaster() {
         if (masterButtonState==='Home') {
             goHome()

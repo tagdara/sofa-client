@@ -1,10 +1,10 @@
-import React, { Suspense, useState, useEffect, useContext } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from 'context/DeviceContext';
-
 import ListItem from '@material-ui/core/ListItem';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+
+import { directives } from 'store/directive'
 
 const useStyles = makeStyles({
         
@@ -16,11 +16,9 @@ const useStyles = makeStyles({
  
 });
 
-
 export default function PropertyValue(props) {
     
     const classes = useStyles();
-    const { directives } = useContext(DeviceContext);
     const [propMod, setPropMod] = useState(undefined)
     const [modName, setModName] = useState(undefined)
 

@@ -1,5 +1,7 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { DeviceStateContext } from 'context/DeviceStateContext';
+import React, { useState, useEffect } from 'react';
+import { deviceByFriendlyName, register, unregister } from 'store/deviceHelpers';
+import useDeviceStateStore from 'store/deviceStateStore'
+import { directive } from 'store/directive'
 import StatusLock from 'devices/statusLock';
 import PinDialog from 'dialogs/PinDialog';
 import PlaceholderCard from 'layout/PlaceholderCard';
@@ -8,20 +10,18 @@ export default function Opener(props) {
     
     const pin= "7818";
     const [showDialog, setShowDialog] = useState(false);
-    const { cardReady, devices, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices, directive } = useContext(DeviceStateContext);
-    const [ openerDevice, setOpenerDevice ]=useState(undefined)
-    
+
+    const opener = deviceByFriendlyName(props.deviceName)
+    const deviceState = useDeviceStateStore( state => state.deviceStates[opener.endpointId] )    
+ 
     useEffect(() => {
-        var od=getEndpointIdsByFriendlyName(props.deviceName,'Opener-'+props.deviceName)
-        if (od.length>0) {
-            setOpenerDevice(od[0])
-        }
+        register(opener.endpointId, "Opener-"+opener.endpointId)
         return function cleanup() {
-            unregisterDevices('Opener-'+props.deviceName);
+            unregister(opener.endpointId, "Opener-"+opener.endpointId)
         };
     // eslint-disable-next-line 
-    }, [ ] )
-
+    }, [ ])
+    
 
     function closeDialog() {
         setShowDialog(false);
@@ -31,7 +31,7 @@ export default function Opener(props) {
 
         if (trypin===pin) {
             setShowDialog(false)
-            directive(openerDevice, "ButtonController", "Hold", {"duration": props.buttonDuration})
+            directive(opener.endpointId, "ButtonController", "Hold", {"duration": props.buttonDuration})
         }
     }
     
@@ -39,16 +39,16 @@ export default function Opener(props) {
         setShowDialog(!showDialog)
     }
     
-    if (!cardReady('Opener-'+props.deviceName)) {
+    if (!deviceState) {
         return <PlaceholderCard count={ 1 } />
     }
     
     return (
         <React.Fragment>
             <StatusLock wide={ props.wide} name={ props.displayName ? props.displayName : props.deviceName } secondIcon={false} 
-                        device={ devices[openerDevice] } deviceState={ deviceStates[openerDevice] } handlePress={handlePress} />
+                        device={ opener } deviceState={ deviceState } handlePress={handlePress} />
             { showDialog &&
-                <PinDialog  submitPin={pinCheck} open={showDialog} close={closeDialog} device={ devices[openerDevice] } deviceState={ deviceStates[openerDevice] }
+                <PinDialog  submitPin={pinCheck} open={showDialog} close={closeDialog} device={ opener } deviceState={ deviceState }
                             directive={directive} />
             }
         </React.Fragment>

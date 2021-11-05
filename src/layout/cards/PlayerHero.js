@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { DeviceStateContext } from 'context/DeviceStateContext';
+import { register, unregister, endpointIdsByDisplayCategory, compareState } from 'store/deviceHelpers'
+import useDeviceStateStore from 'store/deviceStateStore'
 import { UserContext } from 'user/UserProvider';
 
 import PlayerCard from 'devices/Player/PlayerCard';
@@ -9,10 +10,12 @@ import PlaceholderCard from 'layout/PlaceholderCard';
 export default function PlayerHero(props) {
     
     const { userPlayer } = useContext(UserContext);
-    const { deviceStates, cardReady, defaultPlayer, getEndpointIdsByCategory, unregisterDevices } = useContext(DeviceStateContext);
+    const defaultPlayer = "" // this should be defined somewhere
     //const speakers = deviceStatesByCategory('SPEAKER')
     const [ mini, setMini ] = useState(props.mini);
-    const [ speakers, setSpeakers ]=useState(undefined)
+    const speakers = endpointIdsByDisplayCategory('SPEAKER')
+    const states = useDeviceStateStore(state => Object.fromEntries(speakers.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
+
 
     function bestPlayer(speakers, defaultPlayer, userPlayer) {
     
@@ -29,7 +32,7 @@ export default function PlayerHero(props) {
         
         for (var s = 0; s < speakers.length; s++) {
             if (speakers[s]===defaultPlayer) {defaultexists=true}
-            if (deviceStates[speakers[s]].MusicController.playbackState.value==='PLAYING') {
+            if (states[speakers[s]].MusicController.playbackState.value==='PLAYING') {
                 hotplayer=speakers[s]
                 break
             }
@@ -62,14 +65,14 @@ export default function PlayerHero(props) {
     }
     
     useEffect(() => {
-        setSpeakers(getEndpointIdsByCategory('SPEAKER','PlayerHero'))
+        register(speakers, 'PlayerHero')
         return function cleanup() {
-            unregisterDevices('PlayerHero');
+            unregister(speakers, 'PlayerHero')
         };
     // eslint-disable-next-line 
     }, [])
 
-    if (!cardReady('PlayerHero')) {
+    if (!states) {
         return <PlaceholderCard count={3} />
     }
 

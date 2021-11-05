@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -8,7 +8,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 
 import { SketchPicker } from 'react-color'
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import useRegisterStore from 'store/registerStore'
+import { directive } from 'store/directive'
 
 const useStyles = makeStyles({
         
@@ -125,35 +128,41 @@ export const hsv2rgb = (color) => {
     return "#"+decimalToHex(Math.round(r * 255))+ decimalToHex(Math.round(g * 255))+ decimalToHex(Math.round(b * 255))
     /* eslint no-unused-expressions: 0 */
 }
-const MultiLightColor = React.memo(props => {
+const MultiLightColor = props => {
 
     const classes = useStyles();
     const [openDialog, setOpenDialog] = useState(false);
+    const lights = useDeviceStore(useCallback(state => Object.keys(state.devices).filter( dev => props.endpointIds.includes(dev)), [props.endpointIds]))
+    console.log('multicolor', lights)
+    const states = useDeviceStateStore(useCallback( state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), [lights]))
+    console.log('multistates', states)    
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
-        props.addEndpointIds('ids', props.endpointIds, 'MultiLightColor')
+        register(props.endpointIds, 'MultiLightColor')
         return function cleanup() {
-            props.unregisterDevices('MultiLightColor');
+            unregister(props.endpointIds, 'MultiLightColor');
         };
     // eslint-disable-next-line 
     }, [])    
 
-    if (!props.deviceStateReady) { return null }
+    if (!states) { return null }
 
     function currentAverage() {
         var avgHue=0
         var avgSat=0
         var avgBri=0
 
-        for (var light in props.deviceState) {
-            var col = props.deviceState[light].ColorController.color.value
+        for (var light in states) {
+            var col = states[light].ColorController.color.value
             avgHue += col['hue']
             avgSat += col['saturation']           
-            if (props.deviceState[light].PowerController.powerState.value==='ON') {
+            if (states[light].PowerController.powerState.value==='ON') {
                 avgBri+=col['brightness']  
             }
         }
-        var count=Object.keys(props.deviceState).length
+        var count=Object.keys(states).length
         avgHue = avgHue/count
         avgSat = avgSat/count
         avgBri = avgBri/count
@@ -169,9 +178,9 @@ const MultiLightColor = React.memo(props => {
     function handleColorSliderChange(newcolor, event) {
         var hsb={"hue":newcolor.hsv['h'], "saturation":newcolor.hsv['s'], "brightness":newcolor.hsv['v']};
         
-        for (var light in  props.deviceState) {
-            hsb.brightness=props.deviceState[light].BrightnessController.brightness.value/100
-            props.directive(light, 'ColorController', 'SetColor', { "color" : hsb }, {})
+        for (var light in states) {
+            hsb.brightness=states[light].BrightnessController.brightness.value/100
+            directive(light, 'ColorController', 'SetColor', { "color" : hsb }, {})
         }
     }
     
@@ -200,7 +209,7 @@ const MultiLightColor = React.memo(props => {
         </>
     );
 
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(MultiLightColor)
+export default MultiLightColor
 

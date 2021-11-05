@@ -13,7 +13,9 @@ import AirplayIcon from '@material-ui/icons/Airplay';
 import ItemBase from 'components/ItemBase'
 import SofaListItem from 'components/SofaListItem'
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { directive } from 'store/directive'
+import useDeviceStateStore from 'store/deviceStateStore'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -31,33 +33,34 @@ const useStyles = makeStyles(theme => {
     }
 })
 
-const AppleTV = React.memo(props => {
+const AppleTV = props => {
 
     const classes = useStyles();
+    const device = deviceByEndpointId(props.endpointId)
+    const deviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const name = device.name
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'AppleTV-'+props.endpointId)
+        register(props.endpointId, "appleTv-"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('AppleTV-'+props.endpointId);
+            unregister(props.endpointId, "appleTv-"+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])
+    }, [props.endpointId])
 
-    if (!props.deviceState || !props.deviceState[props.endpointId]) { return null }
+    if (!deviceState) { return null }
 
     const serverurl="https://"+window.location.hostname;
-    const deviceState = props.deviceState[props.endpointId]
-    const name = props.devices[props.endpointId].friendlyName
     const playing = deviceState.MediaController.playbackState.value === 'PLAYING'
     const on = deviceState.PowerController.powerState.value==='ON'
     const title = deviceState.MediaController.title.value 
 
     function handlePowerChange(event) {
-        props.directive(props.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
+        directive(props.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
     };
     
     function handleCommand(command) {
-        props.directive(props.endpointId, 'MediaController', command)
+        directive(props.endpointId, 'MediaController', command)
     }; 
 
 
@@ -95,6 +98,6 @@ const AppleTV = React.memo(props => {
             }
         </ItemBase>
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(AppleTV);
+export default AppleTV;

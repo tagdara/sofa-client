@@ -1,6 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from 'context/DeviceContext';
 
 import AutomationInput from './AutomationInput';
 
@@ -9,6 +8,7 @@ import OperatorButton from "./operatorButton"
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import { propertyMap } from 'store/deviceHelpers'
 
 const useStyles = makeStyles({
         
@@ -40,7 +40,6 @@ const useStyles = makeStyles({
 export default function ControllerProperty(props) {
 
     const classes = useStyles();
-    const { propertyMap } = useContext(DeviceContext);
     const propMap=propertyMap(props.device)
 
     function editOperatorValue(value) {

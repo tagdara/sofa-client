@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
-import { DeviceContext } from 'context/DeviceContext';
-
+import React from 'react';
 import AutomationDevice from './AutomationDevice';
 import AutomationMove from './AutomationMove';
 import PropertyValue from './PropertyValue';
 import ControllerProperty from './ControllerProperty';
 import GridItem from 'components/GridItem';
 
-export default function AutomationTrigger(props) {
+import { getDeviceProperties, getControllerInterface } from 'store/deviceHelpers'
 
-    const { getDeviceProperties, getControllerInterface } = useContext(DeviceContext);
+export default function AutomationTrigger(props) {
 
     function directive (endpointId, controllerName, command, payload={}, cookie={}, instance) {
         console.log(controllerName, props.item.controller)

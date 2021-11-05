@@ -1,15 +1,12 @@
-import React, { useContext } from 'react';
-import { DeviceContext } from 'context/DeviceContext';
-
+import React from 'react';
 import AutomationDevice from './AutomationDevice';
 import PropertyValue from './PropertyValue';
 import AutomationMove from './AutomationMove';
 import DeviceDirective from './DeviceDirective';
 import GridItem from 'components/GridItem';
+import { getControllerInterface } from 'store/deviceHelpers'
 
 export default function AutomationAction(props) {
-    
-    const { getControllerInterface } = useContext(DeviceContext);
 
     function directive (endpointId, controllerName, command, payload={}, cookie={}, instance) {
         console.log('fake directive', controllerName, props.item.controller)

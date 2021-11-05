@@ -1,17 +1,16 @@
-import React, { useContext } from 'react';
-
+import React from 'react';
 import FanIcon from '@material-ui/icons/Toys';
-
-import { DeviceContext } from 'context/DeviceContext';
 import CardBase from 'components/CardBase';
 import Device from 'devices/Device';
 import Shade from 'devices/Shade/Shade';
+import { endpointIdsByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers'
 
-export default function MoreDevicesHero(props) {
+const MoreDevicesHero = props => {
     
-    const { endpointIdsByFriendlyName, endpointIdsByCategory, sortByName } = useContext(DeviceContext);
-    const shades = sortByName(endpointIdsByCategory('INTERIOR_BLIND'))    
-    const fans = endpointIdsByFriendlyName(['Bathroom Fan','Bathroom Heat Fan'])
+    const shades = sortByName(endpointIdsByDisplayCategory('INTERIOR_BLIND'))    
+    const fans = endpointIdsByFriendlyName(['Bathroom Fan', 'Bathroom Heat Fan'])
+
+    console.log(shades, fans)
 
     return (
         <CardBase>
@@ -28,3 +27,5 @@ export default function MoreDevicesHero(props) {
 MoreDevicesHero.defaultProps = {
     showDetail: true,
 }
+
+export default MoreDevicesHero;

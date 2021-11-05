@@ -5,8 +5,6 @@ import EditIcon from '@material-ui/icons/Edit';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceContext } from 'context/DeviceContext';
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import GridSection from 'components/GridSection';
 
 import SectionHeaderButton from 'components/SectionHeaderButton';
@@ -14,33 +12,35 @@ import DeviceDialog from 'dialogs/DeviceDialog';
 import LightLayout from 'layout/pages/LightLayout';
 import SceneLayout from 'layout/pages/SceneLayout';
 
-const AreaLayout = React.memo(props => {
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import { register, unregister, sortByName, hasDisplayCategory } from 'store/deviceHelpers'
+
+const AreaLayout = props => {
 
     const { selectPage } = useContext(LayoutContext);
-    const { sortByName, hasDisplayCategory } = useContext(DeviceContext);
     const [addingDevice, setAddingDevice] = useState(false);
     const [deletingDevice, setDeletingDevice] = useState(false);
     const [editingScene, setEditingScene] = useState(false);
     const currentArea = props.endpointId
+    const device = useDeviceStore( state => state.devices[props.endpointId] )
+    const deviceState  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const name = device.friendlyName
+
 
     useEffect(() => {
-        props.addEndpointIds('id', currentArea, 'AreaHero')
+        register(props.endpointId, 'arealayout-'+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('AreaHero');
+            unregister(props.endpointId, 'arealayout-'+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [ currentArea ]) 
+    }, [])  
 
-    if (isEmpty(props.deviceState) || !props.deviceState[currentArea] ) { return null }
+    if (deviceState)  { return null }
 
-    const children = sortByName(props.deviceState[currentArea].AreaController.children.value)
+    const children = sortByName(deviceState.AreaController.children.value)
     const lights = children.filter(endpointId => hasDisplayCategory(endpointId, "LIGHT"))
     const scenes = children.filter(endpointId => hasDisplayCategory(endpointId, "SCENE_TRIGGER"))
-    const name = props.devices[currentArea].friendlyName
-
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
 
     function addDevice(){
         setAddingDevice(true)
@@ -109,6 +109,6 @@ const AreaLayout = React.memo(props => {
             }
         </GridSection>
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(AreaLayout);
+export default AreaLayout;

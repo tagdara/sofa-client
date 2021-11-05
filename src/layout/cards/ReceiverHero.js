@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
-import { DeviceContext } from 'context/DeviceContext';
+import React from 'react';
 import Receiver from 'devices/Receiver/Receiver';
 import PlaceholderCard from 'layout/PlaceholderCard';
+import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 
 const ReceiverHero = props => {
-
-    const { devicesByCategory } = useContext(DeviceContext);
-    const receivers =  devicesByCategory('RECEIVER')
+    const receivers = endpointIdsByDisplayCategory('RECEIVER')
 
     if (!receivers) {
         return <PlaceholderCard count={1} />
@@ -15,7 +13,7 @@ const ReceiverHero = props => {
     return (
         <>
             { receivers.map( receiver => 
-                <Receiver endpointId={receiver.endpointId} wide={props.wide} key={receiver.endpointId} />
+                <Receiver endpointId={receiver} wide={props.wide} key={receiver} />
             )}
         </>
     )

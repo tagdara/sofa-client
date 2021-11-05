@@ -5,11 +5,13 @@ import CloseIcon from '@material-ui/icons/Close';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from "@material-ui/core/IconButton"
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
 import SofaListItem from "components/SofaListItem"
 import CardBase from "components/CardBase"
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import { directive } from 'store/directive'
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -44,18 +46,21 @@ function useInterval(callback, delay) {
     }, [delay]);
 }
 
-const Scene = React.memo(props => {
+const Scene = props => {
     
     const classes = useStyles();
     const [working, setWorking] = useState(false)
+    const scene = useDeviceStore( state => state.devices[props.endpointId] )
+    const sceneState  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const name = scene.friendlyName
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Scene-'+props.endpointId)
+        register(props.endpointId, 'scene-'+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('Scene-'+props.endpointId);
+            unregister(props.endpointId, 'scene-'+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])    
+    }, []) 
 
     useInterval(() => {
         setWorking(false)
@@ -65,20 +70,18 @@ const Scene = React.memo(props => {
         setWorking(false)
     }, [props.computedLevel]);
 
-    if (!props.deviceStateReady) { return null }
-
-    const name = props.devices[props.endpointId].friendlyName
+    if (!sceneState) { return null }
 
     function runScene() {
         if (!props.editing && !props.remove) {
             console.log('Activating', name)
             setWorking(true)
-            props.directive(props.endpointId, 'SceneController', 'Activate')
+            directive(props.endpointId, 'SceneController', 'Activate')
         }
     }
     
     function deleteScene() {
-        props.directive(props.endpointId, 'SceneController', 'Delete')
+        directive(props.endpointId, 'SceneController', 'Delete')
     }
 
     // noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true} noPaper={false} button={false} 
@@ -110,6 +113,6 @@ const Scene = React.memo(props => {
         />
         </CardBase>
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Scene)
+export default Scene;

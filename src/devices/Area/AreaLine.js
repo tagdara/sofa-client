@@ -4,9 +4,12 @@ import { makeStyles } from '@material-ui/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
 import DotLevel from 'components/DotLevel';
+
+import useDeviceStateStore from 'store/deviceStateStore'
+//import useRegisterStore from 'store/registerStore'
+import { directive } from 'store/directive'
+import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles({
     
@@ -24,31 +27,30 @@ const useStyles = makeStyles({
     }
 });
 
-const AreaLine = React.memo(props => {
+const AreaLine = props => {
 
     const classes = useStyles(); 
+    const area = deviceByEndpointId(props.endpointId)   
+    const areaState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'AreaSummaryLine')
+        register(props.endpointId, 'AreaLine-'+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('AreaSummaryLine');
+            unregister(props.endpointId, 'AreaLine-'+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])    
+    }, [])
 
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
 
-    if (isEmpty(props.deviceState) || !props.deviceState[props.endpointId]) { return null }
+    if (!areaState) { return null }
     
-    const shortcuts = props.deviceState[props.endpointId].AreaController.shortcuts.value
-    const scene = props.deviceState[props.endpointId].AreaController.scene.value
-    const name = props.devices[props.endpointId].friendlyName
+    const shortcuts = areaState.AreaController.shortcuts.value
+    const scene = areaState.AreaController.scene.value
+    const name = area.friendlyName
 
     function runShortcut(level) {
         //var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
-        props.directive(shortcuts[level], 'SceneController', 'Activate')
+        directive(shortcuts[level], 'SceneController', 'Activate')
     }
     
     function currentLevel() {
@@ -66,6 +68,6 @@ const AreaLine = React.memo(props => {
             }
         </ListItem>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(AreaLine)
+export default AreaLine

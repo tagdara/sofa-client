@@ -1,14 +1,13 @@
 import React, { useContext, useState } from 'react';
-import { DeviceContext } from 'context/DeviceContext';
+import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 import { UserContext } from 'user/UserProvider';
 
 import SecurityCamera from 'devices/Camera/SecurityCamera';
 
 export default function CameraSelect(props) {
 
-    const { endpointIdsByCategory,sortByName } = useContext(DeviceContext);
     const { chooseUserCamera, userCamera } = useContext(UserContext);
-    const cameras = sortByName(endpointIdsByCategory('CAMERA'))
+    const cameras = sortByName(endpointIdsByDisplayCategory('CAMERA'))
     const [ currentCamera, setCurrentCamera ] = useState(userCamera)
 
     function nextCamera() {
@@ -36,6 +35,8 @@ export default function CameraSelect(props) {
         setCurrentCamera(cameras[cameraPosition])
         return cameras[cameraPosition]
     }
+
+    console.log('currentCamera', currentCamera)
 
     return (
         <SecurityCamera endpointId={currentCamera} selectButtons={true} 

@@ -3,28 +3,34 @@ import React, { useEffect } from 'react';
 import Switch from '@material-ui/core/Switch';
 import TuneIcon from '@material-ui/icons/Tune';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
 import SofaItem from 'components/SofaItem';
 
-const Device = React.memo(props => {
+import { directive } from 'store/directive'
+import { deviceByEndpointId } from 'store/deviceHelpers'
 
+import useDeviceStateStore from 'store/deviceStateStore'
+import useRegisterStore from 'store/registerStore'
+
+const Device = props => {
+
+    const device = deviceByEndpointId(props.endpointId)   
+    const deviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId])
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Device-'+props.endpointId)
+        register(props.endpointId, "Device-"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('Device-'+props.endpointId);
+            unregister(props.endpointId, "Device-"+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, []) 
-    
-    if (!props.deviceState || !props.deviceState[props.endpointId]) { return null }
+    }, [])
 
-    const deviceState = props.deviceState[props.endpointId]
-    const device = props.devices[props.endpointId]
+
+    if (!deviceState) { return null }
 
     function handlePowerChange(event) {
-        props.directive(props.endpointId, "PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
+        directive(props.endpointId, "PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
     }; 
 
     function energy() {
@@ -46,8 +52,8 @@ const Device = React.memo(props => {
                     }
                 />
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Device);
+export default Device;
 
 

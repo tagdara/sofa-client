@@ -8,16 +8,17 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { NetworkContext } from 'network/NetworkProvider';
 import { UserContext } from 'user/UserProvider';
 
 import AutomationItem from 'automation/AutomationItem';
 import GridSection from 'components/GridSection';
+import useUserStore from 'store/userStore'
 
 const AutomationsLayout = props => {
 
+    const serverUrl = "https://"+window.location.hostname;
+    const accessToken = useUserStore(state => state.access_token)
     const { selectPage } = useContext(LayoutContext);
-    const { getJSON, postJSON } = useContext(NetworkContext);
     const { makeFavorite, isFavorite} = useContext(UserContext)
     const [ automations, setAutomations ] = useState([])
     const editing = false
@@ -26,10 +27,16 @@ const AutomationsLayout = props => {
     const [scheduled, setScheduled] = useState(false)
 
     useEffect(() => {
-        getJSON('list/logic/automations')
-            .then(result=>fixAutomations(result))
+        loadJSONAutomations()
     // eslint-disable-next-line 
     }, []);
+
+    const loadJSONAutomations = async () => {
+        const headers = { authorization : accessToken }
+        const response = await fetch(serverUrl + "/list/logic/automations", { headers: headers })
+        var result = await response.json()
+        fixAutomations(result)
+    }
 
     
     function fixAutomations(autos) {
@@ -68,13 +75,20 @@ const AutomationsLayout = props => {
 
         if (automationName) {
             delete automations[automationName]
-            postJSON('del/logic/automation/'+endpointId, [])
-                .then(setAutomations(automations));
+            setAutomations(automations)
+            delJSONAutomation(endpointId)
         } else {
             console.log('did not find', endpointId, 'in',automations)
         }
     } 
-        
+  
+    const delJSONAutomation = async (endpointId) => {
+        const headers = { authorization : accessToken }
+        const body = []
+        const response = await fetch(serverUrl+"/del/logic/automation/"+endpointId, { headers: headers, method: "post", body: JSON.stringify(body)})
+        return await response.json()
+    }
+
     function newAutomation() {
         selectPage('AutomationLayout', {'noBottom':true})        
     }

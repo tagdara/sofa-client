@@ -1,49 +1,54 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
 import { UserContext } from 'user/UserProvider';
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-import { DeviceContext } from 'context/DeviceContext'
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
 import AreaLine from 'devices/Area/AreaLine';
 import AreaSummaryLine from 'devices/Area/AreaSummaryLine';
-// import AreaSummary from 'devices/Area/AreaSummary';
+
 import ItemBase from 'components/ItemBase';
 import CardControl from 'components/CardControl';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import LightButton from 'devices/Light/LightButton';
 import SceneButton from 'devices/Scene/SceneButton';
 
-const AreaHero = React.memo(props => {
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import useRegisterStore from 'store/registerStore'
+import { sortByName, hasDisplayCategory, hasCapability } from 'store/deviceHelpers'
 
-    const { userArea } = useContext(UserContext);
-    const { sortByName, hasDisplayCategory, hasCapability } = useContext(DeviceContext);       
+const AreaHero = props => {
+
+    const { userArea } = useContext(UserContext);     
     const { selectPage } = useContext(LayoutContext);
     const [ currentArea, setCurrentArea] = useState('logic:area:Main')
 
+    const area = useDeviceStore( state => state.devices[currentArea] )
+    const areaState = useDeviceStateStore( state => state.deviceStates[currentArea] )
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
+
+
     useEffect(() => {
-        props.addEndpointIds('id',currentArea, 'AreaHero')
+        register(currentArea, 'AreaHero')
         return function cleanup() {
-            props.unregisterDevices('AreaHero');
+            unregister(currentArea, 'AreaHero')
         };
     // eslint-disable-next-line 
-    }, [ currentArea ])    
+    }, [currentArea])
 
-    if (isEmpty(props.deviceState) || !props.deviceState[currentArea] ) { return <PlaceholderCard count={ 6 } /> }
-    const children = sortByName(props.deviceState[currentArea].AreaController.children.value)
-    const shortcuts = props.deviceState[currentArea].AreaController.shortcuts.value
-    const currentScene = props.deviceState[currentArea].AreaController.scene.value
-    const name = props.devices[currentArea].friendlyName
+
+    if (!areaState ) { return <PlaceholderCard count={ 6 } /> }
+    const children = sortByName(areaState.AreaController.children.value)
+    const shortcuts = areaState.AreaController.shortcuts.value
+    const currentScene = areaState.AreaController.scene.value
+    const name = area.friendlyName
     const areas = children.filter(endpointId => hasCapability(endpointId, "AreaController"))
     const lights = children.filter(endpointId => hasDisplayCategory(endpointId, "LIGHT"))
     const scenes = children.filter(endpointId => hasDisplayCategory(endpointId, "SCENE_TRIGGER"))
     const nonShortcuts = scenes.filter(endpointId => !shortcuts.includes(endpointId))
-
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
 
     function shortcutId(scene) {
         if (shortcuts.includes(scene)) { return shortcuts.indexOf(scene)}
@@ -89,6 +94,6 @@ const AreaHero = React.memo(props => {
             )}
         </ItemBase>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(AreaHero)
+export default AreaHero

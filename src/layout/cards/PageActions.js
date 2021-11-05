@@ -1,6 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceStateContext } from 'context/DeviceStateContext';
+import { devicesByFriendlyName, endpointIdsByFriendlyName } from 'store/deviceHelpers';
+import { directive } from 'store/directive';
 import LabelIcon from '@material-ui/icons/Label';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -36,19 +37,9 @@ const useStyles = makeStyles(theme => {
 
 export default function PageActions(props) {
     
-    const { cardReady, devices, directive, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DeviceStateContext);
-
+    const allActions = endpointIdsByFriendlyName(props.actions)
+    const devices = devicesByFriendlyName(props.actions)
     const classes = useStyles();
-    //const allActions = deviceStatesByFriendlyName(props.actions)
-    const [allActions, setAllActions]=useState(undefined)
-
-    useEffect(() => {
-        setAllActions(getEndpointIdsByFriendlyName(props.actions, 'Actions-'+props.name))
-        return function cleanup() {
-            unregisterDevices('Actions-'+props.name);
-        };
-    // eslint-disable-next-line 
-    }, [ ] )
 
     function runAutomation(item) {
         directive(item, 'SceneController', 'Activate')
@@ -56,7 +47,6 @@ export default function PageActions(props) {
     }
 
     return (
-        cardReady('Actions-'+props.name) &&
         <ListItem className={classes.listItem} >
         { allActions.map( item => 
             <Chip

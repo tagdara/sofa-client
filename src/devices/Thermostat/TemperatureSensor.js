@@ -9,7 +9,10 @@ import Collapse from '@material-ui/core/Collapse';
 
 import ItemBase from 'components/ItemBase'
 import SofaListItem from 'components/SofaListItem';
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {      
@@ -25,26 +28,28 @@ const useStyles = makeStyles(theme => {
     }
 })
  
-const TemperatureSensor = React.memo(props => {
+const TemperatureSensor = props => {
     
     const classes = useStyles();
     const { selectPage } = useContext(LayoutContext);
     const [ showDetail, setShowDetail ] = useState(false)
     const additionalAttributes = ['Light Level', 'Humidity', 'Wind Speed', 'UV Index', 'Rainfall']
+    const device = useDeviceStore( state => state.devices[props.endpointId] )
+    const deviceState  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const name = device.friendlyName
+    const temperatureSensor = deviceState.TemperatureSensor
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'TemperatureSensor-'+props.endpointId)
+        register(props.endpointId, 'TemperatureSensor-'+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('TemperatureSensor-'+props.endpointId);
+            unregister(props.endpointId, 'TemperatureSensor-'+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])    
+    }, []) 
 
-    const deviceState = props.deviceState[props.endpointId]
     if (!deviceState) { return null }
-    const temperatureSensor = deviceState.TemperatureSensor
+
     const deviceAttributes = additionalAttributes.filter( attribute => deviceState.hasOwnProperty(attribute))
-    const name = props.devices[props.endpointId].friendlyName
 
     function tempColor(temp) {
         if (!temp) { return 'disabled' }
@@ -76,6 +81,6 @@ const TemperatureSensor = React.memo(props => {
             </Collapse>
         </ItemBase>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(TemperatureSensor);
+export default TemperatureSensor;

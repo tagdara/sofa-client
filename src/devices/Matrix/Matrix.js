@@ -6,11 +6,14 @@ import ListItemText from '@material-ui/core/ListItemText';
 
 import TvIcon from '@material-ui/icons/Tv';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
 import ToggleAvatar from 'components/ToggleAvatar';
 import ItemBase from "components/ItemBase";
 import ModeSelect from "devices/Mode/ModeSelect";
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import { directive } from 'store/directive'
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     
@@ -26,26 +29,25 @@ const useStyles = makeStyles(theme => {
 
 });
 
-const Matrix = React.memo(props => {
+const Matrix = props => {
 
     const classes = useStyles();
-
-    useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Matrix-'+props.endpointId)
-        return function cleanup() {
-            props.unregisterDevices('Matrix-'+props.endpointId);
-        };
-    // eslint-disable-next-line 
-    }, [])
-
-    if (!props.deviceState || !props.deviceState[props.endpointId]) { return null }
-
-    const matrixState = props.deviceState[props.endpointId]
-    const matrixDevice = props.devices[props.endpointId]    
+    const matrixDevice = useDeviceStore( state => state.devices[props.endpointId] )
+    const matrixState  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
     const name = matrixDevice.friendlyName
 
+    useEffect(() => {
+        register(props.endpointId, 'Matrix-'+props.endpointId)
+        return function cleanup() {
+            unregister(props.endpointId, 'Matrix-'+props.endpointId)
+        };
+    // eslint-disable-next-line 
+    }, [])  
+
+    if (!matrixState) { return null }
+
     function changeMode(modeId) {
-        props.directive(props.endpointId, "ModeController", 'SetMode', { "mode": modeId }, {}, 'Matrix.Input' )
+        directive(props.endpointId, "ModeController", 'SetMode', { "mode": modeId }, {}, 'Matrix.Input' )
     }; 
         
     return (
@@ -57,7 +59,7 @@ const Matrix = React.memo(props => {
             </ListItem>
         </ItemBase>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Matrix);
+export default Matrix;
 

@@ -1,11 +1,12 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import ListItem from '@material-ui/core/ListItem';
-
-import { DeviceContext } from 'context/DeviceContext'
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import DotLevel from 'components/DotLevel';
 import MultiLightColor from 'devices/Light/MultiLightColor';
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import { directive } from 'store/directive'
+import { hasCapability, register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -20,33 +21,30 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-const AreaSummaryLine = React.memo(props => {
+const AreaSummaryLine = props => {
 
-    const classes = useStyles();
-    const { hasCapability } = useContext(DeviceContext);       
+    const classes = useStyles();     
+    const areaState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'AreaSummaryLine')
+        register(props.endpointId, 'AreaSummaryLine-'+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('AreaSummaryLine');
+            unregister(props.endpointId, 'AreaSummaryLine-'+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [ props.endpointId ])    
+    }, [props.endpointId])
 
-    function isEmpty(obj) {
-        return Object.keys(obj).length === 0;
-    }
 
-    if (isEmpty(props.deviceState) || !props.deviceState[props.endpointId]) { return null }
+    if (!areaState) { return null }
     
-    const children = props.deviceState[props.endpointId].AreaController.children.value
-    const shortcuts = props.deviceState[props.endpointId].AreaController.shortcuts.value
-    const scene = props.deviceState[props.endpointId].AreaController.scene.value
+    const children = areaState.AreaController.children.value
+    const shortcuts = areaState.AreaController.shortcuts.value
+    const scene = areaState.AreaController.scene.value
     const colorLights = children.filter(endpointId => hasCapability(endpointId, "ColorController"))
 
     function runShortcut(level) {
         //var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
-        props.directive(shortcuts[level], 'SceneController', 'Activate')
+        directive(shortcuts[level], 'SceneController', 'Activate')
     }
     
     function currentLevel() {
@@ -69,6 +67,6 @@ const AreaSummaryLine = React.memo(props => {
         </ListItem>
     )
 
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(AreaSummaryLine)
+export default AreaSummaryLine;

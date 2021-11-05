@@ -1,11 +1,12 @@
-import React, {  useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from 'context/DeviceContext';
 import ListItem from '@material-ui/core/ListItem';
 import AutomationInput from './AutomationInput';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import { directives } from 'store/directive'
+import { deviceDirectives }  from 'store/deviceHelpers'
 
 const useStyles = makeStyles({
 
@@ -22,7 +23,6 @@ const useStyles = makeStyles({
 export default function DeviceDirective(props) {
     
     const classes = useStyles();
-    const { directives, deviceDirectives } = useContext(DeviceContext);
     const directiveMap = deviceDirectives(props.device)
 
     function propertyFromDirective(controllerName, directiveName) {

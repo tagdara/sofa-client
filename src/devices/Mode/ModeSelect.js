@@ -1,5 +1,5 @@
-import React, { useContext}  from 'react';
-import { DeviceContext } from 'context/DeviceContext';
+import React from 'react';
+import { getModes, isModeNonControllable } from 'store/deviceHelpers';
 import { makeStyles } from '@material-ui/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => {
 const ModeSelect = props => {
 
     const classes = useStyles();
-    const { getModes, isModeNonControllable } = useContext(DeviceContext);
     const modes = getModes(props.endpointId)
     const mode = modes[props.mode]
     

@@ -7,11 +7,15 @@ import Switch from '@material-ui/core/Switch';
 import CloudOffIcon from '@material-ui/icons/CloudOff';
 import ClearIcon from '@material-ui/icons/Clear';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 import LightProperties from "devices/Light/LightProperties";
 import SofaListItem from "components/SofaListItem";
 import ItemBase from "components/ItemBase";
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import { directive } from 'store/directive'
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -25,26 +29,26 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-const Light = React.memo(props => {
+const Light = props => {
 
     const classes = useStyles();
     const [showAll, setShowAll] = useState(props.showAll)
     const expanded = showAll || props.brightControl || props.tempControl || props.colorControl
-    const light = props.devices[props.endpointId]
-    const lightState = props.deviceState[ props.endpointId ]
+    const light = useDeviceStore( state => state.devices[props.endpointId] )
+    const lightState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
     const name = light ? light.friendlyName : "Unknown"
 
     useEffect(() => {
-        props.addEndpointIds("id", props.endpointId, "Light"+props.endpointId)
+        register(props.endpointId, "Light"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices("Light"+props.endpointId);
+            unregister(props.endpointId, "Light"+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])    
+    }, [props.endpointId])
 
 
     function handlePowerChange(event) {
-        props.directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
+        directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     }; 
     
     function isReachable() {
@@ -115,9 +119,9 @@ const Light = React.memo(props => {
                                 onLevelControl={props.onLevelControl} />
         </ItemBase>
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Light);
+export default Light;
 
 Light.defaultProps = {
     itemType: "card",

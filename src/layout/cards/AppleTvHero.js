@@ -1,14 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 
-import { DeviceContext } from 'context/DeviceContext';
+import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 
 import AppleTV from 'devices/AppleTV/AppleTV';
 import PlaceholderCard from 'layout/PlaceholderCard';
 
 const AppleTvHero = props => {
 
-    const { endpointIdsByCategory } = useContext(DeviceContext);
-    const appleTVs = endpointIdsByCategory('MEDIA_PLAYER')    
+    const appleTVs = endpointIdsByDisplayCategory('MEDIA_PLAYER')    
 
     if (!appleTVs) { return <PlaceholderCard count={ 1 } /> }
      

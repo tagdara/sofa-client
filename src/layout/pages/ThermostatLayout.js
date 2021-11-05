@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { DeviceContext } from 'context/DeviceContext';
+import { endpointIdsByDisplayCategory } from 'store/deviceHelpers';
 
 import GridSection from 'components/GridSection';
 import TemperatureSensor from 'devices/Thermostat/TemperatureSensor';
@@ -9,9 +9,8 @@ import Forecast from 'devices/Thermostat/Forecast';
 
 const ThermostatLayout = props => {
 
-    const { endpointIdsByCategory } = useContext(DeviceContext);
-    const thermostats = endpointIdsByCategory('THERMOSTAT')
-    const temperatureSensors = endpointIdsByCategory('TEMPERATURE_SENSOR')
+    const thermostats = endpointIdsByDisplayCategory('THERMOSTAT')
+    const temperatureSensors = endpointIdsByDisplayCategory('TEMPERATURE_SENSOR')
 
     return (    
         <>

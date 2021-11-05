@@ -1,7 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -14,14 +12,17 @@ import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 
-import { DeviceContext } from 'context/DeviceContext';
-
 import DotAvatar from 'components/DotSlider'
 import CardBase from 'components/CardBase'
 import ToggleIconButton from 'components/ToggleIconButton'
 import SofaListItem from 'components/SofaListItem'
 import ModeLines from 'devices/Mode/ModeLines'
 
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import useRegisterStore from 'store/registerStore'
+import { directive } from 'store/directive'
+import { getModes, getInputs } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     
@@ -69,45 +70,47 @@ const useStyles = makeStyles(theme => {
 
 });
 
-const Receiver = React.memo(props => {
-    
+const Receiver = props => {
 
-    useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Receiver-'+props.endpointId)
-        return function cleanup() {
-            props.unregisterDevices('Receiver-'+props.endpointId);
-        };
-    // eslint-disable-next-line 
-    }, [])
-
-    const classes = useStyles();
-    const { getModes, getInputs} = useContext(DeviceContext);
+    const classes = useStyles();    
     const [ showDetail, setShowDetail ] = useState(false);
     const [ volumeMode, setVolumeMode ] = useState('presets');
     const volumePresets = [40, 55, 60, 65, 70, 80];
-    const receiver = props.deviceState[props.endpointId]
+
+    const device = useDeviceStore( state => state.devices[props.endpointId] )
+    const receiver = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
+
+    useEffect(() => {
+        register(props.endpointId, 'Receiver-'+props.endpointId)
+        return function cleanup() {
+            unregister(props.endpointId, 'Receiver-'+props.endpointId);
+        };
+    // eslint-disable-next-line 
+    }, [props.endpointId])
 
     if (!receiver) { return null }
 
     function handleVolumeChange(event) {
-        props.directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
+        directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
     }; 
 
     //function handleMuteChange(event) {
-    //    props.directive(props.device.endpointId, 'Speaker', 'SetVolume', { "mute" : !props.deviceState.Speaker.mute.value } )
+    //    directive(props.endpointId, 'Speaker', 'SetVolume', { "mute" : !receiver.Speaker.mute.value } )
     //}; 
     
     function handlePowerChange(event) {
-        props.directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
+        directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     };
     
     function handleInput(event, inputname) {
-        props.directive(props.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
+        directive(props.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
     }; 
 
     
     function surroundName() {
-        var surroundmodes=getModes(props.endpointId).Surround
+        var surroundmodes = getModes(props.endpointId).Surround
         if (surroundmodes.hasOwnProperty(receiver.Surround.mode.value)) {
             return surroundmodes[receiver.Surround.mode.value]
         }
@@ -115,7 +118,7 @@ const Receiver = React.memo(props => {
     }
     
     function handleInputLockModeChoice(event,modechoice) {
-        props.directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Receiver.InputLock')
+        directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Receiver.InputLock')
     }; 
 
     function handleVolumeMode(event,modechoice) {
@@ -137,7 +140,7 @@ const Receiver = React.memo(props => {
         <CardBase>
             <SofaListItem   avatar={<SpeakerGroupIcon />} avatarState = { receiver.PowerController.powerState.value === 'ON' ? 'on' : 'off' } noPad={true}
                             avatarClick={ () => setShowDetail(!showDetail) } labelClick={ () => setShowDetail(!showDetail) }
-                            avatarBackground={false} primary={props.devices[props.endpointId].friendlyName} secondary={subText()}
+                            avatarBackground={false} primary={device.friendlyName} secondary={subText()}
                             secondaryActions={<Switch color="primary" checked={ receiver.PowerController.powerState.value === 'ON' } 
                             onChange={ (e) => handlePowerChange(e) } /> }
             />
@@ -180,12 +183,12 @@ const Receiver = React.memo(props => {
                                 <MenuItem value={"presets"}>Presets</MenuItem>
                             </Select>
                         </ListItem>
-                        <ModeLines  directive={props.directive} disabled={receiver.PowerController.powerState.value!=='ON'} endpointId={props.endpointId}
-                                    device={props.devices[props.endpointId]} deviceState={receiver} exclude={["InputLock"]} />
+                        <ModeLines  directive={directive} disabled={receiver.PowerController.powerState.value!=='ON'} endpointId={props.endpointId}
+                                    device={device} deviceState={receiver} exclude={["InputLock"]} />
 
             </Collapse>
         </CardBase>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Receiver);
+export default Receiver;

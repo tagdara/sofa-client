@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import TableCell from '@material-ui/core/TableCell';
@@ -6,7 +6,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-import { DeviceContext } from 'context/DeviceContext';
+import { getModes, isModeNonControllable }  from 'store/deviceHelpers';
 
 const useStyles = makeStyles({
         
@@ -23,7 +23,6 @@ const useStyles = makeStyles({
 const ModeController = props => {
     
     const classes = useStyles();
-    const { getModes, isModeNonControllable } = useContext(DeviceContext);
     const hasPower = props.deviceState && props.deviceState.hasOwnProperty('PowerController')
     const on = hasPower ? props.deviceState.PowerController.powerState.value !== 'ON' : true
     const modes = getModes(props.device, props.exclude)

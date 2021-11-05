@@ -9,11 +9,15 @@ import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import NightsStayIcon from '@material-ui/icons/NightsStay';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import SofaListItem from 'components/SofaListItem';
 import CardBase from 'components/CardBase';
 import ComputerWol from 'devices/Computer/ComputerWol';
 import ComputerVolume from 'devices/Computer/ComputerVolume';
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import { directive } from 'store/directive'
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -26,45 +30,47 @@ const useStyles = makeStyles(theme => {
     }
 })
 
-const Computer = React.memo(props => {
+const Computer = props => {
 
     const classes = useStyles();
 
+    const device = useDeviceStore( state => state.devices[props.endpointId] )
+    const computerState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Computer-'+props.endpointId)
+        register(props.endpointId, 'Computer-'+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('Computer-'+props.endpointId);
+            unregister(props.endpointId, 'Computer-'+props.endpointId)
         };
     // eslint-disable-next-line 
     }, [])
 
-    const name = props.devices && props.devices[props.endpointId] ? props.devices[props.endpointId].friendlyName : "Unknown"
+    const name = device.friendlyName ?? "Unknown"
 
-    if (!props.deviceState || !props.deviceState[props.endpointId]) {
+    if (!computerState) {
         return  <CardBase >
                     <SofaListItem   inList={true} avatarBackground={false} avatarState={ 'off'}
                                     avatar={ <WindowsIcon />}
                                     primary={ name }
                                     secondaryActions={
-                                        <ComputerWol endpointId={props.endpointId} directive={props.directive} />
+                                        <ComputerWol endpointId={props.endpointId} directive={directive} />
                                     }
                     />
                 </CardBase>   
     }    
 
-    const computerState = props.deviceState[props.endpointId]
     const Speaker = computerState.Speaker
     const on = computerState.PowerController ? computerState.PowerController.powerState.value === "ON" : false
     
     function turnOff() {
-        props.directive(props.endpointId, "PowerController", "TurnOff", {}, {}, "")
+        directive(props.endpointId, "PowerController", "TurnOff", {}, {}, "")
     }; 
  
     function handleLockButton(event) {
         if (event) {
-            props.directive(props.endpointId, "LockController" , "Lock", {}, {}, "")
+            directive(props.endpointId, "LockController" , "Lock", {}, {}, "")
         } else {
-            props.directive(props.endpointId, "LockController" , "Unlock", {}, {}, "")
+            directive(props.endpointId, "LockController" , "Unlock", {}, {}, "")
         }
     }; 
 
@@ -113,14 +119,14 @@ const Computer = React.memo(props => {
                                         </IconButton>        
                                     </>
                                     :
-                                    <ComputerWol endpointId={props.endpointId} directive={props.directive} />
+                                    <ComputerWol endpointId={props.endpointId} directive={directive} />
                                     }
                                 </>
                             }
             />
-            { (Speaker && on ) && <ComputerVolume endpointId={props.endpointId} directive={props.directive} Speaker ={ Speaker } /> }
+            { (Speaker && on ) && <ComputerVolume endpointId={props.endpointId} directive={directive} Speaker ={ Speaker } /> }
         </CardBase>   
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Computer);
+export default Computer;

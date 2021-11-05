@@ -1,24 +1,25 @@
-import React, { useContext, useState, useEffect }from 'react';
-import { DeviceStateContext } from 'context/DeviceStateContext';
-
+import React, { useEffect } from 'react';
+import { register, unregister, getModes, endpointIdByFriendlyName } from 'store/deviceHelpers'
 import ItemBase from 'components/ItemBase'
 import SofaListItem from 'components/SofaListItem';
 import PlaceholderCard from 'layout/PlaceholderCard';
+import useDeviceStateStore from 'store/deviceStateStore'
 
 export default function Forecast(props) { 
     
-    const { getModes, cardReady, deviceStates, getEndpointIdsByFriendlyName, unregisterDevices } = useContext(DeviceStateContext);
-    const [ device, setDevice ]=useState(undefined)
+    const device = endpointIdByFriendlyName(props.Primary)
+    const deviceState = useDeviceStateStore( state => state.deviceStates[props.Primary] )
 
     useEffect(() => {
-        setDevice(getEndpointIdsByFriendlyName(props.Primary, 'Forecast')[0])
+        register(props.Primary, "Forecast"+props.Primary)
         return function cleanup() {
-            unregisterDevices('Forecast');
+            unregister(props.Primary, "Forecast"+props.Primary)
         };
     // eslint-disable-next-line 
-    }, [ ] )
-    
-    if (!cardReady('Forecast')) {
+    }, [props.Primary])
+
+
+    if (!deviceState) {
         return <><PlaceholderCard /><PlaceholderCard count={2}/></>
     }
 
@@ -32,7 +33,7 @@ export default function Forecast(props) {
     function conLabel() {
         try {
             var modes=getModes(device)
-            return modes['Weather Condition'][deviceStates[device]['Weather Condition'].mode.value]
+            return modes['Weather Condition'][deviceState['Weather Condition'].mode.value]
         }
         catch {}
         return "Forecast"
@@ -43,9 +44,9 @@ export default function Forecast(props) {
     
     return (
         <ItemBase >
-            <SofaListItem   avatar={!deviceStates[device]['Forecast High'].rangeValue.value ? '--' :
-                                        deviceStates[device]['Forecast Low'].rangeValue.value + ' - '+deviceStates[device]['Forecast High'].rangeValue.value } 
-                            avatarState={ tempColor(deviceStates[device]['Forecast High'].rangeValue.value) }
+            <SofaListItem   avatar={!deviceState['Forecast High'].rangeValue.value ? '--' :
+                                        deviceState['Forecast Low'].rangeValue.value + ' - '+deviceState['Forecast High'].rangeValue.value } 
+                            avatarState={ tempColor(deviceState['Forecast High'].rangeValue.value) }
                             primary={ conLabel() } wideAvatar={true}/>
         </ItemBase>
     );

@@ -1,20 +1,10 @@
-import React, { useState, useEffect } from 'react';
-
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import React from 'react';
 import Speaker from 'devices/Speaker/Speaker';
+import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 
-const SpeakerList = React.memo(props => {
+const SpeakerList = props => {
     
-    const [ speakers, setSpeakers]=useState([])
-
-    // since this component doesn't actually want the devicestates, we should refactor this part to just use
-    // device context
-
-    useEffect(() => {
-        var speakerList = props.addEndpointIds('category','SPEAKER')
-        setSpeakers(speakerList)
-    // eslint-disable-next-line 
-    }, [])
+    const speakers = endpointIdsByDisplayCategory( "SPEAKER")    
 
     return (
         <>
@@ -23,7 +13,6 @@ const SpeakerList = React.memo(props => {
             )}
         </>
     )
+}
 
-}, deviceStatesAreEqual);
-
-export default dataFilter(SpeakerList);
+export default SpeakerList;

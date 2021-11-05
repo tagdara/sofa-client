@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -11,14 +11,18 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceContext } from 'context/DeviceContext';
 
 import SofaAvatarSlider from 'components//SofaAvatarSlider'
 import CardBase from 'components/CardBase'
 import ModeLines from 'devices/Mode/ModeLines'
 import SofaListItem from 'components/SofaListItem'
 import ToggleAvatar from 'components/ToggleAvatar';
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import useRegisterStore from 'store/registerStore'
+import { directive } from 'store/directive'
+import { getController } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {      
@@ -106,27 +110,26 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-const Thermostat = React.memo(props => {
+const Thermostat = props => {
     
     const classes = useStyles();
     const { selectPage } = useContext(LayoutContext);
-    const { getController} = useContext(DeviceContext);
-
     const [targetSetpoint, setTargetSetpoint] = useState(70);
     const [powerLevel, setPowerLevel] = useState(false)
     const [showDetail, setShowDetail] = useState(false)
 
-    const thermostat = props.deviceState[props.endpointId]
-    const thermostatDevice = props.devices[props.endpointId]
+    const thermostatDevice = useDeviceStore( state => state.devices[props.endpointId] )
+    const thermostat = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Thermostat-'+props.endpointId)
+        register(props.endpointId, 'Thermostat-'+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('Thermostat-'+props.endpointId);
+            unregister(props.endpointId, 'Thermostat-'+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])
-
+    }, [props.endpointId])
 
     useEffect(() => {
         if (thermostat) {
@@ -176,7 +179,7 @@ const Thermostat = React.memo(props => {
     }; 
     
     function handlePowerLevelChange(event) {
-        props.directive(props.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
+        directive(props.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
     }; 
 
     //function handlePreSetpointChange(event) {
@@ -184,11 +187,11 @@ const Thermostat = React.memo(props => {
     //}; 
     
     function handleSetpointChange(event) {
-        props.directive(props.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
+        directive(props.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
     }; 
 
     function handleSetMode(event) {
-        props.directive(props.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
+        directive(props.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
     }; 
     
     function switchToHistory() {
@@ -253,10 +256,10 @@ const Thermostat = React.memo(props => {
                     </ListItem> 
                 }
 
-                <ModeLines directive = { props.directive } device={thermostatDevice} deviceState={thermostat}  />
+                <ModeLines directive = { directive } device={thermostatDevice} deviceState={thermostat}  />
             </Collapse>
         </CardBase>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Thermostat)
+export default Thermostat

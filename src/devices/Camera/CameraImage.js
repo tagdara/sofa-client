@@ -1,11 +1,12 @@
-import React, { useState, useRef, useEffect, useContext } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { NetworkContext } from 'network/NetworkProvider';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { useInterval } from 'components/useInterval';
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { directive } from 'store/directive'
+import useDeviceStateStore from 'store/deviceStateStore'
 
 const useStyles = makeStyles(theme => {
     
@@ -13,7 +14,7 @@ const useStyles = makeStyles(theme => {
         im: {
             width: "100%",
             height: "auto",
-            borderRadius: 4,
+            borderRadius: 8,
             display: "flex",
         },
         spinner: {
@@ -36,29 +37,34 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-const CameraImage = React.memo(props => {
+const CameraImage = props => {
 
     const classes = useStyles();
-    const { checkAuthentication } = useContext(NetworkContext);
+    //const { checkAuthentication } = useContext(NetworkContext);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [updateUri, setupdateUri] = useState("");
     const image = useRef(null);
     const holder = useRef(null);
     const [imageUri, setImageUri] = useState(undefined)
 
+    const device = deviceByEndpointId(props.endpointId)
+    const cameraState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const name = device ? device.name : ""
+
+    console.log('cpe', props.endpointId)
+
     useEffect(() => {
         setImageUri(undefined)
-        setupdateUri(undefined)
-        props.addEndpointIds("id", props.endpointId, "dialog"+props.endpointId)
+        setupdateUri(undefined) 
+        register(props.endpointId, "image-"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices("dialog"+props.endpointId);
+            unregister(props.endpointId, "image-"+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [ props.endpointId])  
+    }, [props.endpointId])  
 
-    const cameraState = props.deviceState && props.deviceState[props.endpointId] ? props.deviceState[props.endpointId] : undefined
+
     const unreachable = cameraState && cameraState.EndpointHealth ? cameraState.EndpointHealth.connectivity.value.value !== "OK" : true
-    const name = props.devices && props.devices[props.endpointId] ? props.devices[props.endpointId].friendlyName : ""
 
     useEffect(()=> {
 
@@ -74,7 +80,7 @@ const CameraImage = React.memo(props => {
 
         if ((!unreachable) && (props.endpointId)) { 
             // This should get the static image URI without starting streams unnecessarily
-            props.directive(props.endpointId, "CameraStreamController", "InitializeCameraStreams",{ "cameraStreams": [] })
+            directive(props.endpointId, "CameraStreamController", "InitializeCameraStreams",{ "cameraStreams": [] })
                 .then(response =>{ getImageUriFromPayload(response) } )
         } 
     // eslint-disable-next-line 
@@ -96,7 +102,8 @@ const CameraImage = React.memo(props => {
     }
     
     function imageError(e) {
-        checkAuthentication().then(res => { console.log('image error.',props.imageUri, e.message,' -  loaded: '+imageLoaded) } )
+        console.log('image error', e)
+        //checkAuthentication().then(res => { console.log('image error.',props.imageUri, e.message,' -  loaded: '+imageLoaded) } )
     }
  
     if (!imageUri || unreachable) {
@@ -127,6 +134,6 @@ const CameraImage = React.memo(props => {
         />
         </div>
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(CameraImage);
+export default CameraImage;

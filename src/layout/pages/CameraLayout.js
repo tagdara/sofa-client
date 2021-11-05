@@ -1,4 +1,4 @@
-import React, { useContext, useState} from 'react';
+import React, { useState} from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import QrCodeIcon from '@material-ui/icons/DeveloperMode'; // Current Material icons does not include the updated QrCode icon
 
 import UbiquitiIcon from 'resources/UbiquitiIcon';
-import { DeviceContext } from 'context/DeviceContext';
+import { endpointIdsByDisplayCategory, sortByName }  from 'store/deviceHelpers'
 
 import SofaListItem from 'components/SofaListItem';
 import SecurityCamera from 'devices/Camera/SecurityCamera';
@@ -21,11 +21,11 @@ const useStyles = makeStyles({
     button: {
         minWidth: 36
     },
-}
-)
-export default function CameraLayout(props) {
-    const { endpointIdsByCategory,sortByName } = useContext(DeviceContext);
-    const cameras = sortByName(endpointIdsByCategory('CAMERA'))
+})
+
+const CameraLayout = props => {
+
+    const cameras = sortByName(endpointIdsByDisplayCategory('CAMERA'))
     const [ showQR, setShowQR]=useState(false)
     const homekitSupport = false
     const classes = useStyles();
@@ -57,3 +57,5 @@ export default function CameraLayout(props) {
         </>
     )
 }
+
+export default CameraLayout

@@ -5,31 +5,32 @@ import ListIcon from '@material-ui/icons/List';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
 import SofaListItem from 'components/SofaListItem';
 import ItemBase from "components/ItemBase"
+import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { directive } from 'store/directive'
+import useDeviceStateStore from 'store/deviceStateStore'
 
-const AutomationItem = React.memo(props => {
+const AutomationItem = props => {
     
     const [ launched, setLaunched] = useState(false)
+    const automation = deviceByEndpointId(props.endpointId)
+    const automationState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const name = automation.friendlyName
 
     useEffect(() => {
-        props.addEndpointIds("id", props.endpointId, "Automation-"+props.endpointId)
+        register(props.endpointId, "Automation-"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices("Automation-"+props.endpointId);
+            unregister(props.endpointId, "Automation-"+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])
+    }, [props.endpointId])
 
-    if (!props.deviceState || !props.deviceState[props.endpointId]) { return null }
- 
-    const automationState = props.deviceState[props.endpointId]
-    const name = props.devices[props.endpointId].friendlyName
+    if (!automationState) { return null }
 
     function runAutomation(conditions=true) {
         setLaunched(true)
-        props.directive(props.endpointId, 'SceneController', 'Activate', {}, {"conditions": conditions})
+        directive(props.endpointId, 'SceneController', 'Activate', {}, {"conditions": conditions})
             .then(result=> { parseResult(result) })
     }
 
@@ -100,9 +101,9 @@ const AutomationItem = React.memo(props => {
         </ItemBase>
     );
 
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(AutomationItem);
+export default AutomationItem;
 
 AutomationItem.defaultProps = {
     launcher: false,

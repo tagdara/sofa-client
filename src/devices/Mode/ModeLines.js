@@ -1,5 +1,5 @@
-import React, { useContext}  from 'react';
-import { DeviceContext } from 'context/DeviceContext';
+import React from 'react';
+import { getModes, deviceByEndpointId, isModeNonControllable } from 'store/deviceHelpers';
 import { makeStyles } from '@material-ui/styles';
 
 import List from '@material-ui/core/List';
@@ -30,9 +30,8 @@ const useStyles = makeStyles(theme => {
 export default function ModeLines(props) {
 
     const classes = useStyles();
-    const { getModes, deviceByEndpointId, isModeNonControllable } = useContext(DeviceContext);
-    const device=deviceByEndpointId(props.device.endpointId)
-    const modes=getModes(device, props.exclude)
+    const device = deviceByEndpointId(props.device.endpointId)
+    const modes = getModes(device, props.exclude)
     
     function handleModeChoice(event, mode, modechoice) {
         props.directive(props.device.endpointId, mode, 'SetMode', { "mode": modechoice })

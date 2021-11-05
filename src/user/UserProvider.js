@@ -1,56 +1,66 @@
-import React, {useState, useEffect, useContext, createContext} from 'react';
-import { NetworkContext } from 'network/NetworkProvider';
-import { DeviceContext } from 'context/DeviceContext';
+import React, {useState, useEffect, createContext} from 'react';
+import { deviceByEndpointId } from 'store/deviceHelpers';
+import useUserStore from 'store/userStore'
+const serverUrl = "https://"+window.location.hostname;
 
 export const UserContext = createContext();
 
 export default function UserProvider(props) {
 
     const [ userData, setUserData ] = useState({});
-    const { getJSON, postJSON, loggedIn } = useContext(NetworkContext);
-    const { deviceByEndpointId } = useContext(DeviceContext);
     const [ favorites, setFavorites] = useState([])
     const [ userCamera, setUserCamera] = useState(undefined)
     const [ userTheme, setUserTheme] = useState(undefined)
     const [ userPlayer, setUserPlayer] = useState(undefined)
     const [ userArea, setUserArea] = useState("logic:area:Main")
-    
+    const loggedIn = useUserStore(state => state.loggedin)
+    const accessToken = useUserStore(state => state.access_token)
     useEffect(() => {
-        
-        function parseResult(result) {
-            if (result) {
-                if (result.hasOwnProperty('favorites')) {
-                    setFavorites(result.favorites)
-                }
-                if (result.hasOwnProperty('camera')) {
-                    setUserCamera(result.camera)
-                }
-                if (result.hasOwnProperty('player')) {
-                    setUserPlayer(result.player)
-                }
-                
-                if (result.hasOwnProperty('theme')) {
-                    setUserTheme(result.theme)
-                }
-                if (result.hasOwnProperty('area')) {
-                    setUserTheme(result.area)
-                }
-                setUserData(result)
-            }
-        }
-        
+         
         if (loggedIn) {
-      	    getJSON('user')
-                .then(result=>parseResult(result))
+            getUserData()
         } else {
             setUserData({})
         }
     // eslint-disable-next-line 
     }, [ loggedIn] )
+
+    function parseResult(result) {
+        if (result) {
+            if (result.hasOwnProperty('favorites')) {
+                setFavorites(result.favorites)
+            }
+            if (result.hasOwnProperty('camera')) {
+                setUserCamera(result.camera)
+            }
+            if (result.hasOwnProperty('player')) {
+                setUserPlayer(result.player)
+            }
+            
+            if (result.hasOwnProperty('theme')) {
+                setUserTheme(result.theme)
+            }
+            if (result.hasOwnProperty('area')) {
+                setUserTheme(result.area)
+            }
+            setUserData(result)
+        }
+    }
+
+    const getUserData = async () => {
+        const headers = { authorization : accessToken }
+        const response = await fetch(serverUrl+"/user", { headers: headers })
+        var result = await response.json()
+        parseResult(result)       
+    }
     
-    function saveUserData(data) {
-        postJSON('user/save', data)
-            .then(result=>console.log('saved user setting change',result))
+    const saveUserData = async data => {
+        const headers = { authorization : accessToken }
+        const body = data
+        const response = await fetch(serverUrl+"/user/save", { headers: headers, method: "post", body: JSON.stringify(body)})
+        var result = await response.json()
+        console.log('saved user setting change', result)
+
     }
     
     function chooseUserCamera(cameraId) { 

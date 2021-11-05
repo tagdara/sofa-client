@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect, createContext, useReducer } from 'react';
-import { NetworkContext } from 'network/NetworkProvider';
+import React, { useState, useEffect, createContext, useReducer } from 'react';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import ErrorBoundary from 'error/ErrorBoundary';
+import useUserStore from 'store/userStore'
 
 export const stackModuleReducer = (state, data) => {
 
@@ -70,7 +70,9 @@ export const LayoutContext = createContext({});
 
 export const LayoutProvider = (props) => {
 
-    const { getJSON, loggedIn } = useContext(NetworkContext);
+    const serverUrl = "https://"+window.location.hostname;
+    const accessToken = useUserStore(state => state.access_token)
+    const loggedIn = useUserStore(state => state.logged_in)
     const mobileBreakpoint = 800
     const maxScreenWidth = Math.min(1800, window.innerWidth)
     const minStackWidth = 320
@@ -94,11 +96,17 @@ export const LayoutProvider = (props) => {
 
     useEffect(() => {
         if (loggedIn) {
-            getJSON('layout/default')
-                .then(result=> setStackLayout(result) );
+            getDefaultLayout()
         }
     // eslint-disable-next-line 
     }, [ loggedIn] )
+
+    const getDefaultLayout = async () => {
+        const headers = { authorization : accessToken }
+        const response = await fetch(serverUrl + "/layout/default", { headers: headers })
+        var result =  await response.json()
+        setStackLayout(result) 
+    }
 
     function goHome() {
         setCurrentPage('Stacks')
@@ -137,8 +145,16 @@ export const LayoutProvider = (props) => {
             return promise1;
         }
         //console.log('cache miss',stackName, stacks)
-        return getJSON('layout/stack/'+stackName)
-            .then(result=> { loadStack(result); setStacks({[stackName] : result}); return (result); })
+        return getLayoutStack(stackName)
+    }
+
+    const getLayoutStack = async (stackName) => {
+        const headers = { authorization : accessToken }
+        const response = await fetch(serverUrl + "/layout/stack/"+stackName, { headers: headers })
+        var result =  await response.json()
+        loadStack(result)
+        setStacks({[stackName] : result})
+        return result
     }
 
 

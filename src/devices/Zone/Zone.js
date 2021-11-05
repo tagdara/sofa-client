@@ -7,29 +7,33 @@ import ClearIcon from '@material-ui/icons/Clear';
 import DoneIcon from '@material-ui/icons/Done';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import GridItem from 'components/GridItem';
 import ToggleAvatar from 'components/ToggleAvatar';
 
 import Moment from 'react-moment';
 import 'moment-timezone';
 
-const Zone = React.memo(props => {
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import { register, unregister } from 'store/deviceHelpers'
+
+const Zone = props => {
 
     const { selectPage } = useContext(LayoutContext);
-    const zoneState = props.deviceState[ props.endpointId ]
+    const device = useDeviceStore( state => state.devices[props.endpointId] )
+    const zoneState  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const name = device.friendlyName
 
     useEffect(() => {
-        props.addEndpointIds("id", props.endpointId, "Zone"+props.endpointId)
+        register(props.endpointId, 'zone-'+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices("Zone"+props.endpointId);
+            unregister(props.endpointId, 'zone-'+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])    
+    }, [])  
 
     if (!zoneState) { return null }
 
-    const name = props.devices[props.endpointId].friendlyName
     const open = isOpen(props.endpointId)
 
     function isOpen(endpointId) {
@@ -59,6 +63,6 @@ const Zone = React.memo(props => {
             </ListItem>
         </GridItem>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Zone);
+export default Zone;

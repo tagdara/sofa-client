@@ -1,4 +1,4 @@
-import React, { useContext, useState} from 'react';
+import React, { useEffect, useState} from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -7,10 +7,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
-import { NetworkContext } from 'network/NetworkProvider';
+import Grid from '@material-ui/core/Grid';
 
 import GridItem from 'components/GridItem';
+
+import useUserStore from 'store/userStore';
 
 const useStyles = makeStyles({
     loginBox: {
@@ -32,13 +33,24 @@ const useStyles = makeStyles({
 
 export default function SofaLogin(props) {
     
-    
-    const { login, getStorage } = useContext(NetworkContext);
-    const [ user, setUser ] = useState(getStorage('user'))
+    const login = useUserStore( state => state.login )
+    const userName = useUserStore( state => state.name )
+    const refreshToken = useUserStore( state => state.refresh_token )
+    const setLoginMessage = useUserStore( state => state.setLoginMessage )
+    const checkToken = useUserStore( state => state.checkToken )
+    //const { login, getStorage } = useContext(NetworkContext);
+    const [ user, setUser ] = useState(userName)
     const [ password, setPassword ] = useState('')
     const [ errorMessage, setErrorMessage ] = useState('')
     const classes = useStyles();
-    
+ 
+    useEffect(() => {
+        console.log('checking token', userName)
+        setLoginMessage('Checking token', userName)
+        checkToken(userName, refreshToken)
+    // eslint-disable-next-line         
+    }, [])        
+
     function confirmToken(result) {
         console.log('resulting token', result)
         if (result) {
@@ -60,7 +72,7 @@ export default function SofaLogin(props) {
     }
 
     return (
-            <>
+        <Grid container spacing={2} >
                 <GridItem wide={props.wide} className={classes.loginBox}>
                     <ListItem style={{display:'flex', justifyContent:'center'}} >
                         <Typography variant="h6">Sofa Login</Typography>
@@ -82,6 +94,6 @@ export default function SofaLogin(props) {
                         </Button>
                     </ListItem>
                 </GridItem>
-            </>
+            </Grid>
     )
 };

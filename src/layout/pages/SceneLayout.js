@@ -1,13 +1,12 @@
-import React, { useContext } from 'react';
-import { DeviceContext } from 'context/DeviceContext';
+import React from 'react';
+import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 
 import Scene from 'devices/Scene/Scene';
 import GridSection from 'components/GridSection';
 
 const SceneLayout = props => {
 
-    const { endpointIdsByCategory, sortByName } = useContext(DeviceContext);
-    const scenes = props.scenes ? props.scenes : sortByName(endpointIdsByCategory('SCENE_TRIGGER'))
+    const scenes = props.scenes ? props.scenes : sortByName(endpointIdsByDisplayCategory('SCENE_TRIGGER'))
 
     return (    
         <GridSection name={"Scenes"} scroll={true} >

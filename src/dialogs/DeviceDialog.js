@@ -1,10 +1,11 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import { DeviceContext } from 'context/DeviceContext';
+import { directives } from 'store/directive'
+import { devicesByDisplayCategory } from 'store/deviceHelpers';
 import List from '@material-ui/core/List';
 import SearchIcon from '@material-ui/icons/Search';
 
@@ -62,7 +63,7 @@ const useStyles = makeStyles({
 
 const DeviceDialog = props => {
 
-    const { devicesByCategory, controllers, directives } = useContext(DeviceContext);
+    const controllers = undefined // Couldn't figure out where this comes from
     const classes = useStyles();
 
     const [mode] = useState('all');
@@ -70,11 +71,11 @@ const DeviceDialog = props => {
     const [nameFilter, setNameFilter] = useState('')
     const [showDevice, setShowDevice] = useState(null)
     const [loading, setLoading] = useState(false);
-    const devs=devicesByCategory('ALL', nameFilter)
+    const devs = devicesByDisplayCategory ('ALL', nameFilter)
     const [displayDevs, setDisplayDevs]=useState([])
     
     useEffect(() => {
-        var devs=devicesByCategory('ALL', nameFilter)
+        var devs = devicesByDisplayCategory ('ALL', nameFilter)
         setDisplayDevs(devs.slice(0, limit))
     // eslint-disable-next-line 
     }, [ limit, nameFilter ])

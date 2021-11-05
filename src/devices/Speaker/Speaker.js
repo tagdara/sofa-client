@@ -1,22 +1,29 @@
 import React, { useEffect } from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
-
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
 import SofaAvatarSlider from 'components/SofaAvatarSlider'
+import { directive } from 'store/directive'
+import { deviceByEndpointId } from 'store/deviceHelpers'
 
+import useDeviceStateStore from 'store/deviceStateStore'
+import useRegisterStore from 'store/registerStore'
 
-const Speaker = React.memo(props => {
+const Speaker = props => {
 
-    const directive = props.directive
-    const speaker = props.deviceState[props.endpointId]
-    const name = props.devices[props.endpointId] ? shortName(props.devices[props.endpointId].friendlyName) : ""
+    const speakerDevice = deviceByEndpointId(props.endpointId)   
+    const speaker = useDeviceStateStore( state => state.deviceStates[props.endpointId])
+    const name = speakerDevice.friendlyName ? shortName(speakerDevice.friendlyName) : ""
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
-        props.addEndpointIds('id',props.endpointId,'speaker')
+        register(props.endpointId, "speaker-"+props.endpointId)
+        return function cleanup() {
+            unregister(props.endpointId, "speaker-"+props.endpointId)
+        };
     // eslint-disable-next-line 
     }, [])
+
     
     if (!speaker || !speaker.PowerController || ( props.filterOff && speaker.PowerController.powerState.value==='OFF')) {
         //console.log('speaker is being filtered', props.filterOff, speaker)
@@ -45,16 +52,16 @@ const Speaker = React.memo(props => {
     return (
         <ListItem>
             <SofaAvatarSlider   label = { name } 
-                                labelClick = {togglePower}
+                                labelClick = { togglePower }
                                 small = {true} reverse = {true} minWidth = { 64 } noPad = { true }
                                 value = { speaker.Speaker.volume.value }
-                                change = {handleVolumeChange} 
+                                change = { handleVolumeChange } 
                                 avatarClick={ () => handleMuteChange(!speaker.Speaker.mute.value)} 
                                 avatarState={ speaker.PowerController.powerState.value==='ON' ? "on" : "off" }
                                 disabled={ speaker.PowerController.powerState.value==='OFF' }
             />
         </ListItem>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Speaker)
+export default Speaker

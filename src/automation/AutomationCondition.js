@@ -1,15 +1,12 @@
-import React, { useContext } from 'react';
-import { DeviceContext } from 'context/DeviceContext';
-
+import React from 'react';
 import AutomationDevice from './AutomationDevice';
 import AutomationMove from './AutomationMove';
 import PropertyValue from './PropertyValue';
 import ControllerProperty from './ControllerProperty';
 import GridItem from 'components/GridItem';
+import { getDeviceProperties, getControllerInterface } from 'store/deviceHelpers'
 
 export default function AutomationCondition(props) {
-
-    const { getDeviceProperties, getControllerInterface } = useContext(DeviceContext);
 
     function directive (endpointId, controllerName, command, payload={}, cookie={}, instance) {
         if (controllerName!==props.item.controller) { return false}

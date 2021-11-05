@@ -1,7 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { LayoutContext } from 'layout/LayoutProvider';
-import { NetworkContext } from 'network/NetworkProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 
@@ -28,7 +27,6 @@ export default function AdminFeatures(props) {
     
     const classes = useStyles();
     const { selectPage } = useContext(LayoutContext);
-    const { toggleLogSSE } = useContext(NetworkContext);
     const [ showDialog, setShowDialog] = useState(false);
 
     function otherPort(portnumber, tabname) {
@@ -38,6 +36,10 @@ export default function AdminFeatures(props) {
     
     function closeDialog() {
         setShowDialog(false)
+    }
+    
+    function toggleLogSSE() {
+        // needs to be re-implemented if needed
     }
 
     return (

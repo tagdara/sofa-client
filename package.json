@@ -9,6 +9,7 @@
         "@material-ui/lab": "^4.0.0-alpha.56",
         "array-move": "^3.0.1",
         "classnames": "^2.2.6",
+        "immer": "^9.0.6",
         "moment": "^2.29.1",
         "moment-timezone": "^0.5.31",
         "rc-tree": "^4.0.0-beta.2",
@@ -25,7 +26,8 @@
         "react-vis": "^1.11.7",
         "react-window": "^1.8.5",
         "recharts": "^2.0.0-beta.6",
-        "typeface-roboto": "0.0.75"
+        "typeface-roboto": "0.0.75",
+        "zustand": "^3.6.3"
     },
     "scripts": {
         "start": "react-scripts start",

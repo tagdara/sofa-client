@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import { DeviceContext } from 'context/DeviceContext';
+import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 import List from '@material-ui/core/List';
 import Matrix from './Matrix';
 
@@ -19,8 +19,7 @@ const useStyles = makeStyles(theme => {
 export default function MatrixList(props) {
 
     const classes = useStyles();
-    const { endpointIdsByCategory,sortByName } = useContext(DeviceContext);
-    const matrix = sortByName(endpointIdsByCategory('MATRIX'))
+    const matrix = sortByName(endpointIdsByDisplayCategory('MATRIX'))
 
     return (
         <List className={classes.flex}>

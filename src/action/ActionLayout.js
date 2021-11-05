@@ -6,7 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import ActionAction from './ActionAction';
 //import ActionFooter from './action/ActionFooter';
 import TreeHeader from './TreeHeader';
-import { NetworkContext } from 'network/NetworkProvider';
+import { NetworkContext } from '../archive/NetworkProvider';
 //import { SortableList } from "./action/SortableList"
 //import SortableTree from 'react-sortable-tree';
 import IconButton from '@material-ui/core/IconButton';

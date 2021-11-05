@@ -1,12 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 
-import { DeviceContext } from 'context/DeviceContext';
+import { endpointIdsByDisplayCategory } from 'store/deviceHelpers';
 
 import Television from 'devices/Television/Television';
 
 const TvHero = props => {
-    const { endpointIdsByCategory } = useContext(DeviceContext);
-    const tvs = endpointIdsByCategory('TV')
+    const tvs = endpointIdsByDisplayCategory('TV')
 
     return (
         <>

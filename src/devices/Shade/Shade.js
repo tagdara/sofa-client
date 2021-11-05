@@ -7,10 +7,13 @@ import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import RemoveIcon from '@material-ui/icons/Remove';
 import TonalityIcon from '@material-ui/icons/Tonality';
-
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
-
 import SofaListItem from 'components/SofaListItem';
+
+import { directive } from 'store/directive'
+import { deviceByEndpointId } from 'store/deviceHelpers'
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import useRegisterStore from 'store/registerStore'
 
 const useStyles = makeStyles(theme => {
     return {      
@@ -31,27 +34,32 @@ const useStyles = makeStyles(theme => {
     }
 })
 
-const Shade = React.memo(props => {
+const Shade = props => {
 
     const classes = useStyles();
 
+    const device = deviceByEndpointId(props.endpointId)   
+    const deviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId])
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
+
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'Shade-'+props.endpointId)
+        register(props.endpointId, "shade-"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('Shade-'+props.endpointId);
+            unregister(props.endpointId, "shade-"+props.endpointId)
         };
     // eslint-disable-next-line 
     }, [])
 
-    if (!props.deviceState || !props.deviceState[props.endpointId]) { return null }
+    if (!deviceState) { return null }
 
     function handlePress(modechoice) {
-        props.directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Blinds.Position')
+        directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Blinds.Position')
     }
     
     return ( 
         <SofaListItem   inList={props.inList} avatarBackground={false} avatarState={ 'off' } avatar={ props.icon ? props.icon : <TonalityIcon />}
-                        primary={props.devices[props.endpointId].friendlyName}>
+                        primary={device.friendlyName}>
 
             <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >
                 <Button className={classes.button} onClick={ () => handlePress('Position.Down') }><ExpandMoreIcon /></Button>
@@ -60,9 +68,9 @@ const Shade = React.memo(props => {
             </ButtonGroup>
         </SofaListItem>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(Shade);
+export default Shade;
 
 Shade.defaultProps ={
     inList: false,

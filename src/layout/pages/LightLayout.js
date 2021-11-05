@@ -1,6 +1,5 @@
-import React, { useState, useContext }  from 'react';
+import React, { useState, useCallback }  from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { DeviceContext } from 'context/DeviceContext';
 
 import ColorLensIcon from '@material-ui/icons/ColorLens';
 import AcUnitIcon from '@material-ui/icons/AcUnit';
@@ -10,6 +9,9 @@ import Light from 'devices/Light/Light';
 import GridSection from 'components/GridSection';
 import Spacer from 'components/Spacer';
 import SectionHeaderButton from 'components/SectionHeaderButton';
+
+import useDeviceStore from 'store/deviceStore'
+import { sortByName } from 'store/deviceHelpers'
 
 const useStyles = makeStyles({
     
@@ -30,12 +32,13 @@ const useStyles = makeStyles({
 const LightLayout = props => {
 
     const classes = useStyles();
-    const { endpointIdsByCategory, sortByName } = useContext(DeviceContext);
     const [filter, setFilter] = useState(props.filter);
     const [brightControl, setBrightControl] = useState(false)
     const [tempControl, setTempControl] = useState(false)
     const [colorControl, setColorControl] = useState(false)
-    const lights = props.lights ? props.lights : sortByName(endpointIdsByCategory('LIGHT'))
+    const lights = sortByName(useDeviceStore(useCallback(state => Object.keys(state.devices).filter( dev => state.devices[dev].displayCategories.includes('LIGHT')), [])))
+
+    //const lights = props.lights ? props.lights : sortByName(endpointIdsByCategory('LIGHT'))
 
     return (    
         <GridSection name={"Lights"} scroll={true}

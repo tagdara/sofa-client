@@ -3,15 +3,17 @@ import React, { useState, useEffect, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { NetworkContext } from 'network/NetworkProvider';
 import { UserContext } from 'user/UserProvider';
 
 import AutomationSave from "automation/AutomationSave"
 import AutomationHeader from "automation/AutomationHeader"
 import AutomationColumn from "automation/AutomationColumn"
+import useUserStore from 'store/userStore'
 
 export default function AutomationLayout(props) {
 
+    const serverUrl = "https://"+window.location.hostname;
+    const accessToken = useUserStore(state => state.access_token)
     const [automation, setAutomation] = useState({})
     const [actions, setActions] = useState([])
     const [conditions, setConditions] = useState([])
@@ -21,88 +23,92 @@ export default function AutomationLayout(props) {
     const [saved, setSaved] = useState(true)
     const [title, setTitle] = useState("")
     const { applyLayoutCard, isMobile } = useContext(LayoutContext);
-    const { getJSON, postJSON } = useContext(NetworkContext);
     const { makeFavorite, isFavorite} = useContext(UserContext)
 
     useEffect(() => {
-        function checkCallbackItems(itemtype) {
-            if (!gotReturn && props.type===itemtype && props.item) {
-                setGotReturn(true)
-                return props.item
-            }
-        }
-        
-        function loadAutomation(newauto) {
-            var newactions=[]
-            var changes=false
-            
-            setAutomation(newauto)
-            
-            setTitle(newauto.name)
-            
-            if (newauto.hasOwnProperty('actions')) {
-                newactions=newauto['actions']
-            } 
-            
-            var addaction=checkCallbackItems('action')
-            if (addaction) {
-                newactions=[...newactions,addaction]
-                saveType('action',newactions)
-            } else {
-                setActions(newactions)
-            }
-            
-            var newconditions=[]
-            if (newauto.hasOwnProperty('conditions')) {
-                newconditions = newauto['conditions']
-            } 
-            var addcondition=checkCallbackItems('condition')
-            if (addcondition) {
-                newconditions=[...newconditions,addcondition]
-                saveType('condition',newconditions)
-            } else {
-                setConditions(newconditions);
-            }
-            
-            var newtriggers=[]
-            if (newauto.hasOwnProperty('triggers')) {
-                newtriggers=newauto['triggers']
-            }
-            var addtrigger=checkCallbackItems('trigger')
-            if (addtrigger) {
-                newtriggers=[...newtriggers, addtrigger]
-                saveType('trigger',newtriggers)
-            } else {
-                setTriggers(newtriggers);
-            }
-            
-            var newschedules=[]
-            if (newauto.hasOwnProperty('schedules')) {
-                newschedules=newauto['schedules']
-            }
-            var addschedule=checkCallbackItems('schedule')
-            if (addschedule) {
-                newschedules=[...newschedules, addschedule]
-                saveType('schedule', newschedules)
-            } else {
-                setSchedules(newschedules);
-            }
-            
-            if (changes) {
-                setSaved(false)
-                //saveAutomation(newactions, newconditions, newtriggers, newschedules)
-            }
-        }
-
         if (props.endpointId!==undefined) {
-            getJSON('list/logic/automation/'+props.endpointId)
-                .then(result=>loadAutomation(result));
+            loadJSONAutomation()
         } else {
             console.log('This is a blank automation.')
         }
     // eslint-disable-next-line
     }, [ props.name, props.item, gotReturn, props.type ]);
 
+    function checkCallbackItems(itemtype) {
+        if (!gotReturn && props.type===itemtype && props.item) {
+            setGotReturn(true)
+            return props.item
+        }
+    }
+
+    function loadAutomation(newauto) {
+        var newactions=[]
+        var changes=false
+        
+        setAutomation(newauto)
+        
+        setTitle(newauto.name)
+        
+        if (newauto.hasOwnProperty('actions')) {
+            newactions=newauto['actions']
+        } 
+        
+        var addaction=checkCallbackItems('action')
+        if (addaction) {
+            newactions=[...newactions,addaction]
+            saveType('action',newactions)
+        } else {
+            setActions(newactions)
+        }
+        
+        var newconditions=[]
+        if (newauto.hasOwnProperty('conditions')) {
+            newconditions = newauto['conditions']
+        } 
+        var addcondition=checkCallbackItems('condition')
+        if (addcondition) {
+            newconditions=[...newconditions,addcondition]
+            saveType('condition',newconditions)
+        } else {
+            setConditions(newconditions);
+        }
+        
+        var newtriggers=[]
+        if (newauto.hasOwnProperty('triggers')) {
+            newtriggers=newauto['triggers']
+        }
+        var addtrigger=checkCallbackItems('trigger')
+        if (addtrigger) {
+            newtriggers=[...newtriggers, addtrigger]
+            saveType('trigger',newtriggers)
+        } else {
+            setTriggers(newtriggers);
+        }
+        
+        var newschedules=[]
+        if (newauto.hasOwnProperty('schedules')) {
+            newschedules=newauto['schedules']
+        }
+        var addschedule=checkCallbackItems('schedule')
+        if (addschedule) {
+            newschedules=[...newschedules, addschedule]
+            saveType('schedule', newschedules)
+        } else {
+            setSchedules(newschedules);
+        }
+        
+        if (changes) {
+            setSaved(false)
+            //saveAutomation(newactions, newconditions, newtriggers, newschedules)
+        }
+    }
+
+    const loadJSONAutomation = async () => {
+        const headers = { authorization : accessToken }
+        const response = await fetch(serverUrl + "/list/logic/automation/"+props.endpointId, { headers: headers })
+        var result = await response.json()
+        loadAutomation(result)
+    }
 
 
     function saveType(itemtype, items) {
@@ -122,9 +128,12 @@ export default function AutomationLayout(props) {
         setSaved(false)
     }
     
-    function newSaveAutomation() {
-        postJSON('save/logic/automation/'+props.endpointId, {"name": title, "conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules})
-            .then(setSaved(true))
+    const newSaveAutomation = async () => {
+        const headers = { authorization : accessToken }
+        const body = {"name": title, "conditions": conditions, "actions": actions, "triggers":triggers, "schedules": schedules}
+        const response = await fetch(serverUrl+"/save/logic/automation/"+props.endpointId, { headers: headers, method: "post", body: JSON.stringify(body)})
+        await response.json()
+        setSaved(true)
     }
     
     function goBack() {

@@ -1,14 +1,19 @@
 import React, { useEffect } from 'react';
 import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
 import SofaListItem from 'components/SofaListItem';
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 
-const ComputerSummary = React.memo(props => {
+import useDeviceStateStore from 'store/deviceStateStore'
+import { compareState, endpointIdsByFriendlyName, register, unregister } from 'store/deviceHelpers'
+
+const ComputerSummary = props => {
+
+    const outlets = endpointIdsByFriendlyName(props.outlets)
+    const states = useDeviceStateStore( state => Object.fromEntries(outlets.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
 
     useEffect(() => {
-        props.addEndpointIds('friendlyName', props.outlets, 'ComputerSummary')
+        register(outlets, 'ComputerSummary')
         return function cleanup() {
-            props.unregisterDevices('ComputerSummary');
+            unregister(outlets, 'ComputerSummary')
         };
     // eslint-disable-next-line 
     }, [])
@@ -18,9 +23,9 @@ const ComputerSummary = React.memo(props => {
         // energy use.
 
         var onDevs = 0;
-        for (var dev in props.deviceState) {
-            var outlet = props.deviceState[dev]
-            if ( props.deviceState[dev] ) {
+        for (var dev in states) {
+            var outlet = states[dev]
+            if ( states[dev] ) {
                 if (outlet && outlet.PowerController.powerState.value === 'ON') {
                     if (outlet.hasOwnProperty('Energy Level')) {
                         if (outlet['Energy Level'].mode.value !== 'Standby') {
@@ -53,6 +58,6 @@ const ComputerSummary = React.memo(props => {
                         primary={ countLabel() }  
                     />
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(ComputerSummary);
+export default ComputerSummary;

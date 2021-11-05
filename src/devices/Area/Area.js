@@ -87,18 +87,10 @@ export default function Area(props) {
     const classes = useStyles();
     const { deviceByEndpointId } = useContext(DeviceContext);
 
-    function runScene(sceneName) {
-        deviceByEndpointId("logic:scene:"+sceneName).SceneController.directive("Activate")
+    function runShortcut(level) {
+        directive(shortcuts[level], 'SceneController', 'Activate')
     }
 
-    function runShortcut(level) {
-        if (props.shortcuts.hasOwnProperty(level.toString())) {
-            runScene(props.shortcuts[level])
-        } else {
-            console.log('No scene shortcut for area level', level)
-        }
-    }
-        
     return (
         <GridItem wide={props.wide} >
             <ListItem className={classes.listItem}>

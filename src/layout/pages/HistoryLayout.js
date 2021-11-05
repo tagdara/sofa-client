@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Button from '@material-ui/core/Button';
 
-import { DeviceContext } from 'context/DeviceContext';
+import { getHistoryForDevice, friendlyNameByEndpointId } from 'store/deviceHelpers';
 
 import HistoryLine from 'history/HistoryLine';
 import GridSection from 'components/GridSection';
@@ -14,7 +14,6 @@ export default function HistoryLayout(props) {
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     //const { getHistoryForDevice } = useRef(useContext(DataContext)).current;
-    const { getHistoryForDevice, friendlyNameByEndpointId } = useContext(DeviceContext)
     
     useEffect(() => {
         getHistoryForDevice(props.endpointId, props.property, 0).then(result => setHistory(result))

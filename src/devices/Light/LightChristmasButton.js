@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ChristmasTreeIcon from 'resources/ChristmasTreeIcon';
-
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import IconButton from '@material-ui/core/IconButton';
+
+import useDeviceStateStore from 'store/deviceStateStore'
+import { directive } from 'store/directive'
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {
@@ -13,23 +15,23 @@ const useStyles = makeStyles(theme => {
         }
     }
 })
-const LightChristmasButton = React.memo(props => {
+const LightChristmasButton = props => {
 
     const classes = useStyles();
     const treeEndpointId = 'insteon:node:1A F1 A5 1'
-    const tree = props.deviceState[treeEndpointId]
+    const tree = useDeviceStateStore( state => state.deviceStates[treeEndpointId] )
     const treeOn = tree && tree.PowerController.powerState.value === 'ON'
 
     useEffect(() => {
-        props.addEndpointIds('id', treeEndpointId, 'LightChristmasButton')
+        register(treeEndpointId, "xmasLight"+treeEndpointId)
         return function cleanup() {
-            props.unregisterDevices('LightChristmasButton');
+            unregister(treeEndpointId, "xmasLight"+treeEndpointId);
         };
     // eslint-disable-next-line 
-    }, [])   
+    }, [])  
 
     function toggleTree() {
-        props.directive(treeEndpointId, 'PowerController', treeOn ? 'TurnOff' : 'TurnOn')
+        directive(treeEndpointId, 'PowerController', treeOn ? 'TurnOff' : 'TurnOn')
     }
     
 
@@ -39,6 +41,6 @@ const LightChristmasButton = React.memo(props => {
         </IconButton>
     )
 
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(LightChristmasButton);
+export default LightChristmasButton;

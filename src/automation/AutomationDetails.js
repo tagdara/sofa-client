@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { DeviceStateContext } from 'context/DeviceStateContext';
+import React, { useState } from 'react';
+import { directive  } from 'store/directive';
 
 import Moment from 'react-moment';
 import IconButton from '@material-ui/core/IconButton';
@@ -13,12 +13,11 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
 function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
 export default function AutomationDetails(props) {
 
-    const { directive } = useContext(DeviceStateContext);
     const [ showResult, setShowResult]=useState(false)
     const [ resultMessage, setResultMessage]=useState('')
     const [ severity, setSeverity]=useState('info')

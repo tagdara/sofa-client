@@ -5,7 +5,10 @@ import Button from "@material-ui/core/Button"
 import Avatar from "@material-ui/core/Avatar"
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
+import useDeviceStateStore from 'store/deviceStateStore'
+import useDeviceStore from 'store/deviceStore'
+import useRegisterStore from 'store/registerStore'
+import { directive } from 'store/directive'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -59,18 +62,23 @@ function useInterval(callback, delay) {
     }, [delay]);
 }
 
-const SceneButton = React.memo(props => {
+const SceneButton = props => {
     
     const classes = useStyles();
     const [working, setWorking] = useState(false)
+    const scene = useDeviceStore( state => state.devices[props.endpointId] )
+    const sceneState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
-        props.addEndpointIds('id', props.endpointId, 'SceneButton-'+props.endpointId)
+        register(props.endpointId, "scenebutton"+props.endpointId)
         return function cleanup() {
-            props.unregisterDevices('SceneButton-'+props.endpointId);
+            unregister(props.endpointId, "scenebutton"+props.endpointId)
         };
     // eslint-disable-next-line 
-    }, [])    
+    }, [props.endpointId])
+  
 
     useInterval(() => {
         setWorking(false)
@@ -80,15 +88,15 @@ const SceneButton = React.memo(props => {
         setWorking(false)
     }, [props.computedLevel]);
 
-    if (!props.deviceStateReady) { return null }
+    if (!sceneState) { return null }
 
-    const name = props.devices[props.endpointId].friendlyName
+    const name = scene.friendlyName
 
     function runScene() {
         if (!props.editing && !props.remove) {
             console.log('Activating', name)
             setWorking(true)
-            props.directive(props.endpointId, 'SceneController', 'Activate')
+            directive(props.endpointId, 'SceneController', 'Activate')
         }
     }
     
@@ -109,6 +117,6 @@ const SceneButton = React.memo(props => {
             { name }
         </Button>
     )
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(SceneButton)
+export default SceneButton

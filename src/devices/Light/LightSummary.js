@@ -1,27 +1,35 @@
 import React, { useEffect } from 'react';
-import { deviceStatesAreEqual, dataFilter } from 'context/DeviceStateFilter'
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
 import SofaListItem from 'components/SofaListItem';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import LightChristmasButton from 'devices/Light/LightChristmasButton';
 
-const LightSummary = React.memo(props => {
+import useDeviceStateStore from 'store/deviceStateStore'
+import useRegisterStore from 'store/registerStore'
+import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
+
+const LightSummary = props => {
+    const lights = endpointIdsByDisplayCategory('LIGHT')
+    const states = useDeviceStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
-        props.addEndpointIds("category", "LIGHT", "LightSummary")
+        register(lights, "LightSummary")
         return function cleanup() {
-            props.unregisterDevices("LightSummary");
+            unregister(lights, "LightSummary")
         };
     // eslint-disable-next-line 
     }, [])
 
-    if (!props.deviceState || Object.keys(props.deviceState).length < 1) { return <PlaceholderCard /> }
+
+    if (!states || Object.keys(states).length < 1) { return <PlaceholderCard /> }
     
     function lightCount(condition, source) {
         var count = 0;
-        for (var dev in props.deviceState) {
-            var light = props.deviceState[dev]
+        for (var dev in states) {
+            var light = states[dev]
             if (light) {
                 switch (condition.toUpperCase()) {
                     case "OFF":
@@ -75,6 +83,6 @@ const LightSummary = React.memo(props => {
         />
         </>
     );
-}, deviceStatesAreEqual);
+}
 
-export default dataFilter(LightSummary);
+export default LightSummary;

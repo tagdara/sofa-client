@@ -21,8 +21,8 @@ export const directive = async (endpointId, controllerName, command, payload={},
     const body = { "directive": {"header": directiveHeader, "endpoint": directiveEndpoint, "payload": payload }}
     const response = await fetch(serverUrl, {  headers: headers, method: "post", body: JSON.stringify(body)})
     const result = await response.json()
-    console.log('result',result)
     storeUpdater(result)
+    return result
 }
 
 export const directives = useDeviceStore.getState().directives
@@ -31,8 +31,11 @@ export const refreshDirectives = async () => {
     const accessToken = useUserStore.getState().access_token;
     const headers = { authorization : accessToken }
     const response = await fetch(directivesUrl, { headers: headers })
+    if (response.status === 401) { 
+        useUserStore.setState({ access_token: undefined, logged_in: false })
+        return
+    } 
     const result = await response.json()
-    console.log('directives', result)
     useDeviceStore.setState({directives: result})
 }
 

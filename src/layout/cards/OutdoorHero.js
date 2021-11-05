@@ -1,11 +1,9 @@
-import React, { useContext} from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import React from 'react';
+import { selectPage } from 'store/layoutHelpers'
 
 import Weather from 'devices/Thermostat/Weather';
 
 export default function OutdoorHero(props) {
-    
-    const { selectPage } = useContext(LayoutContext);
     
     return (
         <Weather current={props.outdoor} forecast={"Rainmachine"} onClick={ () => selectPage('ThermostatLayout') } wide={props.wide } 

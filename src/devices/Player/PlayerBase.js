@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import React from 'react';
+import { selectPage } from 'store/layoutHelpers'
 import { makeStyles } from '@material-ui/styles';
 
 import Avatar from '@material-ui/core/Avatar';
@@ -41,7 +41,6 @@ export default function PlayerBase(props) {
     
     console.log('player',props.player)
     const classes = useStyles();
-    const { selectPage } = useContext(LayoutContext);
     const serverurl="https://"+window.location.hostname;
     
     function addDefaultSrc(ev){

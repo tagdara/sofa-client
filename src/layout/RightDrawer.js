@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -7,7 +7,8 @@ import Drawer from '@material-ui/core/Drawer';
 
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 
-import { LayoutContext } from 'layout/LayoutProvider';
+import { toggleRightDrawer } from 'store/layoutHelpers';
+import useLayoutStore from 'store/layoutStore';
 import RecentLayout from 'layout/pages/RecentLayout';
 
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -41,7 +42,7 @@ const useStyles = makeStyles(theme => {
 
 export default function RightDrawer(props) {
     
-    const { rightDrawerOpen, toggleRightDrawer } = useContext(LayoutContext);
+    const rightDrawerOpen = useLayoutStore(state => state.rightDrawerOpen)
     const classes = useStyles();
     
     return (

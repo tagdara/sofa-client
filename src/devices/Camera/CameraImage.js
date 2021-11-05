@@ -51,8 +51,6 @@ const CameraImage = props => {
     const cameraState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
     const name = device ? device.name : ""
 
-    console.log('cpe', props.endpointId)
-
     useEffect(() => {
         setImageUri(undefined)
         setupdateUri(undefined) 
@@ -73,7 +71,7 @@ const CameraImage = props => {
                 var newUri = data.payload.imageUri
                 setImageUri(newUri)
             }
-            catch {
+            catch(e) {
                 console.log('Improper response from InitializeCameraStreams', data)
             }
         }

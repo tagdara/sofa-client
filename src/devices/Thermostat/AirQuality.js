@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { LayoutContext } from 'layout/LayoutProvider';
-import { DeviceStateContext } from 'context/DeviceStateContext';
+import { selectPage } from 'store/layoutHelpers'
+import { modeDisplayName } from 'store/deviceHelpers';
 
 import SofaListItem from 'components/SofaListItem';
 import CardBase from 'components/CardBase'
@@ -9,9 +9,6 @@ import ToggleAvatar from 'components/ToggleAvatar'
 
 
 export default function AirQuality(props) { 
-    
-    const { selectPage } = useContext(LayoutContext);
-    const { modeDisplayName } = useContext(DeviceStateContext);
     
     function indoorAQValueName() {
         try {

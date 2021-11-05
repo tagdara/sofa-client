@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import React, { useState, useEffect } from 'react';
+import { selectPage } from 'store/layoutHelpers'
 import { endpointIdsByDisplayCategory, hasDescription, getChangeTimesForDevices } from 'store/deviceHelpers';
 
 import Zone from 'devices/Zone/Zone';
@@ -7,7 +7,6 @@ import GridSection from 'components/GridSection';
 
 const ZoneLayout = props => {
 
-    const { selectPage } = useContext(LayoutContext);
     const motionSensors = endpointIdsByDisplayCategory('MOTION_SENSOR')
     const contactSensors = endpointIdsByDisplayCategory('CONTACT_SENSOR')
 

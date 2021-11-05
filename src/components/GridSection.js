@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { LayoutContext } from 'layout/LayoutProvider';
+import useLayoutStore from 'store/layoutStore'
 import classNames from 'classnames';
 
 import Typography from '@material-ui/core/Typography';
@@ -62,9 +62,9 @@ const useStyles = makeStyles(theme => {
 
 export default function GridSection(props) {
     
-    const { isMobile } = useContext(LayoutContext);
+    const isMobile = useLayoutStore( state => state.isMobile )
     const classes = useStyles();
-    const [show, setShow] = useState(props.show);
+    const [ show, setShow ] = useState(props.show);
 
     return (
         <Grid container item spacing={1} key={props.name} xs={props.xs} 

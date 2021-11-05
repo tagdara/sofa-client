@@ -9,6 +9,7 @@ import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 import useDeviceStateStore from 'store/deviceStateStore'
 import useDeviceStore from 'store/deviceStore'
 import { register, unregister } from 'store/deviceHelpers'
+import { directive } from 'store/directive'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -32,6 +33,7 @@ const LightButton = props => {
 
     const fullName = light ? light.friendlyName : "Unknown"
     const name = props.skipPrefix && fullName.startsWith(props.skipPrefix+" ") ? fullName.slice(props.skipPrefix.length) : fullName
+    const sendDirective = props.directive ? props.directive : directive
 
     useEffect(() => {
         register(props.endpointId, "Light"+props.endpointId)
@@ -44,7 +46,7 @@ const LightButton = props => {
     if (!lightState ) { return null}
 
     function togglePower() {
-        props.directive(props.endpointId, 'PowerController', on ? 'TurnOff' : 'TurnOn')
+        sendDirective(props.endpointId, 'PowerController', on ? 'TurnOff' : 'TurnOn')
     }
     
     function isReachable() {

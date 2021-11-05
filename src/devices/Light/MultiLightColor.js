@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
 
@@ -9,31 +9,16 @@ import DialogActions from '@material-ui/core/DialogActions';
 import { SketchPicker } from 'react-color'
 
 import useDeviceStateStore from 'store/deviceStateStore'
-import useDeviceStore from 'store/deviceStore'
-import useRegisterStore from 'store/registerStore'
 import { directive } from 'store/directive'
+import { compareState, register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles({
-        
-    wide: {
-        width: "100%",
-    },
-    indent: {
-        paddingLeft: 16,
-        paddingRight: 8,
-    },
     button: {
         borderRadius: 24,
         width: 48,
         flexGrow: 0,
     },
-    revealIcon: {
-        height: 24,
-        width: 24,
-        color: "#FFE4B5",
-    }
 });
-
 
 const sketchPickerStyles = {
     default: {
@@ -132,12 +117,7 @@ const MultiLightColor = props => {
 
     const classes = useStyles();
     const [openDialog, setOpenDialog] = useState(false);
-    const lights = useDeviceStore(useCallback(state => Object.keys(state.devices).filter( dev => props.endpointIds.includes(dev)), [props.endpointIds]))
-    console.log('multicolor', lights)
-    const states = useDeviceStateStore(useCallback( state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), [lights]))
-    console.log('multistates', states)    
-    const register = useRegisterStore( state => state.add)
-    const unregister = useRegisterStore( state => state.remove)
+    const states = useDeviceStateStore(state => Object.fromEntries(props.endpointIds.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))  
 
     useEffect(() => {
         register(props.endpointIds, 'MultiLightColor')

@@ -1,12 +1,10 @@
-import React, { useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import React from 'react';
+import { selectPage } from 'store/layoutHelpers'
 
 import ItemBase from 'components/ItemBase';
 import ZoneSummary from 'devices/Zone/ZoneSummary';
 
 export default function ZoneHero(props) {
-
-    const { selectPage } = useContext(LayoutContext);
 
     return (
         <ItemBase >

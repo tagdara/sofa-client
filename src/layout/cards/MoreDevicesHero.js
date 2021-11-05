@@ -9,9 +9,7 @@ const MoreDevicesHero = props => {
     
     const shades = sortByName(endpointIdsByDisplayCategory('INTERIOR_BLIND'))    
     const fans = endpointIdsByFriendlyName(['Bathroom Fan', 'Bathroom Heat Fan'])
-
-    console.log(shades, fans)
-
+    
     return (
         <CardBase>
             { shades.map( shade => (

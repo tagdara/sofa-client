@@ -1,6 +1,6 @@
 import useDeviceStore from 'store/deviceStore'
 import useRegisterStore from 'store/registerStore'
-import useUserStore from 'store/deviceStore'
+import useUserStore from 'store/userStore'
 
 const serverUrl = "https://"+window.location.hostname;
 const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }} 
@@ -395,8 +395,11 @@ export const devicesByDisplayCategory = (categories, searchterm) => {
 export const getRecent = async scene => {
     const accessToken = useUserStore.getState().access_token;
     const headers = { authorization : accessToken }
+    console.log('headers', headers)
     const response = await fetch(serverUrl + "/list/hub/recent", { headers: headers })
-    return await response.json()
+    var result = await response.json()
+    console.log('ohnooo', result)
+    return result
 }
 
 export const getHistoryForDevice = async (dev, prop, page) => {

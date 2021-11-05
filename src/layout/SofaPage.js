@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { LayoutContext } from 'layout/LayoutProvider';
+import { renderSuspenseModule  } from 'store/layoutHelpers'
 
 import Grid from '@material-ui/core/Grid';
 import PageActions from './PageActions';
@@ -69,7 +69,6 @@ const useStyles = makeStyles(theme => {
 export default function SofaPage(props) {
     
     const classes = useStyles();
-    const { renderSuspenseModule } = useContext(LayoutContext);
     const [showActions, setShowActions] = useState(false)
     
     return (

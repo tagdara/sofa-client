@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect }from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import React, { useState, useEffect }from 'react';
+import { selectPage } from 'store/layoutHelpers'
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -31,7 +31,6 @@ const useStyles = makeStyles(theme => {
 const TemperatureSensor = props => {
     
     const classes = useStyles();
-    const { selectPage } = useContext(LayoutContext);
     const [ showDetail, setShowDetail ] = useState(false)
     const additionalAttributes = ['Light Level', 'Humidity', 'Wind Speed', 'UV Index', 'Rainfall']
     const device = useDeviceStore( state => state.devices[props.endpointId] )

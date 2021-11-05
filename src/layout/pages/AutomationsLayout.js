@@ -7,7 +7,7 @@ import ScheduleIcon from '@material-ui/icons/Schedule';
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-import { LayoutContext } from 'layout/LayoutProvider';
+import { selectPage } from 'store/layoutHelpers'
 import { UserContext } from 'user/UserProvider';
 
 import AutomationItem from 'automation/AutomationItem';
@@ -18,7 +18,6 @@ const AutomationsLayout = props => {
 
     const serverUrl = "https://"+window.location.hostname;
     const accessToken = useUserStore(state => state.access_token)
-    const { selectPage } = useContext(LayoutContext);
     const { makeFavorite, isFavorite} = useContext(UserContext)
     const [ automations, setAutomations ] = useState([])
     const editing = false

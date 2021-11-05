@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import { selectPage } from 'store/layoutHelpers'
 import { UserContext } from 'user/UserProvider';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -22,7 +22,6 @@ import { sortByName, hasDisplayCategory, hasCapability } from 'store/deviceHelpe
 const AreaHero = props => {
 
     const { userArea } = useContext(UserContext);     
-    const { selectPage } = useContext(LayoutContext);
     const [ currentArea, setCurrentArea] = useState('logic:area:Main')
 
     const area = useDeviceStore( state => state.devices[currentArea] )

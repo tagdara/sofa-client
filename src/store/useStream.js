@@ -71,20 +71,20 @@ export const useStream = ( dataProcessor ) => {
 
     const errorHandler = () => {
         console.log('ERROR with EventSource')
-        reloadPWA()
-        //setConnected(false)
-        //connectStream()
+        //reloadPWA()
+        ////setConnected(false)
+        ////connectStream()
     }
 
-    function reloadPWA() {
+    //function reloadPWA() {
         
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.unregister();
-            });
-        }
-        window.location.reload(true)
-    }
+    //    if ('serviceWorker' in navigator) {
+    //        navigator.serviceWorker.ready.then(registration => {
+    //            registration.unregister();
+    //        });
+    //    }
+    //    window.location.reload(true)
+    //}
 
     const dataHandler = event => {
         //deviceDispatch(JSON.parse(event.data));
@@ -107,7 +107,7 @@ export const useStream = ( dataProcessor ) => {
             return false
         }
 
-        console.log('<< event stream data', data)
+        //console.log('<< event stream data', data)
         dataProcessor(data)
         //setHeartbeat(Date.now())
     };
@@ -115,7 +115,7 @@ export const useStream = ( dataProcessor ) => {
 
     useEffect(() => {
         let unmounted = false;
-        if (!unmounted && !isConnecting && streamStatus!==1 && accessToken) {
+        if (!streamConnected && !unmounted && !isConnecting && streamStatus!==1 && accessToken) {
             connectStream()
         }
             

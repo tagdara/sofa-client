@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import React, { useState, useEffect } from 'react';
+import { selectPage } from 'store/layoutHelpers'
 
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
@@ -29,7 +29,6 @@ const useStyles = makeStyles({
 export default function PlayerCard(props) {
     
     const classes = useStyles();
-    const { selectPage } = useContext(LayoutContext);
     const jukebox = endpointIdsByFriendlyName('Jukebox')[0]
     const speakers = endpointIdsByDisplayCategory('SPEAKER')
     const states = useDeviceStateStore(state => Object.fromEntries([jukebox, ...speakers].filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))

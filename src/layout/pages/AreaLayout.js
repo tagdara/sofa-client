@@ -1,10 +1,10 @@
-import React, {useContext, useState, useEffect } from 'react';
+import React, {useState, useEffect } from 'react';
 
 import AddIcon from '@material-ui/icons/Add';
 import EditIcon from '@material-ui/icons/Edit';
 import RemoveIcon from '@material-ui/icons/Remove';
 
-import { LayoutContext } from 'layout/LayoutProvider';
+import { selectPage } from 'store/layoutHelpers'
 import GridSection from 'components/GridSection';
 
 import SectionHeaderButton from 'components/SectionHeaderButton';
@@ -18,7 +18,6 @@ import { register, unregister, sortByName, hasDisplayCategory } from 'store/devi
 
 const AreaLayout = props => {
 
-    const { selectPage } = useContext(LayoutContext);
     const [addingDevice, setAddingDevice] = useState(false);
     const [deletingDevice, setDeletingDevice] = useState(false);
     const [editingScene, setEditingScene] = useState(false);

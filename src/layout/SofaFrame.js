@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import Grid from '@material-ui/core/Grid';
@@ -13,8 +13,8 @@ import useStream from 'store/useStream'
 import storeUpdater from 'store/storeUpdater'
 import useLayoutStore from 'store/layoutStore'
 
-import { LayoutContext } from 'layout/LayoutProvider';
 import { discovery, refreshDirectives } from 'store/directive'
+import { addModule, renderSuspenseModule } from 'store/layoutHelpers'
 
 const useStyles = makeStyles(theme => {
     
@@ -64,13 +64,11 @@ const useStyles = makeStyles(theme => {
 
 export default function SofaFrame(props) {
     
-    const { addModule, isMobile, renderSuspenseModule, maxScreenWidth } = useContext(LayoutContext);
     const { streamConnected } = useStream(storeUpdater)
     const currentPage = useLayoutStore(state => state.currentPage)
     const currentProps = useLayoutStore(state => state.currentProps)
-
-    console.log('streamconnected', streamConnected )
-
+    const maxScreenWidth = useLayoutStore(state => state.maxScreenWidth)
+    const isMobile = useLayoutStore(state => state.isMobile)
     const classes = useStyles(maxScreenWidth);
     
     useEffect(() => {
@@ -83,8 +81,8 @@ export default function SofaFrame(props) {
             addModule(currentPage)
         }
     // eslint-disable-next-line 
-    }, [currentPage] )
-    
+    }, [ currentPage ] )
+
     return (
         <>
             { !isMobile && <RightDrawer /> }

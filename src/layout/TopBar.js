@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -11,8 +11,9 @@ import MenuIcon from '@material-ui/icons/Menu';
 import NotesIcon from '@material-ui/icons/Notes';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HomeIcon from '@material-ui/icons/Home';
-import { LayoutContext } from 'layout/LayoutProvider';
+import { goBack, goHome, toggleDrawer, toggleRightDrawer } from 'store/layoutHelpers';
 import useUserStore from 'store/userStore'
+import useLayoutStore from 'store/layoutStore'
 
 const useStyles = makeStyles((theme) => ({
 	appBar: {
@@ -35,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 export default function TopBar(props) {
 	const classes = useStyles();
 	const loggedIn = useUserStore(state => state.logged_in)
-	const { goBack, currentPage, goHome, toggleDrawer, toggleRightDrawer } = useContext(LayoutContext);
+	const currentPage = useLayoutStore(state => state.currentPage)
 
 	return (
 		<AppBar className={classes.AppBar} position="static" color="transparent" elevation={0}>
@@ -46,7 +47,7 @@ export default function TopBar(props) {
 				<Typography variant="h6" className={classes.title}>
 					Home
 				</Typography>
-				{loggedIn && (
+				{ loggedIn && (
 					<div>
 						{ currentPage !== 'Stacks' &&
 							<IconButton onClick={() => goBack()}>

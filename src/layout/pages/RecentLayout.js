@@ -10,7 +10,7 @@ export default function RecentLayout(props) {
     const [ recent, setRecent ] = useState([])
 
     useEffect(() => {
-        getRecent().then(result=> setRecent(result)) 
+        getRecent().then(result => { console.log(result); setRecent(result) } )
     // eslint-disable-next-line 
     }, []);
 

@@ -1,11 +1,11 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
 import IconButton from '@material-ui/core/IconButton';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
-import { LayoutContext } from 'layout/LayoutProvider';
+import { selectPage } from 'store/layoutHelpers'
 
 import CardBase from 'components/CardBase';
 import Spacer from 'components/Spacer';
@@ -15,7 +15,6 @@ import MatrixList from 'devices/Matrix/MatrixList';
 
 export default function ComputerHero(props) {
     
-    const { selectPage } = useContext(LayoutContext);
     const [ expandMonitors, setExpandMonitors ]=useState()
      
     // This stuff really needs to be moved to config and autodetect, maybe solve with virtual device combining PC and plug

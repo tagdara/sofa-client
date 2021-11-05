@@ -1,14 +1,13 @@
-import React, { useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import React from 'react';
 
 import Thermostat from 'devices/Thermostat/Thermostat';
 import PlaceholderCard from 'layout/PlaceholderCard';
 
+import { selectPage } from 'store/layoutHelpers'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers'
 
 const ThermostatHero = props => {
     const endpointId =  endpointIdByFriendlyName(props.primary)
-    const { selectPage } = useContext(LayoutContext);
 
     if (!endpointId) {
         return <><PlaceholderCard /><PlaceholderCard count={2}/></>

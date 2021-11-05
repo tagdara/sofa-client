@@ -8,7 +8,6 @@ const loginUrl = serverUrl + "/login";
 
 const useUserStore = create(persist(
     set => ({
-
         name: localStorage.getItem('user'),
         refresh_token: localStorage.getItem('refresh_token'),
         login_message: "welcome",
@@ -53,6 +52,7 @@ const useUserStore = create(persist(
                     set({ logged_in: true })
                 }
                 catch {
+                    console.log('invalid token')
                     set({ login_message: "Invalid token"})
                 }
             }

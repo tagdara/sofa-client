@@ -30,9 +30,9 @@ const CameraLayout = props => {
     const homekitSupport = false
     const classes = useStyles();
     
-    function openNVR() {
+    function openProtect() {
         var newurl="https://unifi.dayton.tech/protect"
-        var tabname="_nvr"
+        var tabname="_protect"
         window.open(newurl,tabname);
     }
     
@@ -51,7 +51,7 @@ const CameraLayout = props => {
             </GridSection>
             <GridSection>
                 <List>
-                    <SofaListItem noPad={true} button onClick={() => openNVR() } avatar={<UbiquitiIcon />} avatarBackground={false} primary={'Unifi Protect'} />
+                    <SofaListItem noPad={true} button onClick={() => openProtect() } avatar={<UbiquitiIcon />} avatarBackground={false} primary={'Unifi Protect'} />
                 </List>
             </GridSection>
         </>

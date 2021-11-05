@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 import ListItem from '@material-ui/core/ListItem';
@@ -9,8 +9,6 @@ import Collapse from '@material-ui/core/Collapse';
 
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-import { LayoutContext } from 'layout/LayoutProvider';
 
 import SofaAvatarSlider from 'components//SofaAvatarSlider'
 import CardBase from 'components/CardBase'
@@ -23,6 +21,7 @@ import useDeviceStore from 'store/deviceStore'
 import useRegisterStore from 'store/registerStore'
 import { directive } from 'store/directive'
 import { getController } from 'store/deviceHelpers'
+import { selectPage } from 'store/layoutHelpers'
 
 const useStyles = makeStyles(theme => {
     return {      
@@ -113,7 +112,6 @@ const useStyles = makeStyles(theme => {
 const Thermostat = props => {
     
     const classes = useStyles();
-    const { selectPage } = useContext(LayoutContext);
     const [targetSetpoint, setTargetSetpoint] = useState(70);
     const [powerLevel, setPowerLevel] = useState(false)
     const [showDetail, setShowDetail] = useState(false)

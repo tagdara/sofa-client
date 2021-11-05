@@ -36,8 +36,6 @@ export default function CameraSelect(props) {
         return cameras[cameraPosition]
     }
 
-    console.log('currentCamera', currentCamera)
-
     return (
         <SecurityCamera endpointId={currentCamera} selectButtons={true} 
                         nextCamera={nextCamera} prevCamera={prevCamera} 

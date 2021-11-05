@@ -1,6 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { LayoutContext } from 'layout/LayoutProvider';
+import { getStack, renderSuspenseModule } from 'store/layoutHelpers';
 
 import Grid from '@material-ui/core/Grid';
 import PageActions from './PageActions';
@@ -79,8 +79,7 @@ const useStyles = makeStyles(theme => {
 export default function Stack(props) {
     
     const classes = useStyles();
-    const { getStack, renderSuspenseModule } = useContext(LayoutContext);
-    const [showActions, setShowActions] = useState(false)
+    const [ showActions, setShowActions ] = useState(false)
     const [ stack, setStack ]=useState({})
 
     useEffect(() => { 

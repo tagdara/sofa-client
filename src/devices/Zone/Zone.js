@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -6,7 +6,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import ClearIcon from '@material-ui/icons/Clear';
 import DoneIcon from '@material-ui/icons/Done';
 
-import { LayoutContext } from 'layout/LayoutProvider';
+import { selectPage } from 'store/layoutHelpers'
 import GridItem from 'components/GridItem';
 import ToggleAvatar from 'components/ToggleAvatar';
 
@@ -19,7 +19,6 @@ import { register, unregister } from 'store/deviceHelpers'
 
 const Zone = props => {
 
-    const { selectPage } = useContext(LayoutContext);
     const device = useDeviceStore( state => state.devices[props.endpointId] )
     const zoneState  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
     const name = device.friendlyName

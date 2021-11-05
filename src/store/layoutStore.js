@@ -8,12 +8,16 @@ const useLayoutStore = create((set, get) => ({
     currentStack: undefined,
     currentPage: 'Stacks',
     currentProps: undefined,
-    breadCrumbs: undefined,
+    breadCrumbs: [],
     drawerOpen: false,
     rightDrawerOpen: false,
     modules: {},
     stackModules: {},
     stackLayout: {},
+    maxScreenWidth: Math.min(1800, window.innerWidth),
+    isMobile: window.innerWidth <= 800,
+    minStackWidth: 320,
+
     refreshStackLayout: async () => {
         const accessToken = useUserStore.getState().access_token;
         const headers = { authorization : accessToken }
@@ -22,6 +26,17 @@ const useLayoutStore = create((set, get) => ({
         console.log('stack layout',result)
         set({ stackLayout: result})
     },
+    selectPage: (pagename, pageprops) => {
+        const currentPage = get().currentPage
+        const currentProps = get().currentProps
+        if (currentPage!=="Stacks") {
+            const breadCrumbs = get().breadCrumbs
+            if (!breadCrumbs.includes(currentPage) )  {
+                set({ breadCrumbs: [...breadCrumbs, { "page":currentPage, "props":currentProps }] })
+            }
+        }
+        set({ drawerOpen: false, rightDrawerOpen: false, currentStack: undefined, currentPage: pagename, currentProps: pageprops})
+    }
 }))
 
 export default useLayoutStore;

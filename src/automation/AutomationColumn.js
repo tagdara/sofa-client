@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
 
@@ -6,7 +6,7 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
 
-import { LayoutContext } from 'layout/LayoutProvider';
+import useLayoutStore from 'store/layoutStore'
 import AutomationAction from "automation/AutomationAction"
 import AutomationCondition from "automation/AutomationCondition"
 import AutomationTrigger from "automation/AutomationTrigger"
@@ -19,7 +19,7 @@ import { deviceByEndpointId, getControllerProperties, controllerForProperty } fr
 
 export default function AutomationColumn(props) {
 
-    const { isMobile } = useContext(LayoutContext);
+    const isMobile = useLayoutStore( state => state.isMobile )
 
     const [reorder, setReorder] = useState(false)
     const [remove, setRemove] = useState(false)

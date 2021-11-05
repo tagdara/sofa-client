@@ -1,13 +1,10 @@
-import React, { useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
-
+import React from 'react';
 import SofaListItem from 'components/SofaListItem';
 import CardBase from 'components/CardBase';
 import ListAltIcon from '@material-ui/icons/ListAlt';
+import { selectPage } from 'store/layoutHelpers'
 
 export default function AutomationAll(props) {
-    
-    const { selectPage } = useContext(LayoutContext);
     
     return (
         <CardBase noPad={true} >

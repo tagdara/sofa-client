@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
+import { toggleDrawer } from 'store/layoutHelpers';
+import useLayoutStore from 'store/layoutStore'
 import { ThemeContext } from 'theme/SofaTheme';
 
 import { makeStyles } from '@material-ui/styles';
@@ -51,7 +52,7 @@ const useStyles = makeStyles(theme => {
 
 export default function SofaDrawer(props) {
     
-    const { drawerOpen, toggleDrawer } = useContext(LayoutContext);
+    const drawerOpen = useLayoutStore( state => state.drawerOpen)
     const { pickUserTheme, colorScheme } = useContext(ThemeContext);
     const classes = useStyles();
     

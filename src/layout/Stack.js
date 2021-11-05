@@ -1,7 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/styles';
-import { LayoutContext } from 'layout/LayoutProvider';
+import { getStack, renderSuspenseModule } from 'store/layoutHelpers';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -86,7 +86,6 @@ const useStyles = makeStyles(theme => {
 export default function Stack(props) {
     
     const classes = useStyles();
-    const { getStack, renderStackModule } = useContext(LayoutContext);
     const [ stack, setStack ]=useState({})
     const [ expand, setExpand ]=useState(false)
 
@@ -123,7 +122,7 @@ export default function Stack(props) {
                     <React.Fragment key={"card"+i}>
                     { (!card.hasOwnProperty('expand') || card['expand']===expand ) ?
                     <ErrorBoundary>
-                        { renderStackModule(card['module'], card['props']) }
+                        { renderSuspenseModule(card['module'], card['props']) }
                     </ErrorBoundary>
                     :
                     null

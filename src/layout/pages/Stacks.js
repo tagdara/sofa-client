@@ -1,14 +1,22 @@
-import React, { useContext } from 'react';
-
-import { LayoutContext } from 'layout/LayoutProvider';
+import React, { useEffect } from 'react';
 import Stack from 'layout/Stack';
+import useLayoutStore from 'store/layoutStore'
+import { refreshStackLayout } from 'store/layoutHelpers'
 
 export default function Stacks(props) {
     
     // Stack data is actually stored in LayoutProvider even though it logically should reside here because Stacks gets unloaded
     // and causes long re-renders by loading the stack definitions and modules.
+    const stackLayout = useLayoutStore(state => state.stackLayout )
+    const currentStack = useLayoutStore(state => state.currentStack )
+    const minStackWidth = useLayoutStore(state => state.minStackWidth )
+    const maxScreenWidth = useLayoutStore(state => state.maxScreenWidth )
+    const maxStacks = Math.min(4, Math.round( maxScreenWidth / minStackWidth))
 
-    const { stackLayout, currentStack, maxStacks } = useContext(LayoutContext);
+    useEffect(() => {
+        refreshStackLayout()
+    }, [])
+
 
     function filterStacks() {
         if (maxStacks===1) {

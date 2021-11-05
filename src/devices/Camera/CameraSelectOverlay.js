@@ -1,14 +1,13 @@
-import React, { useContext } from 'react';
-import { LayoutContext } from 'layout/LayoutProvider';
-
+import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
-
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import VideocamIcon from '@material-ui/icons/Videocam';
 import CameraQR from 'devices/Camera/CameraQR';
+
+import { selectPage } from 'store/layoutHelpers'
 
 const useStyles = makeStyles(theme => {
     
@@ -39,7 +38,6 @@ const useStyles = makeStyles(theme => {
 export default function CameraSelectOverlay(props) {
 
     const classes = useStyles();
-    const { selectPage } = useContext(LayoutContext);
 
     return (
         <>

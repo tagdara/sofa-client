@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { LayoutContext } from 'layout/LayoutProvider';
+import { selectPage } from 'store/layoutHelpers'
 
 import ListItem from '@material-ui/core/ListItem';
 
@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => {
 export default function AdminFeatures(props) {
     
     const classes = useStyles();
-    const { selectPage } = useContext(LayoutContext);
     const [ showDialog, setShowDialog] = useState(false);
 
     function otherPort(portnumber, tabname) {

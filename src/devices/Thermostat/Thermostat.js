@@ -13,15 +13,14 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SofaAvatarSlider from 'components//SofaAvatarSlider'
 import CardBase from 'components/CardBase'
 import ModeLines from 'devices/Mode/ModeLines'
-import SofaListItem from 'components/SofaListItem'
 import ToggleAvatar from 'components/ToggleAvatar';
+import TemperatureSensor from 'devices/Thermostat/TemperatureSensor'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import useDeviceStore from 'store/deviceStore'
-import useRegisterStore from 'store/registerStore'
 import { directive } from 'store/directive'
-import { getController } from 'store/deviceHelpers'
-import { selectPage } from 'store/layoutHelpers'
+import { getController, register, unregister } from 'store/deviceHelpers'
+//import { selectPage } from 'store/layoutHelpers'
 
 const useStyles = makeStyles(theme => {
     return {      
@@ -118,8 +117,6 @@ const Thermostat = props => {
 
     const thermostatDevice = useDeviceStore( state => state.devices[props.endpointId] )
     const thermostat = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-    const register = useRegisterStore( state => state.add)
-    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
         register(props.endpointId, 'Thermostat-'+props.endpointId)
@@ -165,13 +162,6 @@ const Thermostat = props => {
     //    return [60,90]
     //}
                     
-    function tempColor(temp) {
-        if (!temp) { return 'disabled' } 
-        if (temp>=74) { return "hot" }
-        if (temp<70) { return "cool" }
-        return "mid";
-    }
-    
     function handlePrePowerLevelChange(event) {
         setPowerLevel(event);
     }; 
@@ -192,9 +182,9 @@ const Thermostat = props => {
         directive(props.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
     }; 
     
-    function switchToHistory() {
-        selectPage('ThermostatLayout')
-    }
+    //function switchToHistory() {
+    //    selectPage('ThermostatLayout')
+    //}
     
     function showFanPowerLevel() {
 
@@ -213,12 +203,7 @@ const Thermostat = props => {
 
     return ( 
         <CardBase>
-            <SofaListItem   avatarState={ tempColor(thermostat.TemperatureSensor.temperature.deepvalue) }
-                            onClick={ () => setShowDetail(!showDetail)}
-                            avatar={ thermostat.TemperatureSensor.temperature.deepvalue ? thermostat.TemperatureSensor.temperature.deepvalue : '--'}
-                            avatarClick={ () => switchToHistory()} 
-                            primary={ thermostatDevice.friendlyName } 
-            />
+            <TemperatureSensor endpointId={props.endpointId} onClick={props.onClick} />
             <ListItem className={classes.bottomListItem}>
                 <>
                     <ButtonGroup className={classes.buttonGroup} size="small" variant="text" >

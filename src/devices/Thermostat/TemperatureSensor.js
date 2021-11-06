@@ -1,18 +1,20 @@
-import React, { useState, useEffect }from 'react';
-import { selectPage } from 'store/layoutHelpers'
+import React, { useState }from 'react';
+//import { selectPage } from 'store/layoutHelpers'
 import { makeStyles } from '@material-ui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
+import CardLine from 'components/CardLine'
+import TemperatureSensorAvatar from 'controllers/temperatureSensor/TemperatureSensorAvatar'
+
 import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
 import Collapse from '@material-ui/core/Collapse';
+import IconButton from '@material-ui/core/IconButton';
 
 import ItemBase from 'components/ItemBase'
-import SofaListItem from 'components/SofaListItem';
+import RangeValueLine from 'controllers/rangeController/RangeValueLine'
+import { deviceByEndpointId, hasInstance} from 'store/deviceHelpers'
 
-import useDeviceStateStore from 'store/deviceStateStore'
-import useDeviceStore from 'store/deviceStore'
-import { register, unregister } from 'store/deviceHelpers'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 const useStyles = makeStyles(theme => {
     return {      
@@ -29,55 +31,49 @@ const useStyles = makeStyles(theme => {
 })
  
 const TemperatureSensor = props => {
-    
     const classes = useStyles();
     const [ showDetail, setShowDetail ] = useState(false)
     const additionalAttributes = ['Light Level', 'Humidity', 'Wind Speed', 'UV Index', 'Rainfall']
-    const device = useDeviceStore( state => state.devices[props.endpointId] )
-    const deviceState  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const device = deviceByEndpointId(props.endpointId)
     const name = device.friendlyName
-    const temperatureSensor = deviceState.TemperatureSensor
 
-    useEffect(() => {
-        register(props.endpointId, 'TemperatureSensor-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'TemperatureSensor-'+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, []) 
-
-    if (!deviceState) { return null }
-
-    const deviceAttributes = additionalAttributes.filter( attribute => deviceState.hasOwnProperty(attribute))
-
-    function tempColor(temp) {
-        if (!temp) { return 'disabled' }
-        if (temp>=74) { return "hot" }
-        if (temp<70) { return "cool" }
-        return "mid";
-    }
-    
-    function switchToHistory() {
-        selectPage('ThermostatHistory', { 'endpointId':props.endpointId, 'past':'7d'})
-    }
+    //function switchToHistory() {
+    //    selectPage('ThermostatHistory', { 'endpointId' : props.endpointId, 'past':'7d'})
+    //}
     
     function toggleDetail() {
         setShowDetail(!showDetail)
     }
+
+    function checkMoreData() {
+        for (var k = 0; k < additionalAttributes.length; k++) {
+            if (hasInstance(props.endpointId, additionalAttributes[k])) {
+                return true
+            }
+        }
+        return false
+    }
+
+    const hasMoreData = checkMoreData()
+
     return (
-        <ItemBase small={true} hasCollapse={true}>
-            <SofaListItem   avatar={ temperatureSensor.temperature.value ? temperatureSensor.temperature.deepvalue : '--'} 
-                            labelClick={props.onClick ? props.onClick : toggleDetail} avatarClick={() => switchToHistory()} 
-                            avatarState={ tempColor( temperatureSensor.temperature.deepvalue) }
-                            primary={ name } />
-            <Collapse in={showDetail} className={classes.detail}>
-                { deviceAttributes.map( attribName => 
-                    <ListItem className={classes.listItem} key={attribName}>
-                        <ListItemText primary={attribName} />
-                        <Typography>{ deviceState[attribName].rangeValue.value }</Typography>
-                    </ListItem>
-                )}
-            </Collapse>
+        <ItemBase hasCollapse={hasMoreData}>
+            <CardLine onClick={props.onClick ? props.onClick : toggleDetail }>
+                <TemperatureSensorAvatar endpointId={props.endpointId} />
+                <ListItemText primary={name} />
+                { hasMoreData && 
+                    <IconButton onClick={toggleDetail} size={"small"}>
+                        { showDetail ? <ExpandLessIcon/> : <ExpandMoreIcon /> }
+                    </IconButton>
+                }
+            </CardLine>     
+            { hasMoreData &&           
+                <Collapse in={showDetail} className={classes.detail}>
+                    { additionalAttributes.map( attribName => 
+                        <RangeValueLine endpointId={props.endpointId} instance={attribName} key={attribName+props.endpointId} />
+                    )}
+                </Collapse>
+            }
         </ItemBase>
     );
 }

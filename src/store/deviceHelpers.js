@@ -88,20 +88,28 @@ export const getController = (endpointId, name) => {
 }
 
 export const getModes = (endpointId, exclude=[]) => {
-        
-    var dev = useDeviceStore.getState().devices[endpointId]
+
+    var dev = endpointId
+    if (typeof(dev)=='string') {
+        dev = useDeviceStore.getState().devices[dev]
+    }    
     if (!dev) { return {} }
     var modes={}
+
     for (var k = 0; k < dev.capabilities.length; k++) {
         if (dev.capabilities[k].interface.endsWith('ModeController')) {
-            var mc=dev.capabilities[k]
-            var modename=mc.capabilityResources.friendlyNames[0].value.text
+            var modeCapability = dev.capabilities[k]
+            var supportedModes = modeCapability.configuration.supportedModes
+            var modename=modeCapability.capabilityResources.friendlyNames[0].value.text
             if (!exclude.includes(modename)) {
-                var modechoices=[]
-                for (var j = 0; j < mc.configuration.supportedModes.length; j++) {
-                    modechoices[mc.configuration.supportedModes[j].value] = mc.configuration.supportedModes[j].modeResources.friendlyNames[0].value.text
-                }
-                modes[modename]=modechoices
+                var modeChoices=[]
+                modes[modename] = supportedModes.reduce(function(result, mode) {
+                    return { ...result, [mode.value]: mode.modeResources.friendlyNames[0].value.text }
+                }, modeChoices)
+                //for (var j = 0; j < supportedModes.length; j++) {
+                //    modechoices[supportedModes[j].value] = supportedModes[j].modeResources.friendlyNames[0].value.text
+                //}
+                //modes[modename]=[...modechoices]
             }
         }
     }
@@ -184,6 +192,17 @@ export const hasDescription = (endpointId, term) => {
     return device.description.toLowerCase().includes(term.toLowerCase())
 }
 
+export const hasInstance = (endpointId, instance) => {
+    var dev = useDeviceStore.getState().devices[endpointId]
+    for (var k = 0; k < dev.capabilities.length; k++) {
+        if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.endsWith(instance)) {
+            return true
+        }
+    }
+    return false
+  
+}
+
 export function endpointIdsByDisplayCategory(category) {
     var devices = useDeviceStore.getState().devices  
     var endpointIds = []         
@@ -199,11 +218,12 @@ export const modeDisplayName = (endpointId, instance, value) => {
 
     var dev = useDeviceStore.getState().devices[endpointId]        
     for (var k = 0; k < dev.capabilities.length; k++) {
-        if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance===instance) {
+        if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.endsWith(instance)) {
             try {
-                for (var j = 0; j < dev.capabilities[k].configuration.supportedModes.length; j++) {
-                    if (dev.capabilities[k].configuration.supportedModes[j].value===value) {
-                        return dev.capabilities[k].configuration.supportedModes[j].modeResources.friendlyNames[0].value.text
+                const supportedModes = dev.capabilities[k].configuration.supportedModes
+                for (var j = 0; j < supportedModes.length; j++) {
+                    if (supportedModes[j].value === value) {
+                        return supportedModes[j].modeResources.friendlyNames[0].value.text                     
                     }
                 }
             }

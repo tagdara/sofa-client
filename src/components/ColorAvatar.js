@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles, withTheme } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import classNames from 'classnames';
 
 import ListItemAvatar from '@material-ui/core/ListItemAvatar';
@@ -62,18 +62,18 @@ const useStyles = makeStyles(theme => {
 
 
 
-function ToggleAvatar(props) {
+const ColorAvatar = props => {
 
     const classes = useStyles();
 
     const styles = {
         back: {
-            backgroundColor: props.theme.palette.avatar[props.avatarState.toLowerCase()],
+            backgroundColor: props.color,
             },
         noback: {
             padding: 8,
-            backgroundColor: props.theme.palette.avatar.none,
-            color: props.theme.palette.avatar[props.avatarState.toLowerCase()]
+            backgroundColor: "rgba(0,0,0,0)",
+            color: props.color,
         },
     };
 
@@ -93,12 +93,5 @@ function ToggleAvatar(props) {
     )
 }
 
-ToggleAvatar.defaultProps = {
-    reverse: false,
-    noback: false,
-    small: false,
-    avatarState: "off",
-}
-
-export default withTheme(ToggleAvatar)
+export default ColorAvatar
 

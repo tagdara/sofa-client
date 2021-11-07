@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useReducer } from 'react';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import ErrorBoundary from 'error/ErrorBoundary';
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
 
 export const stackModuleReducer = (state, data) => {
 
@@ -71,8 +71,8 @@ export const LayoutContext = createContext({});
 export const LayoutProvider = (props) => {
 
     const serverUrl = "https://"+window.location.hostname;
-    const accessToken = useUserStore(state => state.access_token)
-    const loggedIn = useUserStore(state => state.logged_in)
+    const accessToken = useLoginStore(state => state.access_token)
+    const loggedIn = useLoginStore(state => state.logged_in)
     const mobileBreakpoint = 800
     const maxScreenWidth = Math.min(1800, window.innerWidth)
     const minStackWidth = 320

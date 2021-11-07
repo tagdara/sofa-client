@@ -1,19 +1,20 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Grid from '@material-ui/core/Grid';
-
-import { LayoutContext } from 'layout/LayoutProvider';
-import { UserContext } from 'user/UserProvider';
 
 import AutomationSave from "automation/AutomationSave"
 import AutomationHeader from "automation/AutomationHeader"
 import AutomationColumn from "automation/AutomationColumn"
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
+import useLayoutStore from 'store/layoutStore'
+
+import { isFavorite, makeFavorite } from 'store/deviceHelpers'
+import { selectPage } from 'store/layoutHelpers'
 
 export default function AutomationLayout(props) {
 
     const serverUrl = "https://"+window.location.hostname;
-    const accessToken = useUserStore(state => state.access_token)
+    const accessToken = useLoginStore(state => state.access_token)
     const [automation, setAutomation] = useState({})
     const [actions, setActions] = useState([])
     const [conditions, setConditions] = useState([])
@@ -22,8 +23,7 @@ export default function AutomationLayout(props) {
     const [gotReturn,setGotReturn] = useState(false)
     const [saved, setSaved] = useState(true)
     const [title, setTitle] = useState("")
-    const { applyLayoutCard, isMobile } = useContext(LayoutContext);
-    const { makeFavorite, isFavorite} = useContext(UserContext)
+    const isMobile = useLayoutStore( state => state.isMobile)
 
     useEffect(() => {
         if (props.endpointId!==undefined) {
@@ -137,8 +137,9 @@ export default function AutomationLayout(props) {
     }
     
     function goBack() {
-        applyLayoutCard('AutomationsLayout')
+        selectPage('AutomationsLayout')
     }
+
 
     return (
         <Grid container item spacing={1} xs={isMobile ? 12 : 9} >

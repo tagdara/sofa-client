@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { register, unregister, endpointIdsByDisplayCategory, compareState } from 'store/deviceHelpers'
 import useDeviceStateStore from 'store/deviceStateStore'
-import { UserContext } from 'user/UserProvider';
+import useUserStore from 'store/userStore'
 
 import PlayerCard from 'devices/Player/PlayerCard';
 import PlayerMini from 'devices/Player/PlayerMini';
@@ -9,7 +9,7 @@ import PlaceholderCard from 'layout/PlaceholderCard';
 
 export default function PlayerHero(props) {
     
-    const { userPlayer } = useContext(UserContext);
+    const userPlayer = useUserStore(state => state.preferences.player)
     const defaultPlayer = "" // this should be defined somewhere
     //const speakers = deviceStatesByCategory('SPEAKER')
     const [ mini, setMini ] = useState(props.mini);

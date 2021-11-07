@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
 
 const serverurl="https://"+window.location.hostname;
 
@@ -18,7 +18,7 @@ function writeCookie(key, value, days) {
 };
 
 export const useStream = ( dataProcessor ) => {
-    const accessToken = useUserStore(state => state.access_token)
+    const accessToken = useLoginStore(state => state.access_token)
     const [eventSource, setEventSource] = useState(undefined)
     const [isConnecting, setIsConnecting] = useState(false)
 

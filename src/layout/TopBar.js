@@ -12,7 +12,7 @@ import NotesIcon from '@material-ui/icons/Notes';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import HomeIcon from '@material-ui/icons/Home';
 import { goBack, goHome, toggleDrawer, toggleRightDrawer } from 'store/layoutHelpers';
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
 import useLayoutStore from 'store/layoutStore'
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TopBar(props) {
 	const classes = useStyles();
-	const loggedIn = useUserStore(state => state.logged_in)
+	const loggedIn = useLoginStore(state => state.logged_in)
 	const currentPage = useLayoutStore(state => state.currentPage)
 
 	return (

@@ -1,6 +1,6 @@
 import create from 'zustand'
 import { storeUpdater } from 'store/storeUpdater'
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
 
 const serverUrl = "https://"+window.location.hostname;
 const registerUrl = serverUrl + "/register_devices";
@@ -31,7 +31,7 @@ const useRegisterStore = create((set, get) => ({
         if (adds) {
             // we may use a pending flag to aggregate changes later but for now we will
             // just not write the adds to the final set
-            const accessToken = useUserStore.getState().access_token;
+            const accessToken = useLoginStore.getState().access_token;
             const headers = { authorization : accessToken }
             const body = { add: adds }
             const response = await fetch(registerUrl, {  headers: headers, method: "post", body: JSON.stringify(body)})
@@ -61,7 +61,7 @@ const useRegisterStore = create((set, get) => ({
         if (result.removes) {
             // we may use a pending flag to aggregate changes later but for now we will
             // just not write the adds to the final set
-            const accessToken = useUserStore.getState().access_token;
+            const accessToken = useLoginStore.getState().access_token;
             const headers = { authorization : accessToken }
             const body = { removes: result.removes }
             const response = await fetch(registerUrl, {  headers: headers, method: "post", body: JSON.stringify(body)})

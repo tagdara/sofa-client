@@ -1,12 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
-import { UserContext } from 'user/UserProvider';
 
 import SecurityCamera from 'devices/Camera/SecurityCamera';
+import useUserStore from 'store/userStore'
 
 export default function CameraSelect(props) {
 
-    const { chooseUserCamera, userCamera } = useContext(UserContext);
+    const userCamera = useUserStore( state => state.preferences.camera)
+    const updateUserSetting = useUserStore( state => state.update)
     const cameras = sortByName(endpointIdsByDisplayCategory('CAMERA'))
     const [ currentCamera, setCurrentCamera ] = useState(userCamera)
 
@@ -18,7 +19,7 @@ export default function CameraSelect(props) {
         catch {
             cameraPosition = 0
         }
-        chooseUserCamera(cameras[cameraPosition])
+        updateUserSetting('camera', cameras[cameraPosition])
         setCurrentCamera(cameras[cameraPosition])
         return cameras[cameraPosition]
     }
@@ -31,7 +32,7 @@ export default function CameraSelect(props) {
         catch {
             cameraPosition = cameras.length -1
         }
-        chooseUserCamera(cameras[cameraPosition])
+        updateUserSetting('camera', cameras[cameraPosition])
         setCurrentCamera(cameras[cameraPosition])
         return cameras[cameraPosition]
     }

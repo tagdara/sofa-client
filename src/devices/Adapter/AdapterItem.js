@@ -28,6 +28,8 @@ export default function AdapterItem(props) {
     // eslint-disable-next-line 
     }, [])
 
+    if (!deviceState) { console.log('dead adapter', props.endpointId); return null }
+
     function getErrorState(count) {
         try {
 

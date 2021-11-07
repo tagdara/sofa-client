@@ -1,6 +1,5 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { selectPage } from 'store/layoutHelpers'
-import { UserContext } from 'user/UserProvider';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -15,20 +14,16 @@ import LightButton from 'devices/Light/LightButton';
 import SceneButton from 'devices/Scene/SceneButton';
 
 import useDeviceStateStore from 'store/deviceStateStore'
-import useDeviceStore from 'store/deviceStore'
-import useRegisterStore from 'store/registerStore'
-import { sortByName, hasDisplayCategory, hasCapability } from 'store/deviceHelpers'
+import useUserStore from 'store/userStore'
+import { sortByName, hasDisplayCategory, hasCapability, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
 
 const AreaHero = props => {
 
-    const { userArea } = useContext(UserContext);     
-    const [ currentArea, setCurrentArea] = useState('logic:area:Main')
+    const userArea = useUserStore( state => state.preferences.area)
+    const [ currentArea, setCurrentArea ] = useState('logic:area:Main')
 
-    const area = useDeviceStore( state => state.devices[currentArea] )
+    const area = deviceByEndpointId(currentArea)
     const areaState = useDeviceStateStore( state => state.deviceStates[currentArea] )
-    const register = useRegisterStore( state => state.add)
-    const unregister = useRegisterStore( state => state.remove)
-
 
     useEffect(() => {
         register(currentArea, 'AreaHero')

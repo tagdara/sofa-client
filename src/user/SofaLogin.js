@@ -12,6 +12,7 @@ import Grid from '@material-ui/core/Grid';
 import GridItem from 'components/GridItem';
 
 import useUserStore from 'store/userStore';
+import useLoginStore from 'store/loginStore';
 
 const useStyles = makeStyles({
     loginBox: {
@@ -33,12 +34,10 @@ const useStyles = makeStyles({
 
 export default function SofaLogin(props) {
     
-    const login = useUserStore( state => state.login )
+    const login = useLoginStore( state => state.login )
     const userName = useUserStore( state => state.name )
-    const refreshToken = useUserStore( state => state.refresh_token )
-    const setLoginMessage = useUserStore( state => state.setLoginMessage )
-    const checkToken = useUserStore( state => state.checkToken )
-    //const { login, getStorage } = useContext(NetworkContext);
+    const setLoginMessage = useLoginStore( state => state.setLoginMessage )
+    const checkToken = useLoginStore( state => state.checkToken )
     const [ user, setUser ] = useState(userName)
     const [ password, setPassword ] = useState('')
     const [ errorMessage, setErrorMessage ] = useState('')
@@ -47,7 +46,7 @@ export default function SofaLogin(props) {
     useEffect(() => {
         console.log('checking token', userName)
         setLoginMessage('Checking token', userName)
-        checkToken(userName, refreshToken)
+        checkToken()
     // eslint-disable-next-line         
     }, [])        
 

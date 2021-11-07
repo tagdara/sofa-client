@@ -1,6 +1,6 @@
 import create from 'zustand'
 import { persist } from "zustand/middleware"
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
 import useDeviceStore from 'store/deviceStore'
 import { storeUpdater } from "store/storeUpdater" 
 const serverUrl = "https://"+window.location.hostname;
@@ -16,7 +16,7 @@ const useDeviceStateStore = create(persist(
         deviceStates: {},
         registeredDevices: [],
         directive: async (endpointId, controllerName, command, payload={}, cookie={}, instance="") => {
-            const accessToken = useUserStore.getState().access_token;
+            const accessToken = useLoginStore.getState().access_token;
             const getController = useDeviceStore.getState().getController    
             const controller = getController(endpointId, controllerName)
             const headers = { authorization : accessToken }

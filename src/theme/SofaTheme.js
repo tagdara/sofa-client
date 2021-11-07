@@ -1,9 +1,9 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import lightTheme from './sofaThemeLight';
 import darkTheme from './sofaThemeDark';
 import { ThemeProvider } from '@material-ui/styles';
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { UserContext } from '../user/UserProvider';
+import useUserStore from 'store/userStore'
 
 export const ThemeContext = React.createContext();
 
@@ -11,7 +11,8 @@ export default function SofaThemeProvider(props) {
     
     const [colorScheme, setColorScheme] = useState('');
     const [sofaTheme, setSofaTheme] = useState({});
-    const { chooseUserTheme, userTheme } = useContext(UserContext);
+    const userTheme = useUserStore(state => state.preferences.theme)
+    const updateUser = useUserStore(state => state.update)
     
     useEffect(() => {
         var pref = getPreferredColorScheme()
@@ -51,7 +52,7 @@ export default function SofaThemeProvider(props) {
     }
 
     function pickUserTheme(themeName) {
-        chooseUserTheme(themeName)
+        updateUser('theme', themeName)
         applyTheme(themeName)
         console.log('set user theme to ', themeName)
     }

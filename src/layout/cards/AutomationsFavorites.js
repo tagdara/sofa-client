@@ -4,10 +4,10 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
 import { LayoutContext } from 'layout/LayoutProvider';
-import { UserContext } from 'user/UserProvider';
 import AutomationAll from 'automation/AutomationAll';
 import AutomationItem from 'automation/AutomationItem';
 import GridSection from 'components/GridSection';
+import useUserStore from 'store/userStore'
 
 
 function Alert(props) {
@@ -17,7 +17,7 @@ function Alert(props) {
 const AutomationsFavorites = props => {
 
     const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
-    const { getFavorites } = useContext(UserContext);
+    const favorites = useUserStore(state => state.favorites )
     const [ showResult, setShowResult] = useState(false)
     const [ resultMessage, setResultMessage] = useState('')
     const [ severity, setSeverity] = useState('info')
@@ -36,8 +36,6 @@ const AutomationsFavorites = props => {
         setSeverity(severity)
         setShowResult(true);         
     }
-
-    const favorites = getFavorites()
 
     return (    
             <GridSection name={"Automations"}>

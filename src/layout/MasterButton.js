@@ -10,7 +10,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 
 import { LayoutContext } from 'layout/LayoutProvider';
 import { NetworkContext } from '../archive/NetworkProvider';
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
 
 const useStyles = makeStyles(theme => {
     return {
@@ -56,7 +56,7 @@ export default function MasterButton(props) {
     const classes = useStyles();
     const { applyHomePage, masterButtonState, goBack, goHome, backPage } = useContext(LayoutContext);
     const { connectError } = useContext(NetworkContext);
-    const loggedIn = useUserStore(state => state.loggedin)
+    const loggedIn = useLoginStore(state => state.loggedin)
     function callMaster() {
         if (masterButtonState==='Home') {
             goHome()

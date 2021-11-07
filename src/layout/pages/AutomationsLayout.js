@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -8,17 +8,17 @@ import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
 
 import { selectPage } from 'store/layoutHelpers'
-import { UserContext } from 'user/UserProvider';
 
 import AutomationItem from 'automation/AutomationItem';
 import GridSection from 'components/GridSection';
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/userStore'
+
+import { isFavorite, makeFavorite } from 'store/deviceHelpers'
 
 const AutomationsLayout = props => {
 
     const serverUrl = "https://"+window.location.hostname;
-    const accessToken = useUserStore(state => state.access_token)
-    const { makeFavorite, isFavorite} = useContext(UserContext)
+    const accessToken = useLoginStore(state => state.access_token)
     const [ automations, setAutomations ] = useState([])
     const editing = false
     const [remove, setRemove] = useState(false)

@@ -1,6 +1,6 @@
 import React from 'react';
 import useLayoutStore from 'store/layoutStore'
-import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
 
 import PlaceholderCard from 'layout/PlaceholderCard';
 import ErrorBoundary from 'error/ErrorBoundary';
@@ -9,7 +9,7 @@ const serverUrl = "https://"+window.location.hostname;
 const layoutUrl = serverUrl+ '/layout/default'
 
 export const refreshStackLayout = async () => {
-    const accessToken = useUserStore.getState().access_token;
+    const accessToken = useLoginStore.getState().access_token;
     const headers = { authorization : accessToken }
     const response = await fetch(layoutUrl, { headers: headers })
     const result = await response.json()
@@ -102,7 +102,7 @@ export const getStack = stackName =>  {
 }
 
 const getLayoutStack = async (stackName) => {
-    const accessToken = useUserStore.getState().access_token
+    const accessToken = useLoginStore.getState().access_token
     const headers = { authorization : accessToken }
     const response = await fetch(serverUrl + "/layout/stack/"+stackName, { headers: headers })
     var result =  await response.json()

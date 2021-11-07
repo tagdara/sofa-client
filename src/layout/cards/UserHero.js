@@ -1,7 +1,6 @@
 
 import React, { useContext, useState } from 'react';
 import { ThemeContext } from 'theme/SofaTheme';
-import { UserContext } from 'user/UserProvider';
 import { makeStyles } from '@material-ui/styles';
 
 import CardBase from 'components/CardBase';
@@ -17,6 +16,8 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import AdminFeatures from 'layout/cards/AdminFeatures';
+
+import useUserStore from 'store/userStore'
 
 const useStyles = makeStyles(theme => {
     return {
@@ -37,7 +38,7 @@ export default function UserHero(props) {
 
     const classes = useStyles();
     const { pickUserTheme, colorScheme } = useContext(ThemeContext);
-    const { userData } = useContext(UserContext);
+    const userData = useUserStore( state => state)
     const [ adminMode, setAdminMode ] = useState(false)
     const name = userData ? userData.firstname+" "+userData.lastname : "Unknown"
 

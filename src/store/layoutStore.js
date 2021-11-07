@@ -1,5 +1,5 @@
 import create from 'zustand'
-import useUserStore from "store/userStore"
+import useLoginStore from "store/loginStore"
 
 const serverUrl = "https://"+window.location.hostname;
 const layoutUrl = serverUrl+ 'layout/default'
@@ -19,7 +19,7 @@ const useLayoutStore = create((set, get) => ({
     minStackWidth: 320,
 
     refreshStackLayout: async () => {
-        const accessToken = useUserStore.getState().access_token;
+        const accessToken = useLoginStore.getState().access_token;
         const headers = { authorization : accessToken }
         const response = await fetch(layoutUrl, { headers: headers })
         const result = await response.json()

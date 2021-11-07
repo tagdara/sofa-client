@@ -1,5 +1,6 @@
 import useDeviceStore from 'store/deviceStore'
 import useRegisterStore from 'store/registerStore'
+import useLoginStore from 'store/loginStore'
 import useUserStore from 'store/userStore'
 
 const serverUrl = "https://"+window.location.hostname;
@@ -413,7 +414,7 @@ export const devicesByDisplayCategory = (categories, searchterm) => {
 }
 
 export const getRecent = async scene => {
-    const accessToken = useUserStore.getState().access_token;
+    const accessToken = useLoginStore.getState().access_token;
     const headers = { authorization : accessToken }
     console.log('headers', headers)
     const response = await fetch(serverUrl + "/list/hub/recent", { headers: headers })
@@ -426,7 +427,7 @@ export const getHistoryForDevice = async (dev, prop, page) => {
         
     // Requests the history for a specific device and property.  It allows for pagination since the data could be very
     // large.  This requires the Influx adapter in order to see history.
-    const accessToken = useUserStore.getState().access_token;
+    const accessToken = useLoginStore.getState().access_token;
     const headers = { authorization : accessToken }
     var url = serverUrl + "list/influx/history/"+dev+"/"+prop
     if (page) { url=url+"/"+page }
@@ -452,10 +453,23 @@ export const getChangeTimesForDevices = async (val,devs) => {
         }
     }
 
-    const accessToken = useUserStore.getState().access_token;
+    const accessToken = useLoginStore.getState().access_token;
     const headers = { authorization : accessToken }
     const body = devs
     const response = await fetch(serverUrl+"/list/influx/last/"+val, { headers: headers, method: "post", body: JSON.stringify(body)})
     var result = await response.json()
     return checkJSON(result)
+}
+
+export function isFavorite(endpointId) {
+    const favorites = useUserStore.getState().preferences.favorites
+    return favorites.includes(endpointId)
+}
+
+export function makeFavorite(endpointId) {
+    const favorites = useUserStore.getState().preferences.favorites
+    const update = useUserStore.getState().update
+    if (!favorites.includes(endpointId)) {
+        update('favorites', [...favorites, endpointId])
+    }
 }

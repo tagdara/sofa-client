@@ -12,6 +12,7 @@ import TopBar from 'layout/TopBar';
 import useStream from 'store/useStream'
 import storeUpdater from 'store/storeUpdater'
 import useLayoutStore from 'store/layoutStore'
+import useUserStore from 'store/userStore'
 
 import { discovery, refreshDirectives } from 'store/directive'
 import { addModule, renderSuspenseModule } from 'store/layoutHelpers'
@@ -69,11 +70,14 @@ export default function SofaFrame(props) {
     const currentProps = useLayoutStore(state => state.currentProps)
     const maxScreenWidth = useLayoutStore(state => state.maxScreenWidth)
     const isMobile = useLayoutStore(state => state.isMobile)
+    const refreshUser = useUserStore(state => state.refresh)
     const classes = useStyles(maxScreenWidth);
     
     useEffect(() => {
         refreshDirectives()
         discovery()
+        refreshUser()
+        // eslint-disable-next-line 
     }, [])
 
     useEffect(() => { 

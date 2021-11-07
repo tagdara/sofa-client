@@ -1,5 +1,5 @@
 import create from 'zustand'
-import useUserStore from "store/userStore"
+import useLoginStore from "store/loginStore"
 
 const serverUrl = "https://"+window.location.hostname;
 const activationsUrl = serverUrl+ '/activations'
@@ -17,7 +17,7 @@ const useActivationStore = create((set, get) => ({
     stackModules: {},
     stackLayout: {},
     removeActivations: async (name, short_key) => {
-        const accessToken = useUserStore.getState().access_token;
+        const accessToken = useLoginStore.getState().access_token;
         const headers = { authorization : accessToken }
         const body = {"name":name, "api_key":short_key}
         const response = await fetch(removeUrl, { headers: headers, method: "post", body: JSON.stringify(body)})
@@ -26,7 +26,7 @@ const useActivationStore = create((set, get) => ({
         set({ activations: result})
     },
     approveActivations: async (name, short_key) => {
-        const accessToken = useUserStore.getState().access_token;
+        const accessToken = useLoginStore.getState().access_token;
         const headers = { authorization : accessToken }
         const body = {"name":name, "api_key":short_key}
         const response = await fetch(approveUrl, { headers: headers, method: "post", body: JSON.stringify(body)})
@@ -35,7 +35,7 @@ const useActivationStore = create((set, get) => ({
         set({ activations: result})
     },
     refreshActivations: async () => {
-        const accessToken = useUserStore.getState().access_token;
+        const accessToken = useLoginStore.getState().access_token;
         const headers = { authorization : accessToken }
         const response = await fetch(serverUrl, { headers: headers })
         const result = await response.json()

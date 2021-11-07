@@ -19,6 +19,7 @@ function writeCookie(key, value, days) {
 
 export const useStream = ( dataProcessor ) => {
     const accessToken = useLoginStore(state => state.access_token)
+    const checkToken = useLoginStore(state => state.checkToken)
     const [eventSource, setEventSource] = useState(undefined)
     const [isConnecting, setIsConnecting] = useState(false)
 
@@ -69,8 +70,9 @@ export const useStream = ( dataProcessor ) => {
         setIsConnecting(false)
     }
 
-    const errorHandler = () => {
-        console.log('ERROR with EventSource')
+    const errorHandler = (e) => {
+        console.log('ERROR with EventSource',e )
+        checkToken()
         //reloadPWA()
         ////setConnected(false)
         ////connectStream()

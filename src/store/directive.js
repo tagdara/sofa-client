@@ -27,7 +27,12 @@ export const directive = async (endpointId, controllerName, command, payload={},
         return {}
     }
     const headers = { authorization : accessToken }
-    const directiveHeader={ "name": command, "namespace": controller.interface, "payloadVersion":"3", "messageId": newtoken(), "correlationToken": newtoken() }
+    var directiveHeader={ "name": command, "namespace": controller.interface, "payloadVersion":"3", "messageId": newtoken(), "correlationToken": newtoken() }
+    if (instance) {
+        directiveHeader.instance=instance
+    } else if (controller.hasOwnProperty('instance')) {
+        directiveHeader.instance=controller.instance
+    }
     const directiveEndpoint = {"endpointId": endpointId, "cookie": cookie, "scope": { "type":"BearerToken", "token":accessToken }}
     const body = { "directive": {"header": directiveHeader, "endpoint": directiveEndpoint, "payload": payload }}
     const response = await fetch(serverUrl, {  headers: headers, method: "post", body: JSON.stringify(body)})

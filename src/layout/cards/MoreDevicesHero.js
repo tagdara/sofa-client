@@ -12,7 +12,7 @@ const MoreDevicesHero = props => {
     return (
         <CardBase>
             { shades.map( shade => (
-                <Shade key={shade} endpointId={shade} />
+                <Shade key={shade} endpointId={shade} itemType={"listItem"} />
             ))}
             { fans.map(fan =>
                 <Fan key={fan} endpointId={fan} nested={true} itemType={"listItem"} />

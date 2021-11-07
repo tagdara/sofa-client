@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { useInterval } from 'components/useInterval';
 import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
+//import { checkToken } from 'store/userHelpers'
 import useDeviceStateStore from 'store/deviceStateStore'
 
 const useStyles = makeStyles(theme => {
@@ -101,6 +102,7 @@ const CameraImage = props => {
     
     function imageError(e) {
         console.log('image error', e)
+        //checkToken()
         //checkAuthentication().then(res => { console.log('image error.',props.imageUri, e.message,' -  loaded: '+imageLoaded) } )
     }
  

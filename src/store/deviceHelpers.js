@@ -80,7 +80,7 @@ export const getController = (endpointId, name) => {
             if (dev.capabilities[j].interface.endsWith("."+name)) {
                 return dev.capabilities[j]
             }
-            if (dev.capabilities[j].hasOwnProperty('instance') && dev.capabilities[j].instance.endsWith("."+name)) {
+            if (dev.capabilities[j].hasOwnProperty('instance') && (dev.capabilities[j].instance === name || dev.capabilities[j].instance.endsWith("."+name))) {
                 return dev.capabilities[j]
             }
         }

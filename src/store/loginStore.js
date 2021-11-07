@@ -53,7 +53,14 @@ const useLoginStore = create((set,get) => ({
             if (user && refreshToken) {
                 set({ login_message: 'Checking token '+user})
                 const body = { "user": user, "refresh_token": refreshToken }
-                const response = await fetch(tokenUrl, {  method: "post", body: JSON.stringify(body)})
+                var response = undefined
+                try {
+                    response = await fetch(tokenUrl, {  method: "post", body: JSON.stringify(body)})
+                }
+                catch (e) {
+                    console.log('server not ready', e)
+                    return
+                }
                 try {
                     var result = await response.json()
                     set(result)

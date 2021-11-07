@@ -1,4 +1,3 @@
-    
 export const reloadPWA = () => {
     localStorage.removeItem('deviceStateStore');
     localStorage.removeItem('deviceStore')

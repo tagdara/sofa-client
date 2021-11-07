@@ -42,10 +42,7 @@ const CardLineIcon = props => {
 
     const classes = useStyles();
     const color = (props.color && !["primary", "secondary"].includes(props.color)) ? props.color : undefined
-
-    console.log(props.color)
-    console.log(classes)
-
+    
     const styles = {
         back: {
             backgroundColor: props.color,

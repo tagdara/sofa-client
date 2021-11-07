@@ -4,12 +4,18 @@ import FavoriteIcon from '@material-ui/icons/Star';
 import ListIcon from '@material-ui/icons/List';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import CloseIcon from '@material-ui/icons/Close';
+import ClearIcon from '@material-ui/icons/Clear';
+import CloudOffIcon from '@material-ui/icons/CloudOff';
 
-import SofaListItem from 'components/SofaListItem';
 import ItemBase from "components/ItemBase"
-import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
+import CardLineIcon from 'components/CardLineIcon'
+import { isFavorite, removeFavorite, makeFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
 import useDeviceStateStore from 'store/deviceStateStore'
+
 
 const AutomationItem = props => {
     
@@ -25,7 +31,19 @@ const AutomationItem = props => {
     // eslint-disable-next-line 
     }, [props.endpointId])
 
-    if (!automationState) { return null }
+    if (!automationState) {
+        if (!isFavorite(props.endpointId)) { return null }
+        return <ItemBase small={ props.small } highlight={props.highlight}>
+                    <CardLine>
+                        <ListItemIcon><CloudOffIcon /></ListItemIcon>
+                        <CardLineText primary={"Missing: "+props.endpointId} />
+                        <IconButton onClick={ () => removeFavorite(props.endpointId) } size={"small"}>
+                            <ClearIcon />
+                        </IconButton>
+                    </CardLine>
+                </ItemBase>
+    
+    }
 
     const name = automation.friendlyName
 
@@ -67,38 +85,23 @@ const AutomationItem = props => {
         return automationState.Running.toggleState.value === 'ON'
     }
 
-    function makeFavorite(automation, stat) {
-        // this should be part of usercontext
-    }
-    
-    // noGrid={props.noGrid} nolist={true} noMargin={props.noMargin} noback={true} noPaper={false} button={false}
     return (
-        <ItemBase small={ props.small } highlight={props.highlight}>
-        <SofaListItem 
-            avatar={ props.favorite && props.icon !== "base" ? <FavoriteIcon/> : <ListIcon /> }
-            avatarState={props.favorite ? "on": "off" }
-            avatarClick={() => makeFavorite(props.endpointId, !props.favorite)}
-            labelClick={() => props.select(props.endpointId)}
-            avatarBackground={ false }
-            primary={ name }
-            secondary={ summary() }
-            small={ props.small }
-            noPad={ props.small }
-            loading={ loading() }
-            secondaryActions={
-                <>
-                    { props.deleting ?
-                        <IconButton size={"small"} onClick={ () => props.delete(props.endpointId) } >
-                            <CloseIcon />
-                        </IconButton>
-                    :
-                        <IconButton disabled={ loading() } size={"small"} onClick={ () => runAutomation(props.endpointId) } >
-                            <PlayArrowIcon />
-                        </IconButton>                
-                    }
-                </>
+        <ItemBase small={ props.small } highlight={props.highlight} onClick={ () => props.select(props.endpointId) }>
+            <CardLine>
+                <CardLineIcon color={props.favorite ? "primary" : undefined } loading={loading()} onClick={(event) => { event.stopPropagation(); makeFavorite(props.endpointId, !props.favorite)}}>
+                    { props.favorite && props.icon !== "base" ? <FavoriteIcon/> : <ListIcon /> }
+                </CardLineIcon>
+            <CardLineText primary={name} secondary={ summary() } />
+            { props.deleting ?
+                <IconButton size={"small"} onClick={ () => props.delete(props.endpointId) } >
+                    <CloseIcon />
+                </IconButton>
+            :
+                <IconButton disabled={ loading() } size={"small"} onClick={ () => runAutomation(props.endpointId) } >
+                    <PlayArrowIcon />
+                </IconButton>                
             }
-        />
+            </CardLine>
         </ItemBase>
     );
 

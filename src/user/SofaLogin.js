@@ -8,16 +8,13 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-
-import GridItem from 'components/GridItem';
-
-import useUserStore from 'store/userStore';
+import Paper from '@material-ui/core/Paper';
 import useLoginStore from 'store/loginStore';
+import useLayoutStore from 'store/layoutStore';
 
 const useStyles = makeStyles({
     loginBox: {
-        marginTop: "30%",
-        margin: "auto",
+        margin: 4,
     },
     controlArea: {
         height: "90%",
@@ -29,23 +26,31 @@ const useStyles = makeStyles({
     },
     form: {
         width: "100%",
+    },
+    loginPage: {
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    loginPaper: {
+        padding: 16,
+        borderRadius: 8,
     }
 });
 
 export default function SofaLogin(props) {
     
     const login = useLoginStore( state => state.login )
+    const isMobile = useLayoutStore( state => state.isMobile )
     const loginMessage = useLoginStore( state => state.login_message )
-    const userName = useUserStore( state => state.name )
-    const setLoginMessage = useLoginStore( state => state.setLoginMessage )
+    const userName = useLoginStore( state => state.name )
     const checkToken = useLoginStore( state => state.checkToken )
     const [ user, setUser ] = useState(userName)
     const [ password, setPassword ] = useState('')
     const classes = useStyles();
  
     useEffect(() => {
-        console.log('checking token', userName)
-        setLoginMessage('Checking token', userName)
         checkToken()
     // eslint-disable-next-line         
     }, [])        
@@ -61,8 +66,9 @@ export default function SofaLogin(props) {
     }
 
     return (
-        <Grid container spacing={2} >
-                <GridItem wide={props.wide} className={classes.loginBox}>
+        <Grid container spacing={2} className={classes.loginPage} >
+            <Grid item xs={isMobile ? 12 : 4} className={classes.loginBox}>
+                <Paper className={classes.loginPaper}>
                     <ListItem style={{display:'flex', justifyContent:'center'}} >
                         <Typography variant="h6">Sofa Login</Typography>
                     </ListItem>
@@ -82,7 +88,8 @@ export default function SofaLogin(props) {
                             Login
                         </Button>
                     </ListItem>
-                </GridItem>
+                </Paper>
             </Grid>
+        </Grid>
     )
 };

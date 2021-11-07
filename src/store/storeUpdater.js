@@ -105,6 +105,9 @@ function handleReportProperties(device, data) {
     return updatedDevice
 }
 
+const markUnreachable = ( deviceState ) => {
+    return { ...deviceState, EndpointHealth: { "connectivity": { "value": { "value" : "UNREACHABLE" } }}}
+}
 
 const updateDeviceStore = (data, defer=false) => {
     
@@ -121,26 +124,20 @@ const updateDeviceStore = (data, defer=false) => {
             case 'DeleteReport':
                 var devices = useDeviceStore.getState().devices
                 var deviceResult = without(devices, data.event.payload.endpoints);
-                useDeviceStore.setState({ devices: deviceResult })
+                useDeviceStore.setState({ devices: deviceResult, last_update: date.toISOString() })
 
                 var deviceStates = useDeviceStateStore.getState().deviceStates
                 var stateResult = without(deviceStates, data.event.payload.endpoints);
-                useDeviceStateStore.setState({ deviceStates: stateResult })
-
-                //localStorage.setItem('devices', JSON.stringify(deviceResult));
-                //localStorage.setItem('deviceStates', JSON.stringify(stateResult));
-                //localStorage.setItem('last_update', date.toISOString())
+                useDeviceStateStore.setState({ deviceStates: stateResult, last_update: date.toISOString() })
                 break;
             case 'Discover.Response':
                 var discoveredDevices = data.event.payload.endpoints.reduce((items, endpoint) => ({ ...items, [endpoint.endpointId]: endpoint }), {})
-                useDeviceStore.setState({ devices: discoveredDevices })
-                //localStorage.setItem('devices', JSON.stringify(devices));
+                useDeviceStore.setState({ devices: discoveredDevices, last_update: date.toISOString() })
                 break;
             case 'AddOrUpdateReport':
                 var oldDevices = useDeviceStore.getState().devices
                 var addDevices = data.event.payload.endpoints.reduce((items, endpoint) => ({ ...items, [endpoint.endpointId]: endpoint }), {})
-                useDeviceStore.setState({ devices: {...oldDevices, ...addDevices }})
-                //localStorage.setItem('devices', JSON.stringify({...oldDevices, ...devices }));
+                useDeviceStore.setState({ devices: {...oldDevices, ...addDevices }, last_update: date.toISOString() })
                 break;
             case "StateReport":
             case "Response":
@@ -150,33 +147,24 @@ const updateDeviceStore = (data, defer=false) => {
                 if (defer) {
                     return { [endpointId] :  changes }
                 }
-                useDeviceStateStore.setState({ deviceStates: {...oldDeviceStates, [endpointId]: changes }})
-                localStorage.setItem('deviceStates', JSON.stringify({...oldDeviceStates, [endpointId]: changes }));
-                localStorage.setItem('last_update', date.toISOString())
+                useDeviceStateStore.setState({ deviceStates: {...oldDeviceStates, [endpointId]: changes }, last_update: date.toISOString() })
                 break
             case 'ActivationStarted':
                 console.log('ActivationStarted', data)
                 break
             case "ErrorResponse":
-                if (deviceStates.hasOwnProperty(endpointId)) {
-                    if (data.event.payload.type === 'BRIDGE_UNREACHABLE') {
+                if (data.event.payload.type === 'BRIDGE_UNREACHABLE') {
+                    var errDeviceStates = useDeviceStateStore.getState().deviceStates
+                    if (errDeviceStates.hasOwnProperty(endpointId)) {
                         var errorDevice = useDeviceStateStore.getState().devices[endpointId]
-                        var updatedDeviceStates = { deviceStates: { [endpointId]: { ...errorDevice, EndpointHealth: { "connectivity": { "value": { "value" : "UNREACHABLE" } }}}}}
-
-                        useDeviceStateStore.setState(updatedDeviceStates)
-                        localStorage.setItem('deviceStates', JSON.stringify(updatedDeviceStates));
+                        useDeviceStateStore.setState({ errDeviceStates: { [endpointId]: markUnreachable(errorDevice) }, last_update: date.toISOString() })
                     }
-                    
-                    if (data.event.payload.type === 'NO_SUCH_ENDPOINT') {
-                        const { [endpointId]: remove, ...rest } = useDeviceStore.getState().devices
-                        console.log('Removing NO_SUCH_ENDPOINT device', endpointId)
-                        useDeviceStore.setState({ devices: rest })
-                        localStorage.setItem('devices', JSON.stringify(rest));
-                    }      
                 }
-
-                localStorage.setItem('deviceStates', JSON.stringify(deviceStates));
-                localStorage.setItem('last_update', date.toISOString())
+                if (data.event.payload.type === 'NO_SUCH_ENDPOINT') {
+                    const { [endpointId]: remove, ...rest } = useDeviceStore.getState().devices
+                    console.log('Removing NO_SUCH_ENDPOINT device', endpointId)
+                    useDeviceStore.setState({ devices: rest , last_update: date.toISOString() })   
+                }
                 break
             case "multiple StateReports":
                 //console.log('multi')
@@ -187,10 +175,7 @@ const updateDeviceStore = (data, defer=false) => {
                         result = { ...result, ...updateDeviceStore(data.data[x], true) }
                     }
                 }
-                useDeviceStateStore.setState({ deviceStates: {...oldMultiStates, ...result }})
-                localStorage.setItem('deviceStates', JSON.stringify({...oldMultiStates, ...result }));
-                localStorage.setItem('last_update', date.toISOString())
-
+                useDeviceStateStore.setState({ deviceStates: {...oldMultiStates, ...result }, last_update: date.toISOString()})
                 break
             default:
                 console.log('unhandled report name', data.event.header.name)

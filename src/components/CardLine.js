@@ -23,7 +23,10 @@ const useStyles = makeStyles(theme => {
             //boxSizing: "border-box",
             //height: 72,
             minHeight: 56,
-            padding: "8px 16px"
+            padding: "8px 16px",
+            overflow: "hidden",
+            display: "flex",
+            flexGrow: 1,
         },
     }
 });

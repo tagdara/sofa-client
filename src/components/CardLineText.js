@@ -19,7 +19,6 @@ const useStyles = makeStyles(theme => {
         flex: {
             display: "flex",
             flexGrow: 1,
-            width: "100%",
             flexDirection: "column",
             //minHeight: 41,
             //maxHeight: 41,

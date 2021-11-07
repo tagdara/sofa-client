@@ -34,10 +34,8 @@ const AutomationsFavorites = props => {
         setShowResult(true);         
     }
 
-    console.log('favs', favorites)
-
     return (    
-            <GridSection name={"Automations"}>
+            <GridSection name={"Favorites"}>
             { favorites &&
                 <>
                     { favorites.map(endpointId => 

@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware"
 const useDeviceStore = create(persist(
     (set, get) => ({
         devices: {},
-        constrollerProperties: {},
+        controllerProperties: {},
         directives: {},
         getInputs: ( endpointId, exclude=[] ) => {
             var dev = get().devices[endpointId]

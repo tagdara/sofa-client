@@ -19,6 +19,7 @@ import AdminFeatures from 'layout/cards/AdminFeatures';
 
 import useUserStore from 'store/userStore'
 import useLoginStore from 'store/loginStore'
+import { reloadPWA } from 'store/userHelpers'
 
 const useStyles = makeStyles(theme => {
     return {
@@ -39,21 +40,10 @@ export default function UserHero(props) {
 
     const classes = useStyles();
     const { pickUserTheme, colorScheme } = useContext(ThemeContext);
-    const userData = useUserStore( state => state)
+    const firstName = useUserStore( state => state.preferences.firstname)
+    const lastName = useUserStore( state => state.preferences.lastname)
     const logout = useLoginStore( state => state.logout )
     const [ adminMode, setAdminMode ] = useState(false)
-    const name = userData ? userData.firstname+" "+userData.lastname : "Unknown"
-
-    function reloadPWA() {
-        localStorage.removeItem('deviceStates');
-        localStorage.removeItem('devices')
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.unregister();
-            });
-        }
-        window.location.reload(true)
-    }
 
     return (
         <CardBase >
@@ -61,7 +51,7 @@ export default function UserHero(props) {
                 <IconButton onClick={props.handleFavorites}>
                     <AccountCircle />
                 </IconButton>
-                <ListItemText primary={name} />
+                <ListItemText primary={firstName+" "+lastName} />
                 <div className={classes.spacer} />
                 <IconButton onClick={logout}>
                     <ExitToAppIcon />

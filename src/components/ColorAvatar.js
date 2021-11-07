@@ -55,6 +55,9 @@ const useStyles = makeStyles(theme => {
         },
         xchipPad: {
             paddingRight: 16,
+        },
+        avatar: {
+            padding: 0,
         }
     }
 
@@ -81,11 +84,11 @@ const ColorAvatar = props => {
         <ListItemAvatar onClick={props.onClick} className={ classNames(classes.flex, props.small ? classes.sizeSmall : classes.base, props.reverse && classes.reverse )}>
             { props.wideAvatar ?
             <div className={!props.reverse ? classes.chipPad : null} >
-            <Chip   classes={{ label: classes.chipLabel }} style={props.noback ? styles.noback : styles.back} className={ classNames(classes.wideChip, props.small && classes.smallChip) } 
+            <Chip   classes={{ label: classes.chipLabel }} style={(props.background === false || props.noback) ? styles.noback : styles.back} className={ classNames(classes.wideChip, props.small && classes.smallChip) } 
                     onClick={props.onClick} label={props.children} color="secondary" />
             </div>
             :
-            <Avatar style={props.noback ? styles.noback : styles.back} className={ classNames(props.small && classes.avatarSmall) } onClick={props.onClick} >
+            <Avatar style={(props.background === false || props.noback) ? styles.noback : styles.back} className={ props.small ? classes.avatarSmall :classes.avatar } onClick={props.onClick} >
                 {props.children}
             </Avatar>
             }

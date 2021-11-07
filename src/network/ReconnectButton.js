@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import CloudIcon from '@material-ui/icons/Cloud';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Fab from '@material-ui/core/Fab';
+import { reloadPWA } from 'store/userHelpers'
 
 const useStyles = makeStyles(theme => {
     
@@ -33,17 +34,6 @@ const useStyles = makeStyles(theme => {
 export default function ReconnectButton(props) {
     
     const classes = useStyles();
-    
-    function reloadPWA() {
-        localStorage.removeItem('deviceStates');
-        localStorage.removeItem('devices')
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.unregister();
-            });
-        }
-        window.location.reload(true)
-    }
     
     return (
         <>

@@ -1,5 +1,4 @@
 import create from 'zustand'
-import useUserStore from 'store/userStore'
 
 const serverUrl = "https://"+window.location.hostname;
 const tokenUrl = serverUrl+'/auth/o2/token'
@@ -9,7 +8,7 @@ const useLoginStore = create((set,get) => ({
         name: localStorage.getItem('user'),
         refresh_token: localStorage.getItem('refresh_token'),
         access_token: undefined,
-        login_message: "welcome",
+        login_message: "",
         logged_in: false,
         setUserName: (name) => set( { name: name }),
         setStoreAccessToken: (token) => set( { access_token: token }),
@@ -17,7 +16,8 @@ const useLoginStore = create((set,get) => ({
         setRefreshToken: (newToken) => set( { refresh_token: newToken }),
         setLoginMessage: (message) => set( { login_message: message}),
         logout: () => {
-            localStorage.setItem('refresh_token', undefined)
+            localStorage.clear();
+            //localStorage.setItem('refresh_token', undefined)
             set({ refresh_token: undefined, access_token: undefined, admin: undefined, logged_in: false, login_message : "You are logged out" })
         }, 
         login: async (username, password) => {
@@ -47,22 +47,24 @@ const useLoginStore = create((set,get) => ({
             return result
         },
         checkToken: async () => {
-            const user = useUserStore.getState().name
+            const user = get().name
             const refreshToken = get().refresh_token
+            console.log('checking token', user)
             if (user && refreshToken) {
+                set({ login_message: 'Checking token '+user})
                 const body = { "user": user, "refresh_token": refreshToken }
                 const response = await fetch(tokenUrl, {  method: "post", body: JSON.stringify(body)})
                 try {
                     var result = await response.json()
                     set(result)
                     set({ logged_in: true })
+                    set({ login_message: ""})
                 }
                 catch {
                     console.log('invalid token')
                     set({ login_message: "Invalid token"})
                 }
             }
-            set({ login_message: ""})
         },
     })
 )

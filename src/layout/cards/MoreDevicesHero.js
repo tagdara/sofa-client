@@ -1,7 +1,6 @@
 import React from 'react';
-import FanIcon from '@material-ui/icons/Toys';
 import CardBase from 'components/CardBase';
-import Device from 'devices/Device';
+import Fan from 'devices/Fan/Fan';
 import Shade from 'devices/Shade/Shade';
 import { endpointIdsByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers'
 
@@ -16,7 +15,7 @@ const MoreDevicesHero = props => {
                 <Shade key={shade} endpointId={shade} />
             ))}
             { fans.map(fan =>
-                <Device key={fan} endpointId={fan} icon={<FanIcon />} nested={true} />
+                <Fan key={fan} endpointId={fan} nested={true} itemType={"listItem"} />
             )}
         </CardBase>
     );

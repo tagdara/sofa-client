@@ -478,6 +478,7 @@ export function removeFavorite(endpointId) {
     const favorites = [...useUserStore.getState().preferences.favorites]
     const update = useUserStore.getState().update
     if (favorites.includes(endpointId)) {
+        // eslint-disable-next-line 
         const [ endpointId, ...rest ] = favorites
         update('favorites', [...rest ])
     }

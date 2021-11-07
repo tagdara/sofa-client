@@ -42,6 +42,9 @@ const ComputerSummary = props => {
 
     function countLabel() {
         try {
+            if ( onCount() === 1 ) {
+                return onCount()+" computer on"
+            }
             if (onCount()>0) {
                 return onCount()+" computers on"
             }

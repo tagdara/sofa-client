@@ -23,6 +23,8 @@ export default function AirQualityChip(props) {
     // eslint-disable-next-line 
     }, [ ] )
 
+    if (!aqState) { return null }
+
     const aqColor = ( aqi ) => {
         switch (true) {
             case (aqi < 51 || aqi === "Good"):  

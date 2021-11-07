@@ -18,6 +18,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import AdminFeatures from 'layout/cards/AdminFeatures';
 
 import useUserStore from 'store/userStore'
+import useLoginStore from 'store/loginStore'
 
 const useStyles = makeStyles(theme => {
     return {
@@ -39,6 +40,7 @@ export default function UserHero(props) {
     const classes = useStyles();
     const { pickUserTheme, colorScheme } = useContext(ThemeContext);
     const userData = useUserStore( state => state)
+    const logout = useLoginStore( state => state.logout )
     const [ adminMode, setAdminMode ] = useState(false)
     const name = userData ? userData.firstname+" "+userData.lastname : "Unknown"
 
@@ -61,7 +63,7 @@ export default function UserHero(props) {
                 </IconButton>
                 <ListItemText primary={name} />
                 <div className={classes.spacer} />
-                <IconButton onClick={() => pickUserTheme(colorScheme==='dark' ? 'light' : 'dark')}>
+                <IconButton onClick={logout}>
                     <ExitToAppIcon />
                 </IconButton>
             </ListItem>

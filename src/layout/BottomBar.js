@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -12,7 +12,8 @@ import ThermostatIcon from '@material-ui/icons/DataUsage';
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
-import { LayoutContext } from 'layout/LayoutProvider';
+import { selectStack } from 'store/layoutHelpers'
+import useLayoutStore from 'store/layoutStore'
 
 const useStyles = makeStyles(theme => {
     
@@ -44,7 +45,7 @@ const useStyles = makeStyles(theme => {
 export default function SimpleBottomNavigation(props) {
 
     const classes = useStyles();
-    const { currentStack, selectStack } = useContext(LayoutContext);
+    const currentStack = useLayoutStore( state => state.currentStack)
     
     const sections = [ "Audio Video", "Lights and Comfort", "Climate", "Security", "System" ]
     const sectionData= {   "Audio Video": { "label": "AV", "icon": <QueueMusicIcon />}, 

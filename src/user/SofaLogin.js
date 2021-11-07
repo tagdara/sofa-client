@@ -35,12 +35,12 @@ const useStyles = makeStyles({
 export default function SofaLogin(props) {
     
     const login = useLoginStore( state => state.login )
+    const loginMessage = useLoginStore( state => state.login_message )
     const userName = useUserStore( state => state.name )
     const setLoginMessage = useLoginStore( state => state.setLoginMessage )
     const checkToken = useLoginStore( state => state.checkToken )
     const [ user, setUser ] = useState(userName)
     const [ password, setPassword ] = useState('')
-    const [ errorMessage, setErrorMessage ] = useState('')
     const classes = useStyles();
  
     useEffect(() => {
@@ -50,18 +50,8 @@ export default function SofaLogin(props) {
     // eslint-disable-next-line         
     }, [])        
 
-    function confirmToken(result) {
-        console.log('resulting token', result)
-        if (result) {
-            setErrorMessage('')
-            window.location.replace(window.location);
-        } else {
-            setErrorMessage('Incorrect credentials')
-        }
-    }
-
     function checkLogin() { 
-        login(user,password).then(result=>confirmToken(result))
+        login(user,password)
     }
 
     function keyPress(code) {
@@ -85,7 +75,7 @@ export default function SofaLogin(props) {
                             id="password" label="Password" type="password" defaultValue={""}  />
                     </ListItem>
                     <ListItem>
-                        <ListItemText primary={errorMessage} />
+                        <ListItemText primary={loginMessage} />
                     </ListItem>
                     <ListItem style={{display:'flex', justifyContent:'center'}} >
                         <Button fullWidth onClick={ ()=> checkLogin()}>

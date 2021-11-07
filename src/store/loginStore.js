@@ -17,10 +17,11 @@ const useLoginStore = create((set,get) => ({
         setRefreshToken: (newToken) => set( { refresh_token: newToken }),
         setLoginMessage: (message) => set( { login_message: message}),
         logout: () => {
-            localStorage.removeItem('refresh_token')
-            set({refresh_token: undefined, access_token: undefined, admin: undefined })
+            localStorage.setItem('refresh_token', undefined)
+            set({ refresh_token: undefined, access_token: undefined, admin: undefined, logged_in: false, login_message : "You are logged out" })
         }, 
         login: async (username, password) => {
+            var result = undefined
             set({ login_message : ""})
             const body = { "user": username, "password": password }
             const response = await fetch(loginUrl, {  method: "post", body: JSON.stringify(body)})
@@ -29,26 +30,30 @@ const useLoginStore = create((set,get) => ({
             } else if (response.status === 403) {
                 set({ login_message : "Guest logins are disabled"})
             } else {
-                const result = await response.json()
+                result = await response.json()
                 if (result.refresh_token) {
                     console.log('Logged in as', username)
                     localStorage.setItem('user', username)
                     localStorage.setItem('refresh_token', result.refresh_token)
+                    set({ refresh_token: result.refresh_token})
                 } else {
                     console.log('no token', result)
                 }
+                if (result.access_token) {
+                    set({ access_token: result.access_token, logged_in: true})
+                }
                 set(result)
             }
+            return result
         },
         checkToken: async () => {
             const user = useUserStore.getState().name
-            const refreshToken = useUserStore.getState().refresh_token
+            const refreshToken = get().refresh_token
             if (user && refreshToken) {
                 const body = { "user": user, "refresh_token": refreshToken }
                 const response = await fetch(tokenUrl, {  method: "post", body: JSON.stringify(body)})
                 try {
                     var result = await response.json()
-                    console.log('ct result', result)
                     set(result)
                     set({ logged_in: true })
                 }

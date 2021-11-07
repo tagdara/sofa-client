@@ -159,3 +159,7 @@ export const toggleRightDrawer = newState => {
     }
 }   
 
+export const selectStack = ( stackName, pageprops={} ) => {
+    console.log('setting stack to',stackName)
+    useLayoutStore.setState({currentStack: stackName, currentPage: "Stacks", currentProps: pageprops})
+}

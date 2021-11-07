@@ -16,7 +16,6 @@ const AutomationItem = props => {
     const [ launched, setLaunched] = useState(false)
     const automation = deviceByEndpointId(props.endpointId)
     const automationState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-    const name = automation.friendlyName
 
     useEffect(() => {
         register(props.endpointId, "Automation-"+props.endpointId)
@@ -27,6 +26,8 @@ const AutomationItem = props => {
     }, [props.endpointId])
 
     if (!automationState) { return null }
+
+    const name = automation.friendlyName
 
     function runAutomation(conditions=true) {
         setLaunched(true)

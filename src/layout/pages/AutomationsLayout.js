@@ -14,6 +14,7 @@ import GridSection from 'components/GridSection';
 import useLoginStore from 'store/userStore'
 
 import { isFavorite, makeFavorite } from 'store/deviceHelpers'
+import { loadAutomations } from 'store/automationHelpers'
 
 const AutomationsLayout = props => {
 
@@ -26,38 +27,14 @@ const AutomationsLayout = props => {
     const [scheduled, setScheduled] = useState(false)
 
     useEffect(() => {
-        loadJSONAutomations()
+        loadAutomations().then(result => { setAutomations(result)})
     // eslint-disable-next-line 
     }, []);
 
-    const loadJSONAutomations = async () => {
-        const headers = { authorization : accessToken }
-        const response = await fetch(serverUrl + "/list/logic/automations", { headers: headers })
-        var result = await response.json()
-        fixAutomations(result)
-    }
 
-    
-    function fixAutomations(autos) {
-
-        var sections=['actions','schedules','triggers','conditions'] 
-        
-        //for (var auto in autos) {
-        for (var i = 0; i < autos.length; i++) {
-            for (var j = 0; j < sections.length; j++) {
-                if (!autos[i].hasOwnProperty(sections[j])) {
-                    console.log('warning', autos[i], 'does not have a',sections[j],'entry')    
-                    autos[i][sections[j]]=[]
-                }
-            }
-        }
-        setAutomations(autos)
-    }
-    
     function selectAutomation(automation) {
         selectPage('AutomationLayout', {'endpointId':automation, 'noBottom':true } )
     }    
-    
     
     function deleteAutomation(endpointId) {
 

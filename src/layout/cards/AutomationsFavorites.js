@@ -1,14 +1,13 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 
-import { LayoutContext } from 'layout/LayoutProvider';
 import AutomationAll from 'automation/AutomationAll';
 import AutomationItem from 'automation/AutomationItem';
 import GridSection from 'components/GridSection';
 import useUserStore from 'store/userStore'
-
+import { selectPage } from 'store/layoutHelpers';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -16,15 +15,13 @@ function Alert(props) {
 
 const AutomationsFavorites = props => {
 
-    const { applyBackPage, applyLayoutCard } = useContext(LayoutContext);
-    const favorites = useUserStore(state => state.favorites )
+    const favorites = useUserStore(state => state.preferences.favorites )
     const [ showResult, setShowResult] = useState(false)
     const [ resultMessage, setResultMessage] = useState('')
     const [ severity, setSeverity] = useState('info')
 
     function selectAutomation(automation) {
-        applyBackPage('SystemLayout',{})
-        applyLayoutCard('AutomationLayout', {'name':automation, 'noBottom':true } )
+        selectPage('AutomationLayout', {'name':automation, 'noBottom':true } )
     }    
     
     function handleClose() {
@@ -37,16 +34,22 @@ const AutomationsFavorites = props => {
         setShowResult(true);         
     }
 
+    console.log('favs', favorites)
+
     return (    
             <GridSection name={"Automations"}>
-            { favorites.map(endpointId => 
-                <AutomationItem small={true} endpointId={endpointId} key={endpointId}
-                                favorite={true} allowEdit={false} 
-                                launcher={true} icon={"base"}
-                                select={selectAutomation}
-                                showResult={showResultSnackbar}
-                />
-            )}
+            { favorites &&
+                <>
+                    { favorites.map(endpointId => 
+                        <AutomationItem small={true} endpointId={endpointId} key={endpointId}
+                                        favorite={true} allowEdit={false} 
+                                        launcher={true} icon={"base"}
+                                        select={selectAutomation}
+                                        showResult={showResultSnackbar}
+                        />
+                    )}
+                </>
+            }
             <AutomationAll />
             <Snackbar   anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}} 
                         open={showResult} autoHideDuration={6000} 

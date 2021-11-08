@@ -71,7 +71,10 @@ const CardLineIcon = props => {
     }
 
     return  (
-        <ListItemIcon onClick={props.onClick} styles={ color && styles.color } className={ props.color === "primary" ? classes.highlight : classes.normal} {...bind} >
+        <ListItemIcon   onClick={ props.onClick } 
+                        className={ props.color === "primary" ? classes.highlight : classes.normal}
+                        style={ color &&  styles.color }
+                        {...bind} >
             {props.children}
         </ListItemIcon>
     )

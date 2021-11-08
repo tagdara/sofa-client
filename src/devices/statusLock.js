@@ -1,7 +1,12 @@
 import React from 'react';
 import CardBase from 'components/CardBase';
-import SofaListItem from 'components/SofaListItem';
 import DialpadIcon from '@material-ui/icons/Dialpad';
+import green from '@material-ui/core/colors/green';
+import red from '@material-ui/core/colors/red';
+
+import CardLine from 'components/CardLine';
+import CardLineText from 'components/CardLineText';
+import CardLineIcon from 'components/CardLineIcon';
 
 export default function StatusLock(props) {
 
@@ -21,13 +26,16 @@ export default function StatusLock(props) {
     }
 
     const closed = sensorController.detectionState.value==='NOT_DETECTED'
-
+    const iconColor = closed ? green[500] : red[500]
+ 
     return (
         <CardBase>
-            <SofaListItem   avatarBackground={!closed} avatarState={closed ? "closed" : "open"} avatar={<DialpadIcon />}
-                            onClick={props.handlePress}
-                            primary={props.name} secondary={ getSensorController().detectionState.value==='NOT_DETECTED' ? 'Closed' : 'Open' }
-            />
+            <CardLine onClick={props.handlePress} itemType={"listItem"}>
+                <CardLineIcon color={iconColor} >
+                    <DialpadIcon />
+                </CardLineIcon>      
+                <CardLineText primary={props.name} secondary={ closed ? 'Closed' : 'Open' }/>
+            </CardLine>
         </CardBase>
     );
 

@@ -49,7 +49,6 @@ const useLoginStore = create((set,get) => ({
         checkToken: async () => {
             const user = get().name
             const refreshToken = get().refresh_token
-            console.log('checking token', user)
             if (user && refreshToken) {
                 set({ login_message: 'Checking token '+user})
                 const body = { "user": user, "refresh_token": refreshToken }

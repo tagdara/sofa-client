@@ -28,8 +28,6 @@ const StackPicker = props => {
     const maxScreenWidth = useLayoutStore(state => state.maxScreenWidth )
     const maxStacks = Math.min(4, Math.round( maxScreenWidth / minStackWidth))
 
-    console.log('max', maxStacks, 'vs', stackLayout.length)
-
     // using length -1 to skip admin but probably a better way
     if (isMobile || (stackLayout.length -1 <= maxStacks)) { 
         return <Typography variant="subtitle1" className={classes.title} >

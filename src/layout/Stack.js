@@ -4,10 +4,10 @@ import { makeStyles } from '@material-ui/styles';
 import { getStack, renderSuspenseModule } from 'store/layoutHelpers';
 
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 
 import ErrorBoundary from 'error/ErrorBoundary';
 import StackMoreButton from 'layout/StackMoreButton';
+import StackPicker from 'layout/StackPicker'
 
 const useStyles = makeStyles(theme => {
     return {
@@ -86,22 +86,26 @@ const useStyles = makeStyles(theme => {
 export default function Stack(props) {
     
     const classes = useStyles();
-    const [ stack, setStack ]=useState({})
+    const [ stack, setStack ]=useState(props.stack)
+    const [ stackData, setStackData ] = useState(undefined)
     const [ expand, setExpand ]=useState(false)
 
-    useEffect(() => { 
-        if (props.stack) {
-            getStack(props.stack)
-                .then(result=> setStack(result))
-        }
+    //useEffect(() => { 
+    //    setStack(props.stack)
     // eslint-disable-next-line             
-    }, [ props.stack] )
+    // }, [ props.stack] )
 
+    useEffect(() => { 
+        if (stack) {
+            getStack(stack)
+                .then(result=> setStackData(result))
+        }
+    }, [ stack ] )
 
     function expandable() {
-        if (stack.cards) {
-            for (var i = 0; i < stack.cards.length; i++) {
-                if (stack.cards[i].hasOwnProperty('expand')) {
+        if (stackData && stackData.cards) {
+            for (var i = 0; i < stackData.cards.length; i++) {
+                if (stackData.cards[i].hasOwnProperty('expand')) {
                     return true
                 }
             }
@@ -114,21 +118,26 @@ export default function Stack(props) {
             <Grid container item spacing={0} key={props.name} xs={ props.xs } className={ classes.stack } >
                 <div className={classes.pageHeader}>
                     {props.showTitle &&
-                        <Typography variant="subtitle1" className={classes.title} >{stack.name}</Typography>
+                        <StackPicker stack={stack} setStack={setStack} />
                     }
                     { expandable() && <StackMoreButton expand={expand} onClick={ () => setExpand(!expand)} /> } 
+
                 </div>
-                { stack.cards && stack.cards.map( (card, i) => 
-                    <React.Fragment key={"card"+i}>
-                    { (!card.hasOwnProperty('expand') || card['expand']===expand ) ?
-                    <ErrorBoundary>
-                        { renderSuspenseModule(card['module'], card['props']) }
-                    </ErrorBoundary>
-                    :
-                    null
-                    }
-                    </React.Fragment >
-                )}
+                { stackData &&
+                    <>
+                    { stackData.cards && stackData.cards.map( (card, i) => 
+                        <React.Fragment key={"card"+i}>
+                        { (!card.hasOwnProperty('expand') || card['expand']===expand ) ?
+                        <ErrorBoundary>
+                            { renderSuspenseModule(card['module'], card['props']) }
+                        </ErrorBoundary>
+                        :
+                        null
+                        }
+                        </React.Fragment >
+                    )}
+                    </>
+                }
             </Grid>
         : null
     );

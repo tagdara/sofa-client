@@ -492,3 +492,14 @@ export function removeFavorite(endpointId) {
         update('favorites', [...rest ])
     }
 }
+
+export function isReachable(deviceState) {
+    // requires devicestate to prevent subscription in the helper
+    try {
+        if (deviceState.EndpointHealth.connectivity.value.value==='OK') {
+            return true
+        }
+    }
+    catch {}
+    return false
+}

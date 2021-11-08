@@ -23,15 +23,13 @@ const useUserStore = create(persist(
             const headers = { authorization : accessToken }
             const body = prefs
             const response = await fetch(userSaveUrl, {  headers: headers, method: "post", body: JSON.stringify(body)})
-            const result = await response.json()
-            console.log('user info', result)          
+            return await response.json()         
         },
         refresh: async () => {
             const accessToken = useLoginStore.getState().access_token;
             const headers = { authorization : accessToken }
             const response = await fetch(userUrl, { headers: headers })
             const result = await response.json()
-            console.log('user info', result)
             set({preferences: result} )
         },
     }),

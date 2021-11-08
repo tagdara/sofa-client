@@ -9,13 +9,15 @@ import ClearIcon from '@material-ui/icons/Clear';
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 import LightProperties from "devices/Light/LightProperties";
-import SofaListItem from "components/SofaListItem";
 import ItemBase from "components/ItemBase";
 
 import useDeviceStateStore from 'store/deviceStateStore'
-import useDeviceStore from 'store/deviceStore'
 import { directive } from 'store/directive'
-import { register, unregister } from 'store/deviceHelpers'
+import { deviceByEndpointId, isReachable, register, unregister } from 'store/deviceHelpers'
+
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
+import CardLineIcon from 'components/CardLineIcon'
 
 const useStyles = makeStyles(theme => {
     return {        
@@ -33,10 +35,9 @@ const Light = props => {
 
     const classes = useStyles();
     const [showAll, setShowAll] = useState(props.showAll)
-    const expanded = showAll || props.brightControl || props.tempControl || props.colorControl
-    const light = useDeviceStore( state => state.devices[props.endpointId] )
+    //const expanded = showAll || props.brightControl || props.tempControl || props.colorControl
+    const light = deviceByEndpointId(props.endpointId)
     const lightState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-    const name = light ? light.friendlyName : "Unknown"
 
     useEffect(() => {
         register(props.endpointId, "Light"+props.endpointId)
@@ -46,32 +47,30 @@ const Light = props => {
     // eslint-disable-next-line 
     }, [props.endpointId])
 
-
     function handlePowerChange(event) {
         directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     }; 
-    
-    function isReachable() {
-        try {
-            if (lightState.EndpointHealth.connectivity.value.value==='OK') {
-                return true
-            }
-        }
-        catch {}
-        return false
+
+    function stopEventPropagation(event) {
+        // switches use onChange but onClick needs to also be blocked for nested items
+        event.stopPropagation()
     }
+
+    const name = light ? light.friendlyName : "Unknown"
+    const reachable = isReachable(lightState)
+    const on = lightState && lightState.PowerController.powerState.value === 'ON'
 
     function filtered(filter) {
         
         filter = filter ? filter.toUpperCase() : "TRUE"
         switch (filter) {
             case "ON":
-                if (lightState && lightState.PowerController.powerState.value==='ON' && isReachable()) {
+                if (on && reachable) {
                     return false
                 }
                 break;
             case "OFF":
-                if (!lightState || lightState.PowerController.powerState.value==='OFF' || !isReachable()) {
+                if (!lightState || !on || !reachable) {
                     return false
                 }
                 break;
@@ -82,38 +81,28 @@ const Light = props => {
     }
 
     if (!lightState || filtered(props.filter)) { 
-        // console.log('filters', lightState, filtered(props.filter)) ; 
         return null 
     }
 
     return (
         <ItemBase itemType={ props.itemType } small={ props.small} >
-            <SofaListItem   avatarState={ lightState.PowerController.powerState.value==='ON' ? "on" : "off" }
-                            avatarBackground={false} 
-                            avatarClick={() => setShowAll(!showAll) }
-                            labelClick={() => setShowAll(!showAll) }
-                            avatar={ isReachable() ?
-                                    <LightbulbOutlineIcon className={classes.iconSize} />
-                                :
-                                    <CloudOffIcon className={classes.iconSize} />
-                            }                
-                            primary={ name } 
-                            secondary={ isReachable() ? null : 'Off at switch' }
-                            small={props.small} 
-                            noPad={props.small}
-                            highlight={ expanded }
-                            secondaryActions={ 
-                                <>
-                                    { ( isReachable() && !props.remove ) &&
-                                        <Switch color="primary" className={classes.lightSwitch} checked={lightState.PowerController.powerState.value==='ON'} 
-                                                onChange={handlePowerChange} />
-                                    }
-                                    { props.remove && 
-                                        <IconButton size="small" onClick={()=>props.remove(props.device)} ><ClearIcon /></IconButton>
-                                    }
-                                </>
-                            }
-            />
+            <CardLine onClick={ () => setShowAll(!showAll)}>
+                <CardLineIcon color={on ? "primary" : undefined } onClick={stopEventPropagation}  >
+                    { reachable ? <LightbulbOutlineIcon className={classes.iconSize} />
+                                : <CloudOffIcon className={classes.iconSize} /> }            
+                </CardLineIcon>
+                <CardLineText primary={name} secondary={reachable ? null : 'Off at switch' }/>
+                { (reachable && !props.remove ) &&
+                    <Switch color="primary" className={classes.lightSwitch} 
+                            checked={lightState.PowerController.powerState.value==='ON'} 
+                            onChange={handlePowerChange} onClick={stopEventPropagation} />
+                }
+                { props.remove && 
+                    <IconButton size="small" onClick={()=>props.remove(props.device)} >
+                        <ClearIcon />
+                    </IconButton>
+                }
+            </CardLine>            
             <LightProperties    endpointId={props.endpointId} deviceState={lightState}
                                 showAll={showAll} brightControl={props.brightControl} tempControl={props.tempControl} colorControl={props.colorControl}
                                 onLevelControl={props.onLevelControl} />

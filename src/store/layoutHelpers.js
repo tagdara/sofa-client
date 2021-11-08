@@ -112,7 +112,7 @@ const getLayoutStack = async (stackName) => {
 }
 
 function loadStack(stack) {
-    if (stack.cards.length>0) {
+    if (stack && stack.cards && stack.cards.length>0) {
         for (var x = 0; x < stack.cards.length; x++) {
             //console.log('adding ',stack.cards[x].module)
             addModule(stack.cards[x].module, true)
@@ -160,6 +160,5 @@ export const toggleRightDrawer = newState => {
 }   
 
 export const selectStack = ( stackName, pageprops={} ) => {
-    console.log('setting stack to',stackName)
     useLayoutStore.setState({currentStack: stackName, currentPage: "Stacks", currentProps: pageprops})
 }

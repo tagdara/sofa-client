@@ -1,13 +1,16 @@
 import React, { useEffect } from 'react';
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
-import SofaListItem from 'components/SofaListItem';
+import CardLine from 'components/CardLine';
+import CardLineText from 'components/CardLineText';
+import ColorAvatar from 'components/ColorAvatar';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import LightChristmasButton from 'devices/Light/LightChristmasButton';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
 import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
+import green from '@material-ui/core/colors/green';
 
 const LightSummary = props => {
     const lights = endpointIdsByDisplayCategory('LIGHT')
@@ -68,20 +71,17 @@ const LightSummary = props => {
         return null
     }
 
+    const iconColor = lightCount('on') > 0 ?  green[500] : undefined
     const labelText = lightCount('on') === 1 ? lightCount('on')+" light is on" : lightCount('on')+" lights are on"
 
     return (
-        <>
-        <SofaListItem   avatarState={lightCount('on') ? "on" : "off"} 
-                        avatarClick={ props.onClick } 
-                        labelClick={ props.onClick }
-                        avatar={<LightbulbOutlineIcon/>} 
-                        noPad={true}
-                        primary={lightCount('on') ? labelText : "All lights off" }
-                        inlineSecondary={true}
-                        secondaryActions={ checkHoliday() }
-        />
-        </>
+        <CardLine onClick={props.onClick} itemType={"listItem"}>
+            <ColorAvatar color={iconColor}>
+                {<LightbulbOutlineIcon/>}
+            </ColorAvatar>      
+            <CardLineText  primary={lightCount('on') ? labelText : "All lights off" }/>
+            { checkHoliday() }
+        </CardLine>
     );
 }
 

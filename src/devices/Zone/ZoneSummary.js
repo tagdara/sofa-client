@@ -54,12 +54,12 @@ const ZoneSummary = props => {
     //avatarBackground={ violated } avatarState={ violated ? "open" : "closed" } 
 
     return (
-            <CardLine  onClick={props.onClick}>
-                <ColorAvatar color={iconColor}>
-                    { violated ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
-                </ColorAvatar>      
-                <CardLineText primary={ violated ? openZones.length+' zones are not secure' : 'All zones secure' } secondary={openZoneList.join(', ')} />
-            </CardLine>
+        <CardLine onClick={props.onClick} itemType={"listItem"}>
+            <ColorAvatar color={iconColor}>
+                { violated ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
+            </ColorAvatar>      
+            <CardLineText primary={ violated ? openZones.length+' zones are not secure' : 'All zones secure' } secondary={openZoneList.join(', ')} />
+        </CardLine>
     );
 }
 

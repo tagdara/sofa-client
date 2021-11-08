@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Collapse from '@material-ui/core/Collapse';
@@ -15,14 +13,15 @@ import LockOpenIcon from '@material-ui/icons/LockOpen';
 import DotAvatar from 'components/DotSlider'
 import CardBase from 'components/CardBase'
 import ToggleIconButton from 'components/ToggleIconButton'
-import SofaListItem from 'components/SofaListItem'
 import ModeLines from 'devices/Mode/ModeLines'
 
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
+import CardLineIcon from 'components/CardLineIcon'
+
 import useDeviceStateStore from 'store/deviceStateStore'
-import useDeviceStore from 'store/deviceStore'
-import useRegisterStore from 'store/registerStore'
 import { directive } from 'store/directive'
-import { getModes, getInputs } from 'store/deviceHelpers'
+import { getModes, getInputs, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     
@@ -34,6 +33,7 @@ const useStyles = makeStyles(theme => {
         },
         select: {
             minWidth: "50%",
+            display: "flex",
         },
         titleText: {
             fontSize: 18,
@@ -65,7 +65,15 @@ const useStyles = makeStyles(theme => {
         detail: {
             width: "100%",
             paddingTop: -8,
+            display: "flex",
+            flexGrow: 1,
+            flexDirection: "column",
         },
+        innerCollapse: {
+            width: "100%",
+            display: "flex",
+        },
+
     }
 
 });
@@ -74,13 +82,11 @@ const Receiver = props => {
 
     const classes = useStyles();    
     const [ showDetail, setShowDetail ] = useState(false);
-    const [ volumeMode, setVolumeMode ] = useState('presets');
+    const [ volumePresetMode, setVolumePresetMode ] = useState(true);
     const volumePresets = [40, 55, 60, 65, 70, 80];
 
-    const device = useDeviceStore( state => state.devices[props.endpointId] )
+    const device = deviceByEndpointId(props.endpointId)
     const receiver = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-    const register = useRegisterStore( state => state.add)
-    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
         register(props.endpointId, 'Receiver-'+props.endpointId)
@@ -92,6 +98,8 @@ const Receiver = props => {
 
     if (!receiver) { return null }
 
+    const on = receiver.PowerController.powerState.value === 'ON' 
+
     function handleVolumeChange(event) {
         directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
     }; 
@@ -101,6 +109,7 @@ const Receiver = props => {
     //}; 
     
     function handlePowerChange(event) {
+        event.stopPropagation();
         directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     };
     
@@ -121,70 +130,61 @@ const Receiver = props => {
         directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Receiver.InputLock')
     }; 
 
-    function handleVolumeMode(event,modechoice) {
-        setVolumeMode(modechoice)
-    }; 
-
-    
     function subText() {
-        if (showDetail || receiver.PowerController.powerState.value==='OFF') {
+        if (showDetail || !on) {
             return null
         }
-        if (receiver.PowerController.powerState.value!=='OFF') {
+        if (on) {
             return receiver.InputController.input.value + " / "+ surroundName()
         }
         return receiver.Speaker.volume.value+"% / "+receiver.InputController.input.value + " / "+ surroundName()
     }
 
+    function stopEventPropagation(event) {
+        // switches use onChange but onClick needs to also be blocked for nested items
+        event.stopPropagation()
+    }
+
     return (
         <CardBase>
-            <SofaListItem   avatar={<SpeakerGroupIcon />} avatarState = { receiver.PowerController.powerState.value === 'ON' ? 'on' : 'off' } noPad={true}
-                            avatarClick={ () => setShowDetail(!showDetail) } labelClick={ () => setShowDetail(!showDetail) }
-                            avatarBackground={false} primary={device.friendlyName} secondary={subText()}
-                            secondaryActions={<Switch color="primary" checked={ receiver.PowerController.powerState.value === 'ON' } 
-                            onChange={ (e) => handlePowerChange(e) } /> }
-            />
-            { (showDetail || receiver.PowerController.powerState.value==='ON' ) &&
-                <DotAvatar   label={"Volume"} levelValues={volumeMode==='presets' ? volumePresets : undefined } centered={true}
+            <CardLine onClick={ () => setShowDetail(!showDetail)}>
+                <CardLineIcon color={on ? "primary" : undefined } onClick={stopEventPropagation} longPress={() => setVolumePresetMode(!volumePresetMode) } >
+                    <SpeakerGroupIcon />
+                </CardLineIcon>
+                <CardLineText primary={device.friendlyName} secondary={subText()} />
+                <Switch color="primary" checked={ on } onClick={stopEventPropagation} onChange={ handlePowerChange } />
+            </CardLine>
+            { (showDetail || on ) &&
+                <DotAvatar   label={"Volume"} levelValues={volumePresetMode ? volumePresets : undefined } centered={true}
                                     small={true} reverse={true} minWidth={64} 
                                     value={receiver.Speaker.volume.value}
                                     select={handleVolumeChange} 
-                                    disabled={ receiver.PowerController.powerState.value==='OFF' }
+                                    disabled={ !on }
                 />
             }
-            <Collapse in={showDetail} className={classes.detail}>
-                        <ListItem>
-                            <ListItemText primary={"Input"} />
-                            { receiver.InputLock &&
-                                <ToggleIconButton
-                                    buttonState={ receiver.InputLock.mode.value==='InputLock.Locked' ? "on" : "off" } 
-                                    disabled={receiver.PowerController.powerState.value!=='ON'}
-                                    onIcon={ <LockIcon fontSize={"small"} /> } 
-                                    offIcon={ <LockOpenIcon fontSize={"small"} /> }
-                                    onClick={ (e) => handleInputLockModeChoice(e, (receiver.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
-                                />
-                            }
-                            <Select disabled={receiver.PowerController.powerState.value!=='ON'} 
-                                    className={classes.select} displayEmpty 
-                                    value={receiver.InputController.input.value ? receiver.InputController.input.value : ""} 
-                                    onChange={ (e) => handleInput(e, e.target.value) } >
-                                { getInputs(props.endpointId).map(inp =>
-                                    <MenuItem key={inp} value={inp}>{inp}</MenuItem>
-                                )}
-                            </Select>
-                        </ListItem>
-                        <ListItem>
-                            <ListItemText primary={"Volume"} />
-                            <Select disabled={receiver.PowerController.powerState.value!=='ON'} 
-                                    className={classes.select} displayEmpty 
-                                    value={volumeMode} 
-                                    onChange={ (e) => handleVolumeMode(e, e.target.value) } >
-                                <MenuItem value={"open"}>Open</MenuItem>
-                                <MenuItem value={"presets"}>Presets</MenuItem>
-                            </Select>
-                        </ListItem>
-                        <ModeLines  directive={directive} disabled={receiver.PowerController.powerState.value!=='ON'} endpointId={props.endpointId}
-                                    device={device} deviceState={receiver} exclude={["InputLock"]} />
+            <Collapse in={showDetail} className={classes.detail} classes={{ wrapperInner: classes.detail}}>
+                <CardLine onClick={ () => setShowDetail(!showDetail)}>
+                    <CardLineText primary={"Input"} />
+                    { receiver.InputLock &&
+                        <ToggleIconButton
+                            buttonState={ receiver.InputLock.mode.value==='InputLock.Locked' ? "on" : "off" } 
+                            disabled={!on}
+                            onIcon={ <LockIcon fontSize={"small"} /> } 
+                            offIcon={ <LockOpenIcon fontSize={"small"} /> }
+                            onClick={ (e) => handleInputLockModeChoice(e, (receiver.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
+                        />
+                    }
+                    <Select disabled={!on} 
+                            className={classes.select} displayEmpty 
+                            value={receiver.InputController.input.value ? receiver.InputController.input.value : ""} 
+                            onChange={ (e) => handleInput(e, e.target.value) } >
+                        { getInputs(props.endpointId).map(inp =>
+                            <MenuItem key={inp} value={inp}>{inp}</MenuItem>
+                        )}
+                    </Select>
+                </CardLine>
+                <ModeLines  directive={directive} disabled={!on} endpointId={props.endpointId}
+                            device={device} deviceState={receiver} exclude={["InputLock"]} />
 
             </Collapse>
         </CardBase>

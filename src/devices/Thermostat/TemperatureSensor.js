@@ -57,7 +57,7 @@ const TemperatureSensor = props => {
     const hasMoreData = checkMoreData()
 
     return (
-        <ItemBase hasCollapse={hasMoreData}>
+        <ItemBase hasCollapse={hasMoreData} itemType={props.itemType}>
             <CardLine onClick={props.onClick ? props.onClick : toggleDetail }>
                 <TemperatureSensorAvatar endpointId={props.endpointId} />
                 <ListItemText primary={name} />

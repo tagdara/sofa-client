@@ -16,17 +16,19 @@ const useStyles = makeStyles(theme => {
             flexGrow: 1,
             overflow: "hidden",
             borderRadius: 8,
+            width: "100%",
         },
         listItem: {
             cursor: "pointer",
-            boxSizing: "content-box",
-            //boxSizing: "border-box",
+            //boxSizing: "content-box",
+            boxSizing: "border-box",
             //height: 72,
-            minHeight: 56,
-            padding: "8px 16px",
+            minHeight: 64,
+            padding: "0 16px",
             overflow: "hidden",
             display: "flex",
             flexGrow: 1,
+            width: "100%",
         },
     }
 });

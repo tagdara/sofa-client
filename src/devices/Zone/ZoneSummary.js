@@ -3,21 +3,24 @@ import React, { useEffect } from 'react';
 import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
-import SofaListItem from 'components/SofaListItem';
-import PlaceholderCard from 'layout/PlaceholderCard';
-import useDeviceStore from 'store/deviceStore'
-import useDeviceStateStore from 'store/deviceStateStore'
+import CardLine from 'components/CardLine';
+import CardLineText from 'components/CardLineText';
+import ColorAvatar from 'components/ColorAvatar';
 
-import { compareDevice, compareState, hasCapability, endpointIdsByDisplayCategory, register, unregister } from 'store/deviceHelpers'
+import PlaceholderCard from 'layout/PlaceholderCard';
+import useDeviceStateStore from 'store/deviceStateStore'
+import green from '@material-ui/core/colors/green';
+import red from '@material-ui/core/colors/red';
+
+import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
 
 const ZoneSummary = props => {
   
     const contactSensors = endpointIdsByDisplayCategory( "CONTACT_SENSOR")   
     const motionSensors = endpointIdsByDisplayCategory( "MOTION_SENSOR")     
     const allSensors = [...contactSensors, ...motionSensors] 
-    const devices = useDeviceStore(state => Object.fromEntries(allSensors.filter(key => key in state.devices).map(key => [key, state.devices[key]])), (oldDevices, newDevices) => compareDevice(oldDevices, newDevices))
+    const devices = devicesByEndpointIds(allSensors)
     const states = useDeviceStateStore(state => Object.fromEntries(allSensors.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
-
 
     useEffect(() => {
         register(allSensors, "ZoneHero")
@@ -33,6 +36,8 @@ const ZoneSummary = props => {
     const securityZones = Object.keys(devices).filter( endpointId => !automationZones.includes(endpointId))
     const openZones = securityZones.filter(endpointId => isOpen(endpointId))
     const violated = openZones.length > 0
+    const iconColor = violated ? red[500] : green[500]
+
 
     function isOpen(endpointId) {
         if (hasCapability(endpointId, 'ContactSensor') && states[endpointId]) { 
@@ -46,13 +51,15 @@ const ZoneSummary = props => {
     
     const openZoneList = openZones.map(endpointId => devices[endpointId].friendlyName)
     
+    //avatarBackground={ violated } avatarState={ violated ? "open" : "closed" } 
+
     return (
-            <SofaListItem   avatarBackground={ violated } avatarState={ violated ? "open" : "closed" } 
-                            onClick={props.onClick}
-                            avatar={ violated ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
-                            primary={ violated ? openZones.length+' zones are not secure' : 'All zones secure' } 
-                            secondary={openZoneList.join(', ')}
-            />
+            <CardLine  onClick={props.onClick}>
+                <ColorAvatar color={iconColor}>
+                    { violated ? <PriorityHighIcon/> : <VerifiedUserIcon/> }
+                </ColorAvatar>      
+                <CardLineText primary={ violated ? openZones.length+' zones are not secure' : 'All zones secure' } secondary={openZoneList.join(', ')} />
+            </CardLine>
     );
 }
 

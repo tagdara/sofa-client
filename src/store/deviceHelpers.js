@@ -172,6 +172,15 @@ export function devicesByFriendlyName(devnames) {
     }
     return results
 }
+
+export function devicesByEndpointIds(endpointIds) {
+    var devices = useDeviceStore.getState().devices
+    var results = {}           
+    for (var id in devices) {
+        results[id]=devices[id]
+    }
+    return results
+}
           
 export const friendlyNameByEndpointId = endpointId => {
     var device = useDeviceStore.getState().devices[endpointId]  

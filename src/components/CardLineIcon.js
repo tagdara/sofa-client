@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/styles';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { useLongPress } from 'use-long-press';
 
 const useStyles = makeStyles(theme => {
     
@@ -57,12 +58,20 @@ const CardLineIcon = props => {
         }
     };
 
+    const bind = useLongPress(() => {}, {
+        onFinish: event => { event.stopPropagation(); event.preventDefault(); props.longPress() },
+        threshold: 500,
+        captureEvent: false,
+        cancelOnMovement: false,
+        detect: 'both',
+    });
+
     if (props.loading) {
         return  <CircularProgress size={24} />
     }
 
     return  (
-        <ListItemIcon onClick={props.onClick} styles={ color && styles.color } className={ props.color === "primary" ? classes.highlight : classes.normal}>
+        <ListItemIcon onClick={props.onClick} styles={ color && styles.color } className={ props.color === "primary" ? classes.highlight : classes.normal} {...bind} >
             {props.children}
         </ListItemIcon>
     )

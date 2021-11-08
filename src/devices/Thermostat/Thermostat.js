@@ -203,7 +203,7 @@ const Thermostat = props => {
 
     return ( 
         <CardBase>
-            <TemperatureSensor endpointId={props.endpointId} onClick={props.onClick} />
+            <TemperatureSensor endpointId={props.endpointId} onClick={props.onClick} itemType={"listItem"} />
             <ListItem className={classes.bottomListItem}>
                 <>
                     <ButtonGroup className={classes.buttonGroup} size="small" variant="text" >

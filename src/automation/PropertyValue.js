@@ -1,8 +1,8 @@
 import React, { Suspense, useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import ListItem from '@material-ui/core/ListItem';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@mui/styles';
+import ListItem from '@mui/material/ListItem';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
 import { directives } from 'store/directive'
 

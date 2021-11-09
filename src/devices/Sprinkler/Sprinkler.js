@@ -1,17 +1,17 @@
 import React, { useContext } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { DeviceStateContext } from 'context/DeviceStateContext';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 
-import Avatar from '@material-ui/core/Avatar';
-import IconButton from '@material-ui/core/IconButton';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
 
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-import InvertColorsIcon from '@material-ui/icons/InvertColors';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import InvertColorsIcon from '@mui/icons-material/InvertColors';
 
 import GridItem from 'components/GridItem';
 

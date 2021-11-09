@@ -1,10 +1,10 @@
 import React from "react";
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
-import SentimentDissatisfiedIcon from '@material-ui/icons/SentimentDissatisfied';
+import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 
 import GridItem from 'components/GridItem';
 import ToggleAvatar from 'components/ToggleAvatar';

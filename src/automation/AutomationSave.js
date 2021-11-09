@@ -1,9 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from '@mui/icons-material/Save';
 
-import Fab from '@material-ui/core/Fab';
+import Fab from '@mui/material/Fab';
 
 const useStyles = makeStyles({
     fabSave: {

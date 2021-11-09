@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FavoriteIcon from '@material-ui/icons/Star';
+import FavoriteIcon from '@mui/icons-material/Star';
 
 import AutomationTitle from "automation/AutomationTitle"
 import AutomationDetails from "automation/AutomationDetails"

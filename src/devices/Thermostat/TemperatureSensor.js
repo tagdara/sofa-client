@@ -1,20 +1,20 @@
 import React, { useState }from 'react';
 //import { selectPage } from 'store/layoutHelpers'
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 import CardLine from 'components/CardLine'
 import TemperatureSensorAvatar from 'controllers/temperatureSensor/TemperatureSensorAvatar'
 
-import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
-import IconButton from '@material-ui/core/IconButton';
+import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import IconButton from '@mui/material/IconButton';
 
 import ItemBase from 'components/ItemBase'
 import RangeValueLine from 'controllers/rangeController/RangeValueLine'
 import { deviceByEndpointId, hasInstance} from 'store/deviceHelpers'
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 const useStyles = makeStyles(theme => {
     return {      

@@ -1,18 +1,18 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Dialog from '@material-ui/core/Dialog';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import Dialog from '@mui/material/Dialog';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
-import CloseIcon from '@material-ui/icons/Close';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
+import CloseIcon from '@mui/icons-material/Close';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Slide from '@material-ui/core/Slide';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import Slide from '@mui/material/Slide';
 
 const useStyles = makeStyles({
 

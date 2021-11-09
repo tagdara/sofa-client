@@ -1,5 +1,5 @@
 import React, { useEffect }from 'react';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import { register, unregister } from 'store/deviceHelpers'

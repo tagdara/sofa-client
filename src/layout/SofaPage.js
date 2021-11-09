@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { renderSuspenseModule  } from 'store/layoutHelpers'
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import PageActions from './PageActions';
-import Toolbar from '@material-ui/core/Toolbar';
-import Chip from '@material-ui/core/Chip';
+import Toolbar from '@mui/material/Toolbar';
+import Chip from '@mui/material/Chip';
 import ErrorBoundary from './ErrorBoundary';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import classNames from 'classnames';
 
 

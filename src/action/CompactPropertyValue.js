@@ -1,8 +1,8 @@
 import React, { Suspense, useState, useEffect, useContext } from 'react';
 import { DeviceContext } from 'context/DeviceContext';
 
-import Button from '@material-ui/core/Button';
-import Chip from '@material-ui/core/Chip';
+import Button from '@mui/material/Button';
+import Chip from '@mui/material/Chip';
 
 export default function PropertyValue(props) {
     

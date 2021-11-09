@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import { DeviceStateContext } from 'context/DeviceStateContext';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import IconButton from '@material-ui/core/IconButton';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import IconButton from '@mui/material/IconButton';
 
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import SpeakerIcon from '@material-ui/icons/Speaker';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import SpeakerIcon from '@mui/icons-material/Speaker';
 
 import GridSection from 'components/GridSection';
 import GridItem from 'components/GridItem';

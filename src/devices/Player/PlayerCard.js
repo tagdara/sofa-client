@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { selectPage } from 'store/layoutHelpers'
 
-import { makeStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
-import List from '@material-ui/core/List';
+import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Grid';
+import List from '@mui/material/List';
 import PlayerArtOverlay from './PlayerArtOverlay';
 import PlayerArtOverlayButtons from './PlayerArtOverlayButtons';
 

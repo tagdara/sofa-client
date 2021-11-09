@@ -1,8 +1,9 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import yellow from '@material-ui/core/colors/yellow';
+import { createTheme } from '@mui/material/styles';
+import deepOrange from '@mui/material/colors/deepOrange';
+import yellow from '@mui/material/colors/yellow';
 
-export default createMuiTheme({
+
+const DarkTheme = createTheme({
     direction: "ltr",
     spacing: 8,
     palette: {
@@ -64,6 +65,8 @@ export default createMuiTheme({
             item: "#272727",
             itemHighlight: "#333",
         },
-        type: "dark",
+        mode: "dark",
     }
 });
+
+export default DarkTheme

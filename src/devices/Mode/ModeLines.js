@@ -1,12 +1,12 @@
 import React from 'react';
 import { getModes, deviceByEndpointId, isModeNonControllable } from 'store/deviceHelpers';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 
 const useStyles = makeStyles(theme => {
@@ -43,7 +43,7 @@ export default function ModeLines(props) {
             { Object.keys(modes).map(mode => 
                 <ListItem key={mode}  >
                     <ListItemText primary={mode} key={mode} />
-                    <Select disabled={props.disabled || isModeNonControllable(device,mode)} className={classes.select} displayEmpty 
+                    <Select disabled={props.disabled || isModeNonControllable(device,mode)} className={classes.select} displayEmpty variant={"standard"}
                             value={props.deviceState[mode].mode.value ? props.deviceState[mode].mode.value : ""} 
                             onChange={ (e) => handleModeChoice(e, mode, e.target.value)} >
                         { Object.keys(modes[mode]).map(modechoice => 

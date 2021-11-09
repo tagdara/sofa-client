@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
-import ClearIcon from '@material-ui/icons/Clear';
-import DoneIcon from '@material-ui/icons/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+import DoneIcon from '@mui/icons-material/Done';
 
 import { selectPage } from 'store/layoutHelpers'
 import GridItem from 'components/GridItem';

@@ -4,12 +4,12 @@ import ColorAvatar from 'components/ColorAvatar';
 import useDeviceStateStore from 'store/deviceStateStore'
 import { register, unregister, modeDisplayName } from 'store/deviceHelpers'
 
-import grey from '@material-ui/core/colors/grey';
-import green from '@material-ui/core/colors/green';
-import yellow from '@material-ui/core/colors/yellow';
-import orange from '@material-ui/core/colors/orange';
-import red from '@material-ui/core/colors/red';
-import purple from '@material-ui/core/colors/purple';
+import grey from '@mui/material/colors/grey';
+import green from '@mui/material/colors/green';
+import yellow from '@mui/material/colors/yellow';
+import orange from '@mui/material/colors/orange';
+import red from '@mui/material/colors/red';
+import purple from '@mui/material/colors/purple';
 
 export default function AirQualityChip(props) { 
 

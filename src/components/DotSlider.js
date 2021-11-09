@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Slider from '@material-ui/core/Slider';
+import { makeStyles } from '@mui/styles';
+import Slider from '@mui/material/Slider';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -55,7 +55,6 @@ export default function DotSlider(props) {
         setLevel(lev)
     }
 
-    
     return (
         <div className={props.centered ? classes.centeredHolder : classes.holder} >
             <Slider

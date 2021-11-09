@@ -1,6 +1,6 @@
 import React from 'react';
 import ToggleAvatar from 'components/ToggleAvatar'
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const ListItemAvatar = props => {
     

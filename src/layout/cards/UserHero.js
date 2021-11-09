@@ -1,19 +1,19 @@
 
 import React, { useContext, useState } from 'react';
-import { ThemeContext } from 'theme/SofaTheme';
-import { makeStyles } from '@material-ui/styles';
+import { SofaThemeContext } from 'theme/SofaTheme';
+import { makeStyles } from '@mui/styles';
 
 import CardBase from 'components/CardBase';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import CompareIcon from '@material-ui/icons/Compare';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import CompareIcon from '@mui/icons-material/Compare';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 import AdminFeatures from 'layout/cards/AdminFeatures';
 
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => {
 export default function UserHero(props) {
 
     const classes = useStyles();
-    const { pickUserTheme, colorScheme } = useContext(ThemeContext);
+    const { pickUserTheme, colorScheme } = useContext(SofaThemeContext);
     const firstName = useUserStore( state => state.preferences.firstname)
     const lastName = useUserStore( state => state.preferences.lastname)
     const logout = useLoginStore( state => state.logout )

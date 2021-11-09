@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
 import { LayoutContext } from 'layout/LayoutProvider';
 import { DeviceStateContext } from 'context/DeviceStateContext';

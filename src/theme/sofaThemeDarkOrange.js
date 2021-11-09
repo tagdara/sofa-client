@@ -1,8 +1,8 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import yellow from '@material-ui/core/colors/yellow';
+import { createTheme } from '@mui/material/styles';
+import deepOrange from '@mui/material/colors/deepOrange';
+import yellow from '@mui/material/colors/yellow';
 
-export default createMuiTheme({
+export default createTheme({
     direction: "ltr",
     palette: {
         primary: {

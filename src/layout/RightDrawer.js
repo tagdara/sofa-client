@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import IconButton from '@material-ui/core/IconButton';
-import Drawer from '@material-ui/core/Drawer';
+import IconButton from '@mui/material/IconButton';
+import Drawer from '@mui/material/Drawer';
 
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 import { toggleRightDrawer } from 'store/layoutHelpers';
 import useLayoutStore from 'store/layoutStore';

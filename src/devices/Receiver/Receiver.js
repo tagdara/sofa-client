@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Collapse from '@material-ui/core/Collapse';
-import Switch from '@material-ui/core/Switch';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Collapse from '@mui/material/Collapse';
+import Switch from '@mui/material/Switch';
 
-import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
-import LockIcon from '@material-ui/icons/Lock';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
+import SpeakerGroupIcon from '@mui/icons-material/SpeakerGroup';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
 
-import DotAvatar from 'components/DotSlider'
+import DotSlider from 'components/DotSlider'
 import CardBase from 'components/CardBase'
 import ToggleIconButton from 'components/ToggleIconButton'
 import ModeLines from 'devices/Mode/ModeLines'
@@ -148,14 +148,14 @@ const Receiver = props => {
     return (
         <CardBase>
             <CardLine onClick={ () => setShowDetail(!showDetail)}>
-                <CardLineIcon color={on ? "primary" : undefined } onClick={stopEventPropagation} longPress={() => setVolumePresetMode(!volumePresetMode) } >
+                <CardLineIcon on={on} onClick={stopEventPropagation} longPress={() => setVolumePresetMode(!volumePresetMode) } >
                     <SpeakerGroupIcon />
                 </CardLineIcon>
                 <CardLineText primary={device.friendlyName} secondary={subText()} />
                 <Switch color="primary" checked={ on } onClick={stopEventPropagation} onChange={ handlePowerChange } />
             </CardLine>
             { (showDetail || on ) &&
-                <DotAvatar   label={"Volume"} levelValues={volumePresetMode ? volumePresets : undefined } centered={true}
+                <DotSlider   label={"Volume"} levelValues={volumePresetMode ? volumePresets : undefined } centered={true}
                                     small={true} reverse={true} minWidth={64} 
                                     value={receiver.Speaker.volume.value}
                                     select={handleVolumeChange} 
@@ -174,7 +174,7 @@ const Receiver = props => {
                             onClick={ (e) => handleInputLockModeChoice(e, (receiver.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
                         />
                     }
-                    <Select disabled={!on} 
+                    <Select disabled={!on} variant={"standard"}
                             className={classes.select} displayEmpty 
                             value={receiver.InputController.input.value ? receiver.InputController.input.value : ""} 
                             onChange={ (e) => handleInput(e, e.target.value) } >

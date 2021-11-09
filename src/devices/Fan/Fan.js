@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
-import Switch from '@material-ui/core/Switch';
-import FanIcon from '@material-ui/icons/Toys';
+import Switch from '@mui/material/Switch';
+import FanIcon from 'resources/FanIcon';
 
 import ItemBase from 'components/ItemBase';
 import CardLine from 'components/CardLine'
@@ -37,7 +37,7 @@ const Fan = props => {
     return (    
         <ItemBase itemType={props.itemType}>
             <CardLine inList={props.itemType === "listItem"}>
-                <CardLineIcon color={on ? "primary" : undefined }>
+                <CardLineIcon on={on}>
                     { props.icon ? props.icon : <FanIcon />}
                 </CardLineIcon>
                 <CardLineText primary={ device.friendlyName } />

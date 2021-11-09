@@ -1,12 +1,12 @@
 import React, {useContext} from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Fab from '@material-ui/core/Fab';
+import Fab from '@mui/material/Fab';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import HomeIcon from '@material-ui/icons/Home';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import RefreshIcon from '@material-ui/icons/Refresh';
+import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import RefreshIcon from '@mui/icons-material/Refresh';
 
 import { LayoutContext } from 'layout/LayoutProvider';
 import { NetworkContext } from '../archive/NetworkProvider';

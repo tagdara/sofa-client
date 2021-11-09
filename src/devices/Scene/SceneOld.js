@@ -1,17 +1,17 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListIcon from '@material-ui/icons/List';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import CloseIcon from '@material-ui/icons/Close';
+import ListItem from '@mui/material/ListItem';
+import ListIcon from '@mui/icons-material/List';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import CloseIcon from '@mui/icons-material/Close';
 
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItemText from '@mui/material/ListItemText';
 import ToggleAvatar from 'components/ToggleAvatar';
 import GridItem from "components/GridItem"
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const useStyles = makeStyles({
     

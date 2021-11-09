@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import clsx from  'clsx';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
@@ -12,31 +12,32 @@ const useStyles = makeStyles(theme => {
     
     return {    
         button: {
-            backgroundColor: theme.palette.background.button,
+            backgroundColor: theme.palette.background.button+" !important",
             borderColor: "rgba(255,255,255, 0) !important",
             marginRight: 1,
             padding: "3px 8px",
             "&:hover" : {
-                backgroundColor: theme.palette.background.hoverButton
+                backgroundColor: theme.palette.background.hoverButton+" !important",
             },
         },
         onButton: {
-            backgroundColor: theme.palette.background.selectButton,
+            backgroundColor: theme.palette.background.selectButton+"70 !important",
+            color: theme.palette.primary.contrastText+" !important",
             borderColor: "rgba(255,255,255, 0) !important",
             marginRight: 1,
             padding: "3px 8px",
             "&:hover" : {
-                backgroundColor: theme.palette.background.hoverSelectButton
+                backgroundColor: theme.palette.background.hoverSelectButton+" !important",
             },
  
         },
         partButton: {
-            backgroundColor: theme.palette.background.mediumButton,
+            backgroundColor: theme.palette.background.mediumButton+" !important",
             borderColor: "rgba(255,255,255, 0) !important",
             marginRight: 1,
             padding: "3px 8px",
             "&:hover" : {
-                backgroundColor: theme.palette.background.hoverButton
+                backgroundColor: theme.palette.background.hoverButton+" !important",
             },
         },
     }

@@ -1,10 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import ListItem from '@material-ui/core/ListItem';
+import { makeStyles } from '@mui/styles';
+import ListItem from '@mui/material/ListItem';
 import AutomationInput from './AutomationInput';
-import Grid from '@material-ui/core/Grid';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import Grid from '@mui/material/Grid';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { directives } from 'store/directive'
 import { deviceDirectives }  from 'store/deviceHelpers'
 

@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
 
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import { selectPage } from 'store/layoutHelpers'
 

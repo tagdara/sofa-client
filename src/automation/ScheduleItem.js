@@ -1,8 +1,8 @@
 import React, { memo }  from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ScheduleIcon from '@material-ui/icons/Schedule';
-import TuneIcon from '@material-ui/icons/Tune';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import TuneIcon from '@mui/icons-material/Tune';
 import CardBase from 'components/CardBase'
 import ToggleAvatar from 'components/ToggleAvatar'
 

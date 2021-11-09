@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Switch from '@material-ui/core/Switch';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Switch from '@mui/material/Switch';
 
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import AirplayIcon from '@material-ui/icons/Airplay';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import AirplayIcon from '@mui/icons-material/Airplay';
 
 import ItemBase from 'components/ItemBase'
 import SofaListItem from 'components/SofaListItem'

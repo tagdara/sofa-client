@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect, useContext } from 'react';
 import { DeviceStateContext } from 'context/DeviceStateContext';
-import ListItem from '@material-ui/core/ListItem';
-import Button from '@material-ui/core/Button';
+import ListItem from '@mui/material/ListItem';
+import Button from '@mui/material/Button';
 import GridItem from 'components/GridItem';
 
 

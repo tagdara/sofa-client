@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import IconButton from '@material-ui/core/IconButton';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import WifiTetheringIcon from '@material-ui/icons/WifiTethering';
+import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
+import WifiTetheringIcon from '@mui/icons-material/WifiTethering';
 
 const useStyles = makeStyles(theme => {
     return {        

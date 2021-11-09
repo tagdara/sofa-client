@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
+import ListItem from '@mui/material/ListItem';
 
 const useStyles = makeStyles(theme => {
     return {        

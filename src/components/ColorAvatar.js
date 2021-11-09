@@ -1,10 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
 
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
 
 const useStyles = makeStyles(theme => {
     

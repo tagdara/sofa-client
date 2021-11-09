@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
 
-import TvIcon from '@material-ui/icons/Tv';
+import TvIcon from '@mui/icons-material/Tv';
 
 import ToggleAvatar from 'components/ToggleAvatar';
 import ItemBase from "components/ItemBase";

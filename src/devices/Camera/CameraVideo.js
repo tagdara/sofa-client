@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 
-import CropOriginalIcon from '@material-ui/icons/CropOriginal';
+import CropOriginalIcon from '@mui/icons-material/CropOriginal';
 
 import ReactHLS from 'react-hls-player';
 

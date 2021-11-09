@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 
 const useStyles = makeStyles(theme => {
     return {        

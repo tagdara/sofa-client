@@ -1,16 +1,16 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@mui/styles';
+import Grid from '@mui/material/Grid';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import TextField from  '@material-ui/core/TextField';
-import EventIcon from '@material-ui/icons/Event';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
+import TextField from  '@mui/material/TextField';
+import EventIcon from '@mui/icons-material/Event';
 
 const useStyles = makeStyles({
     shortLabel: {

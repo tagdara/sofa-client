@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import ListIcon from '@material-ui/icons/List';
-import Button from "@material-ui/core/Button"
-import Avatar from "@material-ui/core/Avatar"
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { makeStyles } from '@mui/styles';
+import ListIcon from '@mui/icons-material/List';
+import Button from "@mui/material/Button"
+import Avatar from "@mui/material/Avatar"
+import CircularProgress from '@mui/material/CircularProgress';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import useDeviceStore from 'store/deviceStore'
@@ -112,7 +112,9 @@ const SceneButton = props => {
 
 
     return (
-        <Button fullWidth variant={"outlined"} color={active ? "primary" : undefined } startIcon={startIcon()} 
+        <Button fullWidth variant={"outlined"} 
+                sx={{ borderColor: active ? 'primary.main' : 'action.disabled', color: active ? 'primary.main' : 'action.disabled' }} 
+                startIcon={startIcon()} 
                 className={classes.button} onClick={runScene}>
             { name }
         </Button>

@@ -1,8 +1,8 @@
 import React from 'react';
 import CardBase from 'components/CardBase';
-import DialpadIcon from '@material-ui/icons/Dialpad';
-import green from '@material-ui/core/colors/green';
-import red from '@material-ui/core/colors/red';
+import DialpadIcon from '@mui/icons-material/Dialpad';
+import green from '@mui/material/colors/green';
+import red from '@mui/material/colors/red';
 
 import CardLine from 'components/CardLine';
 import CardLineText from 'components/CardLineText';

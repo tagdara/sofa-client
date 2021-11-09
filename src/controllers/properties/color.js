@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
 import { SketchPicker } from 'react-color'
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
 
 const useStyles = makeStyles({
         

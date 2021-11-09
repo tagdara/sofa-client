@@ -10,7 +10,7 @@ import LightChristmasButton from 'devices/Light/LightChristmasButton';
 import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
 import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
-import green from '@material-ui/core/colors/green';
+import green from '@mui/material/colors/green';
 
 const LightSummary = props => {
     const lights = endpointIdsByDisplayCategory('LIGHT')

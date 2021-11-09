@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import TextField from '@mui/material/TextField';
 import debounce from 'lodash/debounce';
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const useStyles = makeStyles(theme => {
     return {

@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import lightTheme from './sofaThemeLight';
-import darkTheme from './sofaThemeDark';
-import { ThemeProvider } from '@material-ui/styles';
-import CssBaseline from "@material-ui/core/CssBaseline";
+import React, { useState, useEffect, createContext  } from 'react';
+import LightTheme from 'theme/sofaThemeLight';
+import DarkTheme from 'theme/sofaThemeDark';
 import useUserStore from 'store/userStore'
 
-export const ThemeContext = React.createContext();
+export const SofaThemeContext = createContext();
 
 export default function SofaThemeProvider(props) {
     
@@ -19,10 +17,10 @@ export default function SofaThemeProvider(props) {
         if (pref === "dark") {
         //if (userTheme==='dark') {
             setColorScheme('dark')
-            setSofaTheme(darkTheme)
+            setSofaTheme(DarkTheme)
         } else {
             setColorScheme('light')
-            setSofaTheme(lightTheme)
+            setSofaTheme(LightTheme)
         }
         
     }, [userTheme]);
@@ -45,9 +43,9 @@ export default function SofaThemeProvider(props) {
         var d = new Date();
         var n = d.getHours();
         if (n>17 || n<8) {
-            return darkTheme
+            return DarkTheme
         } else {
-            return lightTheme
+            return LightTheme
         }
     }
 
@@ -61,19 +59,22 @@ export default function SofaThemeProvider(props) {
         
         if (themeName==='dark') {
             setColorScheme('dark')
-            setSofaTheme(darkTheme)
-            return darkTheme
+            setSofaTheme(DarkTheme)
+            return DarkTheme
         } else if (themeName==='light') {
             setColorScheme('light')
-            setSofaTheme(lightTheme)
-            return lightTheme
+            setSofaTheme(LightTheme)
+            return LightTheme
         }
         return getTheme()
     }
 
+    const theme = getTheme(colorScheme)
+
     return (
-        <ThemeContext.Provider
+        <SofaThemeContext.Provider
             value={{
+                theme: theme,
                 colorScheme: colorScheme,
                 sofaTheme: sofaTheme,
                 applyTheme: applyTheme,
@@ -81,10 +82,7 @@ export default function SofaThemeProvider(props) {
                 pickUserTheme: pickUserTheme,
             }}
         >
-            <ThemeProvider theme={getTheme(colorScheme)}>
-                <CssBaseline />
                 { props.children }
-            </ThemeProvider>
-        </ThemeContext.Provider>
+        </SofaThemeContext.Provider>
     );
 }

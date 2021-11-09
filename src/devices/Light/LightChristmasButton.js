@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 import ChristmasTreeIcon from 'resources/ChristmasTreeIcon';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'

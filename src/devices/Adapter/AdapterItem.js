@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 
-import ReplayIcon from '@material-ui/icons/Replay';
-import ClearIcon from '@material-ui/icons/Clear';
+import ReplayIcon from '@mui/icons-material/Replay';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import Moment from 'react-moment';
 import 'moment-timezone';

@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Collapse from '@material-ui/core/Collapse';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Collapse from '@mui/material/Collapse';
 
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import SofaAvatarSlider from 'components//SofaAvatarSlider'
 import CardBase from 'components/CardBase'
+import CardLineSpacer from 'components/CardLineSpacer'
 import ModeLines from 'devices/Mode/ModeLines'
 import ToggleAvatar from 'components/ToggleAvatar';
 import TemperatureSensor from 'devices/Thermostat/TemperatureSensor'
@@ -73,7 +74,7 @@ const useStyles = makeStyles(theme => {
         marginRight: 4,
     },
     modeButton: {
-        minWidth: 36,
+        minWidth: 48,
         padding: "4px 8px",
         backgroundColor: theme.palette.background.button,
         borderColor: "rgba(255,255,255, 0) !important",
@@ -83,10 +84,10 @@ const useStyles = makeStyles(theme => {
         },
     },
     selectedButton: {
-        minWidth: 36,
+        minWidth: 48,
         padding: "4px 8px",
-        backgroundColor: theme.palette.background.selectButton,
-        color: theme.palette.primary.contrastText,
+        backgroundColor: theme.palette.background.selectButton+"50 !important",
+        color: theme.palette.primary.contrastText+" !important",
         borderColor: "rgba(255,255,255, 0) !important",
         marginRight: 1,
         "&:hover" : {
@@ -95,8 +96,7 @@ const useStyles = makeStyles(theme => {
 
     },
     buttonGroup: {
-        display: "flex",
-        flexGrow: 1,
+        backgroundColor: theme.palette.background.button+" !important",
     },
     detail: {
         width: "100%",
@@ -213,6 +213,7 @@ const Thermostat = props => {
                             </Button>
                         ))}
                     </ButtonGroup>
+                    <CardLineSpacer />
                     { thermostat.ThermostatController.thermostatMode.value!=='OFF' &&
                         <ToggleAvatar small={true} onClick={() => setShowDetail(!showDetail) } reverse={true} 
                             avatarState={thermostat.ThermostatController.thermostatMode.value}>

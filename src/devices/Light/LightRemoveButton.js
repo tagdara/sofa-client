@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ClearIcon from '@material-ui/icons/Clear';
+import ClearIcon from '@mui/icons-material/Clear';
 import SofaListItem from "components/SofaListItem";
 
 const useStyles = makeStyles(theme => {

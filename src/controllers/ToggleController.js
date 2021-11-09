@@ -1,8 +1,8 @@
 import React from 'react';
 
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Switch from '@material-ui/core/Switch';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Switch from '@mui/material/Switch';
 
 
 const ToggleController = props => {

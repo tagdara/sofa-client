@@ -1,28 +1,28 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
 
 import DeviceExpandActions from './deviceExpandActions'
 import DeviceExpandProperties from './deviceExpandProperties'
 import DeviceExpandEvents from './deviceExpandEvents'
 
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import Collapse from '@material-ui/core/Collapse';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import Collapse from '@mui/material/Collapse';
 
 import GridItem from 'components/GridItem';
 
-import DataUsageIcon from '@material-ui/icons/DataUsage';
-import DeveloperBoardIcon from '@material-ui/icons/DeveloperBoard';
-import SpeakerIcon from '@material-ui/icons/Speaker';
-import SpeakerGroupIcon from '@material-ui/icons/SpeakerGroup';
-import TouchAppIcon from '@material-ui/icons/TouchApp';
-import TuneIcon from '@material-ui/icons/Tune';
-import ListIcon from '@material-ui/icons/List';
-import TvIcon from '@material-ui/icons/Tv';
+import DataUsageIcon from '@mui/icons-material/DataUsage';
+import DeveloperBoardIcon from '@mui/icons-material/DeveloperBoard';
+import SpeakerIcon from '@mui/icons-material/Speaker';
+import SpeakerGroupIcon from '@mui/icons-material/SpeakerGroup';
+import TouchAppIcon from '@mui/icons-material/TouchApp';
+import TuneIcon from '@mui/icons-material/Tune';
+import ListIcon from '@mui/icons-material/List';
+import TvIcon from '@mui/icons-material/Tv';
 import LightbulbOutlineIcon from '../LightbulbOutline';
 
 

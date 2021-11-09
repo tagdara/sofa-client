@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Dialog from '@material-ui/core/Dialog';
-import Paper from '@material-ui/core/Paper';
-import Fab from '@material-ui/core/Fab';
+import Dialog from '@mui/material/Dialog';
+import Paper from '@mui/material/Paper';
+import Fab from '@mui/material/Fab';
 
-import ScreenRotationIcon from '@material-ui/icons/ScreenRotation';
-import CloseIcon from '@material-ui/icons/Close';
-import TimerIcon from '@material-ui/icons/Timer';
+import ScreenRotationIcon from '@mui/icons-material/ScreenRotation';
+import CloseIcon from '@mui/icons-material/Close';
+import TimerIcon from '@mui/icons-material/Timer';
 
 import CameraImage from 'devices/Camera/CameraImage';
 import CameraVideo from 'devices/Camera/CameraVideo';

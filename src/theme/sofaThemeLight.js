@@ -1,9 +1,9 @@
-import { createMuiTheme } from '@material-ui/core/styles';
-import deepOrange from '@material-ui/core/colors/deepOrange';
-import yellow from '@material-ui/core/colors/yellow';
 
+import { createTheme } from '@mui/material/styles';
+import deepOrange from '@mui/material/colors/deepOrange';
+import yellow from '@mui/material/colors/yellow';
 
-export default createMuiTheme({
+const LightTheme = createTheme({
     palette: {
         primary: {
             light: deepOrange[300],
@@ -51,7 +51,8 @@ export default createMuiTheme({
             item: "#eee",
             itemHighlight: "#f4f4f4",
         },
-
-        type: "light"
+        mode: "light"
     }
 })
+
+export default LightTheme

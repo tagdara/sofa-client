@@ -1,8 +1,8 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import CloudIcon from '@material-ui/icons/Cloud';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Fab from '@material-ui/core/Fab';
+import { makeStyles } from '@mui/styles';
+import CloudIcon from '@mui/icons-material/Cloud';
+import CircularProgress from '@mui/material/CircularProgress';
+import Fab from '@mui/material/Fab';
 import { reloadPWA } from 'store/userHelpers'
 
 const useStyles = makeStyles(theme => {

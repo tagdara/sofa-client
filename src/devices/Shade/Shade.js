@@ -1,12 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import RemoveIcon from '@material-ui/icons/Remove';
-import TonalityIcon from '@material-ui/icons/Tonality';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import RemoveIcon from '@mui/icons-material/Remove';
+import TonalityIcon from '@mui/icons-material/Tonality';
 import ItemBase from 'components/ItemBase';
 import CardLine from 'components/CardLine'
 import CardLineText from 'components/CardLineText'
@@ -16,13 +16,16 @@ import { directive } from 'store/directive'
 import { deviceByEndpointId } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
-    return {      
-        button: {
-            backgroundColor: theme.palette.background.button,
+    return {    
+        button: {        
+            backgroundColor: theme.palette.background.button+" !important",
             borderColor: "rgba(255,255,255, 0) !important",
             marginRight: 1,
             padding: "3px 8px"
         },
+        buttonRoot: {
+            backgroundColor: theme.palette.action.disabled,
+        }
     }
 })
 
@@ -38,11 +41,11 @@ const Shade = props => {
     return ( 
         <ItemBase itemType={props.itemType}>
             <CardLine inList={props.itemType === "listItem"}>
-                <CardLineIcon>
+                <CardLineIcon on={false}>
                     <TonalityIcon />
                 </CardLineIcon>
                 <CardLineText primary={ device.friendlyName } />
-                <ButtonGroup className={classes.buttonGroup} size="small" variant="text"  >
+                <ButtonGroup className={classes.buttonGroup} size="small" variant="text" >
                     <Button className={classes.button} onClick={ () => handlePress('Position.Down') }><ExpandMoreIcon /></Button>
                     <Button className={classes.button} onClick={ () => handlePress('Position.Stop') }><RemoveIcon /></Button>
                     <Button className={classes.button} onClick={ () => handlePress('Position.Up') }><ExpandLessIcon /></Button>

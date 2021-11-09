@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
 import { directives } from 'store/directive'
 import { devicesByDisplayCategory } from 'store/deviceHelpers';
-import List from '@material-ui/core/List';
-import SearchIcon from '@material-ui/icons/Search';
+import List from '@mui/material/List';
+import SearchIcon from '@mui/icons-material/Search';
 
 import GridSearch from 'components/GridSearch';
 import Device from 'deviceSelect/Device';
 import CompositeDevice from 'devices/CompositeDevice';
 import SofaDialog from "dialogs/SofaDialog";
 
-import { Scrollbar } from 'react-scrollbars-custom';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { Scrollbar } from 'react-custom-scrollbars';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const useStyles = makeStyles({
     xscroller: {

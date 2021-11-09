@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { directive  } from 'store/directive';
 
 import Moment from 'react-moment';
-import IconButton from '@material-ui/core/IconButton';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Typography from '@material-ui/core/Typography';
+import IconButton from '@mui/material/IconButton';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Typography from '@mui/material/Typography';
 
-import LowPriorityIcon from '@material-ui/icons/LowPriority';
-import PlaylistPlayIcon from '@material-ui/icons/PlaylistPlay';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import LowPriorityIcon from '@mui/icons-material/LowPriority';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;

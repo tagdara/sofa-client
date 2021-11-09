@@ -1,8 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => {
             backgroundColor: theme.palette.layer.card,
             width: "100%",
             alignItems: "flex-start",
-            borderRadius: 8,
+            borderRadius: "16px !important",
         },
         border: {
             borderWidth: "thin",
@@ -94,6 +94,7 @@ const useStyles = makeStyles(theme => {
         },
         
         paperGrid: {
+            position: "relative",
             '& > :first-child': {
                 paddingTop: 0,
             },

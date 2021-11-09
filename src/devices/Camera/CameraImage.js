@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { useInterval } from 'components/useInterval';
 import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'

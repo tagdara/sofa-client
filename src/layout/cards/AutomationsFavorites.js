@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 import AutomationAll from 'automation/AutomationAll';
 import AutomationItem from 'automation/AutomationItem';

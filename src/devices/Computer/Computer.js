@@ -1,13 +1,13 @@
 import React, {useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 
-import MouseIcon from '@material-ui/icons/Mouse';
+import MouseIcon from '@mui/icons-material/Mouse';
 import WindowsIcon from 'resources/WindowsIcon';
-import LockIcon from '@material-ui/icons/Lock';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
-import NightsStayIcon from '@material-ui/icons/NightsStay';
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+import NightsStayIcon from '@mui/icons-material/NightsStay';
 
 import SofaListItem from 'components/SofaListItem';
 import CardBase from 'components/CardBase';

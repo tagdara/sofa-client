@@ -1,8 +1,8 @@
 import React from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 
-import CommentIcon from '@material-ui/icons/Comment';
+import CommentIcon from '@mui/icons-material/Comment';
 import ListItem from 'components/NewListItem';
 import ListItemAvatar from 'components/NewListItemAvatar';
 import ListItemText from 'components/NewListItemText';

@@ -1,8 +1,8 @@
 import React from 'react';
-import { makeStyles, withStyles} from '@material-ui/styles';
+import { makeStyles, withStyles} from '@mui/styles';
 
-import Avatar from '@material-ui/core/Avatar';
-import Badge from '@material-ui/core/Badge';
+import Avatar from '@mui/material/Avatar';
+import Badge from '@mui/material/Badge';
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 const useStyles = makeStyles(theme => {

@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import IconButton from '@material-ui/core/IconButton';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import IconButton from '@mui/material/IconButton';
 
-import RoomIcon from '@material-ui/icons/Room';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+import RoomIcon from '@mui/icons-material/Room';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import { DeviceContext } from 'context/DeviceContext';
 

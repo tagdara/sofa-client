@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect }from 'react';
 import { DeviceStateContext } from 'context/DeviceStateContext';
-import ListItem from '@material-ui/core/ListItem';
-import { makeStyles } from '@material-ui/styles';
+import ListItem from '@mui/material/ListItem';
+import { makeStyles } from '@mui/styles';
 
 import CardBase from 'components/CardBase'
 import SofaListItem from 'components/SofaListItem';

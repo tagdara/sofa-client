@@ -1,8 +1,8 @@
 import React from "react";
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
-import Fade from '@material-ui/core/Fade';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+//import Fade from '@mui/material/Fade';
 
 import ToggleAvatar from 'components/ToggleAvatar';
 import CardBase from 'components/CardBase';
@@ -56,21 +56,32 @@ export default function PlaceholderCard(props){
     
     const classes = useStyles();
     
+    //function xisInset(children) {
+    //    if (props.inset) {
+    //        return <Fade in={true}> {children} </Fade>
+    //    } else {
+    //        return  <Fade in={true}>
+    //                <CardBase wide={true} inset={props.inset} >
+    //                    { children }
+    //                </CardBase>
+    //                </Fade>
+    //    }
+    //}
+
     function isInset(children) {
         if (props.inset) {
-            return <Fade in={true}> {children} </Fade>
+            return <div>{children} </div>
         } else {
-            return  <Fade in={true}>
-                    <CardBase wide={true} inset={props.inset} >
+            return  <CardBase wide={true} inset={props.inset} >
                         { children }
                     </CardBase>
-                    </Fade>
         }
     }
-    
+
+
     return (
         isInset(
-            <>
+            <div>
             { [...Array(props.count).keys()].map( index =>
                 <div key={index} className={props.inset ? classes.insetPlace : classes.place}>
                         <ToggleAvatar avatarState={ "off" } noback={true} >
@@ -82,7 +93,7 @@ export default function PlaceholderCard(props){
                     </div>
                 </div>
             )}
-            </>
+            </div>
         )
     );
 

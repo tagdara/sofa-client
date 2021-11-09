@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
-import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
+import UnfoldMoreIcon from '@mui/icons-material/UnfoldMore';
 
 import useLayoutStore from 'store/layoutStore'
 import AutomationAction from "automation/AutomationAction"

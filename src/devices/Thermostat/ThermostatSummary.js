@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 
 import { LayoutContext } from 'layout/LayoutProvider';
 import { DeviceStateContext } from 'context/DeviceStateContext';

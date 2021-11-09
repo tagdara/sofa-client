@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListIcon from '@material-ui/icons/List';
-import ListItemIcon from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import TextField from '@material-ui/core/TextField';
+import ListItem from '@mui/material/ListItem';
+import ListIcon from '@mui/icons-material/List';
+import ListItemIcon from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import TextField from '@mui/material/TextField';
 
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 
 import ToggleAvatar from 'components/ToggleAvatar';
 import GridItem from "components/GridItem"

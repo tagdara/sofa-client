@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 
 import React from 'react';
-import { SvgIcon } from '@material-ui/core';
+import { SvgIcon } from '@mui/material';
 import { ReactComponent as Windows } from './Windows.svg';
 
 function WindowsIcon(props) {

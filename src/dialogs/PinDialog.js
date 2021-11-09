@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import DialogContent from '@material-ui/core/DialogContent';
-import Button from '@material-ui/core/Button';
-import CheckIcon from '@material-ui/icons/Check';
-import CloseIcon from '@material-ui/icons/Close';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
+import DialogContent from '@mui/material/DialogContent';
+import Button from '@mui/material/Button';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import TextField from '@mui/material/TextField';
+import Grid from '@mui/material/Grid';
 
 import SecurityCamera from 'devices/Camera/SecurityCamera'
 import SofaDialog from "dialogs/SofaDialog"

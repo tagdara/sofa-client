@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import ListItem from '@material-ui/core/ListItem';
+import ListItem from '@mui/material/ListItem';
 import SofaAvatarSlider from 'components/SofaAvatarSlider'
 import { directive } from 'store/directive'
 import { deviceByEndpointId } from 'store/deviceHelpers'

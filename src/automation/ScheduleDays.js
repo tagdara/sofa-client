@@ -1,5 +1,5 @@
 import React from 'react';
-import ListItem from '@material-ui/core/ListItem';
+import ListItem from '@mui/material/ListItem';
 
 import ToggleButton from 'components/ToggleButton';
 

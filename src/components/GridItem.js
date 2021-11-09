@@ -1,9 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import classNames from 'classnames';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import List from '@material-ui/core/List'
+import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import List from '@mui/material/List'
 
 const useStyles = makeStyles(theme => {
     return {

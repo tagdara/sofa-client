@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
-import VerifiedUserIcon from '@material-ui/icons/VerifiedUser';
-import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 
 import CardLine from 'components/CardLine';
 import CardLineText from 'components/CardLineText';
@@ -9,8 +9,8 @@ import ColorAvatar from 'components/ColorAvatar';
 
 import PlaceholderCard from 'layout/PlaceholderCard';
 import useDeviceStateStore from 'store/deviceStateStore'
-import green from '@material-ui/core/colors/green';
-import red from '@material-ui/core/colors/red';
+import green from '@mui/material/colors/green';
+import red from '@mui/material/colors/red';
 
 import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
 

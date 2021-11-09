@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { DeviceStateContext } from 'context/DeviceStateContext';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import List from '@material-ui/core/List';
+import List from '@mui/material/List';
 
 import SofaCategoryFilter from './sofaCategoryFilter'
 import DeviceExpand from './deviceExpand'

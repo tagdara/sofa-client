@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import useLayoutStore from 'store/layoutStore'
 import classNames from 'classnames';
 
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
 
 const useStyles = makeStyles(theme => {
     return {

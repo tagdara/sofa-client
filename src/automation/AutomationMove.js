@@ -1,11 +1,11 @@
 import React from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import IconButton from '@mui/material/IconButton';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 
-import CloseIcon from '@material-ui/icons/Close';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CloseIcon from '@mui/icons-material/Close';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 
 export default function AutomationMove(props) {

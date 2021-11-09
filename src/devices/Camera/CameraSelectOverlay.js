@@ -1,10 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import IconButton from '@material-ui/core/IconButton';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import VideocamIcon from '@material-ui/icons/Videocam';
+import { makeStyles } from '@mui/styles';
+import IconButton from '@mui/material/IconButton';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import VideocamIcon from '@mui/icons-material/Videocam';
 import CameraQR from 'devices/Camera/CameraQR';
 
 import { selectPage } from 'store/layoutHelpers'
@@ -13,22 +13,22 @@ const useStyles = makeStyles(theme => {
     
     return {    
         nextbutton: {
-            position: "absolute",
+            position: "absolute !important",
             top: "40%",
             right: 8,
         },
         prevbutton: {
-            position: "absolute",
+            position: "absolute !important",
             top: "40%",
             left: 8,
         },
         gridbutton: {
-            position: "absolute",
+            position: "absolute !important",
             right: 8,
             bottom: 8,
         },
         videoButton: {
-            position: "absolute",
+            position: "absolute !important",
             right: 8,
             top: 8,
         },

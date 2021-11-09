@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { LayoutContext } from 'layout/LayoutProvider';
 
-import IconButton from '@material-ui/core/IconButton';
-import Videocam from '@material-ui/icons/Videocam';
+import IconButton from '@mui/material/IconButton';
+import Videocam from '@mui/icons-material/Videocam';
 
 
 export default function CameraSummary(props) {

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { getStack, renderSuspenseModule } from 'store/layoutHelpers';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
 import ErrorBoundary from 'error/ErrorBoundary';
 import StackMoreButton from 'layout/StackMoreButton';
@@ -12,10 +12,13 @@ import StackPicker from 'layout/StackPicker'
 const useStyles = makeStyles(theme => {
     return {
         stack: {
+            paddingTop: "env(safe-area-inset-top) !important",
+            paddingLeft: "0 !important",
             overflowX: "hidden",
             overflowY: "hidden",
             alignContent: "start",
-            padding: "4px !important",
+            //padding: "2px",
+            boxSizing: "border-box",
             //border: "1px solid "+ theme.palette.layer.section,
             //backgroundColor: theme.palette.layer.section,
             //display: "flex",

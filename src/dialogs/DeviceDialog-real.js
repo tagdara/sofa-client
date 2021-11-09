@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import DialogContent from '@material-ui/core/DialogContent';
+import DialogContent from '@mui/material/DialogContent';
 
 import { DeviceContext } from 'context/DeviceContext';
 

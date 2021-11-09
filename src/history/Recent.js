@@ -1,14 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 import Moment from 'react-moment';
 import 'moment-timezone';
 import ToggleAvatar from 'components/ToggleAvatar';
-import ListItem from '@material-ui/core/ListItem';
-import Typography from '@material-ui/core/Typography';
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItem from '@mui/material/ListItem';
+import Typography from '@mui/material/Typography';
+import ListItemText from '@mui/material/ListItemText';
 import CardBase from 'components/CardBase';
-import AvTimerIcon from '@material-ui/icons/AvTimer';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
 import moment from 'moment'
 
 const useStyles = makeStyles(theme => {

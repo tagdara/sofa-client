@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import DesktopWindowsIcon from '@material-ui/icons/DesktopWindows';
+import DesktopWindowsIcon from '@mui/icons-material/DesktopWindows';
 import SofaListItem from 'components/SofaListItem';
 
 import useDeviceStateStore from 'store/deviceStateStore'

@@ -3,16 +3,16 @@ import { useState, useEffect } from 'react';
 import { DeviceContext } from 'context/DeviceContext';
 import { LayoutContext } from 'layout/LayoutProvider';
 
-import {makeStyles, withStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
-import TextField from '@material-ui/core/TextField';
-import ListItem from '@material-ui/core/ListItem';
+import {makeStyles, withStyles } from '@mui/styles';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import ListItem from '@mui/material/ListItem';
 import GridItem from "components/GridItem"
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import InputBase from '@material-ui/core/InputBase';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import InputBase from '@mui/material/InputBase';
 
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 
 import moment from 'moment';
 import 'moment-timezone';

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import Switch from '@material-ui/core/Switch';
-import TuneIcon from '@material-ui/icons/Tune';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import Switch from '@mui/material/Switch';
+import TuneIcon from '@mui/icons-material/Tune';
 
 import GridItem from 'components/GridItem';
 import ToggleAvatar from 'components/ToggleAvatar';

@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import List from '@material-ui/core/List';
+import List from '@mui/material/List';
 
 import LightSliderBrightness from "devices/Light/LightSliderBrightness";
 import LightSliderTemperature from "devices/Light/LightSliderTemperature";

@@ -3,8 +3,8 @@ import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 
-import ClearIcon from '@material-ui/icons/Clear';
-import DoneIcon from '@material-ui/icons/Done';
+import ClearIcon from '@mui/icons-material/Clear';
+import DoneIcon from '@mui/icons-material/Done';
 import ButtonItem from "components/ButtonItem"
 
 

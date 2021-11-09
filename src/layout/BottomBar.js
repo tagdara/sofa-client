@@ -1,14 +1,14 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@mui/styles';
 
-import BottomNavigation from '@material-ui/core/BottomNavigation';
-import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 
-import MenuIcon from '@material-ui/icons/Menu';
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
-import SecurityIcon from '@material-ui/icons/Security';
-import ThermostatIcon from '@material-ui/icons/DataUsage';
+import MenuIcon from '@mui/icons-material/Menu';
+import QueueMusicIcon from '@mui/icons-material/QueueMusic';
+import SecurityIcon from '@mui/icons-material/Security';
+import ThermostatIcon from '@mui/icons-material/DataUsage';
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 

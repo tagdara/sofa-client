@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 
 import AutomationSave from "automation/AutomationSave"
 import AutomationHeader from "automation/AutomationHeader"

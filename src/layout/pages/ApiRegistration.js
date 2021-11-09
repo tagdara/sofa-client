@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import SyncAltIcon from '@material-ui/icons/SyncAlt';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
 
 import GridSection from 'components/GridSection';
 import GridItem from 'components/GridItem';

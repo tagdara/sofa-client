@@ -1,22 +1,22 @@
 import React, { memo }  from 'react';
-import { makeStyles, withStyles  } from '@material-ui/styles';
+import { makeStyles, withStyles  } from '@mui/styles';
 
-import Grid from '@material-ui/core/Grid';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import TextField from '@material-ui/core/TextField';
+import Grid from '@mui/material/Grid';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import TextField from '@mui/material/TextField';
 
-import AnnouncementIcon from '@material-ui/icons/Announcement';
-import CloseIcon from '@material-ui/icons/Close';
+import AnnouncementIcon from '@mui/icons-material/Announcement';
+import CloseIcon from '@mui/icons-material/Close';
 
 import DeviceIcon from '../DeviceIcon';
 import OperatorButton from "./operatorButton";
 import GridItem from 'components/GridItem';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import InputBase from '@material-ui/core/InputBase';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import InputBase from '@mui/material/InputBase';
 
 
 const useStyles = makeStyles({

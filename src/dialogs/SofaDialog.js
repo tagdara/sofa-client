@@ -1,9 +1,9 @@
 import React from "react";
-import { makeStyles } from '@material-ui/styles';
-import withMobileDialog from '@material-ui/core/withMobileDialog';
+import { makeStyles } from '@mui/styles';
+//import withMobileDialog from '@mui/material/withMobileDialog';
 
-import Dialog from '@material-ui/core/Dialog';
-import Slide from  '@material-ui/core/Slide';
+import Dialog from '@mui/material/Dialog';
+import Slide from  '@mui/material/Slide';
 const useStyles = makeStyles({
 
     dialogPaperFull: {
@@ -52,4 +52,4 @@ SofaDialog.defaultProps = {
     fullHeight: true,
 }
 
-export default withMobileDialog()(SofaDialog);
+export default SofaDialog;

@@ -1,8 +1,8 @@
 import React, {useState, useEffect } from 'react';
 
-import AddIcon from '@material-ui/icons/Add';
-import EditIcon from '@material-ui/icons/Edit';
-import RemoveIcon from '@material-ui/icons/Remove';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import RemoveIcon from '@mui/icons-material/Remove';
 
 import { selectPage } from 'store/layoutHelpers'
 import GridSection from 'components/GridSection';

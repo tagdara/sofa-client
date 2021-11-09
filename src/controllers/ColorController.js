@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Button from '@material-ui/core/Button';
-import LensIcon from '@material-ui/icons/Lens';
+import Button from '@mui/material/Button';
+import LensIcon from '@mui/icons-material/Lens';
 
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
 import { HuePicker } from 'react-color';
 
 const useStyles = makeStyles({

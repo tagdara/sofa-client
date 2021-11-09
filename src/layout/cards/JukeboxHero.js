@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
-import SpeakerIcon from '@material-ui/icons/Speaker';
+import QueueMusicIcon from '@mui/icons-material/QueueMusic';
+import SpeakerIcon from '@mui/icons-material/Speaker';
 
 import ItemBase from 'components/ItemBase';
 import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'devices/Player/PlayerArtOverlayButtons';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import SofaListItem from 'components/SofaListItem';
+
 import SpeakerList from 'devices/Speaker/SpeakerList';
 import Spacer from 'components/Spacer';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
 import { directive } from 'store/directive'
+
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
+import ColorAvatar from 'components/ColorAvatar'
 
 const JukeboxHero = props => {
     
@@ -83,30 +87,28 @@ const JukeboxHero = props => {
     return (
         <ItemBase>
             { (isIdle() && !showIdle) ?
-                <SofaListItem   avatar={ jukeboxState.MusicController.art.value ? 
-                                         <img height={64} width={64} src={serverurl + jukeboxState.MusicController.art.value} alt={"idle"} />
-                                         : 'X' } 
-                                avatarClick={() => setShowIdle(true)} 
-                                avatarState={ 'off' }
-                                primary={'Jukebox is idle'}
-                                secondaryActions={
-                                    <>
-                                        <IconButton size={"small"} onClick={toggleSpeakerFilter}>
-                                            <SpeakerIcon />
-                                        </IconButton>
-                                        <Spacer width={8} />
-                                        <IconButton size={"small"} onClick={openJukebox}>
-                                            <QueueMusicIcon />
-                                        </IconButton>
-                                    </>
-                                }
-                />            
+                <CardLine onClick={() => setShowIdle(true)}>
+                    <ColorAvatar>{ jukeboxState.MusicController.art.value ? 
+                                    <img height={64} width={64} src={serverurl + jukeboxState.MusicController.art.value} alt={"idle"} />
+                                    : 'X' } 
+                    </ColorAvatar>
+                    <CardLineText primary={'Jukebox is idle'} />
+                    <IconButton size={"small"} onClick={toggleSpeakerFilter}>
+                        <SpeakerIcon />
+                    </IconButton>
+                    <Spacer width={8} />
+                    <IconButton size={"small"} onClick={openJukebox}>
+                        <QueueMusicIcon />
+                    </IconButton>
+                </CardLine>    
             :
+                <CardLine>
                     <PlayerArtOverlay   deviceState={jukeboxState} cover={openJukebox} setMini={() => setShowIdle(false)} >
                         <PlayerArtOverlayButtons    min={props.setMini} cover={handleCover} stop={handleStop} 
                                                     playPause={handlePlayPause} skip={handleSkip} jukebox={true} toggleSpeakerFilter={ toggleSpeakerFilter }
                                                     playbackState={ jukeboxState.MusicController.playbackState.value ? jukeboxState.MusicController.playbackState.value : 'Unknown'} />
                     </PlayerArtOverlay>
+                </CardLine>
             }
             <SpeakerList filterOff={filterOff} />
 

@@ -1,15 +1,15 @@
 import React, { useContext } from 'react';
 import { DeviceContext } from 'context/DeviceContext';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 import CardBase from 'components/CardBase';
 import DeviceIcon from '../DeviceIcon';
 import CompactPropertyValue from './CompactPropertyValue';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import CropFreeIcon from '@material-ui/icons/CropFree';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import CropFreeIcon from '@mui/icons-material/CropFree';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const useStyles = makeStyles({
 

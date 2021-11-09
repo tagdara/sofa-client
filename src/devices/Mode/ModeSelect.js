@@ -1,8 +1,8 @@
 import React from 'react';
 import { getModes, isModeNonControllable } from 'store/deviceHelpers';
-import { makeStyles } from '@material-ui/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import { makeStyles } from '@mui/styles';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
 
 const useStyles = makeStyles(theme => {

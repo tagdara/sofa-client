@@ -1,7 +1,10 @@
-import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import React, { useEffect, useContext } from 'react';
+import { makeStyles } from '@mui/styles';
+import { SofaThemeContext } from 'theme/SofaTheme';
+import { ThemeProvider } from "@mui/material/styles";
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
+import CssBaseline from "@mui/material/CssBaseline";
 
 import { Scrollbars } from 'react-custom-scrollbars';
 import BottomBar from 'layout/BottomBar';
@@ -32,15 +35,16 @@ const useStyles = makeStyles(theme => {
         },
         mobileControlArea: {
             //minHeight: "100%",
-            margin: "8px auto",
-            maxWidth: 600,
-            width: "100%",
+            margin: "8px 0 !important",
+            maxWidth: 480,
+            width: "100vw !important",
             marginTop: "env(safe-area-inset-top)",
             boxSizing: "border-box",
             alignContent: "flex-start",
             display: "flex",
             position: "relative",
             paddingBottom: 64,
+            flexDirection: "column",
         },
         version: {
             paddingLeft: 16,
@@ -64,7 +68,8 @@ const useStyles = makeStyles(theme => {
 });
 
 export default function SofaFrame(props) {
-    
+
+    const { theme } = useContext(SofaThemeContext)
     const { streamConnected } = useStream(storeUpdater)
     const currentPage = useLayoutStore(state => state.currentPage)
     const currentProps = useLayoutStore(state => state.currentProps)
@@ -88,7 +93,7 @@ export default function SofaFrame(props) {
     }, [ currentPage ] )
 
     return (
-        <>
+        <ThemeProvider theme={ theme }>
             { !isMobile && <RightDrawer /> }
             { !isMobile && <TopBar /> }
             { !isMobile && <SofaDrawer /> }
@@ -101,6 +106,7 @@ export default function SofaFrame(props) {
             </div>
             </Scrollbars>
             { isMobile && <BottomBar /> }
-        </>
+            <CssBaseline />
+        </ThemeProvider>
     );
 }

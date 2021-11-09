@@ -1,14 +1,14 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import IconButton from '@material-ui/core/IconButton';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import PauseIcon from '@material-ui/icons/Pause';
-import SkipNextIcon from '@material-ui/icons/SkipNext';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
-import Grid from '@material-ui/core/Grid';
-import SpeakerIcon from '@material-ui/icons/Speaker';
+import IconButton from '@mui/material/IconButton';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
+import SkipNextIcon from '@mui/icons-material/SkipNext';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import QueueMusicIcon from '@mui/icons-material/QueueMusic';
+import Grid from '@mui/material/Grid';
+import SpeakerIcon from '@mui/icons-material/Speaker';
 
 const useStyles = makeStyles(theme => {
     
@@ -27,6 +27,7 @@ const useStyles = makeStyles(theme => {
         buttonRow: {
             display: "flex",
             paddingRight: 16,
+            width: "100%",
         }
     }
 });

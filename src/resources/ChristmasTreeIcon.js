@@ -1,10 +1,11 @@
 /* eslint-disable max-len */
 
 import React from 'react';
-import { SvgIcon, makeStyles, createStyles  } from '@material-ui/core';
+import { SvgIcon } from '@mui/material';
+import { makeStyles, createStyles } from '@mui/styles';
 import { ReactComponent as ChristmasTree } from './ChristmasTree.svg';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
+const useStyles = makeStyles( theme => createStyles({
     treeStyle: {
         filter: `grayscale(1)`,
         opacity: 0.4,

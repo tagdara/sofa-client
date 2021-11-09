@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import CloudOffIcon from '@material-ui/icons/CloudOff';
-import Button from "@material-ui/core/Button"
+import CloudOffIcon from '@mui/icons-material/CloudOff';
+import Button from "@mui/material/Button"
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 
 import useDeviceStateStore from 'store/deviceStateStore'
-import useDeviceStore from 'store/deviceStore'
-import { register, unregister } from 'store/deviceHelpers'
+import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
 
 const useStyles = makeStyles(theme => {
@@ -28,11 +27,8 @@ const useStyles = makeStyles(theme => {
 const LightButton = props => {
 
     const classes = useStyles();
-    const light = useDeviceStore( state => state.devices[props.endpointId] )
+    const light = deviceByEndpointId(props.endpointId)
     const lightState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-
-    const fullName = light ? light.friendlyName : "Unknown"
-    const name = props.skipPrefix && fullName.startsWith(props.skipPrefix+" ") ? fullName.slice(props.skipPrefix.length) : fullName
     const sendDirective = props.directive ? props.directive : directive
 
     useEffect(() => {
@@ -65,9 +61,11 @@ const LightButton = props => {
     }
 
     const on = lightState.PowerController.powerState.value === 'ON'
+    const name = props.skipPrefix && light.friendlyName.startsWith(props.skipPrefix+" ") ? light.friendlyName.slice(props.skipPrefix.length) : light.friendlyName
 
     return (
-        <Button fullWidth variant={ "outlined" } color={on ? "primary" : undefined } 
+        <Button fullWidth variant={ "outlined" } 
+                sx={{ borderColor: on ? 'primary.main' : 'action.disabled', color: on ? 'primary.main' : 'action.disabled' }} 
                 startIcon={startIcon()} className={classes.button} onClick = {togglePower}>
             { name }
         </Button>

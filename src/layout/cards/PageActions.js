@@ -1,12 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { devicesByFriendlyName, endpointIdsByFriendlyName } from 'store/deviceHelpers';
 import { directive } from 'store/directive';
-import LabelIcon from '@material-ui/icons/Label';
+import LabelIcon from '@mui/icons-material/Label';
 
-import ListItem from '@material-ui/core/ListItem';
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
+import ListItem from '@mui/material/ListItem';
+import Chip from '@mui/material/Chip';
+import Avatar from '@mui/material/Avatar';
 
 const useStyles = makeStyles(theme => {
     return {       

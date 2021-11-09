@@ -1,18 +1,18 @@
 import React from 'react';
 import { selectPage } from 'store/layoutHelpers'
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Avatar from '@material-ui/core/Avatar';
-import Chip from '@material-ui/core/Chip';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
 
-import ListItemText from '@material-ui/core/ListItemText';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 
-import IconButton from '@material-ui/core/IconButton';
-import ViewModuleIcon from '@material-ui/icons/ViewModule';
+import IconButton from '@mui/material/IconButton';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
 
 import GridItem from "components/GridItem"
 

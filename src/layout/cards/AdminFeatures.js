@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { selectPage } from 'store/layoutHelpers'
 
-import ListItem from '@material-ui/core/ListItem';
+import ListItem from '@mui/material/ListItem';
 
-import EditIcon from '@material-ui/icons/Edit';
-import DevicesOtherIcon from '@material-ui/icons/DevicesOther';
-import SettingsEthernetIcon from '@material-ui/icons/SettingsEthernet';
-import HistoryIcon from '@material-ui/icons/History';
-import SyncAltIcon from '@material-ui/icons/SyncAlt';
-import Button from '@material-ui/core/Button';
-import SubjectIcon from '@material-ui/icons/Subject';
-import AvTimerIcon from '@material-ui/icons/AvTimer';
+import EditIcon from '@mui/icons-material/Edit';
+import DevicesOtherIcon from '@mui/icons-material/DevicesOther';
+import SettingsEthernetIcon from '@mui/icons-material/SettingsEthernet';
+import HistoryIcon from '@mui/icons-material/History';
+import SyncAltIcon from '@mui/icons-material/SyncAlt';
+import Button from '@mui/material/Button';
+import SubjectIcon from '@mui/icons-material/Subject';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
 import DeviceDialog from 'dialogs/DeviceDialog';
 
 

@@ -4,7 +4,7 @@ import { DeviceStateContext } from 'context/DeviceStateContext';
 import ButtonItem from 'components/ButtonItem';
 import Light from './light/Light';
 import GridSection from 'components/GridSection';
-import SaveIcon from '@material-ui/icons/Save';
+import SaveIcon from '@mui/icons-material/Save';
 import AutomationTitle from "./automation/automationTitle"
 import CardBase from 'components/CardBase';
 

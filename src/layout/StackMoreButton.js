@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Chip from '@material-ui/core/Chip';
+import Chip from '@mui/material/Chip';
 
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 
 const useStyles = makeStyles(theme => {

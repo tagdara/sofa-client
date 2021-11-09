@@ -1,13 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemAvatar from '@material-ui/core/ListItemAvatar';
-import ListItemText from '@material-ui/core/ListItemText';
-import Avatar from '@material-ui/core/Avatar';
-import QueueMusicIcon from '@material-ui/icons/QueueMusic';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import Avatar from '@mui/material/Avatar';
+import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import GridItem from 'components/GridItem';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 
 
 export default function NoPlayer(props) {

@@ -1,11 +1,11 @@
 import React, { useState} from 'react';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import List from '@material-ui/core/List';
-import Button from '@material-ui/core/Button';
+import List from '@mui/material/List';
+import Button from '@mui/material/Button';
 
-import QrCodeIcon from '@material-ui/icons/DeveloperMode'; // Current Material icons does not include the updated QrCode icon
+import QrCodeIcon from '@mui/icons-material/DeveloperMode'; // Current Material icons does not include the updated QrCode icon
 
 import UbiquitiIcon from 'resources/UbiquitiIcon';
 import { endpointIdsByDisplayCategory, sortByName }  from 'store/deviceHelpers'

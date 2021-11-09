@@ -1,9 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import Typography from '@mui/material/Typography';
+import Grid from '@mui/material/Grid';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -37,7 +37,7 @@ const useStyles = makeStyles(theme => {
         },
         songImageHolder: {
             position: "relative",
-            padding: "8px 8px 8px 16px",
+            padding: "8px 8px 8px 0px",
             margin: 0,
         },
         songImageAspect: {
@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => {
             boxSizing: "border-box",
             display: "flex",
             justifyContent: "center",
-            flexDirection: "column",
+            flexDirection: "column !important",
             position: "relative",
         },
         songButtonHolder: {
@@ -114,6 +114,7 @@ const useStyles = makeStyles(theme => {
             paddingTop: 4,
         },
         topbox: {
+            padding: 0,
             paddingBottom: 8,
             borderBottom: "0px solid",
             borderBottomColor: theme.palette.divider,
@@ -172,7 +173,7 @@ export default function PlayerArtOverlay(props) {
             <Grid item container xs={8} className={classes.songTextButtonsHolder} >
                 <Grid item xs={12} className={classes.songTextHolder}  onClick={()=> props.setMini(true)}>
                     <Typography variant="subtitle1" className={classes.songText}>{title}</Typography>
-                    <Typography variant="subtitle1" className={classes.artistText}>{artist}</Typography>
+                    <Typography variant="subtitle2" className={classes.artistText}>{artist}</Typography>
                 </Grid>
                 <Grid item xs={12} className={classes.songButtonHolder}>
                     {props.children}

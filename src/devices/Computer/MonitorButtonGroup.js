@@ -1,6 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
+import { makeStyles } from '@mui/styles';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import MonitorButton from 'devices/Computer/MonitorButton';
 
 const useStyles = makeStyles(theme => {

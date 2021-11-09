@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 
-import LensIcon from '@material-ui/icons/Lens';
+import LensIcon from '@mui/icons-material/Lens';
 
 import { SketchPicker } from 'react-color'
 import LightPropertyPlaceholder from 'devices/Light/LightPropertyPlaceholder';

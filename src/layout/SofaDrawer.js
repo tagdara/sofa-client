@@ -1,17 +1,17 @@
 import React, { useContext } from 'react';
 import { toggleDrawer } from 'store/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
-import { ThemeContext } from 'theme/SofaTheme';
+import { SofaThemeContext } from 'theme/SofaTheme';
 
-import { makeStyles } from '@material-ui/styles';
-import IconButton from '@material-ui/core/IconButton';
+import { makeStyles } from '@mui/styles';
+import IconButton from '@mui/material/IconButton';
 
 import Stack from 'layout/Stack';
 
-import Drawer from '@material-ui/core/Drawer';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import CompareIcon from '@material-ui/icons/Compare';
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import Drawer from '@mui/material/Drawer';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import CompareIcon from '@mui/icons-material/Compare';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 const drawerWidth = 400;
@@ -53,7 +53,7 @@ const useStyles = makeStyles(theme => {
 export default function SofaDrawer(props) {
     
     const drawerOpen = useLayoutStore( state => state.drawerOpen)
-    const { pickUserTheme, colorScheme } = useContext(ThemeContext);
+    const { pickUserTheme, colorScheme } = useContext(SofaThemeContext);
     const classes = useStyles();
     
     return (

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import CardBase from 'components/CardBase';
 
 const useStyles = makeStyles(theme => {

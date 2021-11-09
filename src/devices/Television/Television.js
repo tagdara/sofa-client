@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
 
-import IconButton from '@material-ui/core/IconButton';
-import ControlCameraIcon from '@material-ui/icons/ControlCamera';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Switch from '@material-ui/core/Switch';
-import Collapse from '@material-ui/core/Collapse';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
+import IconButton from '@mui/material/IconButton';
+import ControlCameraIcon from '@mui/icons-material/ControlCamera';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Switch from '@mui/material/Switch';
+import Collapse from '@mui/material/Collapse';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 
-import TvIcon from '@material-ui/icons/Tv';
+import TvIcon from '@mui/icons-material/Tv';
 import DotAvatar from 'components/DotAvatar'
 import ItemBase from 'components/ItemBase'
 import TvRemote from 'devices/Television/TvRemote';
@@ -135,7 +135,7 @@ const Television = props => {
         <>
             <ItemBase nopad={true}>
                 <CardLine onClick={ () => setShowDetail(!showDetail)}>
-                    <CardLineIcon color={on ? "primary" : undefined } onClick={stopEventPropagation}  >
+                    <CardLineIcon on={on} onClick={stopEventPropagation}  >
                         <TvIcon />
                     </CardLineIcon>
                     <CardLineText primary={device.friendlyName} secondary={subText()} />
@@ -166,7 +166,7 @@ const Television = props => {
                         <ListItem className={classes.bottomListItem}>
                             <ListItemText primary={"Input"} />
                             <Select disabled={ tv.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty 
-                                    value={tv.InputController.input.value ? tv.InputController.input.value : ""} 
+                                    value={tv.InputController.input.value ? tv.InputController.input.value : ""} variant={"standard"}
                                     onChange={ (e) => handleInput(e, e.target.value) } >
                                 { inputs.map(inp =>
                                     <MenuItem key={inp} value={inp}>{inp}</MenuItem>

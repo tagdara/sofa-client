@@ -1,7 +1,7 @@
 import React from 'react';
 
-import Switch from '@material-ui/core/Switch';
-import TuneIcon from '@material-ui/icons/Tune';
+import Switch from '@mui/material/Switch';
+import TuneIcon from '@mui/icons-material/Tune';
 import CardBase from 'components/CardBase';
 import SofaListItem from 'components/SofaListItem';
 

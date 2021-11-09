@@ -1,6 +1,6 @@
 import React  from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Button from '@material-ui/core/Button';
+import { makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles({
     
@@ -14,7 +14,9 @@ const SectionHeaderButton = props => {
     const classes = useStyles();
 
     return (    
-        <Button onClick={props.onClick} color={ props.on ? "primary" : "default"} className={classes.button }>
+        <Button onClick={props.onClick} 
+                sx={{ color: props.on ? 'primary.main' : 'action.disabled' }} 
+                className={classes.button }>
             { props.children }
         </Button>
     )

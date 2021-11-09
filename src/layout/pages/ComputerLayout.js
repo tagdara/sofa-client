@@ -1,6 +1,6 @@
 import React from 'react';
 
-import PowerIcon from '@material-ui/icons/Power';
+import PowerIcon from '@mui/icons-material/Power';
 
 import { endpointIdsByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 import GridSection from 'components/GridSection';

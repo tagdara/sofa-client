@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import GridItem from 'components/GridItem'
 import ScheduleStart from './ScheduleStart'
 import ScheduleInterval from './ScheduleInterval'

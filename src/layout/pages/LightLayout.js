@@ -1,9 +1,9 @@
 import React, { useState, useCallback }  from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ColorLensIcon from '@material-ui/icons/ColorLens';
-import AcUnitIcon from '@material-ui/icons/AcUnit';
-import BrightnessLowIcon from '@material-ui/icons/BrightnessLow';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import BrightnessLowIcon from '@mui/icons-material/BrightnessLow';
 
 import Light from 'devices/Light/Light';
 import GridSection from 'components/GridSection';

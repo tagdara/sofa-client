@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { getStack, renderSuspenseModule } from 'store/layoutHelpers';
 
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import PageActions from './PageActions';
-import Chip from '@material-ui/core/Chip';
+import Chip from '@mui/material/Chip';
 import ErrorBoundary from './ErrorBoundary';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 
 
 const useStyles = makeStyles(theme => {

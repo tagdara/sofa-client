@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { makeStyles } from '@material-ui/styles';
-import MenuItem from '@material-ui/core/MenuItem';
-import Select from '@material-ui/core/Select';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@mui/styles';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Typography from '@mui/material/Typography';
 import useLayoutStore from 'store/layoutStore'
 
 const useStyles = makeStyles(theme => {
@@ -36,7 +36,7 @@ const StackPicker = props => {
     }
 
     return (
-        <Select className={classes.select} displayEmpty disableUnderline
+        <Select className={classes.select} displayEmpty disableUnderline variant={"standard"}
                 value={ props.stack } 
                 onChange={ (e)=> props.setStack(e.target.value)} 
             >

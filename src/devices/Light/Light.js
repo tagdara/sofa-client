@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import IconButton from '@material-ui/core/IconButton';
-import Switch from '@material-ui/core/Switch';
+import IconButton from '@mui/material/IconButton';
+import Switch from '@mui/material/Switch';
 
-import CloudOffIcon from '@material-ui/icons/CloudOff';
-import ClearIcon from '@material-ui/icons/Clear';
+import CloudOffIcon from '@mui/icons-material/CloudOff';
+import ClearIcon from '@mui/icons-material/Clear';
 
 import LightbulbOutlineIcon from 'resources/LightbulbOutline';
 import LightProperties from "devices/Light/LightProperties";

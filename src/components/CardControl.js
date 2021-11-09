@@ -1,11 +1,11 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
 
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import HomeIcon from '@material-ui/icons/Home';
+import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import HomeIcon from '@mui/icons-material/Home';
 
 
 const useStyles = makeStyles(theme => {

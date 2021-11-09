@@ -1,5 +1,5 @@
-import { withStyles } from '@material-ui/styles';
-import InputBase from '@material-ui/core/InputBase';
+import { withStyles } from '@mui/styles';
+import InputBase from '@mui/material/InputBase';
 
 const AutomationInput = withStyles(theme => ({
     input: {

@@ -1,35 +1,15 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
 
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-
-import DotLevel from 'components/DotLevel';
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
+import LevelSlider from 'components/LevelSlider';
 
 import useDeviceStateStore from 'store/deviceStateStore'
-//import useRegisterStore from 'store/registerStore'
 import { directive } from 'store/directive'
 import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
 
-const useStyles = makeStyles({
-    
-    halves: {
-        flexGrow: 1,
-        flexBasis: 1,
-        boxSizing: "border-box",
-        cursor: "pointer",
-    },
-    areaListItem: {
-        minHeight: 54,
-        paddingRight: 8,
-        paddingTop: 0,
-        paddingBottom: 0,
-    }
-});
-
 const AreaLine = props => {
 
-    const classes = useStyles(); 
     const area = deviceByEndpointId(props.endpointId)   
     const areaState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
@@ -48,25 +28,20 @@ const AreaLine = props => {
     const scene = areaState.AreaController.scene.value
     const name = area.friendlyName
 
-    function runShortcut(level) {
-        //var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
-        directive(shortcuts[level], 'SceneController', 'Activate')
+    function runShortcut(newScene) {
+        if (newScene !== scene) {
+            console.log('should run', newScene)
+            directive(newScene, 'SceneController', 'Activate')
+        }
     }
     
-    function currentLevel() {
-        if (shortcuts.includes(scene)) {
-            return shortcuts.indexOf(scene)
-        }
-        return 0
-    }   
-
     return (
-        <ListItem className={classes.areaListItem}>
-            <ListItemText className={classes.halves} onClick={ () => props.selectArea(props.endpointId)}>{name} </ListItemText>
+        <CardLine inList={true}>
+            <CardLineText onClick={ () => props.selectArea(props.endpointId)} primary={name} />
             { (shortcuts.length > 0) &&
-                <DotLevel half={true} level={currentLevel()} select={runShortcut} />
+                <LevelSlider half={true} level={scene} select={runShortcut} levels={shortcuts} />
             }
-        </ListItem>
+        </CardLine>
     );
 }
 

@@ -1,12 +1,12 @@
 import React from 'react';
-
-import CssBaseline from "@material-ui/core/CssBaseline";
+import CssBaseline from "@mui/material/CssBaseline";
 import SofaThemeProvider from 'theme/SofaTheme';
 
 import SofaFrame from "layout/SofaFrame";
 import SofaLogin from "user/SofaLogin";
 import ErrorBoundary from 'error/ErrorBoundary'
 import useLoginStore from 'store/loginStore'
+
 
 const Sofa = (props) => {
 

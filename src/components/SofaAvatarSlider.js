@@ -1,8 +1,8 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import ListItemText from '@material-ui/core/ListItemText';
+import ListItemText from '@mui/material/ListItemText';
 
 import SofaSlider from './SofaSlider';
 import ToggleAvatar from 'components/ToggleAvatar'

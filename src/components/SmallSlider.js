@@ -1,7 +1,7 @@
 import React , { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
+import Slider from '@mui/material/Slider';
 
 const useStyles = makeStyles({
          

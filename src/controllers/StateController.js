@@ -1,10 +1,10 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
-import Button from '@material-ui/core/Button';
-import LensIcon from '@material-ui/icons/Lens';
+import TableCell from '@mui/material/TableCell';
+import TableRow from '@mui/material/TableRow';
+import Button from '@mui/material/Button';
+import LensIcon from '@mui/icons-material/Lens';
 
 const useStyles = makeStyles({
         

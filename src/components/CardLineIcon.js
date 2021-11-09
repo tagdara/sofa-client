@@ -1,62 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import CircularProgress from '@mui/material/CircularProgress';
 import { useLongPress } from 'use-long-press';
 
-const useStyles = makeStyles(theme => {
-    
-    return {
-        flex: {
-            display: "flex",
-            alignItems: "center",
-            zIndex: 6,
-            //padding: 8,
-        },
-        base: {
-            padding: 0,
-            minWidth: 56,
-        },
-        reverse: {
-            justifyContent: "flex-end",
-            display: "flex",
-        },
-        sizeSmall: {
-            minWidth: 26,
-            fontSize: 10,
-        },
-        none: {
-            color: theme.palette.primary.dark,
-            padding: "0 8px",
-            fontSize: 20,
-        },
-        highlight: {
-            color: theme.palette.primary.main,
-        }
-    }
-
-});
-
-
-
 const CardLineIcon = props => {
-
-    const classes = useStyles();
-    const color = (props.color && !["primary", "secondary"].includes(props.color)) ? props.color : undefined
-    
-    const styles = {
-        back: {
-            backgroundColor: props.color,
-            },
-        noback: {
-            padding: 8,
-            backgroundColor: "rgba(0,0,0,0)",
-            color: props.color,
-        },
-        color: {
-            color: props.color,
-        }
-    };
 
     const bind = useLongPress(() => {}, {
         onFinish: event => { event.stopPropagation(); event.preventDefault(); props.longPress() },
@@ -70,11 +17,25 @@ const CardLineIcon = props => {
         return  <CircularProgress size={24} />
     }
 
+    function computeColor() {
+        if (props.on === true ) { 
+            if (props.color) {
+                return props.color
+            }
+            return 'primary.main' 
+        }
+        if (props.on === false) {
+            return 'action.disabled'
+        }
+        return props.color
+    }
+
+    // style={ color && styles.color }
     return  (
         <ListItemIcon   onClick={ props.onClick } 
-                        className={ props.color === "primary" ? classes.highlight : classes.normal}
-                        style={ color &&  styles.color }
-                        {...bind} >
+                        {...bind} 
+                        sx={{ color: computeColor() }}
+                    >
             {props.children}
         </ListItemIcon>
     )

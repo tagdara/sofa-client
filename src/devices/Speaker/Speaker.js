@@ -1,20 +1,18 @@
 import React, { useEffect } from 'react';
 
-import ListItem from '@mui/material/ListItem';
-import SofaAvatarSlider from 'components/SofaAvatarSlider'
-import { directive } from 'store/directive'
-import { deviceByEndpointId } from 'store/deviceHelpers'
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
+import CardLineSlider from 'components/CardLineSlider';
 
+import { directive } from 'store/directive'
+import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
 import useDeviceStateStore from 'store/deviceStateStore'
-import useRegisterStore from 'store/registerStore'
+
 
 const Speaker = props => {
 
     const speakerDevice = deviceByEndpointId(props.endpointId)   
     const speaker = useDeviceStateStore( state => state.deviceStates[props.endpointId])
-    const name = speakerDevice.friendlyName ? shortName(speakerDevice.friendlyName) : ""
-    const register = useRegisterStore( state => state.add)
-    const unregister = useRegisterStore( state => state.remove)
 
     useEffect(() => {
         register(props.endpointId, "speaker-"+props.endpointId)
@@ -25,8 +23,15 @@ const Speaker = props => {
     }, [])
 
     
-    if (!speaker || !speaker.PowerController || ( props.filterOff && speaker.PowerController.powerState.value==='OFF')) {
+    if (!speaker || !speaker.PowerController ) {
         //console.log('speaker is being filtered', props.filterOff, speaker)
+        return null
+    }
+
+    const name = shortName(speakerDevice.friendlyName)
+    const on = speaker.PowerController.powerState.value==='ON'
+
+    if (props.filterOff && speaker.PowerController.powerState.value==='OFF') {
         return null
     }
 
@@ -34,9 +39,9 @@ const Speaker = props => {
         directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
     }; 
 
-    function handleMuteChange(event) {
-        directive(props.endpointId, 'Speaker', 'SetVolume', { "mute" : !speaker.Speaker.mute.value } )
-    }; 
+    //function handleMuteChange(event) {
+    //    directive(props.endpointId, 'Speaker', 'SetVolume', { "mute" : !speaker.Speaker.mute.value } )
+    //}; 
 
     function togglePower(event) {
         directive(props.endpointId, 'PowerController', speaker.PowerController.powerState.value==='OFF' ? 'TurnOn' : 'TurnOff')
@@ -50,17 +55,10 @@ const Speaker = props => {
     }
 
     return (
-        <ListItem>
-            <SofaAvatarSlider   label = { name } 
-                                labelClick = { togglePower }
-                                small = {true} reverse = {true} minWidth = { 64 } noPad = { true }
-                                value = { speaker.Speaker.volume.value }
-                                change = { handleVolumeChange } 
-                                avatarClick={ () => handleMuteChange(!speaker.Speaker.mute.value)} 
-                                avatarState={ speaker.PowerController.powerState.value==='ON' ? "on" : "off" }
-                                disabled={ speaker.PowerController.powerState.value==='OFF' }
-            />
-        </ListItem>
+        <CardLine inList={props.inList}>
+            <CardLineText primary={name} onClick={ togglePower } width={"30%"} />
+            <CardLineSlider value = { speaker.Speaker.volume.value } on={on} set={handleVolumeChange} width={"60%"}/>         
+        </CardLine>
     );
 }
 

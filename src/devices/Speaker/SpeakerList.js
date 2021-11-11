@@ -9,7 +9,7 @@ const SpeakerList = props => {
     return (
         <>
             { speakers.map( endpointId => 
-                <Speaker key={endpointId} filterOff={props.filterOff} endpointId={endpointId} />
+                <Speaker key={endpointId} filterOff={props.filterOff} endpointId={endpointId} inList={true} />
             )}
         </>
     )

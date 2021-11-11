@@ -13,9 +13,6 @@ const useStyles = makeStyles(theme => {
             color: theme.palette.primary.contrastText,
             backgroundColor: theme.palette.primary.main,
         },
-        select: {
-            minWidth: "50%",
-        },
         modeGroup: {
             width: "100%",
         }
@@ -31,6 +28,8 @@ const ModeSelect = props => {
     
     return (
         <Select disabled={props.disabled || isModeNonControllable(props.endpointId, props.mode)} 
+                variant={"standard"}
+                sx={{ minWidth: props.width, maxWidth: props.width}}
                 className={classes.select} displayEmpty 
                 value={ props.value ? props.value : ""} 
                 onChange={ (e)=> props.select(e.target.value)} 

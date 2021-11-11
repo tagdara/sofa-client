@@ -1,17 +1,8 @@
 import React, { useState } from 'react';
-
-import ListItem from '@mui/material/ListItem';
-import IconButton from '@mui/material/IconButton';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-
-import { selectPage } from 'store/layoutHelpers'
-
 import CardBase from 'components/CardBase';
-import Spacer from 'components/Spacer';
-import ComputerSummary from 'devices/Computer/ComputerSummary';
-import MonitorButtonGroup from 'devices/Computer/MonitorButtonGroup';
+import MonitorButtonStackGroup from 'devices/Computer/MonitorButtonStackGroup';
 import MatrixList from 'devices/Matrix/MatrixList';
+import { selectPage } from 'store/layoutHelpers'
 
 export default function ComputerHero(props) {
     
@@ -33,15 +24,14 @@ export default function ComputerHero(props) {
         ]
     }
 
+    const toggleExpand = () => {
+        setExpandMonitors(!expandMonitors)
+    }
+
 
     return (
         <CardBase >
-            <ComputerSummary outlets={computerPlugs} onClick={ () => selectPage('ComputerLayout') } />
-            <ListItem>
-                <MonitorButtonGroup buttonLayout={buttonLayout} />
-                <Spacer />
-                <IconButton size={"small"} onClick = { ()=> setExpandMonitors(!expandMonitors) }>{ expandMonitors ? <ExpandLessIcon/> : <ExpandMoreIcon />}</IconButton>
-            </ListItem>
+            <MonitorButtonStackGroup buttonLayout={buttonLayout} outlets={computerPlugs} topClick={toggleExpand} bottomClick={ () => selectPage('ComputerLayout') } />
             { expandMonitors &&
                 <MatrixList />
             }

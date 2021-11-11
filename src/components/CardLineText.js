@@ -35,6 +35,7 @@ export default function CardLineText(props) {
 
     return (
         <ListItemText   onClick={ props.onClick } 
+                        sx={{ minWidth: props.width,  maxWidth: props.width }}
                         classes={{ root: classes.flex, primary: classes.primary, secondary : classes.secondary }} 
                         primary={ props.primary } 
                         secondary={ props.secondary } 

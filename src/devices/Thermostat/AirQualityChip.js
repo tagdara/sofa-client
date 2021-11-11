@@ -30,7 +30,7 @@ export default function AirQualityChip(props) {
             case (aqi < 51 || aqi === "Good"):  
                 return green[500]
             case (aqi < 101): 
-                return yellow[500]
+                return yellow[700]
             case (aqi < 151 || aqi === "Fair"): 
                 return orange[500]
             case (aqi < 201 || aqi === "Poor"): 

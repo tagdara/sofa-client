@@ -11,30 +11,8 @@ const useStyles = makeStyles(theme => {
             margin: 0,
             zIndex: 2,
             display: "flex",
-            flexGrow: 1,
+            flexGrow: 2,
             minWidth: "50%",
-        },
-        centeredHolder: {
-            display: "flex",
-            width: "100%",
-            maxWidth: "100%",
-            position: "relative",
-            minWidth: 192,
-            padding: "0px 28px 8px 28px",
-            boxSizing: "border-box",
-            margin: 0,
-            zIndex: 2,
-            justifyContent: "center",
-        },
-        track: {
-            border: 'none',
-            width: 40,
-            backgroundColor: theme.palette.action.disabled,
-
-        }, 
-        rail: {  
-            opacity: 0.5,
-            width: 40,
         },
         onSlider: {
             color: theme.palette.primary.main,

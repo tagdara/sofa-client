@@ -25,8 +25,8 @@ const useStyles = makeStyles(theme => {
     return {
         controlArea: {
             margin: "8px auto",
-            maxWidth: maxScreenWidth => maxScreenWidth,
-            width: "100vw",
+            maxWidth: maxScreenWidth => maxScreenWidth+" !important",
+            width: "100%",
             boxSizing: "border-box",
             display: "flex",
             justifyContent: "center",

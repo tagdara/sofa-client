@@ -24,6 +24,61 @@ const useStyles = makeStyles(theme => {
             zIndex: 2,
             justifyContent: "center",
         },
+        onSlider: {
+            color: theme.palette.primary.main,
+            height: 2,
+            '& .MuiSlider-track': {
+                height: 2,
+                border: 'none',
+            },
+            '& .MuiSlider-rail': {
+                height: 2,
+                opacity: 0.5,
+                backgroundColor: theme.palette.primary.dark,
+            },
+            '& .MuiSlider-mark': {
+                backgroundColor: theme.palette.primary.main,
+                height: 4,
+                width: 4,
+                '&.MuiSlider-markActive': {
+                    opacity: 1,
+                    backgroundColor: 'currentColor',
+                },
+            },
+            '& .MuiSlider-thumb': {
+                height: 20,
+                width: 20,
+                backgroundColor: theme.palette.primary.main,
+            },
+        },
+        offSlider: {
+            color: theme.palette.action.disabled,
+            height: 2,
+            '& .MuiSlider-track': {
+                height: 2,
+                border: 'none',
+            },
+            '& .MuiSlider-rail': {
+                height: 2,
+                opacity: 0.5,
+                backgroundColor: theme.palette.action.disabled,
+            },
+            '& .MuiSlider-mark': {
+                backgroundColor: theme.palette.action.disabled,
+                height: 4,
+                width: 4,
+                '&.MuiSlider-markActive': {
+                    opacity: 1,
+                    backgroundColor: 'currentColor',
+                },
+            },
+            '& .MuiSlider-thumb': {
+                height: 1,
+                width: 1,
+                opacity: 0,
+                backgroundColor: theme.palette.action.disabled,
+            },
+        }
     }
 });
 
@@ -57,7 +112,7 @@ export default function DotSlider(props) {
 
     return (
         <div className={props.centered ? classes.centeredHolder : classes.holder} >
-            <Slider
+            <Slider className={classes.onSlider}
                     defaultValue={props.value}
                     aria-labelledby="discrete-slider-custom"
                     step={ props.levelValues ? null : 1 }

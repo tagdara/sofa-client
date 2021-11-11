@@ -37,7 +37,7 @@ const AreaLine = props => {
     
     return (
         <CardLine inList={true}>
-            <CardLineText onClick={ () => props.selectArea(props.endpointId)} primary={name} />
+            <CardLineText onClick={ () => props.selectArea(props.endpointId)} primary={name} width={"50%"} />
             { (shortcuts.length > 0) &&
                 <LevelSlider half={true} level={scene} select={runShortcut} levels={shortcuts} />
             }

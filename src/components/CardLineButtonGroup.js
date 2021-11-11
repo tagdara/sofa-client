@@ -2,12 +2,11 @@ import React from 'react';
 import { makeStyles } from '@mui/styles';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import MonitorButton from 'devices/Computer/MonitorButton';
-import Spacer from 'components/Spacer';
 
 const useStyles = makeStyles(theme => {
     return {    
         buttonGroup: {
-            paddingRight: 16,
+            paddingRight: 8,
         }
     }
 });
@@ -18,23 +17,13 @@ export default function MonitorButtonGroup(props) {
 
     if (!props.buttonLayout) { return null }
 
-    const sectionCount = Object.keys(props.buttonLayout).length;
-
     return (
-        <>
-            { Object.keys(props.buttonLayout).map( (zone,i) => 
-                <>
-                <ButtonGroup key={zone} className={classes.buttonGroup} size="small" variant="contained"  >
+        <ButtonGroup key={zone} className={classes.buttonGroup} size="small" variant="text"  >
                 { props.buttonLayout[zone].map( btn =>
                     <MonitorButton key={btn.label} {...btn} />
                 )}
-                </ButtonGroup>
-                { i < sectionCount &&
-                    <Spacer />
-                }
-                </>
-            )}
-        </>
+        </ButtonGroup>
+
     );
 }
  

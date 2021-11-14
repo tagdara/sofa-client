@@ -1,8 +1,15 @@
 import React, { useEffect }from 'react';
-import ToggleAvatar from 'components/ToggleAvatar';
+import ColorAvatar from 'components/ColorAvatar';
 import useDeviceStateStore from 'store/deviceStateStore'
 import { register, unregister } from 'store/deviceHelpers'
- 
+
+import grey from '@mui/material/colors/grey';
+import teal from '@mui/material/colors/teal';
+import green from '@mui/material/colors/green';
+import orange from '@mui/material/colors/orange';
+import red from '@mui/material/colors/red';
+
+
 const TemperatureSensorAvatar = props => {
     
     const deviceState  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
@@ -19,17 +26,29 @@ const TemperatureSensorAvatar = props => {
 
     const temperature = deviceState.TemperatureSensor.temperature.value.value
 
-    function tempColor(temp) {
-        if (!temp) { return 'disabled' }
-        if (temp>=74) { return "hot" }
-        if (temp<70) { return "cool" }
-        return "mid";
+    const tempColor = ( temp ) => {
+        switch (true) {
+            case (!temp):
+                return grey[500]
+            case (temp < 70): 
+                return teal[500]
+            case (temp < 75): 
+                return green[700]
+            case (temp < 90): 
+                return orange[500]
+            case (temp < 200): 
+                return red[500]
+            default:
+                return grey[500]
+        }
     }
+    
+    const temperatureColor = tempColor(temperature)
 
     return (
-        <ToggleAvatar reverse={props.reverse} wideAvatar={false} small={props.small} avatarState={ tempColor(temperature) } >
+        <ColorAvatar small={props.small} color={temperatureColor} onClick={props.onClick}>
             { temperature }
-        </ToggleAvatar>
+        </ColorAvatar>
     );
 }
 

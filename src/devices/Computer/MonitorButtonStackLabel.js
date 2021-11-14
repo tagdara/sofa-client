@@ -42,7 +42,8 @@ const useStyles = makeStyles(theme => {
             },
         },
         group: {
-            padding: 4,
+            paddingRight: 8,
+            paddingLeft: 0,
         },
         count: {
             paddingRight:4,

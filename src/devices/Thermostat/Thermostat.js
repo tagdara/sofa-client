@@ -1,27 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
 
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import Collapse from '@mui/material/Collapse';
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
 
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
-import SofaAvatarSlider from 'components//SofaAvatarSlider'
+import FanPowerLevel from 'devices/Thermostat/FanPowerLevel'
 import CardBase from 'components/CardBase'
 import CardLineSpacer from 'components/CardLineSpacer'
 import ModeLines from 'devices/Mode/ModeLines'
-import ToggleAvatar from 'components/ToggleAvatar';
+
 import TemperatureSensor from 'devices/Thermostat/TemperatureSensor'
+import ThermostatModeButtons from 'devices/Thermostat/ThermostatModeButtons'
+import ThermostatSetpointAvatar from 'devices/Thermostat/ThermostatSetpointAvatar'
+import ThermostatSetpointButtons from 'devices/Thermostat/ThermostatSetpointButtons'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import useDeviceStore from 'store/deviceStore'
 import { directive } from 'store/directive'
-import { getController, register, unregister } from 'store/deviceHelpers'
-//import { selectPage } from 'store/layoutHelpers'
+import { register, unregister } from 'store/deviceHelpers'
 
 const useStyles = makeStyles(theme => {
     return {      
@@ -111,8 +108,6 @@ const useStyles = makeStyles(theme => {
 const Thermostat = props => {
     
     const classes = useStyles();
-    const [targetSetpoint, setTargetSetpoint] = useState(70);
-    const [powerLevel, setPowerLevel] = useState(false)
     const [showDetail, setShowDetail] = useState(false)
 
     const thermostatDevice = useDeviceStore( state => state.devices[props.endpointId] )
@@ -126,31 +121,7 @@ const Thermostat = props => {
     // eslint-disable-next-line 
     }, [props.endpointId])
 
-    useEffect(() => {
-        if (thermostat) {
-            if (thermostat.ThermostatController.hasOwnProperty('upperSetpoint')) {
-                setTargetSetpoint([ thermostat.ThermostatController.lowerSetpoint.deepvalue, 
-                                    thermostat.ThermostatController.upperSetpoint.deepvalue ])
-            } else {
-                setTargetSetpoint(thermostat.ThermostatController.targetSetpoint.deepvalue)
-            }
-            if (thermostat.hasOwnProperty('PowerLevelController')) {
-                setPowerLevel(thermostat.PowerLevelController.powerLevel.value)
-            }
-        }
-    // eslint-disable-next-line 
-    }, [thermostat]);
-
     if (!thermostat) { return null }
- 
-    function supportedModes() {
-        try { 
-            return getController(props.endpointId, "ThermostatController")
-                        .configuration.supportedModes 
-            }
-        catch {}
-        return []
-    }
 
     //function supportedRange() {
         //needs to be applied to the button version but stubbed for now
@@ -161,85 +132,25 @@ const Thermostat = props => {
     //    
     //    return [60,90]
     //}
-                    
-    function handlePrePowerLevelChange(event) {
-        setPowerLevel(event);
-    }; 
-    
-    function handlePowerLevelChange(event) {
-        directive(props.endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": event})
-    }; 
-
-    //function handlePreSetpointChange(event) {
-    //    setTargetSetpoint(event);
-    //}; 
-    
-    function handleSetpointChange(event) {
-        directive(props.endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": event, "scale": "FAHRENHEIT"}} )
-    }; 
-
-    function handleSetMode(event) {
-        directive(props.endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": event }} )
-    }; 
-    
-    //function switchToHistory() {
-    //    selectPage('ThermostatLayout')
-    //}
-    
-    function showFanPowerLevel() {
-
-        if (!thermostat.hasOwnProperty('PowerLevelController')) {
-            return false
-        }
-        
-        // This is for Dyson
-        if (getController(props.endpointId, 'Fan Mode')) {
-            if (thermostat['Fan Mode'].mode.value!=='FAN') {
-                return false
-            } 
-        }
-        return true
-    }
 
     return ( 
         <CardBase>
             <TemperatureSensor endpointId={props.endpointId} onClick={props.onClick} itemType={"listItem"} />
-            <ListItem className={classes.bottomListItem}>
+            <CardLine className={classes.bottomListItem}>
                 <>
-                    <ButtonGroup className={classes.buttonGroup} size="small" variant="text" >
-                        { supportedModes().map((mode) => (
-                            <Button className={thermostat.ThermostatController.thermostatMode.value===mode ? classes.selectedButton : classes.modeButton  } onClick={ (e) => handleSetMode(mode)} size="small" key = {mode+'m'} >
-                            {mode}
-                            </Button>
-                        ))}
-                    </ButtonGroup>
+                    <ThermostatModeButtons endpointId={props.endpointId} />
                     <CardLineSpacer />
                     { thermostat.ThermostatController.thermostatMode.value!=='OFF' &&
-                        <ToggleAvatar small={true} onClick={() => setShowDetail(!showDetail) } reverse={true} 
-                            avatarState={thermostat.ThermostatController.thermostatMode.value}>
-                            {targetSetpoint}
-                        </ToggleAvatar>
+                        <ThermostatSetpointAvatar small={true} onClick={() => setShowDetail(!showDetail)} endpointId={props.endpointId} />
                     }
                 </>
-            </ListItem>
+            </CardLine>
             <Collapse in={showDetail} className={classes.detail}>
-                <ListItem>
-                    <ListItemText primary={'Heat Set point'} />
-                    <ButtonGroup size="small" variant="text"  >
-                        <Button onClick={ () => handleSetpointChange(targetSetpoint-1) }><ExpandMoreIcon /></Button>
-                        <Button className={classes.setpoint} >{targetSetpoint}</Button>
-                        <Button  onClick={ () => handleSetpointChange(targetSetpoint+1) }><ExpandLessIcon /></Button>
-                    </ButtonGroup>
-                </ListItem> 
-                { showFanPowerLevel() &&
-                    <ListItem>
-                        <ListItemText primary={"Fan"} />
-                        <SofaAvatarSlider  small={true} reverse={true} minWidth={160} 
-                                            value={powerLevel} step={10} noPad={true}
-                                            preChange={handlePrePowerLevelChange} change={handlePowerLevelChange} />
-                    </ListItem> 
-                }
-
+                <CardLine>
+                    <CardLineText primary={'Heat Set point'} />
+                    <ThermostatSetpointButtons endpointId={props.endpointId} />
+                </CardLine> 
+                <FanPowerLevel endpointId={props.endpointId} />
                 <ModeLines directive = { directive } device={thermostatDevice} deviceState={thermostat}  />
             </Collapse>
         </CardBase>

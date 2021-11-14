@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => {
     return {
         actionsChip: {
             justifyContent: "center",
-            backgroundColor: theme.palette.layer.card,
+            //backgroundColor: theme.palette.layer.card,
             '&:hover': {
                 borderColor: theme.palette.primary.dark,
             },

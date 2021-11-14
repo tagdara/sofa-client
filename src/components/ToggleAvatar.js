@@ -68,12 +68,14 @@ function ToggleAvatar(props) {
 
     const styles = {
         back: {
-            backgroundColor: props.theme.palette.avatar[props.avatarState.toLowerCase()],
+            // deprecated - use ColorAvatar and pass colors directly
+            //backgroundColor: props.theme.palette.avatar[props.avatarState.toLowerCase()],
             },
         noback: {
             padding: 8,
-            backgroundColor: props.theme.palette.avatar.none,
-            color: props.theme.palette.avatar[props.avatarState.toLowerCase()]
+            //backgroundColor: props.theme.palette.avatar.none,
+            // deprecated - use ColorAvatar and pass colors directly
+            //color: props.theme.palette.avatar[props.avatarState.toLowerCase()]
         },
     };
 

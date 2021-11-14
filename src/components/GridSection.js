@@ -3,21 +3,20 @@ import { makeStyles } from '@mui/styles';
 import useLayoutStore from 'store/layoutStore'
 import classNames from 'classnames';
 
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
+import GridSectionTitle from 'components/GridSectionTitle'
 
 const useStyles = makeStyles(theme => {
     return {
         base: {
             display: "flex",
-            margin: 0,
+            marginBottom: 2,
             overflowX: "hidden",
             alignContent: "start",
-            padding: "3px !important",
-            borderRadius: "4px 4px 4px 4px",
-        },
-        margin: {
-            marginBottom: 2,
+            padding: "8px !important",
+            boxSizing: "border-box",
+            width: "100% !important",
+            maxWidth: "100% !important",
         },
         gridColumn: {
             overflowY: "hidden",
@@ -25,36 +24,6 @@ const useStyles = makeStyles(theme => {
         scrollColumn: {
             overflowY: "auto",
             paddingRight: 32,
-        },
-        mobile: {
-            flexGrow: 1
-        },
-        title: {
-            padding: 4,
-            display: "flex",
-            flexGrow: 2,
-        },
-        titleBlock: {
-            padding: 4,
-            display: "flex",
-            flexGrow: 1,
-            flexAlign: "space-between",
-        },
-        background: {
-            backgroundColor: theme.palette.layer.section,
-        },
-        center: {
-            width: "100%",
-            
-            justifyContent: "center",
-        },
-        end: {
-            display: "flex",
-            flexGrow: 0,
-            justifyContent: "flex-end",
-        },
-        nopad: {
-            padding: "0 !important",
         },
     }
 });
@@ -67,17 +36,9 @@ export default function GridSection(props) {
     const [ show, setShow ] = useState(props.show);
 
     return (
-        <Grid container item spacing={1} key={props.name} xs={props.xs} 
-            className={ classNames(classes.base, props.margin && classes.margin, props.scroll ? classes.scrollColumn : classes.gridColumn, props.background ? classes.background : null)} 
-        >
-            {props.name &&
-                <Grid item xs={12} className={classes.titleBlock}>
-                    <Typography variant="h6" className={classes.title} onClick={ () => setShow(!show) } >{props.name}</Typography>
-                    <div className={ (!isMobile || !props.break) ? classes.end : classes.center}>
-                        {props.secondary}
-                    </div>
-                </Grid>
-            }
+        <Grid container item spacing={(props.single || isMobile) ? 0 : 1} key={props.name} xs={props.xs} 
+                className={ classNames(classes.base, props.scroll ? classes.scrollColumn : classes.gridColumn)} >
+            <GridSectionTitle name={props.name} break={props.break} secondary={props.secondary} onClick={ () => setShow(!show) } />
             { show && props.children}
         </Grid>
     );

@@ -4,7 +4,8 @@ import { SofaThemeContext } from 'theme/SofaTheme';
 import { makeStyles } from '@mui/styles';
 
 import CardBase from 'components/CardBase';
-import ListItem from '@mui/material/ListItem';
+import CardLine from 'components/CardLine';
+import Spacer from 'components/Spacer';
 import ListItemText from '@mui/material/ListItemText';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
@@ -47,7 +48,7 @@ export default function UserHero(props) {
 
     return (
         <CardBase >
-            <ListItem className={classes.userRow} >
+            <CardLine>
                 <IconButton onClick={props.handleFavorites}>
                     <AccountCircle />
                 </IconButton>
@@ -56,18 +57,20 @@ export default function UserHero(props) {
                 <IconButton onClick={logout}>
                     <ExitToAppIcon />
                 </IconButton>
-            </ListItem>
-            <ListItem className={classes.buttonRow}>
+            </CardLine>
+            <CardLine>
                 <Button startIcon={<CompareIcon />}  onClick={() => pickUserTheme(colorScheme==='dark' ? 'light' : 'dark')}>
                     { colorScheme==='dark' ? 'Light' : 'Dark' }
                 </Button>
+                <Spacer />
                 <Button variant={ adminMode ? "contained" : null} startIcon={<SettingsIcon />} onClick={ () => setAdminMode(!adminMode) }>
                     Admin
                 </Button>
+                <Spacer />
                 <Button startIcon={<RefreshIcon />} onClick={ reloadPWA} >
                     Reload
                 </Button>
-            </ListItem>
+            </CardLine>
             { adminMode &&
                 <AdminFeatures />
             }

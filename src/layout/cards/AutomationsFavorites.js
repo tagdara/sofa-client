@@ -3,9 +3,12 @@ import React, { useState } from 'react';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 
+import CardLine from 'components/CardLine';
+import CardLineTitle from 'components/CardLineTitle';
+
 import AutomationAll from 'automation/AutomationAll';
 import AutomationItem from 'automation/AutomationItem';
-import GridSection from 'components/GridSection';
+
 import useUserStore from 'store/userStore'
 import { selectPage } from 'store/layoutHelpers';
 
@@ -34,29 +37,29 @@ const AutomationsFavorites = props => {
         setShowResult(true);         
     }
 
-    return (    
-            <GridSection name={"Favorites"}>
-            { favorites &&
-                <>
-                    { favorites.map(endpointId => 
-                        <AutomationItem small={true} endpointId={endpointId} key={endpointId}
-                                        favorite={true} allowEdit={false} 
-                                        launcher={true} icon={"base"}
-                                        select={selectAutomation}
-                                        showResult={showResultSnackbar}
-                        />
-                    )}
-                </>
-            }
-            <AutomationAll />
-            <Snackbar   anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}} 
-                        open={showResult} autoHideDuration={6000} 
-                        onClose={handleClose}
-                    >
-                <Alert severity={severity}>{resultMessage}</Alert>
-            </Snackbar>
+    if (!favorites) { return <AutomationAll /> }
 
-            </GridSection>
+    return (    
+            <>
+                <CardLine>
+                    <CardLineTitle title={"Favorites"} />
+                </CardLine>
+                { favorites.map(endpointId => 
+                    <AutomationItem small={true} endpointId={endpointId} key={endpointId}
+                                    favorite={true} allowEdit={false} 
+                                    launcher={true} icon={"base"}
+                                    select={selectAutomation}
+                                    showResult={showResultSnackbar}
+                    />
+                )}
+                <AutomationAll />
+                <Snackbar   anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}} 
+                            open={showResult} autoHideDuration={6000} 
+                            onClose={handleClose}
+                        >
+                    <Alert severity={severity}>{resultMessage}</Alert>
+                </Snackbar>
+            </>
     )
 }
 

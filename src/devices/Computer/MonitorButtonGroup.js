@@ -23,16 +23,16 @@ export default function MonitorButtonGroup(props) {
     return (
         <>
             { Object.keys(props.buttonLayout).map( (zone,i) => 
-                <>
-                <ButtonGroup key={zone} className={classes.buttonGroup} size="small" variant="contained"  >
-                { props.buttonLayout[zone].map( btn =>
-                    <MonitorButton key={btn.label} {...btn} />
-                )}
-                </ButtonGroup>
-                { i < sectionCount &&
-                    <Spacer />
-                }
-                </>
+                <React.Fragment key={zone}>
+                    <ButtonGroup className={classes.buttonGroup} size="small" variant="contained"  >
+                    { props.buttonLayout[zone].map( btn =>
+                        <MonitorButton key={btn.label} {...btn} />
+                    )}
+                    </ButtonGroup>
+                    { i < sectionCount &&
+                        <Spacer />
+                    }
+                </React.Fragment>
             )}
         </>
     );

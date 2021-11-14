@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => {
             overflowY: "auto",
         },
         drawerPaper: {
-            backgroundColor: theme.palette.layer.section,
+            //backgroundColor: theme.palette.layer.section,
             width: drawerWidth,
             border: 0,
             height: "100%"

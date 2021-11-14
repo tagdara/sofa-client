@@ -1,10 +1,10 @@
 import React, { memo }  from 'react';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import TuneIcon from '@mui/icons-material/Tune';
 import CardBase from 'components/CardBase'
-import ToggleAvatar from 'components/ToggleAvatar'
+import CardLine from 'components/CardLine'
+import CardLineIcon from 'components/CardLineIcon'
+import CardLineText from 'components/CardLineText'
 
 function ScheduleItem(props) {
     
@@ -62,15 +62,17 @@ function ScheduleItem(props) {
 
     return (
         <CardBase>
-            <ListItem>
-                <ToggleAvatar avatarState={'on'} onClick={ () => props.select(props.name) }><TuneIcon /></ToggleAvatar>
-                <ListItemText onClick={ () => props.select(props.name) } primary={props.name} secondary={"Last: "+dateOnly(props.automation.lastrun)+" "+timeOnly(props.automation.lastrun)} />
-            </ListItem>
+            <CardLine>
+                <CardLineIcon on={true}><TuneIcon /></CardLineIcon>
+                <CardLineText primary={props.name} secondary={"Last: "+dateOnly(props.automation.lastrun)+" "+timeOnly(props.automation.lastrun)} 
+                                onClick={ () => props.select(props.name) } />
+            </CardLine>                
             { props.automation.schedules.map((sched,index) =>
-            <ListItem key={index} >
-                <ToggleAvatar noback={true} onClick={ () => props.select(props.name) }><ScheduleIcon /></ToggleAvatar>
-                <ListItemText onClick={ () => props.select(props.name) } primary={textSched(sched)} secondary={"Next: "+dateOnly(props.automation.nextrun)+" "+timeOnly(props.automation.nextrun)} />
-            </ListItem>
+            <CardLine key={index} >
+                <CardLineIcon on={true}><ScheduleIcon /></CardLineIcon>
+                <CardLineText  primary={textSched(sched)} secondary={"Next: "+dateOnly(props.automation.nextrun)+" "+timeOnly(props.automation.nextrun)} 
+                                onClick={ () => props.select(props.name) } />
+            </CardLine> 
             )}
         </CardBase>
     )

@@ -13,17 +13,13 @@ const useStyles = makeStyles(theme => {
     return {
         stack: {
             paddingTop: "env(safe-area-inset-top) !important",
+            paddingBottom: "env(safe-area-inset-bottom) !important",
             paddingLeft: "0 !important",
             overflowX: "hidden",
             overflowY: "hidden",
             alignContent: "start",
-            //padding: "2px",
             boxSizing: "border-box",
-            //border: "1px solid "+ theme.palette.layer.section,
-            //backgroundColor: theme.palette.layer.section,
-            //display: "flex",
             borderRadius: "4px 4px 4px 4px",
-            //border: "1px solid "+theme.palette.background.default,
         },
         title: {
             display: "flex",
@@ -43,7 +39,7 @@ const useStyles = makeStyles(theme => {
             overflowY: "hidden",
             alignContent: "start",
             padding: "3px !important",
-            backgroundColor: theme.palette.layer.section,
+            //backgroundColor: theme.palette.layer.section,
             borderRadius: "4px 4px 4px 4px",
             maxWidth: "24%",
         },
@@ -54,7 +50,7 @@ const useStyles = makeStyles(theme => {
             overflowY: "hidden",
             alignContent: "start",
             padding: "3px !important",
-            backgroundColor: theme.palette.layer.section,
+            //backgroundColor: theme.palette.layer.section,
             borderRadius: "4px 4px 4px 4px",
         },
         mobileGridColumn: {
@@ -64,7 +60,7 @@ const useStyles = makeStyles(theme => {
             //overflowY: "hidden",
             alignContent: "start",
             padding: "3px !important",
-            backgroundColor: theme.palette.layer.section,
+            //backgroundColor: theme.palette.layer.section,
             borderRadius: "4px 4px 4px 4px",
         },
         paddedToolbar: {
@@ -74,7 +70,7 @@ const useStyles = makeStyles(theme => {
         actionsChip: {
             justifyContent: "center",
             marginRight: 6,
-            backgroundColor: theme.palette.layer.card,
+            //backgroundColor: theme.palette.layer.card,
             '&:hover': {
                 borderColor: theme.palette.primary.dark,
             }  

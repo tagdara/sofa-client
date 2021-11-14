@@ -4,7 +4,7 @@ import MonitorButtonStack from 'devices/Computer/MonitorButtonStack';
 import MonitorButtonStackLabel from 'devices/Computer/MonitorButtonStackLabel';
 import Spacer from 'components/Spacer';
 
-export default function MonitorButtonGroup(props) {
+export default function MonitorButtonStackGroup(props) {
 
     if (!props.buttonLayout) { return null }
 
@@ -14,14 +14,14 @@ export default function MonitorButtonGroup(props) {
         <CardLine>
             <MonitorButtonStackLabel outlets={props.outlets} topClick={props.topClick} bottomClick={ props.bottomClick } />
             { Object.keys(props.buttonLayout).map( (zone, i) => 
-                <>  
+                <React.Fragment key={zone}>
                     { props.buttonLayout[zone].map( btn =>
                         <MonitorButtonStack key={btn.label} {...btn} />
                     )}
                     { i < sectionCount &&
                         <Spacer />
                     }
-                </>
+                </React.Fragment>
             )}
         </CardLine>
     );

@@ -5,8 +5,6 @@ import { ThemeProvider } from "@mui/material/styles";
 
 import Grid from '@mui/material/Grid';
 import CssBaseline from "@mui/material/CssBaseline";
-
-import { Scrollbars } from 'react-custom-scrollbars';
 import BottomBar from 'layout/BottomBar';
 import ReconnectButton from 'network/ReconnectButton';
 import SofaDrawer from 'layout/SofaDrawer';
@@ -16,6 +14,7 @@ import useStream from 'store/useStream'
 import storeUpdater from 'store/storeUpdater'
 import useLayoutStore from 'store/layoutStore'
 import useUserStore from 'store/userStore'
+import ScrollHolder from 'layout/ScrollHolder'
 
 import { discovery, refreshDirectives } from 'store/directive'
 import { addModule, renderSuspenseModule } from 'store/layoutHelpers'
@@ -50,20 +49,6 @@ const useStyles = makeStyles(theme => {
             paddingLeft: 16,
             opacity: "0.5"
         },
-        scrollHolder: {
-            display: "flex",
-            flex:3,
-            boxSizing: "border-box",
-            //padding: "0px 20px",
-            paddingBottom: 0,
-            marginBottom: 0,
-            overflowY: "auto",
-            overflowX: "hidden",
-            //marginLeft: "calc(100vw - 20px - 100%)",
-            alignContent: "flex-start",
-            flexDirection: "column",
-            //backgroundColor: theme.palette.layer.body,
-        },
     }
 });
 
@@ -97,14 +82,12 @@ export default function SofaFrame(props) {
             { !isMobile && <RightDrawer /> }
             { !isMobile && <TopBar /> }
             { !isMobile && <SofaDrawer /> }
-            <Scrollbars>
-            <div className={classes.scrollHolder}>
+            <ScrollHolder>
                 { !streamConnected && <ReconnectButton /> }
                 <Grid container spacing={ 1 } className={ isMobile ? classes.mobileControlArea : classes.controlArea} >
                     { renderSuspenseModule(currentPage, currentProps) }
                 </Grid>
-            </div>
-            </Scrollbars>
+            </ScrollHolder>
             { isMobile && <BottomBar /> }
             <CssBaseline />
         </ThemeProvider>

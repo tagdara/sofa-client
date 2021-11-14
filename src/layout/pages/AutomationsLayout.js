@@ -13,8 +13,8 @@ import AutomationItem from 'automation/AutomationItem';
 import GridSection from 'components/GridSection';
 import useLoginStore from 'store/userStore'
 
-import { isFavorite, makeFavorite } from 'store/deviceHelpers'
-import { loadAutomations } from 'store/automationHelpers'
+import { isFavorite, makeFavorite } from 'store/deviceHelpers';
+import { loadActivities } from 'store/activityHelpers';
 
 const AutomationsLayout = props => {
 
@@ -27,10 +27,11 @@ const AutomationsLayout = props => {
     const [scheduled, setScheduled] = useState(false)
 
     useEffect(() => {
-        loadAutomations().then(result => { setAutomations(result)})
+        loadActivities().then(result => { setAutomations(result)})
     // eslint-disable-next-line 
     }, []);
 
+    if (!automations) { return null }
 
     function selectAutomation(automation) {
         selectPage('AutomationLayout', {'endpointId':automation, 'noBottom':true } )

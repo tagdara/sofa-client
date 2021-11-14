@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => {
             position: "relative",
             minWidth: "320px",
             minHeight: 64,      
-            backgroundColor: theme.palette.layer.card,
+            //backgroundColor: theme.palette.layer.card,
             width: "100%",
         },
         border: {

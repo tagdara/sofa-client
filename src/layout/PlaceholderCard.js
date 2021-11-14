@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => {
     
     return {    
         greek: {
-            background: theme.palette.layer.item,
+            //background: theme.palette.layer.item,
             borderRadius: 2,
             minWidth: "75%",
             width: "75%",
@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => {
             margin: 6,
         },
         greekSub: {
-            background: theme.palette.layer.item,
+            //background: theme.palette.layer.item,
             borderRadius: 2,
             minWidth: "50%",
             width: "50%",

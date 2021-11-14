@@ -1,6 +1,6 @@
 import React, { useState, useEffect, createContext  } from 'react';
-import LightTheme from 'theme/sofaThemeLight';
-import DarkTheme from 'theme/sofaThemeDark';
+import LightTheme from 'theme/SofaThemeLightNew';
+import DarkTheme from 'theme/SofaThemeDarkNew';
 import useUserStore from 'store/userStore'
 
 export const SofaThemeContext = createContext();

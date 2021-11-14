@@ -13,10 +13,6 @@ const CardLineIcon = props => {
         detect: 'both',
     });
 
-    if (props.loading) {
-        return  <CircularProgress size={24} />
-    }
-
     function computeColor() {
         if (props.on === true ) { 
             if (props.color) {
@@ -36,7 +32,11 @@ const CardLineIcon = props => {
                         {...bind} 
                         sx={{ color: computeColor() }}
                     >
-            {props.children}
+            { props.loading ? 
+                <CircularProgress size={24}/>
+            :
+                <> {props.children} </>
+            }
         </ListItemIcon>
     )
 }

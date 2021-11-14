@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => {
             boxSizing: "border-box",
         },
         group: {
-            marginRight: 2,
+            marginRight: 4,
             maxWidth: "13% !important",
             minWidth: "13% !important",
             boxSizing: "borderBox",

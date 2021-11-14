@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => {
             display: "flex",
         },
         spinner: {
-            color: theme.palette.layer.itemHighlight,
+            //color: theme.palette.layer.itemHighlight,
             position: "absolute",
             margin: "auto",
             top: 0,

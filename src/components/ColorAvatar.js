@@ -44,9 +44,9 @@ const useStyles = makeStyles(theme => {
         },
 
         avatarSmall: {
-            height: 28,
-            width: 28,
-            fontSize: 14,
+            height: "28px !important",
+            width: "28px !important",
+            fontSize: "14px !important",
         },
         none: {
             color: theme.palette.primary.dark,
@@ -88,7 +88,9 @@ const ColorAvatar = props => {
                     onClick={props.onClick} label={props.children} color="secondary" />
             </div>
             :
-            <Avatar style={(props.background === false || props.noback) ? styles.noback : styles.back} className={ props.small ? classes.avatarSmall :classes.avatar } onClick={props.onClick} >
+            <Avatar style={(props.background === false || props.noback) ? styles.noback : styles.back} 
+                    className={ props.small ? classes.avatarSmall :classes.avatar } 
+                    onClick={props.onClick} >
                 {props.children}
             </Avatar>
             }

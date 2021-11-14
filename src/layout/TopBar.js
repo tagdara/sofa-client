@@ -17,9 +17,11 @@ import useLayoutStore from 'store/layoutStore'
 const useStyles = makeStyles((theme) => ({
 	appBar: {
 		boxShadow: 'none', 
+		backGroundColor: theme.palette.background.page,
 	},
 	toolbar: {
-		borderBottom: "1px solid "+theme.palette.background.page,
+		borderBottom: "1px solid "+theme.palette.background.paper+" !important",
+		marginBottom: 16,
 	},
 	root: {
 		flexGrow: 1,

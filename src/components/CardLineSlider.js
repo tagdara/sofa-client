@@ -68,8 +68,6 @@ const CardLineSlider = props => {
     const on = (props.on !== undefined) ? props.on : value > 0
     const classes = useStyles();
 
-    console.log('on',on)
-
     useEffect(() => {
         setValue(props.value)
     // eslint-disable-next-line 

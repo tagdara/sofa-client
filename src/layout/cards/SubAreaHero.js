@@ -16,8 +16,6 @@ import { sortByName, hasDisplayCategory, hasCapability, register, unregister, de
 
 const SubAreaHero = props => {
 
-
-    console.log('props', props)
     const [ currentArea, setCurrentArea ] = useState(props.area)
 
     const area = deviceByEndpointId(currentArea)

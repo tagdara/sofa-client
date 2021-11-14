@@ -1,8 +1,13 @@
 import React, { useEffect } from 'react';
-import ToggleAvatar from 'components/ToggleAvatar';
+import ColorAvatar from 'components/ColorAvatar';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import { register, unregister } from 'store/deviceHelpers'
+import grey from '@mui/material/colors/grey';
+import teal from '@mui/material/colors/teal';
+import green from '@mui/material/colors/green';
+import orange from '@mui/material/colors/orange';
+import red from '@mui/material/colors/red';
 
 export default function ForecastAvatar(props) { 
 
@@ -16,12 +21,6 @@ export default function ForecastAvatar(props) {
     // eslint-disable-next-line 
     }, [ ] )
 
-    function tempColor(temp) {
-        if (!temp) { return 'disabled' }
-        if (temp>=74) { return "hot" }
-        if (temp<70) { return "cool" }
-        return "mid";
-    }
     
     function forecastHigh() {
         try {
@@ -57,14 +56,33 @@ export default function ForecastAvatar(props) {
         return tempColor(total / count)
     }
 
+    const tempColor = ( temp ) => {
+        switch (true) {
+            case (!temp):
+                return grey[500]
+            case (temp < 70): 
+                return teal[500]
+            case (temp < 75): 
+                return green[700]
+            case (temp < 90): 
+                return orange[500]
+            case (temp < 200): 
+                return red[500]
+            default:
+                return grey[500]
+        }
+    }
+    
+    //const temperatureColor = tempColor(setpoint)
+
     return (
 
-        <ToggleAvatar reverse={true} 
+        <ColorAvatar reverse={true} 
                     wideAvatar={true} 
                     small={true} 
-                    avatarState={ forecastTempColor() } >
+                    color={ forecastTempColor() } >
                     { forecastLow()+ " - " + forecastHigh() }
-        </ToggleAvatar>
+        </ColorAvatar>
     );
 }
 

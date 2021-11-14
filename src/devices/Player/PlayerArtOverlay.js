@@ -120,7 +120,7 @@ const useStyles = makeStyles(theme => {
             borderBottomColor: theme.palette.divider,
         },
         spinner: {
-            color: theme.palette.layer.itemHighlight,
+            //color: theme.palette.layer.itemHighlight,
             position: "absolute",
             margin: "auto",
             top: 0,

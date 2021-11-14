@@ -69,6 +69,8 @@ const MonitorButtonStackLabel = props => {
     // eslint-disable-next-line 
     }, [])
 
+    if (!states) { return null }
+
     function onCount() {
         // Checks first to see if the outlet is on, then whether or not there is significant
         // energy use.

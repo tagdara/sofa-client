@@ -87,7 +87,7 @@ const useStyles = makeStyles(theme => {
             boxSizing: "border-box",
             display: "flex",
             width: "100%",
-            padding: "4px !important",
+            //padding: "4px !important",
             position: "relative",
         },
         

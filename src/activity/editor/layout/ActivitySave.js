@@ -4,6 +4,7 @@ import { makeStyles } from '@mui/styles';
 import SaveIcon from '@mui/icons-material/Save';
 
 import Fab from '@mui/material/Fab';
+import useActivityEditorStore from 'store/activityEditorStore'
 
 const useStyles = makeStyles({
     fabSave: {
@@ -21,23 +22,21 @@ const useStyles = makeStyles({
     }
 });
 
-export default function AutomationSave(props) {
+export default function ActivitySave(props) {
 
     const classes = useStyles();
+    const saved = useActivityEditorStore( state => state.saved )
+    const endpointId = useActivityEditorStore( state => state.endpointId )
+    const name = useActivityEditorStore( state => state.activity.name )
+
+    const okToSave = endpointId && name 
     
-    function okToSave() {
-        if (!props.name) { return false }
-        return true
-    }
+    if (saved) { return null}
 
     return (
-        <React.Fragment>
-            { !props.saved &&
-                <Fab size="small" color="primary" disabled={ !okToSave() } onClick={ (e)=> props.save() } className={classes.fabSave} >
-                    <SaveIcon />
-                </Fab>
-            }
-        </React.Fragment>
+        <Fab size="small" color="primary" disabled={ !okToSave } onClick={ (e)=> props.save() } className={classes.fabSave} >
+            <SaveIcon />
+        </Fab>
     )
 }
 

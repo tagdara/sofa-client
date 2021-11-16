@@ -5,6 +5,8 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 
+import useActivityEditorStore from 'store/activityEditorStore';
+
 const useStyles = makeStyles({
     
     root: {
@@ -30,30 +32,33 @@ const useStyles = makeStyles({
     }
 });
 
-export default function AutomationTitle(props) {
+const ActivityName = props => {
 
     const classes = useStyles();
-    const [ edit, setEdit ]=useState(false)
+    const [ editing, setEditing ]=useState(false)
+    const name = useActivityEditorStore( state => state.activity.name )
     
-    function editTitle(newvalue) {
-        props.save('title',newvalue)
+    function edit(newName) {
+        useActivityEditorStore.set({ activity: { name: newName }})
     }
 
     return (    
-             !edit && props.name ?
-                <Grid item xs={ 12 } className={classes.display} onClick={ ()=> setEdit(true) }>
-                    <Typography variant="h6" className={classes.typo}>{ props.name } </Typography>
+             !editing && name ?
+                <Grid item xs={ 12 } className={classes.display} onClick={ ()=> setEditing(true) }>
+                    <Typography variant="h6" className={classes.typo}>{ name } </Typography>
                 </Grid>
             :
                 <Grid item xs={ 12 } className={classes.root}>
                     <TextField
                         fullWidth
                         label={'Name'}
-                        value={ props.name===undefined ? "" : props.name }
-                        onChange={(e) => editTitle(e.target.value)}
+                        value={ name === undefined ? "" : name }
+                        onChange={(e) => edit(e.target.value)}
                     />
                     {props.children}
                 </Grid>
     )
 
 };
+
+export default ActivityName

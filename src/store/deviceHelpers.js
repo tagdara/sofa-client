@@ -325,10 +325,11 @@ export const getDeviceProperties = dev => {
     return devprops
 }
 
-export const propertyMap = dev => {
+export const mapDeviceProperties = dev => {
         
     var devprops=[]     
     if (dev===undefined) { return undefined }
+
     const controllerProperties = useDeviceStore.getState().controllerProperties
      
     for (var j = 0; j < dev.capabilities.length; j++) {

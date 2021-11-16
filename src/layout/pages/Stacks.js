@@ -1,12 +1,25 @@
 import React, { useEffect } from 'react';
-import Stack from 'layout/Stack';
+import CardStack from 'layout/CardStack';
+import Grid from '@mui/material/Grid';
 import useLayoutStore from 'store/layoutStore'
 import { refreshStackLayout } from 'store/layoutHelpers'
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles(theme => {
+    return {
+        stack: {
+            paddingTop: "env(safe-area-inset-top) !important",
+            paddingBottom: "env(safe-area-inset-bottom) !important",
+            paddingLeft: "4px !important",
+            paddingRight: "4px !important",
+            boxSizing: "border-box",
+        },
+    }
+})
 
 export default function Stacks(props) {
-    
-    // Stack data is actually stored in LayoutProvider even though it logically should reside here because Stacks gets unloaded
-    // and causes long re-renders by loading the stack definitions and modules.
+
+    const classes = useStyles();
     const stackLayout = useLayoutStore(state => state.stackLayout )
     const currentStack = useLayoutStore(state => state.currentStack )
     const minStackWidth = useLayoutStore(state => state.minStackWidth )
@@ -17,6 +30,7 @@ export default function Stacks(props) {
         refreshStackLayout()
     }, [])
 
+    if ( !stackLayout || !Object.keys(stackLayout).length ) { return null }
 
     function filterStacks() {
         if (maxStacks===1) {
@@ -29,14 +43,12 @@ export default function Stacks(props) {
     }
 
     return (
-        stackLayout && stackLayout.length>0 ? 
         <>
             { filterStacks().map( stack =>
-                <Stack key={stack} stack={ stack } xs={ Math.floor( 12/maxStacks )}  />
+                <Grid item key={stack} xs={ Math.floor( 12/maxStacks )} className={classes.stack} >
+                    <CardStack stack={ stack }  />
+                </Grid>
             )}
         </>
-        :
-        null
-
     );
 }

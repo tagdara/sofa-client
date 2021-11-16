@@ -6,8 +6,8 @@ import MuiAlert from '@mui/material/Alert';
 import CardLine from 'components/CardLine';
 import CardLineTitle from 'components/CardLineTitle';
 
-import AutomationAll from 'automation/AutomationAll';
-import AutomationItem from 'automation/AutomationItem';
+import ActivitiesAllButton from 'activity/ActivitiesAllButton';
+import ActivityItem from 'activity/ActivityItem';
 
 import useUserStore from 'store/userStore'
 import { selectPage } from 'store/layoutHelpers';
@@ -16,7 +16,7 @@ function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-const AutomationsFavorites = props => {
+const Favorites = props => {
 
     const favorites = useUserStore(state => state.preferences.favorites )
     const [ showResult, setShowResult] = useState(false)
@@ -24,7 +24,7 @@ const AutomationsFavorites = props => {
     const [ severity, setSeverity] = useState('info')
 
     function selectAutomation(automation) {
-        selectPage('AutomationLayout', {'name':automation, 'noBottom':true } )
+        selectPage('ActivitiesPage', {'name':automation, 'noBottom':true } )
     }    
     
     function handleClose() {
@@ -37,7 +37,7 @@ const AutomationsFavorites = props => {
         setShowResult(true);         
     }
 
-    if (!favorites) { return <AutomationAll /> }
+    if (!favorites) { return <ActivitiesAllButton /> }
 
     return (    
             <>
@@ -45,14 +45,14 @@ const AutomationsFavorites = props => {
                     <CardLineTitle title={"Favorites"} />
                 </CardLine>
                 { favorites.map(endpointId => 
-                    <AutomationItem small={true} endpointId={endpointId} key={endpointId}
+                    <ActivityItem small={true} endpointId={endpointId} key={endpointId}
                                     favorite={true} allowEdit={false} 
                                     launcher={true} icon={"base"}
                                     select={selectAutomation}
                                     showResult={showResultSnackbar}
                     />
                 )}
-                <AutomationAll />
+                <ActivitiesAllButton />
                 <Snackbar   anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}} 
                             open={showResult} autoHideDuration={6000} 
                             onClose={handleClose}
@@ -63,4 +63,4 @@ const AutomationsFavorites = props => {
     )
 }
 
-export default AutomationsFavorites;
+export default Favorites;

@@ -79,7 +79,7 @@ const ThermostatModeButtons = props => {
     
     return ( 
         <ToggleButtonGroup  className={classes.buttonGroup} size="small" variant="text" 
-                            disableElevation color="primary" exclusive 
+                            color="primary" exclusive 
                             value={thermostatMode}
                             onChange={handleSetMode}
                             >

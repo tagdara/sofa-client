@@ -7,15 +7,17 @@ import CardLine from 'components/CardLine';
 import CardLineText from 'components/CardLineText';
 import CardLineIcon from 'components/CardLineIcon';
 
-export default function AutomationAll(props) {
+const ActivitiesAllButton = props => {
     
     return (
-        <CardBase noPad={true} onClick={() => selectPage('AutomationsLayout', {'favorites':false})}>
+        <CardBase noPad={true} onClick={() => selectPage('ActivitiesPage', {'favorites':false})}>
             <CardLine>
                 <CardLineIcon on={false}><ListAltIcon /></CardLineIcon>
-                <CardLineText primary={"All Automations"}/>
+                <CardLineText primary={"All Activities"}/>
             </CardLine>                
         </CardBase>
     )
 }
+
+export default ActivitiesAllButton
 

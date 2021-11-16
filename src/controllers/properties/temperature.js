@@ -15,7 +15,6 @@ export default function Temperature(props) {
         try {
             if (props.item.value.hasOwnProperty('temperature')) {
                 val=parseInt(props.item.value.temperature.value)
-                console.log('parse temp',val, props.item.value)
             }
         } 
         catch {}

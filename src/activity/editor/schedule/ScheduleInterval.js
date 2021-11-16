@@ -6,7 +6,8 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import TextField from  '@mui/material/TextField';
 import ScheduleIcon from '@mui/icons-material/Schedule';
-import UnitButton from './UnitButton';
+
+import TimeUnitButton from 'activity/editor/input/TimeUnitButton';
 
 const useStyles = makeStyles({
     shortLabel: {
@@ -41,7 +42,7 @@ export default function ScheduleInterval(props) {
                 value={props.value}
                 onChange={(e) => props.change('interval', e.target.value)}
             />
-            <UnitButton value={props.unit} setUnit={changeUnit} />
+            <TimeUnitButton value={props.unit} setUnit={changeUnit} />
         </ListItem>
     )
 }

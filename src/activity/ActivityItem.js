@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import FavoriteIcon from '@mui/icons-material/Star';
-import ListIcon from '@mui/icons-material/List';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import CloseIcon from '@mui/icons-material/Close';
-import ClearIcon from '@mui/icons-material/Clear';
-import CloudOffIcon from '@mui/icons-material/CloudOff';
+import ListIcon from '@mui/icons-material/List';
 
 import ItemBase from "components/ItemBase"
-import ListItemIcon from '@mui/material/ListItemIcon';
 import CardLine from 'components/CardLine'
 import CardLineText from 'components/CardLineText'
 import CardLineIcon from 'components/CardLineIcon'
-import { isFavorite, removeFavorite, makeFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import ActivityItemMissing from 'activity/ActivityItemMissing'
+
+import { isFavorite, makeFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
+
 import useDeviceStateStore from 'store/deviceStateStore'
 
 
-const AutomationItem = props => {
+const ActivityItem = props => {
     
     const [ launched, setLaunched] = useState(false)
     const automation = deviceByEndpointId(props.endpointId)
@@ -31,19 +31,7 @@ const AutomationItem = props => {
     // eslint-disable-next-line 
     }, [props.endpointId])
 
-    if (!automationState) {
-        if (!isFavorite(props.endpointId)) { return null }
-        return <ItemBase small={ props.small } highlight={props.highlight}>
-                    <CardLine>
-                        <ListItemIcon><CloudOffIcon /></ListItemIcon>
-                        <CardLineText primary={"Missing: "+props.endpointId} />
-                        <IconButton onClick={ () => removeFavorite(props.endpointId) } size={"small"}>
-                            <ClearIcon />
-                        </IconButton>
-                    </CardLine>
-                </ItemBase>
-    
-    }
+    if (!automationState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 
     const name = automation.friendlyName
 
@@ -74,11 +62,12 @@ const AutomationItem = props => {
 
 
     function summary() {
-        if (!props.automation || !props.allowEdit) { return undefined }
-        var parts = ['triggers', 'conditions', 'actions']
-        var results = parts.map(part => { if (props.automation && props.automation[part].length > 0)  { return props.automation[part].length+" "+part } return undefined })
+        if (!props.activity || !props.allowEdit) { return undefined }
+        var parts = ['triggers_count', 'conditions_count', 'actions_count', 'schedules_count']
+        var results = parts.map(part => { if (props.activity[part] > 0)  { return props.activity[part]+" "+part.split("_")[0] } return undefined })
         return results.filter(Boolean).join(" / ")
     }    
+
 
     function loading() {
         if (launched) { return true }
@@ -86,10 +75,12 @@ const AutomationItem = props => {
     }
 
     return (
-        <ItemBase small={ props.small } highlight={props.highlight} onClick={ () => props.select(props.endpointId) }>
-            <CardLine>
-                <CardLineIcon color={props.favorite ? "primary" : undefined } loading={loading()} onClick={(event) => { event.stopPropagation(); makeFavorite(props.endpointId, !props.favorite)}}>
-                    { props.favorite && props.icon !== "base" ? <FavoriteIcon/> : <ListIcon /> }
+        <ItemBase small={ true } highlight={props.highlight}>
+            <CardLine  onClick={ () => props.select(props.endpointId) }>
+                <CardLineIcon color={props.favorite ? "primary" : undefined } 
+                                loading={loading()} 
+                                onClick={(event) => { event.stopPropagation(); makeFavorite(props.endpointId, !props.favorite)}}>
+                    { isFavorite(props.endpointId) && props.icon !== "base" ? <FavoriteIcon/> : <ListIcon /> }
                 </CardLineIcon>
             <CardLineText primary={name} secondary={ summary() } />
             { props.deleting ?
@@ -104,15 +95,12 @@ const AutomationItem = props => {
             </CardLine>
         </ItemBase>
     );
-
 }
 
-export default AutomationItem;
+export default ActivityItem;
 
-AutomationItem.defaultProps = {
-    launcher: false,
+ActivityItem.defaultProps = {
     allowEdit: true,
     deleting: false,
-    small: true,
 }
 

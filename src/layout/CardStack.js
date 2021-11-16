@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
 import { getStack, renderSuspenseModule } from 'store/layoutHelpers';
 
-import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
 
 import ErrorBoundary from 'error/ErrorBoundary';
 import StackMoreButton from 'layout/StackMoreButton';
@@ -82,7 +82,7 @@ const useStyles = makeStyles(theme => {
     }
 });
 
-export default function Stack(props) {
+export default function CardStack(props) {
     
     const classes = useStyles();
     const [ stack, setStack ]=useState(props.stack)
@@ -112,36 +112,39 @@ export default function Stack(props) {
         return false
     }
 
-    return (
-        stack ?
-            <Grid container item spacing={0} key={props.name} xs={ props.xs } className={ classes.stack } >
-                <div className={classes.pageHeader}>
-                    {props.showTitle &&
-                        <StackPicker stack={stack} setStack={setStack} />
-                    }
-                    { expandable() && <StackMoreButton expand={expand} onClick={ () => setExpand(!expand)} /> } 
+    if (!stack) { return null}
 
-                </div>
-                { stackData &&
-                    <>
-                    { stackData.cards && stackData.cards.map( (card, i) => 
-                        <React.Fragment key={"card"+i}>
-                        { (!card.hasOwnProperty('expand') || card['expand']===expand ) ?
-                        <ErrorBoundary>
-                            { renderSuspenseModule(card['module'], card['props']) }
-                        </ErrorBoundary>
-                        :
-                        null
-                        }
-                        </React.Fragment >
-                    )}
-                    </>
+    // <Grid container item spacing={0} key={props.name} xs={ props.xs } className={ classes.stack } >
+
+
+    return (
+        <Stack spacing={1}>
+            <div className={classes.pageHeader}>
+                {props.showTitle &&
+                    <StackPicker stack={stack} setStack={setStack} />
                 }
-            </Grid>
-        : null
+                { expandable() && <StackMoreButton expand={expand} onClick={ () => setExpand(!expand)} /> } 
+
+            </div>
+            { stackData &&
+                <>
+                { stackData.cards && stackData.cards.map( (card, i) => 
+                    <React.Fragment key={"card"+i}>
+                    { (!card.hasOwnProperty('expand') || card['expand']===expand ) ?
+                    <ErrorBoundary>
+                        { renderSuspenseModule(card['module'], card['props']) }
+                    </ErrorBoundary>
+                    :
+                    null
+                    }
+                    </React.Fragment >
+                )}
+                </>
+            }
+        </Stack>
     );
 }
 
-Stack.defaultProps = {
+CardStack.defaultProps = {
     showTitle: true,
 }

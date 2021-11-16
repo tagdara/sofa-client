@@ -21,7 +21,7 @@ const units = [
     'days',
 ];
 
-export default function UnitButton(props) {
+const TimeUnitButton = props => {
 
     const classes = useStyles();
     const [anchor, setAnchor] = useState(null)
@@ -60,3 +60,5 @@ export default function UnitButton(props) {
         </React.Fragment>
     )
 }
+
+export default TimeUnitButton

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import AutomationInput from 'automation/AutomationInput';
+import AutomationInput from 'activity/editor/input/ActivityInput';
 
 export default function Mode(props) {
 

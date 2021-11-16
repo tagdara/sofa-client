@@ -1,7 +1,7 @@
 import { withStyles } from '@mui/styles';
 import InputBase from '@mui/material/InputBase';
 
-const AutomationInput = withStyles(theme => ({
+const ActivityInput = withStyles(theme => ({
     input: {
         minWidth: '100px',
         borderRadius: 4,
@@ -19,4 +19,4 @@ const AutomationInput = withStyles(theme => ({
     },
 }))(InputBase);
 
-export default AutomationInput
+export default ActivityInput

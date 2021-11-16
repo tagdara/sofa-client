@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { DeviceContext } from 'context/DeviceContext';
 
-import AutomationDevice from 'automation/AutomationDevice';
-import PropertyValue from 'automation/PropertyValue';
-import DeviceDirective from 'automation/DeviceDirective';
+import AutomationDevice from 'activity/editor/ActivityDevice';
+import PropertyValue from 'activity/editor/PropertyValue';
+import DeviceDirective from 'activity/editor/DeviceDirective';
 import CardBase from 'components/CardBase';
 import DisplayAction from 'action/DisplayAction';
 

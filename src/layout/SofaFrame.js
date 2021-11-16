@@ -16,7 +16,7 @@ import useLayoutStore from 'store/layoutStore'
 import useUserStore from 'store/userStore'
 import ScrollHolder from 'layout/ScrollHolder'
 
-import { discovery, refreshDirectives } from 'store/directive'
+import { discovery, refreshDirectives, refreshProperties } from 'store/directive'
 import { addModule, renderSuspenseModule } from 'store/layoutHelpers'
 
 const useStyles = makeStyles(theme => {
@@ -65,6 +65,7 @@ export default function SofaFrame(props) {
     
     useEffect(() => {
         refreshDirectives()
+        refreshProperties()
         discovery()
         refreshUser()
         // eslint-disable-next-line 

@@ -60,7 +60,6 @@ export const refreshProperties = async () => {
     const headers = { authorization : accessToken }
     const response = await fetch(propertiesUrl, { headers: headers })
     const result = await response.json()
-    console.log('properties', result)
     useDeviceStore.setState({controllerProperties: result})
 }
 
@@ -89,3 +88,24 @@ export const discovery = async () => {
     storeUpdater(result)
 }
 
+export const propertyFromDirective = (controller, directive) => {
+    if (controller===undefined || directive===undefined) {
+        return undefined
+    }
+
+    if (controller.includes('.')) {
+        controller = controller.split('.')[1]
+    }
+
+    if (directives.hasOwnProperty(controller) && directives[controller].hasOwnProperty(directive)) {
+        var actionValues = directives[controller][directive]
+        if (actionValues) { 
+            try {
+                return Object.keys(actionValues)[0]
+            } 
+            catch {}
+        }
+    }
+
+    return undefined
+}    

@@ -6,7 +6,7 @@ import { SofaThemeContext } from 'theme/SofaTheme';
 import { makeStyles } from '@mui/styles';
 import IconButton from '@mui/material/IconButton';
 
-import Stack from 'layout/Stack';
+import Stack from 'layout/CardStack';
 
 import Drawer from '@mui/material/Drawer';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';

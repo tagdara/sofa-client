@@ -10,20 +10,23 @@ import Typography from '@mui/material/Typography';
 import LowPriorityIcon from '@mui/icons-material/LowPriority';
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import Alert from '@mui/material/Alert';
+import useActivityEditorStore from 'store/activityEditorStore'
 
-function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
-export default function AutomationDetails(props) {
+const ActivityDetails = props => {
+  
+    const endpointId = useActivityEditorStore( state => state.endpointId )
+    const activity = useActivityEditorStore( state => state.activity )
 
-    const [ showResult, setShowResult]=useState(false)
-    const [ resultMessage, setResultMessage]=useState('')
-    const [ severity, setSeverity]=useState('info')
-    
-    function runAutomation(conditions=true) {
-        directive(props.endpointId, 'SceneController', 'Activate', {}, {"conditions": conditions})
+    const [ showResult, setShowResult] = useState(false)
+    const [ resultMessage, setResultMessage] = useState('')
+    const [ severity, setSeverity] = useState('info')
+
+    const lastRun = activity.last_run && activity.last_run !== 'never' ? activity.last_run : undefined
+   
+    function runAutomation(processConditions=true) {
+        directive(endpointId, 'SceneController', 'Activate', {}, {"conditions": processConditions})
             .then(result=> { parseResult(result) })
     }
     
@@ -49,14 +52,17 @@ export default function AutomationDetails(props) {
 
     return (    
         <ListItem>
-            <ListItemText primary={"Last Run"} secondary={ props.automation.lastrun && props.automation.lastrun!=='never' ? <Moment utc format="ddd MMM D h:mm:sa">{props.automation.lastrun }</Moment> : 'Never'} />
-            <Typography variant="overline">{ props.endpointId }</Typography>
+            <ListItemText primary={"Last Run"} secondary={ lastRun ? <Moment utc format="ddd MMM D h:mm:sa">{lastRun}</Moment> : 'Never'} />
+            <Typography variant="overline">{ endpointId }</Typography>
             <IconButton onClick={() => runAutomation()}><PlaylistPlayIcon /></IconButton>
             <IconButton onClick={() => runAutomation(false)}><LowPriorityIcon /></IconButton>
             <Snackbar anchorOrigin={{ vertical: 'bottom', horizontal: 'right',}} open={showResult} autoHideDuration={6000} onClose={handleClose}>
-                <Alert severity={severity}>{resultMessage}</Alert>
+                <Alert elevation={6} variant="filled" severity={severity}>{resultMessage}</Alert>
             </Snackbar>
         </ListItem>
     )
 
 };
+
+
+export default ActivityDetails

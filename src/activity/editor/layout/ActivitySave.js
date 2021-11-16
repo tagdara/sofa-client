@@ -5,11 +5,12 @@ import SaveIcon from '@mui/icons-material/Save';
 
 import Fab from '@mui/material/Fab';
 import useActivityEditorStore from 'store/activityEditorStore'
+import { saveActivity } from 'store/activityEditorHelpers'
 
 const useStyles = makeStyles({
     fabSave: {
-        position: 'fixed',
-        bottom: 80,
+        position: 'fixed !important',
+        bottom: 64,
         right: 24,
         padding: 0,
         marginBottom: "env(safe-area-inset-bottom)",
@@ -34,7 +35,7 @@ export default function ActivitySave(props) {
     if (saved) { return null}
 
     return (
-        <Fab size="small" color="primary" disabled={ !okToSave } onClick={ (e)=> props.save() } className={classes.fabSave} >
+        <Fab size="small" color="primary" disabled={ !okToSave } onClick={saveActivity} className={classes.fabSave} >
             <SaveIcon />
         </Fab>
     )

@@ -2,17 +2,15 @@ import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 
 import Grid from '@mui/material/Grid';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-
-import CropFreeIcon from '@mui/icons-material/CropFree';
-
 import DeviceDialog from 'dialogs/DeviceDialog';
-import DeviceIcon from 'components/DeviceIcon';
 import { deviceByEndpointId } from 'store/deviceHelpers'
 import { selectActivityDevice } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
+
+import ActivityDeviceEmpty from 'activity/editor/ActivityDeviceEmpty'
+import ActivityDeviceItem from 'activity/editor/ActivityDeviceItem'
+import ActivityDeviceMissing from 'activity/editor/ActivityDeviceMissing'
+
 
 const useStyles = makeStyles({
 
@@ -55,17 +53,23 @@ const ActivityDevice = props => {
         selectActivityDevice(props.category, props.index, newEndpointId)
     }
 
+    function openSelectDialog() {
+        setDeviceSelect(true)
+    }
+
+    console.log(endpointId, device)
+
     return (
         <Grid item xs={props.wide ? 12 : 4 } className={classes.deviceLine} >
-            <ListItem button onClick={() => setDeviceSelect(true) } className={ classes.deviceButton } >
-                <ListItemIcon>
-                    { device===undefined ? <CropFreeIcon /> : <DeviceIcon name={ device.displayCategories[0] } /> }
-                </ListItemIcon>
-                <ListItemText   classes={{ primary: classes.primary, secondary: classes.typeLine}} 
-                                primary={ device ? device.friendlyName : "Choose a device" } 
-                                secondary={ device && device.displayCategories[0]} 
-                />
-            </ListItem>
+            { ( !endpointId && !device) &&
+                <ActivityDeviceEmpty onClick={openSelectDialog} />
+            }
+            { ( endpointId && !device) &&
+                <ActivityDeviceMissing endpointId={endpointId} onClick={openSelectDialog} />
+            }
+            { ( endpointId && device) &&
+                <ActivityDeviceItem endpointId={endpointId} device={device} onClick={openSelectDialog} />
+            }
             { deviceSelect &&
                 <DeviceDialog open={true} close={closeDialog} select={selectDevice} />
             }

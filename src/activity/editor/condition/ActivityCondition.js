@@ -1,7 +1,7 @@
 import React from 'react';
 import ActivityDevice from 'activity/editor/ActivityDevice';
 import PropertyValue from 'activity/editor/PropertyValue';
-import ActivityMove from 'activity/editor/layout/ActivityMove';
+import ActivityItemActions from 'activity/editor/layout/ActivityItemActions';
 import ControllerProperty from 'activity/editor/ControllerProperty';
 import GridItem from 'components/GridItem';
 
@@ -12,7 +12,7 @@ const ActivityCondition = props => {
             <ActivityDevice category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />      
             <ControllerProperty category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} /> 
             <PropertyValue category={ props.category } index={props.index} wide={props.wide} />
-            <ActivityMove category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />
+            <ActivityItemActions category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />
         </GridItem>
     )
 }

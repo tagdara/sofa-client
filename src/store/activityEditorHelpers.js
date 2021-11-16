@@ -26,63 +26,69 @@ export const newActivity = () => {
 }
 
 
-export const saveAutomation = async () => {
+export const saveActivity = async () => {
     const accessToken = useLoginStore.getState().access_token;
     const endpointId = useActivityEditorStore.getState().endpointId
     const activity = useActivityEditorStore.getState().activity
     const headers = { authorization : accessToken }
     const body = { ...activity, endpointId : endpointId }
     const response = await fetch(saveUrl + endpointId, { headers: headers, method: "post", body: JSON.stringify(body)})
-    await response.json()
-    useActivityEditorStore.setStore({ saved: true })
+    const result = await response.json()
+    console.log('result', result)
+    useActivityEditorStore.setState({ saved: true })
 }
 
 
 export const removeActivityItem = (section, index) => {
     // section should be the category - actions, conditions, triggers, schedules
     console.log('deleting item', index, 'from', section)
-    const items = useActivityEditorStore.getState().activity[section]
+    const activity = useActivityEditorStore.getState().activity
+    const items = activity[section]
     var remaining = [...items]
     remaining.splice(index, 1);
-    useActivityEditorStore.setState({ activity: { [section]: [ ...remaining] }})
+    useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: [ ...remaining] }})
 }
 
 export const updateActivityItem = (section, index, item) => {
     // section should be the category - actions, conditions, triggers, schedules
-    const items = useActivityEditorStore.getState().activity[section]
+    const activity = useActivityEditorStore.getState().activity
+    const items = activity[section]
     var updatedItems = [...items]
     updatedItems[index] = item
-    useActivityEditorStore.setState({ activity: { [section]: updatedItems }})
+    useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: updatedItems }})
 }
 
 export const addActivityItem = (section, item) => {
     // section should be the category - actions, conditions, triggers, schedules
-    const items = useActivityEditorStore.getState().activity[section]
+    const activity = useActivityEditorStore.getState().activity
+    const items = activity[section]
     var updatedItems = [...items, item]
-    useActivityEditorStore.setState({ activity: { [section]: updatedItems }})
+    useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: updatedItems }})
 }
 
 export const moveActivityItemUp = (section, index) => {
     if (index-1>=0) {
-        const items = useActivityEditorStore.getState().activity[section]
+        const activity = useActivityEditorStore.getState().activity
+        const items = activity[section]
         console.log('moving up item', index, items[index])
         var updatedItems = [...items]
         var element = updatedItems[index];
         updatedItems.splice(index, 1);
         updatedItems.splice(index-1, 0, element);
         console.log('moved up item', updatedItems[index-1], updatedItems)
-        useActivityEditorStore.setState({ activity: { [section]: updatedItems }})
+        useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: updatedItems }})
     }
 }
 
 export const moveActivityItemDown = (section, index) => {
-    const items = useActivityEditorStore.getState().activity[section]
+    const activity = useActivityEditorStore.getState().activity
+    const items = activity[section]
     if (index+1 <= items.length) {
         var updatedItems = [...items]
         var element = updatedItems[index];
         updatedItems.splice(index, 1);
         updatedItems.splice(index+1, 0, element);
-        useActivityEditorStore.setState({ activity: { [section]: updatedItems }})
+        useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: updatedItems }})
     }
 }
 

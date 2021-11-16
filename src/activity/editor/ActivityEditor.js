@@ -9,14 +9,10 @@ import ActivitySchedules from "activity/editor/schedule/ActivitySchedules"
 
 import ActivityHeader from "activity/editor/layout/ActivityHeader"
 import ActivitySave from "activity/editor/layout/ActivitySave"
-import useLayoutStore from 'store/layoutStore'
-
 import { loadActivity, newActivity } from 'store/activityEditorHelpers';
 
 
 export default function ActivityEditor(props) {
-
-    const isMobile = useLayoutStore( state => state.isMobile)
 
     useEffect(() => {
         if (props.endpointId !== undefined) {
@@ -29,7 +25,7 @@ export default function ActivityEditor(props) {
     }, [ props.endpointId ]);
 
     return (
-        <Grid container item spacing={1} xs={isMobile ? 12 : 9} >
+        <Grid item xs={12} sx={{ position: "relative"}}>
             <ActivityHeader />
             <ActivitySchedules />
             <ActivityTriggers />

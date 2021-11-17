@@ -10,6 +10,7 @@ const saveUrl = serverUrl + "/save/logic/activity/" // +props.endpointId
 
 export const loadActivity = async (endpointId) => {
     // loadJSONAutomation
+    useActivityEditorStore.setState({name: undefined, endpointId: endpointId, activity: {}, saved: false}, true)
     if (endpointId) {
         const accessToken = useLoginStore.getState().access_token;
         const headers = { authorization : accessToken }
@@ -22,7 +23,7 @@ export const loadActivity = async (endpointId) => {
 }
 
 export const newActivity = () => {
-    useActivityEditorStore.setStore({ activity: {}, saved: false, endpointId: undefined }, true)
+    useActivityEditorStore.setState({ activity: {}, saved: false, endpointId: undefined }, true)
 }
 
 

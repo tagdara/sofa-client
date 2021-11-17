@@ -43,7 +43,7 @@ const DeviceIcon = props => {
 
 export default DeviceIcon
 
-DeviceIcon.defaultProps = {
-    size: 'default',
-    fontSize: 'default',
-}
+//DeviceIcon.defaultProps = {
+//    size: 'default',
+//   fontSize: 'default',
+//}

@@ -1,5 +1,5 @@
 import React from 'react';
-import ListItem from '@mui/material/ListItem';
+import CardLine from 'components/CardLine';
 
 import ToggleButton from 'components/ToggleButton';
 
@@ -21,13 +21,13 @@ export default function ScheduleDays(props) {
     }
     
     return (
-        <ListItem>
+        <CardLine>
             { daysOfTheWeek.map((day) => 
                 <ToggleButton key={day} label={day} buttonState={props.value && props.value.includes(day) ? 'on' : 'off' } onClick={(e) => editDays(day)} >
                     {day}
                 </ToggleButton>
                 )
             }
-        </ListItem>
+        </CardLine>
     )
 }

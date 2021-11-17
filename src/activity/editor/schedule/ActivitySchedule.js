@@ -14,7 +14,7 @@ import { updateActivityItem } from 'store/activityEditorHelpers'
 const useStyles = makeStyles({
     flex: {
         display: "flex",
-        padding: 6,
+        padding: 0,
     },
 });
 
@@ -22,6 +22,8 @@ const ActivitySchedule = props => {
 
     const schedule = useActivityEditorStore(state => state.activity.schedules[props.index] )
     const classes = useStyles();
+
+    if (!schedule) { return null }
     
     function changeValue(aspect, value) {
         var updatedSchedule={ ...schedule, [aspect] : value}

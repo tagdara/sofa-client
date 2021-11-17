@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import AutomationInput from 'activity/editor/input/ActivityInput';
 
-export default function Mode(props) {
+const Mode = (props) => {
 
     useEffect(() => {
         if (props.item.value===undefined) {
@@ -39,7 +38,7 @@ export default function Mode(props) {
 
     
     return (
-        <Select value={props.item.value!==undefined ? props.item.value.mode : ""} onChange={handleModeChange} input={<AutomationInput name="input" />} >
+        <Select value={props.item.value!==undefined ? props.item.value.mode : ""} onChange={handleModeChange} size="small" >
             { props.interface.configuration.supportedModes.map( mode => 
                 <MenuItem key={mode.value} value={mode.value}>{ getModeName(mode) }</MenuItem>
             )}
@@ -47,3 +46,5 @@ export default function Mode(props) {
     );
 
 }
+
+export default Mode

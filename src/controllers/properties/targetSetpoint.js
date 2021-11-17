@@ -5,14 +5,14 @@ export default function TargetSetpoint(props) {
 
     useEffect(() => {
         if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'ThermostatController', 'SetTargetTemperature', { "targetSetpoint" : { "value": 70, "scale": "FAHRENHEIT" }}, {}, props.item.instance)
+            props.directive(props.device.endpointId, 'Alexa.ThermostatController', 'SetTargetTemperature', { "targetSetpoint" : { "value": 70, "scale": "FAHRENHEIT" }}, {}, props.item.instance)
         }
     // eslint-disable-next-line
     }, [props.item, props.device, props.interface])
 
     
     function handleTargetSetpointChange(event) {
-        props.directive(props.device.endpointId, 'ThermostatController', 'SetTargetTemperature', { "targetSetpoint" :  { "value": event, "scale": "FAHRENHEIT" }}, {}, props.item.instance)
+        props.directive(props.device.endpointId, 'Alexa.ThermostatController', 'SetTargetTemperature', { "targetSetpoint" :  { "value": event, "scale": "FAHRENHEIT" }}, {}, props.item.instance)
 
     }; 
     

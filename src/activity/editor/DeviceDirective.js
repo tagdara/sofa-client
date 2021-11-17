@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-import ListItem from '@mui/material/ListItem';
-import AutomationInput from './input/ActivityInput';
+import CardLine from 'components/CardLine'
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
@@ -13,7 +12,6 @@ import useActivityEditorStore from 'store/activityEditorStore'
 const useStyles = makeStyles({
 
     flex: {
-        padding: "0px 4px",
         display: "flex",
         alignItems: "center",
     },
@@ -77,17 +75,19 @@ export default function DeviceDirective(props) {
     }
     
     if (!device) { return null }
-
+  //                         input={<AutomationInput name="command" />} >
     return (
-        <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
-            <ListItem>
-                <Select className={classes.wideSelect} value={defaultOrValue()} onChange={(e) => handleChangeDirectiveName(e.target.value)} 
-                        input={<AutomationInput name="command" />} >
+        <Grid item xs={props.wide ? 4 : 12 } className={classes.flex} >
+            <CardLine>
+                <Select className={classes.wideSelect} 
+                        value={defaultOrValue()} 
+                        size="small"
+                        onChange={(e) => handleChangeDirectiveName(e.target.value)} >
                 { directiveMap.map( dirItem => 
                     <MenuItem key={propkey(dirItem)} value={dirItem}>{dirItem.instance ? dirItem.directive+"."+dirItem.instance.split('.')[1] : dirItem.directive}</MenuItem>
                 )}
                 </Select>
-            </ListItem>
+            </CardLine>
         </Grid>
     )
 }

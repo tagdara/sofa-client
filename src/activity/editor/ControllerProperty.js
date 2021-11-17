@@ -1,9 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
 
-import AutomationInput from './input/ActivityInput';
-
-import ListItem from '@mui/material/ListItem';
+import CardLine from 'components/CardLine'
 import OperatorButton from "./input/operatorButton"
 import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
@@ -30,7 +28,6 @@ const useStyles = makeStyles({
     },
     flex: {
         display: "flex",
-        height: 64,
         alignItems: "center",
     },
     wideSelect: {
@@ -92,17 +89,18 @@ export default function ControllerProperty(props) {
     }
 
     return (
-        <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
-            <ListItem >
+        <Grid item xs={props.wide ? 4 : 12 } className={classes.flex} >
+            <CardLine >
                 <Select className={classes.wideSelect} value={ defaultOrValue() } 
                         onChange={(e) => handleChangePropertyName(e.target.value)} 
-                        input={<AutomationInput name="command"/>} >
+                        size="small" 
+                >
                 { propertyMap.map( propItem => 
                     <MenuItem key={propkey(propItem)} value={propItem}>{ propItem.instance ? propItem.instance.split('.')[1] : propItem.property }</MenuItem>
                 )}
                 </Select>
                 <OperatorButton index={props.index} value={ opDefaultOrValue() } setOperator={ editOperatorValue } anyOp={props.anyOp} />
-            </ListItem>
+            </CardLine>
         </Grid>
     )
 }

@@ -1,35 +1,14 @@
 import React, { useEffect } from 'react';
-import { withStyles } from '@mui/styles';
 
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import InputBase from '@mui/material/InputBase';
 
-
-const BootstrapInput = withStyles(theme => ({
-    input: {
-        minWidth: '100px',
-        borderRadius: 4,
-        position: 'relative',
-        backgroundColor: theme.palette.background.paper,
-        border: '1px solid #ced4da',
-        fontSize: 16,
-        padding: '10px 26px 10px 12px',
-        transition: theme.transitions.create(['border-color', 'box-shadow']),
-        '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-    },
-}))(InputBase);
-
-export default function DetectionState(props) {
+const DetectionState = props => {
     
     const controller=props.interface.interface.split('.')[1]
     
     useEffect(() => {
-        if (props.item.value===undefined) {
+        if (props.item.value === undefined) {
             props.directive(props.device.endpointId, controller, 'SetDetectionState', { 'detectionState': 'DETECTED' }, {}, props.item.instance)
         }
     // eslint-disable-next-line
@@ -40,12 +19,12 @@ export default function DetectionState(props) {
     }; 
     
     return (
-        <Select value={ props.item.value ? props.item.value.detectionState : "" } onChange={handleDetectionStateChange} input={<BootstrapInput name="detectionState" />} >
-            <MenuItem value="DETECTED">DETECTED</MenuItem>
-            <MenuItem value="NOT_DETECTED">NOT_DETECTED</MenuItem>
+        <Select value={ props.item.value ? props.item.value.detectionState : "" } onChange={handleDetectionStateChange} size="small" >
+            <MenuItem value="DETECTED">Detected</MenuItem>
+            <MenuItem value="NOT_DETECTED">Not Detected</MenuItem>
         </Select>
     );
 
 }
-
+export default DetectionState
 

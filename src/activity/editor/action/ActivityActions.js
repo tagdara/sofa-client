@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import ActivityAction from "activity/editor/action/ActivityAction"
-import ActivitySectionButtons from "activity/editor/layout/ActivitySectionButtons"
-import GridSection from 'components/GridSection';
+import ActivityCategory from "activity/editor/layout/ActivityCategory"
 
 import useActivityEditorStore from "store/activityEditorStore"
 import ErrorBoundary from 'error/ErrorBoundary'
@@ -15,6 +14,7 @@ const ActivityActions = props => {
     const items = useActivityEditorStore(state => state.activity.actions)
     const name = "Actions"
     const category = "actions"
+    const count = items ? items.length : 0
 
     function add() {
         const newItem={
@@ -28,23 +28,14 @@ const ActivityActions = props => {
     }
 
     return (
-        <GridSection    name={name} 
-                        margin={true}
-                        secondary={ <ActivitySectionButtons 
-                                        add = { add } 
-                                        setRemoving = { setRemoving } 
-                                        setReordering ={ setReordering } 
-                                        removing = { removing } 
-                                        reorder = { reordering }
-                                        count = { items ? items.length : 0 }
-                                    /> }
-                >
+        <ActivityCategory   name={name} count={count} add={add} 
+                            setRemoving = { setRemoving } setReordering ={ setReordering } removing = { removing } reorder = { reordering } >
             { items && items.map( (item,index) =>
                 <ErrorBoundary key={"actions"+index} >
-                    <ActivityAction category={category} index = {index} reordering = {reordering} removing = {removing} />
+                    <ActivityAction category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} />
                 </ErrorBoundary>
             )}
-        </GridSection>
+        </ActivityCategory>
     )
 };
 

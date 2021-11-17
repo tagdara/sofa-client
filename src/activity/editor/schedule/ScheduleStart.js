@@ -1,14 +1,18 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
+
+// import DateTimePicker from '@mui/lab/DateTimePicker';
 import Grid from '@mui/material/Grid';
 
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
+import CardLineIcon from 'components/CardLineIcon'
 
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
+//import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import DateAdapter from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DateTimePicker from '@mui/lab/DateTimePicker';
+
 import TextField from  '@mui/material/TextField';
 import EventIcon from '@mui/icons-material/Event';
 
@@ -26,8 +30,17 @@ const useStyles = makeStyles({
         marginTop:0,
         flexGrow:0,
         marginBottom:0,
-        padding: 6,
+        padding: 0,
     },
+    holder: {
+        display: "flex",
+        justifyContent: "flex-start",
+        alignItems: "center",
+        flexDirection: "row",
+    },
+    datePickerRoot: {
+        padding: 12,
+    }
 });
 
 
@@ -35,42 +48,26 @@ export default function ScheduleStart(props) {
     
     const classes = useStyles();
 
-    function shortTimeFormat(thisdate) {
-        var longdate=new Date().toISOString().replace('Z','')
-        if (thisdate) {
-            longdate=thisdate
-        }
-
-        if (longdate.split(':').length>2) {
-            longdate=longdate.split(':')[0]+":"+longdate.split(':')[1]
-        }
-
-        return longdate
-    }
-
     return (
         <>
         <Grid item xs={props.wide ? 12 : 4 } >
-            <ListItem> 
-                <ListItemIcon><EventIcon /></ListItemIcon>
-                <ListItemText className={classes.label} primary="Starting" />
-                { props.remove ?
-                    <ListItemSecondaryAction>
-                        <IconButton onClick={() => props.delete(props.index)}><CloseIcon /></IconButton>     
-                    </ListItemSecondaryAction>
-                    : null
-                }
-            </ListItem>
+            <CardLine >
+                <CardLineIcon>
+                    <EventIcon />
+                </CardLineIcon>
+                <CardLineText primary="Starting" />
+            </CardLine>
         </Grid>
-        <Grid item xs={props.wide ? 12 : 4 } >
-            <TextField
-                className={classes.input}
-                type="datetime-local"
-                id={'specstart'}
-                margin={"normal"}
-                value={props.value ? props.value : shortTimeFormat() }
-                onChange={(e) => props.change(props.target, e.target.value)}
-            />
+        <Grid item xs={props.wide ? 12 : 4 } className={classes.holder} >
+            <LocalizationProvider dateAdapter={DateAdapter}>
+                <DateTimePicker
+                    size="small"
+                    renderInput={(props) => <TextField size="small" {...props} />}
+                    label="DateTimePicker"
+                    value={ props.value }
+                    onChange={newValue =>  props.change(props.target, newValue)}
+                />
+            </LocalizationProvider>
         </Grid>
         </>
     )

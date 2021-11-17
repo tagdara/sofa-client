@@ -56,11 +56,9 @@ const ActivityDevice = props => {
     function openSelectDialog() {
         setDeviceSelect(true)
     }
-
-    console.log(endpointId, device)
-
+    
     return (
-        <Grid item xs={props.wide ? 12 : 4 } className={classes.deviceLine} >
+        <Grid item xs={props.wide ? 4 : 12 } className={classes.deviceLine} >
             { ( !endpointId && !device) &&
                 <ActivityDeviceEmpty onClick={openSelectDialog} />
             }

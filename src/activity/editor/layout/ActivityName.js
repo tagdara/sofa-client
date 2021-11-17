@@ -39,7 +39,7 @@ const ActivityName = props => {
     const name = useActivityEditorStore( state => state.activity.name )
     
     function edit(newName) {
-        useActivityEditorStore.set({ activity: { name: newName }})
+        useActivityEditorStore.setState({ activity: { name: newName }})
     }
 
     return (    

@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => {
     return {        
         listItemNoPad: {
             cursor: "pointer",
-            boxSizing: "content-box",
+            boxSizing: "border-box",
             //boxSizing: "border-box",
             padding: "0 16px",
             height: 56,

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 import IconButton from '@mui/material/IconButton';
+import Button from '@mui/material/Button';
+
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import FavoriteIcon from '@mui/icons-material/Star';
 
 import { selectPage } from 'store/layoutHelpers'
 
@@ -16,11 +17,11 @@ import { loadActivities, deleteActivity } from 'store/activityHelpers';
 
 const ActivitiesLayout = props => {
 
-    const editing = false
     const [ activities, setActivities ] = useState([])
-    const [ removing, setRemoving ] = useState(false)
-    const [ favorites, setFavorites ] = useState(props.favorites)
-    const [ showScheduled, setShowScheduled] = useState(false)
+    const editing = false
+    const [remove, setRemove] = useState(false)
+    const [favorites, setFavorites] = useState(props.favorites)
+    const [scheduled, setScheduled] = useState(false)
 
     useEffect(() => {
         loadActivities().then(result => { setActivities(result)})
@@ -43,49 +44,43 @@ const ActivitiesLayout = props => {
     }
 
     function toggleScheduled() {
-        setShowScheduled(!showScheduled)
+        setScheduled(!scheduled)
+        if (!scheduled) {
+            setFavorites(false)
+        }
     }
 
-    function getListItems() {
-        var workingList = [...activities]
-        if (favorites) {
-            workingList = workingList.filter(activity => isFavorite(activity.endpointId))
-        }
-        if (showScheduled) {
-            workingList = workingList.filter(activity => activity.next_run )
-        }
-        return workingList
-    }
+    const activityList = favorites ? activities.filter(activity => isFavorite(activity.endpointId)) : activities 
 
-    const activityList = getListItems()
 
     return (    
+        <>
             <GridSection scroll={true} name={"Activities"} secondary={
-                <div>
+                <>
                     <IconButton onClick={ () => newActivity() } >
                         <AddIcon fontSize="small" />
                     </IconButton>
                         { Object.keys(activities).length>0 &&
-                        <IconButton color={ removing ? "primary" : "inherit" } onClick={ () => { setRemoving(!removing); }} >
+                        <IconButton color={ remove ? "primary" : "inherit" } onClick={ () => { setRemove(!remove); }} >
                             <RemoveIcon fontSize="small" />
                         </IconButton>
                         }
                     <IconButton onClick={ () => toggleScheduled() } >
-                        <ScheduleIcon color={ showScheduled ? "primary" : "inherit" } fontSize="small" />
+                        <ScheduleIcon color={ scheduled ? "primary" : "inherit" } fontSize="small" />
                     </IconButton>
-                    <IconButton color={ favorites ? "primary" : "inherit" } onClick={ () => toggleFavorites() }><FavoriteIcon/></IconButton>
-                </div> }
+                    <Button color={ !favorites ? "primary" : "inherit" } onClick={ () => toggleFavorites() }>ALL</Button>
+                </> }
             >
             { activityList && activityList.map(activity => 
                 <ActivityItem   endpointId={activity.endpointId} key={activity.endpointId}
                                 select={selectActivity}
                                 activity={ activity }
-                                makeFavorite={makeFavorite}
-                                edit={editing} delete={removing ? deleteActivity : undefined} 
-                                showNextRun = {showScheduled}
+                                makeFavorite={makeFavorite} deleting={remove} 
+                                edit={editing} delete={deleteActivity} 
                             />
             )}
             </GridSection>
+        </>
     )
 }
 

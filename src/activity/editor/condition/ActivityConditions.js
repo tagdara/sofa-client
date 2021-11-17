@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import ActivityCondition from "activity/editor/condition/ActivityCondition"
 import useActivityEditorStore from 'store/activityEditorStore'
 import { addActivityItem } from 'store/activityEditorHelpers'
-import GridSection from 'components/GridSection';
 import ErrorBoundary from 'error/ErrorBoundary'
-import ActivitySectionButtons from "activity/editor/layout/ActivitySectionButtons"
+
+import ActivityCategory from "activity/editor/layout/ActivityCategory"
 
 const ActivityConditions = props => {
 
@@ -14,7 +14,8 @@ const ActivityConditions = props => {
     const items = useActivityEditorStore(state => state.activity.conditions)
     const name = "Conditions"
     const category = "conditions"
-
+    const count = items ? items.length : 0
+    
     function add() {
         const newItem={
             "type": "property",
@@ -28,23 +29,14 @@ const ActivityConditions = props => {
     }
 
     return (
-        <GridSection    name={name} 
-                        margin={true}
-                        secondary={ <ActivitySectionButtons 
-                                        add = { add } 
-                                        setRemoving = { setRemoving } 
-                                        setReordering ={ setReordering } 
-                                        removing = { removing } 
-                                        reorder = { reordering } 
-                                        count = { items ? items.length : 0 }
-                                    /> }
-                >
+        <ActivityCategory   name={name} count={count} add={add} 
+                            setRemoving = { setRemoving } setReordering ={ setReordering } removing = { removing } reorder = { reordering } >
             { items && items.map( (item,index) =>
-                <ErrorBoundary key={"trigger"+index} >
-                    <ActivityCondition category={category} index = {index} reordering = {reordering} removing = {removing} />
+                <ErrorBoundary key={"cond"+index} >
+                    <ActivityCondition category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} />
                 </ErrorBoundary>
             )}
-        </GridSection>
+        </ActivityCategory >
     )
 };
 

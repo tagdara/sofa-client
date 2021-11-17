@@ -3,6 +3,7 @@ import useLoginStore from 'store/loginStore'
 
 const serverUrl = "https://"+window.location.hostname;
 const activitiesUrl = serverUrl + "/list/logic/activities"
+const scheduleUrl = serverUrl + "/list/logic/schedule"
 
 export const loadActivities = async () => {
     const accessToken = useLoginStore.getState().access_token;
@@ -11,6 +12,13 @@ export const loadActivities = async () => {
     var webResult = await response.json()
     var result = fixActivities(webResult)
     return result
+}
+
+export const loadSchedule = async () => {
+    const accessToken = useLoginStore.getState().access_token;
+    const headers = { authorization : accessToken }
+    const response = await fetch(scheduleUrl, { headers: headers })
+    return await response.json()
 }
 
 function fixActivities(activities) {

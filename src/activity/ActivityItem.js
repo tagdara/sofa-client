@@ -15,6 +15,7 @@ import { isFavorite, makeFavorite, register, unregister, deviceByEndpointId } fr
 import { directive } from 'store/directive'
 
 import useDeviceStateStore from 'store/deviceStateStore'
+import moment from 'moment';
 
 
 const ActivityItem = props => {
@@ -61,13 +62,22 @@ const ActivityItem = props => {
     }
 
 
-    function summary() {
-        if (!props.activity || !props.allowEdit) { return undefined }
+    function partsSummary() {
         var parts = ['triggers_count', 'conditions_count', 'actions_count', 'schedules_count']
         var results = parts.map(part => { if (props.activity[part] > 0)  { return props.activity[part]+" "+part.split("_")[0] } return undefined })
         return results.filter(Boolean).join(" / ")
     }    
+ 
+    function scheduleSummary() {
+        if (props.activity.next_run) { return moment(props.activity.next_run).calendar() }
+        return undefined
+    }
 
+    function summary() {
+        if (!props.activity || !props.allowEdit) { return undefined }
+        if (props.showNextRun) { return scheduleSummary() }
+        return partsSummary()
+    }    
 
     function loading() {
         if (launched) { return true }

@@ -28,7 +28,11 @@ export default function PropertyValue(props) {
     useEffect(() => {
 
         try {
-            if (!item) { return }
+            if (!item) { 
+                setPropertyModule(undefined) 
+                setPropertyModuleName(undefined)
+                return undefined
+            }
             var propertyName = item.propertyName
             if (!propertyName) {
                 propertyName = propertyFromDirective(item.controller, item.command)
@@ -48,18 +52,21 @@ export default function PropertyValue(props) {
 
     const endpointId = item.endpointId
     const device = endpointId ? deviceByEndpointId(endpointId) : undefined
+ 
+    if ( !device || !propertyModuleName || !item || item.operator ==='Any') { return null }
+
     const controllerInterface = getControllerInterface(device,item) 
-    
+
     const activityPropertyDirective = (endpointId, controllerName, command, payload={}, cookie={}, instance)  => {
-        updateActivityItem(props.category, props.index, payload)
+        console.log('using directive type update', endpointId, controllerName, command, payload, instance)
+        const update = { endpointId: endpointId, controller: controllerName, command: command, type: "command", value: payload}
+        updateActivityItem(props.category, props.index, update)
     }
 
     const renderProps = { ...props, item: item, device: device, instance: item.instance, directive: activityPropertyDirective, interface: controllerInterface }
 
-    if ( !device || !propertyModuleName || !item || item.operator ==='Any') { return null }
-
     return (
-        <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
+        <Grid item xs={props.wide ? 4 : 12 } className={classes.flex} >
             <ListItem >
             { renderSuspensePropertyModule(propertyModuleName, propertyModule, renderProps ) }
             </ListItem>

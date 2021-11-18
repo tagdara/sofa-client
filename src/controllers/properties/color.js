@@ -16,7 +16,8 @@ const useStyles = makeStyles({
     },
     button: {
         minWidth: 96,
-        minHeight: 39,
+        minHeight: 24,
+        boxSizing: "border-box",
     },
     revealIcon: {
         height: 24,

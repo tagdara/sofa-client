@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import { directives } from 'store/directive'
-import { devicesByDisplayCategory } from 'store/deviceHelpers';
+import { filteredEndpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 import List from '@mui/material/List';
-import SearchIcon from '@mui/icons-material/Search';
 
-import GridSearch from 'components/GridSearch';
+import DeviceSelectSearch from 'deviceSelect/DeviceSelectSearch';
 import Device from 'deviceSelect/Device';
 import CompositeDevice from 'devices/CompositeDevice';
-import SofaDialog from "dialogs/SofaDialog";
 
-import { Scrollbar } from 'react-custom-scrollbars';
-import CircularProgress from '@mui/material/CircularProgress';
+//import { Scrollbars } from 'react-custom-scrollbars';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 const useStyles = makeStyles({
     xscroller: {
@@ -63,76 +65,52 @@ const useStyles = makeStyles({
 
 const DeviceDialog = props => {
 
-    const controllers = undefined // Couldn't figure out where this comes from
+    const theme = useTheme();
     const classes = useStyles();
 
-    const [mode] = useState('all');
-    const [limit, setLimit] = useState(50);
     const [nameFilter, setNameFilter] = useState('')
     const [showDevice, setShowDevice] = useState(null)
-    const [loading, setLoading] = useState(false);
-    const devs = devicesByDisplayCategory ('ALL', nameFilter)
-    const [displayDevs, setDisplayDevs]=useState([])
-    
-    useEffect(() => {
-        var devs = devicesByDisplayCategory ('ALL', nameFilter)
-        setDisplayDevs(devs.slice(0, limit))
-    // eslint-disable-next-line 
-    }, [ limit, nameFilter ])
+    //const [ category, setCategory ] = useState(undefined)
+    const category = undefined
 
-    //function filterByType(devtype) {
+    const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const endpointIds = filteredEndpointIdsByDisplayCategory(category,nameFilter)
+    const sortedEndpointIds = sortByName(endpointIds)
 
-    //    if (devtype==='all' || devtype==='') {
-    //        var devs=devicesByCategory('ALL', nameFilter)
-            //return devs
-    //        return devs.slice(0, limit)
-    //    }
-        
-    //    return devicesByCategory(devtype)
-    //}
-    
     function closeDevice() {
         setShowDevice(null)
     }
     
-    function handleLoadMore() {
-        if ( limit < devs.length ) { 
-            setLoading(true)
-            setLimit(limit+50)
-            setLoading(false)
-        }
-    }
-
-    function handleScroll(e) {
-        const bottom = e.scrollHeight - e.scrollTop === e.clientHeight;
-        if (bottom) {
-            handleLoadMore()
+    function select(selectedEndpointId) {
+        if (props.select) {
+            props.select(selectedEndpointId)
+            props.close()
+        } else {
+            setShowDevice(selectedEndpointId)
         }
     }
 
     return (
-        <SofaDialog open={props.open} close={props.close} maxWidth={'md'} >
+        <Dialog open={props.open} close={props.close} fullScreen={fullScreen} fullWidth maxWidth={'md'} >
             <DialogTitle>
-                <GridSearch small={true} wide={true} searchValue={nameFilter} setSearchValue={setNameFilter} startIcon={<SearchIcon />} />
+                <DeviceSelectSearch searchValue={nameFilter} setSearchValue={setNameFilter} />
             </DialogTitle>
             <DialogContent className={classes.scroller}>
-                <Scrollbar  contentProps={{ style: {'display': 'flex', 'flexDirection': 'column'} }} className={classes.scrollContent} onScroll={ handleScroll } noScrollX translateContentSizeYToHolder >
                     <List>
-                    { displayDevs.map((device) =>
-                        <Device key={ 'XX'+device.endpointId } small={true} device={device} mode={mode} 
-                                controllers={controllers} select={props.select ? props.select : () => setShowDevice(device.endpointId)} 
-                                directives={directives} showDevice={setShowDevice} />
-                    )}
+                        { sortedEndpointIds.map( endpointId =>
+                            <Device key={ 'select'+endpointId } endpointId={endpointId} small={true} 
+                                    select={select} 
+                                    showDevice={setShowDevice} />
+                        )}
                     { showDevice && 
                         <CompositeDevice endpointId={showDevice} close={closeDevice} directives={directives} />
                     }
-                    { loading &&
-                        <CircularProgress size={24} />
-                    }
                     </List>
-                </Scrollbar>
             </DialogContent>
-        </SofaDialog>
+            <DialogActions>
+                <Button onClick={props.close}>CANCEL</Button>
+            </DialogActions>
+        </Dialog>
     )
 
 };

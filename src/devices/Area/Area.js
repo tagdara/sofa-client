@@ -10,8 +10,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 
-import { DeviceContext } from 'context/DeviceContext';
-
 import ToggleAvatar from 'components/ToggleAvatar';
 import DotLevel from 'components/DotLevel';
 import GridItem from 'components/GridItem'
@@ -85,7 +83,6 @@ const useStyles = makeStyles({
 export default function Area(props) {
     
     const classes = useStyles();
-    const { deviceByEndpointId } = useContext(DeviceContext);
 
     function runShortcut(level) {
         directive(shortcuts[level], 'SceneController', 'Activate')

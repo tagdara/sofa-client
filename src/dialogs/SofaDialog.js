@@ -4,6 +4,7 @@ import { makeStyles } from '@mui/styles';
 
 import Dialog from '@mui/material/Dialog';
 import Slide from  '@mui/material/Slide';
+
 const useStyles = makeStyles({
 
     dialogPaperFull: {

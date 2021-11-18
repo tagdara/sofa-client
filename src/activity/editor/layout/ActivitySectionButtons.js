@@ -25,12 +25,12 @@ const ActivitySectionButtons = props => {
                     <AddIcon fontSize="small" />
                 </IconButton>
             }
-            { (props.setRemoving && props.count) &&
+            { (props.setRemoving && props.count > 0 ) &&
                 <IconButton size="small" onClick={remove} >
                     <RemoveIcon fontSize="small" />
                 </IconButton>
             }
-            { (props.setReordering && props.count > 1) &&
+            { (props.setReordering !== undefined && props.count > 1) &&
                 <IconButton size="small" onClick={reorder}>
                     <UnfoldMoreIcon fontSize="small" />
                 </IconButton>

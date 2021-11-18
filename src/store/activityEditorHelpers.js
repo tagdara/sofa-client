@@ -56,6 +56,7 @@ export const updateActivityItem = (section, index, item) => {
     const items = activity[section]
     var updatedItems = [...items]
     updatedItems[index] = item
+    console.log('item', item)
     useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: updatedItems }})
 }
 

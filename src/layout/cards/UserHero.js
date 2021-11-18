@@ -48,7 +48,7 @@ export default function UserHero(props) {
 
     return (
         <CardBase >
-            <CardLine>
+            <CardLine inList={true}>
                 <IconButton onClick={props.handleFavorites}>
                     <AccountCircle />
                 </IconButton>
@@ -58,7 +58,7 @@ export default function UserHero(props) {
                     <ExitToAppIcon />
                 </IconButton>
             </CardLine>
-            <CardLine>
+            <CardLine inList={true}>
                 <Button startIcon={<CompareIcon />}  onClick={() => pickUserTheme(colorScheme==='dark' ? 'light' : 'dark')}>
                     { colorScheme==='dark' ? 'Light' : 'Dark' }
                 </Button>

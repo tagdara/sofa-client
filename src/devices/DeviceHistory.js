@@ -3,15 +3,13 @@ import { useState, useEffect } from 'react';
 import { DeviceContext } from 'context/DeviceContext';
 import { LayoutContext } from 'layout/LayoutProvider';
 
-import {makeStyles, withStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import ListItem from '@mui/material/ListItem';
 import GridItem from "components/GridItem"
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import InputBase from '@mui/material/InputBase';
-
 import Button from '@mui/material/Button';
 
 import moment from 'moment';
@@ -35,24 +33,6 @@ const useStyles = makeStyles({
     }
 });
   
-const BootstrapInput = withStyles(theme => ({
-    input: {
-        minWidth: '100px',
-        borderRadius: 4,
-        position: 'relative',
-        backgroundColor: theme.palette.background.paper,
-        border: '1px solid #ced4da',
-        fontSize: 16,
-        padding: '10px 26px 10px 12px',
-        transition: theme.transitions.create(['border-color', 'box-shadow']),
-        '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-    },
-}))(InputBase);  
-
 export default function DeviceHistory(props) {
     
     const classes = useStyles();
@@ -75,9 +55,6 @@ export default function DeviceHistory(props) {
     const chartwidth=window.innerWidth > 1400 ? 1400 : window.innerWidth
     const chartheight=chartwidth /2 > 500 ? 500 : chartwidth / 2
     
-    //useEffect(() => { 
-    //    console.log(history)
-    //}, [history] )
 
     useEffect(() => { 
         var x=moment(startDateEntry+" "+startTimeEntry)
@@ -223,7 +200,7 @@ export default function DeviceHistory(props) {
                 
                 <GridItem xs={isMobile ? 12 : 4} >
                     <ListItem>
-                        <Select className={classes.interval} label="Start" value={groupBy} onChange={(e) => setGroupBy(e.target.value)} input={<BootstrapInput name="interval" id="interval" />} >
+                        <Select className={classes.interval} label="Start" value={groupBy} onChange={(e) => setGroupBy(e.target.value)} size="small" >
                         { intervals.map( iv => 
                             <MenuItem key={ iv } value={iv}>{iv}</MenuItem>
                         )}

@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-import { withStyles, makeStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import InputBase from '@mui/material/InputBase';
 import ListIcon from '@mui/icons-material/List';
+
+import DateAdapter from '@mui/lab/AdapterMoment';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import TimePicker from '@mui/lab/TimePicker';
+import moment from 'moment'
 
 const useStyles = makeStyles({
     
@@ -14,35 +18,18 @@ const useStyles = makeStyles({
     },
 });
 
-const BootstrapInput = withStyles(theme => ({
-    input: {
-        borderRadius: 4,
-        position: 'relative',
-        backgroundColor: theme.palette.background.paper,
-        border: '1px solid #ced4da',
-        fontSize: 16,
-        padding: '10px 26px 10px 12px',
-        transition: theme.transitions.create(['border-color', 'box-shadow']),
-        '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-    },
-}))(InputBase);
-
 export default function TimeEntry(props) {
     
     const classes = useStyles();
     const [presetMode, setPresetMode] = useState(false)
     const [preset, setPreset]=useState('Sunset')
     const [offset, setOffset]=useState(0)
-    const [specificTime, setSpecificTime]=useState('08:00:00')
+    const [specificTime, setSpecificTime]=useState('08:00')
 
     useEffect(() => {
         if (props.value!==undefined) {
             if (props.value.includes(':')) {
-                setSpecificTime(props.value)
+                setSpecificTime(moment(props.value, 'HH:mm').valueOf())
             } else {
                 if (props.value.includes('+')) {
                     setOffset(parseInt(props.value.split('+')[1]))
@@ -57,7 +44,6 @@ export default function TimeEntry(props) {
     }, [props.value])
     
     function handleChange(part, val) {
-        console.log('partval',part,val)
         var newval='unknown'
         if (part==='offset' && presetMode) {
             setOffset(val)
@@ -75,7 +61,7 @@ export default function TimeEntry(props) {
             }
         } else {
             setSpecificTime(val)
-            newval=val
+            newval=val.format('HH:mm')
         }
         props.updateValue(props.label, newval)
     }
@@ -84,7 +70,7 @@ export default function TimeEntry(props) {
         <>
             { presetMode ?
                 <>
-                    <Select onChange={(e) => handleChange('preset', e.target.value) } value={ preset } input={<BootstrapInput name="Preset" id="Preset" />} >
+                    <Select onChange={(e) => handleChange('preset', e.target.value) } value={ preset } size="small" >
                         <MenuItem value=""><em>Choose a property</em></MenuItem>
                         <MenuItem value="Sunrise">Sunrise</MenuItem>
                         <MenuItem value="Sunset">Sunset</MenuItem>
@@ -94,11 +80,16 @@ export default function TimeEntry(props) {
                             InputLabelProps={{ shrink: true, }} inputProps={{ step: 5, style: {padding: 10 } }}  />
                 </>
             :
-                <TextField className={classes.start} variant="outlined" onChange={(e) => handleChange('time', e.target.value) }
-                        id={ props.label } label={ props.label } type="time" value={ specificTime }
-                        InputLabelProps={{ shrink: true, }} inputProps={{ step: 5, style: {padding: 10 } }}  />
+                <LocalizationProvider dateAdapter={DateAdapter}>
+                    <TimePicker
+                        size="small"
+                        renderInput={(props) => <TextField size="small" {...props} />}
+                        label="Time"
+                        value={specificTime }
+                        onChange={newValue =>  handleChange('time', newValue)}
+                    />
+                </LocalizationProvider>
             }
-
             <IconButton size={"small"} onClick={() => setPresetMode(!presetMode) } ><ListIcon /></IconButton>
         </>
     );

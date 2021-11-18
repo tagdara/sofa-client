@@ -43,6 +43,7 @@ const AreaHero = props => {
     const lights = children.filter(endpointId => hasDisplayCategory(endpointId, "LIGHT"))
     const scenes = children.filter(endpointId => hasDisplayCategory(endpointId, "SCENE_TRIGGER"))
     const nonShortcuts = scenes.filter(endpointId => !shortcuts.includes(endpointId))
+    const homeArea = userArea ? userArea : "logic:area:Main"
 
     function shortcutId(scene) {
         if (shortcuts.includes(scene)) { return shortcuts.indexOf(scene)}
@@ -60,7 +61,7 @@ const AreaHero = props => {
 
     return (
         <ItemBase>
-            <CardControl name={ name } home={userArea} currentArea={currentArea} selectArea={selectArea} expand={expandArea} />
+            <CardControl name={ name } home={homeArea} currentArea={currentArea} selectArea={selectArea} expand={expandArea} />
             <AreaSummaryLine endpointId={currentArea} />
             { areas.map(area =>
                 <AreaLine key={area} endpointId={area} selectArea={selectArea} />

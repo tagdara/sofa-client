@@ -3,12 +3,12 @@ import React from 'react';
 import IconButton from '@mui/material/IconButton';
 
 import CommentIcon from '@mui/icons-material/Comment';
-import ListItem from 'components/NewListItem';
-import ListItemAvatar from 'components/NewListItemAvatar';
-import ListItemText from 'components/NewListItemText';
-import ListItemSecondaryAction from 'components/NewListItemSecondaryAction';
-import DeviceIcon from 'components/DeviceIcon';
+import CardLine from 'components/CardLine'
+import CardLineIcon from 'components/CardLineIcon'
+import CardLineText from 'components/CardLineText'
 
+import DeviceIcon from 'components/DeviceIcon';
+import { deviceByEndpointId } from 'store/deviceHelpers'
 
 const Device = props => {
 
@@ -17,19 +17,30 @@ const Device = props => {
         props.showDevice(props.device.endpointId)
     }
 
+    const device = deviceByEndpointId(props.endpointId)
+    const category = device.displayCategories[0]
+
+    const camelSentence = str => {
+        return (" " + str).toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, 
+            function(match, chr) {
+                return chr.toUpperCase();
+            }
+        );
+    }
+
+    const friendlyCategory = category ? camelSentence(category) : ""
+
     return (
-        <ListItem onClick={() => props.select(props.device)} >
-            <ListItemAvatar loading={false} state={"off"} background={false}>
-                <DeviceIcon displayCategories={props.device.displayCategories} />
-            </ListItemAvatar>
-            <ListItemText   primary={props.device.friendlyName} 
-                            secondary={props.device.displayCategories} />
-            <ListItemSecondaryAction inline={true} >
-                <IconButton edge="end" aria-label="See Details" onClick={secondaryClick}>
-                    <CommentIcon />
-                </IconButton>
-            </ListItemSecondaryAction>
-        </ListItem>
+        <CardLine onClick={() => props.select(props.endpointId)} >
+            <CardLineIcon on={false}>
+                <DeviceIcon displayCategories={device.displayCategories} />
+            </CardLineIcon>
+            <CardLineText   primary={device.friendlyName} 
+                            secondary={friendlyCategory} />
+            <IconButton edge="end" aria-label="See Details" onClick={secondaryClick}>
+                <CommentIcon />
+            </IconButton>
+        </CardLine>
     )
 }
 

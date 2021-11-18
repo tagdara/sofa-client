@@ -46,8 +46,8 @@ export default function CardControl(props) {
 
     return (
             <div className={classes.controlLine}>
-                { props.currentArea !== "logic:area:All" ?
-                    <IconButton size="small" className={classes.backButton} onClick={()=>props.selectArea("logic:area:All")}><ArrowBackIcon className={classes.tinyIcon} /></IconButton>
+                { props.currentArea !== "logic:area:all" ?
+                    <IconButton size="small" className={classes.backButton} onClick={()=>props.selectArea("logic:area:all")}><ArrowBackIcon className={classes.tinyIcon} /></IconButton>
                     :
                     <div className={classes.placeholder} />
                 }

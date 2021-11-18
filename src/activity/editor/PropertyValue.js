@@ -11,7 +11,6 @@ import useActivityEditorStore from 'store/activityEditorStore'
 const useStyles = makeStyles({
         
     flex: {
-        padding: "0px 4px",
         display: "flex",
         alignItems: "center",
     },
@@ -57,13 +56,34 @@ export default function PropertyValue(props) {
 
     const controllerInterface = getControllerInterface(device,item) 
 
+    const conditionPropertyDirective = (endpointId, controllerName, command, payload={}, cookie={}, instance)  => {
+        const update = {    type: item.type,
+                            endpointId: endpointId, 
+                            controller: controllerName, 
+                            propertyName: item.propertyName, 
+                            operator: item.operator, 
+                            value: payload[item.propertyName]
+                    }
+        updateActivityItem( props.category, props.index, update)
+    }
+
     const activityPropertyDirective = (endpointId, controllerName, command, payload={}, cookie={}, instance)  => {
-        console.log('using directive type update', endpointId, controllerName, command, payload, instance)
-        const update = { endpointId: endpointId, controller: controllerName, command: command, type: "command", value: payload}
+        const update = {    type: item.type,
+                            endpointId: endpointId, 
+                            controller: controllerName, 
+                            command: command, 
+                            value: payload
+                    }
         updateActivityItem(props.category, props.index, update)
     }
 
-    const renderProps = { ...props, item: item, device: device, instance: item.instance, directive: activityPropertyDirective, interface: controllerInterface }
+    const renderProps = { ...props, 
+                            item: item, 
+                            device: device, 
+                            instance: item.instance, 
+                            directive: item.type==="property" ? conditionPropertyDirective : activityPropertyDirective, 
+                            interface: controllerInterface 
+                        }
 
     return (
         <Grid item xs={props.wide ? 4 : 12 } className={classes.flex} >

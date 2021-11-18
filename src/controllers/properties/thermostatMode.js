@@ -1,27 +1,7 @@
 import React, { useEffect } from 'react';
-import { withStyles } from '@mui/styles';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import InputBase from '@mui/material/InputBase';
 
-
-const BootstrapInput = withStyles(theme => ({
-    input: {
-        minWidth: '100px',
-        borderRadius: 4,
-        position: 'relative',
-        backgroundColor: theme.palette.background.paper,
-        border: '1px solid #ced4da',
-        fontSize: 16,
-        padding: '10px 26px 10px 12px',
-        transition: theme.transitions.create(['border-color', 'box-shadow']),
-        '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-    },
-}))(InputBase);
 
 export default function ThermostatMode(props) {
     
@@ -56,10 +36,8 @@ export default function ThermostatMode(props) {
 
     const supportedModes = props.interface.configuration ? props.interface.configuration.supportedModes : []
     
-    console.log('tmode ocnifg', props.interface)
-    
     return (
-        <Select value={ valueOrDefault() } onChange={handleModeChange} input={<BootstrapInput name="thermostatMode" />} >
+        <Select value={ valueOrDefault() } onChange={handleModeChange} size="small" >
             { supportedModes.map( mode => 
                 <MenuItem key={mode} value={mode}>{mode}</MenuItem>
             )}

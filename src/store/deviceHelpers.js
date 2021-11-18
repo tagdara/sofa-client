@@ -224,6 +224,19 @@ export function endpointIdsByDisplayCategory(category) {
     return endpointIds
 }
 
+export function filteredEndpointIdsByDisplayCategory(category, filter) {
+    var devices = useDeviceStore.getState().devices  
+    var endpointIds = []         
+    filter = filter.toLowerCase()
+    console.log('filter', category, filter)
+    for (var id in devices) {
+        if ((!category || devices[id].displayCategories.includes(category)) && (!filter || devices[id].friendlyName.toLowerCase().includes(filter)) ) {
+            endpointIds.push(devices[id].endpointId)
+        } 
+    }
+    return endpointIds
+}
+
 export const modeDisplayName = (endpointId, instance, value) => {
 
     var dev = useDeviceStore.getState().devices[endpointId]        

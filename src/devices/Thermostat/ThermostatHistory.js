@@ -1,11 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { makeStyles, withStyles } from '@mui/styles';
+import { makeStyles } from '@mui/styles';
 
 import TextField from '@mui/material/TextField';
 import ListItem from '@mui/material/ListItem';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import InputBase from '@mui/material/InputBase';
 import Button from '@mui/material/Button';
 
 import moment from 'moment';
@@ -29,24 +28,7 @@ const useStyles = makeStyles({
         width: "20%",
     },
 });
-  
-const BootstrapInput = withStyles(theme => ({
-    input: {
-        minWidth: '100px',
-        borderRadius: 4,
-        position: 'relative',
-        backgroundColor: theme.palette.background.paper,
-        border: '1px solid #ced4da',
-        fontSize: 16,
-        padding: '10px 26px 10px 12px',
-        transition: theme.transitions.create(['border-color', 'box-shadow']),
-        '&:focus': {
-            borderRadius: 4,
-            borderColor: '#80bdff',
-            boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
-        },
-    },
-}))(InputBase);  
+
 
 export default function ThermostatHistory(props) {
     
@@ -66,8 +48,6 @@ export default function ThermostatHistory(props) {
     const tz = moment.tz.guess();
     const chartwidth=window.innerWidth > 1400 ? 1400 : window.innerWidth
     const chartheight=chartwidth /2 > 500 ? 500 : chartwidth / 2
-    
-    console.log(start,end)
     
     useEffect(() => { 
         console.log(history)
@@ -117,7 +97,7 @@ export default function ThermostatHistory(props) {
         <GridSection name={props.device.friendlyName+" every "+groupBy} >
             <GridItem nopaper={true} xs={12}>
                 <ListItem >
-                    <Select value={device.endpointId ? device.endpointId : ""} onChange={handleDeviceChange} input={<BootstrapInput name="input" id="input" />} >
+                    <Select value={device.endpointId ? device.endpointId : ""} onChange={handleDeviceChange} size="small" >
                     { thermostats.map( tstat => 
                         <MenuItem key={ tstat.endpointId } value={tstat.endpointId}>{tstat.friendlyName}</MenuItem>
                     )}

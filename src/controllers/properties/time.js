@@ -5,7 +5,7 @@ export default function Time(props) {
     
     useEffect(() => {
         if (props.item.value===undefined) {
-            props.directive(props.device.endpointId, 'TimeController', 'SetTime', { "time" : { "start" : "08:00", "end": "20:00"}}, {}, props.item.instance)
+            props.directive(props.device.endpointId, 'LogicController', 'SetTime', { "time" : { "start" : "08:00", "end": "20:00"}}, {}, props.item.instance)
         }
     // eslint-disable-next-line
     }, [props.item, props.device, props.interface])
@@ -18,7 +18,7 @@ export default function Time(props) {
         }
         data[part]=val
         console.log( {"time": data})
-        props.directive(props.device.endpointId, 'TimeController', 'SetTime', { "time" : data }, {}, props.item.instance)
+        props.directive(props.device.endpointId, 'LogicController', 'SetTime', { "time" : data }, {}, props.item.instance)
     }
     
     return (

@@ -28,7 +28,9 @@ const useStyles = makeStyles(theme => {
             position: 'relative',
             width: drawerWidth,
             border: 0,
-            height: "100%"
+            height: "100%",
+            padding: 2,
+            boxSizing: "border-box",
         },
         drawerHeader: {
             backgroundColor: theme.palette.background.paper,

@@ -3,17 +3,17 @@ import ActivityDevice from 'activity/editor/ActivityDevice';
 import ActivityItemActions from 'activity/editor/layout/ActivityItemActions';
 import PropertyValue from 'activity/editor/PropertyValue';
 import ControllerProperty from 'activity/editor/ControllerProperty';
-import GridItem from 'components/GridItem';
+import ActivityLine from 'activity/editor/layout/ActivityLine'
 
 const ActivityTrigger = props => {
 
     return (
-        <GridItem nolist={true} elevation={0} wide={true} xs={12}>
+        <ActivityLine>
             <ActivityDevice category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />
-            <ControllerProperty category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} /> 
-            <PropertyValue category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />
+            <ControllerProperty category={props.category} index={props.index} wide={props.wide}/> 
+            <PropertyValue category={props.category} index={props.index} wide={props.wide} />
             <ActivityItemActions category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />
-        </GridItem>
+        </ActivityLine>
     )
 }
 

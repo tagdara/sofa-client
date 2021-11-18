@@ -17,7 +17,7 @@ const ActivityCategory = props => {
                     setRemoving = { props.setRemoving } 
                     setReordering ={ props.setReordering } 
                     removing = { props.removing } 
-                    reorder = { props.reordering }
+                    reordering = { props.reordering }
                     count = { props.count }
                 />
             </CardLine>

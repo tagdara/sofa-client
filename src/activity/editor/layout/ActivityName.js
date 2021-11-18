@@ -12,16 +12,14 @@ const useStyles = makeStyles({
     root: {
         alignItems: "flex-end",
         padding: "8px 16px 8px 16px !important",
-        height: 64,
         display: "flex",
     },
     display: {
-        alignItems: "flex-end",
+        alignItems: "center",
         padding: "0 16px",
         display: "flex",
-        minHeight: 64,
+        justifyContent: "space-between",
     },
-
     label: {
         display: "flex",
         flexGrow:1,
@@ -46,10 +44,12 @@ const ActivityName = props => {
              !editing && name ?
                 <Grid item xs={ 12 } className={classes.display} onClick={ ()=> setEditing(true) }>
                     <Typography variant="h6" className={classes.typo}>{ name } </Typography>
+                    {props.children}
                 </Grid>
             :
                 <Grid item xs={ 12 } className={classes.root}>
                     <TextField
+                        size="small"
                         fullWidth
                         label={'Name'}
                         value={ name === undefined ? "" : name }

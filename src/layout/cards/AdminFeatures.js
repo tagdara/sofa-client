@@ -28,11 +28,6 @@ export default function AdminFeatures(props) {
     const classes = useStyles();
     const [ showDialog, setShowDialog] = useState(false);
 
-    function otherPort(portnumber, tabname) {
-        var newurl=window.location.protocol+"//"+window.location.hostname+":"+portnumber;
-        window.open(newurl,tabname);
-    }
-    
     function closeDialog() {
         setShowDialog(false)
     }
@@ -52,8 +47,8 @@ export default function AdminFeatures(props) {
                 </Button>
             </ListItem>
             <ListItem>
-                <Button fullWidth variant="outlined" startIcon = {<EditIcon />} onClick={()=> otherPort('8444','_editor')}>
-                    Editor
+                <Button fullWidth variant="outlined" startIcon = {<EditIcon />} onClick={()=> selectPage('ModePage')}>
+                    Modes
                 </Button>
             </ListItem>
             <ListItem>

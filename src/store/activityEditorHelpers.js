@@ -7,6 +7,7 @@ import useLoginStore from 'store/loginStore'
 const serverUrl = "https://"+window.location.hostname;
 const activityUrl = serverUrl + "/list/logic/activity/" // +props.endpointId
 const saveUrl = serverUrl + "/save/logic/activity/" // +props.endpointId
+const addUrl = serverUrl + "/add/logic/activity" // +props.endpointId
 
 export const loadActivity = async (endpointId) => {
     // loadJSONAutomation
@@ -39,6 +40,17 @@ export const saveActivity = async () => {
     useActivityEditorStore.setState({ saved: true })
 }
 
+export const addActivity = async () => {
+    const accessToken = useLoginStore.getState().access_token;
+    const activity = useActivityEditorStore.getState().activity
+    const headers = { authorization : accessToken }
+    const body = { ...activity }
+    const response = await fetch(addUrl, { headers: headers, method: "post", body: JSON.stringify(body)})
+    const result = await response.json()
+    console.log('result', result)
+    useActivityEditorStore.setState({ endpointId: activity.endpointId, activity: result, saved: true })
+}
+
 
 export const removeActivityItem = (section, index) => {
     // section should be the category - actions, conditions, triggers, schedules
@@ -53,9 +65,15 @@ export const removeActivityItem = (section, index) => {
 export const updateActivityItem = (section, index, item) => {
     // section should be the category - actions, conditions, triggers, schedules
     const activity = useActivityEditorStore.getState().activity
-    const items = activity[section]
-    var updatedItems = [...items]
-    updatedItems[index] = item
+
+    if (activity[section]) {
+        const items = activity[section]
+        var updatedItems = [...items]
+        updatedItems[index] = item
+    } else {
+        console.log('This section does not exist to update', section)
+        return 
+    }
     console.log('item', item)
     useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: updatedItems }})
 }
@@ -63,8 +81,13 @@ export const updateActivityItem = (section, index, item) => {
 export const addActivityItem = (section, item) => {
     // section should be the category - actions, conditions, triggers, schedules
     const activity = useActivityEditorStore.getState().activity
-    const items = activity[section]
-    var updatedItems = [...items, item]
+    var updatedItems = [ item ]
+    console.log('updated', updatedItems)
+    if (activity[section]) {
+        const items = activity[section]
+        console.log('old', items)
+        updatedItems = [...items, ...updatedItems]
+    }
     useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: updatedItems }})
 }
 

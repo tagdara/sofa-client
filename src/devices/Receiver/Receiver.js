@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@mui/styles';
 
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import Collapse from '@mui/material/Collapse';
 import Switch from '@mui/material/Switch';
 
@@ -13,11 +11,12 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import DotSlider from 'components/DotSlider'
 import CardBase from 'components/CardBase'
 import ToggleIconButton from 'components/ToggleIconButton'
-import ModeLines from 'devices/Mode/ModeLines'
+import ModeLines from 'controllers/ModeController/ModeLines'
 
 import CardLine from 'components/CardLine'
 import CardLineText from 'components/CardLineText'
 import CardLineIcon from 'components/CardLineIcon'
+import CardLineSelect from 'components/CardLineSelect'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
@@ -30,10 +29,6 @@ const useStyles = makeStyles(theme => {
             width: "100%",
             color: theme.palette.primary.contrastText,
             backgroundColor: "#444",
-        },
-        select: {
-            minWidth: "50%",
-            display: "flex",
         },
         titleText: {
             fontSize: 18,
@@ -113,7 +108,7 @@ const Receiver = props => {
         directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     };
     
-    function handleInput(event, inputname) {
+    function handleInput(inputname) {
         directive(props.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
     }; 
 
@@ -174,14 +169,7 @@ const Receiver = props => {
                             onClick={ (e) => handleInputLockModeChoice(e, (receiver.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
                         />
                     }
-                    <Select disabled={!on} variant={"standard"}
-                            className={classes.select} displayEmpty 
-                            value={receiver.InputController.input.value ? receiver.InputController.input.value : ""} 
-                            onChange={ (e) => handleInput(e, e.target.value) } >
-                        { getInputs(props.endpointId).map(inp =>
-                            <MenuItem key={inp} value={inp}>{inp}</MenuItem>
-                        )}
-                    </Select>
+                    <CardLineSelect value = { receiver.InputController.input.value } choose={handleInput} disabled={!on} selections={getInputs(props.endpointId)} />
                 </CardLine>
                 <ModeLines  directive={directive} disabled={!on} endpointId={props.endpointId}
                             device={device} deviceState={receiver} exclude={["InputLock"]} />

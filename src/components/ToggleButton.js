@@ -5,12 +5,12 @@ import Button from '@mui/material/Button';
 const useStyles = makeStyles(theme => {
     return {        
         off: {
-            minWidth: 36,
+            minWidth: "36px !important",
             marginLeft: 2,
         },
         on: {
             marginLeft: 2,
-            minWidth: 36,
+            minWidth: "36px !important",
             "&:hover" : {
                 backgroundColor: theme.palette.primary.light,
             },

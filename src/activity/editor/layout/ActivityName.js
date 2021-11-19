@@ -33,30 +33,30 @@ const useStyles = makeStyles({
 const ActivityName = props => {
 
     const classes = useStyles();
-    const [ editing, setEditing ]=useState(false)
     const name = useActivityEditorStore( state => state.activity.name )
-    
+    const [ editing, setEditing ] = useState(!name)    
+
     function edit(newName) {
         useActivityEditorStore.setState({ activity: { name: newName }})
     }
 
     return (    
-             !editing && name ?
-                <Grid item xs={ 12 } className={classes.display} onClick={ ()=> setEditing(true) }>
-                    <Typography variant="h6" className={classes.typo}>{ name } </Typography>
-                    {props.children}
-                </Grid>
-            :
-                <Grid item xs={ 12 } className={classes.root}>
-                    <TextField
-                        size="small"
-                        fullWidth
-                        label={'Name'}
-                        value={ name === undefined ? "" : name }
-                        onChange={(e) => edit(e.target.value)}
-                    />
-                    {props.children}
-                </Grid>
+        !editing ?
+            <Grid item xs={ 12 } className={classes.display} onClick={ ()=> setEditing(true) }>
+                <Typography variant="h6" className={classes.typo}>{ name } </Typography>
+                {props.children}
+            </Grid>
+        :
+            <Grid item xs={ 12 } className={classes.root}>
+                <TextField
+                    size="small"
+                    fullWidth
+                    label={'Name'}
+                    value={ name === undefined ? "" : name }
+                    onChange={(e) => edit(e.target.value)}
+                />
+                {props.children}
+            </Grid>
     )
 
 };

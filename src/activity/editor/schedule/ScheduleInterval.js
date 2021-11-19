@@ -1,9 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@mui/styles';
-
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
+import Grid from '@mui/material/Grid';
+import CardLine from 'components/CardLine'
+import CardLineIcon from 'components/CardLineIcon'
+import CardLineText from 'components/CardLineText'
 import TextField from  '@mui/material/TextField';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 
@@ -20,6 +20,10 @@ const useStyles = makeStyles({
         maxWidth: 50,
         marginRight: 16,
     },
+    flex: {
+        display: "flex",
+        padding: 0,
+    },
 });
 
 export default function ScheduleInterval(props) {
@@ -31,18 +35,21 @@ export default function ScheduleInterval(props) {
     }
     
     return (
-        <ListItem> 
-            <ListItemIcon onClick={props.toggle}><ScheduleIcon /></ListItemIcon>
-            <ListItemText className={ classes.shortLabel} primary="Every" />
-            <TextField
-                className={classes.input}
-                id={'specint'}
-                margin={"normal"}
-                type="number"
-                value={props.value}
-                onChange={(e) => props.change('interval', e.target.value)}
-            />
-            <TimeUnitButton value={props.unit} setUnit={changeUnit} />
-        </ListItem>
+        <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
+            <CardLine> 
+                <CardLineIcon onClick={props.toggle}><ScheduleIcon /></CardLineIcon>
+                <CardLineText primary="Every" />
+                <TextField 
+                    sx={{ width: 100}}
+                    size="small"
+                    id = {'specint'}
+                    type="number"
+                    value={props.value}
+                    inputProps={{ maxLength: 4 }}
+                    onChange={(e) => props.change('interval', e.target.value)}
+                />
+                <TimeUnitButton value={props.unit} setUnit={changeUnit} />
+            </CardLine>
+        </Grid>
     )
 }

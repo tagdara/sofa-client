@@ -4,7 +4,7 @@ import CardBase from 'components/CardBase'
 import CardLine from 'components/CardLine'
 import CardLineSpacer from 'components/CardLineSpacer'
 
-import ModeControllerText from 'controllers/modeController/ModeControllerText'
+import ModeControllerText from 'controllers/ModeController/ModeControllerText'
 import ForecastAvatar from 'devices/Thermostat/ForecastAvatar'
 import TemperatureSensorAvatar from 'controllers/temperatureSensor/TemperatureSensorAvatar'
 import AirQualityChip from 'devices/Thermostat/AirQualityChip'

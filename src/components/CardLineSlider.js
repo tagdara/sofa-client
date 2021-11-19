@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => {
                 height: 20,
                 width: 20,
                 backgroundColor: theme.palette.primary.main,
+                '&:before, &:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+                    boxShadow: '0 !important',
+                },
             },
         },
         offSlider: {
@@ -56,6 +59,9 @@ const useStyles = makeStyles(theme => {
                 opacity: "!important",
                 height: 8,
                 width: 8,
+                '&:before, &:focus, &:hover, &.Mui-active, &.Mui-focusVisible': {
+                    boxShadow: '0 !important',
+                },
                 //backgroundColor: theme.palette.action.disabled,
             },
         }

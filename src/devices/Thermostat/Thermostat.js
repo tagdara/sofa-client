@@ -8,7 +8,7 @@ import CardLineText from 'components/CardLineText'
 import FanPowerLevel from 'devices/Thermostat/FanPowerLevel'
 import CardBase from 'components/CardBase'
 import CardLineSpacer from 'components/CardLineSpacer'
-import ModeLines from 'devices/Mode/ModeLines'
+import ModeLines from 'controllers/ModeController/ModeLines'
 
 import TemperatureSensor from 'devices/Thermostat/TemperatureSensor'
 import ThermostatModeButtons from 'devices/Thermostat/ThermostatModeButtons'

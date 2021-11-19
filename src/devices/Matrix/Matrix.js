@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import TvIcon from '@mui/icons-material/Tv';
 
 import ItemBase from "components/ItemBase";
-import ModeSelect from "devices/Mode/ModeSelect";
+import ModeSelect from "controllers/ModeController/ModeSelect";
 
 import CardLine from 'components/CardLine'
 import CardLineText from 'components/CardLineText'

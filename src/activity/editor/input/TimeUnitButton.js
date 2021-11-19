@@ -42,7 +42,7 @@ const TimeUnitButton = props => {
 
     return (
         <React.Fragment>
-            <Button id={"op"+props.index} onClick={handleClick} className={classes.button}>
+            <Button size="small" id={"op"+props.index} onClick={handleClick} className={classes.button}>
                 {props.value ? props.value : "min"}
             </Button>
     

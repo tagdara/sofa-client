@@ -88,6 +88,48 @@ export const getController = (endpointId, name) => {
     return undefined
 }
 
+export const getModeControllers = (endpointId) => {
+
+    var dev = endpointId
+    var results = []
+    if (typeof(dev)=='string') {
+        dev = useDeviceStore.getState().devices[dev]
+    }   
+
+    if (!dev) { return undefined }
+
+    // should use a filter here instead
+    for (var k = 0; k < dev.capabilities.length; k++) {
+        if (dev.capabilities[k].interface.endsWith('ModeController')) {
+            results.push(dev.capabilities[k])
+        }
+    }
+    return results
+}
+
+
+export const getModeControllerFriendlyName = (endpointId, instance) => {
+
+    const modeCapability = getController(endpointId, instance)
+    if (!modeCapability) { return {} }
+    return modeCapability.capabilityResources.friendlyNames[0].value.text
+
+}
+
+export const getSupportedModeList = (endpointId, instance) => {
+
+    try {
+        const modeCapability = getController(endpointId, instance)
+        const supportedModes = modeCapability.configuration.supportedModes
+        return supportedModes.map( mode => { return { name: mode.modeResources.friendlyNames[0].value.text, value: mode.value}} )
+    }
+    catch {
+        console.log('could not get supported mode list for', endpointId, instance)
+    }
+    return []
+}
+
+
 export const getModes = (endpointId, exclude=[]) => {
 
     var dev = endpointId

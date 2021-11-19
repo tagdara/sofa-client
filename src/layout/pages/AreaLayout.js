@@ -9,7 +9,7 @@ import GridSection from 'components/GridSection';
 
 import SectionHeaderButton from 'components/SectionHeaderButton';
 import DeviceDialog from 'dialogs/DeviceDialog';
-import LightLayout from 'layout/pages/LightLayout';
+import LightLayout from 'devices/Light/LightLayout';
 import SceneLayout from 'layout/pages/SceneLayout';
 
 import useDeviceStateStore from 'store/deviceStateStore'

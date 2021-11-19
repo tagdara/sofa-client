@@ -97,11 +97,11 @@ const MonitorButtonStackLabel = props => {
     
     return (
         <ButtonGroup orientation="vertical" variant="text" className={classes.group} >
-            <Button sx={{ color: onCount() ? theme.palette.primary.main : theme.palette.action.disabled }} className={classes.label} onClick={ props.topClick } >
+            <Button disableElevation sx={{ color: onCount() ? theme.palette.primary.main : theme.palette.action.disabled }} className={classes.label} onClick={ props.topClick } >
                 <span className={classes.count}>{ onCount() }</span>
                 <MonitorIcon/>
             </Button>
-            <Button sx={{ color: onCount() ? theme.palette.primary.main : theme.palette.action.disabled }} className={classes.label} onClick={ props.bottomClick } >
+            <Button disableElevation sx={{ color: onCount() ? theme.palette.primary.main : theme.palette.action.disabled }} className={classes.label} onClick={ props.bottomClick } >
                 <span className={classes.count}>{ onCount() }</span>
                 <DesktopIcon />
             </Button>

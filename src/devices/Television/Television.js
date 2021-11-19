@@ -4,18 +4,14 @@ import { makeStyles } from '@mui/styles';
 
 import IconButton from '@mui/material/IconButton';
 import ControlCameraIcon from '@mui/icons-material/ControlCamera';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 import Switch from '@mui/material/Switch';
 import Collapse from '@mui/material/Collapse';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 
 import TvIcon from '@mui/icons-material/Tv';
 import DotAvatar from 'components/DotAvatar'
 import ItemBase from 'components/ItemBase'
 import TvRemote from 'devices/Television/TvRemote';
-import ModeLines from 'devices/Mode/ModeLines'
+import ModeLines from 'controllers/ModeController/ModeLines'
 import SofaAvatarSlider from 'components/SofaAvatarSlider'
 import PlaceholderCard from 'layout/PlaceholderCard';
 
@@ -24,6 +20,7 @@ import Computer from 'devices/Computer/Computer.js';
 import CardLine from 'components/CardLine'
 import CardLineText from 'components/CardLineText'
 import CardLineIcon from 'components/CardLineIcon'
+import CardLineSelect from 'components/CardLineSelect'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
@@ -94,7 +91,7 @@ const Television = props => {
         directive(props.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
     };
 
-    function handleInput(event, inputname) {
+    function handleInput(inputname) {
         directive(props.endpointId,"InputController", 'SelectInput', { "input": inputname } )
     }; 
 
@@ -163,23 +160,17 @@ const Television = props => {
                                                 disabled={ !localVolumeCheck() || !on }
                             />
                         }
-                        <ListItem className={classes.bottomListItem}>
-                            <ListItemText primary={"Input"} />
-                            <Select disabled={ tv.PowerController.powerState.value!=='ON'} className={classes.select} displayEmpty 
-                                    value={tv.InputController.input.value ? tv.InputController.input.value : ""} variant={"standard"}
-                                    onChange={ (e) => handleInput(e, e.target.value) } >
-                                { inputs.map(inp =>
-                                    <MenuItem key={inp} value={inp}>{inp}</MenuItem>
-                                )}
-                            </Select>
-                        </ListItem>
+                        <CardLine inList={true} className={classes.bottomListItem}>
+                            <CardLineText primary={"Input"} />
+                            <CardLineSelect value = { tv.InputController.input.value } choose={handleInput} disabled={!on} selections={ inputs } />
+                        </CardLine>
                         <ModeLines disabled={tv.PowerController.powerState.value!=='ON'} device={device} deviceState={tv} directive={directive} />
                     </>
                 }
                 { showRemote &&
-                    <ListItem className={classes.remoteListItem}>
+                    <CardLine className={classes.remoteListItem}>
                         <TvRemote device={device} />
-                    </ListItem>
+                    </CardLine>
                 }
             </Collapse>
             </ItemBase>

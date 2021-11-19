@@ -1,9 +1,6 @@
 import React from 'react';
-import { makeStyles } from '@mui/styles';
 
-import Grid from '@mui/material/Grid';
-import GridItem from 'components/GridItem'
-
+import ActivityLine from 'activity/editor/layout/ActivityLine'
 import ScheduleStart from 'activity/editor/schedule/ScheduleStart'
 import ScheduleInterval from 'activity/editor/schedule/ScheduleInterval'
 import ScheduleDays from 'activity/editor/schedule/ScheduleDays'
@@ -11,17 +8,10 @@ import ScheduleDays from 'activity/editor/schedule/ScheduleDays'
 import useActivityEditorStore from 'store/activityEditorStore'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 
-const useStyles = makeStyles({
-    flex: {
-        display: "flex",
-        padding: 0,
-    },
-});
 
 const ActivitySchedule = props => {
 
     const schedule = useActivityEditorStore(state => state.activity.schedules[props.index] )
-    const classes = useStyles();
 
     if (!schedule) { return null }
     
@@ -39,16 +29,14 @@ const ActivitySchedule = props => {
     }
 
     return (
-        <GridItem nolist={true} elevation={0} wide={true} xs={12}>
+        <ActivityLine category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} count={props.count}>
             <ScheduleStart wide={props.wide} target="start" change={changeValue} value={schedule.start} />
-            <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
-                { schedule.hasOwnProperty('type') && schedule.type==='interval' ?
-                    <ScheduleInterval toggle={toggleType} change={changeValue} unit={schedule.unit} value={schedule.interval} />
-                :
-                    <ScheduleDays toggle={toggleType} change={changeValue} value={schedule.days} />
-                }
-            </Grid>
-        </GridItem>
+            { schedule.hasOwnProperty('type') && schedule.type==='interval' ?
+                <ScheduleInterval wide={props.wide} toggle={toggleType} change={changeValue} unit={schedule.unit} value={schedule.interval} />
+            :
+                <ScheduleDays wide={props.wide} toggle={toggleType} change={changeValue} value={schedule.days} />
+            }
+        </ActivityLine>
     )
 }
 

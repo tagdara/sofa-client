@@ -162,3 +162,8 @@ export const toggleRightDrawer = newState => {
 export const selectStack = ( stackName, pageprops={} ) => {
     useLayoutStore.setState({currentStack: stackName, currentPage: "Stacks", currentProps: pageprops})
 }
+
+export const otherPort = (portnumber, tabname) => {
+    var newurl = window.location.protocol + "//" + window.location.hostname + ":" +portnumber;
+    window.open(newurl,tabname);
+}

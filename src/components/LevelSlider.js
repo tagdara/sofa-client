@@ -115,13 +115,11 @@ export default function DotSlider(props) {
     }, [ currentLevel ])
     
     function applyLevel(event, lev) {
-        console.log('apply lev',lev, event)
         setLevel(lev)
         props.select(props.levels[lev])
     }
 
     function applyTempLevel(lev) {
-        console.log('apply temp lev',lev)
         setLevel(lev)
     }
 

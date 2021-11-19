@@ -2,10 +2,11 @@ import React from 'react';
 import { makeStyles } from '@mui/styles';
 
 import SaveIcon from '@mui/icons-material/Save';
+import AddBoxIcon from '@mui/icons-material/AddBox';
 
 import Fab from '@mui/material/Fab';
 import useActivityEditorStore from 'store/activityEditorStore'
-import { saveActivity } from 'store/activityEditorHelpers'
+import { saveActivity, addActivity } from 'store/activityEditorHelpers'
 
 const useStyles = makeStyles({
     fabSave: {
@@ -30,13 +31,13 @@ export default function ActivitySave(props) {
     const endpointId = useActivityEditorStore( state => state.endpointId )
     const name = useActivityEditorStore( state => state.activity.name )
 
-    const okToSave = endpointId && name 
+    const okToSave = name && !saved
     
     if (saved) { return null}
 
     return (
-        <Fab size="small" color="primary" disabled={ !okToSave } onClick={saveActivity} className={classes.fabSave} >
-            <SaveIcon />
+        <Fab size="small" color="primary" disabled={ !okToSave } onClick={endpointId ? saveActivity : addActivity } className={classes.fabSave} >
+            { endpointId ? <SaveIcon /> : <AddBoxIcon /> }
         </Fab>
     )
 }

@@ -2,9 +2,8 @@ import React from 'react';
 import { getModes, deviceByEndpointId, isModeNonControllable } from 'store/deviceHelpers';
 import { makeStyles } from '@mui/styles';
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
+import CardLine from 'components/CardLine'
+import CardLineText from 'components/CardLineText'
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 
@@ -36,13 +35,14 @@ export default function ModeLines(props) {
     function handleModeChoice(event, mode, modechoice) {
         props.directive(props.device.endpointId, mode, 'SetMode', { "mode": modechoice })
     }; 
-    
+
+    if (!modes) { return null }
+
     return (
-        Object.keys(modes).length>0 ?
-            <List className={classes.modeGroup}>
+        <>
             { Object.keys(modes).map(mode => 
-                <ListItem key={mode}  >
-                    <ListItemText primary={mode} key={mode} />
+                <CardLine key={mode} inList={true}  >
+                    <CardLineText primary={mode} key={mode} />
                     <Select disabled={props.disabled || isModeNonControllable(device,mode)} className={classes.select} displayEmpty variant={"standard"}
                             value={props.deviceState[mode].mode.value ? props.deviceState[mode].mode.value : ""} 
                             onChange={ (e) => handleModeChoice(e, mode, e.target.value)} >
@@ -50,14 +50,8 @@ export default function ModeLines(props) {
                             <MenuItem key = { modes[mode][modechoice] } value={modechoice}>{modes[mode][modechoice]}</MenuItem>
                         )}
                     </Select>
-                </ListItem>
+                </CardLine>
             )}
-            </List>
-            : null
+        </>
     )
 }
-
-ModeLines.defaultProps = {
-  exclude: [],
-  disabled: false,
-};

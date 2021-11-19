@@ -86,12 +86,12 @@ const MonitorButtonStack = props => {
     // https://stackoverflow.com/questions/57962146/button-components-inside-buttongroup
 
     return (
-        <ButtonGroup orientation="vertical" variant="contained" className={classes.group} >
-            <Button className={ clsx(classes.button, buttonState()) } 
+        <ButtonGroup orientation="vertical" variant="contained" className={classes.group} disableElevation >
+            <Button className={ clsx(classes.button, buttonState()) } disableElevation
                     onClick={ () => toggleInput(props.name, props.defaultInput) }>
                 {props.label}
             </Button>
-            <Button className={ clsx(classes.button, buttonState()) } 
+            <Button className={ clsx(classes.button, buttonState()) } disableElevation
                     onClick={ () => toggleInput(props.name, props.defaultInput) }>
                 {monitorOff ? "." : "pc"+props.label}
             </Button>

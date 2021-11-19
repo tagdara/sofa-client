@@ -1,7 +1,7 @@
 import React from 'react';
 import CardLine from 'components/CardLine';
 import Grid from '@mui/material/Grid';
-import ToggleButton from 'components/ToggleButton';
+import ColorButton from 'components/ColorButton';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles({
@@ -33,9 +33,9 @@ export default function ScheduleDays(props) {
         <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
             <CardLine>
                 { daysOfTheWeek.map((day) => 
-                    <ToggleButton key={day} label={day} buttonState={props.value && props.value.includes(day) ? 'on' : 'off' } onClick={(e) => editDays(day)} >
+                    <ColorButton key={day} label={day} on={props.value && props.value.includes(day) } onClick={(e) => editDays(day)} >
                         {day}
-                    </ToggleButton>
+                    </ColorButton>
                     )
                 }
             </CardLine>

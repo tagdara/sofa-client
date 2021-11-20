@@ -164,17 +164,23 @@ export function sortByName(devlist) {
     devlist.sort(function(a, b)  {
         var x = undefined
         var y = undefined
-        if (typeof a === 'string') { 
-            x = devices[a].friendlyName.toLowerCase()
-        } else {
-            x = a.friendlyName.toLowerCase()
+        try {
+            if (typeof a === 'string') { 
+                x = devices[a].friendlyName.toLowerCase()
+            } else {
+                x = a.friendlyName.toLowerCase()
+            }
+            if (typeof b === 'string') { 
+                y = devices[b].friendlyName.toLowerCase()
+            } else {
+                y = b.friendlyName.toLowerCase()
+            }
+            return x < y ? -1 : x>y ? 1 : 0;
         }
-        if (typeof b === 'string') { 
-            y = devices[b].friendlyName.toLowerCase()
-        } else {
-            y = b.friendlyName.toLowerCase()
+        catch(error) {
+            console.log('name sort error on', a, b, error)
         }
-        return x < y ? -1 : x>y ? 1 : 0;
+        return -1
     });    
     return devlist
 }

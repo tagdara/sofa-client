@@ -35,7 +35,7 @@ export default function ScheduleInterval(props) {
     }
     
     return (
-        <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
+        <Grid item xs={props.wide ? 4 : 12 } className={classes.flex} >
             <CardLine> 
                 <CardLineIcon onClick={props.toggle}><ScheduleIcon /></CardLineIcon>
                 <CardLineText primary="Every" />

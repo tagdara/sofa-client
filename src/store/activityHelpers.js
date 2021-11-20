@@ -10,6 +10,7 @@ export const loadActivities = async () => {
     const headers = { authorization : accessToken }
     const response = await fetch(activitiesUrl, { headers: headers })
     var webResult = await response.json()
+    console.log('webresult', webResult)
     var result = fixActivities(webResult)
     return result
 }

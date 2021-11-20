@@ -21,22 +21,22 @@ import moment from 'moment';
 const ActivityItem = props => {
     
     const [ launched, setLaunched] = useState(false)
-    const automation = deviceByEndpointId(props.endpointId)
-    const automationState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const activity = deviceByEndpointId(props.endpointId)
+    const activityState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
     useEffect(() => {
-        register(props.endpointId, "Automation-"+props.endpointId)
+        register(props.endpointId, "Activity-"+props.endpointId)
         return function cleanup() {
-            unregister(props.endpointId, "Automation-"+props.endpointId)
+            unregister(props.endpointId, "Activity-"+props.endpointId)
         };
     // eslint-disable-next-line 
     }, [props.endpointId])
 
-    if (!automationState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
+    if (!activity || !activityState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 
-    const name = automation.friendlyName
+    const name = activity.friendlyName
 
-    function runAutomation(conditions=true) {
+    function runActivity(conditions=true) {
         setLaunched(true)
         directive(props.endpointId, 'SceneController', 'Activate', {}, {"conditions": conditions})
             .then(result=> { parseResult(result) })
@@ -81,7 +81,7 @@ const ActivityItem = props => {
 
     function loading() {
         if (launched) { return true }
-        return automationState.Running.toggleState.value === 'ON'
+        return activityState.Running.toggleState.value === 'ON'
     }
 
     return (
@@ -98,7 +98,7 @@ const ActivityItem = props => {
                     <CloseIcon />
                 </IconButton>
             :
-                <IconButton disabled={ loading() } size={"small"} onClick={ () => runAutomation(props.endpointId) } >
+                <IconButton disabled={ loading() } size={"small"} onClick={ () => runActivity(props.endpointId) } >
                     <PlayArrowIcon />
                 </IconButton>                
             }

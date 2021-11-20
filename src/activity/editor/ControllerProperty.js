@@ -3,9 +3,11 @@ import { makeStyles } from '@mui/styles';
 
 import CardLine from 'components/CardLine'
 import OperatorButton from "./input/operatorButton"
-import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
+
+import ActivityLineSegment from 'activity/editor/layout/ActivityLineSegment'
+
 import { mapDeviceProperties, deviceByEndpointId }  from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
@@ -89,7 +91,7 @@ export default function ControllerProperty(props) {
     }
 
     return (
-        <Grid item xs={props.wide ? 4 : 12 } className={classes.flex} >
+        <ActivityLineSegment wide={props.wide} >
             <CardLine >
                 <Select className={classes.wideSelect} value={ defaultOrValue() } 
                         onChange={(e) => handleChangePropertyName(e.target.value)} 
@@ -101,6 +103,6 @@ export default function ControllerProperty(props) {
                 </Select>
                 <OperatorButton index={props.index} value={ opDefaultOrValue() } setOperator={ editOperatorValue } anyOp={props.anyOp} />
             </CardLine>
-        </Grid>
+        </ActivityLineSegment>
     )
 }

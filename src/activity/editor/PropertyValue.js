@@ -1,25 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@mui/styles';
-import ListItem from '@mui/material/ListItem';
-import Grid from '@mui/material/Grid';
+import CardLine from 'components/CardLine'
+import ActivityLineSegment from 'activity/editor/layout/ActivityLineSegment'
 
 import { propertyFromDirective } from 'store/directive'
 import { deviceByEndpointId, getControllerInterface }  from 'store/deviceHelpers'
 import { updateActivityItem,  loadPropertyModule, renderSuspensePropertyModule } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
 
-const useStyles = makeStyles({
-        
-    flex: {
-        display: "flex",
-        alignItems: "center",
-    },
- 
-});
-
 export default function PropertyValue(props) {
     
-    const classes = useStyles();
     const [propertyModule, setPropertyModule] = useState(undefined)
     const [propertyModuleName, setPropertyModuleName] = useState(undefined)
     const item = useActivityEditorStore(state => state.activity[props.category][props.index] )
@@ -86,10 +75,10 @@ export default function PropertyValue(props) {
                         }
 
     return (
-        <Grid item xs={props.wide ? 4 : 12 } className={classes.flex} >
-            <ListItem >
+        <ActivityLineSegment wide={props.wide}>
+            <CardLine >
             { renderSuspensePropertyModule(propertyModuleName, propertyModule, renderProps ) }
-            </ListItem>
-        </Grid>
+            </CardLine >
+        </ActivityLineSegment>
     )
 }

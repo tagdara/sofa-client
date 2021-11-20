@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import { directives } from 'store/directive'
-import { deviceByEndpointId, deviceDirectives }  from 'store/deviceHelpers'
+import { deviceByEndpointId, deviceDirectives } from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
 
@@ -14,6 +14,7 @@ const useStyles = makeStyles({
     flex: {
         display: "flex",
         alignItems: "center",
+        justifyContent: "flex-start",
     },
     wideSelect: {
         width: "100%",

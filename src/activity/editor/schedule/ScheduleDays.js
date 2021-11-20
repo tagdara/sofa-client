@@ -1,19 +1,10 @@
 import React from 'react';
 import CardLine from 'components/CardLine';
-import Grid from '@mui/material/Grid';
 import ColorButton from 'components/ColorButton';
-import { makeStyles } from '@mui/styles';
-
-const useStyles = makeStyles({
-    flex: {
-        display: "flex",
-        padding: 0,
-    },
-});
+import ActivityLineSegment from 'activity/editor/layout/ActivityLineSegment'
 
 export default function ScheduleDays(props) {
 
-    const classes = useStyles();
     const daysOfTheWeek = ['sun','mon','tue','wed','thu','fri','sat'];
 
     function editDays(day) {
@@ -30,7 +21,7 @@ export default function ScheduleDays(props) {
     }
     
     return (
-        <Grid item xs={props.wide ? 12 : 4 } className={classes.flex} >
+        <ActivityLineSegment wide={props.wide}>
             <CardLine>
                 { daysOfTheWeek.map((day) => 
                     <ColorButton key={day} label={day} on={props.value && props.value.includes(day) } onClick={(e) => editDays(day)} >
@@ -39,6 +30,6 @@ export default function ScheduleDays(props) {
                     )
                 }
             </CardLine>
-        </Grid>
+        </ActivityLineSegment>
     )
 }

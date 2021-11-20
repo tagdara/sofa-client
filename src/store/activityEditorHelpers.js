@@ -47,8 +47,8 @@ export const addActivity = async () => {
     const body = { ...activity }
     const response = await fetch(addUrl, { headers: headers, method: "post", body: JSON.stringify(body)})
     const result = await response.json()
-    console.log('result', result)
-    useActivityEditorStore.setState({ endpointId: activity.endpointId, activity: result, saved: true })
+    console.log('created', result.endpointId, 'and refreshing', typeof result, result)
+    useActivityEditorStore.setState({ endpointId: result.endpointId, activity: result, saved: true })
 }
 
 

@@ -47,7 +47,11 @@ const ActivitiesLayout = props => {
     }
 
     function getListItems() {
-        var workingList = [...activities]
+        var workingList = []
+        console.log('act', activities)
+        if (activities) {
+            workingList = [...activities]
+        }
         if (favorites) {
             workingList = workingList.filter(activity => isFavorite(activity.endpointId))
         }

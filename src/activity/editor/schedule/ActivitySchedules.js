@@ -28,7 +28,7 @@ const ActivitySchedules = props => {
                             setRemoving = { setRemoving } removing = { removing }  >
                 { items && items.map( (item,index) =>
                     <ErrorBoundary key={"trigger"+index} >
-                        <ActivitySchedule index = {index} removing = {removing} category={category} />
+                        <ActivitySchedule wide={props.wide} index = {index} removing = {removing} category={category} />
                     </ErrorBoundary>
                 )}
         </ActivityCategory>

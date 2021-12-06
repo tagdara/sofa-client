@@ -44,7 +44,7 @@ export const deleteActivity = async endpointId => {
     // TODO/CHEESE - Activities are listed by name, but the delete command now uses endpoint ids
     // This all needs to be sorted out
 
-    const activities = loadActivities()
+    const activities = await loadActivities()
     for (var id in activities) {
         if (activities[id].endpointId===endpointId) {
             console.log('Deleting Activity', endpointId, id)
@@ -52,9 +52,10 @@ export const deleteActivity = async endpointId => {
             const headers = { authorization : accessToken }
             const body = []
             const response = await fetch(serverUrl + "/del/logic/activity/"+endpointId, { headers: headers, method: "post", body: JSON.stringify(body)})
+            
             return await response.json()
         } 
     }
-    console.log('did not find', endpointId, 'in', Object.keys(activities))
+    console.log('did not find', endpointId, 'in', activities)
     return undefined
 } 

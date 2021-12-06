@@ -29,8 +29,12 @@ const ActivitiesLayout = props => {
 
     if (!activities) { return null }
 
+    function deleteAndRefresh(activity) {
+        deleteActivity(activity)
+        loadActivities().then(result => { setActivities(result)})
+    }
+
     function selectActivity(activity) {
-        console.log('selecting', activity)
         selectPage('ActivityEditorPage', {'endpointId':activity, 'noBottom':true } )
     }    
 
@@ -48,7 +52,6 @@ const ActivitiesLayout = props => {
 
     function getListItems() {
         var workingList = []
-        console.log('act', activities)
         if (activities) {
             workingList = [...activities]
         }
@@ -85,7 +88,7 @@ const ActivitiesLayout = props => {
                                 select={selectActivity}
                                 activity={ activity }
                                 makeFavorite={makeFavorite}
-                                edit={editing} delete={removing ? deleteActivity : undefined} 
+                                edit={editing} delete={removing ? deleteAndRefresh : undefined} 
                                 showNextRun = {showScheduled}
                             />
             )}

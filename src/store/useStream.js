@@ -53,6 +53,7 @@ export const useStream = ( dataProcessor ) => {
     
     const connectStream = () => {
         if (!isConnecting) {
+            console.log('connect stream')
             setIsConnecting(true)
             var esource = new EventSource(serverurl+"/sse", { withCredentials: true })
             esource.addEventListener('message', dataHandler);

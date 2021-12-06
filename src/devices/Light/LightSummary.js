@@ -13,6 +13,7 @@ import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 import green from '@mui/material/colors/green';
 
 const LightSummary = props => {
+    const xmas = true
     const lights = endpointIdsByDisplayCategory('LIGHT')
     const states = useDeviceStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
     const register = useRegisterStore( state => state.add)
@@ -65,7 +66,7 @@ const LightSummary = props => {
     }
 
     function checkHoliday() {
-        if (2==1) {
+        if (xmas) {
             return <LightChristmasButton />
         }
         return null

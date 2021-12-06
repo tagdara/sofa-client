@@ -93,8 +93,8 @@ const ActivityItem = props => {
                     { isFavorite(props.endpointId) && props.icon !== "base" ? <FavoriteIcon/> : <ListIcon /> }
                 </CardLineIcon>
             <CardLineText primary={name} secondary={ summary() } />
-            { props.deleting ?
-                <IconButton size={"small"} onClick={ () => props.delete(props.endpointId) } >
+            { props.delete ?
+                <IconButton size={"small"} onClick={ (event) => { event.stopPropagation(); props.delete(props.endpointId); }} >
                     <CloseIcon />
                 </IconButton>
             :

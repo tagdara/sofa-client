@@ -30,13 +30,14 @@ const LightChristmasButton = props => {
     // eslint-disable-next-line 
     }, [])  
 
-    function toggleTree() {
+    function toggleTree(event) {
+        event.stopPropagation()
         directive(treeEndpointId, 'PowerController', treeOn ? 'TurnOff' : 'TurnOn')
     }
     
 
     return (
-        <IconButton className={treeOn ? classes.treeOn : classes.treeOff} onClick={()=>toggleTree() } >
+        <IconButton className={treeOn ? classes.treeOn : classes.treeOff} onClick={(event)=>toggleTree(event) } >
             <ChristmasTreeIcon treeOn={ treeOn } />
         </IconButton>
     )

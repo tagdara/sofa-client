@@ -8,11 +8,10 @@ import Switch from '@mui/material/Switch';
 import Collapse from '@mui/material/Collapse';
 
 import TvIcon from '@mui/icons-material/Tv';
-import DotAvatar from 'components/DotAvatar'
+import DotSlider from 'components/DotSlider'
 import ItemBase from 'components/ItemBase'
 import TvRemote from 'devices/Television/TvRemote';
 import ModeLines from 'controllers/ModeController/ModeLines'
-import SofaAvatarSlider from 'components/SofaAvatarSlider'
 import PlaceholderCard from 'layout/PlaceholderCard';
 
 import Computer from 'devices/Computer/Computer.js';
@@ -83,9 +82,9 @@ const Television = props => {
         directive(props.endpointId,"Speaker", 'SetVolume', { "volume" : event} )
     }; 
 
-    function handleMuteChange(event) {
-        directive(props.endpointId,"Speaker", 'SetVolume', { "mute" : event} )
-    }; 
+    //function handleMuteChange(event) {
+     //   directive(props.endpointId,"Speaker", 'SetVolume', { "mute" : event} )
+    //}; 
     
     function handlePowerChange(event) {
         directive(props.endpointId,"PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
@@ -140,26 +139,16 @@ const Television = props => {
                     <Switch color="primary" checked={ on } onClick={stopEventPropagation} onChange={ handlePowerChange } />
                 </CardLine>
             { localVolumeCheck() && ( on || showDetail ) &&
-                <DotAvatar   label={"Volume"} levelValues={[0,5,7,10,20,50]} centered={true}
-                                    small={true} reverse={true} minWidth={64} 
-                                    value={ tv.Speaker.volume.value }
-                                    select={handleVolumeChange} 
-                                    disabled={ !localVolumeCheck() || !on }
+                <DotSlider   label={"Volume"} levelValues={[0,5,7,10,20,50]} centered={true}
+                    small={true} reverse={true} minWidth={64} 
+                    value={ tv.Speaker.volume.value }
+                    select={handleVolumeChange} 
+                    disabled={  !localVolumeCheck() || !on }
                 />
             }
             <Collapse in={showDetail || showRemote } className={classes.detail} classes={{ wrapperInner: classes.detail}}>
                 { showDetail &&
                     <>
-                        { localVolumeCheck() &&
-                            <SofaAvatarSlider   label={"Volume"} 
-                                                small={true} reverse={true} minWidth={64} 
-                                                value={ tv.Speaker.volume.value }
-                                                change={handleVolumeChange} 
-                                                avatarClick={ () => handleMuteChange(!tv.Speaker.mute.value)} 
-                                                avatarState={ on ? "on" : "off" }
-                                                disabled={ !localVolumeCheck() || !on }
-                            />
-                        }
                         <CardLine inList={true} className={classes.bottomListItem}>
                             <CardLineText primary={"Input"} />
                             <CardLineSelect value = { tv.InputController.input.value } choose={handleInput} disabled={!on} selections={ inputs } />

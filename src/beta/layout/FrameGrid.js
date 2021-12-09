@@ -15,7 +15,7 @@ import WideFrame from 'beta/layout/WideFrame'
 export default function MainPage() {
 
     const wide = useMediaQuery('(min-width: 640px)');
-    const [ opened, setOpened] = useState(wide)
+    const [ opened, setOpened] = useState(false)
     const [ drawerOpened, setDrawerOpened] = useState(wide)
     const { streamConnected } = useStream(storeUpdater)
     

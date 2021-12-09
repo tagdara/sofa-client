@@ -4,7 +4,7 @@ import { selectPage } from 'store/layoutHelpers'
 import { makeStyles } from '@mui/styles';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
-import PlayerArtOverlay from './PlayerArtOverlay';
+import PlayerArtOverlay from '../../beta/devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from './PlayerArtOverlayButtons';
 
 import PlayerVolume from './PlayerVolume';

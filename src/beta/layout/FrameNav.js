@@ -21,9 +21,9 @@ const FrameNav = props => {
 
     return (
         <Navbar height={"100%"} 
+                hiddenBreakpoint="xl"
                 padding="sm" 
                 hidden={ !props.opened }
-                hiddenBreakpoint="md"
                 fixed = {!wide}
                 width={{ sm: 400 }}
                 style={{ maxWidth: wide ? "33vw" : undefined,
@@ -43,9 +43,9 @@ const FrameNav = props => {
                     }
                 </Group>
             </Navbar.Section>
-            { !wide && <Navbar.Section style={{ paddingTop: 8, paddingBottom: "env(safe-area-inset-bottom)" }}>
-                    <NavButton highlight label={"Back to player"} arrow onClick={close} />
-                </Navbar.Section>
+            { !wide &&  <Navbar.Section style={{ paddingTop: 8, paddingBottom: "env(safe-area-inset-bottom)" }}>
+                            <NavButton highlight label={"Back to player"} arrow onClick={close} />
+                        </Navbar.Section>
             }
         </Navbar>
     )

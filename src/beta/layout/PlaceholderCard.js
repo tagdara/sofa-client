@@ -18,10 +18,10 @@ export default function PlaceholderCard(props){
             <Group direction="column" noWrap style={{ width: "100%"}} >
                 <Skeleton height={20} circle  /> 
                 { [...Array(props.count).keys()].map( index =>
-                    <>
+                    <Group key={index}>
                         <Skeleton height={8} radius="xl" width="90%"/>
                         <Skeleton height={8} radius="xl" width="70%"/>
-                    </>
+                    </Group>
                 )}
             </Group>
         )

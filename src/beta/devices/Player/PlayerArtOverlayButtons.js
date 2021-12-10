@@ -10,30 +10,34 @@ export default function PlayerArtOverlayButtons(props) {
     }
     
     return ( 
-        <Group direction="row" noWrap style={{width: "100%"}}>
-            <ActionIcon  size="sm" onClick={ (e) => props.playPause(e)}>
-                { props.playbackState==='PLAYING' ? <Pause size={20} /> : <Play size={20} /> }
-            </ActionIcon>
-            { props.playbackState!=='STOPPED' &&
-                <ActionIcon size="sm" onClick={ (e) => props.skip(e)}>
-                    <SkipForward size={20} />
+        <Group direction="row" position="apart" noWrap style={{width: "100%"}}>
+            <Group>
+                <ActionIcon  size="sm" onClick={ (e) => props.playPause(e)}>
+                    { props.playbackState==='PLAYING' ? <Pause size={20} /> : <Play size={20} /> }
                 </ActionIcon>
-            }
-            { props.jukebox &&
-                <ActionIcon  size="sm" onClick={props.toggleSpeakerFilter}>
-                    <SpeakerIcon size={20} />
+                { props.playbackState!=='STOPPED' &&
+                    <ActionIcon size="sm" onClick={ (e) => props.skip(e)}>
+                        <SkipForward size={20} />
+                    </ActionIcon>
+                }
+                </Group>
+            <Group>
+                { props.jukebox &&
+                    <ActionIcon  size="sm" onClick={props.toggleSpeakerFilter}>
+                        <SpeakerIcon size={20} />
+                    </ActionIcon>
+                }
+                { props.jukebox &&
+                    <ActionIcon  size="sm" onClick={openJukebox}>
+                        <Music size={20} />
+                    </ActionIcon>
+                }
+                { props.players &&
+                <ActionIcon  size="sm" onClick={ (e) => props.players(e)}>
+                    <List size={20} />
                 </ActionIcon>
-            }
-            { props.jukebox &&
-                <ActionIcon  size="sm" onClick={openJukebox}>
-                    <Music size={20} />
-                </ActionIcon>
-            }
-            { props.players &&
-            <ActionIcon  size="sm" onClick={ (e) => props.players(e)}>
-                <List size={20} />
-            </ActionIcon>
-            }
+                }
+                </Group>
         </Group>
     );
 }

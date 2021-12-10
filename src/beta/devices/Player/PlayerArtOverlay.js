@@ -15,15 +15,15 @@ export default function PlayerArtOverlay(props) {
             <Group direction="row" noWrap>
                 <Image 
                     radius="sm"
-                    style={{ minWidth: "30%", maxWidth: "40%", width: "40%" }}
+                    style={{ display: "flex", flexGrow: 1, maxWidth: "30%" }}
                     withPlaceholder
                     src={ art ? artUrl : null }
                     title={ title }
                     alt={ title }
                     onClick={ (e) => props.cover(e)}
                 />
-                <Group position="apart" direction="column" 
-                        style={{ display: "flex", flexGrow: 1}}
+                <Group position="apart" direction="column" grow
+                        style={{ display: "flex", flexGrow: 2}}
                         onClick={()=> props.setMini(true)}>
                     <Group direction="column" noWrap spacing={0}>
                         <Text lineClamp={1} size="sm" >{title}</Text>

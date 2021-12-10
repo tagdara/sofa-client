@@ -28,7 +28,6 @@ const FrameHeader = props => {
                 <Text sx={{ flexGrow: 1 }}>Sofa</Text>
                 { !props.connected && <ActionIcon variant="light" color="red"><CloudOff size={20} /></ActionIcon> }
                 <ActionIcon onClick={goFullScreen}><Maximize size={20} /></ActionIcon>
-
             </div>
             </Header>
         </MediaQuery>

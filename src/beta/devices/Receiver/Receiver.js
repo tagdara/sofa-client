@@ -61,13 +61,10 @@ const Receiver = props => {
     //}; 
 
     function subText() {
-        if (showDetail || !on) {
-            return null
-        }
         if (on) {
             return receiver.InputController.input.value + " / "+ surroundName()
         }
-        return receiver.Speaker.volume.value+"% / "+receiver.InputController.input.value + " / "+ surroundName()
+        return null
     }
 
     function stopEventPropagation(event) {
@@ -75,9 +72,11 @@ const Receiver = props => {
         event.stopPropagation()
     }
 
+    const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
+
     return (
         <Card style={{ width: "100%" }}>
-            <Group direction="column" grow noWrap spacing="md">
+            <Group direction="column" grow noWrap spacing="lg">
                 <CardLine   arrow icon={ <Speaker size={20} /> }
                             primary={"Receiver"}
                             secondary={subText()}
@@ -95,17 +94,13 @@ const Receiver = props => {
                         size="xs"
                         value={ receiver.InputController.input.value }
                         data={ inputSelect() }
-                    />                      
-                    <SegmentedControl
-                        fullWidth
-                        size="xs"
-                        value={ receiver.InputController.input.value }
-                        data={ inputSelect() }
-                    />     
+                    />                       
                 </Group>
                 }
                 <CardLineSlider on={on} 
-                                levelValues={volumePresets} 
+                                step={5}
+                                levels={marks}
+                                marks={marks} 
                                 value={ volume }
                                 change={handleVolumeChange} 
                     />

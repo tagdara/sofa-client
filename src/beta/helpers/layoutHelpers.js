@@ -31,7 +31,6 @@ export const selectPage = (pagename, pageprops) => {
 function addSuspenseModule(moduleName, inStack) {
     try {
         if (inStack) {
-            console.log('instack', moduleName)
             return ( React.lazy(() => 
             import("beta/layout/cards/" + moduleName)
                 .catch(err => { console.error('Error during loading module: ' + err)})
@@ -55,7 +54,6 @@ export const addModules = (moduleList, inStack) => {
         var moduleParts=item.split('/')
         var moduleName=moduleParts[moduleParts.length-1]
         if (!newModules.hasOwnProperty(moduleName)) {
-            console.log('.... adding', inStack)
             newModules[moduleName] = addSuspenseModule(item, inStack)
         }
     })
@@ -70,20 +68,16 @@ export const addModule = ( moduleName, inStack ) => {
     return true
 }   
 
-export const renderSuspenseModule = ( moduleName, moduleProps ) => {
+export const renderSuspenseModule = ( moduleName, moduleProps, key ) => {
       
     if (!moduleName) { console.log('no module specified'); return null }
     if (!useLayoutStore.getState().modules.hasOwnProperty(moduleName)) { 
-        console.log('!!!!!!!!!!!!! not in mods', moduleName)
         addModules([moduleName])
     }
-
-    console.log('render', moduleName)
     try {
-        console.log('modules', moduleName, useLayoutStore.getState().modules)
         let Module = useLayoutStore.getState().modules[moduleName]
-        return  <React.Suspense fallback={<PlaceholderCard name={ moduleName } />}>
-                    <Module key={ moduleName } {...moduleProps} />
+        return  <React.Suspense key={ moduleName+key } fallback={<PlaceholderCard name={ moduleName } />}>
+                    <Module {...moduleProps} />
                 </React.Suspense>
     }
     catch {
@@ -96,7 +90,6 @@ export const renderSuspenseModule = ( moduleName, moduleProps ) => {
 export const getStack = stackName =>  {
     const stacks = useLayoutStore.getState().stacks 
     if (stacks && stacks.hasOwnProperty(stackName)) {
-        console.log('resolve',stackName)
         var promise1 = new Promise(function(resolve, reject) {
             resolve(stacks[stackName]);});
         return promise1;

@@ -6,58 +6,58 @@ import { useMantineTheme } from '@mantine/core';
 const CardLineSlider = props => {
 
     const theme = useMantineTheme(); 
-    const [ volume, setVolume ] = useState(props.value)
-    const [debounced] = useDebouncedValue( volume, 300);
+    const [ value, setValue ] = useState(props.value)
+    const [ debounced ] = useDebouncedValue( value, props.delay ? props.delay : 300 );
 
     useDidUpdate(() => {
-        setVolume(props.value)
+        setValue(props.value)
     }, [ props.value ])
 
     useDidUpdate(() => {
         if (debounced !== undefined) {
-            console.log('>> sending volume change', debounced)
+            console.log('>> sending value change', debounced)
             props.change(debounced)
         }
     }, [ debounced ])
 
-    const extraPad = makeLevels() !== undefined
-    console.log('make', extraPad)
-
+    const showMarkLabels = props.marks !== undefined && !props.hideLabels
     const disabled = theme.colorScheme === 'dark' ? 
                         { 
-                            root: { padding: extraPad ? "8px 8px 16px 8px" : undefined },
+                            root: { padding: showMarkLabels ? "8px 8px 16px 8px" : undefined },
+                            markLabel: { display: !showMarkLabels ? 'none' : undefined }, 
                             track: { backgroundColor: theme.colors.dark[7] }, 
                             bar: { backgroundColor: theme.colors.dark[4] }, 
                             mark: { backgroundColor:  theme.colors.dark[6], borderColor: theme.colors.dark[4] },
                             markFilled: { backgroundColor:  theme.colors.dark[6], borderColor: theme.colors.dark[3] },
                             thumb: { backgroundColor:  theme.colors.dark[6], borderColor: theme.colors.dark[3] } }
                         :
-                        {   root: { padding: extraPad ? "8px 8px 16px 8px" : undefined },
+                        {   root: { padding: showMarkLabels ? "8px 8px 16px 8px" : undefined },
+                            markLabel: { display: !showMarkLabels ? 'none' : undefined }, 
                             track: { backgroundColor: theme.colors.gray[1] }, 
                             bar: { backgroundColor: theme.colors.gray[4] }, 
                             thumb: { backgroundColor:  theme.colors.gray[1], borderColor: theme.colors.gray[4] } }
 
-    function makeLevels() {
-        if (!props.levelValues) { return undefined}
-         //   { return [{ "value": 0, "label": 0 }, { "value": 100, "label": 100 }] }
-        var all_levels=[]
-        for (var i = 0; i < props.levelValues.length; i++) {
-            all_levels.push({ "value": props.levelValues[i], "label": props.levelValues[i] })
-        }
-        return all_levels
-    }   
+    const enabled =     { 
+                            root: { padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
+                            markLabel: {display: !showMarkLabels ? 'none' : undefined }, 
+                        }
+
+    const label = props.labels ? props.labels.find( label => label.value === value).label : value
+    const min = props.min ? props.min : ( props.marks ? props.marks[0].value: 0 )
+    const max = props.max ? props.max : ( props.marks ? props.marks[props.marks.length-1].value : 100 )
 
     return (
         <Slider
-            style={{ boxSizing: "border-box", width: "100%", maxWidth: "100%" }}
-            styles={ props.on ? {root: { padding: extraPad ? "16px 8px 32px 8px" : undefined }} : disabled }
-            onChange={ (val) => setVolume(val) }
-            value={ volume }
-            min={ props.levelValues ? props.levelValues[0] : 0 }
-            max={ props.levelValues ? props.levelValues[props.levelValues.length-1] : 100 }    
-            step={ props.levelValues ? null : 1 }
+            label={ label }
+            style={{ boxSizing: "border-box", maxWidth: "100%", flexGrow: 1, paddingLeft: 8, paddingRight: 8}}
+            onChange={ (val) => setValue(val) }
+            value={ value }
+            min={ min }
+            max={ max }    
+            step={props.step ? props.step : 1 }
             disabled = { !props.on  }
-            marks={ makeLevels() }
+            marks={ props.marks }
+            styles={ !props.on ? disabled : enabled }
         />
     )
 }

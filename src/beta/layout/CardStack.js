@@ -10,7 +10,7 @@ export default function CardStack(props) {
     const [ stackData, setStackData ] = useState(undefined)
     const [ expand, setExpand ]=useState(false)
 
-    console.log('props.stack',props.stack)
+    console.log('props.stack', stackData)
 
     useEffect(() => { 
         if (stack) {
@@ -35,7 +35,8 @@ export default function CardStack(props) {
 
     if (!stack || !stackData ) { return null}
 
-    const cards = stackData.cards.map( (card, i) => renderSuspenseModule(card['module']))
+    const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand))
+    const cards = cardData.map( (card, i) => renderSuspenseModule(card['module'], card['props'], i ))
 
     return (
         <Group direction="column" style={{ width: "100%", justifyContent: "flex-start"}} >
@@ -45,21 +46,7 @@ export default function CardStack(props) {
                 }
                 { expandable() && <StackMoreButton expand={expand} onClick={ () => setExpand(!expand)} /> } 
             </Group>
-            { stackData &&
-                <>
-                { cards.map( (card, i) => 
-                    <React.Fragment key={"card"+i}>
-                    { (!card.hasOwnProperty('expand') || card['expand']===expand ) ?
-                            <>
-                                { card }
-                            </>
-                        :
-                        null
-                    }
-                    </React.Fragment >
-                )}
-                </>
-            }
+            { cards } 
         </Group>
     );
 }

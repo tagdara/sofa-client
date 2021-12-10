@@ -39,7 +39,7 @@ export default function CardStack(props) {
     const cards = cardData.map( (card, i) => renderSuspenseModule(card['module'], card['props'], i ))
 
     return (
-        <Group direction="column" style={{ width: "100%", justifyContent: "flex-start"}} >
+        <Group direction="column" style={{ minWidth: 320, width: "100%", justifyContent: "flex-start"}} >
             <Group direction="row" noWrap style={{ width: "100%"}} position="apart">
                 {props.showTitle &&
                     <StackPicker stack={stack} setStack={setStack} />

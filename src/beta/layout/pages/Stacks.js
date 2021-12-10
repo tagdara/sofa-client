@@ -9,8 +9,9 @@ export default function Stacks(props) {
     const stackLayout = useLayoutStore(state => state.stackLayout )
     const currentStack = useLayoutStore(state => state.currentStack )
     const minStackWidth = useLayoutStore(state => state.minStackWidth )
+    const stackPad = useLayoutStore(state => state.stackPad )
     const maxScreenWidth = useLayoutStore(state => state.maxScreenWidth )
-    const maxStacks = Math.min(4, Math.round( maxScreenWidth / minStackWidth))
+    const maxStacks = Math.min(4, Math.floor( maxScreenWidth / (minStackWidth+stackPad)))
 
     useEffect(() => {
         refreshStackLayout()

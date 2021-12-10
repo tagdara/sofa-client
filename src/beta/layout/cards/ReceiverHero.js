@@ -5,12 +5,9 @@ import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 
 const ReceiverHero = props => {
 
-    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')
     const receivers = endpointIdsByDisplayCategory('RECEIVER')
 
-    if (!receivers) {
-        return <PlaceholderCard count={1} />
-    }
+    if (!receivers) { return <PlaceholderCard count={1} /> }
 
     return (
         <>

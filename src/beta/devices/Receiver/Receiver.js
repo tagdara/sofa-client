@@ -97,6 +97,7 @@ const Receiver = props => {
                     />                       
                 </Group>
                 }
+                { (showDetail || on ) &&
                 <CardLineSlider on={on} 
                                 step={5}
                                 levels={marks}
@@ -104,6 +105,7 @@ const Receiver = props => {
                                 value={ volume }
                                 change={handleVolumeChange} 
                     />
+                }
             </Group>
         </Card>
     );

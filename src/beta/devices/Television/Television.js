@@ -60,12 +60,14 @@ const Television = props => {
                             onChange={ handlePowerChange } 
                     />
                 </CardLine>
+                { (showDetail || on ) &&
                 <SegmentedControl
                     size="xs"
                     fullWidth
                     value={ tv.InputController.input.value }
                     data={ inputSelect() }
                 />    
+                }
             </Group>
         </Card>
     );

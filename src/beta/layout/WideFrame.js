@@ -12,7 +12,7 @@ const WideFrame = props => {
     //const refreshUser = useUserStore(state => state.refresh)
 
     return (
-        <ScrollArea>
+        <ScrollArea offsetScrollbars style={{ padding: "0 16px"}}>
             { renderSuspenseModule(currentPage, currentProps) }
         </ScrollArea>
     )

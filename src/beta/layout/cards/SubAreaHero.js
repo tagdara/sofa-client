@@ -12,8 +12,6 @@ import { Group } from '@mantine/core'
 const SubAreaHero = props => {
 
     const [ currentArea, setCurrentArea ] = useState(props.area)
-    console.log('subarea', props)
-
     const area = deviceByEndpointId(currentArea)
     const areaState = useDeviceStateStore( state => state.deviceStates[currentArea] )
 

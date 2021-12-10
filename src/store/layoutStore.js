@@ -17,6 +17,7 @@ const useLayoutStore = create((set, get) => ({
     maxScreenWidth: Math.min(1800, window.innerWidth),
     isMobile: window.innerWidth <= 800,
     minStackWidth: 320,
+    stackPad: 16, // This should be computed from mantine pad
 
     refreshStackLayout: async () => {
         const accessToken = useLoginStore.getState().access_token;

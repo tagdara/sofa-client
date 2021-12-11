@@ -21,7 +21,7 @@ const FrameNav = props => {
 
     return (
         <Navbar height={"100%"} 
-                hiddenBreakpoint="xl"
+                hiddenBreakpoint={2000}
                 padding="sm" 
                 hidden={ !props.opened }
                 fixed = {!wide}

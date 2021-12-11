@@ -6,7 +6,7 @@ import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import SpeakerIcon from '@mui/icons-material/Speaker';
 
 import ItemBase from 'components/ItemBase';
-import PlayerArtOverlay from 'beta/devices/Player/PlayerArtOverlay';
+import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'devices/Player/PlayerArtOverlayButtons';
 import PlaceholderCard from 'layout/PlaceholderCard';
 

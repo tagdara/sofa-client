@@ -1,19 +1,25 @@
 import React from 'react';
-import { Button, Group } from '@mantine/core';
+import { ScrollArea } from '@mantine/core';
+import useLayoutStore from 'store/layoutStore'
+//import useUserStore from 'store/userStore'
+import { renderSuspenseModule } from 'beta/helpers/layoutHelpers'
+import BottomBar from 'beta/layout/BottomBar'
 
-export default function MobileFrame() {
+
+const MobileFrame = props => {
+
+    const currentPage = useLayoutStore(state => state.currentPage)
+    const currentProps = useLayoutStore(state => state.currentProps)
+    //const refreshUser = useUserStore(state => state.refresh)
 
     return (
-            <Group direction="column" noWrap grow sx={{ 
-                    maxWidth: "100%", 
-                    height: "100%",
-                    paddingTop: "env(safe-area-inset-top)",
-                    }}>
-                <Group>
-                    <Button fullWidth variant="light" size="sm" >Return</Button> 
-                </Group>
-            </Group>
+        <>
+        <ScrollArea offsetScrollbars style={{ padding: "0 16px"}}>
+            { renderSuspenseModule(currentPage, currentProps) }
+        </ScrollArea>
+        <BottomBar />
+        </>
     )
 }
 
-
+export default MobileFrame

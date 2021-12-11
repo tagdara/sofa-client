@@ -22,7 +22,7 @@ export default function ModeControllerText(props) {
 
     return (
         <Group>
-            <Text size={props.size}>{modeText}</Text>
+            <Text lineClamp={1} size={props.size}>{modeText}</Text>
             { props.secondary &&
                 <Text>{props.secondary}</Text>
             }

@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import MonitorButtonStackGroup from 'beta/devices/Computer/MonitorButtonStackGroup';
 import MatrixList from 'beta/devices/Matrix/MatrixList';
 import { selectPage } from 'store/layoutHelpers'
-import { Card } from '@mantine/core';
+//import { Card } from '@mantine/core';
+import StackCard from 'beta/components/StackCard'
 
 export default function ComputerHero(props) {
     
@@ -29,11 +30,11 @@ export default function ComputerHero(props) {
     }
 
     return (
-        <Card>
+        <StackCard>
             <MonitorButtonStackGroup buttonLayout={buttonLayout} outlets={computerPlugs} topClick={toggleExpand} bottomClick={ () => selectPage('ComputerLayout') } />
             { expandMonitors &&
                 <MatrixList />
             } 
-        </Card>
+        </StackCard>
     );
 }

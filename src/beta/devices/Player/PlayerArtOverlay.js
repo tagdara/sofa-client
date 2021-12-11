@@ -26,8 +26,8 @@ export default function PlayerArtOverlay(props) {
                         style={{ display: "flex", flexGrow: 2}}
                         onClick={()=> props.setMini(true)}>
                     <Group direction="column" noWrap spacing={0}>
-                        <Text lineClamp={1} size="sm" >{title}</Text>
-                        <Text lineClamp={1} color="dimmed" size="sm">{artist}</Text>
+                        <Text lineClamp={2} weight={500} size="lg" >{title}</Text>
+                        <Text lineClamp={1} weight={500} color="dimmed" size="md">{artist}</Text>
                     </Group>
                     {props.children}
                 </Group>

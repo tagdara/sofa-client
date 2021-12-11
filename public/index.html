@@ -3,9 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="viewport-fit=cover, width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="viewport-fit=cover, width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Sofa Home Control" />
+
     <meta
       name="Sofa"
       content="Web-based Home Control"
@@ -26,38 +29,42 @@
     -->
     <title>Home</title>
     <style>
-
-
-    body, html {
-        height: 100%;
-        margin: 0;
-        overflow-y: hidden;
-        overflow-x: hidden;
-    }
-    
-    #fix {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        margin: 0;
-        padding: 0;
-        overflow-y: hidden;
-        overflow-x: hidden;
-    }
-    
-    #root {
-        position: relative;
-        height: 100%;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        overflow-y: hidden;
-        overflow-x: hidden;
-        width: 100%;
-        flex-direction: column;
-    }
+      body, html {
+          height: 100vh;
+          height: -webkit-fill-available;
+          margin: 0;
+          overflow-y: hidden;
+          overflow-x: hidden;
+          touch-action: manipulation;
+      }
+      #oldroot {
+          position: relative;
+          height: 100vh;
+          height: -webkit-fill-available;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          overflow-y: hidden;
+          overflow-x: hidden;
+          width: 100%;
+          flex-direction: column;
+      }
+      #root {
+          position: relative;
+          height: 100%;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          overflow-y: hidden;
+          overflow-x: hidden;
+          width: 100%;
+          flex-direction: column;
+      }
+      #fix {
+          height: 100vh;
+          height: -webkit-fill-available;
+      }
+    </style>
 
     </style>
     <link rel="stylesheet" href="%PUBLIC_URL%/fonts/sanfrancisco.css">
@@ -82,17 +89,7 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="fix">
-        <div id="root"></div>
+      <div id="root"></div>
     </div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

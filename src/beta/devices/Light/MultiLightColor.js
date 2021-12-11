@@ -80,7 +80,7 @@ const MultiLightColor = props => {
                 noFocusTrap
                 noEscape
                 transition="pop-top-left"
-                target={<ColorSwatch color={currentHex} onClick={ () => setOpen(true) } />}
+                target={<ColorSwatch radius="md" color={currentHex} onClick={ () => setOpen(true) } />}
             >
                 <Group direction="column">
                     <ColorPicker value={currentAverage() } format="hsl" 

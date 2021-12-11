@@ -30,7 +30,7 @@ export default function Stacks(props) {
     }
 
     return (
-        <SimpleGrid cols={maxStacks} spacing="sm">
+        <SimpleGrid cols={maxStacks} spacing="sm" style={{ margin: "0 auto", maxWidth: maxScreenWidth }}>
             { filterStacks().map( stack =>
                 <CardStack key={stack} stack={ stack }  />
             )}

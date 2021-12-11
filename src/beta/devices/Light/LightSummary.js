@@ -78,7 +78,7 @@ const LightSummary = props => {
                 <Avatar color={iconColor}>
                     {<Lightbulb size={20} />}
                 </Avatar>     
-                <Text style={{width: "100%"}} lineClamp={1}>{ lightCount('on') ? labelText : "All lights off" }</Text>
+                <Text size="lg" weight={700} style={{width: "100%"}} lineClamp={1}>{ lightCount('on') ? labelText : "All lights off" }</Text>
             </Group>
             { checkHoliday() }
         </Group>

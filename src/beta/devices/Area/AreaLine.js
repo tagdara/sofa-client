@@ -38,7 +38,7 @@ const AreaLine = props => {
 
     return (
         <Group position="apart" noWrap spacing={"lg"} style={{ width: "100%"}}>
-            <Text lineClamp={1} style={{ width: "40%" }} size="sm" onClick={ () => props.selectArea(props.endpointId)}>{name}</Text>
+            <Text weight={500} lineClamp={1} style={{ width: "40%" }} size="lg" onClick={ () => props.selectArea(props.endpointId)}>{name}</Text>
             { (shortcuts.length > 0) &&
                 <CardLineSlider on={true} delay={500} value={level} labels={levelLabels} marks={levelLabels} hideLabels max={shortcuts.length-1} change={runShortcut} />
             }

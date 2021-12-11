@@ -75,7 +75,7 @@ const Receiver = props => {
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
-        <Card style={{ width: "100%" }}>
+        <Card style={{ width: "100%"}}>
             <Group direction="column" grow noWrap spacing="lg">
                 <CardLine   arrow icon={ <Speaker size={20} /> }
                             primary={"Receiver"}

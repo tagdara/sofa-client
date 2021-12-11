@@ -36,7 +36,7 @@ const AreaSummaryLine = props => {
     const levelLabels = shortcuts.map( (endpointId, index) => ( { value: index, label: deviceByEndpointId(endpointId).friendlyName  }))
 
     return (
-        <Group direction="row" noWrap style={{width: "100%"}}>
+        <Group spacing="xl" direction="row" noWrap style={{paddingLeft: "10%", paddingRight: "10%", width: "100%"}}>
             { (shortcuts.length > 0) &&
                 <CardLineSlider on={true} delay={500} value={level} labels={levelLabels} marks={levelLabels} hideLabels max={shortcuts.length-1} change={runShortcut} />
             }

@@ -3,6 +3,7 @@ import useLayoutStore from 'store/layoutStore'
 import useLoginStore from 'store/loginStore'
 
 import PlaceholderCard from 'beta/layout/PlaceholderCard';
+import { Text } from '@mantine/core'
 
 const serverUrl = "https://"+window.location.hostname;
 const layoutUrl = serverUrl+ '/layout/default'
@@ -69,8 +70,8 @@ export const addModule = ( moduleName, inStack ) => {
 }   
 
 export const renderSuspenseModule = ( moduleName, moduleProps, key ) => {
-      
-    if (!moduleName) { console.log('no module specified'); return null }
+    
+    if (!moduleName) { console.log('no module specified'); return <Text>No Module</Text> }
     if (!useLayoutStore.getState().modules.hasOwnProperty(moduleName)) { 
         addModules([moduleName])
     }
@@ -84,6 +85,7 @@ export const renderSuspenseModule = ( moduleName, moduleProps, key ) => {
         console.log('render error')
     }
     console.log('module not in modules', moduleName)
+    //return null
     return null
 }
 

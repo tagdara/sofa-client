@@ -10,17 +10,17 @@ export default function MonitorButtonStackGroup(props) {
     const sectionCount = Object.keys(props.buttonLayout).length;
 
     return (
-        <Group grow spacing={2}>
-            <MonitorButtonStackLabel outlets={props.outlets} topClick={props.topClick} bottomClick={ props.bottomClick } />
+        <Group direction="column" grow>
             { Object.keys(props.buttonLayout).map( (zone, i) => 
-                <React.Fragment key={zone}>
+                <Group direction="row" noWrap key={zone} spacing={4}>
+                    <MonitorButtonStackLabel outlets={props.outlets} topClick={props.topClick} bottomClick={ props.bottomClick } />
                     { props.buttonLayout[zone].map( btn =>
                         <MonitorButtonStack key={btn.label} {...btn} />
                     )}
                     { i < sectionCount &&
                         <Space size="xs"/>
                     }
-                </React.Fragment>
+                </Group>
             )}
         </Group>
     );

@@ -22,7 +22,7 @@ const AreaScenes = props => {
     if (!sceneSet || sceneSet.length<1 ) { return null }
 
     return (
-        <Group>
+        <Group direction="column" noWrap grow style={{ width: "100%"}}>
             <Text>Scenes</Text>
             { sceneSet.map(scene =>
                 <SceneButton  key={scene} endpointId={scene} shortcut={shortcutId(scene)} small={true}

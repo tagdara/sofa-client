@@ -4,6 +4,7 @@ body {
         "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    min-height: -webkit-fill-available;
 }
 
 code {
@@ -11,12 +12,17 @@ code {
 }
 
 html {
-    height: 100vh;
     margin: 0;
-    padding-top: "env(safe-area-inset-top)";
-    padding-bottom: "env(safe-area-inset-bottom)";
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
 }
 
-#root { 
-    height: 100vh;
+#fix { 
+    position: fixed;
+    display: flex;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }

@@ -38,7 +38,7 @@ const TemperatureSensorAvatar = props => {
     const temperatureColor = tempColor(temperature)
 
     return (
-        <Avatar color={temperatureColor} onClick={props.onClick}>
+        <Avatar size="lg" color={temperatureColor} onClick={props.onClick}>
             { temperature+"°" }
         </Avatar>
     );

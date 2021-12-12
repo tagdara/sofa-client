@@ -11,7 +11,7 @@ const StackPicker = props => {
 
     // using length -1 to skip admin but probably a better way
     if (isMobile || (stackLayout.length -1 <= maxStacks)) { 
-        return <Text>{props.stack}</Text>
+        return <Text weight={600} size="lg">{props.stack}</Text>
     }
 
     const selectData = stackLayout.map(stack => ({ value: stack, label: stack }))

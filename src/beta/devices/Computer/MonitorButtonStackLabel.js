@@ -42,14 +42,16 @@ const MonitorButtonStackLabel = props => {
     
     return (
         <Group direction="column" spacing="xs">
-            <Button variant={ onCount() ? "filled" : "light"}
+            <Button variant={ "outlined "}
+                    style={{ borderWidth: 0 }}
                     size="xs" compact
                     onClick={ props.topClick } 
                     rightIcon={<Monitor size={16}/>}
             >
                 { onCount() }
             </Button>
-            <Button variant={ onCount() ? "filled" : "light"}
+            <Button variant={ "outlined "}
+                    style={{ borderWidth: 0 }}
                     size="xs" compact
                     onClick={ props.bottomClick } 
                     rightIcon={<HardDrive size={16} />}

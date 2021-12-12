@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
-import PlaceholderCard from 'layout/PlaceholderCard';
-import LightChristmasButton from 'devices/Light/LightChristmasButton';
+import PlaceholderCard from 'beta/layout/PlaceholderCard';
+import LightChristmasButton from 'beta/devices/Light/LightChristmasButton';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
@@ -75,7 +75,7 @@ const LightSummary = props => {
     return (
         <Group position="apart" noWrap>
             <Group noWrap>
-                <Avatar color={iconColor}>
+                <Avatar size="lg" color={iconColor}>
                     {<Lightbulb size={20} />}
                 </Avatar>     
                 <Text size="lg" weight={700} style={{width: "100%"}} lineClamp={1}>{ lightCount('on') ? labelText : "All lights off" }</Text>

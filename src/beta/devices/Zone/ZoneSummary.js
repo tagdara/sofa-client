@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
-import PlaceholderCard from 'layout/PlaceholderCard';
+import PlaceholderCard from 'beta/layout/PlaceholderCard';
 import useDeviceStateStore from 'store/deviceStateStore'
-import green from '@mui/material/colors/green';
-import red from '@mui/material/colors/red';
 
 import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
 import { Avatar, Badge, Group, Text } from '@mantine/core'
@@ -30,8 +28,6 @@ const ZoneSummary = props => {
     const securityZones = Object.keys(devices).filter( endpointId => !automationZones.includes(endpointId))
     const openZones = securityZones.filter(endpointId => isOpen(endpointId))
     const violated = openZones.length > 0
-    const iconColor = violated ? red[500] : green[500]
-
 
     function isOpen(endpointId) {
         if (hasCapability(endpointId, 'ContactSensor') && states[endpointId]) { 
@@ -45,15 +41,15 @@ const ZoneSummary = props => {
     
     const openZoneList = openZones.map(endpointId => devices[endpointId].friendlyName)
     
-    //avatarBackground={ violated } avatarState={ violated ? "open" : "closed" } 
-
     return (
         <Group direction="column" noWrap>
             <Group noWrap>
                 <Avatar color={violated ? "red" : "green"}>
                     { violated ? < AlertOctagon size={20} /> : <Shield size={20} />}
                 </Avatar>     
-                <Text size="lg" weight={700} style={{width: "100%"}} lineClamp={1}>{ violated ? openZones.length+' zone' +  ( openZones.length == 1 ? " is ": "s are ") + "not secure" : 'All zones secure' }</Text>
+                <Text size="lg" weight={700} style={{width: "100%"}} lineClamp={1}>
+                    { violated ? openZones.length+' zone' +  ( openZones.length === 1 ? " is ": "s are ") + "not secure" : 'All zones secure' }
+                </Text>
             </Group>
             { (openZoneList && openZoneList.length>0) &&
             <Group>

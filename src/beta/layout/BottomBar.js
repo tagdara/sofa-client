@@ -1,10 +1,5 @@
 import React from 'react';
 
-import MenuIcon from '@mui/icons-material/Menu';
-import QueueMusicIcon from '@mui/icons-material/QueueMusic';
-import SecurityIcon from '@mui/icons-material/Security';
-import LightbulbOutlineIcon from 'resources/LightbulbOutline';
-
 import { selectStack } from 'store/layoutHelpers'
 import useLayoutStore from 'store/layoutStore'
 import { Group, SegmentedControl, Text} from '@mantine/core';
@@ -22,7 +17,25 @@ const BottomLabel = (label, icon) => {
 
 const BottomBar = props => {
 
+    function reloadPWA() {
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.unregister();
+            });
+        }
+        window.location.reload(true)
+    } 
+
     const currentStack = useLayoutStore( state => state.currentStack)
+
+    const pickStack = newStack => {
+        if (newStack === "System") {
+            reloadPWA()
+        } else {
+            selectStack(newStack)
+        }
+    }
     
     const sectionData= [
             { value: "Audio Video",         "label": BottomLabel("AV",<Music size={20} />) },
@@ -34,7 +47,7 @@ const BottomBar = props => {
 
     return (
 
-            <SegmentedControl fullWidth onChange={selectStack} value={currentStack} data={sectionData} />
+            <SegmentedControl style={{ minHeight: 48, marginBottom: "env(safe-area-inset-bottom)" }} fullWidth onChange={pickStack} value={currentStack} data={sectionData} />
 
     )
 }

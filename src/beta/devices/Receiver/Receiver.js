@@ -4,8 +4,9 @@ import CardLineSlider from 'beta/components/CardLineSlider'
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
 import { getModes, getInputs, register, unregister } from 'store/deviceHelpers'
-import { Card, Group, SegmentedControl, Switch } from '@mantine/core'
+import { Group, SegmentedControl, Switch } from '@mantine/core'
 import { Speaker } from 'react-feather'
+import StackCard from 'beta/components/StackCard'
 
 const Receiver = props => {
   
@@ -75,7 +76,7 @@ const Receiver = props => {
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
-        <Card style={{ width: "100%"}}>
+        <StackCard>
             <Group direction="column" grow noWrap spacing="lg">
                 <CardLine   arrow icon={ <Speaker size={20} /> }
                             primary={"Receiver"}
@@ -107,7 +108,7 @@ const Receiver = props => {
                     />
                 }
             </Group>
-        </Card>
+        </StackCard>
     );
 }
 

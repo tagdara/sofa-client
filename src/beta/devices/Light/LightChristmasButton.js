@@ -3,6 +3,7 @@ import ChristmasTreeIcon from 'resources/ChristmasTreeIcon';
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
 import { register, unregister } from 'store/deviceHelpers'
+import { ActionIcon } from '@mantine/core'
 
 const LightChristmasButton = props => {
 
@@ -10,9 +11,9 @@ const LightChristmasButton = props => {
     const treeOn = tree && tree.PowerController.powerState.value === 'ON'
 
     useEffect(() => {
-        register(props.endpointId, "xmasLight"+treeEndpointId)
+        register(props.endpointId, "xmasLight"+props.endpointId)
         return function cleanup() {
-            unregister(props.endpointId, "xmasLight"+treeEndpointId);
+            unregister(props.endpointId, "xmasLight"+props.endpointId);
         };
     // eslint-disable-next-line 
     }, [])  
@@ -24,9 +25,9 @@ const LightChristmasButton = props => {
     
 
     return (
-        <ActionButton style={{ backgroundColor: treeOn ? "rgba(255,255,0,0.1)" : undefined }} onClick={(event)=>toggleTree(event) } >
+        <ActionIcon size="lg" style={{ backgroundColor: treeOn ? "rgba(255,255,0,0.1)" : undefined }} onClick={(event)=>toggleTree(event) } >
             <ChristmasTreeIcon treeOn={ treeOn } />
-        </ActionButton>
+        </ActionIcon >
     )
 
 }

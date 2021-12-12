@@ -9,16 +9,16 @@ import TargetSetpointAvatar from 'beta/device-model/property/targetSetpoint/Targ
 //import ThermostatSetpointButtons from 'devices/Thermostat/ThermostatSetpointButtons'
 
 import useDeviceStateStore from 'store/deviceStateStore'
-import useDeviceStore from 'store/deviceStore'
+//import useDeviceStore from 'store/deviceStore'
 import { register, unregister } from 'store/deviceHelpers'
-import { Collapse, Group, Text} from '@mantine/core';
+import { Group } from '@mantine/core';
 import StackCard from 'beta/components/StackCard'
 
 const Thermostat = props => {
     
     const [showDetail, setShowDetail] = useState(false)
 
-    const thermostatDevice = useDeviceStore( state => state.devices[props.endpointId] )
+//    const thermostatDevice = useDeviceStore( state => state.devices[props.endpointId] )
     const thermostat = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
     useEffect(() => {

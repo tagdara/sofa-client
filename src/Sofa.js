@@ -7,19 +7,15 @@ import SofaLogin from "user/SofaLogin";
 import ErrorBoundary from 'error/ErrorBoundary'
 import useLoginStore from 'store/loginStore'
 
-import AppFrame from 'beta/AppFrame'
+import App from 'beta/App'
 
 const Sofa = (props) => {
 
     const loggedIn = useLoginStore(state => state.logged_in )
-    const beta = window.location.href.includes('?beta')
-
-    if (beta && !loggedIn) {
-        return <SofaThemeProvider><SofaLogin /></SofaThemeProvider>
-    }
+    const beta = window.location.href.includes('/beta')
 
     if (beta) { 
-        return <AppFrame />
+        return <App />
     }
 
     return (

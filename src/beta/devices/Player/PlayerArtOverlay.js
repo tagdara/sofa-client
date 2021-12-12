@@ -1,5 +1,6 @@
 import React from 'react';
 import { Group, Image, Text } from '@mantine/core'
+import { Music } from 'react-feather'
 
 export default function PlayerArtOverlay(props) {
     
@@ -17,6 +18,7 @@ export default function PlayerArtOverlay(props) {
                     radius="sm"
                     style={{ display: "flex", flexGrow: 1, maxWidth: "30%" }}
                     withPlaceholder
+                    placeholder={<Music style={{ maxWidth: "30%" }} />}
                     src={ art ? artUrl : null }
                     title={ title }
                     alt={ title }
@@ -26,7 +28,7 @@ export default function PlayerArtOverlay(props) {
                         style={{ display: "flex", flexGrow: 2}}
                         onClick={()=> props.setMini(true)}>
                     <Group direction="column" noWrap spacing={0}>
-                        <Text lineClamp={2} weight={500} size="lg" >{title}</Text>
+                        <Text lineClamp={2} weight={500} size="lg" style={{ lineHeight: 1.2 }}>{title}</Text>
                         <Text lineClamp={1} weight={500} color="dimmed" size="md">{artist}</Text>
                     </Group>
                     {props.children}

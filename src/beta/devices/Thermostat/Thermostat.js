@@ -12,7 +12,6 @@ import useDeviceStateStore from 'store/deviceStateStore'
 //import useDeviceStore from 'store/deviceStore'
 import { register, unregister } from 'store/deviceHelpers'
 import { Group } from '@mantine/core';
-import StackCard from 'beta/components/StackCard'
 
 const Thermostat = props => {
     
@@ -42,17 +41,15 @@ const Thermostat = props => {
     //}
 
     return ( 
-        <StackCard>
-            <Group direction="column" spacing="xl" grow>
-                <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick} />
-                <Group noWrap position="apart">
-                    <ThermostatModeButtons endpointId={props.endpointId} />
-                    { thermostat.ThermostatController.thermostatMode.value!=='OFF' &&
-                        <TargetSetpointAvatar size="md" onClick={() => setShowDetail(!showDetail)} endpointId={props.endpointId} />
-                    }
-                </Group>
+        <Group direction="column" spacing="xl" grow style={{ width: "100%" }}>
+            <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick} />
+            <Group noWrap position="apart">
+                <ThermostatModeButtons endpointId={props.endpointId} />
+                { thermostat.ThermostatController.thermostatMode.value!=='OFF' &&
+                    <TargetSetpointAvatar size="md" onClick={() => setShowDetail(!showDetail)} endpointId={props.endpointId} />
+                }
             </Group>
-        </StackCard>
+        </Group>
     );
 
 //    return (

@@ -5,6 +5,7 @@ import useLayoutStore from 'store/layoutStore'
 import { Group, SegmentedControl, Text} from '@mantine/core';
 import { Menu, Music, Shield, Thermometer } from 'react-feather';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
+import { useMantineTheme } from '@mantine/core';
 
 const BottomLabel = (label, icon) => {
     return (
@@ -16,6 +17,8 @@ const BottomLabel = (label, icon) => {
 }
 
 const BottomBar = props => {
+
+    const theme = useMantineTheme();
 
     function reloadPWA() {
         
@@ -45,9 +48,28 @@ const BottomBar = props => {
             { value: "System",              "label": BottomLabel("More", <Menu size={20} />) }
     ]
 
-    return (
+    // TODO Adding color styles has introduced some ghosting along the edges that needs to be fixed
 
-            <SegmentedControl style={{ minHeight: 48, marginBottom: "env(safe-area-inset-bottom)" }} fullWidth onChange={pickStack} value={currentStack} data={sectionData} />
+    return (
+            <SegmentedControl 
+                    fullWidth 
+                    onChange={pickStack} 
+                    value={currentStack} 
+                    data={sectionData} 
+                    style={{    minHeight: 48, 
+                                marginBottom: "env(safe-area-inset-bottom)", 
+                                backgroundColor: theme.colorScheme === 'dark' ? 
+                                    theme.colors.dark[7] : 
+                                    theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.1),
+                    }} 
+                    styles={{   controlActive: {
+                                    borderRadius: 4,
+                                    backgroundColor: theme.colorScheme === 'dark' ? 
+                                        theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.5) : 
+                                        theme.fn.rgba(theme.colors[theme.primaryColor][1], 0.1) 
+                                }
+                    }}
+            />
 
     )
 }

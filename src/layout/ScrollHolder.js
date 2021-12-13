@@ -27,7 +27,7 @@ export default function ScrollHolder(props) {
     const classes = useStyles();
 
     return (
-        <Scrollbars>
+        <Scrollbars style={{ position: "static" }}>
             <div className={classes.scrollHolder}>
                 { props.children }
             </div>

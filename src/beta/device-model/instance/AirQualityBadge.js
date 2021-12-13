@@ -41,7 +41,7 @@ export default function AQIBadge(props) {
     const color = aqColor(value)
 
     return (
-        <Badge variant="light" size={props.size ? props.size : "lg"} color={ color } style={{ fontWeight: 500, textTransform: "initial", flexGrow: 1}}>
+        <Badge fullWidth variant="light" size={props.size ? props.size : "lg"} color={ color } style={{ fontWeight: 500, textTransform: "initial", flexGrow: 1}}>
             { label }
         </Badge>
     );

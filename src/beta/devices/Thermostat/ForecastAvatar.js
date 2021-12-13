@@ -51,8 +51,8 @@ export default function ForecastAvatar(props) {
     }
 
     return (
-        <Button style={{ padding: "0 2px" }} 
-                compact size="xs" variant="light" color={tempColor(getForecastHigh())}>
+        <Button style={{ padding: "0 2px", borderWidth: 0}} 
+                compact size="xs" variant={ props.colors ?  "light" : "outline" } color={ props.colors && tempColor(getForecastHigh()) }>
             {getForecastLow()+ "° - " + getForecastHigh() +"°" }
         </Button>
     )

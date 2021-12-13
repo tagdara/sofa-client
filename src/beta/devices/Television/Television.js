@@ -50,7 +50,7 @@ const Television = props => {
     return (
         <Card style={{ width: "100%" }}>
             <Group direction="column" grow>
-                <CardLine   icon={ <TvIcon size={20} /> }
+                <CardLine   avatar={ <TvIcon /> }
                             primary={device.friendlyName}
                             secondary={subText()}
                             onClick={ () => setShowDetail(!showDetail)}

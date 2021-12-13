@@ -13,13 +13,15 @@ export default function Weather(props) {
 
     return (
         <Group direction="column" noWrap style={{ width: "100%"}}>
-            <Group  direction="row" noWrap onClick={props.onClick} style={{ width: "100%"}} >
-                <TemperatureSensorAvatar endpointId={currentDevice} />
-                <Group direction="column" spacing={2}>
-                    <ModeControllerText size="lg" endpointId={forecastDevice} instance={"Weather Condition"} />
-                    <ForecastAvatar endpointId={forecastDevice} currentTemp={currentDevice}  />
+            <Group position="apart" noWrap onClick={props.onClick} style={{ width: "100%"}} >
+                <Group noWrap>
+                    <TemperatureSensorAvatar endpointId={currentDevice} />
+                    <Group direction="column" spacing={2}>
+                        <ModeControllerText size="lg" endpointId={forecastDevice} instance={"Weather Condition"} />
+                        <ForecastAvatar size={"sm"} dimmed endpointId={forecastDevice} currentTemp={currentDevice}  />
+                    </Group>
                 </Group>
-                <WeatherAvatar endpointId={forecastDevice} size="lg" />
+                <WeatherAvatar instance={"Weather Condition"} endpointId={forecastDevice} size="lg" />
             </Group>
         </Group>
     );

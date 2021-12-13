@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import useDeviceStateStore from 'store/deviceStateStore'
 import { register, unregister } from 'store/deviceHelpers'
-import { Button } from '@mantine/core';
+import { Button, Text } from '@mantine/core';
 
 export default function ForecastAvatar(props) { 
 
@@ -48,6 +48,10 @@ export default function ForecastAvatar(props) {
             default:
                 return 'gray'
         }
+    }
+
+    if (!props.colors) {
+        return <Text color={props.dimmed && "dimmed"} size={props.size}>{getForecastLow()+ "° - " + getForecastHigh() +"°" }</Text>
     }
 
     return (

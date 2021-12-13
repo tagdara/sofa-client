@@ -5,7 +5,7 @@ export default function CardLine(props) {
 
     return (
         <Group noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }} onClick={props.onClick} >
-            { props.avatar && <Avatar src={props.avatar} /> }
+            { props.avatar && <Avatar size="lg">{props.avatar}</Avatar> }
             { props.icon &&
                 <ActionIcon>
                     { props.icon }

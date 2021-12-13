@@ -78,7 +78,7 @@ const Receiver = props => {
     return (
         <StackCard>
             <Group direction="column" grow noWrap spacing="lg">
-                <CardLine   arrow icon={ <Speaker size={20} /> }
+                <CardLine   arrow avatar={ <Speaker /> }
                             primary={"Receiver"}
                             secondary={subText()}
                             onClick={ () => setShowDetail(!showDetail)}

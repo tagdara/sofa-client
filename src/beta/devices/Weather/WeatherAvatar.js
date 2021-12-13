@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import useDeviceStateStore from 'store/deviceStateStore'
 import { modeDisplayName, register, unregister } from 'store/deviceHelpers'
 import { Avatar } from '@mantine/core';
-import { Cloud, CloudDrizzle, CloudRain, Sun } from 'react-feather';
+import { Cloud, CloudDrizzle, CloudLightning, CloudRain, Sun } from 'react-feather';
 
 export default function WeatherAvatar(props) {
 
@@ -24,6 +24,10 @@ export default function WeatherAvatar(props) {
 
     
     const getIcon = () => {
+        if (modeText.includes('thunder')) {
+            return <CloudLightning />
+        }
+        
         if (modeText.includes('light rain')) {
             return <CloudDrizzle />
         }

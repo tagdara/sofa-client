@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Image } from '@mantine/core';
+import { Image, Loader, Paper } from '@mantine/core';
 
 import { useInterval } from 'components/useInterval';
 import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
@@ -7,12 +7,10 @@ import { directive } from 'store/directive'
 //import { checkToken } from 'store/userHelpers'
 import useDeviceStateStore from 'store/deviceStateStore'
 
-
 const CameraImage = props => {
 
     //const [imageLoaded, setImageLoaded] = useState(false);
     const [updateUri, setupdateUri] = useState("");
-    //const image = useRef(null);
     const [imageUri, setImageUri] = useState(undefined)
 
     const device = deviceByEndpointId(props.endpointId)
@@ -52,26 +50,34 @@ const CameraImage = props => {
     // eslint-disable-next-line 
     }, [ props.endpointId, unreachable ]);
 
+
     useInterval(() => {
         if (imageUri && !props.disabled) {
             setupdateUri(imageUri+"?time="+Date.now())
         }
     }, (imageUri || props.showDialog) ? props.refreshInterval : null);
 
-    //function imageFinished() {
-    //    if (!imageLoaded) {
-    //       setImageLoaded(true);
-    //    }
-    //}
-    
-    //function imageError(e) {
-    //    console.log('image error', e)
-    //}
-    
     return (
-        <Image src={updateUri ? updateUri : imageUri+"?date="+Date.now()}
-                withPlaceholder = {!updateUri} alt={name}
-
+        <Image  src={updateUri ? updateUri : "" }
+                styles={{  
+                    image: { 
+                        width: "100%",
+                        aspectRatio: "16/9", 
+                    }
+                }}
+                withPlaceholder={!updateUri}
+                alt={name}
+                placeholder={  <Paper style={{ 
+                                            width: "100%", 
+                                            aspectRatio: "16/9", 
+                                            display: "flex", 
+                                            justifyContent: "center", 
+                                            alignItems: "center" 
+                                        }}
+                                >
+                                    <Loader style={{ display: updateUri ? "none" : undefined, maxWidth: "30%" }} />
+                                </Paper>
+                            }
         />
     )
 }

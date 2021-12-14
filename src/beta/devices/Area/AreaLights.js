@@ -1,5 +1,5 @@
 import React from 'react';
-import LightButton from 'beta/devices/Light/LightButton';
+import LightLine from 'beta/devices/Light/LightLine';
 import { sortByName, hasDisplayCategory } from 'store/deviceHelpers'
 import { Group, Text } from '@mantine/core'
 
@@ -15,10 +15,10 @@ const AreaLights = props => {
     if (!lights || lights.length<1 ) { return null }
 
     return (
-        <Group direction="column" noWrap grow style={{ width: "100%"}}>
+        <Group direction="column" noWrap grow style={{ width: "100%"}} spacing="xl">
             <Text>Lights</Text>
             { lights.map(light =>
-                <LightButton endpointId={light} skipPrefix={name} />
+                <LightLine key={light} endpointId={light} skipPrefix={name} />
             )}
         </Group>
     );

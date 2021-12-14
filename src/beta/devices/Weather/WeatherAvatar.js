@@ -16,13 +16,11 @@ export default function WeatherAvatar(props) {
     // eslint-disable-next-line 
     }, [ ] )
 
-    console.log('ds', deviceState)
     if (!deviceState || !deviceState[props.instance]) { return null }
 
     const modeValue = deviceState[props.instance].mode.value
     const modeText = modeDisplayName(props.endpointId, props.instance, modeValue).toLowerCase()
 
-    
     const getIcon = () => {
         if (modeText.includes('thunder')) {
             return <CloudLightning />

@@ -1,6 +1,5 @@
 import React from 'react';
 import MonitorButtonStack from 'beta/devices/Computer/MonitorButtonStack';
-import MonitorButtonStackLabel from 'beta/devices/Computer/MonitorButtonStackLabel';
 import { Group, Space } from '@mantine/core';
 
 export default function MonitorButtonStackGroup(props) {
@@ -10,10 +9,9 @@ export default function MonitorButtonStackGroup(props) {
     const sectionCount = Object.keys(props.buttonLayout).length;
 
     return (
-        <Group direction="column" grow>
+        <Group direction="row" noWrap spacing={4} position="apart" style={{ width: "100%"}}>
             { Object.keys(props.buttonLayout).map( (zone, i) => 
-                <Group direction="row" noWrap key={zone} spacing={4}>
-                    <MonitorButtonStackLabel outlets={props.outlets} topClick={props.topClick} bottomClick={ props.bottomClick } />
+                <Group key={zone} noWrap spacing="xs">
                     { props.buttonLayout[zone].map( btn =>
                         <MonitorButtonStack key={btn.label} {...btn} />
                     )}

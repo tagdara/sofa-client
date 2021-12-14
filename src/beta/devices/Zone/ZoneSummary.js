@@ -44,7 +44,7 @@ const ZoneSummary = props => {
     return (
         <Group direction="column" noWrap>
             <Group noWrap>
-                <Avatar color={violated ? "red" : "green"}>
+                <Avatar size="lg" color={violated ? "red" : "green"}>
                     { violated ? < AlertOctagon size={20} /> : <Shield size={20} />}
                 </Avatar>     
                 <Text size="lg" weight={700} style={{width: "100%"}} lineClamp={1}>

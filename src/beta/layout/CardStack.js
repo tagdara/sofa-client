@@ -10,8 +10,6 @@ export default function CardStack(props) {
     const [ stackData, setStackData ] = useState(undefined)
     const [ expand, setExpand ]=useState(false)
 
-    console.log('props.stack', stackData)
-
     useEffect(() => { 
         if (stack) {
             getStack(stack)

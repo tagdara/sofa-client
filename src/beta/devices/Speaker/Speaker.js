@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Group, Text } from '@mantine/core';
+import { ThemeIcon, Group, Text } from '@mantine/core';
 import CardLineSlider from 'beta/components/CardLineSlider';
 
 import { directive } from 'store/directive'
 import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
 import useDeviceStateStore from 'store/deviceStateStore'
+import { Speaker as SpeakerIcon } from 'react-feather'
 
 const Speaker = props => {
 
@@ -32,17 +33,17 @@ const Speaker = props => {
         return null
     }
 
-    function handleVolumeChange(event) {
-        directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
+    function handleVolumeChange(vol) {
+        directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : vol} )
     }; 
 
     //function handleMuteChange(event) {
     //    directive(props.endpointId, 'Speaker', 'SetVolume', { "mute" : !speaker.Speaker.mute.value } )
     //}; 
 
-    //function togglePower(event) {
-    //    directive(props.endpointId, 'PowerController', speaker.PowerController.powerState.value==='OFF' ? 'TurnOn' : 'TurnOff')
-    //};
+    function togglePower() {
+        directive(props.endpointId, 'PowerController', speaker.PowerController.powerState.value==='OFF' ? 'TurnOn' : 'TurnOff')
+    };
 
     function shortName(name) {
         if (name.endsWith(" Speakers")) {
@@ -53,8 +54,15 @@ const Speaker = props => {
 
     return (
         <Group direction="row" noWrap grow>
-            <Text style={{ minWidth: "40%" }} lineClamp={1} size="sm">{name}</Text>
-            <CardLineSlider value = { speaker.Speaker.volume.value } on={on} set={handleVolumeChange} width={"60%"}/>         
+            <Group style={{ width: "40%"}}>
+                <ThemeIcon size="lg" variant={on ? "filled" : "light"} radius="md" onClick={togglePower}>
+                    <SpeakerIcon size={20} />
+                </ThemeIcon>
+                <Text weight={400} lineClamp={1} size="lg">
+                    {name}
+                </Text>
+            </Group>
+            <CardLineSlider value = { speaker.Speaker.volume.value } on={on} change={handleVolumeChange} width={"60%"}/>         
         </Group>
     );
 }

@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import FanIcon from 'resources/FanIcon';
 import CardLine from 'beta/components/CardLine'
 import { directive } from 'store/directive'
 import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
 import useDeviceStateStore from 'store/deviceStateStore'
 import { Switch } from '@mantine/core'
+import { FaFan as FanIcon } from "react-icons/fa";
 
 const Fan = props => {
 
@@ -28,7 +28,7 @@ const Fan = props => {
     const on = deviceState.PowerController.powerState.value === 'ON'
 
     return (    
-        <CardLine   icon={ props.icon ? props.icon : <FanIcon />}
+        <CardLine  size={"lg"}  icon={ props.icon ? props.icon : <FanIcon size={20} />}
                     primary={ device.friendlyName } 
         >
             <Switch color="primary" checked={ on } onChange={ handlePowerChange } />

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
+import { endpointIdByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 
 import SecurityCamera from 'beta/devices/Camera/SecurityCamera';
 import useUserStore from 'store/userStore'
+import StatusLock from 'beta/devices/Lock/StatusLock';
+import StackCard from 'beta/components/StackCard'
 
 export default function CameraSelect(props) {
 
@@ -37,10 +39,32 @@ export default function CameraSelect(props) {
         return cameras[cameraPosition]
     }
 
+    const getOpener = (opener) => {
+        try {
+            const endpointId = endpointIdByFriendlyName(opener.deviceName)  
+            return (
+                <StackCard key={endpointId}>
+                    <StatusLock endpointId={endpointId} displayName={ opener.displayName } buttonDuration={opener.buttonDuration} setCamera={setCurrentCamera} />
+                </StackCard>
+            )
+        }
+        catch {
+            return null
+        }
+    }
+
+
     return (
-        <SecurityCamera endpointId={currentCamera} selectButtons={true} 
-                        nextCamera={nextCamera} prevCamera={prevCamera} 
-                        wide={props.wide} top={false} showOffline={true} 
-                    />
+        <>
+            <SecurityCamera endpointId={currentCamera} selectButtons={true} 
+                            nextCamera={nextCamera} prevCamera={prevCamera} 
+                            wide={props.wide} top={false} showOffline={true} 
+                        />
+            { props.openers &&
+                <>
+                    { props.openers.map( opener => getOpener(opener)) }
+                </>
+            }
+        </>
     );
 }

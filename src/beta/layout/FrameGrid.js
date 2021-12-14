@@ -17,6 +17,7 @@ import AppFrame from 'beta/components/AppFrame'
 
 export default function MainPage() {
 
+    
     const wide = useMediaQuery('(min-width: 640px)');
     const [ opened, setOpened] = useState(false)
     const [ drawerOpened, setDrawerOpened] = useState(wide)

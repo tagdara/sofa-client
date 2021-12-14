@@ -6,9 +6,11 @@ import LightChristmasButton from 'beta/devices/Light/LightChristmasButton';
 import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
 import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
-import { Avatar, Group, Text } from '@mantine/core'
+import { Avatar, Group, Text, useMantineTheme } from '@mantine/core'
+
 
 const LightSummary = props => {
+    const theme = useMantineTheme()
     const xmas = true
     const lights = endpointIdsByDisplayCategory('LIGHT')
     const states = useDeviceStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
@@ -69,7 +71,7 @@ const LightSummary = props => {
         return null
     }
 
-    const iconColor = lightCount('on') > 0 ?  'green' : undefined
+    const iconColor = lightCount('on') > 0 ?  theme.colors[theme.primaryColor] : undefined
     const labelText = lightCount('on') === 1 ? lightCount('on')+" light is on" : lightCount('on')+" lights are on"
 
     return (

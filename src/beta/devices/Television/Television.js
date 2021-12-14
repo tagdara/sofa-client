@@ -3,7 +3,7 @@ import CardLine from 'beta/components/CardLine'
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
 import { getInputs, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
-import { Card, Group, SegmentedControl, Switch } from '@mantine/core'
+import { Card, Group, Select, Switch } from '@mantine/core'
 import { Tv as TvIcon } from 'react-feather'
 
 const Television = props => {
@@ -31,13 +31,6 @@ const Television = props => {
         directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     };
 
-    function subText() {
-        if (showDetail || tv.PowerController.powerState.value==='OFF') {
-            return null
-        }
-        return tv.InputController.input.value
-    }
-
     function stopEventPropagation(event) {
         // switches use onChange but onClick needs to also be blocked for nested items
         event.stopPropagation()
@@ -47,13 +40,17 @@ const Television = props => {
        return inputs.map( inp => { return { label : inp, value : inp}})
     }
 
+    function handleInput(inputname) {
+        directive(props.endpointId,"InputController", 'SelectInput', { "input": inputname } )
+    }; 
+
     return (
         <Card style={{ width: "100%" }}>
             <Group direction="column" grow>
                 <CardLine   avatar={ <TvIcon /> }
                             primary={device.friendlyName}
-                            secondary={subText()}
                             onClick={ () => setShowDetail(!showDetail)}
+                            color={ on ? "primary" : undefined }
                 >
                     <Switch checked={ on }
                             onClick={stopEventPropagation} 
@@ -61,12 +58,13 @@ const Television = props => {
                     />
                 </CardLine>
                 { (showDetail || on ) &&
-                <SegmentedControl
-                    size="xs"
-                    fullWidth
-                    value={ tv.InputController.input.value }
-                    data={ inputSelect() }
-                />    
+                    <Select
+                        size="md"
+                        placeholder="Input"
+                        value={ tv.InputController.input.value }
+                        onChange={ handleInput }
+                        data={ inputSelect() }
+                    />    
                 }
             </Group>
         </Card>

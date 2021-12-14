@@ -14,9 +14,9 @@ const useLayoutStore = create((set, get) => ({
     modules: {},
     stackModules: {},
     stackLayout: {},
-    maxScreenWidth: Math.min(1800, window.innerWidth),
+    maxScreenWidth: 1800,
     isMobile: window.innerWidth <= 800,
-    minStackWidth: 320,
+    minStackWidth: 310,
     stackPad: 16, // This should be computed from mantine pad
 
     refreshStackLayout: async () => {

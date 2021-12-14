@@ -10,14 +10,14 @@ const ShadeButtons = props => {
     }
     
     return ( 
-        <Group>
-            <ActionIcon onClick={ () => handlePress('Position.Down') }>
+        <Group spacing={4}>
+            <ActionIcon variant="light" size="lg" onClick={ () => handlePress('Position.Down') }>
                 <ChevronDown size={20} />
             </ActionIcon >
-            <ActionIcon onClick={ () => handlePress('Position.Stop') }>
+            <ActionIcon variant="light" size="lg" onClick={ () => handlePress('Position.Stop') }>
                 <StopCircle size={20} />
             </ActionIcon >
-            <ActionIcon onClick={ () => handlePress('Position.Up') }>
+            <ActionIcon variant="light" size="lg" onClick={ () => handlePress('Position.Up') }>
                 <ChevronUp size={20} />
             </ActionIcon >
         </Group>

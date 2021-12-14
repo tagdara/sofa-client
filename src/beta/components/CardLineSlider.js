@@ -7,23 +7,30 @@ const CardLineSlider = props => {
 
     const theme = useMantineTheme(); 
     const [ value, setValue ] = useState(props.value)
+    const [ userValue, setUserValue] = useState(false)
     const [ debounced ] = useDebouncedValue( value, props.delay ? props.delay : 300 );
 
     useDidUpdate(() => {
+        setUserValue(false)
         setValue(props.value)
     }, [ props.value ])
 
     useDidUpdate(() => {
-        if (debounced !== undefined) {
+        if (debounced !== undefined && userValue) {
             console.log('>> sending value change', debounced)
             props.change(debounced)
         }
     }, [ debounced ])
 
+    const setValueByUser = (val) => {
+        setUserValue(true)
+        setValue(val)
+    } 
+
     const showMarkLabels = props.marks !== undefined && !props.hideLabels
     const disabled = theme.colorScheme === 'dark' ? 
                         { 
-                            root: { padding: showMarkLabels ? "8px 8px 16px 8px" : undefined },
+                            root: { padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
                             markLabel: { display: !showMarkLabels ? 'none' : undefined }, 
                             track: { backgroundColor: theme.colors.dark[7] }, 
                             bar: { backgroundColor: theme.colors.dark[4] }, 
@@ -31,7 +38,7 @@ const CardLineSlider = props => {
                             markFilled: { backgroundColor:  theme.colors.dark[6], borderColor: theme.colors.dark[3] },
                             thumb: { backgroundColor:  theme.colors.dark[6], borderColor: theme.colors.dark[3] } }
                         :
-                        {   root: { padding: showMarkLabels ? "8px 8px 16px 8px" : undefined },
+                        {   root: { padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
                             markLabel: { display: !showMarkLabels ? 'none' : undefined }, 
                             track: { backgroundColor: theme.colors.gray[1] }, 
                             bar: { backgroundColor: theme.colors.gray[4] }, 
@@ -51,7 +58,7 @@ const CardLineSlider = props => {
         <Slider
             label={ label }
             style={{ boxSizing: "border-box", maxWidth: "100%", flexGrow: 1, paddingLeft: 8, paddingRight: 8}}
-            onChange={ (val) => setValue(val) }
+            onChange={ (val) => setValueByUser(val) }
             value={ value }
             min={ min }
             max={ max }    

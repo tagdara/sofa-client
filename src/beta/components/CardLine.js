@@ -5,14 +5,14 @@ export default function CardLine(props) {
 
     return (
         <Group noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }} onClick={props.onClick} >
-            { props.avatar && <Avatar size="lg">{props.avatar}</Avatar> }
+            { props.avatar && <Avatar size={props.size ? props.size : "lg" } color={props.color} >{props.avatar}</Avatar> }
             { props.icon &&
-                <ActionIcon>
+                <ActionIcon size={props.size} color={props.color}>
                     { props.icon }
                 </ActionIcon>
             }           
             <Group direction="column" spacing={0} grow style={{ flexGrow: 1 }}>
-                <Text lineClamp={1} size="lg" weight={500} style={{ flexGrow: 1 }}>
+                <Text lineClamp={1} size="lg" weight={400} style={{ flexGrow: 1 }}>
                     { props.primary }
                 </Text>
                 <Text color="dimmed" size="md" lineClamp={1}>

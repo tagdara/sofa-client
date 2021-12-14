@@ -8,7 +8,6 @@ import { endpointIdByFriendlyName } from 'store/deviceHelpers'
 
 export default function OutdoorHero(props) {
     
-    console.log('props', props)
     const aqEndpoint = endpointIdByFriendlyName(props.outdoorAirQuality)
 
     return (

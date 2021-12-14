@@ -3,18 +3,17 @@ import CardLine from 'beta/components/CardLine'
 import CardLineSlider from 'beta/components/CardLineSlider'
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
-import { getModes, getInputs, register, unregister } from 'store/deviceHelpers'
-import { Group, SegmentedControl, Switch } from '@mantine/core'
+import { getModes, register, unregister } from 'store/deviceHelpers'
+import { Group, Switch } from '@mantine/core'
 import { Speaker } from 'react-feather'
 import StackCard from 'beta/components/StackCard'
+import ReceiverInputSelect from 'beta/devices/Receiver/ReceiverInputSelect'
+import ReceiverSurroundSelect from 'beta/devices/Receiver/ReceiverSurroundSelect'
 
 const Receiver = props => {
   
     const [ showDetail, setShowDetail ] = useState(false);
-    //const [ volumePresetMode, setVolumePresetMode ] = useState(true);
     const volumePresets = [40, 55, 60, 65, 70, 80];
-
-    //const device = deviceByEndpointId(props.endpointId)
     const receiver = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
     useEffect(() => {
@@ -29,12 +28,7 @@ const Receiver = props => {
 
     const on = receiver.PowerController.powerState.value === 'ON' 
     const volume = receiver.Speaker.volume.value
-    const inputs = getInputs(props.endpointId)
- 
-    function inputSelect() {
-        return inputs.map( inp => { return { label : inp, value : inp}})
-     }
-    
+
     function handleVolumeChange(event) {
         directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
     }; 
@@ -43,10 +37,6 @@ const Receiver = props => {
         event.stopPropagation();
         directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
     };
-    
-    //function handleInput(inputname) {
-    //    directive(props.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
-    //}; 
 
     
     function surroundName() {
@@ -56,10 +46,6 @@ const Receiver = props => {
         }
         return ""
     }
-    
-    //function handleInputLockModeChoice(event,modechoice) {
-    //    directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Receiver.InputLock')
-    //}; 
 
     function subText() {
         if (on) {
@@ -77,8 +63,9 @@ const Receiver = props => {
 
     return (
         <StackCard>
-            <Group direction="column" grow noWrap spacing="lg">
+            <Group direction="column" grow noWrap spacing="xl">
                 <CardLine   arrow avatar={ <Speaker /> }
+                            color={ on ? "primary" : undefined}
                             primary={"Receiver"}
                             secondary={subText()}
                             onClick={ () => setShowDetail(!showDetail)}
@@ -88,16 +75,6 @@ const Receiver = props => {
                             onChange={ handlePowerChange } 
                     />
                 </CardLine>
-                { showDetail && 
-                <Group grow>
-                    <SegmentedControl
-                        fullWidth
-                        size="xs"
-                        value={ receiver.InputController.input.value }
-                        data={ inputSelect() }
-                    />                       
-                </Group>
-                }
                 { (showDetail || on ) &&
                 <CardLineSlider on={on} 
                                 step={5}
@@ -107,6 +84,8 @@ const Receiver = props => {
                                 change={handleVolumeChange} 
                     />
                 }
+                { showDetail && <ReceiverSurroundSelect receiver={receiver} endpointId={props.endpointId} /> }
+                { showDetail && <ReceiverInputSelect receiver={receiver} endpointId={props.endpointId} /> }
             </Group>
         </StackCard>
     );

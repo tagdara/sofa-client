@@ -50,7 +50,7 @@ const JukeboxHero = props => {
 
     return (
         <StackCard>
-            <Group direction="column" noWrap grow>
+            <Group direction="column" noWrap grow spacing="xl">
             { (isIdle() && !showIdle) ?
                 <PlayerHeaderSmall endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers} />
             :

@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
+import ComputerSummary from 'beta/devices/Computer/ComputerSummary'
 import MonitorButtonStackGroup from 'beta/devices/Computer/MonitorButtonStackGroup';
 import MatrixList from 'beta/devices/Matrix/MatrixList';
 import { selectPage } from 'store/layoutHelpers'
 //import { Card } from '@mantine/core';
 import StackCard from 'beta/components/StackCard'
-
+import { endpointIdByFriendlyName } from 'store/deviceHelpers';
+import { Group } from '@mantine/core'
 export default function ComputerHero(props) {
     
     const [ expandMonitors, setExpandMonitors ]=useState()
      
     // This stuff really needs to be moved to config and autodetect, maybe solve with virtual device combining PC and plug
     const computerPlugs=["PC1 outlet", "PC2 outlet", "PC3 outlet", "PC4 outlet"]
+    const computerPlugEndpoints=computerPlugs.map( plug => endpointIdByFriendlyName(plug))
 
     const buttonLayout = {
         upstairs:   [   
@@ -31,10 +34,13 @@ export default function ComputerHero(props) {
 
     return (
         <StackCard>
-            <MonitorButtonStackGroup buttonLayout={buttonLayout} outlets={computerPlugs} topClick={toggleExpand} bottomClick={ () => selectPage('ComputerLayout') } />
-            { expandMonitors &&
-                <MatrixList />
-            } 
+            <Group direction="column">
+                <ComputerSummary endpointIds={computerPlugEndpoints} />
+                <MonitorButtonStackGroup buttonLayout={buttonLayout} outlets={computerPlugs} topClick={toggleExpand} bottomClick={ () => selectPage('ComputerLayout') } />
+                { expandMonitors &&
+                    <MatrixList />
+                } 
+            </Group>
         </StackCard>
     );
 }

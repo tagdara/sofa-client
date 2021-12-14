@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { ActionIcon, Avatar, Group, Text } from '@mantine/core'
 import { Speaker as SpeakerIcon, Music } from 'react-feather'
-import PlaceholderCard from 'layout/PlaceholderCard';
+import PlaceholderCard from 'beta/layout/PlaceholderCard';
 import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
 
@@ -34,7 +34,7 @@ const PlayerHeaderSmall = props => {
     return (
         <Group direction="row" noWrap position="apart" onClick={props.toggleIdle}>
             <Group>
-                <Avatar src={ jukeboxState.MusicController.art.value ? 
+                <Avatar size="lg" src={ jukeboxState.MusicController.art.value ? 
                                 serverurl + jukeboxState.MusicController.art.value :
                                 'X' } 
                 />

@@ -5,8 +5,7 @@ import { List, Pause, Play, SkipForward, Speaker as SpeakerIcon, Music } from 'r
 export default function PlayerArtOverlayButtons(props) {
 
     function openJukebox() {
-        var newurl="https://jukebox.dayton.tech"
-        window.open(newurl,'_jukebox');
+        window.open(props.url,'_jukebox');
     }
     
     return ( 

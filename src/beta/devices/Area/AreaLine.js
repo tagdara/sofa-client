@@ -1,29 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import CardLineSlider from 'beta/components/CardLineSlider';
 import { Group, Text } from '@mantine/core'
-import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
-import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
+import { deviceByEndpointId } from 'store/deviceHelpers'
+import { useRegister } from 'store/useRegister'
 
 const AreaLine = props => {
 
-    const area = deviceByEndpointId(props.endpointId)   
-    const areaState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-
-    useEffect(() => {
-        register(props.endpointId, 'AreaLine-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'AreaLine-'+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [])
-
-
-    if (!areaState) { return null }
+    const { device, deviceState } = useRegister(props.endpointId)
+    if (!deviceState) { return null }
     
-    const shortcuts = areaState.AreaController.shortcuts.value
-    const scene = areaState.AreaController.scene.value
-    const name = area.friendlyName
+    const shortcuts = deviceState.AreaController.shortcuts.value
+    const scene = deviceState.AreaController.scene.value
+    const name = device.friendlyName
 
     function runShortcut(index) {
         const sceneId = shortcuts[index]
@@ -33,7 +22,7 @@ const AreaLine = props => {
         }
     }
     
-    const level = shortcuts.indexOf(areaState.AreaController.scene.value);
+    const level = shortcuts.indexOf(deviceState.AreaController.scene.value);
     const levelLabels = shortcuts.map( (endpointId, index) => ( { value: index, label: deviceByEndpointId(endpointId).friendlyName  }))
 
     return (

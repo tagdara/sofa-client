@@ -1,28 +1,20 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import CardLineSlider from 'beta/components/CardLineSlider';
 import MultiLightColor from 'beta/devices/Light/MultiLightColor';
 
-import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
-import { hasCapability, deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
+import { hasCapability, deviceByEndpointId } from 'store/deviceHelpers'
 import { Group } from '@mantine/core'
+import { useRegister } from 'store/useRegister'
 
 const AreaSummaryLine = props => {
-    
-    const areaState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
-    useEffect(() => {
-        register(props.endpointId, 'AreaSummaryLine-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'AreaSummaryLine-'+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [props.endpointId])
+    const { deviceState } = useRegister(props.endpointId)
 
-    if (!areaState) { return null }
+    if (!deviceState) { return null }
     
-    const children = areaState.AreaController.children.value
-    const shortcuts = areaState.AreaController.shortcuts.value
+    const children = deviceState.AreaController.children.value
+    const shortcuts = deviceState.AreaController.shortcuts.value
     const colorLights = children.filter(endpointId => hasCapability(endpointId, "ColorController"))
 
     function runShortcut(level) {
@@ -32,7 +24,7 @@ const AreaSummaryLine = props => {
     
     if (shortcuts.length === 0 && colorLights.length===  0) { return null }
 
-    const level = shortcuts.indexOf(areaState.AreaController.scene.value);
+    const level = shortcuts.indexOf(deviceState.AreaController.scene.value);
     const levelLabels = shortcuts.map( (endpointId, index) => ( { value: index, label: deviceByEndpointId(endpointId).friendlyName  }))
 
     return (

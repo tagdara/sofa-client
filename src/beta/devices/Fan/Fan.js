@@ -1,23 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import CardLine from 'beta/components/CardLine'
 import { directive } from 'store/directive'
-import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
-import useDeviceStateStore from 'store/deviceStateStore'
 import { Switch } from '@mantine/core'
 import { FaFan as FanIcon } from "react-icons/fa";
+import { useRegister } from 'store/useRegister'
 
 const Fan = props => {
 
-    const device = deviceByEndpointId(props.endpointId)   
-    const deviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId])
-
-    useEffect(() => {
-        register(props.endpointId, "Device-"+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, "Device-"+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [])
+    const { device, deviceState } = useRegister(props.endpointId)
 
     if (!deviceState) { return null }
 

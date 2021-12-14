@@ -1,35 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ThemeIcon, Group, Text } from '@mantine/core';
 import CardLineSlider from 'beta/components/CardLineSlider';
-
 import { directive } from 'store/directive'
-import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
-import useDeviceStateStore from 'store/deviceStateStore'
 import { Speaker as SpeakerIcon } from 'react-feather'
+import { useRegister } from 'store/useRegister'
 
 const Speaker = props => {
 
-    const speakerDevice = deviceByEndpointId(props.endpointId)   
-    const speaker = useDeviceStateStore( state => state.deviceStates[props.endpointId])
+    const { device, deviceState } = useRegister(props.endpointId)
 
-    useEffect(() => {
-        register(props.endpointId, "speaker-"+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, "speaker-"+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [])
-
-    
-    if (!speaker || !speaker.PowerController ) {
-        //console.log('speaker is being filtered', props.filterOff, speaker)
+    if (!deviceState || !deviceState.PowerController ) {
         return null
     }
 
-    const name = shortName(speakerDevice.friendlyName)
-    const on = speaker.PowerController.powerState.value==='ON'
+    const name = shortName(device.friendlyName)
+    const on = deviceState.PowerController.powerState.value==='ON'
 
-    if (props.filterOff && speaker.PowerController.powerState.value==='OFF') {
+    if (props.filterOff && deviceState.PowerController.powerState.value==='OFF') {
         return null
     }
 
@@ -42,7 +29,7 @@ const Speaker = props => {
     //}; 
 
     function togglePower() {
-        directive(props.endpointId, 'PowerController', speaker.PowerController.powerState.value==='OFF' ? 'TurnOn' : 'TurnOff')
+        directive(props.endpointId, 'PowerController', deviceState.PowerController.powerState.value==='OFF' ? 'TurnOn' : 'TurnOff')
     };
 
     function shortName(name) {
@@ -62,7 +49,7 @@ const Speaker = props => {
                     {name}
                 </Text>
             </Group>
-            <CardLineSlider value = { speaker.Speaker.volume.value } on={on} change={handleVolumeChange} width={"60%"}/>         
+            <CardLineSlider value = { deviceState.Speaker.volume.value } on={on} change={handleVolumeChange} width={"60%"}/>         
         </Group>
     );
 }

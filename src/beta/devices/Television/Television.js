@@ -1,29 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import CardLine from 'beta/components/CardLine'
-import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
-import { getInputs, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
-import { Card, Group, Select, Switch } from '@mantine/core'
+import { getInputs } from 'store/deviceHelpers'
+import { Group, Select, Switch } from '@mantine/core'
 import { Tv as TvIcon } from 'react-feather'
+import { useRegister } from 'store/useRegister'
 
 const Television = props => {
   
     const [ showDetail, setShowDetail ] = useState(false);
-    const device = deviceByEndpointId(props.endpointId)
-    const tv = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const { device, deviceState } = useRegister(props.endpointId)
 
-    useEffect(() => {
-        register(props.endpointId, 'tv-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'tv-'+props.endpointId);
-        };
-    // eslint-disable-next-line 
-    }, [props.endpointId])
+    if (!deviceState) { return null }
 
-    if (!tv) { return null }
-
-    const on = tv.PowerController.powerState.value === 'ON' 
-    //const volume = tv.Speaker.volume.value
+    const on = deviceState.PowerController.powerState.value === 'ON' 
+    //const volume = deviceState.Speaker.volume.value
     const inputs = getInputs(props.endpointId) 
 
     function handlePowerChange(event) {
@@ -45,7 +36,6 @@ const Television = props => {
     }; 
 
     return (
-        <Card style={{ width: "100%" }}>
             <Group direction="column" grow>
                 <CardLine   avatar={ <TvIcon /> }
                             primary={device.friendlyName}
@@ -61,13 +51,12 @@ const Television = props => {
                     <Select
                         size="md"
                         placeholder="Input"
-                        value={ tv.InputController.input.value }
+                        value={ deviceState.InputController.input.value }
                         onChange={ handleInput }
                         data={ inputSelect() }
                     />    
                 }
             </Group>
-        </Card>
     );
 }
 

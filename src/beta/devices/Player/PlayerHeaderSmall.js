@@ -1,41 +1,28 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { ActionIcon, Avatar, Group, Text } from '@mantine/core'
 import { Speaker as SpeakerIcon, Music } from 'react-feather'
 import PlaceholderCard from 'beta/layout/PlaceholderCard';
-import useDeviceStateStore from 'store/deviceStateStore'
-import useRegisterStore from 'store/registerStore'
+import { useRegister } from 'store/useRegister'
 
 const PlayerHeaderSmall = props => {
     
     const serverurl="https://"+window.location.hostname;
-    const jukebox = 'jukebox'
-    const jukeboxState = useDeviceStateStore( state => state.deviceStates[jukebox] )
-    const register = useRegisterStore( state => state.add)
-    const unregister = useRegisterStore( state => state.remove)
+    const { deviceState } = useRegister(props.endpointId)
 
-    useEffect(() => {
-        register(jukebox, 'jukeboxhero')
-        return function cleanup() {
-            unregister(jukebox, 'jukeboxhero')
-        };
-    // eslint-disable-next-line 
-    }, [])
-
-    if (!jukeboxState) {
+    if (!deviceState) {
         return <PlaceholderCard count={ 3 } />
     }
 
     function openJukebox() {
-        var newurl="https://jukebox.dayton.tech"
         var safariWindow = window.open();
-        safariWindow.location.href = newurl
+        safariWindow.location.href = props.url
     }
 
     return (
         <Group direction="row" noWrap position="apart" onClick={props.toggleIdle}>
             <Group>
-                <Avatar size="lg" src={ jukeboxState.MusicController.art.value ? 
-                                serverurl + jukeboxState.MusicController.art.value :
+                <Avatar size="lg" src={ deviceState.MusicController.art.value ? 
+                                serverurl + deviceState.MusicController.art.value :
                                 'X' } 
                 />
                 <Text>{'Jukebox is idle'}</Text>

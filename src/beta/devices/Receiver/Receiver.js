@@ -1,33 +1,25 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import CardLine from 'beta/components/CardLine'
 import CardLineSlider from 'beta/components/CardLineSlider'
-import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
-import { getModes, register, unregister } from 'store/deviceHelpers'
+import { getModes } from 'store/deviceHelpers'
 import { Group, Switch } from '@mantine/core'
 import { Speaker } from 'react-feather'
 import StackCard from 'beta/components/StackCard'
 import ReceiverInputSelect from 'beta/devices/Receiver/ReceiverInputSelect'
 import ReceiverSurroundSelect from 'beta/devices/Receiver/ReceiverSurroundSelect'
+import { useRegister } from 'store/useRegister'
 
 const Receiver = props => {
   
     const [ showDetail, setShowDetail ] = useState(false);
     const volumePresets = [40, 55, 60, 65, 70, 80];
-    const receiver = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const { deviceState } = useRegister(props.endpointId)
 
-    useEffect(() => {
-        register(props.endpointId, 'Receiver-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'Receiver-'+props.endpointId);
-        };
-    // eslint-disable-next-line 
-    }, [props.endpointId])
+    if (!deviceState) { return null }
 
-    if (!receiver) { return null }
-
-    const on = receiver.PowerController.powerState.value === 'ON' 
-    const volume = receiver.Speaker.volume.value
+    const on = deviceState.PowerController.powerState.value === 'ON' 
+    const volume = deviceState.Speaker.volume.value
 
     function handleVolumeChange(event) {
         directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
@@ -41,15 +33,15 @@ const Receiver = props => {
     
     function surroundName() {
         var surroundmodes = getModes(props.endpointId).Surround
-        if (surroundmodes.hasOwnProperty(receiver.Surround.mode.value)) {
-            return surroundmodes[receiver.Surround.mode.value]
+        if (surroundmodes.hasOwnProperty(deviceState.Surround.mode.value)) {
+            return surroundmodes[deviceState.Surround.mode.value]
         }
         return ""
     }
 
     function subText() {
         if (on) {
-            return receiver.InputController.input.value + " / "+ surroundName()
+            return deviceState.InputController.input.value + " / "+ surroundName()
         }
         return null
     }
@@ -84,8 +76,8 @@ const Receiver = props => {
                                 change={handleVolumeChange} 
                     />
                 }
-                { showDetail && <ReceiverSurroundSelect receiver={receiver} endpointId={props.endpointId} /> }
-                { showDetail && <ReceiverInputSelect receiver={receiver} endpointId={props.endpointId} /> }
+                { showDetail && <ReceiverSurroundSelect deviceState={deviceState} endpointId={props.endpointId} /> }
+                { showDetail && <ReceiverInputSelect deviceState={deviceState} endpointId={props.endpointId} /> }
             </Group>
         </StackCard>
     );

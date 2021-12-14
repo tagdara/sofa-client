@@ -1,7 +1,6 @@
 import React from "react";
-
 import { endpointIdsByDisplayCategory } from 'store/deviceHelpers';
-
+import StackCard from 'beta/components/StackCard'
 import Television from 'beta/devices/Television/Television';
 
 const TvHero = props => {
@@ -10,7 +9,9 @@ const TvHero = props => {
     return (
         <>
             { tvs.map(endpointId => 
-                <Television wide={props.wide} key={ endpointId } endpointId={ endpointId } />
+                <StackCard key={ endpointId }>
+                    <Television endpointId={ endpointId } />
+                </StackCard>
             )}
         </>
     );

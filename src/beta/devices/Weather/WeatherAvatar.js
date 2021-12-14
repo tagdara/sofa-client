@@ -1,20 +1,12 @@
-import React, { useEffect } from 'react';
-import useDeviceStateStore from 'store/deviceStateStore'
-import { modeDisplayName, register, unregister } from 'store/deviceHelpers'
+import React from 'react';
+import { modeDisplayName } from 'store/deviceHelpers'
 import { Avatar } from '@mantine/core';
 import { Cloud, CloudDrizzle, CloudLightning, CloudRain, Sun } from 'react-feather';
+import { useRegister } from 'store/useRegister'
 
 export default function WeatherAvatar(props) {
 
-    const deviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-
-    useEffect(() => {
-        register(props.endpointId, 'WeatherAvatar-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'WeatherAvatar-'+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [ ] )
+    const { deviceState } = useRegister(props.endpointId)
 
     if (!deviceState || !deviceState[props.instance]) { return null }
 

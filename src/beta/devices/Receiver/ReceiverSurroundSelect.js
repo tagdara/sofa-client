@@ -6,7 +6,7 @@ import CardSegmentedControl from 'beta/components/CardSegmentedControl'
 
 const ReceiverSurroundSelect = props => {
 
-    const receiver = props.receiver
+    const receiver = props.deviceState
     if (!receiver) { return null }
 
     const surroundModes = getModes(props.endpointId).Surround

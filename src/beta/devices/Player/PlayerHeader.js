@@ -1,36 +1,23 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Group } from '@mantine/core'
-
 import PlayerArtOverlay from 'beta/devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'beta/devices/Player/PlayerArtOverlayButtons';
 import PlaceholderCard from 'layout/PlaceholderCard';
-
-import useDeviceStateStore from 'store/deviceStateStore'
-import useRegisterStore from 'store/registerStore'
 import { directive } from 'store/directive'
+import { useRegister } from 'store/useRegister'
 
 const PlayerHeader = props => {
     
     const jukebox = 'jukebox'
-    const jukeboxState = useDeviceStateStore( state => state.deviceStates[jukebox] )
-    const register = useRegisterStore( state => state.add)
-    const unregister = useRegisterStore( state => state.remove)
+    const { deviceState } = useRegister(props.endpointId)
 
-    useEffect(() => {
-        register(jukebox, 'jukeboxhero')
-        return function cleanup() {
-            unregister(jukebox, 'jukeboxhero')
-        };
-    // eslint-disable-next-line 
-    }, [])
-
-    if (!jukeboxState) {
+    if (!deviceState) {
         return <PlaceholderCard count={ 3 } />
     }
 
     function handlePlayPause(event) {
         event.stopPropagation();
-        if (jukeboxState.MusicController.playbackState.value ==='PLAYING') {
+        if (deviceState.MusicController.playbackState.value ==='PLAYING') {
             directive(jukebox, 'MusicController', 'Pause')
         } else {
             directive(jukebox, 'MusicController', 'Play')
@@ -53,10 +40,10 @@ const PlayerHeader = props => {
 
     return (
         <Group direction="row">
-            <PlayerArtOverlay   deviceState={jukeboxState} cover={openJukebox} setMini={props.toggleIdle} >
-                <PlayerArtOverlayButtons    min={props.setMini} cover={props.toggleIdle} stop={handleStop} 
+            <PlayerArtOverlay   deviceState={deviceState} cover={openJukebox} setMini={props.toggleIdle} >
+                <PlayerArtOverlayButtons    min={props.setMini} cover={props.toggleIdle} stop={handleStop} url={props.url}
                                             playPause={handlePlayPause} skip={handleSkip} jukebox={true} toggleSpeakerFilter={ props.toggleSpeakers }
-                                            playbackState={ jukeboxState.MusicController.playbackState.value ? jukeboxState.MusicController.playbackState.value : 'Unknown'} />
+                                            playbackState={ deviceState.MusicController.playbackState.value ? deviceState.MusicController.playbackState.value : 'Unknown'} />
             </PlayerArtOverlay>
         </Group>
     );

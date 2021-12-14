@@ -1,27 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
 import { CloudOff, X as XIcon } from 'react-feather'
 import { ActionIcon, Switch, Group, Text} from '@mantine/core';
 import LightPopover from 'beta/devices/Light/LightPopover'
-
-import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
-import { deviceByEndpointId, isReachable, register, unregister } from 'store/deviceHelpers'
+import { isReachable } from 'store/deviceHelpers'
+import { useRegister } from 'store/useRegister'
 
 const LightLine = props => {
 
     const [showPopover, setShowPopover] = useState(props.showAll)
-    //const expanded = showAll || props.brightControl || props.tempControl || props.colorControl
-    const light = deviceByEndpointId(props.endpointId)
-    const lightState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-
-    useEffect(() => {
-        register(props.endpointId, "Light"+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, "Light"+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [props.endpointId])
+    const { device, deviceState } = useRegister(props.endpointId)
 
     function handlePowerChange(event) {
         directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
@@ -32,9 +21,10 @@ const LightLine = props => {
         event.stopPropagation()
     }
 
-    const name = light ? light.friendlyName : "Unknown"
-    const reachable = isReachable(lightState)
-    const on = lightState && lightState.PowerController.powerState.value === 'ON'
+    //const expanded = showAll || props.brightControl || props.tempControl || props.colorControl
+    const name = device ? device.friendlyName : "Unknown"
+    const reachable = isReachable(deviceState)
+    const on = deviceState && deviceState.PowerController.powerState.value === 'ON'
 
     function filtered(filter) {
         
@@ -46,7 +36,7 @@ const LightLine = props => {
                 }
                 break;
             case "OFF":
-                if (!lightState || !on || !reachable) {
+                if (!deviceState || !on || !reachable) {
                     return false
                 }
                 break;
@@ -56,14 +46,14 @@ const LightLine = props => {
         return true
     }
 
-    if (!lightState || filtered(props.filter)) { 
+    if (!deviceState || filtered(props.filter)) { 
         return null 
     }
 
     return (
         <Group noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }}>
             <LightPopover   open={ showPopover } 
-                            light={ lightState }
+                            light={ deviceState }
                             endpointId = {props.endpointId}
                             setOpen={ setShowPopover }
                             target={
@@ -81,7 +71,7 @@ const LightLine = props => {
                 </Text>
             </Group>
             { (reachable && !props.remove ) &&
-                <Switch checked={lightState.PowerController.powerState.value==='ON'} 
+                <Switch checked={deviceState.PowerController.powerState.value==='ON'} 
                         onChange={handlePowerChange} onClick={stopEventPropagation} />
             }
             { props.remove && 

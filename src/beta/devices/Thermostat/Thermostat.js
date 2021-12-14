@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 //import FanPowerLevel from 'devices/Thermostat/FanPowerLevel'
 //import ModeLines from 'controllers/ModeController/ModeLines'
@@ -8,27 +8,15 @@ import ThermostatModeButtons from 'beta/device-model/property/thermostatMode/The
 import TargetSetpointAvatar from 'beta/device-model/property/targetSetpoint/TargetSetpointAvatar'
 //import ThermostatSetpointButtons from 'devices/Thermostat/ThermostatSetpointButtons'
 
-import useDeviceStateStore from 'store/deviceStateStore'
-//import useDeviceStore from 'store/deviceStore'
-import { register, unregister } from 'store/deviceHelpers'
 import { Group } from '@mantine/core';
+import { useRegister } from 'store/useRegister'
 
 const Thermostat = props => {
     
     const [showDetail, setShowDetail] = useState(false)
+    const { deviceState } = useRegister(props.endpointId)
 
-//    const thermostatDevice = useDeviceStore( state => state.devices[props.endpointId] )
-    const thermostat = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-
-    useEffect(() => {
-        register(props.endpointId, 'Thermostat-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'Thermostat-'+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [props.endpointId])
-
-    if (!thermostat) { return null }
+    if (!deviceState) { return null }
 
     //function supportedRange() {
         //needs to be applied to the button version but stubbed for now
@@ -45,7 +33,7 @@ const Thermostat = props => {
             <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick} />
             <Group noWrap position="apart">
                 <ThermostatModeButtons endpointId={props.endpointId} />
-                { thermostat.ThermostatController.thermostatMode.value!=='OFF' &&
+                { deviceState.ThermostatController.thermostatMode.value!=='OFF' &&
                     <TargetSetpointAvatar size="md" onClick={() => setShowDetail(!showDetail)} endpointId={props.endpointId} />
                 }
             </Group>
@@ -59,7 +47,7 @@ const Thermostat = props => {
 //                <ThermostatSetpointButtons endpointId={props.endpointId} />
 //            </Group>
 //            <FanPowerLevel endpointId={props.endpointId} />
-//            <ModeLines directive = { directive } device={thermostatDevice} deviceState={thermostat}  />
+//            <ModeLines directive = { directive } device={device} deviceState={deviceState}  />
 //        </Collapse>
  //   )
 }

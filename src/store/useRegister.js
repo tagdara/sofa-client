@@ -1,36 +1,51 @@
 
+import { useEffect, useState } from 'react'
+import { useId } from '@mantine/hooks';
+import useRegisterStore from 'store/registerStore'
+import useDeviceStateStore from 'store/deviceStateStore'
+import { deviceByEndpointId, compareState } from 'store/deviceHelpers'
 
-
-
-const register = useRegisterStore( state => state.add)
-const unregister = useRegisterStore( state => state.remove)
-
-useEffect(() => {
-    register(props.endpointId, 'jukeboxhero')
-    return function cleanup() {
-        unregister(props.endpointId, 'jukeboxhero')
-    };
-// eslint-disable-next-line 
-}, [])
-
-export default function useRegister(devices) {
+export const useMultiRegister = (endpointIds) => {
 
     const register = useRegisterStore( state => state.add)
     const unregister = useRegisterStore( state => state.remove)
     const [ registeredDevices, setRegisteredDevices ] = useState([])
+    const deviceStates = useDeviceStateStore(state => Object.fromEntries(
+                registeredDevices.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), 
+                        (oldState, newState) => compareState(oldState, newState))
+
+    const uuid = useId();
 
     useEffect(() => {
-        if (type(devices) == str) {
-            register(devices, 'jukeboxhero')
-            setRegisteredDevices([devices])
-        } else {
-            devices.map( device)
-        }
+        register(endpointIds, uuid)
+        setRegisteredDevices(endpointIds)
         return function cleanup() {
-            unregister(props.endpointId, 'jukeboxhero')
+            unregister(endpointIds, uuid)
         };
     // eslint-disable-next-line 
     }, [ devices ])
   
-    return registeredDevices;
-  }
+    return { deviceStates, registeredDevices }
+}
+
+export const useRegister = endpointId => {
+
+    const register = useRegisterStore( state => state.add)
+    const unregister = useRegisterStore( state => state.remove)
+    const [ registeredDevice, setRegisteredDevice ] = useState(undefined)
+    const deviceState = useDeviceStateStore( state => state.deviceStates[endpointId] )
+    const device = deviceByEndpointId(endpointId)   
+
+    const uuid = useId();
+
+    useEffect(() => {
+        register(endpointId, uuid)
+        setRegisteredDevice(endpointId)
+        return function cleanup() {
+            unregister(endpointId, uuid)
+        };
+    // eslint-disable-next-line 
+    }, [ endpointId ])
+  
+    return { device, deviceState, registeredDevice }
+}

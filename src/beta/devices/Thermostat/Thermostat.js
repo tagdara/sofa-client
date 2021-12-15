@@ -30,7 +30,9 @@ const Thermostat = props => {
 
     return ( 
         <Group direction="column" spacing="xl" grow style={{ width: "100%" }}>
-            <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick} />
+            <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick}>
+                {props.children}
+            </TemperatureSensorLine>
             <Group noWrap position="apart">
                 <ThermostatModeButtons endpointId={props.endpointId} />
                 { deviceState.ThermostatController.thermostatMode.value!=='OFF' &&

@@ -27,9 +27,9 @@ export default function MainPage() {
     const currentProps = useLayoutStore(state => state.currentProps)    
 
     return (
-        <AppFrame   bottom={ <BottomBar />} 
+        <AppFrame   bottom={ <BottomBar open={ () => setOpened(true) } />} 
                     header={ <FrameHeader connected={streamConnected} opened={opened} setOpened={setOpened} />}
-                    navbar={ <FrameNav opened={ opened } />}
+                    navbar={ <FrameNav opened={ opened } close={ () => setOpened(false) } />}
                     drawer={ <RightDrawer opened={drawerOpened} close={ () => setDrawerOpened(false) } /> }
                     wide={wide}
         >

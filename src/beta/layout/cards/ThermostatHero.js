@@ -6,7 +6,6 @@ import PlaceholderCard from 'beta/layout/PlaceholderCard';
 
 import { selectPage } from 'store/layoutHelpers'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers'
-import { Group } from '@mantine/core';
 import StackCard from 'beta/components/StackCard'
 
 const ThermostatHero = props => {
@@ -19,13 +18,12 @@ const ThermostatHero = props => {
 
     return (
         <StackCard>
-            <Group direction="column">
-                <Thermostat endpointId={endpointId} 
-                        onClick={ () => selectPage('ThermostatLayout') } 
-                        wide={props.wide } 
-                />
-                <AirQualityBadge endpointId={indoorAQ} instance={"Air Quality"} suffix={"Indoor AQ"} />
-            </Group>
+            <Thermostat endpointId={endpointId} 
+                    onClick={ () => selectPage('ThermostatLayout') } 
+                    wide={props.wide } 
+            >
+                <AirQualityBadge size="nd" endpointId={indoorAQ} instance={"Air Quality"} suffix={"Indoor AQ"} />
+            </Thermostat>
         </StackCard>
     ); 
 }

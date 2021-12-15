@@ -1,25 +1,18 @@
-import React, { useEffect }from 'react';
-import useDeviceStateStore from 'store/deviceStateStore'
-import { register, unregister } from 'store/deviceHelpers'
+import React, { useState } from 'react';
 import { Avatar } from '@mantine/core';
+import { useRegister } from 'store/useRegister'
+import TargetSetpointPopover from 'beta/device-model/property/targetSetpoint/TargetSetpointPopover'
 
 const TargetSetpointAvatar = props => {
-    
-    const thermostat  = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
 
-    useEffect(() => {
-        register(props.endpointId, 'ThermostatSetpointAvatar-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'ThermostatSetpointAvatar-'+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, []) 
+    const { deviceState } = useRegister(props.endpointId)
+    const [ open, setOpen ] = useState(false)
 
-    if (!thermostat) { return null }
+    if (!deviceState) { return null }
 
-    const doubleSetpoint = thermostat.ThermostatController.hasOwnProperty('upperSetpoint')
-    //const setpoints = doubleSetpoint ? [ thermostat.ThermostatController.lowerSetpoint.deepvalue, thermostat.ThermostatController.upperSetpoint.deepvalue ] : thermostat.ThermostatController.targetSetpoint.deepvalue
-    const setpoint = doubleSetpoint ? (( thermostat.ThermostatController.lowerSetpoint.deepvalue + thermostat.ThermostatController.upperSetpoint.deepvalue ) /2) : thermostat.ThermostatController.targetSetpoint.deepvalue
+    //const doubleSetpoint = deviceState.ThermostatController.hasOwnProperty('upperSetpoint')
+    //const setpoint = doubleSetpoint ? (( deviceState.ThermostatController.lowerSetpoint.deepvalue + deviceState.ThermostatController.upperSetpoint.deepvalue ) /2) : deviceState.ThermostatController.targetSetpoint.deepvalue
+    const setpoint = deviceState.ThermostatController.targetSetpoint.deepvalue
 
     const tempColor = ( temp ) => {
         switch (true) {
@@ -38,12 +31,26 @@ const TargetSetpointAvatar = props => {
         }
     }
     
+    const changeSetpoint = val => {
+
+    }
+
     const temperatureColor = tempColor(setpoint)
 
     return (
-        <Avatar size={props.size} color={temperatureColor} onClick={props.onClick}>
-            { setpoint }
-        </Avatar>
+        <TargetSetpointPopover
+            change = { changeSetpoint }
+            setpoint = { setpoint}
+            opened = { open }
+            setOpen = { setOpen }
+            endpointId = { props.endpointId }
+            target = {  <Avatar size={props.size} 
+                                color={temperatureColor} 
+                                onClick={() => setOpen(!open)}
+                        >
+                            { setpoint }
+                        </Avatar> }
+        />
     );
 }
 

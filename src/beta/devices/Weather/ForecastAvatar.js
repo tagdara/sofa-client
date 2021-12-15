@@ -51,7 +51,7 @@ export default function ForecastAvatar(props) {
     }
 
     if (!props.colors) {
-        return <Text color={props.dimmed && "dimmed"} size={props.size}>{getForecastLow()+ "° - " + getForecastHigh() +"°" }</Text>
+        return <Text lineClamp={1} color={props.dimmed && "dimmed"} size={props.size}>{getForecastLow()+ "° - " + getForecastHigh() +"°" }</Text>
     }
 
     return (

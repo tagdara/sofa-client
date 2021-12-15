@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 
-import { Group, Navbar } from '@mantine/core';
+import { Group, Navbar, ScrollArea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 
 import { Settings } from 'react-feather';
 
 import UserNav from 'beta/layout/UserNav'
 import NavButton from 'beta/layout/NavButton'
+import Favorites from 'beta/layout/Favorites'
 import SettingsList from 'beta/layout/SettingsList'
 
 const FrameNav = props => {
@@ -15,38 +16,40 @@ const FrameNav = props => {
     const [ navMode, setNavMode] = useState(undefined)
     const powerUser = true
 
-    function close() {
-        setNavMode(undefined)
-    }
-
     return (
-        <Navbar height={"100%"} 
-                hiddenBreakpoint={2000}
+        <Navbar hiddenBreakpoint={2000}
                 padding="sm" 
                 hidden={ !props.opened }
-                fixed = {!wide}
+                fixed 
                 width={{ sm: 400 }}
-                style={{ maxWidth: wide ? "33vw" : undefined,
-                        minWidth: wide ? "20vw" : undefined
+                style={{    maxWidth: wide ? "33vw" : undefined,
+                            minWidth: wide ? "20vw" : undefined,
+                            height: "100%",
+                            maxHeight: "100%",
+                            overflow: "hidden",
+                            boxSizing: "border-box"
                 }}
             >
             <Navbar.Section style={{ paddingBottom: 8, paddingTop: "env(safe-area-inset-top)" }}>
                 <UserNav expand={navMode === "user"} action={ () => setNavMode('user')} />
             </Navbar.Section>
-            <Navbar.Section mt="sm" grow sx={{ paddingTop: 8 }}>
+            <Navbar.Section mt="sm" grow sx={{ paddingTop: 8 }} component={ScrollArea}>
+                <Favorites />
                 { ( navMode === "settings" && powerUser ) && <SettingsList /> }
             </Navbar.Section>
             <Navbar.Section mt="sm" >
                 <Group noWrap spacing="xs" direction="column">
+                    { ( navMode !== "activities" && powerUser ) &&
+                        <NavButton highlight arrow icon={<Settings size={20} />} label="All Activities" onClick={() => setNavMode('settings')} />
+                    }
                     { ( navMode !== "settings" && powerUser ) &&
                         <NavButton highlight arrow icon={<Settings size={20} />} label="Settings" onClick={() => setNavMode('settings')} />
                     }
                 </Group>
             </Navbar.Section>
-            { !wide &&  <Navbar.Section style={{ paddingTop: 8, paddingBottom: "env(safe-area-inset-bottom)" }}>
-                            <NavButton highlight label={"Back to player"} arrow onClick={close} />
-                        </Navbar.Section>
-            }
+            <Navbar.Section style={{ paddingTop: 8, paddingBottom: "env(safe-area-inset-bottom)" }}>
+                <NavButton highlight label={"Back to Home"} arrow onClick={props.close} />
+            </Navbar.Section>
         </Navbar>
     )
 }

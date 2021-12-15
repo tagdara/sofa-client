@@ -1,15 +1,25 @@
 import React from 'react';
-import { ActionIcon, Avatar, Group, Text } from '@mantine/core';
+import { ActionIcon, Avatar, Group, Loader, Text } from '@mantine/core';
 
 export default function CardLine(props) {
 
     return (
         <Group noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }} onClick={props.onClick} >
-            { props.avatar && <Avatar size={props.size ? props.size : "lg" } color={props.color} >{props.avatar}</Avatar> }
+            { props.avatar && 
+                ( props.loading ?
+                    <Loader size={props.size ? props.size : "lg" } />
+                :
+                    <Avatar size={props.size ? props.size : "lg" } color={props.color} >{props.avatar}</Avatar>
+                )
+            }
             { props.icon &&
-                <ActionIcon size={props.size} color={props.color}>
-                    { props.icon }
-                </ActionIcon>
+                ( props.loading ?
+                    <Loader size={props.size ? props.size : "sm" } />
+                :
+                    <ActionIcon size={props.size} color={props.color}>
+                        { props.icon }
+                    </ActionIcon>
+                )
             }           
             <Group direction="column" spacing={0} grow style={{ flexGrow: 1 }}>
                 <Text lineClamp={1} size="lg" weight={400} style={{ flexGrow: 1 }}>

@@ -19,22 +19,12 @@ const BottomLabel = (label, icon) => {
 const BottomBar = props => {
 
     const theme = useMantineTheme();
-
-    function reloadPWA() {
-        
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.unregister();
-            });
-        }
-        window.location.reload(true)
-    } 
-
     const currentStack = useLayoutStore( state => state.currentStack)
 
     const pickStack = newStack => {
         if (newStack === "System") {
-            reloadPWA()
+            props.open()
+            selectStack(currentStack)
         } else {
             selectStack(newStack)
         }

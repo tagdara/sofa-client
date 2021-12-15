@@ -11,7 +11,10 @@ const TemperatureSensorLine = props => {
     return (
         <Group direction="row" onClick={props.onClick} noWrap grow style={{ width: "100%"}}>
             <TemperatureSensorAvatar endpointId={props.endpointId} />
-            <Text size="lg" lineClamp={1} style={{ flexGrow: 1 }}>{name}</Text>
+            <Group direction="column" grow spacing={4}>
+                <Text size="lg" lineClamp={1} style={{ flexGrow: 1 }}>{name}</Text>
+                { props.children}
+            </Group>
         </Group>     
     );
 }

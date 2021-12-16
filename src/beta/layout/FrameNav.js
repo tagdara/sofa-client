@@ -9,6 +9,7 @@ import UserNav from 'beta/layout/UserNav'
 import NavButton from 'beta/layout/NavButton'
 import Favorites from 'beta/layout/Favorites'
 import SettingsList from 'beta/layout/SettingsList'
+import { selectPage } from 'store/layoutHelpers'
 
 const FrameNav = props => {
 
@@ -40,15 +41,17 @@ const FrameNav = props => {
             <Navbar.Section mt="sm" >
                 <Group noWrap spacing="xs" direction="column">
                     { ( navMode !== "activities" && powerUser ) &&
-                        <NavButton highlight arrow icon={<Settings size={20} />} label="All Activities" onClick={() => setNavMode('settings')} />
-                    }
-                    { ( navMode !== "settings" && powerUser ) &&
-                        <NavButton highlight arrow icon={<Settings size={20} />} label="Settings" onClick={() => setNavMode('settings')} />
+                        <NavButton highlight arrow icon={<Settings size={20} />} label="All Activities" onClick={ () => { selectPage('ActivitiesPage', {'favorites':false}); props.close() } } />
                     }
                 </Group>
             </Navbar.Section>
             <Navbar.Section style={{ paddingTop: 8, paddingBottom: "env(safe-area-inset-bottom)" }}>
-                <NavButton highlight label={"Back to Home"} arrow onClick={props.close} />
+                <Group noWrap spacing="xs">
+                    { ( navMode !== "settings" && powerUser ) &&
+                        <NavButton highlight icon={<Settings size={20} />} label="Settings" onClick={() => setNavMode('settings')} />
+                    }
+                    <NavButton highlight label={"Back to Home"} arrow onClick={props.close} />
+                </Group>
             </Navbar.Section>
         </Navbar>
     )

@@ -65,6 +65,7 @@ const CameraImage = props => {
                         aspectRatio: "16/9", 
                     }
                 }}
+                onClick={props.onClick}
                 withPlaceholder={!updateUri}
                 alt={name}
                 placeholder={  <Paper style={{ 

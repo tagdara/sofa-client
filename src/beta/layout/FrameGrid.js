@@ -33,6 +33,7 @@ export default function MainPage() {
                     drawer={ <RightDrawer opened={drawerOpened} close={ () => setDrawerOpened(false) } /> }
                     wide={wide}
         >
+            <div style={{ height: 1, paddingTop: "env(safe-area-inset-top)"}} />
             { renderSuspenseModule(currentPage, currentProps) } 
             <DataRefresher />  
         </AppFrame>

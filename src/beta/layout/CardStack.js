@@ -41,7 +41,6 @@ export default function CardStack(props) {
                 spacing="xs" 
                 direction="column" 
                 style={{    paddingBottom: 16, 
-                            paddingTop: "env(safe-area-inset-top)",
                             minWidth: 320, 
                             maxWidth: 480, 
                             height: "100%", 

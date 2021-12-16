@@ -7,6 +7,7 @@ import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
 import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 import { Avatar, Group, Text, useMantineTheme } from '@mantine/core'
+import { selectPage } from 'store/layoutHelpers'
 
 
 const LightSummary = props => {
@@ -80,7 +81,14 @@ const LightSummary = props => {
                 <Avatar size="lg" color={iconColor}>
                     {<Lightbulb size={20} />}
                 </Avatar>     
-                <Text size="lg" weight={700} style={{width: "100%"}} lineClamp={1}>{ lightCount('on') ? labelText : "All lights off" }</Text>
+                <Text   size="lg" 
+                        weight={700} 
+                        style={{width: "100%"}} 
+                        lineClamp={1}
+                        onClick={ () => selectPage('LightPage') }
+                >
+                    { lightCount('on') ? labelText : "All lights off" }
+                </Text>
             </Group>
             { checkHoliday() }
         </Group>

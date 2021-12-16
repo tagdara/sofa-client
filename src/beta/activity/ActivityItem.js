@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import CardLine from 'beta/components/CardLine'
-import ActivityItemMissing from 'beta/activity/ActivityItemMissing'
+import moment from 'moment';
 
 import { isFavorite, makeFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
-
 import useDeviceStateStore from 'store/deviceStateStore'
-import moment from 'moment';
+
 import { X as Close, List, Star, PlayCircle } from 'react-feather'
+
 import { ActionIcon } from '@mantine/core';
+
+import { SplitButtonGroup, SplitButton } from 'beta/components/SplitButton'
+import ActivityItemMissing from 'beta/activity/ActivityItemMissing'
 
 const ActivityItem = props => {
     
@@ -71,30 +73,34 @@ const ActivityItem = props => {
         return partsSummary()
     }    
 
-    function loading() {
-        if (launched) { return true }
-        return activityState.Running.toggleState.value === 'ON'
-    }
+    const loading = launched || activityState.Running.toggleState.value === 'ON'
+    const favorite = isFavorite(props.endpointId) 
 
     return (
-            <CardLine   onClick={ () => props.select(props.endpointId) }
-                        iconOnClick={ (event) => { event.stopPropagation(); makeFavorite(props.endpointId, !props.favorite) }}
-                        icon={ isFavorite(props.endpointId) && props.icon !== "base" ? <Star size={20} /> : <List size={20} /> }
-                        loading={ !loading() } 
-                        color={ props.favorite ? "primary" : undefined } 
-                        primary={ name } 
-                        secondary={ summary() } 
-            >
-            { props.delete ?
-                <ActionIcon size={"small"} onClick={ (event) => { event.stopPropagation(); props.delete(props.endpointId); }} >
-                    <Close size={20} />
+        <SplitButtonGroup>
+            <SplitButton >         
+                <ActionIcon variant={ favorite ? "light" : undefined} 
+                            color={favorite ? "green" : undefined } 
+                            onClick={ () => makeFavorite(props.endpointId, !props.favorite) }
+                >
+                    { isFavorite(props.endpointId) && props.icon !== "base" ? <Star size={20} /> : <List size={20} /> }
                 </ActionIcon>
-            :
-                <ActionIcon disabled={ loading() } size={"small"} onClick={ () => runActivity(props.endpointId) } >
-                    <PlayCircle size={20} />
-                </ActionIcon>                
-            }
-            </CardLine>
+            </SplitButton>
+            <SplitButton    label = { name } 
+                            secondary = {  summary() }
+            />
+            <SplitButton >
+                { props.delete ?
+                    <ActionIcon size={"small"} onClick={ (event) => { event.stopPropagation(); props.delete(props.endpointId); }} >
+                        <Close size={20} />
+                    </ActionIcon>
+                :
+                    <ActionIcon loading={loading} onClick={ loading ? undefined : () => runActivity(props.endpointId) } >
+                        <PlayCircle size={20} />
+                    </ActionIcon>                
+                }
+            </SplitButton>
+        </SplitButtonGroup>
     );
 }
 

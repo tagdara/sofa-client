@@ -1,13 +1,7 @@
 import React from 'react';
-import IconButton from '@mui/material/IconButton';
-import ClearIcon from '@mui/icons-material/Clear';
-import CloudOffIcon from '@mui/icons-material/CloudOff';
-
-import ItemBase from "components/ItemBase"
-import CardLine from 'components/CardLine'
-import CardLineText from 'components/CardLineText'
-import CardLineIcon from 'components/CardLineIcon'
-
+import CardLine from 'beta/components/CardLine'
+import { X as ClearIcon, CloudOff } from 'react-feather'
+import { ActionIcon } from '@mantine/core';
 import { isFavorite, removeFavorite } from 'store/deviceHelpers'
 
 const ActivityItemMissing = props => {
@@ -16,15 +10,13 @@ const ActivityItemMissing = props => {
     if (!isFavorite(props.endpointId)) { return null }
 
     return (
-        <ItemBase small={ props.small } highlight={props.highlight}>
-            <CardLine>
-                <CardLineIcon><CloudOffIcon /></CardLineIcon>
-                <CardLineText primary={"Missing: "+props.endpointId} />
-                <IconButton onClick={ () => removeFavorite(props.endpointId) } size={"small"}>
-                    <ClearIcon />
-                </IconButton>
+            <CardLine   icon={<CloudOff size={20} /> }
+                        primary={"Missing: "+props.endpointId}
+            >
+                <ActionIcon onClick={ () => removeFavorite(props.endpointId) } >
+                    <ClearIcon size={20} />
+                </ActionIcon>
             </CardLine>
-        </ItemBase>
     );
 
 }

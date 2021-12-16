@@ -2,23 +2,13 @@ import React, { useEffect } from 'react';
 import CardStack from 'beta/layout/CardStack';
 import useLayoutStore from 'store/layoutStore'
 import { refreshStackLayout } from 'beta/helpers/layoutHelpers'
-import { useMantineTheme, SimpleGrid } from '@mantine/core';
-import { useViewportSize, useMediaQuery } from '@mantine/hooks';
+import { PageFrame, usePageFrame } from 'beta/components/PageFrame'
 
 export default function Stacks(props) {
 
-    const theme = useMantineTheme()
-    const wide = useMediaQuery('(min-width: 640px)');
     const stackLayout = useLayoutStore(state => state.stackLayout )
     const currentStack = useLayoutStore(state => state.currentStack )
-    const minStackWidth = useLayoutStore(state => state.minStackWidth )
-    const stackPad = wide ? theme.spacing['xl'] : theme.spacing['xs']
-    //const stackPad = 4
-    const maxScreenWidth = useLayoutStore(state => state.maxScreenWidth )
-    const { width } = useViewportSize()
-    const stacksWidth = Math.min(maxScreenWidth, width)
-    const maxStacks = Math.min(4, Math.floor( stacksWidth / (minStackWidth+stackPad)))
-
+    const { maxStacks } = usePageFrame()
 
     useEffect(() => {
         refreshStackLayout()
@@ -37,10 +27,10 @@ export default function Stacks(props) {
     }
 
     return (
-        <SimpleGrid cols={maxStacks} spacing="sm" style={{ margin: "0 auto", maxWidth: stacksWidth }}>
+        <PageFrame>
             { filterStacks().map( stack =>
                 <CardStack key={stack} stack={ stack }  />
             )}
-        </SimpleGrid>
+        </PageFrame>
     );
 }

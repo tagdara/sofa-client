@@ -1,6 +1,6 @@
 import React from 'react';
 import CardLine from 'beta/components/CardLine';
-import ActivityNavButton from 'beta/activity/ActivityNavButton';
+import ActivityNavButton from 'beta/activity/ActivityItem';
 import useUserStore from 'store/userStore'
 import { selectPage } from 'store/layoutHelpers';
 import { Group } from '@mantine/core';

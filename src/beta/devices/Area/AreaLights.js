@@ -15,7 +15,7 @@ const AreaLights = props => {
     if (!lights || lights.length<1 ) { return null }
 
     return (
-        <Group direction="column" noWrap grow style={{ width: "100%"}} spacing="xl">
+        <Group direction="column" noWrap grow style={{ width: "100%"}} spacing="xs">
             <Text>Lights</Text>
             { lights.map(light =>
                 <LightLine key={light} endpointId={light} skipPrefix={name} />

@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
 import { CloudOff, X as XIcon } from 'react-feather'
-import { ActionIcon, Switch, Group, Text} from '@mantine/core';
+import { ActionIcon, Switch } from '@mantine/core';
 import LightPopover from 'beta/devices/Light/LightPopover'
 import { directive } from 'store/directive'
 import { isReachable } from 'store/deviceHelpers'
 import { useRegister } from 'store/useRegister'
+import { SplitButtonGroup, SplitButton } from 'beta/components/SplitButton'
 
 const LightLine = props => {
 
@@ -51,35 +52,36 @@ const LightLine = props => {
     }
 
     return (
-        <Group noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }}>
-            <LightPopover   open={ showPopover } 
-                            light={ deviceState }
-                            endpointId = {props.endpointId}
-                            setOpen={ setShowPopover }
-                            target={
-                                <ActionIcon onClick={ () => setShowPopover(!showPopover) }>
-                                    { reachable ? <Lightbulb size={20} /> : <CloudOff size={16} /> }
-                                </ActionIcon>
-                            } 
+        <SplitButtonGroup>
+            <SplitButton >
+                <LightPopover   
+                    open={ showPopover } 
+                    light={ deviceState }
+                    endpointId = {props.endpointId}
+                    setOpen={ setShowPopover }
+                    target={            
+                        <ActionIcon size="md" variant={ on ? 'light' : undefined } color={ on ? "primary" : undefined } onClick={ () => setShowPopover(!showPopover) }>
+                            { reachable ? <Lightbulb size={20} /> : <CloudOff size={16} /> }
+                        </ActionIcon>
+                    }     
+                />
+            </SplitButton>
+            <SplitButton    label = { name } 
+                            secondary = { reachable ? null : 'Off at switch' }
             />
-            <Group direction="column" spacing={0} grow style={{ flexGrow: 1 }}>
-                <Text lineClamp={1} size="lg" weight={400} style={{ flexGrow: 1 }}>
-                    {name} 
-                </Text>
-                <Text color="dimmed" size="md" lineClamp={1}>
-                    {reachable ? null : 'Off at switch' }
-                </Text>
-            </Group>
-            { (reachable && !props.remove ) &&
-                <Switch checked={deviceState.PowerController.powerState.value==='ON'} 
-                        onChange={handlePowerChange} onClick={stopEventPropagation} />
-            }
-            { props.remove && 
-                <ActionIcon size="small" onClick={()=>props.remove(props.device)} >
-                    <XIcon />
-                </ActionIcon>
-            }
-        </Group>            
+            <SplitButton>
+                { (reachable && !props.remove ) &&
+                    <Switch checked={on} 
+                            onChange={handlePowerChange} onClick={stopEventPropagation} 
+                    />
+                }
+                { props.remove && 
+                    <ActionIcon size="small" onClick={()=>props.remove(props.device)} >
+                        <XIcon />
+                    </ActionIcon>
+                }
+            </SplitButton>
+        </SplitButtonGroup>
     )
 }
 

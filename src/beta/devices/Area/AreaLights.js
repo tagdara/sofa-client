@@ -8,6 +8,8 @@ const AreaLights = props => {
     const area = props.device
     const areaState = props.deviceState
 
+    if (!area || !areaState ) { return null }
+
     const children = sortByName(areaState.AreaController.children.value)
     const name = area.friendlyName
     const lights = children.filter(endpointId => hasDisplayCategory(endpointId, "LIGHT"))

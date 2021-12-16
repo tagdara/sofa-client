@@ -35,31 +35,31 @@ export default function AdapterItem(props) {
         }
     }
 
-    function getErrorCount() {
-        try {
-            if (deviceState.AdapterHealth.hasOwnProperty('errors')) {
-                return "Errors: "+deviceState.AdapterHealth.errors.value
-            } else {
-                return "No Errors"
-            }
-        }
-        catch {
-            return ""
-        }
-    }
+//    function getErrorCount() {
+ //       try {
+//            if (deviceState.AdapterHealth.hasOwnProperty('errors')) {
+//                return "Errors: "+deviceState.AdapterHealth.errors.value
+//            } else {
+//                return "No Errors"
+//            }
+//        }
+//        catch {
+//            return ""
+//        }
+//    }
 
-    function getDataSize() {
-        try {
-            if (deviceState.AdapterHealth.hasOwnProperty('datasize')) {
-                return "/ Data: "+deviceState.AdapterHealth.datasize.value
-            } else {
-                return ""
-            }
-        }
-        catch {
-            return ""
-        }
-    }
+//    function getDataSize() {
+//        try {
+//            if (deviceState.AdapterHealth.hasOwnProperty('datasize')) {
+//                return "/ Data: "+deviceState.AdapterHealth.datasize.value
+///            } else {
+ //               return ""
+ //           }
+//        }
+ //       catch {
+ //           return ""
+ //       }
+ //   }
 
     
     function getStartupDate() {
@@ -96,7 +96,7 @@ export default function AdapterItem(props) {
                     <Layers size={20} />
                 </ActionIcon>               
             </SplitButton>
-            <SplitButton  label={ device.friendlyName + getActiveState() } secondary={ getStartupDate()+" "+getErrorCount()+" "+getDataSize()} />
+            <SplitButton  label={ device.friendlyName + getActiveState() } secondary={ getStartupDate() } />
             { getStartupDate()!=='Remote' && 
                 <SplitButton>
                     <ActionIcon onClick={ () => directive(props.endpointId, "PowerController", 'TurnOn')} >

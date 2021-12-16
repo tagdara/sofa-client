@@ -20,6 +20,7 @@ const ComputerSummary = props => {
     // eslint-disable-next-line 
     }, [])
 
+    console.log('e', endpointIds)
 
     if (!states || Object.keys(states).length < 1) { return <PlaceholderCard /> }
     

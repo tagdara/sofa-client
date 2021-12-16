@@ -22,7 +22,8 @@ const AreaHero = props => {
     const area = device
     const areaState = deviceState
 
-    if (!areaState ) { return <PlaceholderCard count={ 6 } /> }
+    if (!area || !areaState ) { return <PlaceholderCard count={ 6 } /> }
+
     const children = sortByName(areaState.AreaController.children.value)
     const name = area.friendlyName
     const areas = children.filter(endpointId => hasCapability(endpointId, "AreaController"))

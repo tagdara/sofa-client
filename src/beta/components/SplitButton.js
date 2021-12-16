@@ -143,8 +143,6 @@ export const SplitButton = ( props ) => {
         return classes.arrow
     }
 
-    console.log(theme.colors[theme.primaryColor][9])
-
     return (
         <Paper padding="xs" className={classSelect()} style={{ width: props.label ? undefined : 1 }} onClick={props.onClick}>
             <Group noWrap style={{  display: "flex", alignItems: "center"}}>

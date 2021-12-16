@@ -18,7 +18,10 @@ const useLayoutStore = create((set, get) => ({
     isMobile: window.innerWidth <= 800,
     minStackWidth: 310,
     stackPad: 16, // This should be computed from mantine pad
-
+    setDrawerOpen: open => {
+        const isOpen = get().drawerOpen
+        set( { drawerOpen: open === undefined ? open : !isOpen })
+    },
     refreshStackLayout: async () => {
         const accessToken = useLoginStore.getState().access_token;
         const headers = { authorization : accessToken }

@@ -187,11 +187,13 @@ export function sortByName(devlist) {
 
 export function hasDisplayCategory(endpointId, category) {
     var device = useDeviceStore.getState().devices[endpointId]
+    if (!device) { return false}
     return device.displayCategories.includes( category.toUpperCase() )
 }
 
 export function hasCapability(endpointId, controller) {
     var device = useDeviceStore.getState().devices[endpointId]
+    if (!device) { return false }
     var result = device.capabilities.filter(cap => cap.interface.endsWith(controller))
     return result.length > 0
 }

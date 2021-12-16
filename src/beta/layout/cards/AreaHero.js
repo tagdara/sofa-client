@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { selectPage } from 'store/layoutHelpers'
 import StackCard from 'beta/components/StackCard'
 import AreaControlHeader from 'beta/devices/Area/AreaControlHeader'
@@ -8,27 +8,19 @@ import AreaScenes from 'beta/devices/Area/AreaScenes';
 import AreaSummaryLine from 'beta/devices/Area/AreaSummaryLine';
 
 import PlaceholderCard from 'beta/layout/PlaceholderCard';
-import useDeviceStateStore from 'store/deviceStateStore'
 import useUserStore from 'store/userStore'
-import { sortByName, hasCapability, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { sortByName, hasCapability } from 'store/deviceHelpers'
 import { Group } from '@mantine/core'
+import { useRegister } from 'store/useRegister'
 
 const AreaHero = props => {
 
     const userArea = useUserStore( state => state.preferences.area)
     const [ currentArea, setCurrentArea ] = useState('logic:area:Main')
+    const { device, deviceState } = useRegister(currentArea)
 
-    const area = deviceByEndpointId(currentArea)
-    const areaState = useDeviceStateStore( state => state.deviceStates[currentArea] )
-
-    useEffect(() => {
-        register(currentArea, 'AreaHero')
-        return function cleanup() {
-            unregister(currentArea, 'AreaHero')
-        };
-    // eslint-disable-next-line 
-    }, [currentArea])
-
+    const area = device
+    const areaState = deviceState
 
     if (!areaState ) { return <PlaceholderCard count={ 6 } /> }
     const children = sortByName(areaState.AreaController.children.value)

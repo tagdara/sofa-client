@@ -52,7 +52,7 @@ const LightLine = props => {
     }
 
     return (
-        <SplitButtonGroup>
+        <SplitButtonGroup on={on}>
             <SplitButton >
                 <LightPopover   
                     open={ showPopover } 
@@ -60,7 +60,7 @@ const LightLine = props => {
                     endpointId = {props.endpointId}
                     setOpen={ setShowPopover }
                     target={            
-                        <ActionIcon size="md" variant={ on ? 'light' : undefined } color={ on ? "primary" : undefined } onClick={ () => setShowPopover(!showPopover) }>
+                        <ActionIcon size="md" color={ on ? "primary" : undefined } onClick={ () => setShowPopover(!showPopover) }>
                             { reachable ? <Lightbulb size={20} /> : <CloudOff size={16} /> }
                         </ActionIcon>
                     }     
@@ -68,6 +68,7 @@ const LightLine = props => {
             </SplitButton>
             <SplitButton    label = { name } 
                             secondary = { reachable ? null : 'Off at switch' }
+                            on={on}
             />
             <SplitButton>
                 { (reachable && !props.remove ) &&

@@ -8,13 +8,13 @@ import { Settings } from 'react-feather';
 import UserNav from 'beta/layout/UserNav'
 import NavButton from 'beta/layout/NavButton'
 import Favorites from 'beta/layout/Favorites'
-import SettingsList from 'beta/layout/SettingsList'
+import SettingsList from 'beta/admin/SettingsList'
 import { selectPage } from 'store/layoutHelpers'
 
 const FrameNav = props => {
 
     const wide = useMediaQuery('(min-width: 640px)');
-    const [ navMode, setNavMode] = useState(undefined)
+    const [ navMode, setNavMode] = useState('activities')
     const powerUser = true
 
     return (
@@ -35,12 +35,12 @@ const FrameNav = props => {
                 <UserNav expand={navMode === "user"} action={ () => setNavMode('user')} />
             </Navbar.Section>
             <Navbar.Section mt="sm" grow sx={{ paddingTop: 8 }} component={ScrollArea}>
-                <Favorites />
+                { ( navMode === "activities" ) && <Favorites /> }
                 { ( navMode === "settings" && powerUser ) && <SettingsList /> }
             </Navbar.Section>
             <Navbar.Section mt="sm" >
                 <Group noWrap spacing="xs" direction="column">
-                    { ( navMode !== "activities" && powerUser ) &&
+                    { ( navMode === "activities" && powerUser ) &&
                         <NavButton highlight arrow icon={<Settings size={20} />} label="All Activities" onClick={ () => { selectPage('ActivitiesPage', {'favorites':false}); props.close() } } />
                     }
                 </Group>

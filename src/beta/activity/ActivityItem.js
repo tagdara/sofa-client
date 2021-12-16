@@ -14,6 +14,7 @@ import ActivityItemMissing from 'beta/activity/ActivityItemMissing'
 
 const ActivityItem = props => {
     
+
     const [ launched, setLaunched] = useState(false)
     const activity = deviceByEndpointId(props.endpointId)
     const activityState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
@@ -58,8 +59,10 @@ const ActivityItem = props => {
 
     function partsSummary() {
         var parts = ['triggers_count', 'conditions_count', 'actions_count', 'schedules_count']
-        var results = parts.map(part => { if (props.activity[part] > 0)  { return props.activity[part]+" "+part.split("_")[0] } return undefined })
-        return results.filter(Boolean).join(" / ")
+        var results = parts.map(part => { if (props.activity[part] > 0)  { return props.activity[part]+" "+part.split("_")[0] } return false })
+        results = results.filter(Boolean)
+        if (!results ||  results.length<1) { return "No components"}
+        return results.join(" / ")
     }    
  
     function scheduleSummary() {
@@ -67,7 +70,7 @@ const ActivityItem = props => {
         return undefined
     }
 
-    function summary() {
+    function xsummary() {
         if (!props.activity || !props.allowEdit) { return undefined }
         if (props.showNextRun) { return scheduleSummary() }
         return partsSummary()
@@ -83,11 +86,11 @@ const ActivityItem = props => {
                             color={favorite ? "green" : undefined } 
                             onClick={ () => makeFavorite(props.endpointId, !props.favorite) }
                 >
-                    { isFavorite(props.endpointId) && props.icon !== "base" ? <Star size={20} /> : <List size={20} /> }
+                    { (isFavorite(props.endpointId) && props.icon !== "base") ? <Star size={20} /> : <List size={20} /> }
                 </ActionIcon>
             </SplitButton>
             <SplitButton    label = { name } 
-                            secondary = {  summary() }
+                            secondary = { xsummary() }
             />
             <SplitButton >
                 { props.delete ?

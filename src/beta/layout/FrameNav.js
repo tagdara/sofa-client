@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Group, Navbar, ScrollArea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 
-import { Settings } from 'react-feather';
+import { List, Settings } from 'react-feather';
 
 import UserNav from 'beta/layout/UserNav'
 import NavButton from 'beta/layout/NavButton'
@@ -41,7 +41,7 @@ const FrameNav = props => {
             <Navbar.Section mt="sm" >
                 <Group noWrap spacing="xs" direction="column">
                     { ( navMode === "activities" && powerUser ) &&
-                        <NavButton highlight arrow icon={<Settings size={20} />} label="All Activities" onClick={ () => { selectPage('ActivitiesPage', {'favorites':false}); props.close() } } />
+                        <NavButton highlight arrow icon={<List size={20} />} label="All Activities" onClick={ () => { selectPage('ActivitiesPage', {'favorites':false}) } } />
                     }
                 </Group>
             </Navbar.Section>
@@ -49,6 +49,9 @@ const FrameNav = props => {
                 <Group noWrap spacing="xs">
                     { ( navMode !== "settings" && powerUser ) &&
                         <NavButton highlight icon={<Settings size={20} />} label="Settings" onClick={() => setNavMode('settings')} />
+                    }
+                    { ( navMode !== "activities"  ) &&
+                        <NavButton highlight icon={<List size={20} />} label="Activities" onClick={() => setNavMode('activities')} />
                     }
                     <NavButton highlight label={"Back to Home"} arrow onClick={props.close} />
                 </Group>

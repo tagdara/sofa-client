@@ -9,8 +9,8 @@ import { useRegister } from 'store/useRegister'
 
 export default function AdapterItem(props) { 
 
-    const { device, deviceState } = useRegister(props.endpointId)
 
+    const { device, deviceState } = useRegister(props.endpointId)
     if (!deviceState) { console.log('dead adapter', props.endpointId); return null }
 
     function getErrorState(count) {

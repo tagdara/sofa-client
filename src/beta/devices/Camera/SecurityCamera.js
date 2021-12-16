@@ -19,6 +19,8 @@ const SecurityCamera = props => {
         }
     }
 
+    if (!device) { return null }
+
     return (
         <StackCard>
             <Card.Section>

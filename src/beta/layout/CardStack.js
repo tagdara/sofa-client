@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { getStack, renderSuspenseModule } from 'beta/helpers/layoutHelpers';
 import { Group } from '@mantine/core';
-import StackMoreButton from 'beta/layout/StackMoreButton';
+// import StackMoreButton from 'beta/layout/StackMoreButton';
 import StackPicker from 'beta/layout/StackPicker'
 
 export default function CardStack(props) {
     
     const [ stack, setStack ]=useState(props.stack)
     const [ stackData, setStackData ] = useState(undefined)
-    const [ expand, setExpand ]=useState(false)
+    //const [ expand, setExpand ]=useState(false)
+    const expand = false
 
     useEffect(() => { 
         if (stack) {
@@ -20,16 +21,16 @@ export default function CardStack(props) {
 
     }, [ stack ] )
 
-    function expandable() {
-        if (stackData && stackData.cards) {
-            for (var i = 0; i < stackData.cards.length; i++) {
-                if (stackData.cards[i].hasOwnProperty('expand')) {
-                    return true
-                }
-            }
-        }
-        return false
-    }
+    //function expandable() {
+    //    if (stackData && stackData.cards) {
+    //        for (var i = 0; i < stackData.cards.length; i++) {
+    //            if (stackData.cards[i].hasOwnProperty('expand')) {
+    //                return true
+    //            }
+    //        }
+    //    }
+    //    return false
+   // }
 
     if (!stack || !stackData ) { return null}
 
@@ -52,12 +53,14 @@ export default function CardStack(props) {
                 {props.showTitle &&
                     <StackPicker stack={stack} setStack={setStack} />
                 }
-                { expandable() && <StackMoreButton expand={expand} onClick={ () => setExpand(!expand)} /> } 
             </Group>
             { cards } 
         </Group>
     );
 }
+
+//                 { expandable() && <StackMoreButton expand={expand} onClick={ () => setExpand(!expand)} /> } 
+
 
 CardStack.defaultProps = {
     showTitle: true,

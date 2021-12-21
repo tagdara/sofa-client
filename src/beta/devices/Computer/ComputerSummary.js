@@ -52,7 +52,7 @@ const ComputerSummary = props => {
     const labelText = deviceCount('on') === 1 ? deviceCount('on')+" computer on" : deviceCount('on')+" computers on"
 
     return (
-        <Group position="apart" noWrap>
+        <Group position="apart" noWrap onClick={props.onClick}>
             <Group noWrap>
                 <Avatar size="lg" color={iconColor}>
                     { <HardDrive size={20} />}

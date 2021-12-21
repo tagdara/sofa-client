@@ -26,6 +26,9 @@ export default function WeatherAvatar(props) {
         if (modeText.includes('cloud')) {
             return <Cloud size={props.size} />
         } 
+        if (modeText.includes('overcast')) {
+            return <Cloud size={props.size} />
+        } 
         return <Sun size={props.size} />
     }
 

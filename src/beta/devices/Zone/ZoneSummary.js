@@ -5,7 +5,7 @@ import useDeviceStateStore from 'store/deviceStateStore'
 import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
 import { Avatar, Badge, Group, Text } from '@mantine/core'
 import { Shield, AlertOctagon } from 'react-feather'
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 
 const ZoneSummary = props => {
   
@@ -54,7 +54,7 @@ const ZoneSummary = props => {
             </Group>
             { (openZoneList && openZoneList.length>0) &&
             <Group>
-                { openZoneList.map( zone => <Badge color="red" variant="light">{zone}</Badge> )}
+                { openZoneList.map( zone => <Badge key={zone+"badge"} color="red" variant="light">{zone}</Badge> )}
             </Group>
             }
         </Group>

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Image, Loader, Paper } from '@mantine/core';
 
-import { useInterval } from 'components/useInterval';
-import { register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { useInterval } from 'store/useInterval';
 import { directive } from 'store/directive'
-//import { checkToken } from 'store/userHelpers'
-import useDeviceStateStore from 'store/deviceStateStore'
+import { useRegister } from 'store/useRegister'
 
 const CameraImage = props => {
 
@@ -13,22 +11,10 @@ const CameraImage = props => {
     const [updateUri, setupdateUri] = useState("");
     const [imageUri, setImageUri] = useState(undefined)
 
-    const device = deviceByEndpointId(props.endpointId)
-    const cameraState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const { device, deviceState } = useRegister(props.endpointId)
     const name = device ? device.name : ""
 
-    useEffect(() => {
-        setImageUri(undefined)
-        setupdateUri(undefined) 
-        register(props.endpointId, "image-"+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, "image-"+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [props.endpointId])  
-
-
-    const unreachable = cameraState && cameraState.EndpointHealth ? cameraState.EndpointHealth.connectivity.value.value !== "OK" : true
+    const unreachable = deviceState && deviceState.EndpointHealth ? deviceState.EndpointHealth.connectivity.value.value !== "OK" : true
 
     useEffect(()=> {
 

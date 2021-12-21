@@ -1,5 +1,5 @@
 import React from 'react';
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 
 import Moment from 'react-moment';
 import 'moment-timezone';

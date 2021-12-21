@@ -1,6 +1,5 @@
 import React, { Suspense } from 'react';
-import Button from '@mui/material/Button';
-
+import { Button } from '@mantine/core';
 import useActivityEditorStore from 'store/activityEditorStore'
 import useLoginStore from 'store/loginStore'
 

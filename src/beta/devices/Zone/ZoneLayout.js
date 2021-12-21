@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 import { endpointIdsByDisplayCategory, hasDescription, getChangeTimesForDevices } from 'store/deviceHelpers';
 import { sortByName } from 'store/deviceHelpers'
 import { Group } from '@mantine/core';

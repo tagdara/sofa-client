@@ -1,6 +1,7 @@
 import React from "react";
 import { Avatar, Card, Group, Text } from '@mantine/core';
-import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
+import { Frown } from 'react-feather'
+
 
 export default function ErrorCard(props) {
 
@@ -17,7 +18,7 @@ export default function ErrorCard(props) {
     return (
         <Card onClick={() => reloadPWA() }>
             <Group>
-                <Avatar ><SentimentDissatisfiedIcon /></Avatar>
+                <Avatar ><Frown size={20} /></Avatar>
                 <Text>{props.name+" "+props.message}</Text>
             </Group>
         </Card>

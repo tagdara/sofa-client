@@ -2,7 +2,7 @@ import React from 'react';
 import { Group } from '@mantine/core'
 import PlayerArtOverlay from 'beta/devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'beta/devices/Player/PlayerArtOverlayButtons';
-import PlaceholderCard from 'layout/PlaceholderCard';
+import PlaceholderCard from 'beta//layout/PlaceholderCard';
 import { directive } from 'store/directive'
 import { useRegister } from 'store/useRegister'
 

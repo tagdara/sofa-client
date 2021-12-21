@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ComputerSummary from 'beta/devices/Computer/ComputerSummary'
 import MonitorButtonStackGroup from 'beta/devices/Computer/MonitorButtonStackGroup';
 import MatrixList from 'beta/devices/Matrix/MatrixList';
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 //import { Card } from '@mantine/core';
 import StackCard from 'beta/components/StackCard'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers';

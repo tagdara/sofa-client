@@ -3,7 +3,7 @@ import CameraImage from 'beta/devices/Camera/CameraImage';
 import StackCard from 'beta/components/StackCard'
 import { Card, Group, Text } from '@mantine/core';
 import { deviceByEndpointId } from 'store/deviceHelpers'
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 
 const SecurityCamera = props => {
 

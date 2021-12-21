@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ErrorCard from 'error/ErrorCard'
+import ErrorCard from 'beta/error/ErrorCard'
 
 class ErrorBoundary extends Component {
     

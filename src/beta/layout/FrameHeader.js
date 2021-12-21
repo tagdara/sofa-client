@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon, Group, Header, MediaQuery, Burger, Text, useMantineTheme } from '@mantine/core';
 import { CloudOff, Home, Maximize } from 'react-feather';
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 import useLayoutStore from 'store/layoutStore'
 
 const FrameHeader = props => {

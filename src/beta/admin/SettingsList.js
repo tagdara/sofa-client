@@ -3,7 +3,7 @@ import { Activity, Clock, Layers, Sliders  } from 'react-feather';
 import NavButton from 'beta/layout/NavButton'
 import FrameNavTitle from 'beta/layout/FrameNavTitle'
 import { ScrollArea } from '@mantine/core';
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 
 export default function SettingsList(props) {
 

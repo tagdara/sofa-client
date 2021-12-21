@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { selectStack } from 'store/layoutHelpers'
+import { selectStack } from 'beta/helpers/layoutHelpers'
 import useLayoutStore from 'store/layoutStore'
 import { Group, SegmentedControl, Text} from '@mantine/core';
 import { Menu, Music, Shield, Thermometer } from 'react-feather';

@@ -7,7 +7,7 @@ import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
 import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 import { Avatar, Group, Text, useMantineTheme } from '@mantine/core'
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 
 
 const LightSummary = props => {

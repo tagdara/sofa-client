@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 
 import ActivityItem from 'beta/activity/ActivityItem';
 import SectionHeader from 'beta/components/SectionHeader';

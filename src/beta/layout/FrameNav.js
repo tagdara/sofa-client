@@ -9,7 +9,7 @@ import UserNav from 'beta/layout/UserNav'
 import NavButton from 'beta/layout/NavButton'
 import Favorites from 'beta/layout/Favorites'
 import SettingsList from 'beta/admin/SettingsList'
-import { selectPage } from 'store/layoutHelpers'
+import { selectPage } from 'beta/helpers/layoutHelpers'
 
 const FrameNav = props => {
 

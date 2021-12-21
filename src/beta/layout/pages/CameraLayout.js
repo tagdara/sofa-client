@@ -3,7 +3,7 @@ import { AiOutlineQrcode } from 'react-icons/ai'
 
 
 import SectionHeader from 'beta/components/SectionHeader';
-import PageFrame from 'beta/components/PageFrame'
+import { PageFrame } from 'beta/components/PageFrame'
 import UbiquitiIcon from 'resources/UbiquitiIcon';
 import { endpointIdsByDisplayCategory, sortByName }  from 'store/deviceHelpers'
 import SecurityCamera from 'beta/devices/Camera/SecurityCamera';

@@ -3,7 +3,7 @@ import CardLine from 'beta/components/CardLine'
 import CardLineSlider from 'beta/components/CardLineSlider'
 import { directive } from 'store/directive'
 import { getModes } from 'store/deviceHelpers'
-import { Group, Switch } from '@mantine/core'
+import { Collapse, Group, Switch } from '@mantine/core'
 import { Speaker } from 'react-feather'
 import StackCard from 'beta/components/StackCard'
 import ReceiverInputSelect from 'beta/devices/Receiver/ReceiverInputSelect'
@@ -67,17 +67,21 @@ const Receiver = props => {
                             onChange={ handlePowerChange } 
                     />
                 </CardLine>
-                { (showDetail || on ) &&
-                <CardLineSlider on={on} 
-                                step={5}
-                                levels={marks}
-                                marks={marks} 
-                                value={ volume }
-                                change={handleVolumeChange} 
+                <Collapse in={showDetail || on }>
+                    <CardLineSlider on={on} 
+                                    step={5}
+                                    levels={marks}
+                                    marks={marks} 
+                                    value={ volume }
+                                    change={handleVolumeChange} 
                     />
-                }
-                { showDetail && <ReceiverSurroundSelect deviceState={deviceState} endpointId={props.endpointId} /> }
-                { showDetail && <ReceiverInputSelect deviceState={deviceState} endpointId={props.endpointId} /> }
+                </Collapse>
+                <Collapse in={showDetail}>
+                    <Group direction="column" grow noWrap spacing="sm">
+                        <ReceiverSurroundSelect deviceState={deviceState} endpointId={props.endpointId} />
+                        <ReceiverInputSelect deviceState={deviceState} endpointId={props.endpointId} />
+                    </Group>
+                </Collapse>
             </Group>
         </StackCard>
     );

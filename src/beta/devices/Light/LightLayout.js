@@ -4,16 +4,13 @@ import LightLine from 'beta/devices/Light/LightLine';
 import useDeviceStore from 'store/deviceStore'
 import { sortByName } from 'store/deviceHelpers'
 import { Button, Group } from '@mantine/core';
-import PageFrame from 'beta/components/PageFrame'
+import { PageFrame } from 'beta/components/PageFrame'
 import SectionHeader from 'beta/components/SectionHeader';
 
 const LightLayout = props => {
 
     const [filter, setFilter] = useState(props.filter);
     const lights = sortByName(useDeviceStore(useCallback(state => Object.keys(state.devices).filter( dev => state.devices[dev].displayCategories.includes('LIGHT')), [])))
-
-    //const lights = props.lights ? props.lights : sortByName(endpointIdsByCategory('LIGHT'))
-    console.log('filter', filter)
 
     return (    
         <Group direction="column">

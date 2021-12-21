@@ -83,7 +83,7 @@ const useStyles = createStyles((theme) => ({
             verticalAlign: "middle",
             color: theme.colors[theme.primaryColor][7],
         },
-        '&>:first-child': {
+        '&>:first-of-type': {
             borderTopLeftRadius: theme.radius.sm,
             borderBottomLeftRadius: theme.radius.sm,
             flexGrow: 0,

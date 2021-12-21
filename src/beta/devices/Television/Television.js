@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CardLine from 'beta/components/CardLine'
 import { directive } from 'store/directive'
 import { getInputs } from 'store/deviceHelpers'
-import { Group, Select, Switch } from '@mantine/core'
+import { Collapse, Group, Select, Switch } from '@mantine/core'
 import { Tv as TvIcon } from 'react-feather'
 import { useRegister } from 'store/useRegister'
 
@@ -47,7 +47,7 @@ const Television = props => {
                             onChange={ handlePowerChange } 
                     />
                 </CardLine>
-                { (showDetail || on ) &&
+                <Collapse in={showDetail || on}>
                     <Select
                         size="md"
                         placeholder="Input"
@@ -55,7 +55,7 @@ const Television = props => {
                         onChange={ handleInput }
                         data={ inputSelect() }
                     />    
-                }
+                </Collapse>
             </Group>
     );
 }

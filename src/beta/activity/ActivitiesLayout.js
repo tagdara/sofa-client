@@ -4,7 +4,7 @@ import { selectPage } from 'store/layoutHelpers'
 
 import ActivityItem from 'beta/activity/ActivityItem';
 import SectionHeader from 'beta/components/SectionHeader';
-import PageFrame from 'beta/components/PageFrame'
+import { PageFrame } from 'beta/components/PageFrame'
 
 import { isFavorite, makeFavorite } from 'store/deviceHelpers';
 import { loadActivities, deleteActivity } from 'store/activityHelpers';

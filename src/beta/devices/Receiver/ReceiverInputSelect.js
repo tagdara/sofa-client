@@ -22,7 +22,7 @@ const Receiver = props => {
         if (inp === "Audio") {
             return <Center>
                         <Text size="sm">{inp}</Text>
-                        <Space />
+                        <Space w="xl" />
                         <ActionIcon color={ locked ? "primary" : undefined } 
                                     size={"sm"}
                                     disabled={!on}

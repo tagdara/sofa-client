@@ -1,19 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 //import FanPowerLevel from 'devices/Thermostat/FanPowerLevel'
 //import ModeLines from 'controllers/ModeController/ModeLines'
 
 import TemperatureSensorLine from 'beta/device-model/controller/temperatureSensor/TemperatureSensorLine'
-import ThermostatModeButtons from 'beta/device-model/property/thermostatMode/ThermostatModeButtons'
-import TargetSetpointAvatar from 'beta/device-model/property/targetSetpoint/TargetSetpointAvatar'
-//import ThermostatSetpointButtons from 'devices/Thermostat/ThermostatSetpointButtons'
+import ThermostatAvatar from 'beta/devices/Thermostat/ThermostatAvatar'
+import PowerLevelAvatar from 'beta/device-model/property/powerLevel/PowerLevelAvatar'
 
 import { Group } from '@mantine/core';
 import { useRegister } from 'store/useRegister'
 
 const Thermostat = props => {
     
-    const [showDetail, setShowDetail] = useState(false)
     const { deviceState } = useRegister(props.endpointId)
 
     if (!deviceState) { return null }
@@ -28,16 +26,16 @@ const Thermostat = props => {
     //    return [60,90]
     //}
 
+    // <TargetSetpointAvatar size="md" onClick={() => setShowDetail(!showDetail)} endpointId={props.endpointId} />
+
     return ( 
-        <Group direction="column" spacing="xl" grow style={{ width: "100%" }}>
-            <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick}>
+        <Group spacing="xl" grow noWrap style={{ width: "100%" }} position="apart">
+            <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick} size={props.size}>
                 {props.children}
             </TemperatureSensorLine>
-            <Group noWrap position="apart">
-                <ThermostatModeButtons endpointId={props.endpointId} />
-                { deviceState.ThermostatController.thermostatMode.value!=='OFF' &&
-                    <TargetSetpointAvatar size="md" onClick={() => setShowDetail(!showDetail)} endpointId={props.endpointId} />
-                }
+            <Group noWrap spacing="xs">
+                <PowerLevelAvatar size="md" label={"Fan"} endpointId={props.endpointId} />
+                <ThermostatAvatar size="md" endpointId={props.endpointId} />
             </Group>
         </Group>
     );

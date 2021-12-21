@@ -2,6 +2,7 @@ import useDeviceStore from 'store/deviceStore'
 import useRegisterStore from 'store/registerStore'
 import useLoginStore from 'store/loginStore'
 import useUserStore from 'store/userStore'
+import { tokenFetch } from 'store/tokenFetch'
 
 const serverUrl = "https://"+window.location.hostname;
 const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }} 
@@ -159,8 +160,11 @@ export const getModes = (endpointId, exclude=[]) => {
     return modes
 }
 
-export function sortByName(devlist) {
+export function sortByName(devlist, exclude) {
     var devices = useDeviceStore.getState().devices
+    if (devices && exclude && exclude.length>0) {
+        devlist = devlist.filter( device => !exclude.includes(devices[device].friendlyName) )
+    }
     devlist.sort(function(a, b)  {
         var x = undefined
         var y = undefined
@@ -500,12 +504,9 @@ export const getHistoryForDevice = async (dev, prop, page) => {
         
     // Requests the history for a specific device and property.  It allows for pagination since the data could be very
     // large.  This requires the Influx adapter in order to see history.
-    const accessToken = useLoginStore.getState().access_token;
-    const headers = { authorization : accessToken }
-    var url = serverUrl + "list/influx/history/"+dev+"/"+prop
-    if (page) { url=url+"/"+page }
-    const response = await fetch(url, { headers: headers })
-    return await response.json()
+    var url = "/list/influx/history/" + dev + "/" + prop
+    if (page) { url = url + "/" + page }
+    return tokenFetch(url)
 }
 
 export const getChangeTimesForDevices = async (val,devs) => {

@@ -3,17 +3,38 @@ import useLayoutStore from 'store/layoutStore'
 import { useMantineTheme, SimpleGrid } from '@mantine/core';
 import { useViewportSize, useMediaQuery } from '@mantine/hooks';
 
+import SectionHeader from 'beta/components/SectionHeader';
+import { Divider, Group } from '@mantine/core'
+
 export const PageFrame = props => {
 
-    const { maxStacks, stacksWidth} = usePageFrame()
     const wide = useMediaQuery('(min-width: 640px)');
 
     // TODO - this padding is a shim for bad flexbox alignment at the top level
+    return  <Group direction="column" grow noWrap style={{ margin: "0 auto", width: "100%", paddingBottom : wide ? 64 : undefined }} >
+                { props.title && <SectionHeader title={props.title} /> }
+                <SectionFrame last={true} {...props} />
+            </Group>
+}
+
+export const SectionFrame = props => {
+
+    const { maxStacks, stacksWidth} = usePageFrame()
 
     return (
-        <SimpleGrid cols={maxStacks} spacing="sm" style={{ paddingBottom : wide ? 64 : undefined, margin: "0 auto", width: "100%", maxWidth: stacksWidth }}>
+        <>
+        { props.title && <Divider variant="dashed" label={props.title} style={{ paddingTop: 16, paddingBottom: 4,  margin: "0 auto", width: "100%", maxWidth: stacksWidth }} /> }
+        <SimpleGrid cols = { maxStacks } 
+                    spacing="sm" 
+                    style={{ 
+                        margin: "0 auto", 
+                        width: "100%", 
+                        maxWidth: stacksWidth
+                    }}
+        >
             { props.children}
         </SimpleGrid>
+        </>
     );
 }
 
@@ -31,5 +52,3 @@ export const usePageFrame = props => {
     return { maxStacks, stacksWidth }
 
 }
-
-export default PageFrame

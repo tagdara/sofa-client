@@ -1,8 +1,8 @@
 import React from 'react';
 import CardPopover from 'beta/components/CardPopover'
-import TargetSetpointAdjuster from 'beta/device-model/property/targetSetpoint/TargetSetpointAdjuster'
+import PowerLevelSlider from 'beta/device-model/property/powerLevel/PowerLevelSlider'
 
-const TargetSetpointPopover = props => {
+const PowerLevelPopover = props => {
 
     return (
         <CardPopover
@@ -10,10 +10,10 @@ const TargetSetpointPopover = props => {
                 setOpen={ props.setOpen }
                 target={ props.target }
         >
-            <TargetSetpointAdjuster endpointId={props.endpointId} />
+            <PowerLevelSlider endpointId={props.endpointId} />
         </CardPopover>
     );
 }
 
-export default TargetSetpointPopover
+export default PowerLevelPopover
 

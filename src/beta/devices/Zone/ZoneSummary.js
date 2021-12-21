@@ -5,6 +5,7 @@ import useDeviceStateStore from 'store/deviceStateStore'
 import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
 import { Avatar, Badge, Group, Text } from '@mantine/core'
 import { Shield, AlertOctagon } from 'react-feather'
+import { selectPage } from 'store/layoutHelpers'
 
 const ZoneSummary = props => {
   
@@ -42,7 +43,7 @@ const ZoneSummary = props => {
     const openZoneList = openZones.map(endpointId => devices[endpointId].friendlyName)
     
     return (
-        <Group direction="column" noWrap>
+        <Group direction="column" noWrap onClick={ () => selectPage('ZonePage') }> 
             <Group noWrap>
                 <Avatar size="lg" color={violated ? "red" : "green"}>
                     { violated ? < AlertOctagon size={20} /> : <Shield size={20} />}

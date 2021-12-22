@@ -257,11 +257,16 @@ export const hasDescription = (endpointId, term) => {
 }
 
 export const hasInstance = (endpointId, instance) => {
-    var dev = useDeviceStore.getState().devices[endpointId]
-    for (var k = 0; k < dev.capabilities.length; k++) {
-        if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.endsWith(instance)) {
-            return true
+    try {
+        var dev = useDeviceStore.getState().devices[endpointId]
+        for (var k = 0; k < dev.capabilities.length; k++) {
+            if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.endsWith(instance)) {
+                return true
+            }
         }
+    }
+    catch {
+        console.log('error getting instance for', endpointId, instance)
     }
     return false
   

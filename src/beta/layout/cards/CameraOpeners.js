@@ -42,6 +42,7 @@ export default function CameraSelect(props) {
     const getOpener = (opener) => {
         try {
             const endpointId = endpointIdByFriendlyName(opener.deviceName)  
+            if (!endpointId) { return null}
             return (
                 <StackCard key={endpointId}>
                     <StatusLock endpointId={endpointId} displayName={ opener.displayName } buttonDuration={opener.buttonDuration} setCamera={setCurrentCamera} />

@@ -13,9 +13,9 @@ const PowerLevelAutoPopover = props => {
                 setOpen={ props.setOpen }
                 target={ props.target }
         >
-            <Group noWrap>
+            <Group direction="column" noWrap grow spacing="xl">
                 <PowerLevelSlider endpointId={props.endpointId} />
-                <ToggleStateSwitch endpointId={props.endpointId} instance={props.instance} />
+                <ToggleStateSwitch size="sm" endpointId={props.endpointId} instance={props.instance} label={"Auto"} />
             </Group>
         </CardPopover>
     );

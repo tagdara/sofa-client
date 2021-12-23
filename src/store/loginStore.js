@@ -58,6 +58,7 @@ const useLoginStore = create((set,get) => ({
                 }
                 catch (e) {
                     console.log('server not ready', e)
+                    set({ login_message: ''})
                     return
                 }
                 try {

@@ -7,10 +7,8 @@ const CardPopover = props => {
 
     return (
         <Popover
-                
                 styles={{ 
                     popover: { 
-
                         backgroundColor: theme.colorScheme === 'dark' ? 
                                             theme.fn.lighten(theme.colors.dark[7], 0.1)  : 
                                             theme.colors[theme.primaryColor][5],

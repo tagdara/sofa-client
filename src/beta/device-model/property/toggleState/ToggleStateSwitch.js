@@ -29,7 +29,7 @@ export default function ToggleStateSwitch(props) {
     };
 
     return (
-        <Switch checked={ displayState } size={props.size}
+        <Switch checked={ displayState } size={"xs"} label={props.label}
             onClick={stopEventPropagation}
             onChange={ handleChange } 
         />

@@ -30,7 +30,7 @@ const CardLineSlider = props => {
     const showMarkLabels = props.marks !== undefined && !props.hideLabels
     const disabled = theme.colorScheme === 'dark' ? 
                         { 
-                            root: { minWidth: 100, padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
+                            root: { display: "flex", flex: 1, padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
                             markLabel: { display: !showMarkLabels ? 'none' : undefined }, 
                             track: { backgroundColor: theme.colors.dark[7] }, 
                             bar: { backgroundColor: theme.colors.dark[4] }, 
@@ -38,14 +38,14 @@ const CardLineSlider = props => {
                             markFilled: { backgroundColor:  theme.colors.dark[6], borderColor: theme.colors.dark[3] },
                             thumb: { backgroundColor:  theme.colors.dark[6], borderColor: theme.colors.dark[3] } }
                         :
-                        {   root: {  minWidth: 100, padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
+                        {   root: {   display: "flex", flex: 1, padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
                             markLabel: { display: !showMarkLabels ? 'none' : undefined }, 
                             track: { backgroundColor: theme.colors.gray[1] }, 
                             bar: { backgroundColor: theme.colors.gray[4] }, 
                             thumb: { backgroundColor:  theme.colors.gray[1], borderColor: theme.colors.gray[4] } }
 
     const enabled =     { 
-                            root: { minWidth: 100, padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
+                            root: {  display: "flex", flex: 1, padding: showMarkLabels ? "8px 8px 32px 8px" : undefined },
                             markLabel: {display: !showMarkLabels ? 'none' : undefined }, 
                         }
 
@@ -57,7 +57,7 @@ const CardLineSlider = props => {
     return (
         <Slider
             label={ label }
-            style={{ boxSizing: "border-box", maxWidth: "100%", width: "100%", flexGrow: 1, paddingLeft: 8, paddingRight: 8}}
+            style={{ boxSizing: "border-box", maxWidth: "100%", width: "100%", minWidth: props.minWidth, flexGrow: 1, paddingLeft: 8, paddingRight: 8}}
             onChange={ (val) => setValueByUser(val) }
             value={ value }
             min={ min }

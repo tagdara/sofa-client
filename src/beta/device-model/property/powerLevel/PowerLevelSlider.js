@@ -8,7 +8,7 @@ const PowerLevelSlider = props => {
     if (powerLevel === undefined ) { return null }
 
     return ( 
-        <CardLineSlider on={true} value={powerLevel} step={10} change={setPowerLevel} />
+        <CardLineSlider minWidth={200} on={true} value={powerLevel} step={10} change={setPowerLevel} />
     );
 }
 

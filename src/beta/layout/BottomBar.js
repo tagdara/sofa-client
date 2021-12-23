@@ -38,30 +38,31 @@ const BottomBar = props => {
             { value: "System",              "label": BottomLabel("More", <Menu size={20} />) }
     ]
 
+    const iconsOnly= [
+        { value: "Audio Video",         "label": <Music size={20} /> },
+        { value: "Lights and Comfort",  "label": <Lightbulb size={20} /> }, 
+        { value: "Climate",             "label": <Thermometer size={20} /> }, 
+        { value: "Security",            "label": <Shield size={20} /> }, 
+        { value: "System",              "label": <Menu size={20} />}
+    ]
+
+
     // TODO Adding color styles has introduced some ghosting along the edges that needs to be fixed
 
     return (
-            <SegmentedControl 
-                    fullWidth 
-                    onChange={pickStack} 
-                    value={currentStack} 
-                    data={sectionData} 
-                    style={{    minHeight: 48, 
-                                marginBottom: "env(safe-area-inset-bottom)", 
-                                backgroundColor: theme.colorScheme === 'dark' ? 
-                                    theme.colors.dark[7] : 
-                                    theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.1),
-                    }} 
-                    styles={{   controlActive: {
-                                    borderRadius: 4,
-                                    backgroundColor: theme.colorScheme === 'dark' ? 
-                                        theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.5) : 
-                                        theme.fn.rgba(theme.colors[theme.primaryColor][1], 0.1) 
-                                }
-                    }}
-            />
-
+        <SegmentedControl 
+                fullWidth 
+                color={theme.primaryColor}
+                onChange={pickStack} 
+                value={currentStack} 
+                data={iconsOnly} 
+                style={{    minHeight: 48,
+                            alignItems: "center",
+                            marginBottom: "env(safe-area-inset-bottom)"
+                }}
+        />
     )
+
 }
 
 export default BottomBar

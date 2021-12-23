@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ActionIcon } from '@mantine/core';
-import { Crop } from 'react-feather'
 import ReactHLS from 'react-hls-player';
 import { directive } from 'store/directive'
 
@@ -44,7 +42,6 @@ const CameraVideo = props => {
             console.log('No streams were specified', data)
             return false
         }
-        console.log('Setting video URL to',data.payload.cameraStreams[0].uri)
         setVideoUri(data.payload.cameraStreams[0].uri)
     }
 
@@ -59,9 +56,6 @@ const CameraVideo = props => {
                 <video controls muted autoPlay playsInline id="video" ref={video}>
                     <source src={dateUri(videoUri)} type="application/x-mpegURL" />
                 </video>
-                <ActionIcon onClick={ () => props.goLive(false) } >
-                    <Crop size={20} />
-                </ActionIcon>
             </>
         )
     }     
@@ -72,18 +66,8 @@ const CameraVideo = props => {
                         videoProps={{ width: "100%", height: "100%", muted: true, autoPlay: true, playsInline: true, }} 
                         hlsConfig ={{ liveDurationInfinity: true, enableWorker: false, }} 
             />
-            <ActionIcon onClick={ () => props.goLive(false) } >
-                <Crop size={20} />
-            </ActionIcon>
         </>
     );
 }
 
 export default CameraVideo;
-
-    //useEffect(()=> {
-        // If we need to attach to events, this code shows a functional example
-    //    if (refVideo.current) {
-    //        refVideo.current.hls.media.addEventListener('playing', function() { console.log('!!!!!') })
-    //    }
-    //},[refVideo.current]);

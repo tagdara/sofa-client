@@ -85,7 +85,6 @@ export const discovery = async () => {
     const body = discoveryDirective
     const response = await fetch(serverUrl, { headers: headers, method: "post", body: JSON.stringify(body)})
     const result = await response.json()
-    console.log('discovered', result)
     storeUpdater(result)
 }
 

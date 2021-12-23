@@ -70,11 +70,11 @@ const useStyles = createStyles((theme) => ({
         tableLayout: "auto",
         borderRadius: theme.radius.sm,
         backgroundColor: theme.colorScheme === 'dark' ? 
-                            theme.fn.rgba(theme.colors.dark[4], 0.5) : 
+                            theme.fn.rgba(theme.colors.dark[6], 0.5) : 
                             theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.1),
         '&:hover': {
             backgroundColor: theme.colorScheme === 'dark' ? 
-                            theme.fn.rgba(theme.colors.dark[4], 0.7) : 
+                            theme.fn.rgba(theme.colors.dark[6], 0.7) : 
                             theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.15),
         },
         "& > *": {

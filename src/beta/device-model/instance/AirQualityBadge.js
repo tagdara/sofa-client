@@ -1,21 +1,13 @@
-import React, { useEffect } from 'react';
-import useDeviceStateStore from 'store/deviceStateStore'
-import { register, unregister, modeDisplayName } from 'store/deviceHelpers'
+import React from 'react';
+import { modeDisplayName } from 'store/deviceHelpers'
 import { Badge } from '@mantine/core';
+import { useRegister } from 'store/useRegister'
 
-export default function AQIBadge(props) { 
+export default function AirQualityBadge(props) { 
 
-    const aqState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const { deviceState} = useRegister(props.endpointId)
 
-    useEffect(() => {
-        register(props.endpointId, 'aqstate='+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'aqstate='+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [ ] )
-
-    if (!aqState) { return null }
+    if (!deviceState) { return null }
 
     const aqColor = ( aqi ) => {
         switch (true) {
@@ -35,7 +27,7 @@ export default function AQIBadge(props) {
     }
 
 
-    const aqController = aqState[props.instance]
+    const aqController = deviceState[props.instance]
     const value = aqController.rangeValue ? aqController.rangeValue.value : modeDisplayName(props.endpointId, props.instance, aqController.mode.value)
     const label = ( props.prefix ? props.prefix + " " : "") + value + (props.suffix ? " "+props.suffix : "")
     const color = aqColor(value)

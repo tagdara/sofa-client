@@ -8,7 +8,7 @@ import { useRegister } from 'store/useRegister'
 const CameraImage = props => {
 
     //const [imageLoaded, setImageLoaded] = useState(false);
-    const [updateUri, setupdateUri] = useState("");
+    const [updateUri, setUpdateUri] = useState("");
     const [imageUri, setImageUri] = useState(undefined)
 
     const { device, deviceState } = useRegister(props.endpointId)
@@ -22,6 +22,7 @@ const CameraImage = props => {
             try {
                 var newUri = data.payload.imageUri
                 setImageUri(newUri)
+                setUpdateUri(newUri)
             }
             catch(e) {
                 console.log('Improper response from InitializeCameraStreams', data)
@@ -39,7 +40,7 @@ const CameraImage = props => {
 
     useInterval(() => {
         if (imageUri && !props.disabled) {
-            setupdateUri(imageUri+"?time="+Date.now())
+            setUpdateUri(imageUri+"?time="+Date.now())
         }
     }, (imageUri || props.showDialog) ? props.refreshInterval : null);
 

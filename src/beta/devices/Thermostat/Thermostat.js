@@ -5,7 +5,7 @@ import React from 'react';
 
 import TemperatureSensorLine from 'beta/device-model/controller/temperatureSensor/TemperatureSensorLine'
 import ThermostatAvatar from 'beta/devices/Thermostat/ThermostatAvatar'
-import PowerLevelAvatar from 'beta/device-model/property/powerLevel/PowerLevelAvatar'
+import PowerLevelAutoAvatar from 'beta/device-model/combo/PowerLevelAutoAvatar'
 
 import { Group } from '@mantine/core';
 import { useRegister } from 'store/useRegister'
@@ -34,7 +34,7 @@ const Thermostat = props => {
                 {props.children}
             </TemperatureSensorLine>
             <Group noWrap spacing="xs">
-                <PowerLevelAvatar size="md" label={"Fan"} endpointId={props.endpointId} />
+                <PowerLevelAutoAvatar size="md" label={"Fan"} endpointId={props.endpointId} instance={"Power Level Auto"} />
                 <ThermostatAvatar size="md" endpointId={props.endpointId} />
             </Group>
         </Group>

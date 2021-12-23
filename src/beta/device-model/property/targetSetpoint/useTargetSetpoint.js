@@ -3,10 +3,18 @@ import { directive } from 'store/directive'
 
 const useTargetSetpoint = endpointId => {
 
-    const { deviceState } = useRegister(endpointId)
+    const { device, deviceState } = useRegister(endpointId)
     const targetSetpoint = deviceState ? deviceState.ThermostatController.targetSetpoint.deepvalue : undefined
 
+    const isDyson = device && device.manufacturerName === "Dyson"
+    const thermostatMode = deviceState ? deviceState.ThermostatController.thermostatMode.value : undefined
+
     const tempColor = ( temp ) => {
+
+        if (isDyson && thermostatMode !== "HEAT") {
+            return 'gray'
+        }
+
         switch (true) {
             case (!temp):
                 return 'gray'
@@ -24,7 +32,7 @@ const useTargetSetpoint = endpointId => {
     }
     
     const setTargetTemperature = newSetpoint => {
-        directive(endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": targetSetpoint, "scale": "FAHRENHEIT"}} )
+        directive(endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": newSetpoint, "scale": "FAHRENHEIT"}} )
     }
 
     const increaseSetpoint = amount => {
@@ -41,9 +49,10 @@ const useTargetSetpoint = endpointId => {
 
 
     const targetSetpointColor = tempColor(targetSetpoint)
-    const targetSetpointLabel = targetSetpoint+ "°"
+    const dysonLabel = thermostatMode !== "HEAT" ? "--" : targetSetpoint+ "°"
+    const targetSetpointLabel = isDyson ? dysonLabel : targetSetpoint + "°"
 
-    return { targetSetpoint, targetSetpointColor, targetSetpointLabel, setTargetTemperature, increaseSetpoint, decreaseSetpoint }
+    return { device, targetSetpoint, targetSetpointColor, targetSetpointLabel, setTargetTemperature, increaseSetpoint, decreaseSetpoint }
 
 }
 

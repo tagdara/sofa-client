@@ -4,7 +4,7 @@ import usePowerLevel from 'beta/device-model/property/powerLevel/usePowerLevel'
 
 const PowerLevelSlider = props => {
     
-    const { powerLevel, setPowerLevel } = usePowerLevel(props.endpointId)
+    const { powerLevel, setPowerLevel } = usePowerLevel(props.endpointId, props.value, props.directive)
     if (powerLevel === undefined ) { return null }
 
     return ( 

@@ -4,13 +4,13 @@ import useThermostatMode from 'beta/device-model/property/thermostatMode/useTher
 
 const ThermostatModeButtons = props => {
 
-    const { thermostatMode, selectModes, setThermostatMode } = useThermostatMode(props.endpointId)
+    const { thermostatMode, selectModes, setThermostatMode } = useThermostatMode(props.endpointId, props.value, props.directive)
     
     if (!thermostatMode) { return null }
 
     return ( 
         <SegmentedControl
-                size="xs"
+                size={props.size ? props.size : "xs"}
                 fullWidth
                 value={ thermostatMode }
                 data={ selectModes }

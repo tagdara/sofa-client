@@ -8,7 +8,7 @@ const TargetSetpointAdjuster = props => {
     const { targetSetpoint, decreaseSetpoint, increaseSetpoint } = useTargetSetpoint(props.endpointId)
 
     return (
-            <Group spacing={4} position="center" style={{ width: "100%"}}>
+            <Group spacing={4} position="center">
                 <ActionIcon variant="light" size="lg" onClick={ () => decreaseSetpoint(1) }>
                     <ChevronDown size={20} />
                 </ActionIcon >

@@ -29,7 +29,8 @@ const Speaker = props => {
     //}; 
 
     function togglePower() {
-        directive(props.endpointId, 'PowerController', deviceState.PowerController.powerState.value==='OFF' ? 'TurnOn' : 'TurnOff')
+        console.log('tp',on)
+        directive(props.endpointId, 'PowerController', on ? 'TurnOff' : 'TurnOn')
     };
 
     function shortName(name) {

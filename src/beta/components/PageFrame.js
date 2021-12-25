@@ -24,7 +24,7 @@ export const SectionFrame = props => {
     return (
         <>
         { props.title && <Divider variant="dashed" label={props.title} style={{ paddingTop: 16, paddingBottom: 4,  margin: "0 auto", width: "100%", maxWidth: stacksWidth }} /> }
-        <SimpleGrid cols = { maxStacks } 
+        <SimpleGrid cols = { props.cols? props.cols : maxStacks } 
                     spacing="sm" 
                     style={{ 
                         margin: "0 auto", 

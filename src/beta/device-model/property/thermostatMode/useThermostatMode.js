@@ -1,10 +1,14 @@
 import { getController } from 'store/deviceHelpers'
 import { useRegister } from 'store/useRegister'
-import { directive } from 'store/directive'
+import { directive as storeDirective } from 'store/directive'
 
-const useThermostatMode = endpointId => {
+const useThermostatMode = ( endpointId, value, directive) => {
 
     const { deviceState } = useRegister(endpointId)
+    const activeDirective = directive ? directive : storeDirective
+    const stateThermostatMode = deviceState ? deviceState.ThermostatController.thermostatMode.value : undefined
+    const userValue = value && value.thermostatMode && value.thermostatMode.value ? value.thermostatMode.value : undefined
+    const thermostatMode = userValue ? userValue : stateThermostatMode
 
     function getSupportedModes() {
         try { 
@@ -15,10 +19,9 @@ const useThermostatMode = endpointId => {
     }
 
     function setThermostatMode(newMode) {
-        directive(endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": newMode }} )
+        activeDirective(endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": newMode }} )
     }; 
 
-    const thermostatMode = deviceState ? deviceState.ThermostatController.thermostatMode.value : undefined
     const supportedModes = getSupportedModes()
     const selectModes = supportedModes.map( mode => { return { label : mode, value : mode}})
     

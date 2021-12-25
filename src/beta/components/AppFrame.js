@@ -52,7 +52,8 @@ const AppFrame = props => {
                             left: 0,
                         },
                     main: { backgroundColor: theme.colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0], 
-                            padding: !props.wide ? 4 : undefined,
+                            //padding: !props.wide ? 4 : undefined,
+                            paddingBottom:  !props.wide ? 4 : undefined,
                             display: "flex", // Warning: removing flexdirection breaks bottombar placement
                             flexDirection: "column", // Warning: removing flexdirection breaks bottombar placement
                     },

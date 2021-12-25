@@ -91,6 +91,7 @@ const ActivityItem = props => {
             </SplitButton>
             <SplitButton    label = { name } 
                             secondary = { xsummary() }
+                            onClick={ () => props.select(props.endpointId) }
             />
             <SplitButton >
                 { props.delete ?

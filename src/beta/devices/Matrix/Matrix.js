@@ -35,7 +35,7 @@ const Matrix = props => {
             <ModeSelect instance={"Input"} half
                         endpointId={props.endpointId} 
                         select={changeMode} 
-                        mode={ matrixState.Input.mode.value }/>
+                        value={ matrixState.Input.mode.value }/>
         </Group>
     );
 }

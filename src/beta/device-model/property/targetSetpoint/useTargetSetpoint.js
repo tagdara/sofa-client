@@ -1,10 +1,13 @@
 import { useRegister } from 'store/useRegister'
-import { directive } from 'store/directive'
+import { directive as storeDirective } from 'store/directive'
 
-const useTargetSetpoint = endpointId => {
+const useTargetSetpoint = ( endpointId, value, directive) => {
 
     const { device, deviceState } = useRegister(endpointId)
-    const targetSetpoint = deviceState ? deviceState.ThermostatController.targetSetpoint.deepvalue : undefined
+    const activeDirective = directive ? directive : storeDirective
+    const stateTargetSetpoint = deviceState ? deviceState.ThermostatController.targetSetpoint.deepvalue : undefined
+    const userValue = value && value.targetSetpoint && value.targetSetpoint.value ? value.targetSetpoint.value : undefined
+    const targetSetpoint = userValue ? userValue : stateTargetSetpoint
 
     const isDyson = device && device.manufacturerName === "Dyson"
     const thermostatMode = deviceState ? deviceState.ThermostatController.thermostatMode.value : undefined
@@ -32,7 +35,7 @@ const useTargetSetpoint = endpointId => {
     }
     
     const setTargetTemperature = newSetpoint => {
-        directive(endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": newSetpoint, "scale": "FAHRENHEIT"}} )
+        activeDirective(endpointId, "ThermostatController", "SetTargetTemperature", { "targetSetpoint": { "value": newSetpoint, "scale": "FAHRENHEIT"}} )
     }
 
     const increaseSetpoint = amount => {

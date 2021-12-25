@@ -1,13 +1,16 @@
 import { useRegister } from 'store/useRegister'
-import { directive } from 'store/directive'
+import { directive as storeDirective } from 'store/directive'
 
-const usePowerLevel = endpointId => {
+const usePowerLevel = ( endpointId, value, directive) => {
 
     const { deviceState } = useRegister(endpointId)
-    const powerLevel = deviceState && deviceState.hasOwnProperty('PowerLevelController') ? deviceState.PowerLevelController.powerLevel.value : undefined
+    const activeDirective = directive ? directive : storeDirective
+    const statePowerLevel = deviceState && deviceState.hasOwnProperty('PowerLevelController') ? deviceState.PowerLevelController.powerLevel.value : undefined
+    const userValue = value && value.powerLevel && value.powerLevel.value ? value.powerLevel.value : undefined
+    const powerLevel = userValue ? userValue : statePowerLevel
 
     const setPowerLevel = newPowerLevel => {
-        directive(endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": newPowerLevel})
+        activeDirective(endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": newPowerLevel})
     }
     
     const increasePowerLevel  = amount => {

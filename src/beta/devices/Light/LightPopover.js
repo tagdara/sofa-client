@@ -4,8 +4,8 @@ import { Group, Text} from '@mantine/core'
 import CardPopover from 'beta/components/CardPopover'
 
 import LightSliderTemperature from 'beta/devices/Light/LightSliderTemperature'
-import LightSliderBrightness from 'beta/devices/Light/LightSliderBrightness'
-import LightSliderColor from 'beta/devices/Light/LightSliderColor'
+import BrightnessSlider from 'beta/device-model/property/brightness/BrightnessSlider'
+import LightSliderColor from 'beta/device-model/property/color/ColorSlider'
 
 const LightPopover = props => {
 
@@ -28,7 +28,7 @@ const LightPopover = props => {
 
                     <Group direction="column" grow spacing={"xl"}>
                         { light.BrightnessController &&
-                            <LightSliderBrightness endpointId={props.endpointId} deviceState={light} directive={directive} />
+                            <BrightnessSlider endpointId={props.endpointId} />
                         }
                         { light.ColorTemperatureController &&
                             <LightSliderTemperature endpointId={props.endpointId} deviceState={light} directive={directive} />

@@ -19,7 +19,7 @@ const FrameHeader = props => {
     }
 
     return (
-        <MediaQuery largerThan="sm" styles={{ display: 'none' }}>
+        <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
             <Header height={64} padding="md" style={{ width: "100%"}}>
             {/* You can handle other responsive styles with MediaQuery component or createStyles function */}
             <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>

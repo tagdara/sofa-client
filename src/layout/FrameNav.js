@@ -18,7 +18,7 @@ const FrameNav = props => {
     const powerUser = true
 
     return (
-        <Navbar hiddenBreakpoint={2000}
+        <Navbar hiddenBreakpoint={4000}
                 padding="sm" 
                 hidden={ !props.opened }
                 fixed 

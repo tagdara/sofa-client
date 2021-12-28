@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import useActivityEditorStore from "store/activityEditorStore"
-import ActivityTrigger from "../archive/activity/editor/trigger/ActivityTrigger"
-import ActivityCategory from "../archive/activity/editor/layout/ActivityCategory"
-import ErrorBoundary from '../archive/error/ErrorBoundary'
+import ActivityTrigger from "activity/editor/trigger/ActivityTrigger"
+import ActivityCategory from "activity/editor/layout/ActivityCategory"
+import ErrorBoundary from 'error/ErrorBoundary'
 
 import { addActivityItem } from 'store/activityEditorHelpers'
 
@@ -34,7 +34,7 @@ const ActivityTriggers = props => {
 
             { items && items.map( (item,index) =>
                 <ErrorBoundary key={"trigger"+index} >
-                    <ActivityTrigger category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} />
+                    <ActivityTrigger compact={true} category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} />
                 </ErrorBoundary>
             )}
         </ActivityCategory>

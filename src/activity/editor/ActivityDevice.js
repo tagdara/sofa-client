@@ -7,6 +7,7 @@ import useActivityEditorStore from 'store/activityEditorStore'
 import ActivityDeviceItem from 'activity/editor/ActivityDeviceItem'
 import ActivityDeviceMissing from 'activity/editor/ActivityDeviceMissing'
 import DeviceSelect from 'device-model/device/DeviceSelect'
+import DeviceBadge from 'device-model/device/DeviceBadge'
 
 const ActivityDevice = props => {
     const [selecting, setSelecting ] = useState(false)
@@ -25,6 +26,10 @@ const ActivityDevice = props => {
 
     function selectDevice(newEndpointId) {
         selectActivityDevice(props.category, props.index, newEndpointId)
+    }
+
+    if ( props.compact) {
+        return <DeviceBadge endpointId={endpointId} />
     }
 
     if ( selecting || deviceEmpty ) { 

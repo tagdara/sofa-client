@@ -1,20 +1,9 @@
 import React from 'react';
-
 import { selectStack } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
-import { SegmentedControl} from '@mantine/core';
+import { SegmentedControl, useMantineTheme } from '@mantine/core';
 import { Menu, Music, Shield, Thermometer } from 'react-feather';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
-import { useMantineTheme } from '@mantine/core';
-
-//const BottomLabel = (label, icon) => {
-//    return (
-//            <Group direction="column" position="center" style={{ width: "100%"}} spacing={0}>
-//                {icon}
-//                <Text size="xs">{label}</Text>
- //           </Group>
- //   )
-//}
 
 const BottomBar = props => {
 
@@ -29,14 +18,6 @@ const BottomBar = props => {
             selectStack(newStack)
         }
     }
-    
-    //const sectionData= [
-    //        { value: "Audio Video",         "label": BottomLabel("AV",<Music size={20} />) },
-    //        { value: "Lights and Comfort",  "label": BottomLabel("Lights", <Lightbulb size={20} />) }, 
-    //        { value: "Climate",             "label": BottomLabel("Climate", <Thermometer size={20} />) }, 
-    //        { value: "Security",            "label": BottomLabel("Security", <Shield size={20} />) }, 
-    //        { value: "System",              "label": BottomLabel("More", <Menu size={20} />) }
-    //]
 
     const iconsOnly= [
         { value: "Audio Video",         "label": <Music size={20} /> },
@@ -45,9 +26,6 @@ const BottomBar = props => {
         { value: "Security",            "label": <Shield size={20} /> }, 
         { value: "System",              "label": <Menu size={20} />}
     ]
-
-
-    // TODO Adding color styles has introduced some ghosting along the edges that needs to be fixed
 
     return (
         <SegmentedControl 

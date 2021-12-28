@@ -1,6 +1,6 @@
 import React from 'react';
 import OperatorButton from "./input/operatorButton"
-import { Group, Select } from '@mantine/core';
+import { Badge, Group, Select } from '@mantine/core';
 import { mapDeviceProperties, deviceByEndpointId }  from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
@@ -64,6 +64,10 @@ export default function ControllerProperty(props) {
 
     const selections = propertyMap.map( (item,index) => { return { value: index.toString(), label: getLabel(item) }})
     const value = defaultOrValue()
+
+    if (props.compact) {
+        return <Badge>{ getLabel(propertyMap[parseInt(value)]) +" "+opDefaultOrValue() }</Badge> 
+    }
     
     return (
         <Group noWrap>

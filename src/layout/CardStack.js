@@ -49,11 +49,9 @@ export default function CardStack(props) {
                             justifyContent: "flex-start"
                         }} 
         >
-            <Group direction="row" noWrap spacing="xl" style={{ padding: 8, width: "100%"}} position="apart">
-                {props.showTitle &&
-                    <StackPicker stack={stack} setStack={setStack} />
-                }
-            </Group>
+            {props.showTitle &&
+                <StackPicker stack={stack} setStack={setStack} />
+            }
             { cards } 
         </Group>
     );

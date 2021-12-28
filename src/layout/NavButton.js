@@ -94,7 +94,7 @@ const NavButton = ( props ) => {
 
     return (
         <UnstyledButton className={classSelect()} onClick={props.onClick}>
-            <Group>
+            <Group noWrap>
                 { (props.reverse && props.arrow) &&
                     <ThemeIcon className={arrowClass()}>
                         <ChevronRight />
@@ -114,7 +114,7 @@ const NavButton = ( props ) => {
                     {props.icon}
                 </ThemeIcon>
                 }
-                <Text size="md" style={{ flexGrow: 1 }}>{props.label}</Text>
+                <Text size="md" lineClamp={1} style={{ flexGrow: 1 }}>{props.label}</Text>
                 { props.children }
                 { (!props.reverse && props.arrow) &&
                     <ThemeIcon className={arrowClass()} >

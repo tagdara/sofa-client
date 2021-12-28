@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Select } from '@mantine/core';
 
 export default function TimeEntry(props) {
-
-    const [timeType, setTimeType] = useState("custom")
 
     const selections = [
         { value: "sunrise", label: "Sunrise"},
@@ -13,8 +11,8 @@ export default function TimeEntry(props) {
 
     return (
         <Select size="sm" 
-            onChange={setTimeType} 
-            value={timeType}
+            onChange={props.select} 
+            value={props.value}
             data={selections}
         />
     );

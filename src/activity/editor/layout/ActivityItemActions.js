@@ -8,7 +8,7 @@ import { moveActivityItemUp, moveActivityItemDown, removeActivityItem } from 'st
 const ActivityItemActions = props => {
 
     return (
-        <Group noWrap>
+        <Group noWrap style={{maxWidth: 64}}>
             { props.removing &&
                 <ActionIcon size="small" onClick={() => removeActivityItem(props.category, props.index)}><Clear size={20} /></ActionIcon>     
             }

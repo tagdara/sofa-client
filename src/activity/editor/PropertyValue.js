@@ -73,7 +73,6 @@ export default function PropertyValue(props) {
                             value: item.value,
                         }
 
-    console.log(propertyModuleName, propertyModule, renderProps)
 
     return (
         renderSuspensePropertyModule(propertyModuleName, propertyModule, renderProps )

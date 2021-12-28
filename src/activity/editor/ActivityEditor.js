@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 
 import { Group } from '@mantine/core';
-//import ActivityTriggers from "activity/editor/trigger/ActivityTriggers"
+import ActivityTriggers from "activity/editor/trigger/ActivityTriggers"
 import ActivityConditions from "activity/editor/condition/ActivityConditions"
 import ActivityActions from "activity/editor/action/ActivityActions"
 //import ActivitySchedules from "activity/editor/schedule/ActivitySchedules"
@@ -23,14 +23,13 @@ export default function ActivityEditor(props) {
     // eslint-disable-next-line
     }, [ props.endpointId ]);
 
-    const wide = window.innerWidth > 799
-
     return (
         <Group direction="column">
             <PageFrame cols={1}>
-                <ActivityHeader wide={wide} />
-                <ActivityConditions wide={wide} />
-                <ActivityActions wide={wide} />
+                <ActivityHeader />
+                <ActivityTriggers />
+                <ActivityConditions />
+                <ActivityActions />
             </PageFrame>
         </Group>
     )

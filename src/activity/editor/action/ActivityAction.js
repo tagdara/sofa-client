@@ -7,10 +7,10 @@ import ActivityLine from 'activity/editor/layout/ActivityLine'
 const ActivityAction = props => {
 
     return (
-        <ActivityLine category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} count={props.count}>
-            <ActivityDevice category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />
-            <DeviceDirective category={ props.category } index={props.index} wide={props.wide} />
-            <PropertyValue category={ props.category } index={props.index} wide={props.wide} />
+        <ActivityLine compact={props.compact} category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} count={props.count}>
+            <ActivityDevice compact={props.compact} category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />
+            <DeviceDirective compact={props.compact} category={ props.category } index={props.index} wide={props.wide} />
+            <PropertyValue compact={props.compact} category={ props.category } index={props.index} wide={props.wide} />
         </ActivityLine>
     )
 }

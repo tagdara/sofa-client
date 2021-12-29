@@ -32,7 +32,7 @@ const ActivityActions = props => {
                             setRemoving = { setRemoving } setReordering ={ setReordering } removing = { removing } reordering = { reordering } >
             { items && items.map( (item,index) =>
                 <ErrorBoundary key={"actions"+index} >
-                    <ActivityAction category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} count={count} />
+                    <ActivityAction compact={true} category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} count={count} />
                 </ErrorBoundary>
             )}
         </ActivityCategory>

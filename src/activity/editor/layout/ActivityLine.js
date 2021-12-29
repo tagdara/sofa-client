@@ -6,6 +6,15 @@ import { usePageFrame } from 'device-model/instance/PageFrame'
 const ActivityLine = props => {
     const { maxStacks } = usePageFrame()
     // <Paper elevation={0} onClick={props.onClick} sx={{ display: "flex", borderRadius:4, width: "100%"}}></Paper>
+
+    if (props.compact) {
+        return (
+            <Group noWrap spacing={1}>
+                { props.children }
+            </Group>
+        )
+    }
+
     return (
         <Paper  onClick={props.onClick} 
                 style={{ padding: "8px 16px", 
@@ -15,15 +24,9 @@ const ActivityLine = props => {
                     }}
         >
             <Group noWrap style={{ width: "100%"}}>
-                { props.compact ?
-                    <Group>
-                        { props.children }
-                    </Group>
-                    :
-                    <SimpleGrid cols={maxStacks < 3 ? 1 : 3} style={{ width: "100%", alignItems: "center"}} >
-                        { props.children }
-                    </SimpleGrid>
-                }
+                <SimpleGrid cols={maxStacks < 3 ? 1 : 3} style={{ width: "100%", alignItems: "center"}} >
+                    { props.children }
+                </SimpleGrid>
                 <ActivityItemActions    category={ props.category } 
                                             index={props.index} 
                                             wide={props.wide} 

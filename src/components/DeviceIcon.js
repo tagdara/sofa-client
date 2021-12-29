@@ -1,7 +1,7 @@
 import React from 'react';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
 import { List, Sliders, Speaker, Thermometer, ToggleRight, Triangle, Tv } from 'react-feather'
-
+import { deviceByEndpointId } from 'store/deviceHelpers'
 
 const DeviceIcon = props => {
 
@@ -27,6 +27,11 @@ const DeviceIcon = props => {
 
     if (props.displayCategories) {
         return getIcon(props.displayCategories, props.size)
+    }
+    
+    if (props.endpointId) {
+        const device = deviceByEndpointId(props.endpointId)
+        return getIcon(device.displayCategories, props.size)
     }
 
     return getIcon(props.name)

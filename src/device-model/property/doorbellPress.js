@@ -1,11 +1,11 @@
 import React from 'react';
-import DoorbellPressBadge  from 'device-model/property/doorbellPress/DoorbellPressBadge';
 import DoorbellPressButton  from 'device-model/property/doorbellPress/DoorbellPressButton';
+import DoorbellPressSegment from 'device-model/property/doorbellPress/DoorbellPressSegment';
 
-const PowerState = props => {
+const DoorbellPress = props => {
 
     if (props.compact) {
-        return <DoorbellPressBadge {...props} />
+        return <DoorbellPressSegment {...props} />
     }
 
     return (    
@@ -13,4 +13,4 @@ const PowerState = props => {
     )
 }
 
-export default PowerState;
+export default DoorbellPress;

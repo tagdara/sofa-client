@@ -1,6 +1,6 @@
 import React from 'react';
 import OperatorButton from "./input/operatorButton"
-import { Badge, Group, Select } from '@mantine/core';
+import { Button, Group, Select } from '@mantine/core';
 import { mapDeviceProperties, deviceByEndpointId }  from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
@@ -66,7 +66,20 @@ export default function ControllerProperty(props) {
     const value = defaultOrValue()
 
     if (props.compact) {
-        return <Badge>{ getLabel(propertyMap[parseInt(value)]) +" "+opDefaultOrValue() }</Badge> 
+        return (
+            <>
+                <Button radius={0} size={props.size ? props.size : "sm"}
+                        compact
+                >
+                    { getLabel(propertyMap[parseInt(value)]) }
+                </Button> 
+                <Button radius={0} size={props.size ? props.size : "sm"}
+                        compact
+                >
+                    { opDefaultOrValue() }
+                </Button>                
+            </>
+        )
     }
     
     return (

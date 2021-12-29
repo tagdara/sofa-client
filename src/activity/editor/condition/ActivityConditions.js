@@ -37,7 +37,7 @@ const ActivityConditions = props => {
         >
             { items && items.map( (item,index) =>
                 <ErrorBoundary key={"cond"+index} >
-                    <ActivityCondition category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} />
+                    <ActivityCondition compact={true} category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} />
                 </ErrorBoundary>
             )}
         </ActivityCategory >

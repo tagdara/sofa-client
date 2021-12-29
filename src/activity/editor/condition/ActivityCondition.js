@@ -7,10 +7,10 @@ import ActivityLine from 'activity/editor/layout/ActivityLine'
 const ActivityCondition = props => {
 
     return (
-        <ActivityLine category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} count={props.count}>
-            <ActivityDevice category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />      
-            <ControllerProperty category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} /> 
-            <PropertyValue category={ props.category } index={props.index} wide={props.wide} />
+        <ActivityLine compact={props.compact} category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} count={props.count}>
+            <ActivityDevice compact={props.compact} category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />      
+            <ControllerProperty compact={props.compact} category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} /> 
+            <PropertyValue compact={props.compact} category={ props.category } index={props.index} wide={props.wide} />
         </ActivityLine >
     )
 }

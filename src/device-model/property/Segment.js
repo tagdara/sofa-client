@@ -3,16 +3,14 @@ import { Button } from '@mantine/core';
 
 const Segment = props => {
 
+    const cssColor = props.color && ( props.color.startsWith('#') || props.color.startsWith('rgb'))
+
     return (
         <Button compact 
                 variant="light"
-                color="green"
-                radius="lg"
-                style={{ 
-                    borderTopLeftRadius: 0,
-                    borderBottomLeftRadius: 0,
-                    paddingRight: 8,
-                }}
+                style={{ backgroundColor: cssColor ? props.color : undefined }}
+                color={ !cssColor && props.color ? props.color : "green" }
+                radius="md"
                 size={props.size ? props.size : "sm"}>
             {props.value}
         </Button>

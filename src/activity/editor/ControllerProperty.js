@@ -1,9 +1,10 @@
 import React from 'react';
 import OperatorButton from "./input/operatorButton"
-import { Button, Group, Select } from '@mantine/core';
+import { Group, Select } from '@mantine/core';
 import { mapDeviceProperties, deviceByEndpointId }  from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
+import Segment from 'device-model/property/Segment'
 
 export default function ControllerProperty(props) {
 
@@ -68,16 +69,8 @@ export default function ControllerProperty(props) {
     if (props.compact) {
         return (
             <>
-                <Button radius={0} size={props.size ? props.size : "sm"}
-                        compact
-                >
-                    { getLabel(propertyMap[parseInt(value)]) }
-                </Button> 
-                <Button radius={0} size={props.size ? props.size : "sm"}
-                        compact
-                >
-                    { opDefaultOrValue() }
-                </Button>                
+                <Segment value={ getLabel(propertyMap[parseInt(value)]) } />
+                <Segment value={ opDefaultOrValue() } />
             </>
         )
     }

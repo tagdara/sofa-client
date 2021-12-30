@@ -18,14 +18,22 @@ const useThermostatMode = ( endpointId, value, directive) => {
         return []
     }
 
+    var camelSentence = (str) => {
+        return (" " + str).toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function(match, chr)
+        {
+            return chr.toUpperCase();
+        });
+    }
+
     function setThermostatMode(newMode) {
         activeDirective(endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": newMode }} )
     }; 
 
     const supportedModes = getSupportedModes()
     const selectModes = supportedModes.map( mode => { return { label : mode, value : mode}})
+    const thermostatModeLabel = camelSentence(thermostatMode)
     
-    return { setThermostatMode, supportedModes, thermostatMode, selectModes }
+    return { thermostatModeLabel, setThermostatMode, supportedModes, thermostatMode, selectModes }
 
 }
 

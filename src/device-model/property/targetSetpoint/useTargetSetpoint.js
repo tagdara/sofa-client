@@ -9,8 +9,10 @@ const useTargetSetpoint = ( endpointId, value, directive) => {
     const userValue = value && value.targetSetpoint && value.targetSetpoint.value ? value.targetSetpoint.value : undefined
     const targetSetpoint = userValue ? userValue : stateTargetSetpoint
 
-    const isDyson = device && device.manufacturerName === "Dyson"
+    const isDyson = value === undefined && device && device.manufacturerName === "Dyson"
     const thermostatMode = deviceState ? deviceState.ThermostatController.thermostatMode.value : undefined
+
+    console.log('tsp', value, isDyson)
 
     const tempColor = ( temp ) => {
 

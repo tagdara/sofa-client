@@ -9,12 +9,7 @@ const DeviceSegment = props => {
 
     return (
         <Button compact 
-                radius="lg"
-                style={{ 
-                    paddingLeft: 12,
-                    borderTopRightRadius: 0,
-                    borderBottomRightRadius: 0
-                }}
+                radius="md"
                 leftIcon={<DeviceIcon size={12} endpointId={props.endpointId} />}
                 variant="light" size={props.size ? props.size : "sm"}>{name}</Button> 
     )

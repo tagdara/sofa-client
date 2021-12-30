@@ -7,7 +7,7 @@ export default function PowerLevelSegment(props) {
     const { powerLevelLabel } = usePowerLevel(props.endpointId, props.value, props.directive)
 
     return (
-        <Segment>{ powerLevelLabel }</Segment>
+        <Segment value={ powerLevelLabel } />
     );
 }
 

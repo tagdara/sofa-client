@@ -3,7 +3,8 @@ import { directives } from 'store/directive'
 import { deviceByEndpointId, deviceDirectives } from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
-import { Button, Select } from '@mantine/core';
+import { Select } from '@mantine/core';
+import Segment from 'device-model/property/Segment'
 
 export default function DeviceDirective(props) {
     
@@ -70,8 +71,10 @@ export default function DeviceDirective(props) {
     const selections = directiveMap.map( (item,index) => { return { value: index.toString(), label: getLabel(item) }})
     const value = defaultOrValue()
 
+    console.log(directiveMap[parseInt(value)].directive, value)
+
     if (props.compact) {
-        return <Button size={props.size ? props.size : "sm"} compact radius={0}>{getLabel(directiveMap[value])}</Button>
+        return <Segment value={getLabel(directiveMap[parseInt(value)])} />
     }
 
     return (

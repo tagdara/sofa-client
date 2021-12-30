@@ -9,9 +9,17 @@ const ActivityLine = props => {
 
     if (props.compact) {
         return (
-            <Group noWrap spacing={1}>
+            <Paper  onClick={props.onClick} 
+                    style={{ padding: 8,
+                            display: "flex", 
+                            borderRadius:4, 
+                            width: "100%"
+                        }}
+            >
+                <Group spacing={4}>
                 { props.children }
-            </Group>
+                </Group>
+            </Paper> 
         )
     }
 

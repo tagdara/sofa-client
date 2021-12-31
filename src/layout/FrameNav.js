@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Group, Navbar, ScrollArea } from '@mantine/core';
+import { Group, Navbar, ScrollArea, Transition } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 
 import { List, Settings } from 'react-feather';
@@ -18,12 +18,18 @@ const FrameNav = props => {
     const powerUser = true
 
     return (
+        <Transition mounted={props.opened} 
+                    transition={"slide-right"} 
+                    duration={200} 
+                    timingFunction="ease">
+        {( styles) => (
         <Navbar hiddenBreakpoint={4000}
                 padding="sm" 
                 hidden={ !props.opened }
                 fixed 
                 width={{ sm: 400 }}
-                style={{    maxWidth: wide ? "33vw" : undefined,
+                style={{    ...styles,
+                            maxWidth: wide ? "33vw" : undefined,
                             minWidth: wide ? "20vw" : undefined,
                             height: "100%",
                             maxHeight: "100%",
@@ -57,6 +63,8 @@ const FrameNav = props => {
                 </Group>
             </Navbar.Section>
         </Navbar>
+        )}
+        </Transition>
     )
 }
 

@@ -13,7 +13,7 @@ const LightLayout = props => {
     const lights = sortByName(useDeviceStore(useCallback(state => Object.keys(state.devices).filter( dev => state.devices[dev].displayCategories.includes('LIGHT')), [])))
 
     return (    
-        <Group direction="column">
+        <Group direction="column" noWrap style={{ width: "100%", overflow: "hidden"}}>
             <SectionHeader title={"Lights"} >
                 <Group spacing="xs">
                     <Button compact variant={ filter==='ALL' ? undefined : "light"}  size="sm" onClick={ () => setFilter('ALL') }  >
@@ -33,6 +33,7 @@ const LightLayout = props => {
         </Group>
     )
 }
+
 
 export default LightLayout;
 

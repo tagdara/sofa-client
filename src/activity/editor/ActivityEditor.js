@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { Group } from '@mantine/core';
+import { Button, Group } from '@mantine/core';
 import ActivityTriggers from "activity/editor/trigger/ActivityTriggers"
 import ActivityConditions from "activity/editor/condition/ActivityConditions"
 import ActivityActions from "activity/editor/action/ActivityActions"
@@ -31,6 +31,7 @@ export default function ActivityEditor(props) {
                 <ActivityConditions />
                 <ActivityActions />
             </PageFrame>
+            <Button>Test</Button>
         </Group>
     )
     //          <ActivitySchedules wide={wide} />

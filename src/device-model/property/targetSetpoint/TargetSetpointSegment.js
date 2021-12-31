@@ -4,7 +4,7 @@ import useTargetSetpoint from 'device-model/property/targetSetpoint/useTargetSet
 
 const TargetSetpointSegment = props => {
 
-    const { targetSetpointLabel } = useTargetSetpoint(props.endpointId)
+    const { targetSetpointLabel } = useTargetSetpoint(props.endpointId, props.value, props.directive)
 
     return <Segment value={ targetSetpointLabel}/>
 

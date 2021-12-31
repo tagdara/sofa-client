@@ -4,7 +4,7 @@ import { Card } from '@mantine/core'
 const StackCard = props => {
     
     return (
-        <Card padding="md" radius="md" style={{ width:"100%", maxWidth: 480, minWidth: 300 }}>
+        <Card padding="md" radius="md" style={{  width:"100%", maxWidth: 480, minWidth: 300 }}>
             { props.children }
         </Card >
     );

@@ -20,11 +20,11 @@ const BottomBar = props => {
     }
 
     const iconsOnly= [
+        { value: "System",              "label": <Menu size={20} />},
         { value: "Audio Video",         "label": <Music size={20} /> },
         { value: "Lights and Comfort",  "label": <Lightbulb size={20} /> }, 
         { value: "Climate",             "label": <Thermometer size={20} /> }, 
         { value: "Security",            "label": <Shield size={20} /> }, 
-        { value: "System",              "label": <Menu size={20} />}
     ]
 
     return (

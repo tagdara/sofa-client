@@ -4,16 +4,18 @@ import { useMantineTheme, SimpleGrid } from '@mantine/core';
 import { useViewportSize, useMediaQuery } from '@mantine/hooks';
 
 import SectionHeader from 'components/SectionHeader';
-import { Divider, Group } from '@mantine/core'
+import { Divider, Group, ScrollArea } from '@mantine/core'
 
 export const PageFrame = props => {
 
     const wide = useMediaQuery('(min-width: 640px)');
 
     // TODO - this padding is a shim for bad flexbox alignment at the top level
-    return  <Group direction="column" grow noWrap style={{ margin: "0 auto", width: "100%", paddingBottom : wide ? 64 : undefined }} >
+    return  <Group direction="column" noWrap style={{ height: "100%", overflow: "hidden", margin: "0 auto", width: "100%", paddingBottom : wide ? 64 : undefined }} >
                 { props.title && <SectionHeader title={props.title} /> }
-                <SectionFrame last={true} {...props} />
+                <ScrollArea scrollbarSize={2} style={{  width: "100%", flexDirection:"column", display: "flex", flexGrow: 1 }} >   
+                    <SectionFrame last={true} {...props} />
+                </ScrollArea>
             </Group>
 }
 

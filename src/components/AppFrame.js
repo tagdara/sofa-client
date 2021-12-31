@@ -1,5 +1,5 @@
 import React from 'react';
-import { AppShell, ScrollArea } from '@mantine/core';
+import { AppShell } from '@mantine/core';
 //import { useViewportSize } from '@mantine/hooks';
 
 const AppFrame = props => {
@@ -32,6 +32,10 @@ const AppFrame = props => {
     // Notice that the height calculated by 100vh and useViewportsize is inconsistent between
     // loads in mobile safari when pinned.  clearly a bug or race condition
 
+    //<ScrollArea scrollbarSize={2} style={{ display: "flex", flexGrow: 1 }} >   
+    //   { props.children }                                                          
+    //</ScrollArea>
+
     return (
             <AppShell   
                 padding="sm"
@@ -60,10 +64,10 @@ const AppFrame = props => {
                 })}
                 header={ props.header }
                 navbar={ props.navbar }
-            >
-                    <ScrollArea scrollbarSize={2} style={{ display: "flex", flexGrow: 1 }} >   
+            >       
+                    <div style={{ overflow: "hidden", flexDirection: "column", display: "flex", flexGrow: 1 }}> 
                         { props.children }                                                          
-                    </ScrollArea>
+                    </div>
                     { (!props.wide && props.bottom) && props.bottom }
                     { props.drawer }
             </AppShell>

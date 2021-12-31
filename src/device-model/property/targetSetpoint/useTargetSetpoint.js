@@ -12,8 +12,6 @@ const useTargetSetpoint = ( endpointId, value, directive) => {
     const isDyson = value === undefined && device && device.manufacturerName === "Dyson"
     const thermostatMode = deviceState ? deviceState.ThermostatController.thermostatMode.value : undefined
 
-    console.log('tsp', value, isDyson)
-
     const tempColor = ( temp ) => {
 
         if (isDyson && thermostatMode !== "HEAT") {

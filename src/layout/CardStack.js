@@ -17,8 +17,6 @@ export default function CardStack(props) {
                 //.then(result=> console.log('real stack data', result))
                 .then(result=> setStackData(result))
         }
-
-
     }, [ stack ] )
 
     //function expandable() {
@@ -36,24 +34,26 @@ export default function CardStack(props) {
 
     const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand))
     const cards = cardData.map( (card, i) => renderSuspenseModule(card['module'], card['props'], i ))
+    console.log('cards', cardData)
 
     return (
-        <Group  noWrap 
-                spacing="xs" 
-                direction="column" 
-                style={{    paddingBottom: 16, 
-                            minWidth: 320, 
-                            maxWidth: 480, 
-                            height: "100%", 
-                            width: "100%", 
-                            justifyContent: "flex-start"
-                        }} 
-        >
-            {props.showTitle &&
-                <StackPicker stack={stack} setStack={setStack} />
-            }
-            { cards } 
-        </Group>
+            <Group  noWrap 
+                    spacing="xs" 
+                    direction="column" 
+                    style={{
+                                paddingBottom: 16, 
+                                minWidth: 320, 
+                                maxWidth: 480, 
+                                height: "100%", 
+                                width: "100%", 
+                                justifyContent: "flex-start"
+                            }} 
+            >
+                {props.showTitle &&
+                    <StackPicker stack={stack} setStack={setStack} />
+                }
+                { cards } 
+            </Group>
     );
 }
 

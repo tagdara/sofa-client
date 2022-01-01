@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActionIcon, Group, Header, MediaQuery, Burger, Text, useMantineTheme } from '@mantine/core';
-import { CloudOff, Home, Maximize } from 'react-feather';
+import { Home, Maximize } from 'react-feather';
 import { selectPage } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
 
@@ -32,7 +32,6 @@ const FrameHeader = props => {
                 />
                 <Text sx={{ flexGrow: 1 }}>Sofa</Text>
                 <Group noWrap spacing="lg">
-                { !props.connected && <ActionIcon size="md" variant="light" color="red"><CloudOff size={20} /></ActionIcon> }
                 { !homePage && <ActionIcon variant="light" color="primary" size="md" onClick={ () => selectPage('Stacks')}><Home size={20} /></ActionIcon> }
                 <ActionIcon size="md" onClick={goFullScreen}><Maximize size={20} /></ActionIcon>
                 </Group>

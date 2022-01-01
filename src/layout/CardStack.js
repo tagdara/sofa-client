@@ -34,7 +34,6 @@ export default function CardStack(props) {
 
     const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand))
     const cards = cardData.map( (card, i) => renderSuspenseModule(card['module'], card['props'], i ))
-    console.log('cards', cardData)
 
     return (
             <Group  noWrap 

@@ -13,8 +13,6 @@ export default function Stacks(props) {
     const currentStack = useLayoutStore(state => state.currentStack )
     const { maxStacks } = usePageFrame()
 
-    console.log('current', currentStack)
-
     useEffect(() => {
         refreshStackLayout()
     }, [])

@@ -4,9 +4,6 @@ import { useMediaQuery } from '@mantine/hooks';
 import useLayoutStore from 'store/layoutStore'
 import { renderSuspenseModule } from 'helpers/layoutHelpers';
 
-import useStream from 'store/useStream'
-import storeUpdater from 'store/storeUpdater'
-
 import FrameHeader from 'layout/FrameHeader';
 import FrameNav from 'layout/FrameNav';
 import RightDrawer from 'layout/RightDrawer';
@@ -22,14 +19,13 @@ export default function MainPage() {
     const opened = useLayoutStore( state => state.drawerOpen)
     const setOpened = useLayoutStore( state => state.setDrawerOpen)
     const [ drawerOpened, setDrawerOpened] = useState(wide)
-    const { streamConnected } = useStream(storeUpdater)
 
     const currentPage = useLayoutStore(state => state.currentPage)
     const currentProps = useLayoutStore(state => state.currentProps)    
 
     return (
         <AppFrame   bottom={ <BottomBar open={ () => setOpened(true) } />} 
-                    header={ <FrameHeader connected={streamConnected} opened={opened} setOpened={setOpened} />}
+                    header={ <FrameHeader opened={opened} setOpened={setOpened} />}
                     navbar={ <FrameNav opened={ opened } close={ () => setOpened(false) } />}
                     drawer={ <RightDrawer opened={drawerOpened} close={ () => setDrawerOpened(false) } /> }
                     wide={wide}

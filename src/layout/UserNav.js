@@ -23,16 +23,16 @@ const UserNav = props => {
     if (expand) {
         return (
             <Card sx={{ padding: 0}}>
-                <NavButton avatar={<User size={20} />} label={name} arrowLeft onClick={ () => setExpand(false) } />
-                <NavButton color="orange" avatar={<RotateCcw size={20} />} label={"Reload"} secondary={"v." + process.env.REACT_APP_VERSION} arrowLeft onClick={ () => reloadPWA() } />
-                <NavButton color="red" avatar={<LogOut size={20} />} label={"Logout"} arrowLeft onClick={ () => logout() } />
+                <NavButton icon={<User size={20} />} label={name} leftArrow={expand} arrow={!expand} onClick={ () => setExpand(false) } />
+                <NavButton color="orange" icon={<RotateCcw size={20} />} label={"Reload"} detail={"v" + process.env.REACT_APP_VERSION} arrowLeft onClick={ () => reloadPWA() } />
+                <NavButton color="red" icon={<LogOut size={20} />} label={"Logout"} arrowLeft onClick={ () => logout() } />
             </Card>
         )
     }
 
     return (
         <Card sx={{ padding: 0}}>
-            <NavButton avatar={<User size={20} />} label={name} arrow onClick={ () => setExpand(true) }  />
+            <NavButton icon={<User size={20} />} label={name} arrow onClick={ () => setExpand(true) }  />
         </Card>
     )
 }

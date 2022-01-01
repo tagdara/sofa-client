@@ -3,13 +3,16 @@ import React, { useState, useEffect } from 'react';
 import { selectPage } from 'helpers/layoutHelpers';
 
 import ActivityItem from 'activity/ActivityItem';
-import SectionHeader from 'components/SectionHeader';
-import { PageFrame } from 'device-model/instance/PageFrame'
-
 import { isFavorite, makeFavorite } from 'store/deviceHelpers';
 import { loadActivities, deleteActivity } from 'store/activityHelpers';
 import { ActionIcon, Group } from '@mantine/core';
 import { Clock, Trash2, Star, Plus } from 'react-feather';
+
+import SectionHeader from 'components/SectionHeader';
+import SectionFrame from 'layout/SectionFrame'
+import SectionGrid from 'layout/SectionGrid'
+import PageFrame from 'layout/PageFrame'
+import HomeButton from 'layout/HomeButton';
 
 const ActivitiesLayout = props => {
 
@@ -64,24 +67,27 @@ const ActivitiesLayout = props => {
     const activityList = getListItems()
 
     return (
-        <Group direction="column">
+        <PageFrame>
             <SectionHeader title={"Activities"} >
-                <ActionIcon size="sm" onClick={ () => newActivity() } >
-                    <Plus size={20} />
-                </ActionIcon>
-                { Object.keys(activities).length>0 &&
-                    <ActionIcon size="sm" onClick={ () => { setRemoving(!removing); }} >
-                        <Trash2 size={20} />
-                    </ActionIcon>             
-                }
-                <ActionIcon size="sm" onClick={ () => toggleScheduled() } >
-                    <Clock size={20} />
-                </ActionIcon>
-                <ActionIcon size="sm" onClick={ () => toggleFavorites() }  color={ favorites ? "primary" : "inherit" } >
-                    <Star size={20} />
-                </ActionIcon>
+                <Group noWrap>
+                    <ActionIcon size="sm" onClick={ () => newActivity() } >
+                        <Plus size={20} />
+                    </ActionIcon>
+                    { Object.keys(activities).length>0 &&
+                        <ActionIcon size="sm" onClick={ () => { setRemoving(!removing); }} >
+                            <Trash2 size={20} />
+                        </ActionIcon>             
+                    }
+                    <ActionIcon size="sm" onClick={ () => toggleScheduled() } >
+                        <Clock size={20} />
+                    </ActionIcon>
+                    <ActionIcon size="sm" onClick={ () => toggleFavorites() }  color={ favorites ? "primary" : "inherit" } >
+                        <Star size={20} />
+                    </ActionIcon>
+                </Group>
             </SectionHeader>
-            <PageFrame>
+            <SectionFrame>
+                <SectionGrid>
                 { activityList && activityList.map(activity => 
                     <ActivityItem   endpointId={activity.endpointId} key={activity.endpointId}
                                     select={selectActivity}
@@ -91,8 +97,13 @@ const ActivitiesLayout = props => {
                                     showNextRun = {showScheduled}
                                 />
                 )}
-            </PageFrame>
-        </Group>
+                </SectionGrid>
+            </SectionFrame>
+            <SectionHeader>
+                <HomeButton />
+            </SectionHeader>
+        </PageFrame>
+
     )
 }
 

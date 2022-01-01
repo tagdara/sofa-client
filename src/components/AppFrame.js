@@ -60,6 +60,7 @@ const AppFrame = props => {
                             paddingBottom:  !props.wide ? 4 : undefined,
                             display: "flex", // Warning: removing flexdirection breaks bottombar placement
                             flexDirection: "column", // Warning: removing flexdirection breaks bottombar placement
+                            maxWidth: "100%",
                     },
                 })}
                 header={ props.header }

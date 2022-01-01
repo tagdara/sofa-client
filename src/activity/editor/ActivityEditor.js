@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-
-import { Button, Group } from '@mantine/core';
 import ActivityTriggers from "activity/editor/trigger/ActivityTriggers"
 import ActivityConditions from "activity/editor/condition/ActivityConditions"
 import ActivityActions from "activity/editor/action/ActivityActions"
@@ -9,7 +7,9 @@ import ActivityActions from "activity/editor/action/ActivityActions"
 import ActivityHeader from "activity/editor/layout/ActivityHeader"
 //import ActivitySave from "activity/editor/layout/ActivitySave"
 import { loadActivity, newActivity } from 'store/activityEditorHelpers';
-import { PageFrame } from 'device-model/instance/PageFrame'
+
+import SectionFrame from 'layout/SectionFrame'
+import PageFrame from 'layout/PageFrame'
 
 export default function ActivityEditor(props) {
 
@@ -24,15 +24,14 @@ export default function ActivityEditor(props) {
     }, [ props.endpointId ]);
 
     return (
-        <Group direction="column">
-            <PageFrame cols={1}>
-                <ActivityHeader />
+        <PageFrame>
+            <ActivityHeader />
+            <SectionFrame>
                 <ActivityTriggers />
                 <ActivityConditions />
                 <ActivityActions />
-            </PageFrame>
-            <Button>Test</Button>
-        </Group>
+            </SectionFrame>
+        </PageFrame>
     )
     //          <ActivitySchedules wide={wide} />
     //        <ActivityTriggers wide={wide} />

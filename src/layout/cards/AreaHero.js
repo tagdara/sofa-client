@@ -37,8 +37,9 @@ const AreaHero = props => {
         selectPage('AreaLayout', {"endpointId": endpointId})
     }
 
+
     return (
-        <StackCard>
+        <StackCard >
             <Group direction="column" noWrap spacing="xl">
                 <AreaControlHeader name={ name } home={homeArea} currentArea={currentArea} selectArea={selectArea} expand={expandArea} />
                 <AreaSummaryLine endpointId={currentArea} />

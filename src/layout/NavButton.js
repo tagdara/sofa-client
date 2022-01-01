@@ -114,7 +114,10 @@ const NavButton = ( props ) => {
                     {props.icon}
                 </ThemeIcon>
                 }
-                <Text size="md" lineClamp={1} style={{ flexGrow: 1 }}>{props.label}</Text>
+                <Group direction="column" spacing={0} grow style={{ flexGrow: 1 }}>
+                    <Text size="md" lineClamp={1} style={{ flexGrow: 1 }}>{props.label}</Text>
+                    { props.detail && <Text color="dimmed" size="xs" style={{ flexGrow: 1 }}>{props.detail}</Text> }
+                </Group>
                 { props.children }
                 { (!props.reverse && props.arrow) &&
                     <ThemeIcon className={arrowClass()} >

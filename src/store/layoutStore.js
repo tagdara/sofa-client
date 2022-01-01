@@ -18,6 +18,10 @@ const useLayoutStore = create((set, get) => ({
     isMobile: window.innerWidth <= 800,
     minStackWidth: 310,
     stackPad: 16, // This should be computed from mantine pad
+    transitionDirection: "fade",
+    setTransitionDirection: direction => {
+        set({ transitionDirection: direction })
+    },
     setDrawerOpen: open => {
         const isOpen = get().drawerOpen
         set( { drawerOpen: open === undefined ? open : !isOpen })
@@ -39,7 +43,7 @@ const useLayoutStore = create((set, get) => ({
                 set({ breadCrumbs: [...breadCrumbs, { "page":currentPage, "props":currentProps }] })
             }
         }
-        set({ drawerOpen: false, rightDrawerOpen: false, currentStack: undefined, currentPage: pagename, currentProps: pageprops})
+        set({ drawerOpen: false, rightDrawerOpen: false, currentPage: pagename, currentProps: pageprops})
     }
 }))
 

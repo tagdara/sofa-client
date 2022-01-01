@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useDidUpdate } from '@mantine/hooks';
 import { selectStack } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
 import { SegmentedControl, useMantineTheme } from '@mantine/core';
@@ -7,24 +8,44 @@ import { BsLightbulb as Lightbulb } from "react-icons/bs";
 
 const BottomBar = props => {
 
-    const theme = useMantineTheme();
+    const [ displayStack, setDisplayStack] = useState(undefined)
     const currentStack = useLayoutStore( state => state.currentStack)
+    const theme = useMantineTheme();
+    const setTransitionDirection = useLayoutStore( state => state.setTransitionDirection)
+
+    useDidUpdate(() => {
+        if (currentStack) {
+            setDisplayStack(currentStack)
+        }
+    }, [ currentStack ])
 
     const pickStack = newStack => {
         if (newStack === "System") {
             props.open()
             selectStack(currentStack)
         } else {
+            if (getPosition(newStack) > getPosition(currentStack)) {
+                setTransitionDirection("slide-left")
+            }
+            else if (getPosition(newStack) < getPosition(currentStack)) {
+                setTransitionDirection("slide-right")
+            } else {
+                setTransitionDirection("fade")
+            }
             selectStack(newStack)
         }
     }
 
-    const iconsOnly= [
-        { value: "System",              "label": <Menu size={20} />},
+    const getPosition = val => {
+        return selections.findIndex(p => p.value === val)
+    }
+
+    const selections= [
         { value: "Audio Video",         "label": <Music size={20} /> },
         { value: "Lights and Comfort",  "label": <Lightbulb size={20} /> }, 
         { value: "Climate",             "label": <Thermometer size={20} /> }, 
         { value: "Security",            "label": <Shield size={20} /> }, 
+        { value: "System",              "label": <Menu size={20} />},
     ]
 
     return (
@@ -32,8 +53,8 @@ const BottomBar = props => {
                 fullWidth 
                 color={theme.primaryColor}
                 onChange={pickStack} 
-                value={currentStack} 
-                data={iconsOnly} 
+                value={displayStack} 
+                data={selections} 
                 style={{    minHeight: 48,
                             alignItems: "center",
                             marginBottom: "env(safe-area-inset-bottom)"

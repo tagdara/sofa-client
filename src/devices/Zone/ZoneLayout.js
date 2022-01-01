@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { selectPage } from 'helpers/layoutHelpers';
 import { endpointIdsByDisplayCategory, hasDescription, getChangeTimesForDevices } from 'store/deviceHelpers';
 import { sortByName } from 'store/deviceHelpers'
-import { Group } from '@mantine/core';
-import { PageFrame } from 'device-model/instance/PageFrame'
-import SectionHeader from 'components/SectionHeader';
+import SectionFrame from 'layout/SectionFrame'
+import SectionGrid from 'layout/SectionGrid'
+import SectionDivider from 'layout/SectionDivider'
+import PageFrame from 'layout/PageFrame'
+import SectionHeader from 'components/SectionHeader'
 import Zone from 'devices/Zone/Zone';
+import HomeButton from 'layout/HomeButton';
 
 const ZoneLayout = props => {
 
@@ -33,20 +36,26 @@ const ZoneLayout = props => {
     }
 
     return (    
-        <Group direction="column">
-            <SectionHeader title={"Security Zones"} />
-            <PageFrame>
-                { securityZones.map(endpointId =>
-                    <Zone key={ endpointId } endpointId={endpointId} history={historyZone} changeTime={ getChangeTime(endpointId) } />
-                )}
-            </PageFrame>
-            <SectionHeader title={"Automation Zones"} />
-            <PageFrame>
-                { automationZones.map(endpointId =>
-                    <Zone key={ endpointId } endpointId={endpointId} history={historyZone} changeTime={ getChangeTime(endpointId) } />
-                )}
-            </PageFrame>
-        </Group>
+        <PageFrame>
+            <SectionHeader title={"Zones"} />
+            <SectionFrame>
+                <SectionDivider label={"Security Zones"} />
+                <SectionGrid>
+                    { securityZones.map(endpointId =>
+                        <Zone key={ endpointId } endpointId={endpointId} history={historyZone} changeTime={ getChangeTime(endpointId) } />
+                    )}
+                </SectionGrid>
+                <SectionDivider label={"Automation Zones"} />
+                <SectionGrid>
+                    { automationZones.map(endpointId =>
+                        <Zone key={ endpointId } endpointId={endpointId} history={historyZone} changeTime={ getChangeTime(endpointId) } />
+                    )}
+                </SectionGrid>
+            </SectionFrame>
+            <SectionHeader>
+                <HomeButton />
+            </SectionHeader>
+        </PageFrame>
     )
 };
 

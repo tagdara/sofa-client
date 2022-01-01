@@ -2,6 +2,7 @@ import React from 'react';
 import Receiver from 'devices/Receiver/Receiver';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
+import StackCard from 'components/StackCard'
 
 const ReceiverHero = props => {
 
@@ -11,7 +12,9 @@ const ReceiverHero = props => {
     return (
         <>
             { receivers.map( receiver => 
-                <Receiver endpointId={receiver} wide={props.wide} key={receiver} />
+                <StackCard key={receiver}>
+                    <Receiver endpointId={receiver} wide={props.wide} key={receiver} />
+                </StackCard>
             )}
         </>
     )

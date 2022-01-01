@@ -38,7 +38,7 @@ const ActivityDetails = props => {
     return (    
         <Group noWrap position="apart" spacing="xl" style={{width: "100%", alignItems: "end"}} >
             <Badge>{endpointId}</Badge>
-            <Text>{"Last Run:" + lastRun}</Text>
+            <Text lineClamp={1}>{"Last Run:" + lastRun}</Text>
             <Group noWrap>
                 <ActionIcon size="lg" onClick={() => runAutomation()}>
                     <Play size={20} />

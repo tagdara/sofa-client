@@ -5,7 +5,7 @@ import { directive } from 'store/directive'
 import { getModes } from 'store/deviceHelpers'
 import { Collapse, Group, Switch } from '@mantine/core'
 import { Speaker } from 'react-feather'
-import StackCard from 'components/StackCard'
+
 import ReceiverInputSelect from 'devices/Receiver/ReceiverInputSelect'
 import ReceiverSurroundSelect from 'devices/Receiver/ReceiverSurroundSelect'
 import { useRegister } from 'store/useRegister'
@@ -54,7 +54,6 @@ const Receiver = props => {
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
-        <StackCard>
             <Group direction="column" grow noWrap spacing="xl">
                 <CardLine   arrow avatar={ <Speaker /> }
                             color={ on ? "primary" : undefined}
@@ -83,7 +82,6 @@ const Receiver = props => {
                     </Group>
                 </Collapse>
             </Group>
-        </StackCard>
     );
 }
 

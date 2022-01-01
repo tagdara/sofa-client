@@ -25,7 +25,7 @@ export const selectPage = (pagename, pageprops) => {
             useLayoutStore.setState({ breadCrumbs: [...breadCrumbs, { "page":currentPage, "props":currentProps }] })
         }
     }
-    useLayoutStore.setState({ drawerOpen: false, rightDrawerOpen: false, currentStack: undefined, currentPage: pagename, currentProps: pageprops})
+    useLayoutStore.setState({ drawerOpen: false, rightDrawerOpen: false, currentPage: pagename, currentProps: pageprops})
 }
 
 

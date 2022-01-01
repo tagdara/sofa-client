@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Group, Skeleton } from '@mantine/core';
+import { Card, Group } from '@mantine/core';
 
 export default function PlaceholderCard(props){
     
@@ -7,7 +7,7 @@ export default function PlaceholderCard(props){
         if (props.inset) {
             return <div>{children} </div>
         } else {
-            return  <Card style={{  width: "100%"}} >
+            return  <Card style={{  width: "100%", background: "rgba(0,0,0,0)" }} >
                         { children }
                     </Card>
         }
@@ -16,16 +16,28 @@ export default function PlaceholderCard(props){
     return (
         isInset(
             <Group direction="column" noWrap style={{ width: "100%"}} >
-                <Skeleton height={20} circle  /> 
                 { [...Array(props.count).keys()].map( index =>
                     <Group key={index}>
-                        <Skeleton height={8} radius="xl" width="90%"/>
-                        <Skeleton height={8} radius="xl" width="70%"/>
+                        <div style={{ height: 12}} />
                     </Group>
                 )}
             </Group>
         )
     );
+
+    //return (
+    //    isInset(
+    //        <Group direction="column" noWrap style={{ width: "100%"}} >
+    //            <Skeleton height={20} circle  /> 
+     //           { [...Array(props.count).keys()].map( index =>
+     //               <Group key={index}>
+    //                    <Skeleton height={8} radius="xl" width="90%"/>
+    //                    <Skeleton height={8} radius="xl" width="70%"/>
+    //                </Group>
+    //            )}
+    //        </Group>
+    //    )
+    //);
 
 }
 

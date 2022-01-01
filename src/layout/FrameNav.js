@@ -59,7 +59,7 @@ const FrameNav = props => {
                     { ( navMode !== "activities"  ) &&
                         <NavButton highlight icon={<List size={20} />} label="Activities" onClick={() => setNavMode('activities')} />
                     }
-                    <NavButton highlight label={"Back to Home"} arrow onClick={props.close} />
+                    <NavButton highlight label={"Home"} arrow onClick={props.close} />
                 </Group>
             </Navbar.Section>
         </Navbar>

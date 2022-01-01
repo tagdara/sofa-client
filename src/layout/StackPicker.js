@@ -8,8 +8,6 @@ const StackPicker = props => {
     const isMobile = useLayoutStore(state => state.isMobile ) 
     const { maxStacks } = usePageFrame()
 
-    console.log('ps', props.style)
-
     if (isMobile || (stackLayout.length <= maxStacks)) { 
         return <Text weight={600} size="lg" style={props.style}>{props.stack}</Text>
     }

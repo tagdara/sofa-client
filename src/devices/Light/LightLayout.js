@@ -4,16 +4,20 @@ import LightLine from 'devices/Light/LightLine';
 import useDeviceStore from 'store/deviceStore'
 import { sortByName } from 'store/deviceHelpers'
 import { Button, Group } from '@mantine/core';
-import { PageFrame } from 'device-model/instance/PageFrame'
+
 import SectionHeader from 'components/SectionHeader';
+import SectionFrame from 'layout/SectionFrame'
+import SectionGrid from 'layout/SectionGrid'
+import PageFrame from 'layout/PageFrame'
+import HomeButton from 'layout/HomeButton';
 
 const LightLayout = props => {
 
     const [filter, setFilter] = useState(props.filter);
     const lights = sortByName(useDeviceStore(useCallback(state => Object.keys(state.devices).filter( dev => state.devices[dev].displayCategories.includes('LIGHT')), [])))
 
-    return (    
-        <Group direction="column" noWrap style={{ width: "100%", overflow: "hidden"}}>
+    return (  
+        <PageFrame>
             <SectionHeader title={"Lights"} >
                 <Group spacing="xs">
                     <Button compact variant={ filter==='ALL' ? undefined : "light"}  size="sm" onClick={ () => setFilter('ALL') }  >
@@ -24,13 +28,18 @@ const LightLayout = props => {
                     </Button>
                 </Group>
             </SectionHeader >
-            <PageFrame>
+            <SectionFrame>
+                <SectionGrid>
                 { lights.map( endpointId =>
                     <LightLine  key={ endpointId } endpointId={endpointId}  small={true} filter={filter} remove={props.remove}
                     />
                 )}
-            </PageFrame>
-        </Group>
+                </SectionGrid>
+            </SectionFrame>
+            <SectionHeader>
+                <HomeButton />
+            </SectionHeader>
+        </PageFrame>
     )
 }
 

@@ -1,8 +1,10 @@
 import React, { useEffect, useState} from 'react';
 import { Group, Transition } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks'
+import usePageFrame from 'helpers/usePageFrame'
 
 const PageFrame = props => {
+    const { stacksWidth } = usePageFrame()
     const wide = useMediaQuery('(min-width: 640px)');
     // Used to fill in the space between the top of the screen and possible navbar and the bottom of the screen and the potential bottombar
     // <Group direction="column" noWrap style={{ width: "100%", overflow: "hidden", paddingBottom: 8 }}></Group>
@@ -17,7 +19,7 @@ const PageFrame = props => {
     return (
         <Transition mounted={ mounted }  transition={"fade"} duration={100} timingFunction="ease">
             {(styles) => 
-                <Group direction="column" noWrap style={{ ...styles, height: "100%", overflow: "hidden", margin: "0 auto", width: "100%", paddingBottom : wide ? 64 : 8 }} >
+                <Group direction="column" noWrap style={{ ...styles, maxWidth: props.maxWidth ? props.maxWidth : stacksWidth, height: "100%", overflow: "hidden", margin: "0 auto", width: "100%", paddingBottom : wide ? 64 : 8 }} >
                     { props.children}
                 </Group>
             }

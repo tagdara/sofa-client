@@ -7,25 +7,29 @@ import { directive } from 'store/directive'
 import { isReachable } from 'store/deviceHelpers'
 import { useRegister } from 'store/useRegister'
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import useDisplayValue from 'helpers/useDisplayValue'
 
 const LightLine = props => {
 
     const [showPopover, setShowPopover] = useState(props.showAll)
     const { device, deviceState } = useRegister(props.endpointId)
+    const name = device ? device.friendlyName : "Unknown"
+    const reachable = isReachable(deviceState)
+    const on = deviceState && deviceState.PowerController.powerState.value === 'ON'
+    const { displayValue, change } = useDisplayValue( on, applyPowerChange )
 
-    function handlePowerChange(event) {
-        directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
+    function applyPowerChange(val) {
+        directive(props.endpointId, 'PowerController', val ? 'TurnOn' : 'TurnOff')
     }; 
+
+    //function handlePowerChange(event) {
+    //    directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
+    //}; 
 
     function stopEventPropagation(event) {
         // switches use onChange but onClick needs to also be blocked for nested items
         event.stopPropagation()
     }
-
-    //const expanded = showAll || props.brightControl || props.tempControl || props.colorControl
-    const name = device ? device.friendlyName : "Unknown"
-    const reachable = isReachable(deviceState)
-    const on = deviceState && deviceState.PowerController.powerState.value === 'ON'
 
     function filtered(filter) {
         
@@ -72,8 +76,8 @@ const LightLine = props => {
             />
             <SplitButton>
                 { (reachable && !props.remove ) &&
-                    <Switch checked={on} 
-                            onChange={handlePowerChange} onClick={stopEventPropagation} 
+                    <Switch checked={displayValue} 
+                            onChange={change} onClick={stopEventPropagation} 
                     />
                 }
                 { props.remove && 

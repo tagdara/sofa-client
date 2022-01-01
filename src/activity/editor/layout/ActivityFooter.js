@@ -6,6 +6,7 @@ import { Button, Group, ActionIcon} from '@mantine/core';
 import SectionHeader from 'layout/SectionHeader'
 import { directive  } from 'store/directive';
 import { selectPage } from 'helpers/layoutHelpers';
+import ActivityAddMenu from 'activity/editor/layout/ActivityAddMenu'
 
 export default function ActivityFooter(props) {
 
@@ -34,16 +35,18 @@ export default function ActivityFooter(props) {
         }
         catch {}
     }    
+
     return (
         <SectionHeader>
             <ActionIcon variant="light" size="md" onClick={() => selectPage('ActivitiesPage')}>
                 <X size={20} />
             </ActionIcon>
+            <ActivityAddMenu add={props.add} />
             <Button size="sm" disabled={ !okToSave } 
                     leftIcon={ endpointId ? <Save size={20} /> : <Plus size={20} /> } 
                     onClick={endpointId ? saveActivity : addActivity }
             >
-                { endpointId ? "Save" : "Add" }
+                { "Save" }
             </Button>
             <Group noWrap position="right">
                 <ActionIcon variant="light" size="md" onClick={() => runAutomation()}>

@@ -10,6 +10,7 @@ const BottomBar = props => {
 
     const [ displayStack, setDisplayStack] = useState(undefined)
     const currentStack = useLayoutStore( state => state.currentStack)
+    const currentPage = useLayoutStore(state => state.currentPage)
     const theme = useMantineTheme();
     const setTransitionDirection = useLayoutStore( state => state.setTransitionDirection)
 
@@ -18,6 +19,8 @@ const BottomBar = props => {
             setDisplayStack(currentStack)
         }
     }, [ currentStack ])
+
+    if (currentPage !== "Stacks") { return null }
 
     const pickStack = newStack => {
         if (newStack === "System") {

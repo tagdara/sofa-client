@@ -6,7 +6,7 @@ import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import SectionDivider from 'layout/SectionDivider'
 import PageFrame from 'layout/PageFrame'
-import SectionHeader from 'components/SectionHeader'
+import SectionHeader from 'layout/SectionHeader'
 import Zone from 'devices/Zone/Zone';
 import HomeButton from 'layout/HomeButton';
 

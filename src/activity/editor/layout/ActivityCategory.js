@@ -1,12 +1,17 @@
 import React from 'react';
 import ActivitySectionButtons from "activity/editor/layout/ActivitySectionButtons"
-import SectionHeader from 'components/SectionHeader';
-import { SectionFrame } from 'device-model/instance/PageFrame';
+import SectionHeader from 'layout/SectionHeader';
+import { Group } from '@mantine/core';
+
 
 const ActivityCategory = props => {
 
+    if (!props.children || props.children.length < 1) {
+        return null
+    }
+
     return (
-        <>
+        <Group direction="column" spacing="xs">
             <SectionHeader title={props.name} >
                 <ActivitySectionButtons 
                     add = { props.add } 
@@ -17,10 +22,8 @@ const ActivityCategory = props => {
                     count = { props.count }
                 />
             </SectionHeader>
-            <SectionFrame cols={1}>
-                { props.children }
-            </SectionFrame>
-        </>
+            { props.children }
+        </Group>
     )
 };
 

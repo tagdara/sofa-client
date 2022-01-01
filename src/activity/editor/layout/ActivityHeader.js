@@ -1,12 +1,12 @@
 import React from 'react';
-import { ActionIcon, Group } from '@mantine/core';
+import { ActionIcon, Group, Paper } from '@mantine/core';
 import { Star } from 'react-feather'
 
 import ActivityName from "activity/editor/layout/ActivityName"
 import ActivityDetails from "activity/editor/layout/ActivityDetails"
 import { isFavorite, makeFavorite } from 'store/deviceHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
-import SectionHeader from 'components/SectionHeader';
+import SectionHeader from 'layout/SectionHeader';
 
 const ActivityHeader = props => {
 
@@ -20,6 +20,7 @@ const ActivityHeader = props => {
 
     return (
         <SectionHeader>
+            <Paper style={{ width: "100%", padding: "4px 8px" }}>
             <Group direction="column" style={{ width: "100%" }}>
                 <ActivityName>
                     <ActionIcon size="lg" color={favorite ? "primary" : undefined} variant={ favorite ? "light" : undefined} onClick={toggleFavorite}>
@@ -28,6 +29,7 @@ const ActivityHeader = props => {
                 </ActivityName>
                 <ActivityDetails />
             </Group>
+            </Paper>
         </SectionHeader>    
     )
 

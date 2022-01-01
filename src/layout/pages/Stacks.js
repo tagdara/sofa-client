@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import CardStack from 'layout/CardStack';
 import useLayoutStore from 'store/layoutStore'
 import { refreshStackLayout } from 'helpers/layoutHelpers';
-import { PageFrame, usePageFrame } from 'device-model/instance/PageFrame'
+import PageFrame from 'layout/PageFrame'
+import usePageFrame from 'helpers/usePageFrame'
+
 
 export default function Stacks(props) {
 

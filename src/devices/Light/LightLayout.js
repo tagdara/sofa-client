@@ -1,11 +1,11 @@
 import React, { useState, useCallback }  from 'react';
 
+import { SegmentedControl } from '@mantine/core';
 import LightLine from 'devices/Light/LightLine';
 import useDeviceStore from 'store/deviceStore'
 import { sortByName } from 'store/deviceHelpers'
-import { Button, Group } from '@mantine/core';
 
-import SectionHeader from 'components/SectionHeader';
+import SectionHeader from 'layout/SectionHeader';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
@@ -16,17 +16,21 @@ const LightLayout = props => {
     const [filter, setFilter] = useState(props.filter);
     const lights = sortByName(useDeviceStore(useCallback(state => Object.keys(state.devices).filter( dev => state.devices[dev].displayCategories.includes('LIGHT')), [])))
 
+    const selections= [
+        { value: "ALL", "label": "All" },
+        { value: "ON",  "label": "On"  }, 
+
+    ]
+
     return (  
         <PageFrame>
             <SectionHeader title={"Lights"} >
-                <Group spacing="xs">
-                    <Button compact variant={ filter==='ALL' ? undefined : "light"}  size="sm" onClick={ () => setFilter('ALL') }  >
-                        All
-                    </Button>
-                    <Button compact variant={ filter==='ON' ? undefined : "light"} size="sm" onClick={ () => setFilter('ON')}>
-                        On
-                    </Button>
-                </Group>
+                <SegmentedControl 
+                        fullWidth 
+                        onChange={setFilter} 
+                        value={filter} 
+                        data={selections} 
+                />
             </SectionHeader >
             <SectionFrame>
                 <SectionGrid>

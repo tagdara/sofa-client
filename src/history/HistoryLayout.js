@@ -3,8 +3,10 @@ import { Button, Group } from '@mantine/core';
 import { getHistoryForDevice, friendlyNameByEndpointId } from 'store/deviceHelpers';
 
 import HistoryLine from 'history/HistoryLine';
-import { SectionFrame } from 'device-model/instance/PageFrame'
-import SectionHeader from 'components/SectionHeader';
+import PageFrame from 'layout/PageFrame'
+import SectionGrid from 'layout/SectionGrid'
+import SectionHeader from 'layout/SectionHeader';
+import SectionDivider from 'layout/SectionDivider';
 
 export default function HistoryLayout(props) {
 
@@ -38,7 +40,8 @@ export default function HistoryLayout(props) {
                 curmonth=hdate.getMonth()
                 curday=hdate.getDate()
                 var labelName = dayNames[hdate.getDay()]+", "+monthNames[curmonth]+" "+curday
-                current_parent = <SectionFrame title={labelName} key={labelName} children={[]} />
+                datesorted.push(<SectionDivider label={labelName} />)
+                current_parent = <SectionGrid key={labelName} />
                 // current_parent = <GridSection key={labelName} name={labelName} children={[]} />
             }
             current_parent.props.children.push(<HistoryLine justTime={true} key={val+hdate.toISOString()} val={val} time={ history[j].time } />)
@@ -50,7 +53,7 @@ export default function HistoryLayout(props) {
     const name = friendlyNameByEndpointId(props.endpointId)
 
     return (   
-        <> 
+        <PageFrame> 
             <SectionHeader title={"Device History for " + name} />
             <Group direction="column" style={{ width: "100%"}} >
                 { todayEvents(true) }
@@ -58,7 +61,7 @@ export default function HistoryLayout(props) {
                     More
                 </Button>
             </Group>
-        </>
+        </PageFrame>
     )
 
 };

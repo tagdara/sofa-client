@@ -19,7 +19,7 @@ const FrameNav = props => {
 
     return (
         <Transition mounted={props.opened} 
-                    transition={"slide-right"} 
+                    transition={wide ? "slide-right" : "slide-left"} 
                     duration={200} 
                     timingFunction="ease">
         {( styles) => (

@@ -2,7 +2,7 @@ import React from "react";
 
 import { sortByName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
 import AdapterItem from 'devices/Adapter/AdapterItem';
-import { PageFrame } from 'device-model/instance/PageFrame'
+import PageFrame from 'layout/PageFrame'
 
 export default function AdapterLayout(props) {
 

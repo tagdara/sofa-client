@@ -1,7 +1,7 @@
 import React from 'react';
 import useLayoutStore from 'store/layoutStore'
 import { Select, Text } from '@mantine/core';
-import { usePageFrame } from 'device-model/instance/PageFrame'
+import { usePageFrame } from 'helpers/usePageFrame'
 
 const StackPicker = props => {
     const stackLayout = useLayoutStore(state => state.stackLayout )    

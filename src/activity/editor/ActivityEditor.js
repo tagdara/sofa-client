@@ -5,7 +5,7 @@ import ActivityActions from "activity/editor/action/ActivityActions"
 //import ActivitySchedules from "activity/editor/schedule/ActivitySchedules"
 
 import ActivityHeader from "activity/editor/layout/ActivityHeader"
-//import ActivitySave from "activity/editor/layout/ActivitySave"
+import ActivityFooter from "activity/editor/layout/ActivityFooter"
 import { loadActivity, newActivity } from 'store/activityEditorHelpers';
 
 import SectionFrame from 'layout/SectionFrame'
@@ -31,6 +31,7 @@ export default function ActivityEditor(props) {
                 <ActivityConditions />
                 <ActivityActions />
             </SectionFrame>
+            <ActivityFooter />
         </PageFrame>
     )
     //          <ActivitySchedules wide={wide} />

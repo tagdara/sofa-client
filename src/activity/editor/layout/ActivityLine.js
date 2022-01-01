@@ -1,7 +1,7 @@
 import React from 'react';
 import ActivityItemActions from 'activity/editor/layout/ActivityItemActions';
 import { Group, Paper, SimpleGrid } from '@mantine/core';
-import { usePageFrame } from 'device-model/instance/PageFrame'
+import { usePageFrame } from 'helpers/usePageFrame'
 
 const ActivityLine = props => {
     const { maxStacks } = usePageFrame()

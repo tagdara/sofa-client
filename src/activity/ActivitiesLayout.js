@@ -8,7 +8,7 @@ import { loadActivities, deleteActivity } from 'store/activityHelpers';
 import { ActionIcon, Group } from '@mantine/core';
 import { Clock, Trash2, Star, Plus } from 'react-feather';
 
-import SectionHeader from 'components/SectionHeader';
+import SectionHeader from 'layout/SectionHeader';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'

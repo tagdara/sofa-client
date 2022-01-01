@@ -1,6 +1,6 @@
 import React, { useState} from 'react';
 import { AiOutlineQrcode } from 'react-icons/ai'
-import SectionHeader from 'components/SectionHeader';
+import SectionHeader from 'layout/SectionHeader';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'

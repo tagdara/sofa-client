@@ -17,7 +17,7 @@ const PageFrame = props => {
     return (
         <Transition mounted={ mounted }  transition={"fade"} duration={100} timingFunction="ease">
             {(styles) => 
-                <Group direction="column" noWrap style={{ ...styles, height: "100%", overflow: "hidden", margin: "0 auto", width: "100%", paddingBottom : wide ? 64 : 16 }} >
+                <Group direction="column" noWrap style={{ ...styles, height: "100%", overflow: "hidden", margin: "0 auto", width: "100%", paddingBottom : wide ? 64 : 8 }} >
                     { props.children}
                 </Group>
             }

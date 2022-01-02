@@ -5,7 +5,7 @@ import { refreshStackLayout } from 'helpers/layoutHelpers';
 import PageFrame from 'layout/PageFrame'
 import usePageFrame from 'helpers/usePageFrame'
 import SectionGrid from 'layout/SectionGrid'
-
+import SectionFrame from 'layout/SectionFrame'
 
 export default function Stacks(props) {
 
@@ -31,11 +31,13 @@ export default function Stacks(props) {
 
     return (
         <PageFrame>
+            <SectionFrame>
             <SectionGrid>
             { filterStacks().map( stack =>
                 <CardStack key={stack} stack={ stack }  />
             )}
             </SectionGrid>
+            </SectionFrame>
         </PageFrame>
     );
 }

@@ -1,77 +1,98 @@
 import create from 'zustand'
 import { storeUpdater } from 'store/storeUpdater'
-import useLoginStore from 'store/loginStore'
+import { tokenFetch } from 'store/tokenFetch'
+import produce from "immer"
 
-const serverUrl = "https://"+window.location.hostname;
-const registerUrl = serverUrl + "/register_devices";
+const registerUrl = "/register_devices";
 
-const removeKey = (key, {[key]: _, ...rest}) => rest;
+//const removeKey = (key, {[key]: _, ...rest}) => rest;
+
+// TODO - This works for now, but many small controls can trigger a ton of registrations.  Should find a way to debounce these changes with a short delay in updating
 
 const useRegisterStore = create((set, get) => ({
+//const useRegisterStore = create(persist( (set, get) => ({
+    ready: false,
     registered: {},
     adds: [],
     removes: [],
+    setReady: newReady => set ({ready: newReady}),
+    refresh: async () => {
+        const endpointIds = Object.keys(get().registered)
+        const data = { add : endpointIds }
+        const result = await tokenFetch(registerUrl, data)
+        storeUpdater({ "event": {"header": {"name": "multiple StateReports"}}, "data": result })
+    },
     add: async (endpointIds, source) => {
         if (!Array.isArray(endpointIds)) {
             endpointIds=[endpointIds]
         }
         var adds = []
-        var result = endpointIds.reduce(function (data, endpointId) {
-            if (!data[endpointId]) {
-                data[endpointId] = []
-            }
-            if (!data[endpointId].includes(source)) {
-                data[endpointId] = [ ...data[endpointId], source ]
-                if (!adds.includes(endpointId)) {
-                    adds = [...adds, endpointId ]
-                }
+        var current = get().registered
+        var updatedRegistered = endpointIds.reduce(function (data, endpointId) {
+            if (!current.hasOwnProperty(endpointId)) {
+                set(produce(state => { state.registered[endpointId] = [ source ] }))
+                //data[endpointId] = [ source ]
+                adds = [...adds, endpointId ]
+            } else if (!current[endpointId].includes(source)) {
+                set(produce(state => { state.registered[endpointId] = [ ...current[endpointId], source ] }))
+                //data[endpointId] = [ ...data[endpointId], source ]
             }
             return data
-        }, get().registered)
-        if (adds) {
+        }, current)
+
+        if (get().ready && adds && adds.length > 0 ) {
             // we may use a pending flag to aggregate changes later but for now we will
             // just not write the adds to the final set
-            const accessToken = useLoginStore.getState().access_token;
-            const headers = { authorization : accessToken }
-            const body = { add: adds }
-            const response = await fetch(registerUrl, {  headers: headers, method: "post", body: JSON.stringify(body)})
-            const addResult = await response.json()
+            const data = { add: adds }
+            console.log('register', data)
+            const result = await tokenFetch(registerUrl, data)
             //console.log('addresult', body, addResult)
-            storeUpdater({ "event": {"header": {"name": "multiple StateReports"}}, "data": addResult })
+            storeUpdater({ "event": {"header": {"name": "multiple StateReports"}}, "data": result })
         }
-        set({ registered: result })
+
+        set({ registered: updatedRegistered })
     },
     remove: async (endpointIds, source) => {
         if (!Array.isArray(endpointIds)) {
-            endpointIds=[endpointIds]
+            endpointIds = [ endpointIds ]
         }
         var removes = []
-        var result = endpointIds.reduce(function (data, endpointId) {
+        var current = get().registered
+        endpointIds.reduce(function (data, endpointId) {
             if (data[endpointId] && data[endpointId].includes(source)) {
-                data[endpointId] = data[endpointId].filter( src => src !== source )
-                if (data[endpointId].length<1) {
-                    data = removeKey(endpointId, data)
+                console.log('data', data[endpointId])
+                var currentEndpoint = current[endpointId].filter( src => src !== source )
+                set(produce(state => { state.registered[endpointId] = currentEndpoint }))
+                if ( currentEndpoint.length < 1 ) {
+                    console.log('should be removed', endpointId, data)
+                    //data = removeKey(endpointId, data)
+                    //set(produce(state => { delete state.registered[endpointId] }))
                     if (!removes.includes(endpointId)) {
                         removes = [...removes, endpointId ]
                     }
                 }
             }
             return data
-        }, get().registered)
-        if (result.removes) {
+        }, current )
+        removes.map( endpointId => (
+            set(produce(state => { delete state.registered[endpointId] }))
+        ))
+        if ( removes && removes.length > 0 ) {
             // we may use a pending flag to aggregate changes later but for now we will
             // just not write the adds to the final set
-            const accessToken = useLoginStore.getState().access_token;
-            const headers = { authorization : accessToken }
-            const body = { removes: result.removes }
-            const response = await fetch(registerUrl, {  headers: headers, method: "post", body: JSON.stringify(body)})
-            const removeResult = await response.json()
-            console.log('removeresult', result.removes, removeResult)
-            result.removes=[]
+            const data = { remove: removes }
+            await tokenFetch(registerUrl, data)
         }
-        //console.log('removeresult', result)
-        set({ registered: result })
+        //console.log('removeresult', updatedRegistered)
+        //set({ registered: updatedRegistered })
     }
-}))
+    }
+    //)
+    // ,
+    // {
+    //    name: "register", // unique name
+    //    getStorage: () => localStorage, // (optional) by default the 'localStorage' is used        
+    // }
+))
 
 export default useRegisterStore;

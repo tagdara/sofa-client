@@ -20,7 +20,7 @@ const BottomBar = props => {
         }
     }, [ currentStack ])
 
-    if (currentPage !== "Stacks") { return null }
+    if (currentPage !== "Stacks") { return <div style={{ height: 1, marginBottom: "env(safe-area-inset-bottom)" }} /> }
 
     const pickStack = newStack => {
         if (newStack === "System") {

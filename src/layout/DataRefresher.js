@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useUserStore from 'store/userStore'
 import { discovery, refreshDirectives, refreshProperties } from 'store/directive'
-import { Button, Group } from '@mantine/core'
+import { Button, Group, Text } from '@mantine/core'
 import { CloudOff } from 'react-feather';
 
 import useStream from 'store/useStream'
@@ -11,7 +11,8 @@ export default function SofaFrame(props) {
 
     const refreshUser = useUserStore(state => state.refresh)
     const [ refreshed, setRefreshed ] = useState(false) // This should actually leverage the store and stream state instead
-    const { streamConnected, streamStatus, streamLabel } = useStream(storeUpdater)
+    const { streamConnected, streamStatus, streamLabel, url } = useStream(storeUpdater)
+    const [ details, setDetails] = useState(false)
 
     useEffect(() => {
         refreshDirectives()
@@ -22,11 +23,30 @@ export default function SofaFrame(props) {
         // eslint-disable-next-line 
     }, [])
 
+    //<Button color="red" fullWidth variant={'light'} leftIcon={<CloudOff size={20} />} loading >
+    //    {streamLabel} { url} {streamStatus} { refreshed }
+    //</Button>
+
+
     if (!streamConnected || streamStatus !== 1 ) {
-        return  <Group>
-                    <Button color="red" fullWidth variant={'light'} leftIcon={<CloudOff size={20} />} loading >
-                        {streamLabel} {streamStatus} { refreshed }
+        return  <Group direction="column">
+                    <Button color="red" 
+                            fullWidth 
+                            variant={'light'} 
+                            leftIcon={<CloudOff size={20} /> }
+                            loading 
+                            onClick={() => setDetails(!details)}
+                    >
+                        {streamLabel} {streamStatus}
                     </Button>
+                    { details &&
+                        <>
+                            <Text size="xs" lineClamp={1}>{streamLabel}</Text>
+                            <Text size="xs" lineClamp={1}>{url}</Text>
+                            <Text size="xs" lineClamp={1}>{streamStatus}</Text>
+                            <Text size="xs" lineClamp={1}>{refreshed}</Text>
+                        </>
+                    }
                 </Group>
     }
 

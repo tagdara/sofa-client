@@ -51,17 +51,19 @@ export const useStream = ( dataProcessor ) => {
 
     const streamStatus = getStreamStatus()
     const streamConnected = getConnected()
+    const url = serverurl + "/sse"
     
     const connectStream = () => {
         if (!isConnecting) {
             setStreamLabel('connect')
             console.log('connect stream')
             setIsConnecting(true)
-            var esource = new EventSource(serverurl+"/sse", { withCredentials: true })
+            var esource = new EventSource(url, { withCredentials: true })
             esource.addEventListener('message', dataHandler);
             esource.addEventListener('error', errorHandler);
             esource.addEventListener('open', openHandler);
             setEventSource(esource)
+            setStreamLabel('connected'+ esource.readyState)
         } else {
             setStreamLabel('not trying')
             console.log('didnt even try to connect stream' )
@@ -75,7 +77,7 @@ export const useStream = ( dataProcessor ) => {
 
     const errorHandler = (e) => {
         console.log('ERROR with EventSource',e )
-        setStreamLabel('error')
+        setStreamLabel('error '+JSON.stringify(e, ["message", "arguments", "type", "name"]))
         checkToken()
     }
 
@@ -119,7 +121,7 @@ export const useStream = ( dataProcessor ) => {
     // eslint-disable-next-line    
     }, [ accessToken, isConnecting, streamConnected, streamStatus]);
     
-    return { streamConnected, streamStatus, streamLabel };
+    return { url, streamConnected, streamStatus, streamLabel };
 };
 
 export default useStream

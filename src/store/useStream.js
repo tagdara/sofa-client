@@ -22,6 +22,7 @@ export const useStream = ( dataProcessor ) => {
     const checkToken = useLoginStore(state => state.checkToken)
     const [eventSource, setEventSource] = useState(undefined)
     const [isConnecting, setIsConnecting] = useState(false)
+    const [ streamLabel, setStreamLabel ] = useState('Initial')
 
     useEffect(() => {
         if (accessToken) {
@@ -53,6 +54,7 @@ export const useStream = ( dataProcessor ) => {
     
     const connectStream = () => {
         if (!isConnecting) {
+            setStreamLabel('connect')
             console.log('connect stream')
             setIsConnecting(true)
             var esource = new EventSource(serverurl+"/sse", { withCredentials: true })
@@ -61,33 +63,21 @@ export const useStream = ( dataProcessor ) => {
             esource.addEventListener('open', openHandler);
             setEventSource(esource)
         } else {
+            setStreamLabel('not trying')
             console.log('didnt even try to connect stream' )
         }
     }
 
-   const openHandler = () => {
-        //console.log('SSE Opened')
-        //setConnected(true)
+    const openHandler = () => {
+        setStreamLabel('open')
         setIsConnecting(false)
     }
 
     const errorHandler = (e) => {
         console.log('ERROR with EventSource',e )
+        setStreamLabel('error')
         checkToken()
-        //reloadPWA()
-        ////setConnected(false)
-        ////connectStream()
     }
-
-    //function reloadPWA() {
-        
-    //    if ('serviceWorker' in navigator) {
-    //        navigator.serviceWorker.ready.then(registration => {
-    //            registration.unregister();
-    //        });
-    //    }
-    //    window.location.reload(true)
-    //}
 
     const dataHandler = event => {
         //deviceDispatch(JSON.parse(event.data));
@@ -118,7 +108,8 @@ export const useStream = ( dataProcessor ) => {
 
     useEffect(() => {
         let unmounted = false;
-        if (!streamConnected && !unmounted && !isConnecting && streamStatus!==1 && accessToken) {
+        if (!streamConnected && !unmounted && !isConnecting && accessToken) {
+            setStreamLabel('connect needed')
             connectStream()
         }
             
@@ -128,7 +119,7 @@ export const useStream = ( dataProcessor ) => {
     // eslint-disable-next-line    
     }, [ accessToken, isConnecting, streamConnected, streamStatus]);
     
-    return { streamConnected, streamStatus };
+    return { streamConnected, streamStatus, streamLabel };
 };
 
 export default useStream

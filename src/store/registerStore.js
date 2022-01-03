@@ -44,7 +44,6 @@ const useRegisterStore = create((set, get) => ({
             // we may use a pending flag to aggregate changes later but for now we will
             // just not write the adds to the final set
             const data = { add: adds }
-            console.log('register', data)
             const result = await tokenFetch(registerUrl, data)
             //console.log('addresult', body, addResult)
             storeUpdater({ "event": {"header": {"name": "multiple StateReports"}}, "data": result })
@@ -60,11 +59,9 @@ const useRegisterStore = create((set, get) => ({
         var current = get().registered
         endpointIds.reduce(function (data, endpointId) {
             if (data[endpointId] && data[endpointId].includes(source)) {
-                console.log('data', data[endpointId])
                 var currentEndpoint = current[endpointId].filter( src => src !== source )
                 set(produce(state => { state.registered[endpointId] = currentEndpoint }))
                 if ( currentEndpoint.length < 1 ) {
-                    console.log('should be removed', endpointId, data)
                     //data = removeKey(endpointId, data)
                     //set(produce(state => { delete state.registered[endpointId] }))
                     if (!removes.includes(endpointId)) {

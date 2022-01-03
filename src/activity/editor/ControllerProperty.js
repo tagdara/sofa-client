@@ -4,7 +4,7 @@ import { Group, Select } from '@mantine/core';
 import { mapDeviceProperties, deviceByEndpointId }  from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
-import Segment from 'device-model/property/Segment'
+import Segment from 'components/Segment'
 
 export default function ControllerProperty(props) {
 

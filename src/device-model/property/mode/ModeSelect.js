@@ -1,26 +1,18 @@
 import React from 'react';
-import { getModes, isModeNonControllable } from 'store/deviceHelpers';
 import { Select } from '@mantine/core';
+import useMode from 'device-model/property/mode/useMode'
 
 const ModeSelect = props => {
 
-    const modes = getModes(props.endpointId)
-    const instance = props.instance.includes('.') ? props.instance.split('.')[1] : props.instance
-    const modeData = modes[instance]
-
-    const disabled = props.disabled || isModeNonControllable(props.endpointId, props.value)
-
-    const values = Object.keys(modeData).map(modeChoice => ({value: modeChoice, label: modeData[modeChoice]}))
-
-    const mode = props.value && props.value.mode ? props.value.mode : null
-  
+    const { mode, instance, selections, disabled, setMode } = useMode(props.endpointId, props.instance, props.value, props.directive)
 
     return (
-        <Select size="sm" disabled={disabled} 
-                placeholder={instance}
-                onChange={props.select} 
-                value={mode}
-                data={values}
+        <Select size="sm" 
+                disabled={ disabled } 
+                placeholder={ instance }
+                onChange={ setMode } 
+                value={ mode }
+                data={ selections }
                 style={{ width: props.half ? "50%" : undefined }}
         />
     )

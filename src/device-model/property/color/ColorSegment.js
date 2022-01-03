@@ -1,5 +1,5 @@
 import React from 'react';
-import Segment from 'device-model/property/Segment'
+import Segment from 'components/Segment'
 import useColor from 'device-model/property/color/useColor'
 
 export default function ColorButton(props) {

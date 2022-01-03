@@ -4,7 +4,7 @@ import { deviceByEndpointId, deviceDirectives } from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
 import { Select } from '@mantine/core';
-import Segment from 'device-model/property/Segment'
+import Segment from 'components/Segment'
 
 export default function DeviceDirective(props) {
     

@@ -1,6 +1,6 @@
 import React from 'react';
 import usePowerLevel from 'device-model/property/powerLevel/usePowerLevel'
-import Segment from 'device-model/property/Segment'
+import Segment from 'components/Segment'
 
 export default function PowerLevelSegment(props) {
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import useVolume from 'device-model/property/volume/useVolume'
-import Segment from 'device-model/property/Segment'
+import Segment from 'components/Segment'
 
 export default function VolumeSegment(props) {
 

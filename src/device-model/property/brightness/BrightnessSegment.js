@@ -1,6 +1,6 @@
 import React from 'react';
 import useBrightness from 'device-model/property/brightness/useBrightness'
-import Segment from 'device-model/property/Segment'
+import Segment from 'components/Segment'
 
 export default function BrightnessSegment(props) {
 

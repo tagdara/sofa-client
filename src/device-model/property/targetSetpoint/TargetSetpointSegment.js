@@ -1,5 +1,5 @@
 import React from 'react';
-import Segment from 'device-model/property/Segment'
+import Segment from 'components/Segment'
 import useTargetSetpoint from 'device-model/property/targetSetpoint/useTargetSetpoint'
 
 const TargetSetpointSegment = props => {

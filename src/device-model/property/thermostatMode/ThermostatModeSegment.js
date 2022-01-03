@@ -1,6 +1,6 @@
 import React from 'react';
 import useThermostatMode from 'device-model/property/thermostatMode/useThermostatMode'
-import Segment from 'device-model/property/Segment'
+import Segment from 'components/Segment'
 
 export default function ThermostatModeSegment(props) {
 

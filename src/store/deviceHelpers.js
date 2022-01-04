@@ -202,6 +202,18 @@ export function hasCapability(endpointId, controller) {
     return result.length > 0
 }
 
+var camelSentence = (str) => {
+    return (" " + str).toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function(match, chr)
+    {
+        return chr.toUpperCase();
+    });
+}
+
+export function categoryLabelByEndpointId(endpointId) {
+    const device = useDeviceStore.getState().devices[endpointId]
+    return camelSentence(device.displayCategories[0])
+}
+
 export function deviceByEndpointId(endpointId) {
     return useDeviceStore.getState().devices[endpointId]       
 }
@@ -238,6 +250,7 @@ export function devicesByEndpointIds(endpointIds) {
           
 export const friendlyNameByEndpointId = endpointId => {
     var device = useDeviceStore.getState().devices[endpointId]  
+    if (!device) { return undefined }
     return device.friendlyName
 }
 

@@ -1,10 +1,10 @@
 import React from 'react';
 import { ActionIcon, Avatar, Group, Loader, Text } from '@mantine/core';
 
-export default function CardLine(props) {
+export const CardLine = React.forwardRef( (props, ref) => {
 
     return (
-        <Group noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }} onClick={props.onClick} >
+        <Group ref={ref} noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }} onClick={props.onClick} >
             { props.avatar && 
                 ( props.loading ?
                     <Loader size={props.size ? props.size : "lg" } />
@@ -32,4 +32,7 @@ export default function CardLine(props) {
             { props.children }
         </Group> 
     )
-}
+
+})
+
+export default CardLine

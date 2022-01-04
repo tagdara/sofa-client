@@ -1,42 +1,38 @@
-import React, { useState } from 'react';
-import ActivityAction from "activity/editor/action/ActivityAction"
-import ActivityCategory from "activity/editor/layout/ActivityCategory"
-
+import React from 'react';
+import PropertyValue from 'activity/editor/PropertyValue';
+import DeviceDirective from 'activity/editor/DeviceDirective';
+import ActivityDevice from 'activity/editor/ActivityDevice';
 import useActivityEditorStore from "store/activityEditorStore"
-import ErrorBoundary from 'error/ErrorBoundary';
-import { addActivityItem } from 'store/activityEditorHelpers'
+import { Group, Timeline} from '@mantine/core';
+import DeviceIcon from 'components/DeviceIcon'
 
 const ActivityActions = props => {
 
-    const [ removing, setRemoving ] = useState(false)
-    const [ reordering, setReordering ] = useState(false)
+    //const [ removing, setRemoving ] = useState(false)
+    //const [ reordering, setReordering ] = useState(false)
 
     const items = useActivityEditorStore(state => state.activity.actions)
-    const name = "Actions"
+    //const name = "Actions"
     const category = "actions"
-    const count = items ? items.length : 0
-
-    function add() {
-        const newItem={
-            "type": "command",
-            "endpointId": undefined,
-            "controller": undefined,
-            "command": undefined,
-            "deviceName": undefined
-        }
-        addActivityItem(category, newItem)
-    }
+    //const count = items ? items.length : 0
 
     return (
-        <ActivityCategory   name={name} count={count} add={add} 
-                            setRemoving = { setRemoving } setReordering ={ setReordering } removing = { removing } reordering = { reordering } >
+        <Timeline  bulletSize={28} lineWidth={2}>
             { items && items.map( (item,index) =>
-                <ErrorBoundary key={"actions"+index} >
-                    <ActivityAction compact={true} category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} count={count} />
-                </ErrorBoundary>
+                <Timeline.Item 
+                    key={index}
+                    bullet={<DeviceIcon color="red" size={16} endpointId={item.endpointId} />}
+                    title={<ActivityDevice compact={true} category={category} index={index} />}
+                >
+                    <Group spacing={2}>
+                        <DeviceDirective compact={true} category={category } index={index}  />
+                        <PropertyValue compact={true} category={ category } index={index} />
+                    </Group>
+                </Timeline.Item>
             )}
-        </ActivityCategory>
+        </Timeline>
     )
+
 };
 
 export default ActivityActions

@@ -8,10 +8,11 @@ const ActivityCategory = props => {
     }
 
     return (
-        <Group direction="column" spacing={4}>
+        <Group direction="column" spacing={16}>
             { props.children }
-        </Group>
+       </Group>
     )
+
 };
 
 export default ActivityCategory

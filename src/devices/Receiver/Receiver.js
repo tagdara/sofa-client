@@ -1,88 +1,59 @@
 import React, { useState } from 'react';
 import CardLine from 'components/CardLine'
-import CardLineSlider from 'components/CardLineSlider'
-import { directive } from 'store/directive'
-import { getModes } from 'store/deviceHelpers'
-import { Collapse, Group, Switch } from '@mantine/core'
-import { Speaker } from 'react-feather'
-
+import { Collapse, Group } from '@mantine/core'
+import DeviceIcon from 'components/DeviceIcon'
 import ReceiverInputSelect from 'devices/Receiver/ReceiverInputSelect'
-import ReceiverSurroundSelect from 'devices/Receiver/ReceiverSurroundSelect'
 import { useRegister } from 'store/useRegister'
+import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
+import ModeSegmentedControl from 'device-model/property/mode/ModeSegmentedControl'
+import VolumeSlider from 'device-model/property/volume/VolumeSlider'
+import useMode from 'device-model/property/mode/useMode'
+import usePowerState from 'device-model/property/powerState/usePowerState'
+import useInput from 'device-model/property/input/useInput'
 
 const Receiver = props => {
-  
+
+    const { modeLabel: surroundName } = useMode(props.endpointId, "Surround") 
+    const { powerStateBool: on } = usePowerState(props.endpointId)
+    const { inputLabel } = useInput(props.endpointId)
     const [ showDetail, setShowDetail ] = useState(false);
     const volumePresets = [40, 55, 60, 65, 70, 80];
+    const surroundPresets = [ "7ch Stereo", "Surround Decoder", "Straight" ]
     const { deviceState } = useRegister(props.endpointId)
 
     if (!deviceState) { return null }
 
-    const on = deviceState.PowerController.powerState.value === 'ON' 
-    const volume = deviceState.Speaker.volume.value
-
-    function handleVolumeChange(event) {
-        directive(props.endpointId, 'Speaker', 'SetVolume', { "volume" : event} )
-    }; 
-    
-    function handlePowerChange(event) {
-        event.stopPropagation();
-        directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
-    };
-
-    
-    function surroundName() {
-        var surroundmodes = getModes(props.endpointId).Surround
-        if (surroundmodes.hasOwnProperty(deviceState.Surround.mode.value)) {
-            return surroundmodes[deviceState.Surround.mode.value]
-        }
-        return ""
-    }
-
     function subText() {
         if (on) {
-            return deviceState.InputController.input.value + " / "+ surroundName()
+            return inputLabel + " / "+ surroundName
         }
         return null
-    }
-
-    function stopEventPropagation(event) {
-        // switches use onChange but onClick needs to also be blocked for nested items
-        event.stopPropagation()
     }
 
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
-            <Group direction="column" grow noWrap spacing="xl">
-                <CardLine   arrow avatar={ <Speaker /> }
-                            color={ on ? "primary" : undefined}
-                            primary={"Receiver"}
-                            secondary={subText()}
-                            onClick={ () => setShowDetail(!showDetail)}
-                >
-                    <Switch checked={ on }
-                            onClick={stopEventPropagation} 
-                            onChange={ handlePowerChange } 
-                    />
-                </CardLine>
-                <Collapse in={showDetail || on }>
-                    <CardLineSlider on={on} 
-                                    step={5}
-                                    levels={marks}
-                                    marks={marks} 
-                                    value={ volume }
-                                    change={handleVolumeChange} 
-                    />
-                </Collapse>
-                <Collapse in={showDetail}>
-                    <Group direction="column" grow noWrap spacing="sm">
-                        <ReceiverSurroundSelect deviceState={deviceState} endpointId={props.endpointId} />
-                        <ReceiverInputSelect deviceState={deviceState} endpointId={props.endpointId} />
-                    </Group>
-                </Collapse>
-            </Group>
-    );
+        <Group direction="column" grow noWrap spacing="xl">
+            <CardLine   arrow avatar={ <DeviceIcon endpointId={props.endpointId} /> }
+                        color={ on ? "primary" : undefined}
+                        primary={ friendlyNameByEndpointId(props.endpointId) }
+                        secondary={ subText() }
+                        onClick={ () => setShowDetail(!showDetail)}
+            >
+                <PowerStateSwitch endpointId={props.endpointId} />
+            </CardLine>
+            <Collapse in={showDetail || on }>
+                <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
+            </Collapse>
+            <Collapse in={showDetail}>
+                <Group direction="column" grow noWrap spacing="sm">
+                    <ModeSegmentedControl filter={surroundPresets} endpointId={props.endpointId} instance={"Surround"} />
+                    <ReceiverInputSelect deviceState={deviceState} endpointId={props.endpointId} />
+                </Group>
+            </Collapse>
+        </Group>
+);
 }
 
 export default Receiver;

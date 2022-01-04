@@ -8,21 +8,28 @@ import usePowerState from 'device-model/property/powerState/usePowerState'
 export default function VolumeSlider(props) {
 
     const { volume, setVolume } = useVolume(props.endpointId, props.value, props.directive)
-    const { powerState } = usePowerState(props.endpointId)
+    const { powerStateBool } = usePowerState(props.endpointId)
 
     if (volume === undefined ) { return null }
 
-    const disabled = props.disabled || (props.value === undefined && powerState === "OFF")
+    const disabled = props.disabled || ( props.value === undefined && !powerStateBool )
+    const on = ( props.value === undefined && powerStateBool )
 
     return (
         <Group noWrap style={{ flexGrow: 1}}>
-            <ThemeIcon variant="light">
-                <Volume2 size={16} />
-            </ThemeIcon >
+            { props.icon &&
+                <ThemeIcon variant="light">
+                    <Volume2 size={16} />
+                </ThemeIcon >
+            }
             <CardLineSlider label={"Volume"} 
-                value={ volume } on={true}
-                min={0} max={100} step={10} change={setVolume}
+                value={ volume } 
+                on={on}
+                change={setVolume}
                 disabled={ disabled }
+                marks={props.marks}
+
+                step={ props.step ? props.step : 10 }
             />
         </Group>
     );

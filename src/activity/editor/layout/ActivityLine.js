@@ -9,23 +9,31 @@ const ActivityLine = props => {
 
     if (props.compact) {
         return (
-            <Paper  onClick={props.onClick} 
-                    style={{ padding: 8,
-                            display: "flex", 
-                            borderRadius:4, 
-                            width: "100%"
-                        }}
-            >
-                <Group spacing={4}>
+            <Group spacing={4} style={{ width: "100%", alignItems: "flex-start"}}>
                 { props.children }
-                </Group>
-            </Paper> 
+            </Group>
+        )
+    }
+
+    if (props.compact) {
+        return (
+                <Paper  onClick={props.onClick} 
+                        style={{ padding: 4,
+                                display: "flex", 
+                                borderRadius:4, 
+                                width: "100%"
+                            }}
+                >
+                    <Group spacing={4} style={{ width: "100%", alignItems: "flex-start"}}>
+                        { props.children }
+                    </Group>
+                </Paper> 
         )
     }
 
     return (
         <Paper  onClick={props.onClick} 
-                style={{ padding: "8px 16px", 
+                style={{ padding: "4px 8px", 
                         display: "flex", 
                         borderRadius:4, 
                         width: "100%"

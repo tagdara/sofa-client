@@ -1,22 +1,18 @@
 import React from 'react';
-import { getInputs } from 'store/deviceHelpers';
 import { Select } from '@mantine/core';
+import useInput from 'device-model/property/input/useInput'
 
 const InputSelect = props => {
 
-    console.log('input select props', props)
-    const inputs = getInputs(props.device.endpointId)
+    const { inputValue, selections, selectInput } = useInput(props.endpointId, props.value, props.directive)
     const disabled = props.disabled 
-    const values = inputs.map(inputChoice => ({value: inputChoice, label:  inputChoice }))
-    const value = props.value && props.value.input ? props.value.input : null
- 
 
     return (
         <Select size="sm" disabled={disabled} 
                 placeholder={"Input"}
-                onChange={props.select} 
-                value={value}
-                data={values}
+                onChange={ selectInput } 
+                value={ inputValue }
+                data={ selections }
                 style={{ width: props.half ? "50%" : undefined }}
         />
     )

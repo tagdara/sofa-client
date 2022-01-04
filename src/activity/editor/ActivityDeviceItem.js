@@ -3,7 +3,7 @@ import React from 'react';
 import CardLine from 'components/CardLine'
 import DeviceIcon from 'components/DeviceIcon';
 
-const ActivityDeviceItem = props => {
+const ActivityDeviceItem = React.forwardRef( (props, ref) => {
 
     const name = props.device.friendlyName
     const category = props.device.displayCategories[0]
@@ -22,6 +22,6 @@ const ActivityDeviceItem = props => {
             secondary={ camelSentence(category) } 
         />
     )
-}
+})
 
 export default ActivityDeviceItem

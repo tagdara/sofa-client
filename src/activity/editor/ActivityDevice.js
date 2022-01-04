@@ -28,8 +28,8 @@ const ActivityDevice = props => {
         selectActivityDevice(props.category, props.index, newEndpointId)
     }
 
-    if ( props.compact) {
-        return <DeviceSegment endpointId={endpointId} />
+    if ( !selecting && props.compact) {
+        return <DeviceSegment endpointId={endpointId} onClick={() => setSelecting(true)} />
     }
 
     if ( selecting || deviceEmpty ) { 

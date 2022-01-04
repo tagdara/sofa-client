@@ -1,11 +1,12 @@
 import React from 'react';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
-import { List, Sliders, Speaker, Thermometer, ToggleRight, Triangle, Tv } from 'react-feather'
+import { HelpCircle, List, Sliders, Speaker, Thermometer, ToggleRight, Triangle, Tv } from 'react-feather'
 import { deviceByEndpointId } from 'store/deviceHelpers'
 
 const DeviceIcon = props => {
 
     const icons = { 
+        'MISSING': HelpCircle,
         'SCENE_TRIGGER': Sliders, 
         'ACTIVITY_TRIGGER': List, 
         'LIGHT': Lightbulb, 
@@ -31,6 +32,7 @@ const DeviceIcon = props => {
     
     if (props.endpointId) {
         const device = deviceByEndpointId(props.endpointId)
+        if (!device) { return getIcon('MISSING', props.size) }
         return getIcon(device.displayCategories, props.size)
     }
 

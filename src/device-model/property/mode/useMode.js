@@ -6,7 +6,7 @@ const useMode = ( endpointId, userInstance, value, directive) => {
 
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
-    console.log('instance', userInstance)
+
     const instance = userInstance.includes('.') ? userInstance.split('.')[1] : userInstance
 
     const modes = getModes(endpointId)

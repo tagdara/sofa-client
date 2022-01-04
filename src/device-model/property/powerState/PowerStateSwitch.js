@@ -5,7 +5,7 @@ import { useDidUpdate } from '@mantine/hooks';
 
 export default function PowerStateSwitch(props) { 
 
-    const { powerState, turnOn, turnOff } = usePowerState(props.endpointId, props.instance)
+    const { powerState, turnOn, turnOff } = usePowerState(props.endpointId)
     const [ displayState, setDisplayState] = useState(powerState === "ON")
 
     useDidUpdate(() => {

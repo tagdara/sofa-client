@@ -3,7 +3,7 @@ import { directives } from 'store/directive'
 import { deviceByEndpointId, deviceDirectives } from 'store/deviceHelpers'
 import { updateActivityItem } from 'store/activityEditorHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
-import { Select } from '@mantine/core';
+import { Menu, Select } from '@mantine/core';
 import Segment from 'components/Segment'
 
 export default function DeviceDirective(props) {
@@ -71,10 +71,16 @@ export default function DeviceDirective(props) {
     const selections = directiveMap.map( (item,index) => { return { value: index.toString(), label: getLabel(item) }})
     const value = defaultOrValue()
 
-    console.log(directiveMap[parseInt(value)].directive, value)
-
     if (props.compact) {
-        return <Segment value={getLabel(directiveMap[parseInt(value)])} />
+        return  <Menu 
+                    control ={ <Segment value={getLabel(directiveMap[parseInt(value)])} /> }
+                >
+                    <Menu.Label>Directives</Menu.Label>
+                    { selections.map( item => 
+                        <Menu.Item key={item.label} onClick={ () => handleChangeDirectiveName(item.value)}>{item.label}</Menu.Item>
+                    )}   
+
+                </Menu>
     }
 
     return (

@@ -1,24 +1,32 @@
 import React from 'react';
-import { directive } from 'store/directive'
-import { getInputs } from 'store/deviceHelpers'
 import { ActionIcon, Center, Group, Space, Text } from '@mantine/core'
 import { Lock, Unlock } from 'react-feather'
 import CardSegmentedControl from 'components/CardSegmentedControl'
+import useMode from 'device-model/property/mode/useMode'
+import usePowerState from 'device-model/property/powerState/usePowerState'
+import useInput from 'device-model/property/input/useInput'
 
-const Receiver = props => {
+const ReceiverInputSelect = props => {
+
+    // This is similar to a standard Input Select but includes a locking capability based off of 
+    // a mode (which should eventually be changed to a toggle)
+
+    // This component is needed to overlay the additional logic
+
+    // A better model would be to have the lock sit next to the control and when locked, disable user
+    // changes as well
   
-    const receiver = props.deviceState
+    const { inputValue, inputs, setInput } = useInput(props.endpointId)
+    const { powerStateBool: on } = usePowerState(props.endpointId)
+    const { mode, setMode } = useMode(props.endpointId, 'InputLock')
+    const locked = mode === 'InputLock.Locked' 
 
-    if (!receiver) { return null }
-
-    const on = receiver.PowerController.powerState.value === 'ON' 
-    const inputs = getInputs(props.endpointId)
-
-    function inputSelect() {
-        return inputs.map( inp => { return { label : makeInput(inp), value : inp} } )
+    const modeToggleClick = ( event) => {
+        event.stopPropagation()
+        setMode( locked ? 'InputLock.Unlocked' : 'InputLock.Locked')
     }
 
-    function makeInput(inp) {
+    const makeCustomSegmentLabel = inp => {
         if (inp === "Audio") {
             return <Center>
                         <Text size="sm">{inp}</Text>
@@ -27,7 +35,7 @@ const Receiver = props => {
                                     size={"sm"}
                                     disabled={!on}
                                     variant={ "filled" }
-                                    onClick={ (e) => handleInputLockModeChoice(e, (receiver.InputLock.mode.value==='InputLock.Locked' ? 'InputLock.Unlocked' : 'InputLock.Locked'))} 
+                                    onClick={ modeToggleClick } 
                         > 
                             { locked ? <Lock size={16} /> : <Unlock size={16} /> }
                         </ActionIcon>
@@ -35,30 +43,21 @@ const Receiver = props => {
         }
         return <Center><Text size="sm">{inp}</Text></Center>
     }
-    
-    function handleInput(inputname) {
-        directive(props.endpointId, 'InputController', 'SelectInput', { "input": inputname } )
-    }; 
 
-    function handleInputLockModeChoice(event,modechoice) {
-        event.stopPropagation()
-        directive(props.endpointId, 'ModeController', 'SetMode', { "mode": modechoice}, {}, 'Receiver.InputLock')
-    }; 
-
-    const locked = receiver.InputLock.mode.value === 'InputLock.Locked' 
+    const selections = inputs.map( inp => { return { label : makeCustomSegmentLabel(inp), value : inp} } )
 
     return (
         <Group noWrap style={{ width: "100%", position: 'relative' }} position="apart">
             <CardSegmentedControl
                 style={{ flexGrow: 1 }}
                 size="sm"
-                value={ receiver.InputController.input.value }
-                data={ inputSelect() }
-                onChange={ handleInput } 
-                disabled={!on}
+                value={ inputValue }
+                data={ selections }
+                onChange={ setInput } 
+                disabled={ !on }
             />                 
         </Group>
     );
 }
 
-export default Receiver;
+export default ReceiverInputSelect;

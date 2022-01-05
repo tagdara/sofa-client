@@ -1,12 +1,13 @@
 import React from 'react';
 import { Group, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/hooks';
-
+import { useDidUpdate } from '@mantine/hooks';
 import useActivityEditorStore from 'store/activityEditorStore';
 
 const ActivityName = props => {
 
     const name = useActivityEditorStore( state => state.activity.name )
+
     const form = useForm({
         initialValues: {
             name: name ? name : "",
@@ -16,6 +17,12 @@ const ActivityName = props => {
             name: (value) => value.length > 2,
         },
     });
+
+    useDidUpdate(() => {
+        // Name lags on the json load, but we cant skip undefined in the case of new activities
+        form.setFieldValue('name', name)
+    }, [ name ])
+
 
     if (!name && !props.new) { return null }
  

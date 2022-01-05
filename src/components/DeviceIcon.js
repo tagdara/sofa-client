@@ -1,18 +1,23 @@
 import React from 'react';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
-import { HelpCircle, List, Sliders, Speaker, Thermometer, ToggleRight, Triangle, Tv } from 'react-feather'
+import { Grid, HelpCircle, List, Sliders, Speaker, Tag, Thermometer, ToggleRight, Triangle, Tv } from 'react-feather'
 import { deviceByEndpointId } from 'store/deviceHelpers'
+import { FaFan as FanIcon } from "react-icons/fa";
 
 const DeviceIcon = props => {
 
     const icons = { 
+        'FAN': FanIcon, 
         'MISSING': HelpCircle,
-        'SCENE_TRIGGER': Sliders, 
+        'MODE': Tag,
+        'SCENE_TRIGGER': Grid, 
         'ACTIVITY_TRIGGER': List, 
         'LIGHT': Lightbulb, 
+        'LOGIC': Sliders,
         'BUTTON': ToggleRight, 
         'SPEAKER': Speaker, 
         'THERMOSTAT': Thermometer, 
+        'TEMPERATURE_SENSOR': Thermometer, 
         'RECEIVER': Speaker, 
         'TV': Tv
     }
@@ -32,8 +37,9 @@ const DeviceIcon = props => {
     
     if (props.endpointId) {
         const device = deviceByEndpointId(props.endpointId)
+        console.log('getting icon for ', props.endpointId, device.displayCategories)
         if (!device) { return getIcon('MISSING', props.size) }
-        return getIcon(device.displayCategories, props.size)
+        return getIcon(device.displayCategories[0], props.size)
     }
 
     return getIcon(props.name)

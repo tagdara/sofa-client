@@ -1,51 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { Image, Loader, Paper } from '@mantine/core';
-
-import { useInterval } from 'store/useInterval';
-import { directive } from 'store/directive'
-import { useRegister } from 'store/useRegister'
+import React from 'react';
+import { Image } from '@mantine/core';
+import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
+import useRefreshCameraImage from 'device-model/controller/CameraStreamController/useRefreshCameraImage'
+import CameraPlaceholder from 'devices/Camera/CameraPlaceholder'
 
 const CameraImage = props => {
 
-    //const [imageLoaded, setImageLoaded] = useState(false);
-    const [updateUri, setUpdateUri] = useState("");
-    const [imageUri, setImageUri] = useState(undefined)
+    const { imageUri, imageSrc } = useRefreshCameraImage(props.endpointId, props.refreshInterval)
+    const name = friendlyNameByEndpointId(props.endpointId)
+    const { reachable } = useEndpointHealth(props.endpointId)
 
-    const { device, deviceState } = useRegister(props.endpointId)
-    const name = device ? device.name : ""
-
-    const unreachable = deviceState && deviceState.EndpointHealth ? deviceState.EndpointHealth.connectivity.value.value !== "OK" : true
-
-    useEffect(()=> {
-
-        function getImageUriFromPayload(data) {
-            try {
-                var newUri = data.payload.imageUri
-                setImageUri(newUri)
-                setUpdateUri(newUri)
-            }
-            catch(e) {
-                console.log('Improper response from InitializeCameraStreams', data)
-            }
-        }
-
-        if ((!unreachable) && (props.endpointId)) { 
-            // This should get the static image URI without starting streams unnecessarily
-            directive(props.endpointId, "CameraStreamController", "InitializeCameraStreams",{ "cameraStreams": [] })
-                .then(response =>{ getImageUriFromPayload(response) } )
-        } 
-    // eslint-disable-next-line 
-    }, [ props.endpointId, unreachable ]);
-
-
-    useInterval(() => {
-        if (imageUri && !props.disabled) {
-            setUpdateUri(imageUri+"?time="+Date.now())
-        }
-    }, (imageUri || props.showDialog) ? props.refreshInterval : null);
+    const loading = (!imageUri  || !reachable )
 
     return (
-        <Image  src={updateUri ? updateUri : "" }
+        <Image  src={ imageSrc }
                 styles={{  
                     image: { 
                         width: "100%",
@@ -53,19 +22,12 @@ const CameraImage = props => {
                     }
                 }}
                 onClick={props.onClick}
-                withPlaceholder={!updateUri}
+                withPlaceholder={ !imageUri }
                 alt={name}
-                placeholder={  <Paper style={{ 
-                                            width: "100%", 
-                                            aspectRatio: "16/9", 
-                                            display: "flex", 
-                                            justifyContent: "center", 
-                                            alignItems: "center" 
-                                        }}
-                                >
-                                    <Loader style={{ display: updateUri ? "none" : undefined, maxWidth: "30%" }} />
-                                </Paper>
-                            }
+                placeholder={  
+                    <CameraPlaceholder loading={loading} />
+
+                }
         />
     )
 }

@@ -10,7 +10,7 @@ const ActivityTrigger = props => {
 
     return (
         <ActivityLine compact={props.compact}>
-            <Badge style={{ margin: 4 }} size="xs" color="orange" variant={"light"}>When</Badge>
+            <Badge style={{ margin: "4px 8px 4px 0px", padding: 0, width: 28 }} size="xs" color="orange" variant={"light"}>On</Badge>
             <Group direction="column" noWrap spacing={2} >
                 <ActivityDevice category={props.category} index={props.index} compact={props.compact} removing={props.removing} reordering={props.reordering} />
                 <Group spacing={2}>

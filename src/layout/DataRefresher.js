@@ -43,8 +43,8 @@ export default function SofaFrame(props) {
 
 
     if (!streamConnected || streamStatus !== 1 ) {
-        return  <Group direction="column">
-                    <Button color="red" 
+        return  <Group direction="column" style={{ maxWidth: 320, margin: "0 auto" }}>
+                    <Button color={ streamStatus===0 ? undefined : "red"} 
                             fullWidth 
                             variant={'light'} 
                             leftIcon={<CloudOff size={20} /> }

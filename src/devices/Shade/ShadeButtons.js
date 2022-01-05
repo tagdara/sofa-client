@@ -1,7 +1,7 @@
 import React from 'react';
 import { directive } from 'store/directive'
 import { ActionIcon, Group } from '@mantine/core'
-import { ChevronUp, ChevronDown, StopCircle } from 'react-feather'
+import { ChevronUp, ChevronDown, Minus } from 'react-feather'
 
 const ShadeButtons = props => {
 
@@ -15,7 +15,7 @@ const ShadeButtons = props => {
                 <ChevronDown size={20} />
             </ActionIcon >
             <ActionIcon variant="light" size="lg" onClick={ () => handlePress('Position.Stop') }>
-                <StopCircle size={20} />
+                <Minus size={20} />
             </ActionIcon >
             <ActionIcon variant="light" size="lg" onClick={ () => handlePress('Position.Up') }>
                 <ChevronUp size={20} />

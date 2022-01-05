@@ -62,6 +62,15 @@ export default function DeviceDirective(props) {
     
     function getLabel(item) {
         if (item.instance) {
+            if (item.directive === "SetMode") {
+                return "Set "+item.instance.split('.')[1]
+            }
+            if (item.directive === "TurnOn") {
+                return "Turn On "+item.instance.split('.')[1]
+            }
+            if (item.directive === "TurnOff") {
+                return "Turn Off "+item.instance.split('.')[1]
+            }
             return item.instance.split('.')[1]+"  ("+item.directive+")"
         } else {
             return item.directive

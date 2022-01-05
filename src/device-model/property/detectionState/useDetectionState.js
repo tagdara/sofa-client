@@ -17,7 +17,7 @@ const useDetectionState = (endpointId, value, directive, userSensorType) => {
                                 deviceState[sensorType].detectionState : 
                                 null
 
-    const userValue = value && value.detectionState ? value.detectionState : undefined
+    const userValue = value ? value : undefined
     const detectionState = userValue ? userValue : stateDetectionState
 
     const setDetectionState = value => {
@@ -25,9 +25,7 @@ const useDetectionState = (endpointId, value, directive, userSensorType) => {
         // activity editor to set triggers and conditions
         directive(endpointId, sensorType, "SetDetectionState", value)
     }
-
-    console.log('detectionstate', detectionState, endpointId, value, directive, userSensorType)
-
+    
     const detectionStateLabel = detectionState === "NOT_DETECTED" ? "Not detected" : "Detected"
     const detectionStateBool = detectionState === "NOT_DETECTED"
 

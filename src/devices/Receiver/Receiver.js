@@ -3,7 +3,6 @@ import CardLine from 'components/CardLine'
 import { Collapse, Group } from '@mantine/core'
 import DeviceIcon from 'components/DeviceIcon'
 import ReceiverInputSelect from 'devices/Receiver/ReceiverInputSelect'
-import { useRegister } from 'store/useRegister'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import ModeSegmentedControl from 'device-model/property/mode/ModeSegmentedControl'
@@ -18,27 +17,20 @@ const Receiver = props => {
     const { powerStateBool: on } = usePowerState(props.endpointId)
     const { inputLabel } = useInput(props.endpointId)
     const [ showDetail, setShowDetail ] = useState(false);
-    const volumePresets = [40, 55, 60, 65, 70, 80];
+    const name = friendlyNameByEndpointId(props.endpointId) 
+
     const surroundPresets = [ "7ch Stereo", "Surround Decoder", "Straight" ]
-    const { deviceState } = useRegister(props.endpointId)
-
-    if (!deviceState) { return null }
-
-    function subText() {
-        if (on) {
-            return inputLabel + " / "+ surroundName
-        }
-        return null
-    }
-
+    const volumePresets = [40, 55, 60, 65, 70, 80];
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
+
+    const subText = on ? inputLabel + " / "+ surroundName : null
 
     return (
         <Group direction="column" grow noWrap spacing="xl">
             <CardLine   arrow avatar={ <DeviceIcon endpointId={props.endpointId} /> }
                         color={ on ? "primary" : undefined}
-                        primary={ friendlyNameByEndpointId(props.endpointId) }
-                        secondary={ subText() }
+                        primary={ name }
+                        secondary={ subText }
                         onClick={ () => setShowDetail(!showDetail)}
             >
                 <PowerStateSwitch endpointId={props.endpointId} />
@@ -49,7 +41,7 @@ const Receiver = props => {
             <Collapse in={showDetail}>
                 <Group direction="column" grow noWrap spacing="sm">
                     <ModeSegmentedControl filter={surroundPresets} endpointId={props.endpointId} instance={"Surround"} />
-                    <ReceiverInputSelect deviceState={deviceState} endpointId={props.endpointId} />
+                    <ReceiverInputSelect endpointId={props.endpointId} />
                 </Group>
             </Collapse>
         </Group>

@@ -1,60 +1,29 @@
 import React, { useState } from 'react';
 import CardLine from 'components/CardLine'
-import { directive } from 'store/directive'
-import { getInputs } from 'store/deviceHelpers'
-import { Collapse, Group, Select, Switch } from '@mantine/core'
-import { Tv as TvIcon } from 'react-feather'
-import { useRegister } from 'store/useRegister'
+import { Collapse, Group } from '@mantine/core'
+import DeviceIcon from 'components/DeviceIcon'
+import usePowerState from 'device-model/property/powerState/usePowerState'
+import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
+import InputSelect from 'device-model/property/input/InputSelect'
+import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 
 const Television = props => {
   
     const [ showDetail, setShowDetail ] = useState(false);
-    const { device, deviceState } = useRegister(props.endpointId)
-
-    if (!deviceState) { return null }
-
-    const on = deviceState.PowerController.powerState.value === 'ON' 
-    //const volume = deviceState.Speaker.volume.value
-    const inputs = getInputs(props.endpointId) 
-
-    function handlePowerChange(event) {
-        event.stopPropagation();
-        directive(props.endpointId, 'PowerController', event.target.checked ? 'TurnOn' : 'TurnOff')
-    };
-
-    function stopEventPropagation(event) {
-        // switches use onChange but onClick needs to also be blocked for nested items
-        event.stopPropagation()
-    }
-
-    function inputSelect() {
-       return inputs.map( inp => { return { label : inp, value : inp}})
-    }
-
-    function handleInput(inputname) {
-        directive(props.endpointId,"InputController", 'SelectInput', { "input": inputname } )
-    }; 
+    const { powerStateBool: on } = usePowerState(props.endpointId)
+    const name = friendlyNameByEndpointId(props.endpointId) 
 
     return (
             <Group direction="column" grow>
-                <CardLine   avatar={ <TvIcon /> }
-                            primary={device.friendlyName}
+                <CardLine   avatar={ <DeviceIcon endpointId={props.endpointId} /> }
+                            primary={ name }
                             onClick={ () => setShowDetail(!showDetail)}
                             color={ on ? "primary" : undefined }
                 >
-                    <Switch checked={ on }
-                            onClick={stopEventPropagation} 
-                            onChange={ handlePowerChange } 
-                    />
+                    <PowerStateSwitch endpointId={props.endpointId} />
                 </CardLine>
                 <Collapse in={showDetail || on}>
-                    <Select
-                        size="md"
-                        placeholder="Input"
-                        value={ deviceState.InputController.input.value }
-                        onChange={ handleInput }
-                        data={ inputSelect() }
-                    />    
+                    <InputSelect endpointId={props.endpointId} />
                 </Collapse>
             </Group>
     );

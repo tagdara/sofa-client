@@ -1,27 +1,18 @@
 import React from 'react';
 import CardLine from 'components/CardLine'
-import { directive } from 'store/directive'
-import { Switch } from '@mantine/core'
 import { FaFan as FanIcon } from "react-icons/fa";
-import { useRegister } from 'store/useRegister'
+import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 
 const Fan = props => {
 
-    const { device, deviceState } = useRegister(props.endpointId)
-
-    if (!deviceState) { return null }
-
-    function handlePowerChange(event) {
-        directive(props.endpointId, "PowerController", event.target.checked ? 'TurnOn' : 'TurnOff')
-    }; 
-
-    const on = deviceState.PowerController.powerState.value === 'ON'
+    const name = friendlyNameByEndpointId(props.endpointId)
 
     return (    
         <CardLine  size={"lg"}  icon={ props.icon ? props.icon : <FanIcon size={20} />}
-                    primary={ device.friendlyName } 
+                    primary={ name } 
         >
-            <Switch color="primary" checked={ on } onChange={ handlePowerChange } />
+            <PowerStateSwitch endpointId={props.endpointId} />
         </CardLine>
     )
 }

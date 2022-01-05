@@ -12,7 +12,7 @@ const SecurityCamera = props => {
     // will be duplicates
     // https://github.com/briis/unifiprotect/issues/46
 
-    const refreshInterval = 10000 
+    const refreshInterval = 11
     const [live, setLive] = useState(false)
     const device = deviceByEndpointId(props.endpointId)
 
@@ -20,7 +20,6 @@ const SecurityCamera = props => {
         if (props.onClick) { 
             props.onClick()
         } else {
-            console.log('selecting')
             selectPage('CameraLayout')
         }
     }

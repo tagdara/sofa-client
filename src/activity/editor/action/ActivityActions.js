@@ -21,7 +21,7 @@ const ActivityActions = props => {
             { items && items.map( (item,index) =>
                 <Timeline.Item 
                     key={index}
-                    bullet={<DeviceIcon color="red" size={16} endpointId={item.endpointId} />}
+                    bullet={<DeviceIcon size={16} endpointId={item.endpointId} />}
                     title={<ActivityDevice compact={true} category={category} index={index} />}
                 >
                     <Group spacing={2}>

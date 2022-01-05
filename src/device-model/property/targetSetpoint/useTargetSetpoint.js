@@ -50,7 +50,16 @@ const useTargetSetpoint = ( endpointId, value, directive) => {
         setTargetTemperature(newSetpoint)
     }
 
-
+    //function supportedRange() {
+        //needs to be applied to the button version but stubbed for now
+    //    try {
+    //        return getController(props.device.endpointId, "ThermostatController").configuration.supportedRange
+    //    }
+    //    catch {}
+    //    
+    //    return [60,90]
+    //}
+    
     const targetSetpointColor = tempColor(targetSetpoint)
     const dysonLabel = thermostatMode !== "HEAT" ? "--" : targetSetpoint+ "°"
     const targetSetpointLabel = isDyson ? dysonLabel : targetSetpoint + "°"

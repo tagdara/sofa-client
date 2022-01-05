@@ -1,19 +1,15 @@
 import React from 'react';
-import { directive } from 'store/directive'
 import { Group, Text} from '@mantine/core'
 import CardPopover from 'components/CardPopover'
 
-import LightSliderTemperature from 'devices/Light/LightSliderTemperature'
+import ColorTemperatureSlider from 'device-model/property/colorTemperatureInKelvin/ColorTemperatureSlider'
 import BrightnessSlider from 'device-model/property/brightness/BrightnessSlider'
-import LightSliderColor from 'device-model/property/color/ColorSlider'
+import ColorSlider from 'device-model/property/color/ColorSlider'
+import { hasCapability } from 'store/deviceHelpers'
 
 const LightPopover = props => {
 
-    const light = props.light
-
-    if (!light) { return null }
-
-    const noControllers = !light.BrightnessController && !light.ColorController && !light.ColorTemperatureController
+    const noControllers = !hasCapability(props.endpointId,'BrightnessController') && !hasCapability(props.endpointId,'ColorController') && !hasCapability(props.endpointId,'ColorTemperatureController')
 
     return (
         <CardPopover
@@ -25,17 +21,10 @@ const LightPopover = props => {
                 { noControllers ?
                     <Text>{"No additional configuration is available"}</Text>
                 :
-
                     <Group direction="column" grow spacing={"xl"}>
-                        { light.BrightnessController &&
-                            <BrightnessSlider endpointId={props.endpointId} />
-                        }
-                        { light.ColorTemperatureController &&
-                            <LightSliderTemperature endpointId={props.endpointId} deviceState={light} directive={directive} />
-                        }
-                        { light.ColorController &&
-                            <LightSliderColor endpointId={props.endpointId} deviceState={light} directive={directive} />
-                        }
+                        <BrightnessSlider endpointId={props.endpointId} icon={true} />
+                        <ColorTemperatureSlider endpointId={props.endpointId} icon={true} />
+                        <ColorSlider endpointId={props.endpointId} icon={true} />
                     </Group>
             }
         </CardPopover>

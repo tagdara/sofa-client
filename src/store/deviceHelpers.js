@@ -438,7 +438,7 @@ export const mapDeviceProperties = dev => {
 }  
 
 
-export const deviceDirectives = dev => {
+export const deviceDirectives = (dev, includeNonControllable) => {
     const directives = useDeviceStore.getState().directives
     if (dev===undefined) { return undefined }
     var dirs=[]
@@ -448,6 +448,7 @@ export const deviceDirectives = dev => {
             if (directives.hasOwnProperty(shortIf)) {
                 var idirs=Object.keys(directives[shortIf])
                 for (var i = 0; i < idirs.length; i++) {
+                    if (dev.capabilities[j].properties && dev.capabilities[j].properties.nonControllable && !includeNonControllable) { continue}
                     if (dev.capabilities[j].hasOwnProperty('instance')) {
                         dirs.push({"directive":idirs[i], "controller":shortIf, "instance":dev.capabilities[j].instance})
                     } else {

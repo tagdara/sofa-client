@@ -29,6 +29,7 @@ const useDetectionState = (endpointId, value, directive, userSensorType) => {
     const detectionStateLabel = detectionState === "NOT_DETECTED" ? "Not detected" : "Detected"
     const detectionStateBool = detectionState === "NOT_DETECTED"
 
+
     return { detectionState, detectionStateBool, detectionStateLabel, setDetectionState }
 
 }

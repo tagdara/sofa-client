@@ -6,14 +6,14 @@ import WideAvatar from 'components/WideAvatar'
 import AirQualityBadge from 'device-model/instance/AirQualityBadge'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers'
 import { Group } from '@mantine/core';
-import { useTemperatureSensor } from 'device-model/controller/temperatureSensor/useTemperatureSensor'
+import useTemperature from 'device-model/property/temperature/useTemperature'
 
 export default function Weather(props) { 
 
     const currentDevice = endpointIdByFriendlyName(props.current)
     const forecastDevice = endpointIdByFriendlyName(props.forecast)
     const aqEndpoint = props.aq ? endpointIdByFriendlyName(props.aq) : undefined
-    const { temperatureColor, temperatureLabel } = useTemperatureSensor(currentDevice)
+    const { temperatureColor, temperatureLabel } = useTemperature(currentDevice)
 
     return (
         <Group direction="column" noWrap style={{ width: "100%"}}>

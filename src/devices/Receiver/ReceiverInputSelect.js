@@ -16,13 +16,14 @@ const ReceiverInputSelect = props => {
     // A better model would be to have the lock sit next to the control and when locked, disable user
     // changes as well
   
-    const { inputValue, inputs, setInput } = useInput(props.endpointId)
+    const { inputValue, inputs, selectInput } = useInput(props.endpointId)
     const { powerStateBool: on } = usePowerState(props.endpointId)
-    const { mode, setMode } = useMode(props.endpointId, 'InputLock')
+    const { mode, setMode } = useMode(props.endpointId, 'Receiver.InputLock')
     const locked = mode === 'InputLock.Locked' 
 
     const modeToggleClick = ( event) => {
         event.stopPropagation()
+        console.log('mode', mode, locked)
         setMode( locked ? 'InputLock.Unlocked' : 'InputLock.Locked')
     }
 
@@ -53,7 +54,7 @@ const ReceiverInputSelect = props => {
                 size="sm"
                 value={ inputValue }
                 data={ selections }
-                onChange={ setInput } 
+                onChange={ selectInput } 
                 disabled={ !on }
             />                 
         </Group>

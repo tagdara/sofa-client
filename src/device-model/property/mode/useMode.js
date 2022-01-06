@@ -20,7 +20,8 @@ const useMode = ( endpointId, userInstance, value, directive) => {
 
     const setMode = newMode => {
         //endpointId, controllerName, command, payload={}, cookie={}, instance=""
-        activeDirective(endpointId, "ModeController", "SetMode", {"mode": newMode}, {}, instance)
+        console.log(endpointId, "ModeController", "SetMode", {"mode": newMode}, {}, instance)
+        activeDirective(endpointId, "ModeController", "SetMode", {"mode": newMode}, {}, userInstance)
     }
     
     const modeLabel = modeData[mode]

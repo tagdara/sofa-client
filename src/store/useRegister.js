@@ -39,10 +39,14 @@ export const useRegister = endpointId => {
     const uuid = useId();
 
     useEffect(() => {
-        register(endpointId, uuid)
-        setRegisteredDevice(endpointId)
+        if (endpointId) {
+            register(endpointId, uuid)
+            setRegisteredDevice(endpointId)
+        }
         return function cleanup() {
-            unregister(endpointId, uuid)
+            if (endpointId) {
+                unregister(endpointId, uuid)
+            }
         };
     // eslint-disable-next-line 
     }, [ endpointId ])

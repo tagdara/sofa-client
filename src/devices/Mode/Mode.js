@@ -20,7 +20,7 @@ export default function Mode(props) {
             </SplitButton>
             <SplitButton label = { name } on={on} />
             <SplitButton>
-                <PowerStateSwitch props={props.endpointId} />
+                <PowerStateSwitch endpointId={props.endpointId} />
             </SplitButton>
         </SplitButtonGroup>
     )

@@ -7,6 +7,7 @@ import PageFrame from 'layout/PageFrame'
 import SectionGrid from 'layout/SectionGrid'
 import SectionHeader from 'layout/SectionHeader';
 import SectionDivider from 'layout/SectionDivider';
+import SectionFrame from 'layout/SectionFrame';
 
 export default function HistoryLayout(props) {
 
@@ -40,8 +41,8 @@ export default function HistoryLayout(props) {
                 curmonth=hdate.getMonth()
                 curday=hdate.getDate()
                 var labelName = dayNames[hdate.getDay()]+", "+monthNames[curmonth]+" "+curday
-                datesorted.push(<SectionDivider label={labelName} />)
-                current_parent = <SectionGrid key={labelName} />
+                datesorted.push(<SectionDivider key={labelName+"-d"} label={labelName} />)
+                current_parent = <SectionGrid key={labelName} children={[]} />
                 // current_parent = <GridSection key={labelName} name={labelName} children={[]} />
             }
             current_parent.props.children.push(<HistoryLine justTime={true} key={val+hdate.toISOString()} val={val} time={ history[j].time } />)
@@ -55,12 +56,16 @@ export default function HistoryLayout(props) {
     return (   
         <PageFrame> 
             <SectionHeader title={"Device History for " + name} />
-            <Group direction="column" style={{ width: "100%"}} >
-                { todayEvents(true) }
+            <SectionFrame>
+                <Group direction="column" style={{ width: "100%"}} >
+                    { todayEvents(true) }
+                </Group>
+            </SectionFrame>
+            <SectionHeader>
                 <Button fullWidth variant="light" onClick={ () => getMore() }>
                     More
                 </Button>
-            </Group>
+            </SectionHeader>
         </PageFrame>
     )
 

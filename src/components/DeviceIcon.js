@@ -37,7 +37,6 @@ const DeviceIcon = props => {
     
     if (props.endpointId) {
         const device = deviceByEndpointId(props.endpointId)
-        console.log('getting icon for ', props.endpointId, device.displayCategories)
         if (!device) { return getIcon('MISSING', props.size) }
         return getIcon(device.displayCategories[0], props.size)
     }

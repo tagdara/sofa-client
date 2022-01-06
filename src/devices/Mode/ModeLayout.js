@@ -11,15 +11,13 @@ const ModeLayout = props => {
 
     const devices = sortByName(endpointIdsByDisplayCategory('MODE'))
 
-    //const lights = props.lights ? props.lights : sortByName(endpointIdsByCategory('LIGHT'))
-
     return (    
         <PageFrame>
             <SectionHeader title={"Modes"} />
             <SectionFrame>
                 <SectionGrid>
                 { devices.map( endpointId =>
-                    <Mode key={ endpointId } endpointId={endpointId} small={true} />
+                    <Mode key={ endpointId } endpointId={endpointId} />
                 )}
                 </SectionGrid>
             </SectionFrame>

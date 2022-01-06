@@ -45,7 +45,6 @@ const useRegisterStore = create((set, get) => ({
             // just not write the adds to the final set
             const data = { add: adds }
             const result = await tokenFetch(registerUrl, data)
-            //console.log('addresult', body, addResult)
             storeUpdater({ "event": {"header": {"name": "multiple StateReports"}}, "data": result })
         }
 

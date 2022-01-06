@@ -30,7 +30,7 @@ export default function PowerStateSwitch(props) {
 
     return (
         <Switch checked={ displayState } 
-                size={props.size ? props.size : "xs"} 
+                size={props.size ? props.size : "sm"} 
                 label={props.label}
                 onClick={stopEventPropagation}
                 onChange={ handleChange } 

@@ -2,7 +2,7 @@ import React from 'react';
 import useActivityEditorStore from 'store/activityEditorStore'
 import { saveActivity, addActivity } from 'store/activityEditorHelpers'
 import { Save, Plus, Play, FastForward, X } from 'react-feather'
-import { Button, Group, ActionIcon} from '@mantine/core';
+import { Group, ActionIcon} from '@mantine/core';
 import SectionHeader from 'layout/SectionHeader'
 import { directive  } from 'store/directive';
 import { selectPage } from 'helpers/layoutHelpers';
@@ -42,12 +42,9 @@ export default function ActivityFooter(props) {
                 <X size={20} />
             </ActionIcon>
             <ActivityAddMenu add={props.add} />
-            <Button size="sm" disabled={ !okToSave } 
-                    leftIcon={ endpointId ? <Save size={20} /> : <Plus size={20} /> } 
-                    onClick={endpointId ? saveActivity : addActivity }
-            >
-                { "Save" }
-            </Button>
+            <ActionIcon variant="light" size="md" disabled={ !okToSave } onClick={endpointId ? saveActivity : addActivity } >
+                { endpointId ? <Save size={20} /> : <Plus size={20} /> } 
+            </ActionIcon>
             <Group noWrap position="right">
                 <ActionIcon variant="light" size="md" onClick={() => runAutomation()}>
                     <Play size={20} />

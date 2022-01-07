@@ -12,25 +12,25 @@ const useDetectionState = (endpointId, value, directive, userSensorType) => {
     }
 
     const sensorType = getSensorType()
+    const selections =[{ label: "Detected", value: "DETECTED"}, { label: "Not Detected", value: "NOT_DETECTED"}]
 
     const stateDetectionState = sensorType && deviceState && deviceState[sensorType] ? 
                                 deviceState[sensorType].detectionState : 
                                 null
 
-    const userValue = value ? value : undefined
-    const detectionState = userValue ? userValue : stateDetectionState
+    const detectionState = value !== undefined ? value : stateDetectionState
 
     const setDetectionState = value => {
         // Can't set detection state on a real object but this is used in the
         // activity editor to set triggers and conditions
-        directive(endpointId, sensorType, "SetDetectionState", value)
+        directive(endpointId, sensorType, "SetDetectionState", { detectionState: value } )
     }
     
     const detectionStateLabel = detectionState === "NOT_DETECTED" ? "Not detected" : "Detected"
     const detectionStateBool = detectionState === "NOT_DETECTED"
 
 
-    return { detectionState, detectionStateBool, detectionStateLabel, setDetectionState }
+    return { detectionState, detectionStateBool, detectionStateLabel, setDetectionState, selections }
 
 }
 

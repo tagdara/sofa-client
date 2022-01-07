@@ -15,6 +15,32 @@ export const sb2sl = (color) => {
     return SL
 }
 
+export function hex2hsv(hex) {
+    const rgb = hex2rgb(hex)
+    return rgb2hsv(rgb)
+}
+
+
+function hex2rgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16)
+    } : null;
+}
+
+export function rgb2hsv(r,g,b) {
+    if (r && r.r) {
+        g = r.g
+        b = r.b
+        r = r.r
+    }
+    let v=Math.max(r,g,b), c=v-Math.min(r,g,b);
+    let h= c && ((v===r) ? (g-b)/c : ((v===g) ? 2+(b-r)/c : 4+(r-g)/c)); 
+    return { hue: 60*(h<0?h+6:h), saturation: v&&c/v,  brightness: v }
+}
+
 export const decimalToHex = (d)=> {
     var hex = Number(d).toString(16);
     while (hex.length < 2) {

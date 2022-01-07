@@ -31,7 +31,6 @@ const ActivityTriggers = props => {
     return (
         <ActivityCategory   name={name} count={count} add={add} 
                             setRemoving = { setRemoving } setReordering ={ setReordering } removing = { removing } reorder = { reordering } >
-
             { items && items.map( (item,index) =>
                 <ErrorBoundary key={"trigger"+index} >
                     <ActivityTrigger compact={true} category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} />

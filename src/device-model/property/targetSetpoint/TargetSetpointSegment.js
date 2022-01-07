@@ -1,12 +1,13 @@
 import React from 'react';
-import Segment from 'components/Segment'
+import SegmentPopover from 'components/SegmentPopover'
 import useTargetSetpoint from 'device-model/property/targetSetpoint/useTargetSetpoint'
+import TargetSetpointAdjuster from 'device-model/property/targetSetpoint/TargetSetpointAdjuster'
 
 const TargetSetpointSegment = props => {
 
     const { targetSetpointLabel } = useTargetSetpoint(props.endpointId, props.value, props.directive)
 
-    return <Segment value={ targetSetpointLabel}/>
+    return <SegmentPopover value={ targetSetpointLabel} popOver={<TargetSetpointAdjuster {...props} />} />
 
 }
 

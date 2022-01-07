@@ -3,8 +3,18 @@ import { Group, Select, Text } from '@mantine/core';
 import { sortByName, categoryLabelByEndpointId } from 'store/deviceHelpers'
 import useDeviceStore from "store/deviceStore"
 import DeviceIcon from 'components/DeviceIcon'
+import { useClickOutside } from '@mantine/hooks';
 
 const DeviceSelect = props => {
+    const blurIt = () => {
+        console.log('blurr')
+        if (!open) {
+            props.onBlur()
+        }
+    }
+    
+    const selectRef = useClickOutside(blurIt)
+    const [ open, setOpen] = useState(false)
 
     const devices = useDeviceStore( state => state.devices)
     const sortedDevices = sortByName(Object.keys(devices))
@@ -35,15 +45,18 @@ const DeviceSelect = props => {
     }
 
     return (
-        <Select size="xs"
+        <Select ref={selectRef}
+                size="xs"
                 radius="md"
                 searchable
                 clearable
+                onDropdownOpen={ () => setOpen(true)}
                 onDropdownClose={props.onBlur}
                 icon={props.icon ? <DeviceIcon size={16} endpointId={device} /> : undefined}
                 itemComponent={SelectItem}
                 placeholder={"Select a device"}
                 onChange={select} 
+                onClick={ (e) => { console.log('clicky')}}
                 value={device}
                 data={values}
                 style={{ width: props.half ? "50%" : undefined }}

@@ -3,7 +3,7 @@ import PropertyValue from 'activity/editor/PropertyValue';
 import DeviceDirective from 'activity/editor/DeviceDirective';
 import ActivityDevice from 'activity/editor/ActivityDevice';
 import useActivityEditorStore from "store/activityEditorStore"
-import { Group, Timeline} from '@mantine/core';
+import { Divider, Group, Timeline} from '@mantine/core';
 import DeviceIcon from 'components/DeviceIcon'
 
 const ActivityActions = props => {
@@ -17,6 +17,8 @@ const ActivityActions = props => {
     //const count = items ? items.length : 0
 
     return (
+        <>
+        { (items && items.length >0) && <Divider style={{ width: "100%"}} />}
         <Timeline  bulletSize={28} lineWidth={2}>
             { items && items.map( (item,index) =>
                 <Timeline.Item 
@@ -31,6 +33,7 @@ const ActivityActions = props => {
                 </Timeline.Item>
             )}
         </Timeline>
+        </>
     )
 
 };

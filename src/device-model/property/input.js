@@ -5,7 +5,6 @@ import InputSegment from 'device-model/property/input/InputSegment'
 const Input = props => {
 
     if (props.compact) {
-        console.log('compact mode props', props)
         return <InputSegment {...props} />
     }
 

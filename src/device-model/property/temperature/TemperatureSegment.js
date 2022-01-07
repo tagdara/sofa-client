@@ -1,14 +1,15 @@
 import React from 'react';
 import useTemperature from 'device-model/property/temperature/useTemperature'
-import Segment from 'components/Segment'
+import SegmentPopover from 'components/SegmentPopover'
+import TemperatureAvatar from 'device-model/property/temperature/TemperatureAvatar'
 
-const TemperatureAvatar = props => {
+const TemperatureSegment = props => {
     
     const { temperatureLabel } = useTemperature(props.endpointId)
 
     return (
-        <Segment>{ temperatureLabel }</Segment>
+        <SegmentPopover value={ temperatureLabel } popOver={<TemperatureAvatar {...props} />} />
     );
 }
 
-export default TemperatureAvatar;
+export default TemperatureSegment;

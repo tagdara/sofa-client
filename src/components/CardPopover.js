@@ -9,6 +9,8 @@ const CardPopover = props => {
         <Popover
                 styles={{ 
                     popover: { 
+                        minWidth: props.minWidth ? props.minWidth: 200,
+                        maxWidth: props.maxWidth ? props.maxWidth: 320,                       
                         backgroundColor: theme.colorScheme === 'dark' ? 
                                             theme.fn.lighten(theme.colors.dark[7], 0.1)  : 
                                             theme.colors[theme.primaryColor][5],

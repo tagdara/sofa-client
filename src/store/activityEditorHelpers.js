@@ -2,6 +2,7 @@ import React, { Suspense } from 'react';
 import { Button } from '@mantine/core';
 import useActivityEditorStore from 'store/activityEditorStore'
 import useLoginStore from 'store/loginStore'
+import { hasCapability } from './deviceHelpers';
 
 const serverUrl = "https://"+window.location.hostname;
 const activityUrl = serverUrl + "/list/logic/activity/" // +props.endpointId
@@ -139,6 +140,12 @@ export const selectActivityDevice = (section, index, endpointId) => {
     console.log('selected new device', endpointId)
     const item = useActivityEditorStore.getState().activity[section][index]
     var updatedItem = { ...item, endpointId: endpointId }
+    if (!hasCapability(endpointId, item.controller)) {
+        updatedItem = { ...updatedItem, controller: undefined, value: undefined, instance: undefined, propertyName: undefined }
+        if (item.type === "command") {
+            updatedItem = { ...updatedItem, command: undefined }
+        }
+    }
     updateActivityItem(section, index, {...updatedItem})
 }
 

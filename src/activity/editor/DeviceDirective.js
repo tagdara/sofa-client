@@ -61,6 +61,10 @@ export default function DeviceDirective(props) {
     }
     
     function getLabel(item) {
+        if (item === undefined) {
+            return "Select a directive"
+        }
+
         if (item.instance) {
             if (item.directive === "SetMode") {
                 return "Set "+item.instance.split('.')[1]

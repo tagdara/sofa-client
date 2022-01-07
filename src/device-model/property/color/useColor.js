@@ -8,15 +8,16 @@ const useColor = ( endpointId, value, directive) => {
     const activeDirective = directive ? directive : storeDirective
 
     const stateColor = deviceState && deviceState.hasOwnProperty('ColorController') ? deviceState.ColorController.color.value : undefined
-    const userValue = value && value.color  ? value.color : undefined
-    const color = userValue ? userValue : stateColor
+    const color = value !== undefined ? value : stateColor
     const colorHex = color ? hsv2rgb(color) : undefined
+
+    const colorMantine = color ? { "hue": color.hue, "saturation": color.saturation * 100, "brightness": color.brightness } : undefined
 
     const setColor = newColor => {
         activeDirective(endpointId, 'ColorController', 'SetColor', { "color" : newColor }, {})
     }
 
-    return { color, colorHex, setColor }
+    return { color, colorHex, colorMantine, setColor }
 
 }
 

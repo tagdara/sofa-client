@@ -1,12 +1,13 @@
 import React from 'react';
-import Segment from 'components/Segment'
+import SegmentMenu from 'components/SegmentMenu'
 import useDetectionState from 'device-model/property/detectionState/useDetectionState'
 
 const DetectionStateSegment = props => {
 
-    const { detectionStateLabel } = useDetectionState(props.endpointId, props.value, props.directive)
+    const { detectionStateLabel, selections, setDetectionState } = useDetectionState(props.endpointId, props.value, props.directive)
 
-    return <Segment value={detectionStateLabel} />
+    return <SegmentMenu value={detectionStateLabel} selections={selections} select={setDetectionState} />
+
 }
 
-export default DetectionStateSegment;
+export default DetectionStateSegment

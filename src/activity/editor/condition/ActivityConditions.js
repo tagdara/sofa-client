@@ -3,6 +3,7 @@ import ActivityCondition from "activity/editor/condition/ActivityCondition"
 import useActivityEditorStore from 'store/activityEditorStore'
 import { addActivityItem } from 'store/activityEditorHelpers'
 import ErrorBoundary from 'error/ErrorBoundary'
+import { Divider} from '@mantine/core';
 
 import ActivityCategory from "activity/editor/layout/ActivityCategory"
 
@@ -35,6 +36,7 @@ const ActivityConditions = props => {
                             removing = { removing } 
                             reorder = { reordering }
         >
+            { (items && items.length >0) && <Divider style={{ width: "100%"}} />}
             { items && items.map( (item,index) =>
                 <ErrorBoundary key={"cond"+index} >
                     <ActivityCondition compact={true} category={category} index = {index} reordering = {reordering} removing = {removing} wide={props.wide} />

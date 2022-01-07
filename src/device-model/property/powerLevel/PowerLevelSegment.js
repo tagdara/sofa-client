@@ -1,13 +1,14 @@
 import React from 'react';
 import usePowerLevel from 'device-model/property/powerLevel/usePowerLevel'
-import Segment from 'components/Segment'
+import PowerLevelSlider from 'device-model/property/powerLevel/PowerLevelSlider'
+import SegmentPopover from 'components/SegmentPopover'
 
 export default function PowerLevelSegment(props) {
 
     const { powerLevelLabel } = usePowerLevel(props.endpointId, props.value, props.directive)
 
     return (
-        <Segment value={ powerLevelLabel } />
+        <SegmentPopover  value={ powerLevelLabel } popOver={<PowerLevelSlider step={1} {...props} />} />
     );
 }
 

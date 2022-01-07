@@ -6,8 +6,7 @@ const useBrightness = ( endpointId, value, directive) => {
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
     const stateBrightness = deviceState && deviceState.hasOwnProperty('BrightnessController') ? deviceState.BrightnessController.brightness.value : undefined
-    const userValue = value && value.brightness  ? value.brightness : undefined
-    const brightness = userValue ? userValue : stateBrightness
+    const brightness = value !== undefined ? value : stateBrightness
 
     const setBrightness = newBrightness => {
         activeDirective(endpointId, "BrightnessController", "SetBrightness", {"brightness": newBrightness})

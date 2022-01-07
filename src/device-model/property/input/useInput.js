@@ -9,10 +9,8 @@ const useInput = ( endpointId, value, directive) => {
 
     const inputs = getInputs(endpointId)
     const selections = inputs.map(inputChoice => ({value: inputChoice, label:  inputChoice }))
-    const userValue = value && value.input ? value.input : null
     const stateValue = deviceState && deviceState.InputController ? deviceState.InputController.input.value : undefined
-
-    const inputValue = userValue ? userValue : stateValue
+    const inputValue = value !== undefined ? value : stateValue
 
     const selectInput = newInput => {
         //endpointId, controllerName, command, payload={}, cookie={}, instance=""

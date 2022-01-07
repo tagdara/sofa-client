@@ -7,9 +7,18 @@ const usePowerState = (endpointId, value, directive) => {
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
     const statePowerState = deviceState && deviceState.PowerController ? deviceState.PowerController.powerState.value : undefined
-    const userValue = value ? value : undefined
-    const powerState = userValue ? userValue : statePowerState
-    const reachable = userValue ? true : isReachable(deviceState)
+    const powerState = value !== undefined ? value : statePowerState
+    const reachable = value !== undefined ? true : isReachable(deviceState)
+    const selections =[{ label: "On", value: "ON"}, { label: "Off", value: "OFF"}]
+
+    const selectPowerState = newState => {
+        // Used for activity editor mostly - not a real alexa directive
+        if (newState.toLowerCase()  === "on") {
+            turnOn()
+        } else if (newState.toLowerCase()  === "off") {
+            turnOff()
+        }
+    }
 
     const turnOn = () => {
         activeDirective(endpointId, "PowerController", "TurnOn")
@@ -26,7 +35,7 @@ const usePowerState = (endpointId, value, directive) => {
         powerStateBool ? turnOff() : turnOn()
     }
 
-    return { powerState, powerStateBool, powerStateLabel, turnOn, turnOff, toggle, reachable }
+    return { powerState, powerStateBool, powerStateLabel, turnOn, turnOff, toggle, selectPowerState, selections, reachable }
 
 }
 

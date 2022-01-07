@@ -16,7 +16,7 @@ const DeviceSegment = props => {
                     leftIcon={props.icon ? <HelpCircle size={12} /> : undefined }
                     variant="light" size={props.size ? props.size : "sm"}
                 >
-                    {"No device"}
+                    {!props.endpointId ? "No device" : "Missing device "+props.endpointId}
                 </Button> 
     }
 

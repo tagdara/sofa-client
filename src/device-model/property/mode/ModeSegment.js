@@ -1,13 +1,13 @@
 import React from 'react';
 import useMode from 'device-model/property/mode/useMode'
-import Segment from 'components/Segment'
+import SegmentMenu from 'components/SegmentMenu'
 
 export default function ModeSegment(props) {
 
-    const { modeLabel } = useMode(props.endpointId, props.instance, props.value, props.directive)
+    const { modeLabel, selections, setMode} = useMode(props.endpointId, props.instance, props.value, props.directive)
 
     return (
-        <Segment value={ modeLabel } />
+        <SegmentMenu value={ modeLabel } selections={selections} select={setMode} />
     );
 }
 

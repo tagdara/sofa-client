@@ -6,8 +6,7 @@ const usePowerLevel = ( endpointId, value, directive) => {
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
     const statePowerLevel = deviceState && deviceState.hasOwnProperty('PowerLevelController') ? deviceState.PowerLevelController.powerLevel.value : undefined
-    const userValue = value && value.powerLevel && value.powerLevel.value ? value.powerLevel.value : undefined
-    const powerLevel = userValue ? userValue : statePowerLevel
+    const powerLevel = value !== undefined ? value : statePowerLevel
 
     const setPowerLevel = newPowerLevel => {
         activeDirective(endpointId, "PowerLevelController", "SetPowerLevel", {"powerLevel": newPowerLevel})

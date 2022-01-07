@@ -5,7 +5,7 @@ import useTargetSetpoint from 'device-model/property/targetSetpoint/useTargetSet
 
 const TargetSetpointAdjuster = props => {
 
-    const { targetSetpoint, decreaseSetpoint, increaseSetpoint } = useTargetSetpoint(props.endpointId)
+    const { targetSetpoint, decreaseSetpoint, increaseSetpoint } = useTargetSetpoint(props.endpointId, props.value, props.directive)
 
     return (
             <Group spacing={4} noWrap>

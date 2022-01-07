@@ -1,4 +1,4 @@
-import React from 'react';
+import React  from 'react';
 import { Button } from '@mantine/core';
 
 const Segment = React.forwardRef( (props, ref) => {

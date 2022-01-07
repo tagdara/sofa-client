@@ -43,6 +43,10 @@ export default function PropertyValue(props) {
     const controllerInterface = getControllerInterface(device,item) 
 
     const conditionPropertyDirective = (endpointId, controllerName, command, payload={}, cookie={}, instance)  => {
+
+        if (command === "TurnOn") { payload = { powerState : "ON"} }
+        if (command === "TurnOff") { payload = { powerState : "OFF"} }
+
         const update = {    type: item.type,
                             endpointId: endpointId, 
                             controller: controllerName, 
@@ -63,6 +67,10 @@ export default function PropertyValue(props) {
         updateActivityItem(props.category, props.index, update)
     }
 
+    // TODO This is a hack/fix for changing format in the activity files so that value is represented as the actual
+    // value and the property is stored separately if needed
+    const itemValue = item.value && item.value.hasOwnProperty(propertyModuleName) ? item.value[propertyModuleName] : item.value
+
     const renderProps = { ...props, 
                             item: item, 
                             device: device, 
@@ -70,7 +78,8 @@ export default function PropertyValue(props) {
                             instance: item.instance, 
                             directive: item.type==="property" ? conditionPropertyDirective : activityPropertyDirective, 
                             interface: controllerInterface,
-                            value: item.value,
+                            value: itemValue,
+                            property: propertyModuleName
                         }
 
 

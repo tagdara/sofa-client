@@ -4,7 +4,7 @@ import { Collapse, Group } from '@mantine/core'
 import DeviceIcon from 'components/DeviceIcon'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
-import ModeSegmentedControl from 'device-model/property/mode/ModeSegmentedControl'
+import ModeSelect from 'device-model/property/mode/ModeSelect'
 import VolumeSlider from 'device-model/property/volume/VolumeSlider'
 import MutedButton from 'device-model/property/muted/MutedButton'
 import useMode from 'device-model/property/mode/useMode'
@@ -42,11 +42,11 @@ const Receiver = props => {
             </Collapse>
             <Collapse in={showDetail}>
                 <Group direction="column" grow noWrap spacing="sm">
-                    <Group noWrap>
-                        <ModeSegmentedControl filter={surroundPresets} endpointId={props.endpointId} instance={"Surround"} />
+                    <Group grow noWrap position={"apart"}>
+                        <ModeSelect filter={surroundPresets} endpointId={props.endpointId} instance={"Surround"} />
                         <MutedButton endpointId={props.endpointId} />
                     </Group>
-                    <Group noWrap>
+                    <Group grow noWrap position={"apart"}>
                         <InputSegmentedControl endpointId={props.endpointId} />
                         <InputLockButton endpointId={props.endpointId} />
                     </Group>

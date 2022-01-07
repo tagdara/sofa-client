@@ -5,7 +5,7 @@ const useMuted = (endpointId, value, directive) => {
 
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
-    const stateMuted = deviceState && deviceState.Speaker ? deviceState.Speaker.muted.value : undefined
+    const stateMuted = deviceState && deviceState.Speaker && deviceState.Speaker.muted ? deviceState.Speaker.muted.value : undefined
     const muted = value !== undefined ? value : stateMuted
 
     const setMute = newState => {

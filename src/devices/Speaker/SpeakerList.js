@@ -4,12 +4,13 @@ import { sortByName, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 
 const SpeakerList = props => {
     
-    const speakers = endpointIdsByDisplayCategory( "SPEAKER")    
-    const sortedSpeakers = sortByName(speakers)
+    const allSpeakers = endpointIdsByDisplayCategory( "SPEAKER")    
+    const sortedSpeakers = sortByName(allSpeakers)
+    const speakers = props.exclude ? sortedSpeakers.filter( endpointId => ( !props.exclude.includes(endpointId) ) ) : sortedSpeakers
 
     return (
         <>
-            { sortedSpeakers.map( endpointId => 
+            { speakers.map( endpointId => 
                 <Speaker key={endpointId} filterOff={props.filterOff} endpointId={endpointId} inList={true} />
             )}
         </>

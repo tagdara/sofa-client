@@ -16,6 +16,8 @@ export const useMultiRegister = (endpointIds) => {
 
     const uuid = useId();
 
+    console.log('umr', endpointIds)
+
     useEffect(() => {
         register(endpointIds, uuid)
         setRegisteredDevices(endpointIds)
@@ -23,7 +25,7 @@ export const useMultiRegister = (endpointIds) => {
             unregister(endpointIds, uuid)
         };
     // eslint-disable-next-line 
-    }, [ devices ])
+    }, [  ])
   
     return { deviceStates, registeredDevices }
 }

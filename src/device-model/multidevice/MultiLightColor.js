@@ -1,26 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
-import { compareState, register, unregister } from 'store/deviceHelpers'
 import { Checkbox, ColorPicker, ColorSwatch, Group, Popover } from '@mantine/core'
 import { hsv2rgb, hsl2hsv } from 'helpers/colorHelpers';
 import { useDidUpdate, useDebouncedValue } from '@mantine/hooks';
+import { hasCapability, compareState, register, unregister } from 'store/deviceHelpers'
 
 const MultiLightColor = props => {
 
     const [open, setOpen] = useState(false);
-    const states = useDeviceStateStore(state => Object.fromEntries(props.endpointIds.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))  
+    const colorLights = props.endpointIds.filter(endpointId => hasCapability(endpointId, "ColorController"))
+    const states = useDeviceStateStore(state => Object.fromEntries(colorLights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))  
     const [ value, setValue ] = useState(undefined)
     const [ retainBrightness, setRetainBrightness] = useState(true)
     const [ debounced ] = useDebouncedValue( value, props.delay ? props.delay : 300 );
 
     useEffect(() => {
-        register(props.endpointIds, 'MultiLightColor')
+        register(colorLights, 'MultiLightColor')
         return function cleanup() {
-            unregister(props.endpointIds, 'MultiLightColor');
+            unregister(colorLights, 'MultiLightColor');
         };
     // eslint-disable-next-line 
-    }, [])    
+    }, [ colorLights ])    
 
     useDidUpdate(() => {
         if (debounced !== undefined) {
@@ -37,7 +38,8 @@ const MultiLightColor = props => {
         }
     }, [ debounced ])
 
-    if (!states) { return null }
+    console.log()
+    if (!colorLights || colorLights.length < 1 || !states) { return null }
 
     function currentAverage() {
         var avgHue=0

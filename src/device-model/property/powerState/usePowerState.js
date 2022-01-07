@@ -22,7 +22,11 @@ const usePowerState = (endpointId, value, directive) => {
     const powerStateLabel = powerState === "ON" ? "On" : "Off"
     const powerStateBool = powerState === "ON"
 
-    return { powerState, powerStateBool, powerStateLabel, turnOn, turnOff, reachable }
+    const toggle = () => {
+        powerStateBool ? turnOff() : turnOn()
+    }
+
+    return { powerState, powerStateBool, powerStateLabel, turnOn, turnOff, toggle, reachable }
 
 }
 

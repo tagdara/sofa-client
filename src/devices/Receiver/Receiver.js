@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import CardLine from 'components/CardLine'
 import { Collapse, Group } from '@mantine/core'
 import DeviceIcon from 'components/DeviceIcon'
-import ReceiverInputSelect from 'devices/Receiver/ReceiverInputSelect'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import ModeSegmentedControl from 'device-model/property/mode/ModeSegmentedControl'
 import VolumeSlider from 'device-model/property/volume/VolumeSlider'
+import MutedButton from 'device-model/property/muted/MutedButton'
 import useMode from 'device-model/property/mode/useMode'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import useInput from 'device-model/property/input/useInput'
+import InputSegmentedControl from 'device-model/property/input/InputSegmentedControl'
+import InputLockButton from 'devices/Receiver/InputLockButton'
 
 const Receiver = props => {
 
@@ -40,8 +42,14 @@ const Receiver = props => {
             </Collapse>
             <Collapse in={showDetail}>
                 <Group direction="column" grow noWrap spacing="sm">
-                    <ModeSegmentedControl filter={surroundPresets} endpointId={props.endpointId} instance={"Surround"} />
-                    <ReceiverInputSelect endpointId={props.endpointId} />
+                    <Group noWrap>
+                        <ModeSegmentedControl filter={surroundPresets} endpointId={props.endpointId} instance={"Surround"} />
+                        <MutedButton endpointId={props.endpointId} />
+                    </Group>
+                    <Group noWrap>
+                        <InputSegmentedControl endpointId={props.endpointId} />
+                        <InputLockButton endpointId={props.endpointId} />
+                    </Group>
                 </Group>
             </Collapse>
         </Group>

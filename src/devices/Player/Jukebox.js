@@ -11,6 +11,7 @@ const JukeboxHero = props => {
     const [ showIdle, setShowIdle ]=useState(false)
     const [ filterOff, setFilterOff] = useState(true)
     const { deviceState } = useRegister(props.endpointId)
+    const exclude = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
 
     if (!deviceState) {
         return <PlaceholderCard count={ 3 } />
@@ -41,7 +42,7 @@ const JukeboxHero = props => {
             :
                 <PlayerHeader endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers}  url={props.url} />
             }
-                <SpeakerList filterOff={filterOff} />
+                <SpeakerList filterOff={filterOff} exclude={exclude} />
         </Group>
     );
 }

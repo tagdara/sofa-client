@@ -1,10 +1,12 @@
 import React from "react";
-import { endpointIdsByDisplayCategory } from 'store/deviceHelpers';
+import { endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
 import StackCard from 'components/StackCard'
 import Television from 'devices/Television/Television';
+import AppleTV from 'devices/AppleTV/AppleTV'
 
 const TvHero = props => {
     const tvs = endpointIdsByDisplayCategory('TV')
+    const appleTV = endpointIdByFriendlyName('Living Room Apple TV')
 
     return (
         <>
@@ -13,6 +15,9 @@ const TvHero = props => {
                     <Television endpointId={ endpointId } />
                 </StackCard>
             )}
+            <StackCard>
+                <AppleTV endpointId={appleTV} />
+            </StackCard>
         </>
     );
 }

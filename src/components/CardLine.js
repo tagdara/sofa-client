@@ -5,11 +5,12 @@ export const CardLine = React.forwardRef( (props, ref) => {
 
     return (
         <Group ref={ref} noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }} onClick={props.onClick} >
-            { props.avatar && 
+            { (props.avatar || props.avatarSrc) && 
                 ( props.loading ?
                     <Loader size={props.size ? props.size : "lg" } />
                 :
-                    <Avatar size={props.size ? props.size : "lg" } color={props.color} >{props.avatar}</Avatar>
+                    <Avatar style={{ width: props.avatarSrc ? 100 : undefined }}
+                            src={props.avatarSrc ? props.avatarSrc : undefined} size={props.size ? props.size : "lg" } color={props.avatarSrc ? undefined : props.color} >{props.avatar}</Avatar>
                 )
             }
             { props.icon &&

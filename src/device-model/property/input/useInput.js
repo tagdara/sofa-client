@@ -24,7 +24,7 @@ const useInput = ( endpointId, value, directive) => {
         });
     }
     
-    const inputLabel = camelSentence(inputValue)
+    const inputLabel = inputValue.includes(" ") ? inputValue : camelSentence(inputValue)
 
     return { inputValue, inputLabel, selections, inputs, selectInput }
 

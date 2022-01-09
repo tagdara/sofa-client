@@ -7,17 +7,14 @@ import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import ModeSelect from 'device-model/property/mode/ModeSelect'
 import VolumeSlider from 'device-model/property/volume/VolumeSlider'
 import MutedButton from 'device-model/property/muted/MutedButton'
-import useMode from 'device-model/property/mode/useMode'
 import usePowerState from 'device-model/property/powerState/usePowerState'
-import useInput from 'device-model/property/input/useInput'
 import InputSegmentedControl from 'device-model/property/input/InputSegmentedControl'
 import InputLockButton from 'devices/Receiver/InputLockButton'
+import ReceiverDetailLine from 'devices/Receiver/ReceiverDetailLine'
 
 const Receiver = props => {
 
-    const { modeLabel: surroundName } = useMode(props.endpointId, "Surround") 
     const { powerStateBool: on } = usePowerState(props.endpointId)
-    const { inputLabel } = useInput(props.endpointId)
     const [ showDetail, setShowDetail ] = useState(false);
     const name = friendlyNameByEndpointId(props.endpointId) 
 
@@ -25,14 +22,13 @@ const Receiver = props => {
     const volumePresets = [40, 55, 60, 65, 70, 80];
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
-    const subText = on ? inputLabel + " / "+ surroundName : null
-
     return (
         <Group direction="column" grow noWrap spacing="xl">
-            <CardLine   arrow avatar={ <DeviceIcon endpointId={props.endpointId} /> }
+            <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
                         color={ on ? "primary" : undefined}
+                        on={on}
                         primary={ name }
-                        secondary={ subText }
+                        secondary={ on ? <ReceiverDetailLine endpointId={props.endpointId} /> : null }
                         onClick={ () => setShowDetail(!showDetail)}
             >
                 <PowerStateSwitch endpointId={props.endpointId} />

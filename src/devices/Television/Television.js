@@ -6,6 +6,7 @@ import usePowerState from 'device-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import InputSelect from 'device-model/property/input/InputSelect'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import TelevisionDetailLine from 'devices/Television/TelevisionDetailLine'
 
 const Television = props => {
   
@@ -15,14 +16,16 @@ const Television = props => {
 
     return (
             <Group direction="column" grow>
-                <CardLine   avatar={ <DeviceIcon endpointId={props.endpointId} /> }
+                <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
+                            color={ on ? "primary" : undefined}
+                            on={on}
                             primary={ name }
+                            secondary={ on ? <TelevisionDetailLine endpointId={props.endpointId} /> : null }
                             onClick={ () => setShowDetail(!showDetail)}
-                            color={ on ? "primary" : undefined }
                 >
                     <PowerStateSwitch endpointId={props.endpointId} />
                 </CardLine>
-                <Collapse in={showDetail || on}>
+                <Collapse in={showDetail}>
                     <InputSelect endpointId={props.endpointId} />
                 </Collapse>
             </Group>

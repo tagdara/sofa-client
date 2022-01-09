@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActionIcon, Avatar, Group, Loader, Text } from '@mantine/core';
+import { Avatar, Group, Loader, Text, ThemeIcon } from '@mantine/core';
 
 export const CardLine = React.forwardRef( (props, ref) => {
 
@@ -17,9 +17,9 @@ export const CardLine = React.forwardRef( (props, ref) => {
                 ( props.loading ?
                     <Loader size={props.size ? props.size : "sm" } />
                 :
-                    <ActionIcon size={props.size} color={props.color}>
+                    <ThemeIcon radius="md" size={props.size ? props.size : "lg" } color={props.color} variant={ props.on ? "filled" : "light"}>
                         { props.icon }
-                    </ActionIcon>
+                    </ThemeIcon>
                 )
             }           
             <Group direction="column" spacing={0} grow style={{ flexGrow: 1 }}>

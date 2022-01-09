@@ -13,9 +13,9 @@ const Segment = React.forwardRef( (props, ref) => {
                 ref = {ref}
                 variant="light"
                 leftIcon={ props.icon }
-                style={{ backgroundColor: cssColor ? props.color : undefined }}
-                color={ !cssColor && props.color ? props.color : "green" }
-                radius="md"
+                style={{ fontWeight: 400, backgroundColor: cssColor ? props.color : undefined }}
+                color={ !cssColor && props.color ? props.color : "primary" }
+                radius="sm"
                 size={props.size ? props.size : "sm"}
                 onClick={props.onClick}
         >

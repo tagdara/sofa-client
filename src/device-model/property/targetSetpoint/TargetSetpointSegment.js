@@ -7,7 +7,7 @@ const TargetSetpointSegment = props => {
 
     const { targetSetpointLabel } = useTargetSetpoint(props.endpointId, props.value, props.directive)
 
-    return <SegmentPopover value={ targetSetpointLabel} popOver={<TargetSetpointAdjuster {...props} />} />
+    return <SegmentPopover size={props.size} value={ targetSetpointLabel} popOver={<TargetSetpointAdjuster {...props} />} />
 
 }
 

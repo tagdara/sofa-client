@@ -7,7 +7,7 @@ export default function ThermostatModeSegment(props) {
     const { thermostatModeLabel } = useThermostatMode(props.endpointId, props.value, props.directive)
 
     return (
-        <Segment value={ thermostatModeLabel } />
+        <Segment size={props.size} value={ thermostatModeLabel } />
     );
 }
 

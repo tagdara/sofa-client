@@ -18,8 +18,8 @@ const InputLockSegment = props => {
     }
 
     return (
-        <Segment color={ locked ? "primary" : undefined } variant={ locked ? "filled" : "light"} onClick={modeToggleClick} >
-            { locked ? <Lock size={16} /> : <Unlock size={16} /> }
+        <Segment size={props.size} color={ locked ? "primary" : undefined } variant={ locked ? "filled" : "light"} onClick={modeToggleClick} >
+            { locked ? <Lock size={12} /> : <Unlock size={12} /> }
         </Segment>
     );
 

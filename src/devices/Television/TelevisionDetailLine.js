@@ -9,8 +9,8 @@ const TelevisionDetailLine = props => {
     const { muted } = useMuted(props.endpointId)
 
     return  <Group style={{ padding: "2px 0"}} spacing={2} >
-                <InputSegment endpointId={props.endpointId} />
-                { muted && <MutedSegment icon endpointId={props.endpointId} /> }
+                <InputSegment size="xs" endpointId={props.endpointId} />
+                { muted && <MutedSegment size="xs" icon endpointId={props.endpointId} /> }
             </Group> 
 }
 

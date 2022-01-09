@@ -14,10 +14,10 @@ const ReceiverDetailLine = props => {
     const locked = mode === 'InputLock.Locked' 
 
     return  <Group style={{ padding: "2px 0"}} spacing={2} >
-                { locked && <InputLockSegment icon endpointId={props.endpointId} /> }
-                <InputSegment endpointId={props.endpointId} />
-                <ModeSegment endpointId={props.endpointId} instance={"Surround"} />
-                { muted && <MutedSegment icon endpointId={props.endpointId} /> }
+                { locked && <InputLockSegment size="xs" icon endpointId={props.endpointId} /> }
+                <InputSegment size="xs" endpointId={props.endpointId} />
+                <ModeSegment size="xs" endpointId={props.endpointId} instance={"Surround"} />
+                { muted && <MutedSegment size="xs" icon endpointId={props.endpointId} /> }
             </Group> 
 }
 

@@ -17,7 +17,7 @@ export default function TimeRangeSegment(props) {
     const endLabel = moment(endVal).format("h:MMa")
 
     return (
-        <Segment>
+        <Segment size={props.size}>
             { startLabel +" - " + endLabel }
         </Segment>
     );

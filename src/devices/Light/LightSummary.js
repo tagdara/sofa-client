@@ -12,7 +12,7 @@ import { selectPage } from 'helpers/layoutHelpers';
 
 const LightSummary = props => {
     const theme = useMantineTheme()
-    const xmas = true
+    const xmas = false
     const lights = endpointIdsByDisplayCategory('LIGHT')
     const states = useDeviceStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
     const register = useRegisterStore( state => state.add)

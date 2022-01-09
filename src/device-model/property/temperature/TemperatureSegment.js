@@ -8,7 +8,7 @@ const TemperatureSegment = props => {
     const { temperatureLabel } = useTemperature(props.endpointId)
 
     return (
-        <SegmentPopover value={ temperatureLabel } popOver={<TemperatureAvatar {...props} />} />
+        <SegmentPopover size={props.size} value={ temperatureLabel } popOver={<TemperatureAvatar {...props} />} />
     );
 }
 

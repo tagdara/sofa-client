@@ -7,7 +7,7 @@ export default function ModeSegment(props) {
     const { rangeValue } = useMode(props.endpointId, props.instance, props.value, props.directive)
 
     return (
-        <Segment value={ rangeValue } />
+        <Segment size={props.size} value={ rangeValue } />
     );
 }
 

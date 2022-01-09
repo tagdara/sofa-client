@@ -7,7 +7,7 @@ export default function InputSegment(props) {
     const { inputLabel, selections, selectInput} = useInput(props.endpointId, props.value, props.directive)
 
     return (
-        <SegmentMenu value={inputLabel} selections={selections} select={selectInput} />
+        <SegmentMenu size={props.size} value={inputLabel} selections={selections} select={selectInput} />
     );
 }
 

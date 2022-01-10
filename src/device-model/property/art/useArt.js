@@ -1,21 +1,15 @@
 
-import { useState, useEffect} from "react";
 import { useRegister } from 'store/useRegister'
+import useTokenImage from 'helpers/useTokenImage'
 
 const useArt = (endpointId, value, directive) => {
 
     const { deviceState } = useRegister(endpointId)
     const stateArt = deviceState && deviceState.MediaMetadata && deviceState.MediaMetadata.art ? deviceState.MediaMetadata.art.value : undefined
     const art = value !== undefined ? value : stateArt
-    const [ image, setImage ] = useState(undefined)
+    const { localImageUrl: image, imageLoaded } = useTokenImage(art)
 
-    useEffect(()=> {
-        var img = new Image();
-        img.onload = function() { setImage(img) }
-        img.src = art
-    }, [ art ]);
-
-    return { image, art }
+    return { image, art, imageLoaded }
 
 }
 

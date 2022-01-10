@@ -13,13 +13,13 @@ const AppleTV = props => {
     const [ showDetail, setShowDetail ] = useState(false);
     const { app: appName } = useApp(props.endpointId)
     const { powerStateBool: on } = usePowerState(props.endpointId)
-    const { art } = useArt(props.endpointId)
+    const { image, art } = useArt(props.endpointId)
     const { title } = useTitle(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
 
     return (
             <Group direction="column" grow>
-                <CardLine   avatarSrc={ (on && art) ? art : undefined }
+                <CardLine   avatarSrc={ (on && art) ? image : undefined }
                             icon = { (!on || !art) ? <AppleTvIcon size={20} /> : undefined } 
                             primary={ name }
                             secondary = { title ? title : appName }

@@ -7,11 +7,11 @@ import CameraPlaceholder from 'devices/Camera/CameraPlaceholder'
 
 const CameraImage = props => {
 
-    const { imageUri, imageSrc } = useRefreshCameraImage(props.endpointId, props.refreshInterval)
+    const { imageSrc, imageLoaded } = useRefreshCameraImage(props.endpointId, props.refreshInterval)
     const name = friendlyNameByEndpointId(props.endpointId)
     const { reachable } = useEndpointHealth(props.endpointId)
 
-    const loading = (!imageUri  || !reachable )
+    const loading = (!imageLoaded  || !reachable )
 
     return (
         <Image  src={ imageSrc }
@@ -22,7 +22,7 @@ const CameraImage = props => {
                     }
                 }}
                 onClick={props.onClick}
-                withPlaceholder={ !imageUri }
+                withPlaceholder={ !imageSrc }
                 alt={name}
                 placeholder={  
                     <CameraPlaceholder loading={loading} />

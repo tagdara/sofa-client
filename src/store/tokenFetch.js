@@ -35,3 +35,23 @@ export const tokenFetch = async (url, data, retry) => {
         console.log('An error occured while attempting to fetch data', url, data, retry)
     }
 }
+
+export const tokenFetchImage = async (url) => {
+    try {
+        const accessToken = useLoginStore.getState().access_token;
+        const headers = { authorization : accessToken }
+        if (!url.startsWith(serverUrl)) { url = serverUrl+url}
+        const response = await fetch(url, { headers: headers })
+
+        if (response.status !== 200) {
+            console.log(response.status,' response code received for image',url)
+            return undefined
+        } 
+        const blob = await response.blob()
+        const imageObjectURL = URL.createObjectURL(blob);
+        return imageObjectURL
+    }
+    catch {
+        console.log('An error occured while attempting to fetch image', url)
+    }
+}

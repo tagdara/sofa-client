@@ -1,16 +1,16 @@
 import React from 'react';
 import { Group, Image, Text } from '@mantine/core'
 import { Music } from 'react-feather'
+import useTokenImage from 'helpers/useTokenImage'
 
 export default function PlayerArtOverlay(props) {
     
-    const serverurl="https://"+window.location.hostname;
     const data = props.deviceState && props.deviceState.MusicController ? props.deviceState.MusicController : {}
     var coverDefault = ""
     const art = data.art ? data.art.value : coverDefault
     const title = data.title ? data.title.value : "Jukebox is idle"
     const artist = data.artist ? data.artist.value : ""
-    const artUrl = art.startsWith('http') ? art : serverurl + art + "?title="+title
+    const { localImageUrl, imageLoaded } = useTokenImage(art)
 
     return ( 
             <Group direction="row" noWrap>
@@ -19,7 +19,7 @@ export default function PlayerArtOverlay(props) {
                     style={{ display: "flex", flexGrow: 1, maxWidth: "30%" }}
                     withPlaceholder
                     placeholder={<Music style={{ maxWidth: "30%" }} />}
-                    src={ art ? artUrl : null }
+                    src={ imageLoaded ? localImageUrl : null }
                     title={ title }
                     alt={ title }
                     onClick={ (e) => props.cover(e)}

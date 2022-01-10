@@ -1,21 +1,10 @@
 import { useState, useEffect } from 'react';
 import useLoginStore from 'store/loginStore'
+import { tokenFetch } from 'store/tokenFetch'
 
 const serverurl="https://"+window.location.hostname;
-
-function writeCookie(key, value, days) {
-
-    // Cookies are one of the only ways to pass authentication information as part of an SSE subscription
-    // otherwise we use local storage
-
-    var date = new Date();
-    // Default at 365 days.
-    days = days || 365;
-    // Get unix milliseconds at current time plus number of days
-    date.setTime(+ date + (days * 86400000)); //24 * 60 * 60 * 1000
-    window.document.cookie = key + "=" + value + "; expires=" + date.toGMTString() + "; path=/";
-    return value;
-};
+const sseUrl = serverurl + "/sse"
+const sseTokenUrl = "/sse/token"
 
 export const useStream = ( dataProcessor ) => {
     const accessToken = useLoginStore(state => state.access_token)
@@ -24,13 +13,6 @@ export const useStream = ( dataProcessor ) => {
     const [isConnecting, setIsConnecting] = useState(false)
     const [ streamLabel, setStreamLabel ] = useState('Initial')
 
-    useEffect(() => {
-        if (accessToken) {
-            //console.log('Cookieizing Access Token for stream auth', accessToken)
-            writeCookie("access_token", accessToken, 1)
-        }
-    }, [ accessToken ])
-    
     function getStreamStatus() {
         
         if (eventSource) {
@@ -53,12 +35,14 @@ export const useStream = ( dataProcessor ) => {
     const streamConnected = getConnected()
     const url = serverurl + "/sse"
     
-    const connectStream = () => {
+    const connectStream = async () => {
         if (!isConnecting) {
+            const tokenResult = await tokenFetch(sseTokenUrl)
             setStreamLabel('connect')
             console.log('connect stream')
             setIsConnecting(true)
-            var esource = new EventSource(url, { withCredentials: true })
+            const tokenUrl = sseUrl + "?token=" + tokenResult['sse_token']
+            var esource = new EventSource(tokenUrl, { withCredentials: true })
             esource.addEventListener('message', dataHandler);
             esource.addEventListener('error', errorHandler);
             esource.addEventListener('open', openHandler);

@@ -3,11 +3,14 @@ import { ActionIcon, Avatar, Group, Text } from '@mantine/core'
 import { Speaker as SpeakerIcon, Music } from 'react-feather'
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { useRegister } from 'store/useRegister'
+import useTokenImage from 'helpers/useTokenImage'
 
 const PlayerHeaderSmall = props => {
     
-    const serverurl="https://"+window.location.hostname;
     const { deviceState } = useRegister(props.endpointId)
+    const data = deviceState && deviceState.MusicController ? deviceState.MusicController : {}
+    const art = (data.art && data.art.value) ? data.art.value : ""
+    const { localImageUrl } = useTokenImage(art)
 
     if (!deviceState) {
         return <PlaceholderCard count={ 3 } />
@@ -18,13 +21,15 @@ const PlayerHeaderSmall = props => {
         safariWindow.location.href = props.url
     }
 
+    //                <Avatar size="lg" src={ deviceState.MusicController.art.value ? 
+    //serverurl + deviceState.MusicController.art.value :
+    //'X' } 
+    // />
+
     return (
         <Group direction="row" noWrap position="apart" onClick={props.toggleIdle}>
             <Group>
-                <Avatar size="lg" src={ deviceState.MusicController.art.value ? 
-                                serverurl + deviceState.MusicController.art.value :
-                                'X' } 
-                />
+                <Avatar size="lg" src={localImageUrl} />
                 <Text>{'Jukebox is idle'}</Text>
             </Group>
             <Group>

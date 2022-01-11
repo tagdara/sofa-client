@@ -1,7 +1,6 @@
 import React from 'react';
-import CardLine from 'components/CardLine';
-import ColorButton from 'components/ColorButton';
-import ActivityLineSegment from '../archive/activity/editor/layout/ActivityLineSegment'
+import { Button, Group } from '@mantine/core'
+import ActivityLineSegment from 'activity/editor/layout/ActivityLineSegment'
 
 export default function ScheduleDays(props) {
 
@@ -22,14 +21,14 @@ export default function ScheduleDays(props) {
     
     return (
         <ActivityLineSegment wide={props.wide}>
-            <CardLine>
+            <Group noWrap spacing={2}>
                 { daysOfTheWeek.map((day) => 
-                    <ColorButton key={day} label={day} on={props.value && props.value.includes(day) } onClick={(e) => editDays(day)} >
+                    <Button size="xs" compact variant={props.value && props.value.includes(day) ? "filled" : "light" } key={day} onClick={(e) => editDays(day)} >
                         {day}
-                    </ColorButton>
+                    </Button>
                     )
                 }
-            </CardLine>
+            </Group>
         </ActivityLineSegment>
     )
 }

@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import ActivityTriggers from "activity/editor/trigger/ActivityTriggers"
 import ActivityConditions from "activity/editor/condition/ActivityConditions"
 import ActivityActions from "activity/editor/action/ActivityActions"
-//import ActivitySchedules from "activity/editor/schedule/ActivitySchedules"
-
+import ActivitySchedules from "activity/editor/schedule/ActivitySchedules"
 import ActivityHeader from "activity/editor/layout/ActivityHeader"
 import ActivityFooter from "activity/editor/layout/ActivityFooter"
 import { loadActivity, newActivity } from 'store/activityEditorHelpers';
@@ -29,6 +28,7 @@ export default function ActivityEditor(props) {
             <ActivityHeader />
             <SectionFrame>
                 <Group direction={"column"} style={{ width: "100%"}}>
+                    <ActivitySchedules />
                     <ActivityTriggers />
                     <ActivityConditions />
                     <ActivityActions />

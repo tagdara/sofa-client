@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import ActivitySchedule from "../archive/activity/editor/schedule/ActivitySchedule"
+import ActivitySchedule from "activity/editor/schedule/ActivitySchedule"
 import useActivityEditorStore from 'store/activityEditorStore'
-import ErrorBoundary from '../archive/error/ErrorBoundary'
-import ActivityCategory from "../archive/activity/editor/layout/ActivityCategory"
+import ErrorBoundary from 'error/ErrorBoundary'
+import ActivityCategory from "activity/editor/layout/ActivityCategory"
 import { shortTimeFormat, addActivityItem } from 'store/activityEditorHelpers'
 
 const ActivitySchedules = props => {
@@ -28,7 +28,7 @@ const ActivitySchedules = props => {
                             setRemoving = { setRemoving } removing = { removing }  >
                 { items && items.map( (item,index) =>
                     <ErrorBoundary key={"trigger"+index} >
-                        <ActivitySchedule wide={props.wide} index = {index} removing = {removing} category={category} />
+                        <ActivitySchedule compact={true} index = {index} removing = {removing} category={category} />
                     </ErrorBoundary>
                 )}
         </ActivityCategory>

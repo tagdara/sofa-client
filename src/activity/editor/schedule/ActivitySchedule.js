@@ -1,13 +1,14 @@
 import React from 'react';
 
-import ActivityLine from '../archive/activity/editor/layout/ActivityLine'
-import ScheduleStart from '../archive/activity/editor/schedule/ScheduleStart'
-import ScheduleInterval from '../archive/activity/editor/schedule/ScheduleInterval'
-import ScheduleDays from '../archive/activity/editor/schedule/ScheduleDays'
+import ActivityLine from 'activity/editor/layout/ActivityLine'
+import ScheduleStart from 'activity/editor/schedule/ScheduleStart'
+import ScheduleInterval from 'activity/editor/schedule/ScheduleInterval'
+import ScheduleDays from 'activity/editor/schedule/ScheduleDays'
 
 import useActivityEditorStore from 'store/activityEditorStore'
 import { updateActivityItem } from 'store/activityEditorHelpers'
-
+import { ThemeIcon, Group, Text } from '@mantine/core';
+import { Calendar } from 'react-feather'
 
 const ActivitySchedule = props => {
 
@@ -29,13 +30,19 @@ const ActivitySchedule = props => {
     }
 
     return (
-        <ActivityLine category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} count={props.count}>
-            <ScheduleStart wide={props.wide} target="start" change={changeValue} value={schedule.start} />
-            { schedule.hasOwnProperty('type') && schedule.type==='interval' ?
-                <ScheduleInterval wide={props.wide} toggle={toggleType} change={changeValue} unit={schedule.unit} value={schedule.interval} />
-            :
-                <ScheduleDays wide={props.wide} toggle={toggleType} change={changeValue} value={schedule.days} />
-            }
+        <ActivityLine compact={props.compact}>
+            <ThemeIcon color="purple" radius="xl" size="md" style={{ margin: "4px 8px 4px 0px", padding: 0, width: 28 }} ><Calendar size={16} /></ThemeIcon>
+            <Group direction="column" noWrap spacing={2} >
+                <Text size="sm">{"Start"}</Text>
+                <ScheduleStart target="start" change={changeValue} value={schedule.start} />
+                <Group>
+                    { schedule.hasOwnProperty('type') && schedule.type==='interval' ?
+                        <ScheduleInterval wide={props.wide} toggle={toggleType} change={changeValue} unit={schedule.unit} value={schedule.interval} />
+                    :
+                        <ScheduleDays wide={props.wide} toggle={toggleType} change={changeValue} value={schedule.days} />
+                    }
+                </Group>
+            </Group>
         </ActivityLine>
     )
 }

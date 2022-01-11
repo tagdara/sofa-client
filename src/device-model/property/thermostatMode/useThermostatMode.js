@@ -30,10 +30,10 @@ const useThermostatMode = ( endpointId, value, directive) => {
     }; 
 
     const supportedModes = getSupportedModes()
-    const selectModes = supportedModes.map( mode => { return { label : mode, value : mode}})
+    const selections = supportedModes.map( mode => { return { label : mode, value : mode}})
     const thermostatModeLabel = camelSentence(thermostatMode)
     
-    return { thermostatModeLabel, setThermostatMode, supportedModes, thermostatMode, selectModes }
+    return { thermostatModeLabel, setThermostatMode, supportedModes, thermostatMode, selections }
 
 }
 

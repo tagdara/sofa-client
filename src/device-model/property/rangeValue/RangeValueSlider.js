@@ -1,7 +1,6 @@
 import React from 'react';
 import CardLineSlider from 'components/CardLineSlider';
-import { Group, ThemeIcon } from '@mantine/core'
-import { Sun } from 'react-feather';
+import { Group } from '@mantine/core'
 import useBrightness from 'device-model/property/brightness/useBrightness'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 
@@ -16,9 +15,6 @@ export default function BrightnessSlider(props) {
 
     return (
         <Group noWrap style={{ flexGrow: 1}}>
-            <ThemeIcon variant="light">
-                <Sun size={16} />
-            </ThemeIcon >
             <CardLineSlider label={"Brightness"} 
                 value={ brightness } on={true}
                 min={0} max={100} step={10} change={setBrightness}

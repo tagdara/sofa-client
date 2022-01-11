@@ -1,13 +1,12 @@
 import React from 'react';
+import SegmentMenu from 'components/SegmentMenu'
 import useThermostatMode from 'device-model/property/thermostatMode/useThermostatMode'
-import Segment from 'components/Segment'
 
 export default function ThermostatModeSegment(props) {
 
-    const { thermostatModeLabel } = useThermostatMode(props.endpointId, props.value, props.directive)
+    const { thermostatModeLabel, selections, setThermostatMode } = useThermostatMode(props.endpointId, props.value, props.directive)
 
-    return (
-        <Segment size={props.size} value={ thermostatModeLabel } />
-    );
+    return  <SegmentMenu value={ thermostatModeLabel } selections={selections} select={setThermostatMode} />
+
 }
 

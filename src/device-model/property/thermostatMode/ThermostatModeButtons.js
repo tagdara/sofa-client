@@ -4,7 +4,7 @@ import useThermostatMode from 'device-model/property/thermostatMode/useThermosta
 
 const ThermostatModeButtons = props => {
 
-    const { thermostatMode, selectModes, setThermostatMode } = useThermostatMode(props.endpointId, props.value, props.directive)
+    const { thermostatMode, selections, setThermostatMode } = useThermostatMode(props.endpointId, props.value, props.directive)
     
     if (!thermostatMode) { return null }
 
@@ -13,7 +13,7 @@ const ThermostatModeButtons = props => {
                 size={props.size ? props.size : "sm"}
                 fullWidth
                 value={ thermostatMode }
-                data={ selectModes }
+                data={ selections }
                 onChange={ setThermostatMode }
         />    
     );

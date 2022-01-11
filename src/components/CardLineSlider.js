@@ -51,8 +51,8 @@ const CardLineSlider = props => {
 
     const labelItem = props.labels ? props.labels.find( label => label.value === value) : undefined
     const label = labelItem ? labelItem.label : value
-    const min = props.min ? props.min : ( props.marks ? props.marks[0].value: 0 )
-    const max = props.max ? props.max : ( props.marks ? props.marks[props.marks.length-1].value : 100 )
+    const min = props.min !== undefined ? props.min : ( props.marks !== undefined ? props.marks[0].value: 0 )
+    const max = props.max !== undefined ? props.max : ( props.marks !== undefined ? props.marks[props.marks.length-1].value : 100 )
 
     return (
         <Slider

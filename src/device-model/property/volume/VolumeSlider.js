@@ -13,7 +13,7 @@ export default function VolumeSlider(props) {
     if (volume === undefined ) { return null }
 
     const disabled = props.disabled || ( props.value === undefined && !powerStateBool )
-    const on = ( props.value === undefined && powerStateBool )
+    const on = ( props.value !== undefined || powerStateBool )
 
     return (
         <Group noWrap style={{ flexGrow: 1}}>

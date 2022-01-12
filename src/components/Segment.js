@@ -13,7 +13,13 @@ const Segment = React.forwardRef( (props, ref) => {
                 ref = {ref}
                 variant="light"
                 leftIcon={ props.icon }
-                style={{  backgroundColor: cssColor ? props.color : undefined }}
+                style={{  
+                    backgroundColor: cssColor ? props.color : undefined,
+                    borderTopLeftRadius: (props.position && props.position !== "start") ? 0 : undefined,
+                    borderBottomLeftRadius: (props.position && props.position !== "start") ? 0 : undefined,
+                    borderTopRightRadius: (props.position && props.position !== "end") ? 0 : undefined,
+                    borderBottomRightRadius: (props.position && props.position !== "end") ? 0 : undefined,
+                }}
                 color={ !cssColor && props.color ? props.color : "primary" }
                 radius="sm"
                 size={props.size ? props.size : "sm"}

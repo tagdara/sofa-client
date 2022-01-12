@@ -27,6 +27,12 @@ export const newActivity = () => {
     useActivityEditorStore.setState({ activity: {}, saved: false, endpointId: undefined }, true)
 }
 
+export const modifyActivityJson = data => {
+    const endpointId = useActivityEditorStore.getState().endpointId;
+    if (data.updated_src) {
+        useActivityEditorStore.setState({ activity: data.updated_src, endpointId: endpointId, saved: false }, true)
+    }
+}
 
 export const saveActivity = async () => {
     const accessToken = useLoginStore.getState().access_token;

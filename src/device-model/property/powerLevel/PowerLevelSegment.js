@@ -8,7 +8,7 @@ export default function PowerLevelSegment(props) {
     const { powerLevelLabel } = usePowerLevel(props.endpointId, props.value, props.directive)
 
     return (
-        <SegmentPopover  size={props.size} value={ powerLevelLabel } popOver={<PowerLevelSlider step={1} {...props} />} />
+        <SegmentPopover minWidth={200} size={props.size} value={ powerLevelLabel } popOver={<PowerLevelSlider step={1} {...props} />} />
     );
 }
 

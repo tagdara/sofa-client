@@ -3,16 +3,15 @@ import { TimeInput } from '@mantine/dates';
 
 const TimeSelect = props => {
 
-    console.log('time sel val', props.value)
-
-    const change = val => {
-        console.log('change', val)
+    const test = data => {
+        console.log('test data', data)
+        props.setTime(data)
     }
 
     return (
         <TimeInput  size="sm" disabled={props.disabled} 
                     value={props.value} 
-                    onChange={change} 
+                    onChange={test} 
                     icon={props.icon}
         />
     )

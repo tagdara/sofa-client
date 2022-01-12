@@ -19,8 +19,22 @@ const PageFrame = props => {
     return (
         <Transition mounted={ mounted }  transition={"fade"} duration={100} timingFunction="ease">
             {(styles) => 
-                <Group direction="column" noWrap style={{ ...styles, maxWidth: props.maxWidth ? props.maxWidth : stacksWidth, height: "100%", overflow: "hidden", margin: "0 auto", width: "100%", paddingBottom : wide ? 64 : 8 }} >
+                <Group  direction="column" 
+                        noWrap 
+                        style={{ 
+                            ...styles, 
+                            maxWidth: props.maxWidth ? props.maxWidth : stacksWidth, 
+                            height: "100%", 
+                            overflow: "hidden", 
+                            margin: "0 auto", 
+                            width: "100%", 
+                            paddingBottom : wide ? 64 : 8,
+                            position: "relative",
+                            boxSizing: "border-box",
+                        }} 
+                >
                     { props.children}
+                    { props.padScroll && <div style={{ height: props.padScroll }} /> }
                 </Group>
             }
         </Transition>

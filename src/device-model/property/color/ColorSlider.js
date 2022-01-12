@@ -61,9 +61,11 @@ const ColorSlider = props => {
 
     return (
         <Group noWrap style={{ alignItems: "flex-start"}}>
-            <ThemeIcon variant="light">
-                <Droplet size={16} />
-            </ThemeIcon >
+            {props.icon &&
+                <ThemeIcon variant="light">
+                    <Droplet size={16} />
+                </ThemeIcon >
+            }
             <Group direction="column" style={{ paddingTop: 4, width: "100%"}}>
                 { retainBrightness ?
                     <div style={{ width: "100%"}}>

@@ -26,7 +26,7 @@ export default function ActivityEditor(props) {
     return (
         <PageFrame>
             <ActivityHeader />
-            <SectionFrame>
+            <SectionFrame padScroll={72}>
                 <Group direction={"column"} style={{ width: "100%"}}>
                     <ActivitySchedules />
                     <ActivityTriggers />

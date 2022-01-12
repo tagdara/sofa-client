@@ -1,25 +1,20 @@
 import React from 'react';
+import SegmentPopover from 'components/SegmentPopover'
+import TimeSelect from 'device-model/property/time/TimeSelect'
 import Segment from 'components/Segment'
-import moment from 'moment';
+import { Group } from '@mantine/core';
+import useTimeRange from 'device-model/property/time/useTimeRange'
 
 export default function TimeRangeSegment(props) {
 
-    console.log('trsp', props)
-    
-    const strToTime = timeStr => {
-        var target = new Date("1970-01-01 " + timeStr);
-        return target
-    }
-
-    const startVal = strToTime(props.item.value.start)
-    const endVal = strToTime(props.item.value.end)
-    const startLabel = moment(startVal).format("h:MMa")
-    const endLabel = moment(endVal).format("h:MMa")
+    const { startLabel, endLabel, startTime, endTime, setStartTime, setEndTime } = useTimeRange(props.endpointId, props.value, props.directive)
 
     return (
-        <Segment size={props.size}>
-            { startLabel +" - " + endLabel }
-        </Segment>
+        <Group spacing={0} noWrap>
+            <SegmentPopover position="start" minWidth={200} size={props.size} value={ startLabel } popOver={<TimeSelect {...props} setTime={setStartTime} value={startTime} />} />
+            <Segment position="middle" size={props.size}>{ " - " }</Segment>
+            <SegmentPopover position="end" minWidth={200} size={props.size} value={ endLabel } popOver={<TimeSelect {...props} value={endTime} setTime={setEndTime}  />} />
+        </Group>
     );
 
 }

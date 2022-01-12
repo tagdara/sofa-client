@@ -7,6 +7,6 @@ export default function BrightnessSegment(props) {
 
     const { brightnessLabel } = useBrightness(props.endpointId, props.value, props.directive)
 
-    return <SegmentPopover value={brightnessLabel}  popOver={<BrightnessSlider {...props} />} />
+    return <SegmentPopover minWidth={200} value={brightnessLabel}  popOver={<BrightnessSlider {...props} />} />
 }
 

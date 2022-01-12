@@ -1,4 +1,4 @@
-import { getController } from 'store/deviceHelpers'
+import { camelCase, getController } from 'store/deviceHelpers'
 import { useRegister } from 'store/useRegister'
 import { directive as storeDirective } from 'store/directive'
 
@@ -18,20 +18,18 @@ const useThermostatMode = ( endpointId, value, directive) => {
         return []
     }
 
-    var camelSentence = (str) => {
-        return (" " + str).toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function(match, chr)
-        {
-            return chr.toUpperCase();
-        });
-    }
-
     function setThermostatMode(newMode) {
         activeDirective(endpointId, "ThermostatController", "SetThermostatMode",  {"thermostatMode" : { "value": newMode }} )
     }; 
 
     const supportedModes = getSupportedModes()
     const selections = supportedModes.map( mode => { return { label : mode, value : mode}})
-    const thermostatModeLabel = camelSentence(thermostatMode)
+    const thermostatModeLabel = camelCase(thermostatMode)
+
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setThermostatMode(stateThermostatMode)
+    }
     
     return { thermostatModeLabel, setThermostatMode, supportedModes, thermostatMode, selections }
 

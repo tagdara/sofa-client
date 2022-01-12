@@ -23,6 +23,11 @@ const useShortcuts = (endpointId, value, directive) => {
         activeDirective(endpointId, "AreaController", "SetShortcuts", {"shortcuts": [ ...finalShortcuts ] })
     }
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setShortcuts(stateShortcuts)
+    }
+
     return { shortcuts, setShortcuts, addShortcuts, removeShortcuts }
 }
 

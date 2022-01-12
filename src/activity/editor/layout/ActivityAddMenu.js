@@ -11,9 +11,8 @@ const ActivityAddMenu = props => {
             "endpointId": undefined,
             "controller": undefined,
             "command": undefined,
-            "deviceName": undefined
         }
-        addActivityItem('action', newItem)
+        addActivityItem('actions', newItem)
     }
 
     function addTrigger() {
@@ -23,9 +22,8 @@ const ActivityAddMenu = props => {
             "value": undefined,
             "propertyName": undefined,
             "controller": undefined,
-            "deviceName": undefined
         }
-        addActivityItem('trigger', newItem)
+        addActivityItem('triggers', newItem)
     }
 
     function addCondition() {
@@ -35,9 +33,8 @@ const ActivityAddMenu = props => {
             "value": undefined,
             "propertyName": undefined,
             "controller": undefined,
-            "deviceName": undefined
         }        
-        addActivityItem('condition', newItem)
+        addActivityItem('conditions', newItem)
     }
 
     return (

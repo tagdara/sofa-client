@@ -1,6 +1,6 @@
 import { useRegister } from 'store/useRegister'
 import { directive as storeDirective } from 'store/directive'
-import { getInputs } from 'store/deviceHelpers';
+import { camelCase, getInputs } from 'store/deviceHelpers';
 
 const useInput = ( endpointId, value, directive) => {
 
@@ -17,14 +17,12 @@ const useInput = ( endpointId, value, directive) => {
         activeDirective(endpointId, "InputController", 'SelectInput', { "input": newInput } )
     }
 
-    var camelSentence = (str) => {
-        return (" " + str).toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function(match, chr)
-        {
-            return chr.toUpperCase();
-        });
+    const inputLabel = (!inputValue || inputValue.includes(" ")) ? inputValue : camelCase(inputValue)
+
+    // set default in activity editor
+    if (directive && value === undefined) {
+        selectInput(stateValue)
     }
-    
-    const inputLabel = (!inputValue || inputValue.includes(" ")) ? inputValue : camelSentence(inputValue)
 
     return { inputValue, inputLabel, selections, inputs, selectInput }
 

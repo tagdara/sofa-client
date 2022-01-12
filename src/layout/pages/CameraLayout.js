@@ -1,6 +1,7 @@
 import React, { useState} from 'react';
 import { AiOutlineQrcode } from 'react-icons/ai'
 import SectionHeader from 'layout/SectionHeader';
+import SectionFooter from 'layout/SectionFooter'
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
@@ -25,17 +26,17 @@ const CameraLayout = props => {
                     </ActionIcon> 
                 }
             </SectionHeader>
-            <SectionFrame>
+            <SectionFrame padScroll >
                 <SectionGrid>
                 { cameras.map(camera => 
                     <SecurityCamera key={camera} endpointId={camera} showQR={showQR} />
                 )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionHeader>
+            <SectionFooter>
                 <UnifiProtectButton />
                 <HomeButton />
-            </SectionHeader>
+            </SectionFooter>
         </PageFrame>
     )
 }

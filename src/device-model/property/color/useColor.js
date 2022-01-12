@@ -17,6 +17,11 @@ const useColor = ( endpointId, value, directive) => {
         activeDirective(endpointId, 'ColorController', 'SetColor', { "color" : newColor }, {})
     }
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setColor(stateColor)
+    }
+
     return { color, colorHex, colorMantine, setColor }
 
 }

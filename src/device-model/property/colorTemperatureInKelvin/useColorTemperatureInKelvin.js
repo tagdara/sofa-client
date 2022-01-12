@@ -12,7 +12,12 @@ const useColorTemperatureInKelvin = ( endpointId, value, directive) => {
     const setColorTemperature = newColorTemperature => {
         activeDirective(endpointId, "ColorTemperatureController", "SetColorTemperature", { "colorTemperatureInKelvin": newColorTemperature })
     }
-    
+
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setColorTemperature(stateColorTemperature)
+    }
+
     const colorTemperatureLabel = colorTemperatureInKelvin + "°"
 
     return { colorTemperatureInKelvin, colorTemperatureLabel, setColorTemperature }

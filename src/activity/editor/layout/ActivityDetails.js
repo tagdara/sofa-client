@@ -7,9 +7,9 @@ import useActivityEditorStore from 'store/activityEditorStore'
 const ActivityDetails = props => {
   
     const endpointId = useActivityEditorStore( state => state.endpointId )
-    const activity = useActivityEditorStore( state => state.activity )
+    const storeLastRun = useActivityEditorStore( state => state.activity.last_run )
 
-    const lastRun = activity.last_run && activity.last_run.toLowerCase() !== 'never' ? moment(activity.last_run).calendar() : undefined
+    const lastRun = storeLastRun && storeLastRun.toLowerCase() !== 'never' ? moment(storeLastRun).calendar() : undefined
 
     return (    
         <Group noWrap position="apart" spacing="xl" style={{width: "100%", alignItems: "end"}} >

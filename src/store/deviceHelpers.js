@@ -10,6 +10,12 @@ const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }}
 export const register = useRegisterStore.getState().add
 export const unregister = useRegisterStore.getState().remove
 
+export const camelCase = (str) => {
+    return (" " + str).toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, function(match, chr)
+    {
+        return chr.toUpperCase();
+    });
+}
 
 export const compareState = (oldData, newData) => {
     for (var item in oldData) {

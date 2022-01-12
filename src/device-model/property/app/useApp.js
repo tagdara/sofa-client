@@ -13,6 +13,11 @@ const useApp = (endpointId, value, directive) => {
         activeDirective(endpointId, "MediaMetadata", "SetApp", {"app": newState})
     }
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setApp(stateApp)
+    }
+    
     const appLabel = app
 
     return { app, appLabel, setApp }

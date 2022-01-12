@@ -10,11 +10,16 @@ export default function ControllerProperty(props) {
     const { propertyMap, selections, getDefaultOrValue, getSelectionLabel } = useDeviceProperties(endpointId)
     const value = getDefaultOrValue(item)
 
+    if (!endpointId) { return null }
+
+    const label = getSelectionLabel(value)
+
     function setPropertyName(newValue) {
         // returns a string index of the value that needs to be converted
         var index = parseInt(newValue)
         if (index < 0 || index > propertyMap.length-1) { return false}
         var updatedValue = propertyMap[index]
+        console.log('updatedValue', props.category, props.index, updatedValue)
 
         const updatedItem = {   ...item,   
                                 "instance": updatedValue.instance, 
@@ -27,5 +32,5 @@ export default function ControllerProperty(props) {
         updateActivityItem(props.category, props.index, updatedItem)
     }
 
-    return <SegmentMenu selections={selections} value={ getSelectionLabel(value) } select={setPropertyName} />
+    return <SegmentMenu selections={selections} color={ label ? undefined : "red" } value={ label ? label : "No property" } select={setPropertyName} />
 }

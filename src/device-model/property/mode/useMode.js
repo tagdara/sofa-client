@@ -26,6 +26,11 @@ const useMode = ( endpointId, userInstance, value, directive) => {
     
     const modeLabel = modeData[mode]
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setMode(stateMode)
+    }
+
     return { mode, modeLabel, selections, instance, modes, setMode, disabled }
 
 }

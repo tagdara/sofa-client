@@ -24,6 +24,11 @@ const useBrightness = ( endpointId, value, directive) => {
         setBrightness(newBrightness)
     }
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setBrightness(stateBrightness)
+    }
+
     const brightnessLabel = brightness + "%"
 
     return { brightness, brightnessLabel, setBrightness, increaseBrightness, decreaseBrightness }

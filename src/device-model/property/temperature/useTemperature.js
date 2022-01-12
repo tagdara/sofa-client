@@ -31,6 +31,11 @@ const useTemperature = ( endpointId, value, directive) => {
     const temperatureColor = getColor(temperature)
     const temperatureLabel = temperature +"°"
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setTemperature(stateTemperature)
+    }
+
     return { device, temperature, temperatureLabel, temperatureColor, setTemperature }
 
 }

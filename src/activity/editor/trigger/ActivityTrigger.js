@@ -5,19 +5,14 @@ import PropertyValue from 'activity/editor/PropertyValue';
 import ConditionOperator from 'activity/editor/ConditionOperator';
 import ControllerProperty from 'activity/editor/ControllerProperty';
 import ActivityLine from 'activity/editor/layout/ActivityLine'
-import { Avatar, Group } from '@mantine/core';
+import { Group } from '@mantine/core';
+import ActivityConditionMenu from 'activity/editor/condition/ActivityConditionMenu';
 
 const ActivityTrigger = props => {
 
     return (
         <ActivityLine compact={props.compact}>
-            <Avatar size="sm" 
-                    color="orange"
-                    radius="xl"
-                    style={{ fontWeight: 600, margin: "4px 8px 4px 0px" }} 
-            >
-                ON
-            </Avatar>
+            <ActivityConditionMenu index={props.index} category={props.category} />
             <Group direction="column" noWrap spacing={2} >
                 <ActivityDevice category={props.category} index={props.index} compact={props.compact} removing={props.removing} reordering={props.reordering} />
                 <Group spacing={2}>

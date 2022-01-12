@@ -5,6 +5,7 @@ import LightLine from 'devices/Light/LightLine';
 import useDeviceStore from 'store/deviceStore'
 import { sortByName } from 'store/deviceHelpers'
 
+import SectionFooter from 'layout/SectionFooter';
 import SectionHeader from 'layout/SectionHeader';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
@@ -32,7 +33,7 @@ const LightLayout = props => {
                         data={selections} 
                 />
             </SectionHeader >
-            <SectionFrame>
+            <SectionFrame padScroll>
                 <SectionGrid>
                 { lights.map( endpointId =>
                     <LightLine  key={ endpointId } endpointId={endpointId}  small={true} filter={filter} remove={props.remove}
@@ -40,9 +41,9 @@ const LightLayout = props => {
                 )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionHeader>
+            <SectionFooter>
                 <HomeButton />
-            </SectionHeader>
+            </SectionFooter>
         </PageFrame>
     )
 }

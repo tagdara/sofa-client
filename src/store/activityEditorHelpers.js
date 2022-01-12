@@ -9,6 +9,50 @@ const activityUrl = serverUrl + "/list/logic/activity/" // +props.endpointId
 const saveUrl = serverUrl + "/save/logic/activity/" // +props.endpointId
 const addUrl = serverUrl + "/add/logic/activity" // +props.endpointId
 
+
+const checkItemNotReady = (section, item) => {
+    if (!item.endpointId || item.endpointId === undefined) { 
+        console.log('no endpointId', section)
+        return true
+    }
+    if (section === "conditions") {
+        if  (!item.operator || item.operator === undefined) {
+            console.log('condition without operator', item)
+            return true
+        }
+    }
+    if (section === "actions") {
+        if  (!item.controller || item.controller === undefined) {
+            console.log('action without controller', item)
+            return true
+        }
+        if  (!item.command || item.command === undefined) {
+            console.log('action without command', item)
+            return true
+        }
+    }
+    return false
+}
+
+const checkSectionNotReady = (section, data) => {
+    if (!data || data.length < 1) { console.log('empty section', section); return false}
+    const result = data.filter( item => checkItemNotReady(section, item) )
+    if (result.length > 0) { console.log(section,'not ready')}
+    return (result.length > 0 )
+}
+
+export const okToSave = () => {
+    console.log('-------- checking ok to save')
+    const sections = [ "actions", "conditions", "triggers"]
+    const saved = useActivityEditorStore.getState().saved
+    if (saved) { console.log('already saved'); return false }
+    const activity = useActivityEditorStore.getState().activity
+    if (!activity.name) { console.log('no name in activity', activity); return false }
+    const results = sections.filter( section => checkSectionNotReady(section, activity[section]) )
+    return (results.length === 0)
+}
+
+
 export const loadActivity = async (endpointId) => {
     // loadJSONAutomation
     useActivityEditorStore.setState({name: undefined, endpointId: endpointId, activity: {}, saved: false}, true)
@@ -80,7 +124,7 @@ export const updateActivityItem = (section, index, item) => {
         console.log('This section does not exist to update', section)
         return 
     }
-    console.log('item', item)
+
     useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: updatedItems }})
 }
 
@@ -88,7 +132,7 @@ export const addActivityItem = (section, item) => {
     // section should be the category - actions, conditions, triggers, schedules
     const activity = useActivityEditorStore.getState().activity
     var updatedItems = [ item ]
-    console.log('updated', updatedItems)
+    console.log('updating', section, updatedItems)
     if (activity[section]) {
         const items = activity[section]
         console.log('old', items)

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import useActivityEditorStore from 'store/activityEditorStore'
-import { saveActivity, addActivity } from 'store/activityEditorHelpers'
+import { okToSave, saveActivity, addActivity } from 'store/activityEditorHelpers'
 import { Database, Save, Plus, Play, FastForward, X } from 'react-feather'
-import { Group, ActionIcon, Modal, Paper } from '@mantine/core';
+import { Group, ActionIcon, Modal } from '@mantine/core';
 import SectionFooter from 'layout/SectionFooter'
 import { directive  } from 'store/directive';
 import { selectPage } from 'helpers/layoutHelpers';
@@ -12,10 +12,10 @@ import ActivityJSON from 'activity/editor/ActivityJSON'
 export default function ActivityFooter(props) {
 
     const [ dialogOpen, setDialogOpen ] = useState(false)
-    const saved = useActivityEditorStore( state => state.saved )
     const endpointId = useActivityEditorStore( state => state.endpointId )
-    const name = useActivityEditorStore( state => state.activity.name )
-    const okToSave = name && !saved
+    const activity = useActivityEditorStore( state => state.activity )
+    const saveOk = activity && okToSave()
+
 
     function runAutomation(processConditions=true) {
         directive(endpointId, 'SceneController', 'Activate', {}, {"conditions": processConditions})
@@ -55,7 +55,7 @@ export default function ActivityFooter(props) {
                 <Database size={20} />
             </ActionIcon>
             <ActivityAddMenu add={props.add} />
-            <ActionIcon variant="light" size="md" disabled={ !okToSave } onClick={endpointId ? saveActivity : addActivity } >
+            <ActionIcon variant="light" size="md" disabled={ !saveOk } onClick={endpointId ? saveActivity : addActivity } >
                 { endpointId ? <Save size={20} /> : <Plus size={20} /> } 
             </ActionIcon>
             <Group noWrap position="right">

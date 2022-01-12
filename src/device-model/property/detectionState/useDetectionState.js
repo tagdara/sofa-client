@@ -29,6 +29,10 @@ const useDetectionState = (endpointId, value, directive, userSensorType) => {
     const detectionStateLabel = detectionState === "NOT_DETECTED" ? "Not detected" : "Detected"
     const detectionStateBool = detectionState === "NOT_DETECTED"
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setDetectionState(stateDetectionState)
+    }
 
     return { detectionState, detectionStateBool, detectionStateLabel, setDetectionState, selections }
 

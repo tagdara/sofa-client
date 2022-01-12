@@ -4,7 +4,7 @@ import { Grid, HelpCircle, List, Sliders, Speaker, Tag, Thermometer, ToggleRight
 import { deviceByEndpointId } from 'store/deviceHelpers'
 import { FaFan as FanIcon } from "react-icons/fa";
 
-const DeviceIcon = props => {
+const DeviceIcon = React.forwardRef( (props, ref) => {
 
     const icons = { 
         'FAN': FanIcon, 
@@ -28,7 +28,7 @@ const DeviceIcon = props => {
         if (icons.hasOwnProperty(category)) {
             RealIcon = icons[category]
         }
-        return <RealIcon size={size} />
+        return <RealIcon ref={ref} onClick={props.onClick} size={size} />
     }
 
     if (props.displayCategories) {
@@ -43,7 +43,7 @@ const DeviceIcon = props => {
 
     return getIcon(props.name)
 
-}
+})
 
 export default DeviceIcon
 

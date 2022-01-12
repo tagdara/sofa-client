@@ -18,6 +18,11 @@ const useRangeValue = ( endpointId, userInstance, value, directive) => {
     
     const rangeValueLabel = rangeValue
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setRangeValue(stateRangeValue)
+    }
+
     return { rangeValue, rangeValueLabel, instance, setRangeValue, disabled }
 
 }

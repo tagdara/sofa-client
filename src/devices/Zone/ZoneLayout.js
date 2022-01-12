@@ -7,6 +7,7 @@ import SectionGrid from 'layout/SectionGrid'
 import SectionDivider from 'layout/SectionDivider'
 import PageFrame from 'layout/PageFrame'
 import SectionHeader from 'layout/SectionHeader'
+import SectionFooter from 'layout/SectionFooter'
 import Zone from 'devices/Zone/Zone';
 import HomeButton from 'layout/HomeButton';
 
@@ -38,7 +39,7 @@ const ZoneLayout = props => {
     return (    
         <PageFrame>
             <SectionHeader title={"Zones"} />
-            <SectionFrame>
+            <SectionFrame padScroll>
                 <SectionDivider label={"Security Zones"} />
                 <SectionGrid>
                     { securityZones.map(endpointId =>
@@ -52,9 +53,9 @@ const ZoneLayout = props => {
                     )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionHeader>
+            <SectionFooter>
                 <HomeButton />
-            </SectionHeader>
+            </SectionFooter>
         </PageFrame>
     )
 };

@@ -18,6 +18,11 @@ const useMuted = (endpointId, value, directive) => {
         setMute(!muted)
     }
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setMute(stateMuted)
+    }
+
     return { muted, mutedLabel, setMute, toggle }
 
 }

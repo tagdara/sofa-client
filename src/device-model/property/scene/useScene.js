@@ -14,6 +14,11 @@ const useScene = (endpointId, value, directive) => {
         activeDirective(endpointId, "AreaController", "SetScene", {"scene": newScene })
     }
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setScene(stateScene)
+    }
+
     return { scene, setScene }
 }
 

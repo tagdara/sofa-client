@@ -16,6 +16,10 @@ const useConnectivity = (endpointId, value, directive) => {
     const connectivityLabel = connectivity === "UNREACHABLE" ? "Unreachable" : "OK"
     const connectivityBool = connectivity ===  "OK"
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setConnectivity(stateConnectivity)
+    }
 
     return { connectivity, connectivityBool, connectivityLabel, setConnectivity, selections }
 

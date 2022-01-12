@@ -1,6 +1,7 @@
 import React from 'react';
 import SegmentMenu from 'components/SegmentMenu'
 import useActivityItem from 'activity/useActivityItem'
+import { updateActivityItem } from 'store/activityEditorHelpers'
 
 export default function ConditionOperator(props) {
 
@@ -8,9 +9,17 @@ export default function ConditionOperator(props) {
     const operatorList=[ '=','!=','>','>=','<','=<', ]
     const selections = operatorList.map( item => ({ label: item, value: item}))
 
-    function setOperator(value) {
-        console.log('saving op',value)
-        props.save(props.index, {...item, "operator": value})
+    if (!item || !item.endpointId || !item.propertyName ) { return null }
+
+    if (!item.operator) { setOperator("=") }
+
+    function setOperator(newValue) {
+
+        const updatedItem = {   ...item,   
+                                "operator": newValue
+                            }
+
+        updateActivityItem(props.category, props.index, updatedItem)
     }
 
     function opDefaultOrValue() {
@@ -19,6 +28,7 @@ export default function ConditionOperator(props) {
         return '='
     }
 
+    if (!item.operator) { setOperator("=") }
     // <OperatorButton index={props.index} value={ opDefaultOrValue() } setOperator={ editOperatorValue } anyOp={props.anyOp} />
 
     return <SegmentMenu size={props.size} value={ opDefaultOrValue() } selections={selections} select={setOperator} />

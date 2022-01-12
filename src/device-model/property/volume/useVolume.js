@@ -26,6 +26,11 @@ const useVolume = ( endpointId, value, directive) => {
 
     const volumeLabel = volume + "%"
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setVolume(stateVolume)
+    }
+
     return { volume, volumeLabel, setVolume, increaseVolume, decreaseVolume }
 
 }

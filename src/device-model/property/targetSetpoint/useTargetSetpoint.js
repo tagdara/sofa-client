@@ -63,6 +63,11 @@ const useTargetSetpoint = ( endpointId, value, directive) => {
     const dysonLabel = thermostatMode !== "HEAT" ? "--" : targetSetpoint+ "°"
     const targetSetpointLabel = isDyson ? dysonLabel : targetSetpoint + "°"
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setTargetTemperature(stateTargetSetpoint)
+    }
+
     return { device, targetSetpoint, targetSetpointColor, targetSetpointLabel, setTargetTemperature, increaseSetpoint, decreaseSetpoint }
 
 }

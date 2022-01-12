@@ -18,6 +18,11 @@ const useEndpointHealth = (endpointId, value, directive) => {
     const connectivityBool = connectivity === 'OK'
     const reachable = connectivityBool // Convenience mapping for some existing items
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setConnectivity(stateConnectivity)
+    }
+
     return { connectivity, connectivityBool, connectivityLabel, setConnectivity, reachable }
 
 }

@@ -9,6 +9,7 @@ import { ActionIcon, Group } from '@mantine/core';
 import { Clock, Trash2, Star, Plus } from 'react-feather';
 
 import SectionHeader from 'layout/SectionHeader';
+import SectionFooter from 'layout/SectionFooter';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
@@ -86,7 +87,7 @@ const ActivitiesLayout = props => {
                     </ActionIcon>
                 </Group>
             </SectionHeader>
-            <SectionFrame>
+            <SectionFrame padScroll>
                 <SectionGrid>
                 { activityList && activityList.map(activity => 
                     <ActivityItem   endpointId={activity.endpointId} key={activity.endpointId}
@@ -99,9 +100,9 @@ const ActivitiesLayout = props => {
                 )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionHeader>
+            <SectionFooter>
                 <HomeButton />
-            </SectionHeader>
+            </SectionFooter>
         </PageFrame>
 
     )

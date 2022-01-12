@@ -26,6 +26,7 @@ export const useDeviceProperties = (endpointId) => {
     }
 
     const getLabel = item => {
+        if (!item) { return undefined }
         if (item.instance) {
             return item.instance.split('.')[1]+"  ("+item.property+")"
         } else {

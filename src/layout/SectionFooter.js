@@ -19,9 +19,19 @@ const SectionFooter = props => {
                         right: 0,
                         marginLeft: "auto",
                         marginRight: "auto",
+                        zIndex: 900,
                     }}
             >
-            <Group noWrap style={{ flexShrink: 0, overflow: "hidden", margin: "0 auto", width: "100%", maxWidth: stacksWidth }} position="apart">
+            <Group  noWrap 
+                    style={{ 
+                        flexShrink: 0, 
+                        overflow: "hidden", 
+                        margin: "0 auto", 
+                        width: "100%", 
+                        maxWidth: stacksWidth 
+                    }} 
+                    position="apart"
+            >
                 { props.title && <Title order={3} >{props.title}</Title> }
                 {props.children}
             </Group>

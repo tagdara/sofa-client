@@ -13,6 +13,11 @@ const useTitle = (endpointId, value, directive) => {
         activeDirective(endpointId, "MediaMetadata", "SetTitle", {"title": newState})
     }
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setTitle(stateTitle)
+    }
+
     return { title, setTitle }
 
 }

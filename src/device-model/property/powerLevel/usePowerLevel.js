@@ -26,6 +26,11 @@ const usePowerLevel = ( endpointId, value, directive) => {
 
     const powerLevelLabel = powerLevel + "%"
 
+    // set default in activity editor
+    if (directive && value === undefined) {
+        setPowerLevel(statePowerLevel)
+    }
+
     return { powerLevel, powerLevelLabel, setPowerLevel, increasePowerLevel, decreasePowerLevel }
 
 }

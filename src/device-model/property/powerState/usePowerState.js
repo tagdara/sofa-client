@@ -1,6 +1,6 @@
 import { useRegister } from 'store/useRegister'
 import { directive as storeDirective } from 'store/directive'
-import { isReachable } from 'store/deviceHelpers'
+import { camelCase, isReachable } from 'store/deviceHelpers'
 
 const usePowerState = (endpointId, value, directive) => {
 
@@ -28,11 +28,16 @@ const usePowerState = (endpointId, value, directive) => {
         activeDirective(endpointId, "PowerController", "TurnOff")
     }   
 
-    const powerStateLabel = powerState === "ON" ? "On" : "Off"
+    const powerStateLabel = powerState !== undefined ? camelCase(powerState) : ""
     const powerStateBool = powerState === "ON"
 
     const toggle = () => {
         powerStateBool ? turnOff() : turnOn()
+    }
+
+    // set default in activity editor
+    if (directive && value === undefined) {
+        selectPowerState(statePowerState)
     }
 
     return { powerState, powerStateBool, powerStateLabel, turnOn, turnOff, toggle, selectPowerState, selections, reachable }

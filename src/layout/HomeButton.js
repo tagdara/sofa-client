@@ -2,6 +2,7 @@ import React from 'react';
 import NavButton from 'layout/NavButton';
 import { selectPage } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
+import { Home } from 'react-feather';
 
 const HomeButton = props => {
 
@@ -12,7 +13,7 @@ const HomeButton = props => {
         selectPage('Stacks')
     }
 
-    return <NavButton highlight label={"Home"} arrow onClick={goHome} />
+    return <NavButton highlight avatar={<Home size={20} />} label={"Home"} arrow onClick={goHome} />
 
 }
 

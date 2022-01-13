@@ -14,9 +14,8 @@ const useMode = ( endpointId, userInstance, value, directive) => {
     const selections = Object.keys(modeData).map(modeChoice => ({value: modeChoice, label: modeData[modeChoice]}))
 
     const stateMode = deviceState && deviceState.hasOwnProperty(instance) ? deviceState[instance].mode.value : undefined
-    const userValue = value && value.mode && value.mode.value ? value.mode.value : undefined
-    const mode = userValue ? userValue : stateMode
-    const disabled = !userValue && isModeNonControllable(endpointId, instance) 
+    const mode = value ? value : stateMode
+    const disabled = value === undefined && isModeNonControllable(endpointId, instance) 
 
     const setMode = newMode => {
         //endpointId, controllerName, command, payload={}, cookie={}, instance=""

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ComputerSummary from 'devices/Computer/ComputerSummary'
+import ComputerList from 'devices/Computer/ComputerList'
 import MonitorButtonStackGroup from 'devices/Computer/MonitorButtonStackGroup';
 import MatrixList from 'devices/Matrix/MatrixList';
 import { selectPage } from 'helpers/layoutHelpers';
@@ -38,7 +39,10 @@ export default function ComputerHero(props) {
             <Group direction="column">
                 <ComputerSummary endpointIds={computerPlugEndpoints} onClick={ () => setExpanded(!expanded) } />
                 <Collapse in={expanded} style={{ width: "100%"}}>
-                    <MonitorButtonStackGroup buttonLayout={buttonLayout} outlets={computerPlugs} topClick={toggleExpand} bottomClick={ () => selectPage('ComputerLayout') } />
+                    <Group direction="column">
+                        <MonitorButtonStackGroup buttonLayout={buttonLayout} outlets={computerPlugs} topClick={toggleExpand} bottomClick={ () => selectPage('ComputerLayout') } />
+                        <ComputerList />
+                    </Group>
                 </Collapse> 
                 <Collapse in={expandMonitors} style={{ width: "100%"}}>
                     <MatrixList />

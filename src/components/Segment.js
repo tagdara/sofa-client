@@ -25,7 +25,7 @@ const Segment = React.forwardRef( (props, ref) => {
                 size={props.size ? props.size : "sm"}
                 onClick={props.onClick}
         >
-            {props.value} { props.children}
+            {props.value && props.value} { props.children}
         </Button>
     )
 })

@@ -7,10 +7,10 @@ export default function MutedSegment(props) {
 
     const { muted, mutedLabel, toggle } = useMuted(props.endpointId, props.value, props.directive)
     
-    const muteIcon = muted ? <VolumeX size={20} /> : <Volume2 size={20} /> 
+    const muteIcon = muted ? <VolumeX size={16} /> : <Volume2 size={16} /> 
 
     return (
-        <Segment size={props.size} color={ (props.icon && !props.color && muted ) ? 'red' : undefined } onClick={toggle} >{ props.icon ? muteIcon : mutedLabel }</Segment>
+        <Segment position={props.position} size={props.size} color={ (props.icon && !props.color && muted ) ? 'red' : undefined } onClick={toggle} >{ props.icon ? muteIcon : mutedLabel }</Segment>
     );
 }
 

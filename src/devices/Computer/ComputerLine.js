@@ -1,13 +1,14 @@
 import React from 'react';
 import { CloudOff, HardDrive } from 'react-feather'
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Group } from '@mantine/core';
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import VolumeSegment from 'device-model/property/volume/VolumeSegment'
-import MutedButton from 'device-model/property/muted/MutedButton'
+import MutedSegment from 'device-model/property/muted/MutedSegment'
+import LockStateSegment from 'device-model/property/lockState/LockStateSegment'
 
 const ComputerLine = props => {
 
@@ -29,8 +30,15 @@ const ComputerLine = props => {
                             on={on}
             />
             <SplitButton>
-                <MutedButton endpointId={props.endpointId} />
-                <VolumeSegment endpointId={props.endpointId} />
+                { on &&
+                    <>
+                        <LockStateSegment icon endpointId={props.endpointId} />
+                        <Group noWrap spacing={0}>
+                            <MutedSegment position="start" icon endpointId={props.endpointId} />
+                            <VolumeSegment position="end" endpointId={props.endpointId} />
+                        </Group>
+                    </>
+                }
                 <PowerStateSwitch endpointId={props.endpointId} />
             </SplitButton>
         </SplitButtonGroup>

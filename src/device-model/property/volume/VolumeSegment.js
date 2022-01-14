@@ -7,6 +7,6 @@ export default function VolumeSegment(props) {
 
     const { volumeLabel } = useVolume(props.endpointId, props.value, props.directive)
 
-    return <SegmentPopover minWidth={200} size={props.size} value={volumeLabel} popOver={<VolumeSlider step={1} {...props} />} />
+    return <SegmentPopover position={props.position} minWidth={200} size={props.size} value={volumeLabel} popOver={<VolumeSlider step={1} {...props} />} />
 }
 

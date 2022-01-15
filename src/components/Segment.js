@@ -13,7 +13,13 @@ const Segment = React.forwardRef( (props, ref) => {
                 ref = {ref}
                 variant="light"
                 leftIcon={ props.icon }
+                styles={{
+                    leftIcon: {
+                        marginRight: props.icon && !props.value ? 0 : undefined
+                    }
+                }}
                 style={{  
+                    margin: 0, // This is needed to prevent gaps on IOS which seems to apply margin: 0 2px to buttons automatically
                     backgroundColor: cssColor ? props.color : undefined,
                     borderTopLeftRadius: (props.position && props.position !== "start") ? 0 : undefined,
                     borderBottomLeftRadius: (props.position && props.position !== "start") ? 0 : undefined,

@@ -4,9 +4,11 @@ import { ActionIcon, Group } from '@mantine/core';
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'device-model/property/powerState/usePowerState'
+import useLockState from 'device-model/property/lockState/useLockState'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import VolumeSegment from 'device-model/property/volume/VolumeSegment'
+import EnergyLevelModeSegment from 'device-model/instance/EnergyLevelModeSegment'
 import MutedSegment from 'device-model/property/muted/MutedSegment'
 import LockStateSegment from 'device-model/property/lockState/LockStateSegment'
 
@@ -15,6 +17,7 @@ const ComputerLine = props => {
     const name = friendlyNameByEndpointId(props.endpointId)
     const { reachable } = useEndpointHealth(props.endpointId)
     const { powerStateBool } = usePowerState(props.endpointId)
+    const { lockStateBool } = useLockState(props.endpointId)
 
     const on = reachable && powerStateBool
 
@@ -32,13 +35,17 @@ const ComputerLine = props => {
             <SplitButton>
                 { on &&
                     <>
+                    { lockStateBool ?
                         <LockStateSegment icon endpointId={props.endpointId} />
+                    :
                         <Group noWrap spacing={0}>
                             <MutedSegment position="start" icon endpointId={props.endpointId} />
                             <VolumeSegment position="end" endpointId={props.endpointId} />
                         </Group>
+                    }
                     </>
                 }
+                <EnergyLevelModeSegment endpointId={props.outlet} instance={"Energy Level"} />
                 <PowerStateSwitch endpointId={props.endpointId} />
             </SplitButton>
         </SplitButtonGroup>

@@ -17,8 +17,8 @@ export default function PlayerArtOverlay(props) {
                 <Image 
                     radius="sm"
                     style={{ display: "flex", flexGrow: 1, maxWidth: "30%" }}
-                    withPlaceholder
-                    placeholder={<Music style={{ maxWidth: "30%" }} />}
+                    withPlaceholder={!imageLoaded}
+                    placeholder={<Music style={{ height: "100%", maxWidth: "30%" }} />}
                     src={ imageLoaded ? localImageUrl : null }
                     title={ title }
                     alt={ title }

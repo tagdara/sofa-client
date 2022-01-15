@@ -166,6 +166,27 @@ export const getModes = (endpointId, exclude=[]) => {
     return modes
 }
 
+export const getFullInstance = (endpointId, instance) => {
+
+    var dev = endpointId
+    if (typeof(dev)=='string') {
+        dev = useDeviceStore.getState().devices[dev]
+    }    
+    if (!dev) { return undefined }
+
+    for (var k = 0; k < dev.capabilities.length; k++) {
+        if (dev.capabilities[k].interface.endsWith('ModeController')) {
+            var modeCapability = dev.capabilities[k]
+            if (instance === modeCapability.instance || instance === modeCapability.instance.split('.')[1]) {
+                return modeCapability.instance
+                //console.log('---', modeCapability.instance)                
+            }
+        }
+    }
+}
+
+
+
 export function sortByName(devlist, exclude) {
     var devices = useDeviceStore.getState().devices
     if (devices && exclude && exclude.length>0) {

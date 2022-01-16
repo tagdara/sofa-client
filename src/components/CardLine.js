@@ -9,7 +9,7 @@ export const CardLine = React.forwardRef( (props, ref) => {
                 ( props.loading ?
                     <Loader size={props.size ? props.size : "lg" } />
                 :
-                    <Avatar style={{ width: props.avatarSrc ? 100 : undefined }}
+                    <Avatar style={{ width: props.avatarSrc ? 100 : undefined, backgroundColor: "rgba(0,0,0, 0.2)" }}
                             src={props.avatarSrc ? props.avatarSrc : undefined} size={props.size ? props.size : "lg" } color={props.avatarSrc ? undefined : props.color} >{props.avatar}</Avatar>
                 )
             }

@@ -7,7 +7,7 @@ const useToggleState = ( endpointId, userInstance, value, directive) => {
     const { deviceState } = useRegister(endpointId)
     const instance = userInstance.includes('.') ? userInstance.split('.')[1] : userInstance
     const activeDirective = directive ? directive : storeDirective
-    const stateToggleState = deviceState && deviceState.hasOwnProperty(instance) ? deviceState[instance].toggleState.value : undefined
+    const stateToggleState = deviceState && deviceState.hasOwnProperty(instance) && deviceState[instance].toggleState ? deviceState[instance].toggleState.value : undefined
     const toggleState = value !== undefined ? value : stateToggleState
     const reachable = value !== undefined ? true : isReachable(deviceState)
     const selections =[{ label: "On", value: "ON"}, { label: "Off", value: "OFF"}]

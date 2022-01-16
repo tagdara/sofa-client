@@ -2,11 +2,15 @@ import React from 'react';
 import TemperatureSensorLine from 'device-model/controller/temperatureSensor/TemperatureSensorLine'
 import ThermostatAvatar from 'devices/Thermostat/ThermostatAvatar'
 import PowerLevelAutoAvatar from 'device-model/combo/PowerLevelAutoAvatar'
+// import ToggleStateSegment from 'device-model/property/toggleState/ToggleStateSegment'
+// import { hasCapability } from 'store/deviceHelpers'
 
 import { Group } from '@mantine/core';
 
 const Thermostat = props => {
     
+    //  { hasCapability(props.endpointId, "ToggleController", "Night Mode") && <ToggleStateSegment endpointId={props.endpointId} instance={"Night Mode"} /> }
+
     return ( 
         <Group spacing="xl" grow noWrap style={{ width: "100%" }} position="apart">
             <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick} size={props.size}>

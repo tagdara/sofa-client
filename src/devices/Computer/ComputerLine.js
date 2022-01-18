@@ -49,7 +49,7 @@ const ComputerLine = props => {
                     }
                     </>
                 }
-                { modeLabel !== "Off" && <WakeSleepSegment icon endpointId={props.endpointId} /> }
+                { modeLabel !== "Off" && <WakeSleepSegment icon endpointId={props.endpointId} value={on ? "ON" : "OFF"} /> }
                 <EnergyLevelModeSegment endpointId={props.outlet} instance={"Energy Level"} />
             </SplitButton>
         </SplitButtonGroup>

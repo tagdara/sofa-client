@@ -5,7 +5,8 @@ import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import useLockState from 'device-model/property/lockState/useLockState'
-import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
+import useMode from 'device-model/property/mode/useMode'
+import WakeSleepSegment from 'device-model/controller/WakeOnLanController/WakeSleepSegment'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import VolumeSegment from 'device-model/property/volume/VolumeSegment'
 import EnergyLevelModeSegment from 'device-model/instance/EnergyLevelModeSegment'
@@ -18,8 +19,11 @@ const ComputerLine = props => {
     const { reachable } = useEndpointHealth(props.endpointId)
     const { powerStateBool } = usePowerState(props.endpointId)
     const { lockStateBool } = useLockState(props.endpointId)
+    const { modeLabel } = useMode(props.outlet, "Energy Level", props.value, props.directive)
 
-    const on = reachable && powerStateBool
+    const outletOffStates = ["Off", "Standby"]
+    const outletOn = !outletOffStates.includes(modeLabel)
+    const on = reachable && powerStateBool && outletOn
 
     return (
         <SplitButtonGroup on={on}>
@@ -45,8 +49,8 @@ const ComputerLine = props => {
                     }
                     </>
                 }
+                { modeLabel !== "Off" && <WakeSleepSegment icon endpointId={props.endpointId} /> }
                 <EnergyLevelModeSegment endpointId={props.outlet} instance={"Energy Level"} />
-                <PowerStateSwitch endpointId={props.endpointId} />
             </SplitButton>
         </SplitButtonGroup>
     )

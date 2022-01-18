@@ -492,7 +492,7 @@ export const deviceDirectives = (dev, includeNonControllable) => {
 }
 
 export const isModeNonControllable = (dev, instance) => {
-        
+    try {
     if (typeof(dev)=='string') {
         dev = deviceByEndpointId(dev)
     }
@@ -505,6 +505,8 @@ export const isModeNonControllable = (dev, instance) => {
             catch { console.log('could not get noncontrollable for', instance) }
         }
     }
+    }
+    catch(e) { console.log('error checking for noncontrollable',e)}
     return false
 
 }

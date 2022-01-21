@@ -9,6 +9,8 @@ import InputSelect from 'device-model/property/input/InputSelect'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import TelevisionDetailLine from 'devices/Television/TelevisionDetailLine'
 import AppleTV from 'devices/AppleTV/AppleTV'
+import ModeSelect from 'device-model/property/mode/ModeSelect'
+import MatrixConflictList from 'devices/Matrix/MatrixConflictList'
 
 const Television = props => {
   
@@ -28,8 +30,14 @@ const Television = props => {
             >
                 <PowerStateSwitch endpointId={props.endpointId} />
             </CardLine>
-            <Collapse in={showDetail}>
-                <InputSelect endpointId={props.endpointId} />
+            <Collapse in={on || showDetail}>
+                <Group direction="column" grow>
+                    <Group noWrap>
+                        <InputSelect endpointId={props.endpointId} />
+                        { inputLabel === "Matrix" && <ModeSelect half instance={"Input"} endpointId={props.matrix} /> }
+                    </Group>
+                    { inputLabel === "Matrix" && <MatrixConflictList endpointId={props.matrix} /> }
+                </Group>
             </Collapse>
             { ( props.appleTV && on && inputLabel==="Apple TV" ) && <AppleTV endpointId={props.appleTV} /> }
         </Group>

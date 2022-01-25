@@ -24,10 +24,10 @@ const ActivityName = props => {
     }, [ name ])
 
 
-    if (!name && !props.new) { return null }
- 
     function edit(newName) {
-        useActivityEditorStore.setState({ activity: { name: newName }})
+        const currentActivity = useActivityEditorStore.getState().activity
+        console.log('setting name to ', newName)
+        useActivityEditorStore.setState({ activity: { ...currentActivity, name: newName }})
     }
 
     return (    

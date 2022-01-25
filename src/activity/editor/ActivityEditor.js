@@ -37,11 +37,4 @@ export default function ActivityEditor(props) {
             <ActivityFooter />
         </PageFrame>
     )
-    //          <ActivitySchedules wide={wide} />
-    //        <ActivityTriggers wide={wide} />
-    //        <ActivityConditions wide={wide} />
-    //        <ActivityActions wide={wide} />
-    //        <ActivitySave wide={wide} />
-
-    //)
 };

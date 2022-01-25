@@ -13,7 +13,7 @@ const ActivityDetails = props => {
 
     return (    
         <Group noWrap position="apart" spacing="xl" style={{width: "100%", alignItems: "end"}} >
-            <Badge variant="light" color="gray">{endpointId}</Badge>
+            <Badge variant="light" color="gray">{endpointId ? endpointId : "New Activity"}</Badge>
             <Group noWrap>
                 <Text size="xs" lineClamp={1}>{lastRun}</Text>
             </Group>

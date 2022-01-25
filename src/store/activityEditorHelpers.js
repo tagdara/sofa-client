@@ -63,7 +63,7 @@ export const loadActivity = async (endpointId) => {
         const response = await fetch(activityUrl + endpointId, { headers: headers })
         const result = await response.json()
         console.log('result', result)
-        useActivityEditorStore.setState({endpointId: endpointId, activity: result, saved: true})
+        useActivityEditorStore.setState({endpointId: endpointId, activity: result, saved: true}, true)
     }
 }
 

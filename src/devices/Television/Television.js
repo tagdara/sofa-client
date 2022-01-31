@@ -39,6 +39,13 @@ const Television = props => {
                     { inputLabel === "Matrix" && <MatrixConflictList endpointId={props.matrix} /> }
                 </Group>
             </Collapse>
+            <Collapse in={showDetail}>
+                <Group direction="column" grow>
+                    <Group noWrap>
+                        <ModeSelect endpointId={props.endpointId} instance={"PowerSaving"} />
+                    </Group>
+                </Group>
+            </Collapse>
             { ( props.appleTV && on && inputLabel==="Apple TV" ) && <AppleTV endpointId={props.appleTV} /> }
         </Group>
     );

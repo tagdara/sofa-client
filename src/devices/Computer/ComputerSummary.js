@@ -27,15 +27,16 @@ const ComputerSummary = props => {
         for (var dev in states) {
             var devState = states[dev]
             var energylevel = (devState["Energy Level"] ? devState["Energy Level"].mode.value : "Off")
+            console.log('energylevel', energylevel)
             if (devState) {
                 switch (condition.toUpperCase()) {
                     case "OFF":
-                        if (energylevel === "Standby" ) {
+                        if (energylevel === "Energy Level.Standby" ) {
                             count=count+1
                         }
                         break;
                     case "ON":
-                        if (energylevel !== "Standby" ) {
+                        if (energylevel !== "Energy Level.Standby" ) {
                             count=count+1
                         } 
                         break;                   

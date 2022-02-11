@@ -25,10 +25,16 @@ const ComputerLine = props => {
     const outletOn = !outletOffStates.includes(modeLabel)
     const on = reachable && powerStateBool && outletOn
 
+    function openMouse() {
+        var newurl="https://home.dayton.tech/windows/pc="+name+".dayton.tech"
+        var safariWindow = window.open();
+        safariWindow.location.href = newurl
+    }
+
     return (
         <SplitButtonGroup on={on}>
             <SplitButton >  
-                <ActionIcon size="md" color={ on ? "primary" : undefined }>
+                <ActionIcon size="md" color={ on ? "primary" : undefined } onClick={ () => openMouse()}>
                     { reachable ? <HardDrive size={20} /> : <CloudOff size={16} /> }
                 </ActionIcon>
             </SplitButton>

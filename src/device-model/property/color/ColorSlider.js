@@ -17,8 +17,12 @@ const ColorSlider = props => {
     useEffect(() => {
         console.log('non user color update', color)
         setUserChange(false)
-        setValue(color)
-        setHue(Math.round(color.hue))
+        if (color) {
+            setValue(color)
+            if (color.hue) {
+                setHue(Math.round(color.hue))
+            }
+        }
     }, [ color ])
 
     useDidUpdate(() => {
@@ -40,7 +44,7 @@ const ColorSlider = props => {
         }
     }, [ debounced ])
 
-    if (!color) { return null }
+    if (!color || !hue ) { return null }
 
     function handleColorChange(newColorString) {
         //const newColor = hsl2hsv(newColorString)
@@ -60,7 +64,7 @@ const ColorSlider = props => {
     console.log('hue', hue, color, value)
 
     return (
-        <Group noWrap style={{ alignItems: "flex-start"}}>
+        <Group noWrap grow style={{ width: "100%", alignItems: "flex-start"}}>
             {props.icon &&
                 <ThemeIcon variant="light">
                     <Droplet size={16} />

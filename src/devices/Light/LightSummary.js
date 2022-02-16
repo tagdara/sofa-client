@@ -35,14 +35,15 @@ const LightSummary = props => {
         for (var dev in states) {
             var light = states[dev]
             if (light) {
+                const powerState = light && light.PowerController ? light.PowerController.powerState.value : "OFF"
                 switch (condition.toUpperCase()) {
                     case "OFF":
-                        if (light.PowerController.powerState.value === "OFF" || !isReachable(light)) {
+                        if (powerState === "OFF" || !isReachable(light)) {
                             count=count+1
                         }
                         break;
                     case "ON":
-                        if (light.PowerController.powerState.value === "ON" && isReachable(light)) {
+                        if (powerState === "ON" && isReachable(light)) {
                             count=count+1
                         } 
                         break;                   

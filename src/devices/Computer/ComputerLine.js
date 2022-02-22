@@ -26,7 +26,7 @@ const ComputerLine = props => {
     const on = reachable && powerStateBool && outletOn
 
     function openMouse() {
-        var newurl="https://home.dayton.tech/windows/pc="+name+".dayton.tech"
+        var newurl="https://mouse.dayton.tech?pc="+name+".dayton.tech"
         var safariWindow = window.open();
         safariWindow.location.href = newurl
     }

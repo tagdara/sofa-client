@@ -78,7 +78,7 @@ const LightSummary = props => {
 
     return (
         <Group position="apart" noWrap>
-            <Group noWrap>
+            <Group noWrap onClick={ () => selectPage('LightPage') }>
                 <Avatar size="lg" color={iconColor}>
                     {<Lightbulb size={20} />}
                 </Avatar>     
@@ -86,7 +86,6 @@ const LightSummary = props => {
                         weight={700} 
                         style={{width: "100%"}} 
                         lineClamp={1}
-                        onClick={ () => selectPage('LightPage') }
                 >
                     { lightCount('on') ? labelText : "All lights off" }
                 </Text>

@@ -10,6 +10,7 @@ const useLoginStore = create((set,get) => ({
     access_token: undefined,
     login_message: "",
     logged_in: false,
+    checking: false,
     setUserName: (name) => set( { name: name }),
     setStoreAccessToken: (token) => set( { access_token: token }),
     setLogin: (status) => set( { loggedin: status}),
@@ -47,6 +48,7 @@ const useLoginStore = create((set,get) => ({
         return result
     },
     checkToken: async () => {
+        set({ checking: true})
         const user = get().name
         const refreshToken = get().refresh_token
         if (user && refreshToken) {
@@ -59,6 +61,7 @@ const useLoginStore = create((set,get) => ({
             catch (e) {
                 console.log('server not ready', e)
                 set({ login_message: ''})
+                set({ checking: false})
                 return
             }
             try {
@@ -72,6 +75,7 @@ const useLoginStore = create((set,get) => ({
                 set({ login_message: "Invalid token"})
             }
         }
+        set({ checking: false})
     },
 }))
 

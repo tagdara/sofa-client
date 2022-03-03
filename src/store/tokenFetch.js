@@ -1,6 +1,16 @@
 import useLoginStore from "store/loginStore"
 const serverUrl = "https://"+window.location.hostname;
 
+function until(conditionFunction) {
+
+    const poll = resolve => {
+        if (conditionFunction()) resolve();
+        else setTimeout(_ => poll(resolve), 400);
+    }
+  
+    return new Promise(poll);
+  }
+
 export const tokenFetch = async (url, data, retry) => {
     try {
         const accessToken = useLoginStore.getState().access_token;
@@ -17,7 +27,12 @@ export const tokenFetch = async (url, data, retry) => {
             if (!retry) {
                 const name = useLoginStore.getState().name
                 const refreshToken = useLoginStore.getState().refresh_token
-                await useLoginStore.getState().checkToken(name, refreshToken)
+                const checking = useLoginStore.getState().checking;
+                if (!checking) {
+                    await useLoginStore.getState().checkToken(name, refreshToken)
+                } else {
+                    await until(_ => !checking);
+                }
                 return await tokenFetch(url, data, true)
             } else {
                 console.log('repeated 401 after token refresh attempt')

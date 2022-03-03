@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import useUserStore from 'store/userStore'
 import useRegisterStore from 'store/registerStore'
 import { discovery, refreshDirectives, refreshProperties } from 'store/directive'
-import { Button, Group, Text } from '@mantine/core'
+import { Button, Group } from '@mantine/core'
 import { CloudOff } from 'react-feather';
 
 import useStream from 'store/useStream'
@@ -12,9 +12,7 @@ import { useDidUpdate } from '@mantine/hooks';
 export default function SofaFrame(props) {
 
     const refreshUser = useUserStore(state => state.refresh)
-    const [ refreshed, setRefreshed ] = useState(false) // This should actually leverage the store and stream state instead
-    const { streamConnected, streamStatus, streamLabel, url } = useStream(storeUpdater)
-    const [ details, setDetails] = useState(false)
+    const { streamConnected, streamStatus, reconnect } = useStream(storeUpdater)
     const setRegisterReady = useRegisterStore( state => state.setReady )
     const refreshRegistered = useRegisterStore( state => state.refresh )
 
@@ -23,7 +21,6 @@ export default function SofaFrame(props) {
         refreshProperties()
         discovery()
         refreshUser()
-        setRefreshed(true)
         // eslint-disable-next-line 
     }, [])
 
@@ -41,26 +38,20 @@ export default function SofaFrame(props) {
     //    {streamLabel} { url} {streamStatus} { refreshed }
     //</Button>
 
+    const statusLabel = streamStatus === 0 ? 'connecting' : (streamStatus === 2 ? 'closed' : 'not ready')
+
 
     if (!streamConnected || streamStatus !== 1 ) {
         return  <Group direction="column" style={{ maxWidth: 320, margin: "0 auto" }}>
-                    <Button color={ streamStatus===0 ? undefined : "red"} 
+                    <Button color={ streamStatus === 0 ? undefined : "red"} 
                             fullWidth 
                             variant={'light'} 
                             leftIcon={<CloudOff size={20} /> }
-                            loading 
-                            onClick={() => setDetails(!details)}
+                            loading={ streamStatus === 0}
+                            onClick={reconnect}
                     >
-                        {streamLabel} {streamStatus}
+                        Data stream is {statusLabel}
                     </Button>
-                    { details &&
-                        <>
-                            <Text size="xs" lineClamp={1}>{streamLabel}</Text>
-                            <Text size="xs" lineClamp={1}>{url}</Text>
-                            <Text size="xs" lineClamp={1}>{streamStatus}</Text>
-                            <Text size="xs" lineClamp={1}>{refreshed}</Text>
-                        </>
-                    }
                 </Group>
     }
 

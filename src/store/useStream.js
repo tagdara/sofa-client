@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useLoginStore from 'store/loginStore'
 import { tokenFetch } from 'store/tokenFetch'
 
@@ -8,23 +8,22 @@ const sseTokenUrl = "/sse/token"
 
 export const useStream = ( dataProcessor ) => {
     const accessToken = useLoginStore(state => state.access_token)
-    const checkToken = useLoginStore(state => state.checkToken)
-    const [eventSource, setEventSource] = useState(undefined)
-    const [isConnecting, setIsConnecting] = useState(false)
     const [ streamLabel, setStreamLabel ] = useState('Initial')
+    const streamRef = useRef(undefined);
+    const connectingRef = useRef(false);
 
     function getStreamStatus() {
         
-        if (eventSource) {
-            return eventSource.readyState
+        if (streamRef.current !== undefined) {
+            return streamRef.current.readyState
         } else {
             return 10
         }
     }
 
     function getConnected() {
-        if (eventSource!==undefined) {
-            if (eventSource.readyState===1) {
+        if (streamRef.current !== undefined) {
+            if (streamRef.current.readyState===1) {
                 return true
             }
         }
@@ -34,20 +33,28 @@ export const useStream = ( dataProcessor ) => {
     const streamStatus = getStreamStatus()
     const streamConnected = getConnected()
     const url = serverurl + "/sse"
+
+    const reconnect = () => {
+        connectingRef.current = false
+        connectStream()
+    }
     
     const connectStream = async () => {
-        if (!isConnecting) {
+        //if (!isConnecting) {
+
+        if (!connectingRef.current) {
+            connectingRef.current=true
             const tokenResult = await tokenFetch(sseTokenUrl)
             setStreamLabel('connect')
             console.log('connect stream')
-            setIsConnecting(true)
+            //setIsConnecting(true)
             const tokenUrl = sseUrl + "?token=" + tokenResult['sse_token']
-            var esource = new EventSource(tokenUrl, { withCredentials: true })
-            esource.addEventListener('message', dataHandler);
-            esource.addEventListener('error', errorHandler);
-            esource.addEventListener('open', openHandler);
-            setEventSource(esource)
-            setStreamLabel('connected'+ esource.readyState)
+            streamRef.current = new EventSource(tokenUrl, { withCredentials: true })
+            streamRef.current.addEventListener('message', dataHandler);
+            streamRef.current.addEventListener('error', errorHandler);
+            streamRef.current.addEventListener('open', openHandler);
+            //setEventSource(esource)
+            setStreamLabel('connected'+ streamRef.current.readyState)
         } else {
             setStreamLabel('not trying')
             console.log('didnt even try to connect stream' )
@@ -56,13 +63,15 @@ export const useStream = ( dataProcessor ) => {
 
     const openHandler = () => {
         setStreamLabel('open')
-        setIsConnecting(false)
+        connectingRef.current=false
+        //setIsConnecting(false)
     }
 
     const errorHandler = (e) => {
-        console.log('ERROR with EventSource',e )
+        console.log('ERROR with EventSource',e.target )
         setStreamLabel('error '+JSON.stringify(e, ["message", "arguments", "type", "name"]))
-        checkToken()
+        e.target.close()
+        //checkToken()
     }
 
     const dataHandler = event => {
@@ -94,7 +103,7 @@ export const useStream = ( dataProcessor ) => {
 
     useEffect(() => {
         let unmounted = false;
-        if (!streamConnected && !unmounted && !isConnecting && accessToken) {
+        if (!streamConnected && !unmounted && !connectingRef.current && accessToken) {
             setStreamLabel('connect needed')
             connectStream()
         }
@@ -103,9 +112,9 @@ export const useStream = ( dataProcessor ) => {
             unmounted = true;
         };
     // eslint-disable-next-line    
-    }, [ accessToken, isConnecting, streamConnected, streamStatus]);
+    }, [ accessToken, connectingRef.current, streamConnected, streamStatus]);
     
-    return { url, streamConnected, streamStatus, streamLabel };
+    return { url, streamConnected, streamStatus, streamLabel, reconnect };
 };
 
 export default useStream

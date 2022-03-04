@@ -5,6 +5,7 @@ import useLayoutStore from 'store/layoutStore'
 import { SegmentedControl, useMantineTheme } from '@mantine/core';
 import { Menu, Music, Shield, Thermometer } from 'react-feather';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
+import HomeButton from 'layout/HomeButton'
 
 const BottomBar = props => {
 
@@ -20,7 +21,8 @@ const BottomBar = props => {
         }
     }, [ currentStack ])
 
-    if (currentPage !== "Stacks") { return <div style={{ height: 1, marginBottom: "env(safe-area-inset-bottom)" }} /> }
+    if (currentPage !== "Stacks") { return <div style={{ marginBottom: "env(safe-area-inset-bottom)" }} ><HomeButton /></div> }
+    //if (currentPage !== "Stacks") { return <div style={{ height: 1, marginBottom: "env(safe-area-inset-bottom)" }} /> }
 
     const pickStack = newStack => {
         if (newStack === "System") {

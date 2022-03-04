@@ -5,12 +5,11 @@ import LightLine from 'devices/Light/LightLine';
 import useDeviceStore from 'store/deviceStore'
 import { sortByName } from 'store/deviceHelpers'
 
-import SectionFooter from 'layout/SectionFooter';
 import SectionHeader from 'layout/SectionHeader';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
-import HomeButton from 'layout/HomeButton';
+
 
 const LightLayout = props => {
 
@@ -41,9 +40,6 @@ const LightLayout = props => {
                 )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionFooter>
-                <HomeButton />
-            </SectionFooter>
         </PageFrame>
     )
 }

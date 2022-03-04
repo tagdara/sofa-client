@@ -3,6 +3,7 @@ import { createStyles } from '@mantine/styles';
 import { Paper, ThemeIcon, Group, Text, useMantineTheme } from '@mantine/core';
 import { ChevronRight } from 'react-feather';
 import clsx from 'clsx';
+import useLayoutStore from 'store/layoutStore'
 
 const useStyles = createStyles((theme) => ({
     button: {
@@ -16,7 +17,7 @@ const useStyles = createStyles((theme) => ({
     transparentButton: {
         display: 'block',
         width: '100%',
-        padding: theme.spacing.sm,
+        //padding: theme.spacing.sm,
         borderRadius: theme.radius.sm,
         color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : theme.black,
 
@@ -27,7 +28,7 @@ const useStyles = createStyles((theme) => ({
     themeButton: {
         display: 'block',
         width: '100%',
-        padding: theme.spacing.sm,
+        //padding: theme.spacing.sm,
         borderRadius: theme.radius.sm,
         color: theme.colorScheme === 'dark' ? 
                     theme.fn.rgba(theme.colors[theme.primaryColor][9], 1) : 
@@ -86,12 +87,12 @@ const useStyles = createStyles((theme) => ({
         '&>:first-of-type': {
             borderTopLeftRadius: theme.radius.sm,
             borderBottomLeftRadius: theme.radius.sm,
-            flexGrow: 0,
+            flexGrow: 1,
         },
         '&>:last-child': {
             borderTopRightRadius: theme.radius.sm,
             borderBottomRightRadius: theme.radius.sm,
-            flexGrow: 0,
+            flexGrow: 1,
         }
     },
     buttonGroupOn: {
@@ -130,6 +131,7 @@ export const SplitButton = ( props ) => {
 
     const { classes } = useStyles();
     const theme = useMantineTheme()
+    const isMobile = useLayoutStore( state => state.isMobile)
 
     const classSelect = () => {
         if (props.transparent) { return classes.transparentButton }
@@ -144,7 +146,7 @@ export const SplitButton = ( props ) => {
     }
 
     return (
-        <Paper padding="xs" className={classSelect()} style={{ width: props.label ? undefined : 1 }} onClick={props.onClick}>
+        <Paper padding={isMobile ? "md": "xs"} className={classSelect()} style={{ width: props.label ? undefined : 1 }} onClick={props.onClick}>
             <Group noWrap style={{  display: "flex", alignItems: "center"}}>
                 { props.icon &&
                     <ThemeIcon className={arrowClass()} >
@@ -152,8 +154,8 @@ export const SplitButton = ( props ) => {
                     </ThemeIcon>
                 }
                 { props.label &&
-                    <Group direction="column" spacing={0} style={{ justifyContent: "center", display: "flex", flexGrow:1, flexShrink: 0, width: "100%"}}>
-                        <Text size="sm" style={{ color : props.on ?  theme.colors[theme.primaryColor][2] : undefined }} weight={500} lineClamp={1}>{props.label}</Text>
+                    <Group direction="column" spacing={0} style={{ justifyContent: "center", display: "flex", flexGrow:1,}}>
+                        <Text size={isMobile ? "md": "sm"} style={{ color : props.on ?  theme.colors[theme.primaryColor][2] : undefined }} weight={500} lineClamp={1}>{props.label}</Text>
                         { props.secondary && <Text weight={400} size="sm" lineClamp={1} color="dimmed" style={{ flexGrow: 1 }}>{props.secondary}</Text> }
                     </Group>
                 }

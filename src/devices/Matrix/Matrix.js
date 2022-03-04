@@ -1,18 +1,46 @@
 import React from 'react';
-import ModeSelect from "device-model/controller/ModeController/ModeSelect";
-import { Group, Text } from '@mantine/core';
+import ModeSelect from 'device-model/property/mode/ModeSelect'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import useMode from 'device-model/property/mode/useMode'
+import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import { CloudOff, Monitor } from 'react-feather'
+import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
+import { ActionIcon, Group } from '@mantine/core';
 
 const Matrix = props => {
 
     const name = friendlyNameByEndpointId(props.endpointId)
-    //const on = matrixState.Input.mode.value !== 'Blank'
-        
+    const { reachable } = useEndpointHealth(props.endpointId)
+    const { mode, setMode } = useMode(props.endpointId, "Input", props.value, props.directive)
+
+    const blank = "Input.I8"
+    const on = mode !== blank
+
+    const toggleInput = () => { 
+        if (on) { 
+            setMode(blank)
+        } else {
+            setMode(props.default) 
+        } 
+    }
+
     return (
-        <Group position="apart" noWrap style={{ width: "100%"}}>
-            <Text lineClamp={1} size="sm">{ name }</Text>
-            <ModeSelect half instance={"Input"} endpointId={props.endpointId} />
-        </Group>
+        <SplitButtonGroup on={on}>
+            <SplitButton >  
+                <ActionIcon size="md" color={ on ? "primary" : undefined } onClick={toggleInput}>
+                    { reachable ? <Monitor size={20} /> : <CloudOff size={16} /> }
+                </ActionIcon>
+            </SplitButton>
+            <SplitButton    label = { name } 
+                            secondary = { reachable ? null : 'Not reachable' }
+                            on={on}
+            />
+            <SplitButton >
+                <Group grow noWrap spacing={0}>
+                    <ModeSelect half size="xs" instance={"Input"} endpointId={props.endpointId} />
+                </Group>
+            </SplitButton>
+        </SplitButtonGroup>
     );
 }
 

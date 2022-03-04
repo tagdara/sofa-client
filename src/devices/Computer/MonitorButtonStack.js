@@ -35,16 +35,18 @@ const MonitorButtonStack = props => {
     return (
         <Group direction="column" grow spacing={1}>
             <Button onClick={ () => toggleInput() }
-                    size="md" compact style={{ margin: 0, fontSize: 12, borderBottomLeftRadius: 0, borderBottomRightRadius: 0, minWidth: 42 }}
+                    size="md" compact style={{ margin: 0, fontSize: 12, borderBottomLeftRadius: 0, borderBottomRightRadius: 0, minWidth: 48 }}
+                    color={ monitorOff ? "gray" : undefined }
                     variant = { on ? "filled" : "light"}
             >
                 {props.set + props.label}
             </Button>
             <Button onClick={ () => toggleInput() }
-                    size="md" compact style={{ margin: 0, fontSize: 12, borderTopLeftRadius: 0, borderTopRightRadius: 0, minWidth: 42}}
+                    color={ monitorOff ? "gray" : undefined }
+                    size="md" compact style={{ margin: 0, fontSize: 12, borderTopLeftRadius: 0, borderTopRightRadius: 0, minWidth: 48}}
                     variant = { on ? "filled" : "light"}
             >
-                {monitorOff ? "" : "pc"+props.label}
+                {monitorOff ? "" : "PC"+props.label}
             </Button>
         </Group>
     );

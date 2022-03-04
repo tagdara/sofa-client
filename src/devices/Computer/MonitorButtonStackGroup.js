@@ -9,7 +9,7 @@ export default function MonitorButtonStackGroup(props) {
     return (
         <Group direction="row" noWrap spacing={4} position="apart" style={{ width: "100%"}}>
             { Object.keys(props.buttonLayout).map( (zone, i) => 
-                <Group key={zone} noWrap spacing="xs"> 
+                <Group key={zone} noWrap spacing={3}> 
                     { props.buttonLayout[zone].map( btn =>
                         <MonitorButtonStack set={zone} key={btn.label} {...btn} />
                     )}

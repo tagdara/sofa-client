@@ -3,7 +3,7 @@ import React from 'react';
 const UbiquitiIcon = props => (
     //<SvgIcon className={ props.treeOn ? classes.colorTree : classes.treeStyle } >
     // style="enable-background:new 0 0 512 512;" 
-    <svg viewBox="0 0 24 24" focusable="false" role="img" fill="currentColor" >
+    <svg viewBox="0 0 24 24" focusable="false" role="img" fill="currentColor" width={props.size ? props.size : 24} height={props.size ? props.size : 24} >
         <title>Ubiquiti icon</title>
         <path d="M5.331 3.987H4.012v-1.32h1.32zm7.605 16.001c-1.78-.08-3.15-.532-4.21-1.185.718 3.118 3.405 4.65 3.535 4.723l.792.437c6.063-.405 9.611-4.318
                 9.611-9.436v-1.109c-1.441 4.7-4.795 6.793-9.728 6.57M4.006 9.605h1.332v2.94h1.336V7.627H8.01v9.612C8.009 21.8 12 24 12 

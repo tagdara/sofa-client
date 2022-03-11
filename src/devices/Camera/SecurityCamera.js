@@ -20,7 +20,7 @@ const SecurityCamera = props => {
         if (props.onClick) { 
             props.onClick()
         } else {
-            selectPage('CameraLayout')
+            selectPage('CameraPage')
         }
     }
 

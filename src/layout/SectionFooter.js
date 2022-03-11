@@ -12,19 +12,6 @@ const SectionFooter = props => {
 
     if (isMobile) {
         return (    
-            <Paper style={{ 
-                            position: "absolute", 
-                            bottom: wide ? 64 : 0, 
-                            maxWidth: 480, 
-                            width: "100%", 
-                            padding: 8,
-                            left: 0,
-                            right: 0,
-                            marginLeft: "auto",
-                            marginRight: "auto",
-                            zIndex: 900,
-                        }}
-                >
                 <Group  noWrap 
                         style={{ 
                             flexShrink: 0, 
@@ -38,7 +25,6 @@ const SectionFooter = props => {
                     { props.title && <Title order={3} >{props.title}</Title> }
                     {props.children}
                 </Group>
-            </Paper>
         )   
     }
 

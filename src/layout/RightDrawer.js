@@ -39,6 +39,7 @@ const RightDrawer = props => {
                                     display: "flex", 
                                     flexDirection: "column",
                                     maxWidth: wide ? "33vw" : undefined,
+                                    zIndex:5000,
                                 } }}
             >
             <Group noWrap direction="column" spacing="sm" grow style={{ flexGrow: 1, paddingBottom: "env(safe-area-inset-bottom)" }} >

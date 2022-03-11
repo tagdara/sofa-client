@@ -1,15 +1,13 @@
 import React, { useState} from 'react';
 import { AiOutlineQrcode } from 'react-icons/ai'
 import SectionHeader from 'layout/SectionHeader';
-import SectionFooter from 'layout/SectionFooter'
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
 import { endpointIdsByDisplayCategory, sortByName }  from 'store/deviceHelpers'
 import SecurityCamera from 'devices/Camera/SecurityCamera';
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Portal } from '@mantine/core';
 import UnifiProtectButton from 'devices/Camera/UnifiProtectButton'
-import HomeButton from 'layout/HomeButton';
 
 const CameraLayout = props => {
 
@@ -33,10 +31,9 @@ const CameraLayout = props => {
                 )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionFooter>
+            <Portal target="#bottomPortal">
                 <UnifiProtectButton />
-                <HomeButton />
-            </SectionFooter>
+            </Portal>
         </PageFrame>
     )
 }

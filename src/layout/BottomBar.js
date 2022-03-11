@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { useDidUpdate } from '@mantine/hooks';
+import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
 import { selectStack } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
-import { SegmentedControl, useMantineTheme } from '@mantine/core';
+import { Affix, Group, SegmentedControl, useMantineTheme } from '@mantine/core';
 import { Menu, Music, Shield, Thermometer } from 'react-feather';
 import { BsLightbulb as Lightbulb } from "react-icons/bs";
 import HomeButton from 'layout/HomeButton'
@@ -14,15 +14,13 @@ const BottomBar = props => {
     const currentPage = useLayoutStore(state => state.currentPage)
     const theme = useMantineTheme();
     const setTransitionDirection = useLayoutStore( state => state.setTransitionDirection)
+    const wide = useMediaQuery('(min-width: 640px)');
 
     useDidUpdate(() => {
         if (currentStack) {
             setDisplayStack(currentStack)
         }
     }, [ currentStack ])
-
-    if (currentPage !== "Stacks") { return <div style={{ marginBottom: "env(safe-area-inset-bottom)" }} ><HomeButton /></div> }
-    //if (currentPage !== "Stacks") { return <div style={{ height: 1, marginBottom: "env(safe-area-inset-bottom)" }} /> }
 
     const pickStack = newStack => {
         if (newStack === "System") {
@@ -53,18 +51,68 @@ const BottomBar = props => {
         { value: "System",              "label": <Menu size={20} />},
     ]
 
+    const bgColor = theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.1)
+
+    if (wide && currentPage !== "Stacks") {  
+        return  (
+            <Affix 
+                style={{ 
+                    boxSizing: "border-box", 
+                    paddingLeft: 16, 
+                    paddingRight: 16, 
+                    width: "100%", 
+                    display: "flex", 
+                    justifyContent: "center", 
+                    alignItems: "center", 
+                    marginBottom: "env(safe-area-inset-bottom)" 
+                }} 
+                position={{ bottom: wide ? 8: 0 }}
+            >
+                <Group noWrap grow style={{ width: "100%", maxWidth: 400, flexDirection: "row-reverse"}} id="bottomPortal">
+                    <HomeButton />
+                </Group>
+            </Affix>
+        )
+    }
+        
+    if (currentPage !== "Stacks") { 
+        return  (
+            <Group noWrap grow 
+                style={{ 
+                    boxSizing: "border-box", 
+                    width: "100%", 
+                    display: "flex", 
+                    justifyContent: "center", 
+                    alignItems: "center", 
+                    marginBottom: "env(safe-area-inset-bottom)", 
+                    flexDirection: "row-reverse"
+                }} 
+                id="bottomPortal"
+            >
+                    <HomeButton />
+            </Group>
+        )
+    }
+
+    if (wide) { return null }
+
     return (
-        <SegmentedControl 
-                fullWidth 
-                color={theme.primaryColor}
-                onChange={pickStack} 
-                value={displayStack} 
-                data={selections} 
-                style={{    minHeight: 48,
-                            alignItems: "center",
-                            marginBottom: "env(safe-area-inset-bottom)"
-                }}
-        />
+            <SegmentedControl 
+                    fullWidth 
+                    color={theme.primaryColor}
+                    onChange={pickStack} 
+                    value={displayStack} 
+                    data={selections} 
+                    style={{    minHeight: 48,
+                                alignItems: "center",
+                                marginBottom: "env(safe-area-inset-bottom)" 
+                    }}
+                    styles={{ 
+                        root: {
+                                backgroundColor: bgColor
+                        }
+                    }}
+            />
     )
 
 }

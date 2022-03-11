@@ -69,7 +69,7 @@ const AppFrame = props => {
                     <div style={{ overflow: "hidden", flexDirection: "column", display: "flex", flexGrow: 1 }}> 
                         { props.children }                                                          
                     </div>
-                    { (!props.wide && props.bottom) && props.bottom }
+                    { props.bottom }
                     { props.drawer }
             </AppShell>
 

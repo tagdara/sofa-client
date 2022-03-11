@@ -1,9 +1,7 @@
 import React from 'react';
 import { useOs } from '@mantine/hooks';
-
+import { Button } from '@mantine/core';
 import UbiquitiIcon from 'resources/UbiquitiIcon';
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
-import { ActionIcon } from '@mantine/core';
 
 const UnifiProtectButton = props => {
 
@@ -20,14 +18,9 @@ const UnifiProtectButton = props => {
     }
     
     return (
-        <SplitButtonGroup>
-            <SplitButton>
-                <ActionIcon onClick={() => openProtect() }>
-                    <UbiquitiIcon />
-                </ActionIcon> 
-            </SplitButton>
-            <SplitButton label={"Unifi Protect"} onClick={() => openProtect() } />
-        </SplitButtonGroup>
+        <Button variant="light" size={ "md" } fullWidth leftIcon={<UbiquitiIcon size={16} />} onClick={() => openProtect() } >
+            Unifi Protect
+        </Button>
     )
 }
 

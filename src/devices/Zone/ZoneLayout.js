@@ -53,9 +53,6 @@ const ZoneLayout = props => {
                     )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionFooter>
-                <HomeButton />
-            </SectionFooter>
         </PageFrame>
     )
 };

@@ -34,7 +34,8 @@ const FrameNav = props => {
                             height: "100%",
                             maxHeight: "100%",
                             overflow: "hidden",
-                            boxSizing: "border-box"
+                            boxSizing: "border-box",
+                            zIndex: 5000
                 }}
             >
             <Navbar.Section style={{ paddingBottom: 8, paddingTop: "env(safe-area-inset-top)" }}>

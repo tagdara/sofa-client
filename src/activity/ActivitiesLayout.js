@@ -9,11 +9,10 @@ import { ActionIcon, Group } from '@mantine/core';
 import { Clock, Trash2, Star, Plus } from 'react-feather';
 
 import SectionHeader from 'layout/SectionHeader';
-import SectionFooter from 'layout/SectionFooter';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
-import HomeButton from 'layout/HomeButton';
+
 
 const ActivitiesLayout = props => {
 
@@ -100,9 +99,6 @@ const ActivitiesLayout = props => {
                 )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionFooter>
-                <HomeButton />
-            </SectionFooter>
         </PageFrame>
 
     )

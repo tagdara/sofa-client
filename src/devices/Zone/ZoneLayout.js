@@ -7,9 +7,8 @@ import SectionGrid from 'layout/SectionGrid'
 import SectionDivider from 'layout/SectionDivider'
 import PageFrame from 'layout/PageFrame'
 import SectionHeader from 'layout/SectionHeader'
-import SectionFooter from 'layout/SectionFooter'
 import Zone from 'devices/Zone/Zone';
-import HomeButton from 'layout/HomeButton';
+
 
 const ZoneLayout = props => {
 

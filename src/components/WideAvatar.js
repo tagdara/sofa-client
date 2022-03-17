@@ -7,7 +7,10 @@ export default function WideAvatar(props) {
     const right = typeof props.right !== 'object' ? <span>{props.right}</span> : props.right  
 
     return (
-        <Avatar color={props.color} size={props.size} styles={{ root: { width: "auto" } , placeholder: { flexWrap: "nowrap", display: "flex", flex: 1, gap: 8 } }}>
+        <Avatar onClick={props.onClick}
+                color={props.color} 
+                size={props.size} 
+                styles={{ root: { width: "auto" } , placeholder: { flexWrap: "nowrap", display: "flex", flex: 1, gap: 8 } }}>
             <div style={{alignItems: "center", flexWrap: "nowrap", display: "flex", paddingLeft:24, paddingRight: 24, gap: 8 }}>
                 { left }
                 { right }

@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
-import { BsLightbulb as Lightbulb } from "react-icons/bs";
+import { BsLightbulb as Lightbulb, BsLightbulbOff as LightbulbOff } from "react-icons/bs";
 import PlaceholderCard from 'layout/PlaceholderCard';
 import LightChristmasButton from 'devices/Light/LightChristmasButton';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import useRegisterStore from 'store/registerStore'
 import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
-import { Avatar, Group, Text, useMantineTheme } from '@mantine/core'
+import { Group, Text, useMantineTheme } from '@mantine/core'
 import { selectPage } from 'helpers/layoutHelpers';
-
+import WideAvatar from 'components/WideAvatar'
+import AreasLightsOn from 'devices/Area/AreasLightsOn'
 
 const LightSummary = props => {
     const theme = useMantineTheme()
@@ -74,21 +75,26 @@ const LightSummary = props => {
     }
 
     const iconColor = lightCount('on') > 0 ?  theme.colors[theme.primaryColor] : undefined
-    const labelText = lightCount('on') === 1 ? lightCount('on')+" light is on" : lightCount('on')+" lights are on"
 
     return (
-        <Group position="apart" noWrap>
-            <Group noWrap onClick={ () => selectPage('LightPage') }>
-                <Avatar size="lg" color={iconColor}>
-                    {<Lightbulb size={20} />}
-                </Avatar>     
-                <Text   size="lg" 
-                        weight={700} 
-                        style={{width: "100%"}} 
-                        lineClamp={1}
-                >
-                    { lightCount('on') ? labelText : "All lights off" }
-                </Text>
+        <Group position="apart" noWrap >
+            <Group noWrap style={{ alignItems: "flex-start"}}>
+                <WideAvatar color={iconColor} size="lg"
+                            onClick={ () => selectPage('LightPage') }
+                            left={ lightCount('on') ? <Lightbulb size="20" /> : <LightbulbOff size="20" /> }
+                            right={ lightCount('on') ? lightCount('on') : undefined }
+                    /> 
+                <Group direction="column" spacing={"xs"} style={{ width: "100%"}} >
+                    <Text   size={ lightCount('on') ? "sm" : "lg" }
+                            weight={500} 
+                            style={{width: "100%"}} 
+                            lineClamp={1}
+                    >
+                        { lightCount('on') ? "Lights are on in these areas" : "All lights off" }
+                        
+                    </Text>
+                    <AreasLightsOn />
+                </Group>
             </Group>
             { checkHoliday() }
         </Group>

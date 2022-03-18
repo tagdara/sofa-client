@@ -20,16 +20,18 @@ const Television = props => {
     const { inputLabel } = useInput(props.endpointId)
 
     return (
-        <Group direction="column" grow>
-            <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
-                        color={ on ? "primary" : undefined}
-                        on={on}
-                        primary={ name }
-                        secondary={ on ? <TelevisionDetailLine endpointId={props.endpointId} /> : null }
-                        onClick={ () => setShowDetail(!showDetail)}
-            >
-                <PowerStateSwitch endpointId={props.endpointId} />
-            </CardLine>
+        <Group direction="column" grow spacing="lg">
+            <Group direction="column" grow noWrap spacing={8}>
+                <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
+                            color={ on ? "primary" : undefined}
+                            on={on}
+                            primary={ name }
+                            onClick={ () => setShowDetail(!showDetail)}
+                >
+                    <PowerStateSwitch endpointId={props.endpointId} />
+                </CardLine>
+                { on && <TelevisionDetailLine endpointId={props.endpointId} /> }
+            </Group>
             <Collapse in={on || showDetail}>
                 <Group direction="column" grow>
                     <Group noWrap>

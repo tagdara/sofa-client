@@ -29,7 +29,7 @@ export const CardLine = React.forwardRef( (props, ref) => {
                 )
             }           
             <Group direction="column" spacing={0} grow style={{ flexGrow: 1 }}>
-                <Text lineClamp={1} size={ props.size ? props.size : "lg" } weight={400} style={{ flexGrow: 1 }}>
+                <Text lineClamp={1} size={ props.size ? props.size : "lg" } weight={500} style={{ flexGrow: 1 }}>
                     { props.primary }
                 </Text>
                 <Text color="dimmed" size={ props.size ? props.size : "md"} lineClamp={1}>

@@ -21,8 +21,8 @@ const AppleTV = props => {
             <Group direction="column" grow>
                 <CardLine   avatarSrc={ (on && art) ? image : undefined }
                             icon = { (!on || !art) ? <AppleTvIcon size={20} /> : undefined } 
-                            primary={ name }
-                            secondary = { title ? title : appName }
+                            primary={ title ? title : appName }
+                            secondary = { name }
                             onClick={ () => setShowDetail(!showDetail)}
                             color={ on ? "primary" : undefined }
                 >

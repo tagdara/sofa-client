@@ -23,16 +23,18 @@ const Receiver = props => {
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
-        <Group direction="column" grow noWrap spacing="xl">
-            <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
-                        color={ on ? "primary" : undefined}
-                        on={on}
-                        primary={ name }
-                        secondary={ on ? <ReceiverDetailLine endpointId={props.endpointId} /> : null }
-                        onClick={ () => setShowDetail(!showDetail)}
-            >
-                <PowerStateSwitch endpointId={props.endpointId} />
-            </CardLine>
+        <Group direction="column" grow noWrap spacing="lg">
+            <Group direction="column" grow noWrap spacing={8}>
+                <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
+                            color={ on ? "primary" : undefined}
+                            on={on}
+                            primary={ name }
+                            onClick={ () => setShowDetail(!showDetail)}
+                >
+                    <PowerStateSwitch endpointId={props.endpointId} />
+                </CardLine>
+                { on && <ReceiverDetailLine endpointId={props.endpointId} />  }
+            </Group>
             <Collapse in={showDetail || on }>
                 <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
             </Collapse>

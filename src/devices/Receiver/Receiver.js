@@ -23,7 +23,7 @@ const Receiver = props => {
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
-        <Group direction="column" grow noWrap spacing="lg">
+        <Group direction="column" grow noWrap spacing="xl">
             <Group direction="column" grow noWrap spacing={8}>
                 <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
                             color={ on ? "primary" : undefined}

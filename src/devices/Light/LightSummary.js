@@ -57,6 +57,8 @@ const LightSummary = props => {
         return count
     }
 
+    const lightsOn = lightCount('on') > 0
+
     function isReachable(dev) {
         try {
             if (dev.EndpointHealth.connectivity.value.value==='OK') {
@@ -74,11 +76,11 @@ const LightSummary = props => {
         return null
     }
 
-    const iconColor = lightCount('on') > 0 ?  theme.colors[theme.primaryColor] : undefined
+    const iconColor = lightsOn ? theme.colors[theme.primaryColor] : undefined
 
     return (
         <Group position="apart" noWrap >
-            <Group noWrap style={{ alignItems: "flex-start"}}>
+            <Group noWrap style={{ alignItems: lightsOn ? "flex-start" : "center "}}>
                 <WideAvatar color={iconColor} size="lg"
                             onClick={ () => selectPage('LightPage') }
                             left={ lightCount('on') ? <Lightbulb size="20" /> : <LightbulbOff size="20" /> }

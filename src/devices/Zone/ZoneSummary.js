@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import useDeviceStateStore from 'store/deviceStateStore'
+import WideAvatar from 'components/WideAvatar'
+import { BsShieldSlash as ShieldSlash } from "react-icons/bs";
 
 import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
-import { Avatar, Badge, Group, Text } from '@mantine/core'
-import { Shield, AlertOctagon } from 'react-feather';
+import { Badge, Group, Text } from '@mantine/core'
+import { Shield } from 'react-feather';
 import { selectPage } from 'helpers/layoutHelpers';
 
 const ZoneSummary = props => {
@@ -44,19 +46,27 @@ const ZoneSummary = props => {
     
     return (
         <Group direction="column" noWrap onClick={ () => selectPage('ZonePage') }> 
-            <Group noWrap>
-                <Avatar size="lg" color={violated ? "red" : "green"}>
-                    { violated ? < AlertOctagon size={20} /> : <Shield size={20} />}
-                </Avatar>     
-                <Text size="lg" weight={700} style={{width: "100%"}} lineClamp={1}>
-                    { violated ? openZones.length+' zone' +  ( openZones.length === 1 ? " is ": "s are ") + "not secure" : 'All zones secure' }
-                </Text>
+            <Group noWrap style={{ alignItems: violated ? "flex-start" : "center "}}>
+                <WideAvatar color={violated ? "red" : "green"} size="lg"
+                            onClick={ () => selectPage('LightPage') }
+                            left={ violated ? < ShieldSlash size={20} /> : <Shield size={20} />} 
+                            right={ violated ? openZones.length : undefined }
+                />
+                <Group direction="column" spacing={"xs"} style={{ width: "100%"}} >
+                    <Text   size={ violated ? "sm" : "lg" }
+                            weight={500} 
+                            style={{width: "100%"}} 
+                            lineClamp={1}
+                    >
+                        { violated ? "Zones not secure" : "All zones secure" }
+                    </Text>
+                    { (openZoneList && openZoneList.length>0) &&
+                        <Group spacing="xs">
+                            { openZoneList.map( zone => <Badge size="sm" key={zone+"badge"} color="red" variant="light">{zone}</Badge> )}
+                        </Group>
+                    }
+                </Group>
             </Group>
-            { (openZoneList && openZoneList.length>0) &&
-            <Group>
-                { openZoneList.map( zone => <Badge key={zone+"badge"} color="red" variant="light">{zone}</Badge> )}
-            </Group>
-            }
         </Group>
     );
 }

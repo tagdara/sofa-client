@@ -6,6 +6,7 @@ import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
 import ComputerList from 'devices/Computer/ComputerList'
 import MatrixList from 'devices/Matrix/MatrixList';
+import PrinterLine from 'devices/Computer/PrinterLine'
 import { Group } from '@mantine/core'
 
 const ComputerLayout = props => {
@@ -21,6 +22,10 @@ const ComputerLayout = props => {
                     <SectionHeader title={"Screens"} />
                     <SectionGrid>
                         <MatrixList />
+                    </SectionGrid>
+                    <SectionHeader title={"Devices"} />
+                    <SectionGrid>
+                        <PrinterLine />
                     </SectionGrid>
                 </Group>
             </SectionFrame>

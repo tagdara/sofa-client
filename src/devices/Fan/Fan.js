@@ -1,6 +1,6 @@
 import React from 'react';
 import CardLine from 'components/CardLine'
-import { FaFan as FanIcon } from "react-icons/fa";
+import { Fan as FanIcon } from "react-bootstrap-icons"
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 

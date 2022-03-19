@@ -1,20 +1,18 @@
 import React from 'react';
-import { BsLightbulb as Lightbulb } from "react-icons/bs";
-import { Grid, HelpCircle, List, Sliders, Speaker, Tag, Thermometer, ToggleRight, Triangle, Tv } from 'react-feather'
+import { Fan as FanIcon, Grid, List, Lightbulb, QuestionCircle, Tag, Thermometer, ToggleOn, Triangle, Sliders, Speaker, Tv} from "react-bootstrap-icons";
 import { deviceByEndpointId } from 'store/deviceHelpers'
-import { FaFan as FanIcon } from "react-icons/fa";
 
 const DeviceIcon = React.forwardRef( (props, ref) => {
 
     const icons = { 
         'FAN': FanIcon, 
-        'MISSING': HelpCircle,
+        'MISSING': QuestionCircle,
         'MODE': Tag,
         'SCENE_TRIGGER': Grid, 
         'ACTIVITY_TRIGGER': List, 
         'LIGHT': Lightbulb, 
         'LOGIC': Sliders,
-        'BUTTON': ToggleRight, 
+        'BUTTON': ToggleOn, 
         'SPEAKER': Speaker, 
         'THERMOSTAT': Thermometer, 
         'TEMPERATURE_SENSOR': Thermometer, 

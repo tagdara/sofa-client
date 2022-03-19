@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { BsLightbulb as Lightbulb, BsLightbulbOff as LightbulbOff } from "react-icons/bs";
+import { Lightbulb, LightbulbOff} from "react-bootstrap-icons";
 import PlaceholderCard from 'layout/PlaceholderCard';
 import LightChristmasButton from 'devices/Light/LightChristmasButton';
 
@@ -86,7 +86,7 @@ const LightSummary = props => {
                             left={ lightCount('on') ? <Lightbulb size="20" /> : <LightbulbOff size="20" /> }
                             right={ lightCount('on') ? lightCount('on') : undefined }
                     /> 
-                <Group direction="column" spacing={"xs"} style={{ width: "100%"}} >
+                <Group direction="column" spacing={"xs"} grow >
                     <Text   size={ lightCount('on') ? "sm" : "lg" }
                             weight={500} 
                             style={{width: "100%"}} 

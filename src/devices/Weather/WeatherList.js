@@ -2,8 +2,7 @@ import React from 'react';
 import RangeValueLine from 'device-model/property/rangeValue/RangeValueLine'
 import { hasInstance} from 'store/deviceHelpers'
 import { Group } from '@mantine/core';
-import { BsLightbulb as Lightbulb } from "react-icons/bs";
-import { CloudDrizzle, Droplet, Sun, Wind } from 'react-feather'
+import { CloudDrizzle, Droplet, Lightbulb, Sun, Wind } from "react-bootstrap-icons";
 
 const WeatherList = props => {
 

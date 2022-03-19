@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { BsLightbulb as Lightbulb } from "react-icons/bs";
-import { CloudOff, X as XIcon } from 'react-feather'
+import { CloudSlash, Lightbulb, X as XIcon} from "react-bootstrap-icons"
 import { ActionIcon } from '@mantine/core';
 import LightPopover from 'devices/Light/LightPopover'
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
@@ -51,7 +50,7 @@ const LightLine = props => {
                     setOpen={ setShowPopover }
                     target={            
                         <ActionIcon size="md" color={ on ? "primary" : undefined } onClick={ () => setShowPopover(!showPopover) }>
-                            { reachable ? <Lightbulb size={20} /> : <CloudOff size={16} /> }
+                            { reachable ? <Lightbulb size={20} /> : <CloudSlash size={16} /> }
                         </ActionIcon>
                     }     
                 />

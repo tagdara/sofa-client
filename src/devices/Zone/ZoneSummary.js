@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import useDeviceStateStore from 'store/deviceStateStore'
 import WideAvatar from 'components/WideAvatar'
-import { BsShieldSlash as ShieldSlash } from "react-icons/bs";
+import { ShieldSlash  } from "react-bootstrap-icons"
 
 import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
 import { Badge, Group, Text } from '@mantine/core'
@@ -47,12 +47,13 @@ const ZoneSummary = props => {
     return (
         <Group direction="column" noWrap onClick={ () => selectPage('ZonePage') }> 
             <Group noWrap style={{ alignItems: violated ? "flex-start" : "center "}}>
-                <WideAvatar color={violated ? "red" : "green"} size="lg"
+                <WideAvatar color={violated ? "red" : "green"} 
+                            size="lg"
                             onClick={ () => selectPage('LightPage') }
                             left={ violated ? < ShieldSlash size={20} /> : <Shield size={20} />} 
                             right={ violated ? openZones.length : undefined }
                 />
-                <Group direction="column" spacing={"xs"} style={{ width: "100%"}} >
+                <Group direction="column" grow spacing={"xs"} >
                     <Text   size={ violated ? "sm" : "lg" }
                             weight={500} 
                             style={{width: "100%"}} 

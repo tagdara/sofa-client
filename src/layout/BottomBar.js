@@ -3,8 +3,7 @@ import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
 import { selectStack } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
 import { Affix, Group, SegmentedControl, useMantineTheme } from '@mantine/core';
-import { Menu, Music, Shield, Thermometer } from 'react-feather';
-import { BsLightbulb as Lightbulb } from "react-icons/bs";
+import { List as Menu, Lightbulb, MusicNoteBeamed as Music, Shield, Thermometer } from "react-bootstrap-icons";
 import HomeButton from 'layout/HomeButton'
 
 const BottomBar = props => {

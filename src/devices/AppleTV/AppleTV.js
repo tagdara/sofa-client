@@ -6,7 +6,7 @@ import useArt from 'device-model/property/art/useArt'
 import useTitle from 'device-model/property/title/useTitle'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
-import { SiAppletv as AppleTvIcon } from "react-icons/si";
+import { Apple as AppleTvIcon } from "react-bootstrap-icons"
 
 const AppleTV = props => {
   

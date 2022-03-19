@@ -4,7 +4,7 @@ import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointH
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers';
-import { BsArrowUpRightSquare as Link } from "react-icons/bs";
+import { ArrowUpRightSquare as Link } from "react-bootstrap-icons";
 import StackCard from 'components/StackCard'
 
 const PrinterLine = props => {

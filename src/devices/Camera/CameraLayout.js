@@ -1,5 +1,5 @@
 import React, { useState} from 'react';
-import { AiOutlineQrcode } from 'react-icons/ai'
+import { QrCode } from 'react-bootstrap-icons'
 import SectionHeader from 'layout/SectionHeader';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
@@ -20,7 +20,7 @@ const CameraLayout = props => {
             <SectionHeader title={"Cameras"} >
                 { homekitSupport &&
                     <ActionIcon onClick={ () => setShowQR(!showQR) }>
-                        <AiOutlineQrcode size={20}  />
+                        <QrCode size={20}  />
                     </ActionIcon> 
                 }
             </SectionHeader>

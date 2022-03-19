@@ -3,8 +3,10 @@ import PlaceholderCard from 'layout/PlaceholderCard';
 import useDeviceStateStore from 'store/deviceStateStore';
 import { register, unregister } from 'store/deviceHelpers'
 import { compareState } from 'store/deviceHelpers'
-import { Avatar, Group, Text, useMantineTheme } from '@mantine/core'
-import { HardDrive } from 'react-feather'
+import {  Group, Text, useMantineTheme } from '@mantine/core'
+import { PcDisplayHorizontal as Pc } from "react-bootstrap-icons";
+import WideAvatar from 'components/WideAvatar'
+import ComputerOnList from 'devices/Computer/ComputerOnList'
 
 const ComputerSummary = props => {
 
@@ -49,16 +51,27 @@ const ComputerSummary = props => {
         return count
     }
 
-    const iconColor = deviceCount('on') > 0 ?  theme.colors[theme.primaryColor] : undefined
-    const labelText = deviceCount('on') === 1 ? deviceCount('on')+" computer on" : deviceCount('on')+" computers on"
+    const anyOn = deviceCount('on') > 0
+    const iconColor = anyOn ?  theme.colors[theme.primaryColor] : undefined
 
     return (
         <Group position="apart" noWrap onClick={props.onClick}>
-            <Group noWrap>
-                <Avatar size="lg" color={iconColor}>
-                    { <HardDrive size={20} />}
-                </Avatar>     
-                <Text size="lg" weight={500} style={{width: "100%"}} lineClamp={1}>{ deviceCount('on') ? labelText : "All computers off" }</Text>
+            <Group noWrap style={{ width: "100%"}}>
+                <WideAvatar color={iconColor} 
+                    size="lg"
+                    left={ < Pc size={20} /> } 
+                    right={ anyOn ? deviceCount('on') : undefined }
+                />    
+                <Group direction="column" spacing={"xs"} style={{ width: "100%"}} >
+                    <Text   size={ anyOn ? "sm" : "lg" }
+                            weight={500} 
+                            style={{width: "100%"}} 
+                            lineClamp={1}
+                    >
+                        { anyOn ? "Computers are on" : "All computers off" } 
+                    </Text>
+                    <ComputerOnList />
+                </Group>            
             </Group>
         </Group>
     );

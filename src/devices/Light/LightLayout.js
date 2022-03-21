@@ -40,13 +40,15 @@ const LightLayout = props => {
                 )}
                 </SectionGrid>
                 { filter === "ON" &&
-                    <SectionGrid>
-                    <Divider variant="dotted" style={{ marginTop: 16 }} label="Lights that are off" />
-                    { lights.map( endpointId =>
-                        <LightLine  key={ endpointId } endpointId={endpointId} filter={"OFF"} small={true} remove={props.remove}
-                        />
-                    )}
-                    </SectionGrid>
+                    <>
+                        <Divider variant="dotted" style={{ width: "100%", marginTop: 16, marginBottom: 8 }} label="Lights that are off" />
+                        <SectionGrid>
+                        { lights.map( endpointId =>
+                            <LightLine  key={ endpointId } endpointId={endpointId} filter={"OFF"} small={true} remove={props.remove}
+                            />
+                        )}
+                        </SectionGrid>
+                    </>
                 }
             </SectionFrame>
         </PageFrame>

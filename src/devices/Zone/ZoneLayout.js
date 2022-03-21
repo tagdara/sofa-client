@@ -39,7 +39,7 @@ const ZoneLayout = props => {
         <PageFrame>
             <SectionHeader title={"Zones"} />
             <SectionFrame padScroll>
-                <SectionDivider label={"Security Zones"} />
+                <SectionDivider first label={"Security Zones"} />
                 <SectionGrid>
                     { securityZones.map(endpointId =>
                         <Zone key={ endpointId } endpointId={endpointId} history={historyZone} changeTime={ getChangeTime(endpointId) } />

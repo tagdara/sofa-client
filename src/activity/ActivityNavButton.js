@@ -7,7 +7,7 @@ import { directive } from 'store/directive'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import moment from 'moment';
-import { X as Close, List, Star, PlayCircle } from 'react-feather'
+import { X as Close, ListUl, Star, PlayCircle } from 'react-bootstrap-icons'
 import { ActionIcon } from '@mantine/core';
 
 const ActivityItem = props => {
@@ -79,7 +79,7 @@ const ActivityItem = props => {
     return (
             <NavButton  onClick={ () => props.select(props.endpointId) }
                         iconOnClick={ (event) => { event.stopPropagation(); makeFavorite(props.endpointId, !props.favorite) }}
-                        icon={ isFavorite(props.endpointId) && props.icon !== "base" ? <Star size={20} /> : <List size={20} /> }
+                        icon={ isFavorite(props.endpointId) && props.icon !== "base" ? <Star size={20} /> : <ListUl size={20} /> }
                         loading={ !loading() } 
                         color={ props.favorite ? "primary" : undefined } 
                         label={ name } 

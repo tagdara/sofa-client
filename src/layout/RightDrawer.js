@@ -32,9 +32,9 @@ const RightDrawer = props => {
                 onClose={ closeDrawer}
                 padding="sm" 
                 size="xl"
-                hideCloseButton
                 styles={{ 
                             drawer: { maxHeight: "100vh", 
+                                    marginTop: 72,
                                     paddingTop: "calc(16px + env(safe-area-inset-top))", 
                                     display: "flex", 
                                     flexDirection: "column",

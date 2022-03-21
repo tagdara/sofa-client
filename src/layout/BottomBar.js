@@ -22,20 +22,15 @@ const BottomBar = props => {
     }, [ currentStack ])
 
     const pickStack = newStack => {
-        if (newStack === "System") {
-            props.open()
-            selectStack(currentStack)
-        } else {
-            if (getPosition(newStack) > getPosition(currentStack)) {
-                setTransitionDirection("slide-left")
-            }
-            else if (getPosition(newStack) < getPosition(currentStack)) {
-                setTransitionDirection("slide-right")
-            } else {
-                setTransitionDirection("fade")
-            }
-            selectStack(newStack)
+        if (getPosition(newStack) > getPosition(currentStack)) {
+            setTransitionDirection("slide-left")
         }
+        else if (getPosition(newStack) < getPosition(currentStack)) {
+            setTransitionDirection("slide-right")
+        } else {
+            setTransitionDirection("fade")
+        }
+        selectStack(newStack)
     }
 
     const getPosition = val => {
@@ -84,7 +79,9 @@ const BottomBar = props => {
                     justifyContent: "center", 
                     alignItems: "center", 
                     marginBottom: "env(safe-area-inset-bottom)", 
-                    flexDirection: "row-reverse"
+                    flexDirection: "row-reverse",
+                    paddingBottom: 4,
+                    paddingTop: 8,
                 }} 
                 id="bottomPortal"
             >

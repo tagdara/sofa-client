@@ -8,7 +8,7 @@ export const SectionDivider = props => {
 
     return <Divider label={props.label}
                     style={{ 
-                        paddingTop: 24,
+                        paddingTop: props.first ? undefined : 24,
                         paddingBottom: 8,
                         margin: "0 auto", 
                         width: "100%", 

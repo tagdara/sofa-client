@@ -6,6 +6,7 @@ import PageFrame from 'layout/PageFrame'
 import usePageFrame from 'helpers/usePageFrame'
 import SectionGrid from 'layout/SectionGrid'
 import SectionFrame from 'layout/SectionFrame'
+import SystemPage from 'layout/pages/SystemPage'
 
 export default function Stacks(props) {
 
@@ -32,11 +33,15 @@ export default function Stacks(props) {
     return (
         <PageFrame>
             <SectionFrame>
-            <SectionGrid>
-            { filterStacks().map( stack =>
-                <CardStack key={stack} stack={ stack }  />
-            )}
-            </SectionGrid>
+            { currentStack === "System" ?
+                <SystemPage />
+                :
+                <SectionGrid>
+                { filterStacks().map( stack =>
+                    <CardStack key={stack} stack={ stack }  />
+                )}
+                </SectionGrid>
+            }
             </SectionFrame>
         </PageFrame>
     );

@@ -1,6 +1,6 @@
 import React, { useState, useCallback }  from 'react';
 
-import { SegmentedControl } from '@mantine/core';
+import { Divider, SegmentedControl } from '@mantine/core';
 import LightLine from 'devices/Light/LightLine';
 import useDeviceStore from 'store/deviceStore'
 import { sortByName } from 'store/deviceHelpers'
@@ -39,6 +39,15 @@ const LightLayout = props => {
                     />
                 )}
                 </SectionGrid>
+                { filter === "ON" &&
+                    <SectionGrid>
+                    <Divider variant="dotted" style={{ marginTop: 16 }} label="Lights that are off" />
+                    { lights.map( endpointId =>
+                        <LightLine  key={ endpointId } endpointId={endpointId} filter={"OFF"} small={true} remove={props.remove}
+                        />
+                    )}
+                    </SectionGrid>
+                }
             </SectionFrame>
         </PageFrame>
     )

@@ -4,18 +4,23 @@ import { Star } from 'react-feather'
 
 import ActivityName from "activity/editor/layout/ActivityName"
 import ActivityDetails from "activity/editor/layout/ActivityDetails"
-import { isFavorite, makeFavorite } from 'store/deviceHelpers'
+import { makeFavorite, removeFavorite } from 'store/deviceHelpers'
 import useActivityEditorStore from 'store/activityEditorStore'
+import useUserStore from 'store/userStore'
 import SectionHeader from 'layout/SectionHeader';
 
 const ActivityHeader = props => {
 
     const endpointId = useActivityEditorStore( state => state.endpointId )
-    var favorite = isFavorite(endpointId)
+    const favorites = useUserStore( state => state.preferences.favorites )
+    const favorite = favorites && favorites.includes(endpointId)
 
     function toggleFavorite() {
-        makeFavorite(endpointId, !favorite)
-        favorite = isFavorite(endpointId)
+        if (!favorite) {
+            makeFavorite(endpointId) 
+        } else {
+            removeFavorite(endpointId)
+        }
     }
 
     return (

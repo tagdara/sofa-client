@@ -20,6 +20,7 @@ const LightLine = props => {
     function filtered(filter) {
         
         filter = filter ? filter.toUpperCase() : "TRUE"
+        
         switch (filter) {
             case "ON":
                 if (on) {

@@ -596,16 +596,23 @@ export function makeFavorite(endpointId) {
     const update = useUserStore.getState().update
     if (!favorites.includes(endpointId)) {
         update('favorites', [...favorites, endpointId])
+    } else {
+        console.log('already fav', endpointId, favorites)
     }
 }
 
 export function removeFavorite(endpointId) {
-    const favorites = [...useUserStore.getState().preferences.favorites]
+
+    var favorites = [...useUserStore.getState().preferences.favorites]
     const update = useUserStore.getState().update
     if (favorites.includes(endpointId)) {
-        // eslint-disable-next-line 
-        const [ endpointId, ...rest ] = favorites
-        update('favorites', [...rest ])
+        console.log('removing fav', endpointId)
+        favorites = favorites.filter(function(item) {
+            return item !== endpointId
+        })
+        update('favorites', favorites)
+    } else {
+        console.log('was not fav', endpointId, favorites)
     }
 }
 

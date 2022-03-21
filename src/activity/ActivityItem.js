@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
-import { isFavorite, makeFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { removeFavorite, makeFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
 import useDeviceStateStore from 'store/deviceStateStore'
+import useUserStore from 'store/userStore'
 
 import { X as Close, List, Star, PlayCircle } from 'react-feather'
 
@@ -18,6 +19,8 @@ const ActivityItem = props => {
     const [ launched, setLaunched] = useState(false)
     const activity = deviceByEndpointId(props.endpointId)
     const activityState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const favorites = useUserStore( state => state.preferences.favorites )
+    const favorite = favorites && favorites.includes(props.endpointId)
 
     useEffect(() => {
         register(props.endpointId, "Activity-"+props.endpointId)
@@ -30,6 +33,14 @@ const ActivityItem = props => {
     if (!activity || !activityState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 
     const name = activity.friendlyName
+
+    function toggleFavorite() {
+        if (!favorite) {
+            makeFavorite(props.endpointId) 
+        } else {
+            removeFavorite(props.endpointId)
+        }
+    }
 
     function runActivity(conditions=true) {
         setLaunched(true)
@@ -77,16 +88,15 @@ const ActivityItem = props => {
     }    
 
     const loading = launched || activityState.Running.toggleState.value === 'ON'
-    const favorite = isFavorite(props.endpointId) 
 
     return (
         <SplitButtonGroup>
             <SplitButton >         
                 <ActionIcon variant={ favorite ? "light" : undefined} 
                             color={favorite ? "green" : undefined } 
-                            onClick={ () => makeFavorite(props.endpointId, !props.favorite) }
+                            onClick={ () => toggleFavorite(props.endpointId) }
                 >
-                    { (isFavorite(props.endpointId) && props.icon !== "base") ? <Star size={20} /> : <List size={20} /> }
+                    { (favorite && props.icon !== "base") ? <Star size={20} /> : <List size={20} /> }
                 </ActionIcon>
             </SplitButton>
             <SplitButton    label = { name } 

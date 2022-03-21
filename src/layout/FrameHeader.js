@@ -20,7 +20,7 @@ const FrameHeader = props => {
 
     return (
         <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
-            <Header height={64} padding="md" style={{ width: "100%"}}>
+            <Header height={64} padding="md" style={{ zIndex: 5001, width: "100%"}}>
             {/* You can handle other responsive styles with MediaQuery component or createStyles function */}
             <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
                 <Burger

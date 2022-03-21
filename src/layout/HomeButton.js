@@ -15,7 +15,7 @@ const HomeButton = props => {
 
     //return <NavButton highlight avatar={<Home style={{ margin: "8px 20px 8px 8px" }} size={20} />} label={"Back to Home"} arrow onClick={goHome} />
     //return <NavButton highlight avatar={<Home size={20} />} label={"Home"} arrow onClick={goHome} />
-    return <Button fullWidth variant="light" size={ "md" } onClick={goHome} leftIcon={<Home size={20} />} >Home</Button>
+    return <Button fullWidth  size={ "md" } onClick={goHome} leftIcon={<Home size={20} />} >Home</Button>
 }
 
 export default HomeButton

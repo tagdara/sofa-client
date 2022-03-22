@@ -1,9 +1,10 @@
 import React from 'react';
-import { Badge } from '@mantine/core'
+import { ActionIcon, Badge } from '@mantine/core'
 import { compareState,friendlyNameByEndpointId, isReachable } from 'store/deviceHelpers'
 import useChildren from 'device-model/property/children/useChildren'
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
+import { X } from "react-bootstrap-icons";
 
 const AreaLightsOnBadge = props => {
 
@@ -48,7 +49,18 @@ const AreaLightsOnBadge = props => {
     if (lightCount('on') < 1 ) { return null }
 
     return (
-        <Badge onClick={turnOffLights} size="sm" variant="light">{name}</Badge>
+        <Badge 
+            sx={{ paddingRight: 3 }}
+            onClick={turnOffLights} 
+            size="sm" 
+            variant="light" 
+            rightSection={  <ActionIcon size="xs" radius="xl" variant="transparent">
+                                <X size={12} />
+                            </ActionIcon>
+            }
+        >
+            {name}
+        </Badge>
     );
 
 }

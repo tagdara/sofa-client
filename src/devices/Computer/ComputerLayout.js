@@ -15,7 +15,7 @@ const ComputerLayout = props => {
         <PageFrame>
             <SectionFrame>
                 <Group direction="column">
-                    <SectionHeader title={"Computers"} />
+                    <SectionHeader first title={"Computers"} />
                     <SectionGrid>
                         <ComputerList />
                     </SectionGrid>

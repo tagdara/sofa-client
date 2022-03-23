@@ -1,11 +1,13 @@
 import React from 'react';
 import RangeValueLine from 'device-model/property/rangeValue/RangeValueLine'
 import { hasInstance} from 'store/deviceHelpers'
-import { Group } from '@mantine/core';
+import { Group, Text } from '@mantine/core';
 import { CloudDrizzle, Droplet, Lightbulb, Sun, Wind } from "react-bootstrap-icons";
+import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 
 const WeatherList = props => {
 
+    const { reachable } = useEndpointHealth(props.endpointId)
     const additionalAttributes = {  'Light Level' : { "icon" : <Lightbulb size={16} />, "unit": "lux" },
                                     'Humidity': { "icon" : <Droplet size={16} />, "unit": "%" },
                                     'Wind Speed': { "icon" : <Wind size={16} />, "unit": "m/s" },
@@ -27,6 +29,15 @@ const WeatherList = props => {
     const hasMoreData = checkMoreData()
 
     if (!hasMoreData) { return null }
+
+    if (!reachable) { 
+        return (
+            <Group direction="column">
+                <Text>Please check the weather station batteries</Text>
+            </Group>
+        )
+    
+    }
 
     return (      
         <Group direction="column">

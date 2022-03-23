@@ -4,8 +4,7 @@ import PlaceholderCard from 'layout/PlaceholderCard';
 import LightChristmasButton from 'devices/Light/LightChristmasButton';
 
 import useDeviceStateStore from 'store/deviceStateStore'
-import useRegisterStore from 'store/registerStore'
-import { compareState, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
+import { compareState, endpointIdsByDisplayCategory, register, unregister } from 'store/deviceHelpers'
 import { Group, Text, useMantineTheme } from '@mantine/core'
 import { selectPage } from 'helpers/layoutHelpers';
 import WideAvatar from 'components/WideAvatar'
@@ -16,8 +15,6 @@ const LightSummary = props => {
     const xmas = false
     const lights = endpointIdsByDisplayCategory('LIGHT')
     const states = useDeviceStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
-    const register = useRegisterStore( state => state.add)
-    const unregister = useRegisterStore( state => state.remove)
     const treeEndpointId = 'insteon:node:1A F1 A5 1'
 
     useEffect(() => {

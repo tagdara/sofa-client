@@ -8,7 +8,6 @@ import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import InputSelect from 'device-model/property/input/InputSelect'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import TelevisionDetailLine from 'devices/Television/TelevisionDetailLine'
-import AppleTV from 'devices/AppleTV/AppleTV'
 import ModeSelect from 'device-model/property/mode/ModeSelect'
 import MatrixConflictList from 'devices/Matrix/MatrixConflictList'
 
@@ -32,7 +31,7 @@ const Television = props => {
                 </CardLine>
                 { on && <TelevisionDetailLine endpointId={props.endpointId} /> }
             </Group>
-            <Collapse in={on || showDetail}>
+            <Collapse in={inputLabel === "Matrix" || showDetail}>
                 <Group direction="column" grow>
                     <Group noWrap>
                         <InputSelect endpointId={props.endpointId} />
@@ -48,7 +47,6 @@ const Television = props => {
                     </Group>
                 </Group>
             </Collapse>
-            { ( props.appleTV && on && inputLabel==="Apple TV" ) && <AppleTV endpointId={props.appleTV} /> }
         </Group>
     );
 }

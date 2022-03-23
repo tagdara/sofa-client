@@ -71,7 +71,7 @@ const useStyles = createStyles((theme) => ({
         tableLayout: "auto",
         borderRadius: theme.radius.sm,
         backgroundColor: theme.colorScheme === 'dark' ? 
-                            theme.fn.rgba(theme.colors.dark[6], 0.5) : 
+                            theme.fn.rgba(theme.colors.dark[6], 0.5):
                             theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.1),
         '&:hover': {
             backgroundColor: theme.colorScheme === 'dark' ? 
@@ -95,6 +95,16 @@ const useStyles = createStyles((theme) => ({
             flexGrow: 1,
         }
     },
+    cardButtonGroup: {
+        backgroundColor: theme.colorScheme === 'dark' ? 
+                            theme.fn.rgba(theme.colors.dark[4], 0.5) :
+                            theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.1),
+        '&:hover': {
+            backgroundColor: theme.colorScheme === 'dark' ? 
+                            theme.fn.rgba(theme.colors.dark[4], 0.7) : 
+                            theme.fn.rgba(theme.colors[theme.primaryColor][5], 0.15),
+        },
+    },
     buttonGroupOn: {
         backgroundColor: theme.colorScheme === 'dark' ? 
                             theme.fn.rgba(theme.colors[theme.primaryColor][7], 0.35) : 
@@ -113,12 +123,13 @@ const useStyles = createStyles((theme) => ({
 export const SplitButtonGroup = ( props ) => {
 
     const { classes } = useStyles();
-   
+
     return (
         <Group direction="row" 
                 onClick={ props.onClick }
                 noWrap spacing={0} 
                 className={clsx(classes.buttonGroup, {
+                    [classes.cardButtonGroup]: props.onCard,
                     [classes.buttonGroupOn]: props.on,
                 })}
         >
@@ -132,7 +143,6 @@ export const SplitButton = ( props ) => {
     const { classes } = useStyles();
     const theme = useMantineTheme()
     const isMobile = useLayoutStore( state => state.isMobile)
-
     const classSelect = () => {
         if (props.transparent) { return classes.transparentButton }
         if (props.highlight) { return classes.themeButton }

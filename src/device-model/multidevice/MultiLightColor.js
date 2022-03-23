@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
 import { Checkbox, ColorPicker, ColorSwatch, Group, Popover } from '@mantine/core'
@@ -8,9 +8,10 @@ import { hasCapability, compareState, register, unregister } from 'store/deviceH
 
 const MultiLightColor = props => {
 
-    const [open, setOpen] = useState(false);
-    const colorLights = props.endpointIds.filter(endpointId => hasCapability(endpointId, "ColorController"))
+    const [ open, setOpen ] = useState(false);
+    const colorLights = useMemo( () => { return props.endpointIds.filter(endpointId => hasCapability(endpointId, "ColorController")) }, [props.endpointIds])
     const states = useDeviceStateStore(state => Object.fromEntries(colorLights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))  
+
     const [ value, setValue ] = useState(undefined)
     const [ retainBrightness, setRetainBrightness] = useState(true)
     const [ debounced ] = useDebouncedValue( value, props.delay ? props.delay : 300 );
@@ -38,7 +39,6 @@ const MultiLightColor = props => {
         }
     }, [ debounced ])
 
-    console.log()
     if (!colorLights || colorLights.length < 1 || !states) { return null }
 
     function currentAverage() {
@@ -82,10 +82,10 @@ const MultiLightColor = props => {
                 noFocusTrap
                 noEscape
                 transition="pop-top-left"
-                target={<ColorSwatch radius="md" color={currentHex} onClick={ () => setOpen(true) } />}
+                target={<ColorSwatch radius="md" color={currentHex} onClick={ () => setOpen(!open) } />}
             >
                 <Group direction="column">
-                    <ColorPicker value={currentAverage() } format="hsl" 
+                    <ColorPicker value={ currentHex } format="hsl" 
                                     onChange={ handleColorChange }
                                     swatches= { [ '#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321', '#417505', '#BD10E0', '#9013FE', 
                                                 '#4A90E2', '#50E3C2', '#B8E986', '#FFFFFF', "#FEEBBA" ] }

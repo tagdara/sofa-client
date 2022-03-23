@@ -1,0 +1,38 @@
+import React from 'react';
+import { Group, Select, Text} from '@mantine/core'
+import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { directive } from 'store/directive'
+import useChildren from 'device-model/property/children/useChildren'
+import useScene from 'device-model/property/scene/useScene'
+
+
+const AreaSceneSelect = props => {
+
+    const { scenes } = useChildren(props.endpointId)
+    const { scene: currentScene } = useScene(props.endpointId)
+    const selections = scenes.map(scene => ({value: scene, label: friendlyNameByEndpointId(scene)})) 
+
+    if (!selections || selections.length<1 ) { return null }
+
+
+    function runScene( sceneEndpointId) {
+        //setWorking(true)
+        directive(sceneEndpointId, 'SceneController', 'Activate')
+    }
+
+    return (
+        <Group noWrap grow style={{ width: "100%"}}>
+            { props.label && <Text>{props.label}</Text> } 
+            <Select size={ props.size ? props.size : "sm" } 
+                    placeholder={ "Select scene" }
+                    onChange={ runScene } 
+                    value={ currentScene }
+                    data={ selections }
+                    style={{  minWidth: 100, width: props.half ? "50%" : "auto" }}
+            />
+        </Group>
+    );
+
+}
+
+export default AreaSceneSelect

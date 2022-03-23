@@ -57,7 +57,7 @@ const SceneItem = props => {
     const active = props.endpointId === props.computedLevel
 
     return (
-        <SplitButtonGroup on={active} onClick={ runScene }>
+        <SplitButtonGroup on={active} onClick={ runScene } onCard={props.onCard}>
             <SplitButton >       
                 { props.shortcut === "x" ?   
                     <ActionIcon size="md" >

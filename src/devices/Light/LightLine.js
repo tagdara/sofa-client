@@ -18,7 +18,7 @@ const LightLine = props => {
     const on = reachable && powerStateBool
 
     function filtered(filter) {
-        
+
         filter = filter ? filter.toUpperCase() : "TRUE"
         
         switch (filter) {
@@ -38,12 +38,12 @@ const LightLine = props => {
         return true
     }
 
-    if ( filtered(props.filter) ) { 
-        return null 
-    }
+    const filteredResult = filtered(props.filter)
+
+    if ( filteredResult ) { return null }
 
     return (
-        <SplitButtonGroup on={on}>
+        <SplitButtonGroup on={on} onCard={props.onCard}>
             <SplitButton >
                 <LightPopover   
                     endpointId = {props.endpointId}

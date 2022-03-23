@@ -18,8 +18,11 @@ const JukeboxHero = props => {
     }
 
     function toggleSpeakers() {
+        console.log('toggling speaker filter to ', !filterOff, 'showidle is', showIdle)
+        if (filterOff) {
+            setShowIdle(true)
+        }
         setFilterOff(!filterOff)
-        setShowIdle(!showIdle)
     }
 
     function toggleIdle() {

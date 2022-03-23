@@ -9,8 +9,8 @@ const AreaSummaryLine = props => {
 
     const { lights } = useChildren(props.endpointId)
 
-    if (!lights || lights.length < 1 ) { return null }
-
+    if ( !lights || lights.length < 1 ) { return null }
+    
     return (
         <Group spacing="xl" direction="row" noWrap style={{paddingLeft: "10%", paddingRight: "10%", width: "100%"}}>
             <AreaShortcutSlider endpointId={props.endpointId} />

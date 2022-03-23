@@ -1,37 +1,21 @@
-import React, { useState } from 'react';
-
-import Thermostat from 'devices/Thermostat/Thermostat';
-import AirQualityBadge from 'device-model/instance/AirQualityBadge'
-import PlaceholderCard from 'layout/PlaceholderCard';
-
+import React from 'react';
+import ThermostatCard from 'devices/Thermostat/ThermostatCard'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers'
-import StackCard from 'components/StackCard'
-import ThermostatList from 'devices/Thermostat/ThermostatList'
-import { Collapse, Group } from '@mantine/core';
 
 const ThermostatHero = props => {
-    const endpointId =  endpointIdByFriendlyName(props.primary)
-    const indoorAQ = endpointIdByFriendlyName(props.indoorAirQuality)  
-    const [ expanded, setExpanded ] = useState(false)
-
-    if (!endpointId) {
-        return <PlaceholderCard count={2}/>
-    }
+    const primary =  endpointIdByFriendlyName(props.primary)
+    const secondary =  endpointIdByFriendlyName(props.secondary)
+    const airQuality =  endpointIdByFriendlyName(props.indoorAirQuality)
+    const currentHour = new Date().getHours();
+    const night = currentHour >= 22 || currentHour <= 8
 
     return (
-        <StackCard>
-            <Group direction="column" style={{ width: "100%"}}>
-                <Thermostat endpointId={endpointId} 
-                        onClick={ () => setExpanded(!expanded) } 
-                        wide={props.wide } 
-                >
-                    <AirQualityBadge size="md" endpointId={indoorAQ} instance={"Air Quality"} suffix={"Indoor AQ"} />
-                </Thermostat>
-                <Collapse in={expanded} style={{ width: "100%"}}>
-                    <ThermostatList />
-                </Collapse>
-            </Group>
-        </StackCard>
+        <>
+            <ThermostatCard endpointId={primary} airQuality={ night ? undefined : airQuality } expand />
+            { night &&
+                <ThermostatCard endpointId={secondary} airQuality={airQuality} />
+            }
+        </>
     ); 
 }
 

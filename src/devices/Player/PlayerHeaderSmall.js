@@ -1,16 +1,17 @@
 import React from 'react';
-import { ActionIcon, Avatar, Group, Text } from '@mantine/core'
-import { Speaker as SpeakerIcon, Music } from 'react-feather'
+import { ActionIcon, Group } from '@mantine/core'
+import { MusicNoteList, Speaker as SpeakerIcon, MusicNoteBeamed as Music } from 'react-bootstrap-icons'
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { useRegister } from 'store/useRegister'
-import useTokenImage from 'helpers/useTokenImage'
+//import useTokenImage from 'helpers/useTokenImage'
+import CardLine from 'components/CardLine'
 
 const PlayerHeaderSmall = props => {
     
     const { deviceState } = useRegister(props.endpointId)
-    const data = deviceState && deviceState.MusicController ? deviceState.MusicController : {}
-    const art = (data.art && data.art.value) ? data.art.value : ""
-    const { localImageUrl } = useTokenImage(art)
+    // const data = deviceState && deviceState.MusicController ? deviceState.MusicController : {}
+    // const art = (data.art && data.art.value) ? data.art.value : ""
+    // const { localImageUrl } = useTokenImage(art)
 
     if (!deviceState) {
         return <PlaceholderCard count={ 3 } />
@@ -21,26 +22,22 @@ const PlayerHeaderSmall = props => {
         safariWindow.location.href = props.url
     }
 
-    //                <Avatar size="lg" src={ deviceState.MusicController.art.value ? 
-    //serverurl + deviceState.MusicController.art.value :
-    //'X' } 
-    // />
+    //<Avatar size="lg" src={localImageUrl} />
 
     return (
-        <Group direction="row" noWrap position="apart" onClick={props.toggleIdle}>
-            <Group>
-                <Avatar size="lg" src={localImageUrl} />
-                <Text>{'Jukebox is idle'}</Text>
-            </Group>
-            <Group>
-                <ActionIcon size={"small"} onClick={props.toggleSpeakers}>
-                    <SpeakerIcon size={20} />
-                </ActionIcon>
-                <ActionIcon size={"small"} onClick={openJukebox}>
-                    <Music size={20} />
-                </ActionIcon>
-            </Group>
-        </Group>    
+            <CardLine   
+                        icon={ <MusicNoteList size={24} onClick={ props.toggleIdle }/> }
+                        primary={ 'Jukebox' }
+            >
+                <Group spacing={"xs"}>
+                    <ActionIcon variant="light" size="lg" onClick={props.toggleSpeakers}>
+                        <SpeakerIcon size={20} />
+                    </ActionIcon>
+                    <ActionIcon variant="light" size="lg" onClick={openJukebox}>
+                        <Music size={20} />
+                    </ActionIcon>
+                </Group>
+            </CardLine>  
     );
 }
 

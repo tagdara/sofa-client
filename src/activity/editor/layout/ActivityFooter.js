@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import useActivityEditorStore from 'store/activityEditorStore'
 import { okToSave, saveActivity, addActivity } from 'store/activityEditorHelpers'
-import { Database, Save, Plus, Play, FastForward, X } from 'react-feather'
+import { FileEarmarkCode, LayerBackward, Save, Plus, Play, X } from 'react-bootstrap-icons'
 import { Group, ActionIcon, Modal } from '@mantine/core';
-import SectionFooter from 'layout/SectionFooter'
 import { directive  } from 'store/directive';
 import { selectPage } from 'helpers/layoutHelpers';
 import ActivityAddMenu from 'activity/editor/layout/ActivityAddMenu'
@@ -39,7 +38,7 @@ export default function ActivityFooter(props) {
     }    
 
     return (
-        <SectionFooter>
+        <Group noWrap>
             <Modal  opened={dialogOpen}
                     onClose={() => setDialogOpen(false)}
                     title="Activity JSON"
@@ -52,7 +51,7 @@ export default function ActivityFooter(props) {
                 <X size={20} />
             </ActionIcon>
             <ActionIcon variant="light" size="md" onClick={() => setDialogOpen(!dialogOpen)}>
-                <Database size={20} />
+                <FileEarmarkCode size={20} />
             </ActionIcon>
             <ActivityAddMenu add={props.add} />
             <ActionIcon variant="light" size="md" disabled={ !saveOk } onClick={endpointId ? saveActivity : addActivity } >
@@ -63,10 +62,10 @@ export default function ActivityFooter(props) {
                     <Play size={20} />
                 </ActionIcon>
                 <ActionIcon variant="light" size="md" onClick={() => runAutomation(false)}>
-                    <FastForward size={20} />
+                    <LayerBackward size={20} />
                 </ActionIcon>
             </Group>
-        </SectionFooter>
+        </Group>
     )
 }
 

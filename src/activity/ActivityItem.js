@@ -8,10 +8,11 @@ import useUserStore from 'store/userStore'
 
 import { X as Close, List, Star, PlayCircle } from 'react-feather'
 
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Badge, Group } from '@mantine/core';
 
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import ActivityItemMissing from 'activity/ActivityItemMissing'
+import ActivityComponentIcon from 'activity/ActivityComponentIcon'
 
 const ActivityItem = props => {
     
@@ -69,11 +70,20 @@ const ActivityItem = props => {
 
 
     function partsSummary() {
-        var parts = ['triggers_count', 'conditions_count', 'actions_count', 'schedules_count']
-        var results = parts.map(part => { if (props.activity[part] > 0)  { return props.activity[part]+" "+part.split("_")[0] } return false })
+        var parts = ['schedules_count', 'triggers_count', 'conditions_count', 'actions_count', 'missing_devices_count']
+        var results = parts.map(part => 
+            { 
+                if (props.activity[part] > 0)  { 
+                    return (
+                        <ActivityComponentIcon key={props.activity.name+part} text={props.activity[part]} component={part} />
+                    )
+                } 
+                return false
+            }
+        )
         results = results.filter(Boolean)
-        if (!results ||  results.length<1) { return "No components"}
-        return results.join(" / ")
+        if (!results ||  results.length<1) {  return <Badge color="red">{"Empty"}</Badge> }
+        return results
     }    
  
     function scheduleSummary() {
@@ -82,9 +92,15 @@ const ActivityItem = props => {
     }
 
     function xsummary() {
-        if (!props.activity || !props.allowEdit) { return undefined }
+        if (!props.activity || !props.allowEdit) { return null}
         if (props.showNextRun) { return scheduleSummary() }
-        return partsSummary()
+        const summary = partsSummary()
+        if (summary.length < 1) { return null }
+        return  (
+            <Group noWrap spacing={4}>
+                { summary }
+            </Group>
+        )
     }    
 
     const loading = launched || activityState.Running.toggleState.value === 'ON'

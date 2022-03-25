@@ -9,7 +9,7 @@ import { loadActivity, newActivity } from 'store/activityEditorHelpers';
 
 import SectionFrame from 'layout/SectionFrame'
 import PageFrame from 'layout/PageFrame'
-import { Group } from '@mantine/core';
+import { Group, Portal } from '@mantine/core';
 
 export default function ActivityEditor(props) {
 
@@ -34,7 +34,9 @@ export default function ActivityEditor(props) {
                     <ActivityActions />
                 </Group>
             </SectionFrame>
-            <ActivityFooter />
+            <Portal target="#bottomPortal">
+                <ActivityFooter />
+            </Portal>
         </PageFrame>
     )
 };

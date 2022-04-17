@@ -31,13 +31,13 @@ const Television = props => {
                 </CardLine>
                 { on && <TelevisionDetailLine endpointId={props.endpointId} /> }
             </Group>
-            <Collapse in={inputLabel === "Matrix" || showDetail}>
+            <Collapse in={ (on && inputLabel === "Matrix") || showDetail}>
                 <Group direction="column" grow>
-                    <Group noWrap>
+                    <Group noWrap grow>
                         <InputSelect endpointId={props.endpointId} />
-                        { inputLabel === "Matrix" && <ModeSelect half instance={"Input"} endpointId={props.matrix} /> }
+                        { inputLabel === "Matrix" && <ModeSelect instance={"Input"} endpointId={props.matrix} /> }
                     </Group>
-                    { inputLabel === "Matrix" && <MatrixConflictList endpointId={props.matrix} /> }
+                    { (on && inputLabel === "Matrix") && <MatrixConflictList endpointId={props.matrix} /> }
                 </Group>
             </Collapse>
             <Collapse in={showDetail}>

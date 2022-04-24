@@ -5,7 +5,8 @@ import useLoginStore from 'store/loginStore'
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { Text } from '@mantine/core'
 
-const serverUrl = "https://"+window.location.hostname;
+const hostName = useLoginStore.getState().host_name
+const serverUrl = useLoginStore.getState().server_url
 const layoutUrl = serverUrl+ '/layout/default'
 
 export const refreshStackLayout = async () => {
@@ -163,6 +164,6 @@ export const selectStack = ( stackName, pageprops={} ) => {
 }
 
 export const otherPort = (portnumber, tabname) => {
-    var newurl = window.location.protocol + "//" + window.location.hostname + ":" +portnumber;
+    var newurl = window.location.protocol + "//" + hostName + ":" +portnumber;
     window.open(newurl,tabname);
 }

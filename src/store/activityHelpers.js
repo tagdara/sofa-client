@@ -1,7 +1,7 @@
 
 import useLoginStore from 'store/loginStore'
 
-const serverUrl = "https://"+window.location.hostname;
+const serverUrl = useLoginStore.getState().server_url
 const activitiesUrl = serverUrl + "/list/logic/activities"
 const scheduleUrl = serverUrl + "/list/logic/schedule"
 

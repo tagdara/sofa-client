@@ -1,6 +1,8 @@
 import create from 'zustand'
 
-const serverUrl = "https://"+window.location.hostname;
+const hostName = ( process.env.REACT_APP_SERVER ? process.env.REACT_APP_SERVER : window.location.hostname )
+const serverUrl = "https://" + hostName
+//const serverUrl = "https://" + window.location.hostname;
 const tokenUrl = serverUrl+'/auth/o2/token'
 const loginUrl = serverUrl + "/login";
 
@@ -11,6 +13,8 @@ const useLoginStore = create((set,get) => ({
     login_message: "",
     logged_in: false,
     checking: false,
+    host_name: hostName,
+    server_url: serverUrl,
     setUserName: (name) => set( { name: name }),
     setStoreAccessToken: (token) => set( { access_token: token }),
     setLogin: (status) => set( { loggedin: status}),

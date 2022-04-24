@@ -1,5 +1,6 @@
 import useLoginStore from "store/loginStore"
-const serverUrl = "https://"+window.location.hostname;
+
+const serverUrl = useLoginStore.getState().server_url
 
 function until(conditionFunction) {
 

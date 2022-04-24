@@ -18,6 +18,8 @@ const Television = props => {
     const name = friendlyNameByEndpointId(props.endpointId) 
     const { inputLabel } = useInput(props.endpointId)
 
+    console.log('tv on', on)
+
     return (
         <Group direction="column" grow spacing="lg">
             <Group direction="column" grow noWrap spacing={8}>

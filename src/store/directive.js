@@ -3,7 +3,7 @@ import useDeviceStore from 'store/deviceStore'
 import { storeUpdater } from "store/storeUpdater" 
 import { getController } from 'store/deviceHelpers'
 
-const serverUrl = "https://"+window.location.hostname;
+const serverUrl = useLoginStore.getState().server_url
 const directivesUrl = serverUrl + "/directives"
 const propertiesUrl = serverUrl + "/properties"
 

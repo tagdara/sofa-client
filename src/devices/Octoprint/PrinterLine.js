@@ -1,42 +1,30 @@
-import React from 'react';
-import { Image, ActionIcon } from '@mantine/core'
+import React, { useState } from 'react';
+import { ActionIcon } from '@mantine/core'
 import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers';
-import { ArrowUpRightSquare as Link, CloudSlash, Layers } from "react-bootstrap-icons";
+import { CloudSlash, Layers } from "react-bootstrap-icons";
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import PrinterCam from 'devices/Octoprint/PrinterCam'
+import PrinterLink from 'devices/Octoprint/PrinterLink'
 
 const PrinterLine = props => {
 
+    const [ zoom, setZoom] = useState(false)
     const name = "3D Printer"
     const endpointId = endpointIdByFriendlyName(name)
     const { reachable } = useEndpointHealth(endpointId)
     const { powerStateBool } = usePowerState(endpointId)
-    const serverUrl = "http://octoprint.dayton.tech"
-    const streamUrl = serverUrl + "/webcam/?action=stream"
     const on = powerStateBool
 
     if ( props.hideOff & ( !reachable || !powerStateBool)) { return null }
-
-    function openOctoPrint() {
-        var tabname="_octoprint"
-        window.open(serverUrl,tabname);
-    }
 
     return (
         <SplitButtonGroup on={on}>
             <SplitButton >  
                 { on ?
-                    <Image 
-                        radius="sm"
-                        height={56}
-                        width={74}
-                        src={ streamUrl }
-                        title={ name }
-                        alt={ name }
-                        onClick={ (e) => props.cover(e)}
-                    />
+                    <PrinterCam zoom={zoom} setZoom={setZoom} />
                 :
                     <ActionIcon size="md" color={ on ? "primary" : undefined }>
                         { reachable ? <Layers size={24} /> : <CloudSlash size={16} /> }
@@ -48,9 +36,7 @@ const PrinterLine = props => {
                             on={on}
             />
             <SplitButton>
-                <ActionIcon onClick={ () => openOctoPrint() }>
-                    <Link size={20} />
-                </ActionIcon>
+                <PrinterLink />
                 <PowerStateSwitch endpointId={endpointId} />
             </SplitButton>
         </SplitButtonGroup>

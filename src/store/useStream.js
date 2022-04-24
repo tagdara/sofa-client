@@ -2,8 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import useLoginStore from 'store/loginStore'
 import { tokenFetch } from 'store/tokenFetch'
 
-const serverurl="https://"+window.location.hostname;
-const sseUrl = serverurl + "/sse"
+const serverUrl = useLoginStore.getState().server_url
+const sseUrl = serverUrl + "/sse"
 const sseTokenUrl = "/sse/token"
 
 export const useStream = ( dataProcessor ) => {
@@ -32,7 +32,7 @@ export const useStream = ( dataProcessor ) => {
 
     const streamStatus = getStreamStatus()
     const streamConnected = getConnected()
-    const url = serverurl + "/sse"
+    const url = serverUrl + "/sse"
 
     const reconnect = () => {
         connectingRef.current = false

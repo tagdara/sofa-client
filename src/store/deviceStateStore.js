@@ -3,7 +3,7 @@ import { persist } from "zustand/middleware"
 import useLoginStore from 'store/loginStore'
 import useDeviceStore from 'store/deviceStore'
 import { storeUpdater } from "store/storeUpdater" 
-const serverUrl = "https://"+window.location.hostname;
+const serverUrl = useLoginStore.getState().server_url
 
 function newtoken() {
     return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>

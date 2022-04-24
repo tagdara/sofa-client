@@ -2,7 +2,7 @@ import create from 'zustand'
 import { persist } from "zustand/middleware"
 import useLoginStore from 'store/loginStore'
 
-const serverUrl = "https://"+window.location.hostname;
+const serverUrl = useLoginStore.getState().server_url
 const userUrl = serverUrl + '/user'
 const userSaveUrl = userUrl + "/save"
 

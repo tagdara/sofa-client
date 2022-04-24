@@ -4,7 +4,7 @@ import useLoginStore from 'store/loginStore'
 import useUserStore from 'store/userStore'
 import { tokenFetch } from 'store/tokenFetch'
 
-const serverUrl = "https://"+window.location.hostname;
+const serverUrl = useLoginStore.getState().server_url
 const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }} 
 
 export const register = useRegisterStore.getState().add

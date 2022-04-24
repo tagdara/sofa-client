@@ -21,14 +21,14 @@ const AreaSceneSelect = props => {
     }
 
     return (
-        <Group noWrap grow style={{ width: "100%"}}>
-            { props.label && <Text>{props.label}</Text> } 
+        <Group position={"apart"} noWrap grow style={{ width: "100%"}}>
+            { props.label && <Text style={{ flexGrow: 0, flexBasis: "auto"}}>{props.label}</Text> } 
             <Select size={ props.size ? props.size : "sm" } 
                     placeholder={ "Select scene" }
                     onChange={ runScene } 
                     value={ currentScene }
                     data={ selections }
-                    style={{  minWidth: 100, width: props.half ? "50%" : "auto" }}
+                    style={{  minWidth: 100, maxWidth: props.half ? "50%" : "100%" }}
             />
         </Group>
     );

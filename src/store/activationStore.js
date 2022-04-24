@@ -1,7 +1,7 @@
 import create from 'zustand'
 import useLoginStore from "store/loginStore"
 
-const serverUrl = "https://"+window.location.hostname;
+const serverUrl = useLoginStore.getState().server_url
 const activationsUrl = serverUrl+ '/activations'
 const removeUrl = activationsUrl + "/remove"
 const approveUrl = activationsUrl + "/approve"

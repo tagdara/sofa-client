@@ -6,7 +6,7 @@ import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
 import ComputerList from 'devices/Computer/ComputerList'
 import MatrixList from 'devices/Matrix/MatrixList';
-import PrinterLine from 'devices/Computer/PrinterLine'
+import PrinterLine from 'devices/Octoprint/PrinterLine'
 import { Group } from '@mantine/core'
 
 const ComputerLayout = props => {

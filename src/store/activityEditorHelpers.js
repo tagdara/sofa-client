@@ -4,7 +4,7 @@ import useActivityEditorStore from 'store/activityEditorStore'
 import useLoginStore from 'store/loginStore'
 import { hasCapability } from './deviceHelpers';
 
-const serverUrl = "https://"+window.location.hostname;
+const serverUrl = useLoginStore.getState().server_url
 const activityUrl = serverUrl + "/list/logic/activity/" // +props.endpointId
 const saveUrl = serverUrl + "/save/logic/activity/" // +props.endpointId
 const addUrl = serverUrl + "/add/logic/activity" // +props.endpointId

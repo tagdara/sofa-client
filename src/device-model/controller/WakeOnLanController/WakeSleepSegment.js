@@ -11,7 +11,13 @@ export default function WakeSleepSegment(props) {
     const label = powerStateBool ? "Sleep" : "Wake"
 
     return (
-        <Segment position={props.position} size={props.size} color={ props.color } onClick={toggle} >{ props.icon ? icon :label }</Segment>
+        <Segment    position={props.position} 
+                    size={props.size} 
+                    color={ props.color } 
+                    onClick={toggle} 
+                    icon={ !props.icon && icon}
+                    value={ !props.icon ? label : icon }
+        />
     );
 }
 

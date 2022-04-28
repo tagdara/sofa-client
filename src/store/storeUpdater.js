@@ -153,7 +153,8 @@ const updateDeviceStore = (data, defer=false) => {
                 console.log('ActivationStarted', data)
                 break
             case "ErrorResponse":
-                if (data.event.payload.type === 'BRIDGE_UNREACHABLE') {
+                if (data.event.payload.type === 'BRIDGE_UNREACHABLE' || data.event.payload.type === 'ENDPOINT_UNREACHABLE') {
+                    console.log('error response', data)
                     var errDeviceStates = useDeviceStateStore.getState().deviceStates
                     if (errDeviceStates.hasOwnProperty(endpointId)) {
                         var errorDevice = useDeviceStateStore.getState().devices[endpointId]

@@ -1,0 +1,2 @@
+zip sofa-client-build.zip /opt/sofa-client/build -r
+scp sofa-client-build.zip code@home.dayton.tech:/opt/sofa

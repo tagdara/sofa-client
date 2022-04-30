@@ -10,9 +10,9 @@ const WeatherList = props => {
     const { reachable } = useEndpointHealth(props.endpointId)
     const additionalAttributes = {  'Light Level' : { "icon" : <Lightbulb size={16} />, "unit": "lux" },
                                     'Humidity': { "icon" : <Droplet size={16} />, "unit": "%" },
-                                    'Wind Speed': { "icon" : <Wind size={16} />, "unit": "m/s" },
+                                    'Wind Speed': { "icon" : <Wind size={16} />, "unit": "mph" },
                                     'UV Index': { "icon" : <Sun size={16} />, "unit": "" },
-                                    'Rainfall': { "icon" : <CloudDrizzle size={16} />, "unit": "mm" }
+                                    'Rainfall': { "icon" : <CloudDrizzle size={16} />, "unit": "in" }
                                 }
 
     function checkMoreData() {

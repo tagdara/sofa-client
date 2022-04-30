@@ -150,11 +150,16 @@ export const getModes = (endpointId, exclude=[]) => {
         if (dev.capabilities[k].interface.endsWith('ModeController')) {
             var modeCapability = dev.capabilities[k]
             var supportedModes = modeCapability.configuration.supportedModes
-            var modename=modeCapability.capabilityResources.friendlyNames[0].value.text
+
+            var modename = modeCapability.capabilityResources.friendlyNames[0].value.text
             if (!exclude.includes(modename)) {
                 var modeChoices=[]
                 modes[modename] = supportedModes.reduce(function(result, mode) {
-                    return { ...result, [mode.value]: mode.modeResources.friendlyNames[0].value.text }
+                    // TODO/CHEESE Some devices are not pushing the actual text friendly names and this is likely a problem sourced
+                    // from the adapters themselves.  This leaves the selection block blank with 'undefined' options and breaks the 
+                    // activity builder.  using the mode value as a default instead
+                    var selectionfriendlyName = mode.modeResources.friendlyNames[0].value.text ? mode.modeResources.friendlyNames[0].value.text : mode.value
+                    return { ...result, [mode.value]: selectionfriendlyName }
                 }, modeChoices)
                 //for (var j = 0; j < supportedModes.length; j++) {
                 //    modechoices[supportedModes[j].value] = supportedModes[j].modeResources.friendlyNames[0].value.text
@@ -470,13 +475,13 @@ export const mapDeviceProperties = dev => {
 
 export const deviceDirectives = (dev, includeNonControllable) => {
     const directives = useDeviceStore.getState().directives
-    if (dev===undefined) { return undefined }
-    var dirs=[]
+    if (dev === undefined) { return undefined }
+    var dirs = []
     if (dev.hasOwnProperty('capabilities')) {
         for (var j = 0; j < dev.capabilities.length; j++) {
-            var shortIf=dev.capabilities[j].interface.split('.')[1]
+            var shortIf = dev.capabilities[j].interface.split('.')[1]
             if (directives.hasOwnProperty(shortIf)) {
-                var idirs=Object.keys(directives[shortIf])
+                var idirs = Object.keys(directives[shortIf])
                 for (var i = 0; i < idirs.length; i++) {
                     if (dev.capabilities[j].properties && dev.capabilities[j].properties.nonControllable && !includeNonControllable) { continue}
                     if (dev.capabilities[j].hasOwnProperty('instance')) {
@@ -485,9 +490,9 @@ export const deviceDirectives = (dev, includeNonControllable) => {
                         dirs.push({"directive":idirs[i], "controller":shortIf, "instance":undefined})
                     }
                 }
-            }
+            } 
         }
-    }
+    } 
     return dirs
 }
 

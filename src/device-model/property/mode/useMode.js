@@ -7,11 +7,12 @@ const useMode = ( endpointId, instance, value, directive) => {
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
 
-    const shortInstance = instance.includes('.') ? instance.split('.')[1] : instance
+    const shortInstance = instance && instance.includes('.') ? instance.split('.')[1] : instance
 
     const modes = getModes(endpointId)
     const fullInstance = getFullInstance(endpointId, instance)
     const modeData = modes[shortInstance]
+    
     const selections = modeData ? Object.keys(modeData).map(modeChoice => ({value: modeChoice, label: modeData[modeChoice]})) : []
 
     const stateMode = deviceState && deviceState.hasOwnProperty(shortInstance) ? deviceState[shortInstance].mode.value : undefined

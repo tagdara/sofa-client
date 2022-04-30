@@ -10,6 +10,12 @@ export const loadActivities = async () => {
     const headers = { authorization : accessToken }
     const response = await fetch(activitiesUrl, { headers: headers })
     var webResult = await response.json()
+
+    // TODO/CHEESE - need a better way to parse a result for ErrorResponse instead of the expected result
+    // and make that uniform across all loaders in order to prevent react crashes
+    if (webResult.hasOwnProperty('event') && webResult.event.header.name === "ErrorResponse") {
+        return []
+    }
     var result = fixActivities(webResult)
     return result
 }

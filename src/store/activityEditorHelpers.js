@@ -104,9 +104,10 @@ export const addActivity = async () => {
 
 export const removeActivityItem = (section, index) => {
     // section should be the category - actions, conditions, triggers, schedules
-    console.log('deleting item', index, 'from', section)
+    
     const activity = useActivityEditorStore.getState().activity
     const items = activity[section]
+    console.log('deleting item', index, 'from', section, ' - ', items[index])
     var remaining = [...items]
     remaining.splice(index, 1);
     useActivityEditorStore.setState({ saved: false, activity: { ...activity, [section]: [ ...remaining] }})

@@ -82,6 +82,7 @@ export default function DeviceDirective(props) {
     }
 
     const selections = directiveMap.map( (item,index) => { return { value: index.toString(), label: getLabel(item) }})
+    console.log('selections', selections)
     const value = defaultOrValue()
 
     if (props.compact) {

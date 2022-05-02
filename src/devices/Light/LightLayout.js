@@ -1,6 +1,6 @@
 import React, { useState, useCallback }  from 'react';
 
-import { Divider, SegmentedControl } from '@mantine/core';
+import { Divider, SegmentedControl, Portal } from '@mantine/core';
 import LightLine from 'devices/Light/LightLine';
 import useDeviceStore from 'store/deviceStore'
 import { sortByName } from 'store/deviceHelpers'
@@ -9,6 +9,7 @@ import SectionHeader from 'layout/SectionHeader';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
+import IsyLauncherButton from 'components/IsyLauncherButton'
 
 
 const LightLayout = props => {
@@ -51,6 +52,9 @@ const LightLayout = props => {
                     </>
                 }
             </SectionFrame>
+            <Portal target="#bottomPortal">
+                <IsyLauncherButton />
+            </Portal>
         </PageFrame>
     )
 }

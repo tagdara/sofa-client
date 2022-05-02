@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0+" codebase="https://isy.universal-devices.com/launcher" href="isy.jnlp" version="1.6">
+    <!--do not change version-->
+    <information>
+        <title>
+            ISY Launcher
+        </title>
+        <vendor>
+            Universal Devices, Inc.
+        </vendor>
+        <description>
+            This utility finds ISY and launches the correct version of the UI/Admin Console/Dashboard
+        </description>
+        <homepage href="https://www.universal-devices.com"/>
+        <description kind="short">
+            ISY Launcher
+        </description>
+        <shortcut online="true">
+            <desktop/>
+            <menu submenu="ISY Launcher"/>
+        </shortcut>
+        <icon href="udlogo.png" kind="splash"/>
+        <icon href="udlogo.png" kind="shortcut"/>
+        <offline-allowed/> 
+    </information>
+    <security>
+        <all-permissions/>
+    </security>
+    <update check="background" policy="always"/>
+    <resources>
+        <jar href="isyfinder-1.6.jar" download="eager"/>
+        <j2se version="1.8+" />
+    </resources>
+    <application-desc main-class="com.universaldevices.isyfinder.ISYFinder">
+    </application-desc>
+</jnlp>

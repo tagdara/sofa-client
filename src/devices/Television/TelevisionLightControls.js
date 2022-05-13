@@ -2,7 +2,11 @@ import React from "react";
 import { endpointIdByFriendlyName } from 'store/deviceHelpers';
 import StackCard from 'components/StackCard'
 import usePowerState from 'device-model/property/powerState/usePowerState'
-import AreaSceneSelect from 'devices/Area/AreaSceneSelect'
+import AreaShortcutSlider from 'devices/Area/AreaShortcutSlider'
+import { ActionIcon, Group, Text } from '@mantine/core'
+import { directive } from 'store/directive'
+import { Tv } from 'react-bootstrap-icons'
+import useScene from 'device-model/property/scene/useScene'
 
 const TelevisionLightControls = props => {
 
@@ -10,12 +14,26 @@ const TelevisionLightControls = props => {
     const area = endpointIdByFriendlyName('Living Room')
     const currentHour = new Date().getHours();
     const night = currentHour >= 17 || currentHour <= 6
+    const { scene: currentScene } = useScene(area)
 
     if (!on || !night ) { return null}
 
+    function runScene( sceneEndpointId) {
+        //setWorking(true)
+        directive(sceneEndpointId, 'SceneController', 'Activate')
+    }
+    
+    const currentWatch = currentScene === "logic:scene:Watch"
+
     return (
         <StackCard>
-            <AreaSceneSelect label="Lighting" endpointId={area} />
+            <Group noWrap>
+                <Text>Lights</Text>
+                <AreaShortcutSlider endpointId={area} />
+                <ActionIcon color={currentWatch ? "red" : undefined } variant="light" onClick={ () => runScene("logic:scene:Watch")}>
+                    <Tv size={20} />
+                </ActionIcon>
+            </Group>
         </StackCard>
     );
 }

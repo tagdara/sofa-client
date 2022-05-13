@@ -4,6 +4,7 @@ import useLoginStore from 'store/loginStore'
 
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { Text } from '@mantine/core'
+import ErrorBoundary from 'error/ErrorBoundary'
 
 const hostName = useLoginStore.getState().host_name
 const serverUrl = useLoginStore.getState().server_url
@@ -78,9 +79,11 @@ export const renderSuspenseModule = ( moduleName, moduleProps, key ) => {
     }
     try {
         let Module = useLayoutStore.getState().modules[moduleName]
-        return  <React.Suspense key={ moduleName+key } fallback={<PlaceholderCard name={ moduleName } />}>
-                    <Module {...moduleProps} />
-                </React.Suspense>
+        return  <ErrorBoundary key={ moduleName+key } >
+                    <React.Suspense fallback={<PlaceholderCard name={ moduleName } />}>
+                        <Module {...moduleProps} />
+                    </React.Suspense>
+                </ErrorBoundary>
     }
     catch {
         console.log('render error')

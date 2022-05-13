@@ -4,6 +4,8 @@ import { useMantineTheme } from '@mantine/core';
 
 const CardSegmentedControl = props => {
 
+    console.log('props', props)
+
     const theme = useMantineTheme();
     const [ value, setValue] = useState(props.value)
 
@@ -16,10 +18,12 @@ const CardSegmentedControl = props => {
         props.onChange(data)
     }
 
+    if (!value) { return null }
+
     return (
         <SegmentedControl             
             size={props.size}
-            value={ value }
+            value={ value ? value : ""}
             data={ props.data }
             onChange={ props.disabled ? undefined : change }
             style={props.style}

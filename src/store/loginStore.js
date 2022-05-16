@@ -1,13 +1,14 @@
 import create from 'zustand'
 
 const hostName = ( process.env.REACT_APP_SERVER ? process.env.REACT_APP_SERVER : window.location.hostname )
-const serverUrl = "https://" + hostName
+const serverUrl = "https://" + hostName // + ":5444"
 //const serverUrl = "https://" + window.location.hostname;
-const tokenUrl = serverUrl+'/auth/o2/token'
+const tokenUrl = serverUrl+'/auth'
+//const tokenUrl = serverUrl+'/auth/o2/token'
 const loginUrl = serverUrl + "/login";
 
 const useLoginStore = create((set,get) => ({
-    name: localStorage.getItem('user'),
+    name: localStorage.getItem('name'),
     refresh_token: localStorage.getItem('refresh_token'),
     access_token: undefined,
     login_message: "",
@@ -25,20 +26,22 @@ const useLoginStore = create((set,get) => ({
         //localStorage.setItem('refresh_token', undefined)
         set({ refresh_token: undefined, access_token: undefined, admin: undefined, logged_in: false, login_message : "You are logged out" })
     }, 
-    login: async (username, password) => {
+    login: async (name, password) => {
         var result = undefined
         set({ login_message : ""})
-        const body = { "user": username, "password": password }
+        const body = { "name": name, "password": password }
+        console.log('login attempt', loginUrl, body)
         const response = await fetch(loginUrl, {  method: "post", body: JSON.stringify(body)})
+        console.log('login response', response)
         if (response.status === 401) {
-            set({ login_message : "Bad username or PIN"})
+            set({ login_message : "Bad name or PIN"})
         } else if (response.status === 403) {
             set({ login_message : "Guest logins are disabled"})
         } else {
             result = await response.json()
             if (result.refresh_token) {
-                console.log('Logged in as', username)
-                localStorage.setItem('user', username)
+                console.log('Logged in as', name)
+                localStorage.setItem('name', name)
                 localStorage.setItem('refresh_token', result.refresh_token)
                 set({ refresh_token: result.refresh_token})
             } else {
@@ -53,11 +56,11 @@ const useLoginStore = create((set,get) => ({
     },
     checkToken: async () => {
         set({ checking: true})
-        const user = get().name
+        const name = get().name
         const refreshToken = get().refresh_token
-        if (user && refreshToken) {
-            set({ login_message: 'Checking token '+user})
-            const body = { "user": user, "refresh_token": refreshToken }
+        if (name && refreshToken) {
+            set({ login_message: 'Checking token '+name})
+            const body = { "name": name, "refresh_token": refreshToken }
             var response = undefined
             try {
                 response = await fetch(tokenUrl, {  method: "post", body: JSON.stringify(body)})

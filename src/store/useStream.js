@@ -4,7 +4,7 @@ import { tokenFetch } from 'store/tokenFetch'
 
 const serverUrl = useLoginStore.getState().server_url
 const sseUrl = serverUrl + "/sse"
-const sseTokenUrl = "/sse/token"
+const sseTokenUrl = "/auth/linked/token" //"/sse/token"
 
 export const useStream = ( dataProcessor ) => {
     const accessToken = useLoginStore(state => state.access_token)
@@ -45,10 +45,11 @@ export const useStream = ( dataProcessor ) => {
         if (!connectingRef.current) {
             connectingRef.current=true
             const tokenResult = await tokenFetch(sseTokenUrl)
+            console.log('token result for linked sse token', tokenResult)
             setStreamLabel('connect')
             console.log('connect stream')
             //setIsConnecting(true)
-            const tokenUrl = sseUrl + "?token=" + tokenResult['sse_token']
+            const tokenUrl = sseUrl + "?token=" + tokenResult['linked_token']
             streamRef.current = new EventSource(tokenUrl, { withCredentials: true })
             streamRef.current.addEventListener('message', dataHandler);
             streamRef.current.addEventListener('error', errorHandler);

@@ -56,6 +56,7 @@ export const tokenFetchImage = async (url) => {
     try {
         const accessToken = useLoginStore.getState().access_token;
         const headers = { authorization : accessToken }
+        //if (!url.startsWith('http')) { url = serverUrl+url}
         if (!url.startsWith(serverUrl)) { url = serverUrl+url}
         const response = await fetch(url, { headers: headers })
 

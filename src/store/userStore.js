@@ -30,7 +30,7 @@ const useUserStore = create(persist(
             const headers = { authorization : accessToken }
             const response = await fetch(userUrl, { headers: headers })
             const result = await response.json()
-            set({preferences: result} )
+            set({preferences: result.data} )
         },
     }),
     {

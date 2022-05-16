@@ -54,10 +54,13 @@ export default function CameraSelect(props) {
         }
     }
 
+    const activeCamera = currentCamera ? currentCamera : cameras[0]
+
+    console.log('openers?', currentCamera, cameras)
 
     return (
         <>
-            <SecurityCamera endpointId={currentCamera} selectButtons={true} 
+            <SecurityCamera endpointId={activeCamera} selectButtons={true} 
                             nextCamera={nextCamera} prevCamera={prevCamera} 
                             wide={props.wide} top={false} showOffline={true} 
                         />

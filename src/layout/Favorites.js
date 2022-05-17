@@ -13,8 +13,6 @@ const Favorites = props => {
         selectPage('ActivitiesPage', {'name':automation, 'noBottom':true } )
     }    
 
-    console.log('favs', favorites)
-
     if (!favorites) { return null }
 
     return (    

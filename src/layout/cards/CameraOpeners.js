@@ -55,9 +55,7 @@ export default function CameraSelect(props) {
     }
 
     const activeCamera = currentCamera ? currentCamera : cameras[0]
-
-    console.log('openers?', currentCamera, cameras)
-
+    
     return (
         <>
             <SecurityCamera endpointId={activeCamera} selectButtons={true} 

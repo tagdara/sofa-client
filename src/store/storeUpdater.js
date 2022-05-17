@@ -22,7 +22,7 @@ function getDeepValue(valueProp) {
     }
 }
 
-function updateProperty(device, prop) {
+function updateProperty(device, prop, endpointId) {
     var interfaceName = prop.namespace.split('.')[1]
 
     if (prop.hasOwnProperty('instance') && prop.instance!=="") {
@@ -38,7 +38,7 @@ function updateProperty(device, prop) {
 
     try {
         if (deviceInterface[propertyName].timeOfSample && deviceInterface[propertyName].timeOfSample > prop.timeOfSample) {
-            console.log('update refused on timeOfSample check', deviceInterface[propertyName].timeOfSample, prop.timeOfSample)
+            console.log('.. update refused on timeOfSample check', endpointId, propertyName, deviceInterface[propertyName].timeOfSample, prop.timeOfSample)
             return deviceInterface
         }
     }
@@ -70,6 +70,12 @@ function getInterfaceName(prop) {
 function handleReportProperties(device, data) {
     
     var updatedDevice = {}
+    var endpointId = "unknown"
+    try {
+        endpointId = data.event.endpoint.endpointId
+    } 
+    catch(err) {}
+
     if (device) {
         updatedDevice = { ...device }
     }
@@ -78,7 +84,7 @@ function handleReportProperties(device, data) {
         for (var p = 0; p < data.event.payload.change.properties.length; p++) {
             var changeProperty = data.event.payload.change.properties[p]
             var changeInterfaceName = getInterfaceName(changeProperty)
-            updatedDevice = { ...updatedDevice, [changeInterfaceName]: updateProperty(updatedDevice, changeProperty) }
+            updatedDevice = { ...updatedDevice, [changeInterfaceName]: updateProperty(updatedDevice, changeProperty, endpointId) }
         }
     }
     catch(err) {
@@ -89,7 +95,7 @@ function handleReportProperties(device, data) {
         for (var c = 0; c < data.context.properties.length; c++) {
             var contextProperty = data.context.properties[c]
             var contextInterfaceName = getInterfaceName(contextProperty)
-            updatedDevice = { ...updatedDevice, [contextInterfaceName]: updateProperty(updatedDevice, contextProperty) }
+            updatedDevice = { ...updatedDevice, [contextInterfaceName]: updateProperty(updatedDevice, contextProperty, endpointId) }
         }
     }
     catch(err) {}

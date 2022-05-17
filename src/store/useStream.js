@@ -45,9 +45,9 @@ export const useStream = ( dataProcessor ) => {
         if (!connectingRef.current) {
             connectingRef.current=true
             const tokenResult = await tokenFetch(sseTokenUrl)
-            console.log('token result for linked sse token', tokenResult)
+            //console.log('token result for linked sse token', tokenResult)
             setStreamLabel('connect')
-            console.log('connect stream')
+            console.log('.. connecting SSE data stream')
             //setIsConnecting(true)
             const tokenUrl = sseUrl + "?token=" + tokenResult['linked_token']
             streamRef.current = new EventSource(tokenUrl, { withCredentials: true })

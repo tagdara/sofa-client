@@ -4,8 +4,6 @@ import { useMantineTheme } from '@mantine/core';
 
 const CardSegmentedControl = props => {
 
-    console.log('props', props)
-
     const theme = useMantineTheme();
     const [ value, setValue] = useState(props.value)
 

@@ -160,11 +160,13 @@ const updateDeviceStore = (data, defer=false) => {
                 break
             case "ErrorResponse":
                 if (data.event.payload.type === 'BRIDGE_UNREACHABLE' || data.event.payload.type === 'ENDPOINT_UNREACHABLE') {
-                    console.log('error response', data)
+                    console.log('.. unreachable device', endpointId, data.event.payload.type)
                     var errDeviceStates = useDeviceStateStore.getState().deviceStates
                     if (errDeviceStates.hasOwnProperty(endpointId)) {
-                        var errorDevice = useDeviceStateStore.getState().devices[endpointId]
-                        useDeviceStateStore.setState({ errDeviceStates: { [endpointId]: markUnreachable(errorDevice) }, last_update: date.toISOString() })
+                        var errorDevice = useDeviceStore.getState().devices[endpointId]
+                        if (errorDevice) {
+                            useDeviceStateStore.setState({ errDeviceStates: { [endpointId]: markUnreachable(errorDevice) }, last_update: date.toISOString() })
+                        }
                     }
                 }
                 if (data.event.payload.type === 'NO_SUCH_ENDPOINT') {

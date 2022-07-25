@@ -22,6 +22,8 @@ const ActivitiesLayout = props => {
     const [ favorites, setFavorites ] = useState(props.favorites)
     const [ showScheduled, setShowScheduled] = useState(false)
 
+    console.log('activities', activities)
+
     useEffect(() => {
         loadActivities().then(result => { setActivities(result)})
     // eslint-disable-next-line 

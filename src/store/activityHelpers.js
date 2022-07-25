@@ -10,7 +10,7 @@ export const loadActivities = async () => {
     const headers = { authorization : accessToken }
     const response = await fetch(activitiesUrl, { headers: headers })
     var webResult = await response.json()
-
+    console.log('webResult', webResult)
     // TODO/CHEESE - need a better way to parse a result for ErrorResponse instead of the expected result
     // and make that uniform across all loaders in order to prevent react crashes
     if (webResult.hasOwnProperty('event') && webResult.event.header.name === "ErrorResponse") {
@@ -30,7 +30,10 @@ export const loadSchedule = async () => {
 function fixActivities(activities) {
 
     var sections=['actions', 'schedules', 'triggers', 'conditions'] 
-    
+    if (!Array.isArray(activities)) { 
+        console.log('activities object is not a list - returning empty list', activities)
+        return []
+    }
     //for (var auto in autos) {
     for (var i = 0; i < activities.length; i++) {
         for (var j = 0; j < sections.length; j++) {

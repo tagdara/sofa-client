@@ -102,7 +102,7 @@ const ActivityItem = props => {
             </Group>
         )
     }    
-
+    console.log('activitystate', activityState)
     const loading = launched || activityState.Running.toggleState.value === 'ON'
 
     return (

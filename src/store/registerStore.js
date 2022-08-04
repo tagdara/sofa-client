@@ -1,6 +1,7 @@
 import create from 'zustand'
 import { storeUpdater } from 'store/storeUpdater'
 import { tokenFetch } from 'store/tokenFetch'
+import useLoginStore from "store/loginStore"
 import produce from "immer"
 
 const registerUrl = "/register_devices";
@@ -17,12 +18,16 @@ const useRegisterStore = create((set, get) => ({
     removes: [],
     setReady: newReady => set ({ready: newReady}),
     refresh: async () => {
+        const loggedIn = useLoginStore.getState().logged_in;
+        if (!loggedIn) { return }
         const endpointIds = Object.keys(get().registered)
         const data = { add : endpointIds }
         const result = await tokenFetch(registerUrl, data)
         storeUpdater({ "event": {"header": {"name": "multiple StateReports"}}, "data": result })
     },
     add: async (endpointIds, source) => {
+        const loggedIn = useLoginStore.getState().logged_in;
+        if (!loggedIn) { return }
         if (!Array.isArray(endpointIds)) {
             endpointIds=[endpointIds]
         }
@@ -73,6 +78,10 @@ const useRegisterStore = create((set, get) => ({
         removes.map( endpointId => (
             set(produce(state => { delete state.registered[endpointId] }))
         ))
+
+        const loggedIn = useLoginStore.getState().logged_in;
+        if (!loggedIn) { return }
+
         if ( removes && removes.length > 0 ) {
             // we may use a pending flag to aggregate changes later but for now we will
             // just not write the adds to the final set

@@ -1,4 +1,1 @@
-cd /opt/sofa-client
-rm sofa-client-build.zip
-zip sofa-client-build.zip build -r
-scp sofa-client-build.zip code@home.dayton.tech:/var/www/client/sofa
+rsync ~/clients/sofa-client/build/* code@sofa.dayton.tech:/var/www/html/sofa -r --delete     

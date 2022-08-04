@@ -14,7 +14,13 @@ function until(conditionFunction) {
 
 export const tokenFetch = async (url, data, retry) => {
     try {
+        const loggedIn = useLoginStore.getState().logged_in;
         const accessToken = useLoginStore.getState().access_token;
+        if (!loggedIn || !accessToken) {
+            console.log('.. user not logged in - tokenFetch aborted')
+            return {}
+        }
+
         const headers = { authorization : accessToken }
         let response
 

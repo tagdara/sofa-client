@@ -26,8 +26,6 @@ export default function AirQualityBadge(props) {
         }
     }
 
-    console.log('props.instance',props.endpointId, props.instance, deviceState )
-
     const aqController = deviceState[props.instance]
     const value = aqController.rangeValue ? aqController.rangeValue.value : modeDisplayName(props.endpointId, props.instance, aqController.mode.value)
     const label = ( props.prefix ? props.prefix + " " : "") + value + (props.suffix ? " "+props.suffix : "")

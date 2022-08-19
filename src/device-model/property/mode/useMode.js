@@ -1,6 +1,42 @@
 import { useRegister } from 'store/useRegister'
 import { directive as storeDirective } from 'store/directive'
-import { getModes, getFullInstance, isModeNonControllable } from 'store/deviceHelpers';
+import { getFullInstance, isModeNonControllable } from 'store/deviceHelpers';
+import useDeviceStore from 'store/deviceStore'
+
+const getModes = (endpointId, exclude=[]) => {
+
+    var dev = endpointId
+    if (typeof(dev)=='string') {
+        dev = useDeviceStore.getState().devices[dev]
+    }    
+    if (!dev) { return {} }
+    var modes={}
+
+    for (var k = 0; k < dev.capabilities.length; k++) {
+        if (dev.capabilities[k].interface.endsWith('ModeController')) {
+            var modeCapability = dev.capabilities[k]
+            var supportedModes = modeCapability.configuration.supportedModes
+
+            var modename = modeCapability.capabilityResources.friendlyNames[0].value.text
+
+            if (!exclude.includes(modename)) {
+                var modeChoices=[]
+                modes[modename] = supportedModes.reduce(function(result, mode) {
+                    // TODO/CHEESE Some devices are not pushing the actual text friendly names and this is likely a problem sourced
+                    // from the adapters themselves.  This leaves the selection block blank with 'undefined' options and breaks the 
+                    // activity builder.  using the mode value as a default instead
+                    var selectionfriendlyName = mode.modeResources.friendlyNames[0].value.text ? mode.modeResources.friendlyNames[0].value.text : mode.value
+                    return { ...result, [mode.value]: selectionfriendlyName }
+                }, modeChoices)
+                //for (var j = 0; j < supportedModes.length; j++) {
+                //    modechoices[supportedModes[j].value] = supportedModes[j].modeResources.friendlyNames[0].value.text
+                //}
+                //modes[modename]=[...modechoices]
+            }
+        }
+    }
+    return modes
+}
 
 const useMode = ( endpointId, instance, value, directive) => {
 

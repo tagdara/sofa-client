@@ -1,6 +1,6 @@
 import React from 'react';
 import { Group, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
 import { useDidUpdate } from '@mantine/hooks';
 import useActivityEditorStore from 'store/activityEditorStore';
 

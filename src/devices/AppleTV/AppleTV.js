@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CardLine from 'components/CardLine'
-import {  Collapse, Group } from '@mantine/core'
+import {  Collapse, Stack } from '@mantine/core'
 import useApp from 'device-model/property/app/useApp'
 import useArt from 'device-model/property/art/useArt'
 import useTitle from 'device-model/property/title/useTitle'
@@ -18,7 +18,7 @@ const AppleTV = props => {
     const name = friendlyNameByEndpointId(props.endpointId) 
 
     return (
-            <Group direction="column" grow>
+            <Stack>
                 <CardLine   avatarSrc={ (on && art) ? image : undefined }
                             icon = { (!on || !art) ? <AppleTvIcon size={20} /> : undefined } 
                             primary={ title ? title : appName }
@@ -30,7 +30,7 @@ const AppleTV = props => {
                 <Collapse in={showDetail}>
                     
                 </Collapse>
-            </Group>
+            </Stack>
     );
 }
 

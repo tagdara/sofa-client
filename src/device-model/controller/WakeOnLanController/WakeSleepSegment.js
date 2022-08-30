@@ -15,8 +15,8 @@ export default function WakeSleepSegment(props) {
                     size={props.size} 
                     color={ props.color } 
                     onClick={toggle} 
-                    icon={ !props.icon && icon}
-                    value={ !props.icon ? label : icon }
+                    icon={ (!props.icon && !props.small) && icon}
+                    value={ !props.icon && !props.small ? label : icon }
         />
     );
 }

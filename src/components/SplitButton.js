@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles } from '@mantine/styles';
-import { Paper, ThemeIcon, Group, Text, useMantineTheme } from '@mantine/core';
+import { Paper, ThemeIcon, Group, Stack, Text, useMantineTheme } from '@mantine/core';
 import { ChevronRight } from 'react-feather';
 import clsx from 'clsx';
 import useLayoutStore from 'store/layoutStore'
@@ -125,8 +125,7 @@ export const SplitButtonGroup = ( props ) => {
     const { classes } = useStyles();
 
     return (
-        <Group direction="row" 
-                onClick={ props.onClick }
+        <Group  onClick={ props.onClick }
                 noWrap spacing={0} 
                 className={clsx(classes.buttonGroup, {
                     [classes.cardButtonGroup]: props.onCard,
@@ -156,7 +155,7 @@ export const SplitButton = ( props ) => {
     }
 
     return (
-        <Paper padding={isMobile ? "md": "xs"} className={classSelect()} style={{ width: props.label ? undefined : 1 }} onClick={props.onClick}>
+        <Paper p={isMobile ? "md": "xs"} className={classSelect()} style={{  width: props.label ? undefined : 1 }} onClick={props.onClick}>
             <Group noWrap style={{  display: "flex", alignItems: "center"}}>
                 { props.icon &&
                     <ThemeIcon className={arrowClass()} >
@@ -164,10 +163,15 @@ export const SplitButton = ( props ) => {
                     </ThemeIcon>
                 }
                 { props.label &&
-                    <Group direction="column" spacing={0} style={{ justifyContent: "center", display: "flex", flexGrow:1,}}>
-                        <Text size={isMobile ? "md": "sm"} style={{ color : props.on ?  theme.colors[theme.primaryColor][2] : undefined }} weight={500} lineClamp={1}>{props.label}</Text>
+                    <Stack spacing={0} style={{ justifyContent: "center", display: "flex", flexGrow:1,}}>
+                        <Text   size={isMobile ? "md": "sm"} 
+                                style={{ color : props.on ?  theme.colors[theme.primaryColor][2] : "dimmed" }} 
+                                weight={500} 
+                                lineClamp={1}>
+                            {props.label}
+                        </Text>
                         { props.secondary && <Text weight={400} size="sm" lineClamp={1} color="dimmed" style={{ flexGrow: 1 }}>{props.secondary}</Text> }
-                    </Group>
+                    </Stack>
                 }
                 { props.children }
                 { props.arrow &&

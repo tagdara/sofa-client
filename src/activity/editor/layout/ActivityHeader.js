@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActionIcon, Group, Paper } from '@mantine/core';
+import { ActionIcon, Stack, Paper } from '@mantine/core';
 import { Star } from 'react-feather'
 
 import ActivityName from "activity/editor/layout/ActivityName"
@@ -26,14 +26,14 @@ const ActivityHeader = props => {
     return (
         <SectionHeader>
             <Paper style={{ width: "100%", padding: "4px 8px" }}>
-            <Group direction="column" style={{ width: "100%" }}>
+            <Stack style={{ width: "100%" }}>
                 <ActivityName>
                     <ActionIcon size="lg" color={favorite ? "primary" : undefined} variant={ favorite ? "light" : undefined} onClick={toggleFavorite}>
                         <Star size={20} />
                     </ActionIcon>
                 </ActivityName>
                 <ActivityDetails />
-            </Group>
+            </Stack>
             </Paper>
         </SectionHeader>    
     )

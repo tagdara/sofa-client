@@ -3,7 +3,7 @@ import React from 'react';
 import { sortByName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
 import Thermostat from 'devices/Thermostat/Thermostat';
 import TemperatureSensorLine from 'device-model/controller/temperatureSensor/TemperatureSensorLine';
-import { Group } from '@mantine/core';
+import { Stack } from '@mantine/core';
 
 const ThermostatList = props => {
 
@@ -12,14 +12,14 @@ const ThermostatList = props => {
     const temperatureSensors = sortByName(endpointIdsByDisplayCategory('TEMPERATURE_SENSOR'), ['Cayuga Weather Station', 'Sofa Host'])
 
     return (    
-        <Group direction="column" style={{ width: "100%"}}>
+        <Stack style={{ width: "100%"}}>
             { thermostats.map( endpointId =>
                 <Thermostat key={ endpointId } endpointId={endpointId} size="md" />
             )}
             { temperatureSensors.map( endpointId =>
                 <TemperatureSensorLine key={ endpointId } endpointId={endpointId} size="md"  />
             )}
-        </Group>
+        </Stack>
     )
 };
 

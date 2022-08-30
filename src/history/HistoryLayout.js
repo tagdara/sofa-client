@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Group } from '@mantine/core';
+import { Button, Stack } from '@mantine/core';
 import { getHistoryForDevice, friendlyNameByEndpointId } from 'store/deviceHelpers';
 
 import HistoryLine from 'history/HistoryLine';
@@ -57,9 +57,9 @@ export default function HistoryLayout(props) {
         <PageFrame> 
             <SectionHeader title={"Device History for " + name} />
             <SectionFrame>
-                <Group direction="column" style={{ width: "100%"}} >
+                <Stack style={{ width: "100%"}} >
                     { todayEvents(true) }
-                </Group>
+                </Stack>
             </SectionFrame>
             <SectionHeader>
                 <Button fullWidth variant="light" onClick={ () => getMore() }>

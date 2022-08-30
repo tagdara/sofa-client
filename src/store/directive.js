@@ -44,6 +44,7 @@ export const directive = async (endpointId, controllerName, command, payload={},
 export const directives = useDeviceStore.getState().directives
 
 export const refreshDirectives = async () => {
+    console.log('refresh directives')
     const accessToken = useLoginStore.getState().access_token;
     const headers = { authorization : accessToken }
     const response = await fetch(directivesUrl, { headers: headers })
@@ -51,7 +52,9 @@ export const refreshDirectives = async () => {
         useLoginStore.setState({ access_token: undefined, logged_in: false })
         return
     } 
+
     const result = await response.json()
+    console.log('result', directivesUrl, result)
     useDeviceStore.setState({directives: result})
 }
 

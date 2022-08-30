@@ -2,7 +2,7 @@ import React from 'react';
 import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 import MatrixConflict from 'devices/Matrix/MatrixConflict';
 import useMode from 'device-model/property/mode/useMode'
-import { Group } from '@mantine/core';
+import { Stack } from '@mantine/core';
 export default function MatrixConflictList(props) {
 
     const matrix = sortByName(endpointIdsByDisplayCategory('MATRIX'))
@@ -10,10 +10,10 @@ export default function MatrixConflictList(props) {
     const otherMatrix = matrix.filter( item => item !== props.endpointId)
 
     return (
-        <Group direction="column">
+        <Stack>
             { otherMatrix.map(device =>
                 <MatrixConflict key={ device } endpointId={device} input={mode} />
             )}
-        </Group>
+        </Stack>
     )
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Group, Text} from '@mantine/core'
+import { Stack, Text} from '@mantine/core'
 import CardPopover from 'components/CardPopover'
 
 import ColorTemperatureSlider from 'device-model/property/colorTemperatureInKelvin/ColorTemperatureSlider'
@@ -21,11 +21,11 @@ const LightPopover = props => {
                 { noControllers ?
                     <Text>{"No additional configuration is available"}</Text>
                 :
-                    <Group direction="column" grow spacing={"xl"}>
+                    <Stack grow spacing={"xl"}>
                         <BrightnessSlider endpointId={props.endpointId} icon={true} />
                         <ColorTemperatureSlider endpointId={props.endpointId} icon={true} />
                         <ColorSlider endpointId={props.endpointId} icon={true} />
-                    </Group>
+                    </Stack>
             }
         </CardPopover>
     );

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Group, PasswordInput, Popover, Text } from '@mantine/core';
-import { useForm } from '@mantine/hooks';
+import { useForm } from '@mantine/form';
 
 const PinPopover = props => {
     
@@ -26,7 +26,7 @@ const PinPopover = props => {
             withArrow
         >
             <form onSubmit={form.onSubmit((values) => props.submitPin(values.password))}>
-                <Group direction="column" grow>
+                <Stack grow>
                     <PasswordInput  required
                                             size="sm" 
                                             label="PIN" 
@@ -48,7 +48,7 @@ const PinPopover = props => {
 export default PinPopover
 
 //<form onSubmit={form.onSubmit((values) => props.submitPin(values.password))}>
-//<Group direction="column" grow>
+//<Stack grow>
 //    <SecurityCamera wide={true} camera={props.device.endpointId} selectButtons={false} directive={props.directive} />
 //    <PasswordInput  required
 //                            size="sm" 

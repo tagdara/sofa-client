@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import useUserStore from 'store/userStore'
 import useRegisterStore from 'store/registerStore'
 import { discovery, refreshDirectives, refreshProperties } from 'store/directive'
-import { Button, Group } from '@mantine/core'
+import { Button, Stack } from '@mantine/core'
 import { CloudOff } from 'react-feather';
 
 import useStream from 'store/useStream'
@@ -42,7 +42,7 @@ export default function SofaFrame(props) {
 
 
     if (!streamConnected || streamStatus !== 1 ) {
-        return  <Group direction="column" style={{ maxWidth: 320, margin: "0 auto" }}>
+        return  <Stack style={{ maxWidth: 320, margin: "0 auto" }}>
                     <Button color={ streamStatus === 0 ? undefined : "red"} 
                             fullWidth 
                             variant={'light'} 
@@ -52,7 +52,7 @@ export default function SofaFrame(props) {
                     >
                         Data stream is {statusLabel}
                     </Button>
-                </Group>
+                </Stack>
     }
 
     return (

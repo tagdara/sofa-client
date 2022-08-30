@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
-import { Checkbox, ColorPicker, ColorSwatch, Group, Popover } from '@mantine/core'
+import { Checkbox, ColorPicker, ColorSwatch, Stack, Popover } from '@mantine/core'
 import { hsv2rgb, hsl2hsv } from 'helpers/colorHelpers';
 import { useDidUpdate, useDebouncedValue } from '@mantine/hooks';
 import { hasCapability, compareState, register, unregister } from 'store/deviceHelpers'
@@ -82,16 +82,20 @@ const MultiLightColor = props => {
                 noFocusTrap
                 noEscape
                 transition="pop-top-left"
-                target={<ColorSwatch radius="md" color={currentHex} onClick={ () => setOpen(!open) } />}
             >
-                <Group direction="column">
+            <Popover.Target>
+                <ColorSwatch radius="md" color={currentHex} onClick={ () => setOpen(!open) } />
+            </Popover.Target>
+            <Popover.Dropdown>
+                <Stack>
                     <ColorPicker value={ currentHex } format="hsl" 
                                     onChange={ handleColorChange }
                                     swatches= { [ '#D0021B', '#F5A623', '#F8E71C', '#8B572A', '#7ED321', '#417505', '#BD10E0', '#9013FE', 
                                                 '#4A90E2', '#50E3C2', '#B8E986', '#FFFFFF', "#FEEBBA" ] }
                     />
                     <Checkbox label="Retain brightness" checked={retainBrightness} onChange={(event) => setRetainBrightness(event.currentTarget.checked)} />
-                </Group>
+                </Stack>
+            </Popover.Dropdown>
         </Popover>
     );
 

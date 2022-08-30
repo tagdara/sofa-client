@@ -1,5 +1,5 @@
 import React, { useState, forwardRef} from 'react';
-import { Group, Select, Text } from '@mantine/core';
+import { Group, Select, Stack, Text } from '@mantine/core';
 import { sortByName, categoryLabelByEndpointId } from 'store/deviceHelpers'
 import useDeviceStore from "store/deviceStore"
 import DeviceIcon from 'components/DeviceIcon'
@@ -28,10 +28,10 @@ const DeviceSelect = props => {
             <div ref={ref} {...others}>
                 <Group spacing={"xs"} noWrap style={{ padding: "2px 0px" }}>
                     <DeviceIcon size={16} endpointId={value} />
-                    <Group direction="column" spacing={0} >
+                    <Stack spacing={0} >
                         <Text weight={600} lineClamp={1} size="xs">{ devices[value].friendlyName }</Text>
                         <Text color={"dimmed"} lineClamp={1} size="xs">{ categoryLabelByEndpointId(value) }</Text>
-                    </Group>
+                    </Stack>
                 </Group>
             </div>
         )

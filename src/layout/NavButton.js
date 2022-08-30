@@ -1,6 +1,6 @@
 import React from 'react';
 import { createStyles } from '@mantine/styles';
-import { Switch, ThemeIcon, UnstyledButton, Group, Text } from '@mantine/core';
+import { Switch, ThemeIcon, UnstyledButton, Group, Stack, Text } from '@mantine/core';
 import { ChevronLeft, ChevronRight } from 'react-feather';
 
 const useStyles = createStyles((theme) => ({
@@ -114,10 +114,10 @@ const NavButton = ( props ) => {
                     {props.icon}
                 </ThemeIcon>
                 }
-                <Group direction="column" spacing={0} grow style={{ flexGrow: 1 }}>
+                <Stack spacing={0} style={{ flexGrow: 1 }}>
                     <Text size="md" lineClamp={1} style={{ flexGrow: 1 }}>{props.label}</Text>
                     { props.detail && <Text color="dimmed" size="xs" style={{ flexGrow: 1 }}>{props.detail}</Text> }
-                </Group>
+                </Stack>
                 { props.children }
                 { (!props.reverse && props.arrow) &&
                     <ThemeIcon className={arrowClass()} >

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CardLine from 'components/CardLine'
-import { Collapse, Group } from '@mantine/core'
+import { Collapse, Group, Stack } from '@mantine/core'
 import DeviceIcon from 'components/DeviceIcon'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import useInput from 'device-model/property/input/useInput'
@@ -19,8 +19,8 @@ const Television = props => {
     const { inputLabel } = useInput(props.endpointId)
 
     return (
-        <Group direction="column" grow spacing="lg">
-            <Group direction="column" grow noWrap spacing={8}>
+        <Stack spacing="lg">
+            <Stack spacing={8}>
                 <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
                             color={ on ? "primary" : undefined}
                             on={on}
@@ -30,24 +30,24 @@ const Television = props => {
                     <PowerStateSwitch endpointId={props.endpointId} />
                 </CardLine>
                 { on && <TelevisionDetailLine endpointId={props.endpointId} /> }
-            </Group>
+            </Stack>
             <Collapse in={ (on && inputLabel === "Matrix") || showDetail}>
-                <Group direction="column" grow>
+                <Stack>
                     <Group noWrap grow>
                         <InputSelect endpointId={props.endpointId} />
                         { inputLabel === "Matrix" && <ModeSelect instance={"Input"} endpointId={props.matrix} /> }
                     </Group>
                     { (on && inputLabel === "Matrix") && <MatrixConflictList endpointId={props.matrix} /> }
-                </Group>
+                </Stack>
             </Collapse>
             <Collapse in={showDetail}>
-                <Group direction="column" grow>
+                <Stack>
                     <Group noWrap>
                         <ModeSelect endpointId={props.endpointId} instance={"PowerSaving"} />
                     </Group>
-                </Group>
+                </Stack>
             </Collapse>
-        </Group>
+        </Stack>
     );
 }
 

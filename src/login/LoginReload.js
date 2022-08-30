@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Group, Text } from '@mantine/core';
+import { Button, Card, Stack, Text } from '@mantine/core';
 
 export default function LoginReload(props) {
     
@@ -15,12 +15,12 @@ export default function LoginReload(props) {
 
     return (
         <Card>
-            <Group direction="column" noWrap grow>
+            <Stack grow>
                 <Text>{"Attempting to connect"} </Text >
                 <Button color="primary" fullWidth onClick={ ()=> reloadPWA()}>
                     RELOAD
                 </Button>
-            </Group>
+            </Stack>
         </Card>
     )
 };

@@ -7,14 +7,14 @@ import PageFrame from 'layout/PageFrame'
 import ComputerList from 'devices/Computer/ComputerList'
 import MatrixList from 'devices/Matrix/MatrixList';
 import PrinterLine from 'devices/Octoprint/PrinterLine'
-import { Group } from '@mantine/core'
+import { Stack } from '@mantine/core'
 
 const ComputerLayout = props => {
 
     return (  
         <PageFrame>
             <SectionFrame>
-                <Group direction="column">
+                <Stack>
                     <SectionHeader first title={"Computers"} />
                     <SectionGrid>
                         <ComputerList />
@@ -27,7 +27,7 @@ const ComputerLayout = props => {
                     <SectionGrid>
                         <PrinterLine />
                     </SectionGrid>
-                </Group>
+                </Stack>
             </SectionFrame>
         </PageFrame>
     )

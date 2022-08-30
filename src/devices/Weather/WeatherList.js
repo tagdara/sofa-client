@@ -1,7 +1,7 @@
 import React from 'react';
 import RangeValueLine from 'device-model/property/rangeValue/RangeValueLine'
 import { hasInstance} from 'store/deviceHelpers'
-import { Group, Text } from '@mantine/core';
+import { Stack, Text } from '@mantine/core';
 import { CloudDrizzle, Droplet, Lightbulb, Sun, Wind } from "react-bootstrap-icons";
 import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 
@@ -32,15 +32,15 @@ const WeatherList = props => {
 
     if (!reachable) { 
         return (
-            <Group direction="column">
+            <Stack>
                 <Text>Please check the weather station batteries</Text>
-            </Group>
+            </Stack>
         )
     
     }
 
     return (      
-        <Group direction="column">
+        <Stack>
             { Object.keys(additionalAttributes).map( attribName => 
                 <RangeValueLine endpointId={props.endpointId} 
                                 instance={attribName} 
@@ -49,7 +49,7 @@ const WeatherList = props => {
                                 key={attribName+props.endpointId} 
                 />
             )}
-        </Group>
+        </Stack>
     );
 }
 

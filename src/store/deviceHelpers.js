@@ -192,8 +192,9 @@ export const getFullInstance = (endpointId, instance) => {
 
 
 
-export function sortByName(devlist, exclude) {
+export function sortByName(devlist, exclude=[]) {
     var devices = useDeviceStore.getState().devices
+    exclude = ['', ...exclude]
     if (devices && exclude && exclude.length>0) {
         devlist = devlist.filter( device => !exclude.includes(devices[device].friendlyName) )
     }
@@ -477,6 +478,7 @@ export const deviceDirectives = (dev, includeNonControllable) => {
     const directives = useDeviceStore.getState().directives
     if (dev === undefined) { return undefined }
     var dirs = []
+    console.log('dirs', directives)
     if (dev.hasOwnProperty('capabilities')) {
         for (var j = 0; j < dev.capabilities.length; j++) {
             var shortIf = dev.capabilities[j].interface.split('.')[1]

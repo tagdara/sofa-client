@@ -17,7 +17,7 @@ const FrameNav = props => {
         {( styles) => (
         <Navbar hiddenBreakpoint={4000}
                 padding="sm" 
-                fixed
+                fixed={false}
                 hidden={ !props.opened }
                 width={{ sm: 400 }}
                 style={{    ...styles,

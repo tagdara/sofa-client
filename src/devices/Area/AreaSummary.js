@@ -8,7 +8,7 @@ import AreaSummaryLine from 'devices/Area/AreaSummaryLine';
 
 import useUserStore from 'store/userStore'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
-import { Group } from '@mantine/core'
+import { Stack } from '@mantine/core'
 import useChildren from 'device-model/property/children/useChildren'
 import useScene from 'device-model/property/scene/useScene'
 import useShortcuts from 'device-model/property/shortcuts/useShortcuts'
@@ -29,7 +29,7 @@ const AreaSummary = props => {
     }
 
     return (
-        <Group direction="column" noWrap spacing="xl">
+        <Stack spacing="xl">
             <AreaControlHeader name={ name } home={homeArea} currentArea={currentArea} selectArea={setCurrentArea} expand={expandArea} />
             <AreaSummaryLine endpointId={currentArea} />
             { areas.map(area =>
@@ -37,7 +37,7 @@ const AreaSummary = props => {
             )}
             <AreaScenes noShortcuts shortcuts={shortcuts} scenes={scenes} current={scene} />
             <AreaLights lights={lights} prefix={name} />
-        </Group>
+        </Stack>
     );
 }
 

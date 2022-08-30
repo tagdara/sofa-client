@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Group } from '@mantine/core'
+import { Stack } from '@mantine/core'
 import PlaceholderCard from 'layout/PlaceholderCard';
 import PlayerHeader from 'devices/Player/PlayerHeader'
 import PlayerHeaderSmall from 'devices/Player/PlayerHeaderSmall'
@@ -39,14 +39,14 @@ const JukeboxHero = props => {
     }
 
     return (
-        <Group direction="column" noWrap grow spacing="xl">
+        <Stack grow spacing="xl">
             { (isIdle() && !showIdle) ?
                 <PlayerHeaderSmall endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers} url={props.url} />
             :
                 <PlayerHeader endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers}  url={props.url} />
             }
                 <SpeakerList filterOff={filterOff} exclude={exclude} />
-        </Group>
+        </Stack>
     );
 }
 

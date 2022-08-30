@@ -5,7 +5,7 @@ import WeatherIcon from 'devices/Weather/WeatherIcon'
 import WideAvatar from 'components/WideAvatar'
 import AirQualityBadge from 'device-model/instance/AirQualityBadge'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers'
-import { Group } from '@mantine/core';
+import { Group, Stack} from '@mantine/core';
 import useTemperature from 'device-model/property/temperature/useTemperature'
 import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 import { Battery } from 'react-bootstrap-icons'
@@ -20,7 +20,7 @@ export default function Weather(props) {
     const { reachable } = useEndpointHealth(currentDevice)
 
     return (
-        <Group direction="column" noWrap grow>
+        <Stack>
             <Group noWrap onClick={props.onClick}>
                 { reachable ? 
                     <WideAvatar color={temperatureColor} 
@@ -35,14 +35,14 @@ export default function Weather(props) {
                                 right={ "?" }
                     />
                 }   
-                <Group direction="column" grow spacing={2}>
+                <Stack spacing={2}>
                     <ModeControllerText size="lg" endpointId={forecastDevice} instance={"Weather Condition"} />
                     <Group noWrap style={{ width: "100%"}}>
                         <ForecastAvatar size={"sm"} dimmed endpointId={forecastDevice} currentTemp={currentDevice}  />
                         { aqEndpoint && <AirQualityBadge size="md" endpointId={aqEndpoint} instance={"AQI"} prefix={"AQI"} /> }
                     </Group>
-                </Group>
+                </Stack>
             </Group>
-        </Group>
+        </Stack>
     );
 }

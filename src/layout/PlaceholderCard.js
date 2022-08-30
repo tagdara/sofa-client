@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Group } from '@mantine/core';
+import { Card, Group, Stack } from '@mantine/core';
 
 export default function PlaceholderCard(props){
     
@@ -15,19 +15,19 @@ export default function PlaceholderCard(props){
 
     return (
         isInset(
-            <Group direction="column" noWrap style={{ width: "100%"}} >
+            <Stack style={{ width: "100%"}} >
                 { [...Array(props.count).keys()].map( index =>
                     <Group key={index}>
                         <div style={{ height: 12}} />
                     </Group>
                 )}
-            </Group>
+            </Stack>
         )
     );
 
     //return (
     //    isInset(
-    //        <Group direction="column" noWrap style={{ width: "100%"}} >
+    //        <Stack style={{ width: "100%"}} >
     //            <Skeleton height={20} circle  /> 
      //           { [...Array(props.count).keys()].map( index =>
      //               <Group key={index}>

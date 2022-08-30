@@ -12,7 +12,7 @@ const AreaSummaryLine = props => {
     if ( !lights || lights.length < 1 ) { return null }
     
     return (
-        <Group spacing="xl" direction="row" noWrap style={{paddingLeft: "10%", paddingRight: "10%", width: "100%"}}>
+        <Group spacing="xl" noWrap style={{paddingLeft: "10%", paddingRight: "10%", width: "100%"}}>
             <AreaShortcutSlider endpointId={props.endpointId} />
             <MultiLightColor endpointIds={lights} />
         </Group>

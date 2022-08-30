@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Checkbox, ColorPicker, Group, HueSlider, ThemeIcon} from '@mantine/core'
+import { Checkbox, ColorPicker, Group, HueSlider, Stack, ThemeIcon} from '@mantine/core'
 import { hex2hsv } from 'helpers/colorHelpers';
 import { useDidUpdate, useDebouncedValue } from '@mantine/hooks';
 import { Droplet } from 'react-feather';
@@ -64,13 +64,13 @@ const ColorSlider = props => {
     console.log('hue', hue, color, value)
 
     return (
-        <Group noWrap grow style={{ width: "100%", alignItems: "flex-start"}}>
+        <Group noWrap style={{ width: "100%", alignItems: "flex-start"}}>
             {props.icon &&
                 <ThemeIcon variant="light">
                     <Droplet size={16} />
                 </ThemeIcon >
             }
-            <Group direction="column" style={{ paddingTop: 4, width: "100%"}}>
+            <Stack style={{ paddingTop: 4, width: "100%"}}>
                 { retainBrightness ?
                     <div style={{ width: "100%"}}>
                         <HueSlider value={ hue } format="hsl" onChange={ handleHueChange }  />
@@ -83,7 +83,7 @@ const ColorSlider = props => {
                     />
                 }
                 <Checkbox label="Retain brightness" checked={retainBrightness} onChange={(event) => setRetainBrightness(event.currentTarget.checked)} />
-            </Group>
+            </Stack>
         </Group>
     );
 

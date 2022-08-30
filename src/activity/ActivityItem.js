@@ -101,8 +101,10 @@ const ActivityItem = props => {
                 { summary }
             </Group>
         )
-    }    
-    console.log('activitystate', activityState)
+    }   
+
+    //console.log('activitystate', activityState)
+
     const loading = launched || activityState.Running.toggleState.value === 'ON'
 
     return (

@@ -5,7 +5,7 @@ import WideAvatar from 'components/WideAvatar'
 import { ShieldSlash  } from "react-bootstrap-icons"
 
 import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
-import { Badge, Group, Text } from '@mantine/core'
+import { Badge, Group, Stack, Text } from '@mantine/core'
 import { Shield } from 'react-feather';
 import { selectPage } from 'helpers/layoutHelpers';
 
@@ -45,7 +45,7 @@ const ZoneSummary = props => {
     const openZoneList = openZones.map(endpointId => devices[endpointId].friendlyName)
     
     return (
-        <Group direction="column" noWrap onClick={ () => selectPage('ZonePage') }> 
+        <Stack onClick={ () => selectPage('ZonePage') }> 
             <Group noWrap style={{ alignItems: violated ? "flex-start" : "center "}}>
                 <WideAvatar color={violated ? "red" : "green"} 
                             size="lg"
@@ -53,7 +53,7 @@ const ZoneSummary = props => {
                             left={ violated ? < ShieldSlash size={20} /> : <Shield size={20} />} 
                             right={ violated ? openZones.length : undefined }
                 />
-                <Group direction="column" grow spacing={"xs"} >
+                <Stack grow spacing={"xs"} >
                     <Text   size={ violated ? "sm" : "lg" }
                             weight={500} 
                             style={{width: "100%"}} 
@@ -66,9 +66,9 @@ const ZoneSummary = props => {
                             { openZoneList.map( zone => <Badge size="sm" key={zone+"badge"} color="red" variant="light">{zone}</Badge> )}
                         </Group>
                     }
-                </Group>
+                </Stack>
             </Group>
-        </Group>
+        </Stack>
     );
 }
 

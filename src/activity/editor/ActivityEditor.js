@@ -9,7 +9,7 @@ import { loadActivity, newActivity } from 'store/activityEditorHelpers';
 
 import SectionFrame from 'layout/SectionFrame'
 import PageFrame from 'layout/PageFrame'
-import { Group, Portal } from '@mantine/core';
+import { Portal, Stack } from '@mantine/core';
 
 export default function ActivityEditor(props) {
 
@@ -27,12 +27,12 @@ export default function ActivityEditor(props) {
         <PageFrame>
             <ActivityHeader />
             <SectionFrame padScroll>
-                <Group direction={"column"} style={{ width: "100%"}}>
+                <Stack style={{ width: "100%"}}>
                     <ActivitySchedules />
                     <ActivityTriggers />
                     <ActivityConditions />
                     <ActivityActions />
-                </Group>
+                </Stack>
             </SectionFrame>
             <Portal target="#bottomPortal">
                 <ActivityFooter />

@@ -16,6 +16,8 @@ export default function DeviceDirective(props) {
     const device = endpointId ? deviceByEndpointId(endpointId) : undefined
     const directiveMap = deviceDirectives(device)
 
+    console.log('dmap', directiveMap)
+
     function propertyFromDirective(controllerName, directiveName) {
         if (controllerName===undefined || directiveName===undefined) {
             return undefined

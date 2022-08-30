@@ -1,6 +1,6 @@
 import React from 'react';
 import CardPopover from 'components/CardPopover'
-import { Group } from '@mantine/core';
+import { Stack } from '@mantine/core';
 import PowerLevelSlider from 'device-model/property/powerLevel/PowerLevelSlider'
 import ToggleStateSwitch from 'device-model/property/toggleState/ToggleStateSwitch'
 
@@ -13,10 +13,10 @@ const PowerLevelAutoPopover = props => {
                 setOpen={ props.setOpen }
                 target={ props.target }
         >
-            <Group direction="column" noWrap grow spacing="xl">
+            <Stack grow spacing="xl">
                 <PowerLevelSlider endpointId={props.endpointId} />
                 <ToggleStateSwitch size="sm" endpointId={props.endpointId} instance={props.instance} label={"Auto"} />
-            </Group>
+            </Stack>
         </CardPopover>
     );
 }

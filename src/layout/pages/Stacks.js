@@ -36,7 +36,7 @@ export default function Stacks(props) {
             { currentStack === "System" ?
                 <SystemPage />
                 :
-                <SectionGrid>
+                <SectionGrid style={{ minWidth: maxStacks * 324 }}>
                 { filterStacks().map( stack =>
                     <CardStack key={stack} stack={ stack }  />
                 )}

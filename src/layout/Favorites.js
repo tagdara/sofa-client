@@ -3,7 +3,7 @@ import CardLine from 'components/CardLine';
 import ActivityNavButton from 'activity/ActivityItem';
 import useUserStore from 'store/userStore';
 import { selectPage } from 'helpers/layoutHelpers';
-import { Group } from '@mantine/core';
+import { Stack } from '@mantine/core';
 
 const Favorites = props => {
 
@@ -16,7 +16,7 @@ const Favorites = props => {
     if (!favorites) { return null }
 
     return (    
-            <Group direction="column" spacing={"xs"}>
+            <Stack spacing={"xs"}>
                 <CardLine primary={"Favorites"} />
                 { favorites.map(endpointId => 
                     <ActivityNavButton small={true} endpointId={endpointId} key={endpointId}
@@ -25,7 +25,7 @@ const Favorites = props => {
                                     select={selectAutomation}
                     />
                 )}
-            </Group>
+            </Stack>
     )
 }
 

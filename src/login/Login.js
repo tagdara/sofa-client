@@ -5,7 +5,7 @@ import LoginForm from 'login/LoginForm';
 import useLoginStore from 'store/loginStore';
 import AppFrame from 'components/AppFrame';
 
-import { Card, Group, Space, Title } from '@mantine/core';
+import { Card, Space, Stack, Title } from '@mantine/core';
 
 export default function Login(props) {
 
@@ -21,7 +21,7 @@ export default function Login(props) {
 
     return (
         <AppFrame padding="sm">
-            <Group direction="column" grow noWrap>
+            <Stack>
                 <Space h="lg" style={{ paddingTop: "calc(16px + env(safe-area-inset-top))" }} />
                 <Card sx={{ minWidth: 300, maxWidth: 480, margin: "auto" }} shadow="sm" padding="sm">
                     <Title order={3} align="center">Home</Title>
@@ -30,7 +30,7 @@ export default function Login(props) {
                     { refreshToken != null && <LoginReload /> }
                     <LoginForm />
                 </Card>
-            </Group>
+            </Stack>
         </AppFrame>
     )
 };

@@ -5,7 +5,7 @@ import LightChristmasButton from 'devices/Light/LightChristmasButton';
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import { compareState, endpointIdsByDisplayCategory, register, unregister } from 'store/deviceHelpers'
-import { Group, Text, useMantineTheme } from '@mantine/core'
+import { Group, Stack, Text, useMantineTheme } from '@mantine/core'
 import { selectPage } from 'helpers/layoutHelpers';
 import WideAvatar from 'components/WideAvatar'
 import AreasLightsOn from 'devices/Area/AreasLightsOn'
@@ -83,7 +83,7 @@ const LightSummary = props => {
                             left={ lightCount('on') ? <Lightbulb size="20" /> : <LightbulbOff size="20" /> }
                             right={ lightCount('on') ? lightCount('on') : undefined }
                     /> 
-                <Group direction="column" spacing={"xs"} grow >
+                <Stack spacing={"xs"} grow >
                     <Text   size={ lightCount('on') ? "sm" : "lg" }
                             weight={500} 
                             style={{width: "100%"}} 
@@ -93,7 +93,7 @@ const LightSummary = props => {
                         
                     </Text>
                     <AreasLightsOn />
-                </Group>
+                </Stack>
             </Group>
             { checkHoliday() }
         </Group>

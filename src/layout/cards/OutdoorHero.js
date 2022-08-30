@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import StackCard from 'components/StackCard'
 import Weather from 'devices/Weather/Weather';
 import WeatherList from 'devices/Weather/WeatherList'
-import { Collapse, Group } from '@mantine/core';
+import { Collapse, Stack } from '@mantine/core';
 import { endpointIdByFriendlyName } from 'store/deviceHelpers'
 
 export default function OutdoorHero(props) {
@@ -12,7 +12,7 @@ export default function OutdoorHero(props) {
 
     return (
         <StackCard>
-            <Group direction="column" noWrap style={{ width: "100%"}}>
+            <Stack style={{ width: "100%"}}>
                 <Weather    aq={props.outdoorAirQuality} 
                             current={props.outdoor} 
                             forecast={"Rainmachine"} 
@@ -21,7 +21,7 @@ export default function OutdoorHero(props) {
                 <Collapse in={expanded} style={{width: "100%"}}>
                     <WeatherList endpointId={currentDevice} />
                 </Collapse>
-            </Group>
+            </Stack>
         </StackCard>
     ); 
 }

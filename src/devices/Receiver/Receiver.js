@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import CardLine from 'components/CardLine'
-import { Collapse, Group } from '@mantine/core'
+import { Collapse, Group, Stack } from '@mantine/core'
 import DeviceIcon from 'components/DeviceIcon'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
@@ -23,8 +23,8 @@ const Receiver = props => {
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
-        <Group direction="column" grow noWrap spacing="xl">
-            <Group direction="column" grow noWrap spacing={8}>
+        <Stack spacing="xl">
+            <Stack spacing={8}>
                 <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
                             color={ on ? "primary" : undefined}
                             on={on}
@@ -34,12 +34,12 @@ const Receiver = props => {
                     <PowerStateSwitch endpointId={props.endpointId} />
                 </CardLine>
                 { on && <ReceiverDetailLine endpointId={props.endpointId} />  }
-            </Group>
+            </Stack>
             <Collapse in={showDetail || on }>
                 <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
             </Collapse>
             <Collapse in={showDetail}>
-                <Group direction="column" grow noWrap spacing="sm">
+                <Stack spacing="sm">
                     <Group grow noWrap position={"apart"}>
                         <ModeSelect filter={surroundPresets} endpointId={props.endpointId} instance={"Surround"} />
                         <MutedButton endpointId={props.endpointId} />
@@ -48,9 +48,9 @@ const Receiver = props => {
                         <InputSegmentedControl endpointId={props.endpointId} />
                         <InputLockButton endpointId={props.endpointId} />
                     </Group>
-                </Group>
+                </Stack>
             </Collapse>
-        </Group>
+        </Stack>
 );
 }
 

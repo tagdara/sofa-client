@@ -7,7 +7,7 @@ import PlaceholderCard from 'layout/PlaceholderCard';
 import useDeviceStateStore from 'store/deviceStateStore'
 
 import { sortByName, hasCapability, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
-import { Group } from '@mantine/core'
+import { Stack } from '@mantine/core'
 
 const SubAreaHero = props => {
 
@@ -34,13 +34,13 @@ const SubAreaHero = props => {
 
     return (
         <StackCard>
-            <Group direction="column" noWrap spacing="xl">
+            <Stack spacing="xl">
                 { areas.map(area =>
                     <AreaLine key={area} endpointId={area} selectArea={selectArea} />
                 )}
                 <AreaScenes noShortcuts deviceState={areaState} />
                 <AreaLights device={area} deviceState={areaState} />
-            </Group>
+            </Stack>
         </StackCard>
     );
 }

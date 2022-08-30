@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getStack, renderSuspenseModule } from 'helpers/layoutHelpers';
-import { Group } from '@mantine/core';
+import { Stack } from '@mantine/core';
 // import StackMoreButton from 'layout/StackMoreButton';
 import StackPicker from 'layout/StackPicker';
 
@@ -36,9 +36,8 @@ export default function CardStack(props) {
     const cards = cardData.map( (card, i) => renderSuspenseModule(card['module'], card['props'], i ))
 
     return (
-            <Group  noWrap 
+            <Stack  noWrap 
                     spacing="xs" 
-                    direction="column" 
                     style={{
                                 paddingBottom: 16, 
                                 minWidth: 320, 
@@ -52,7 +51,7 @@ export default function CardStack(props) {
                     <StackPicker stack={stack} setStack={setStack} />
                 }
                 { cards } 
-            </Group>
+            </Stack>
     );
 }
 

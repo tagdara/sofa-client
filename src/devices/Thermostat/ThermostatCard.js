@@ -6,7 +6,7 @@ import PlaceholderCard from 'layout/PlaceholderCard';
 
 import StackCard from 'components/StackCard'
 import ThermostatList from 'devices/Thermostat/ThermostatList'
-import { Collapse, Group } from '@mantine/core';
+import { Collapse, Stack } from '@mantine/core';
 
 const ThermostatCard = props => {
 
@@ -17,9 +17,8 @@ const ThermostatCard = props => {
     }
 
     return (
-        <>
         <StackCard>
-            <Group direction="column" style={{ width: "100%"}}>
+            <Stack style={{ width: "100%"}}>
                 <Thermostat endpointId={props.endpointId} 
                         onClick={ () => setExpanded(!expanded) } 
                         wide={props.wide } 
@@ -31,9 +30,8 @@ const ThermostatCard = props => {
                         <ThermostatList />
                     </Collapse>
                 }
-            </Group>
+            </Stack>
         </StackCard>
-        </>
     ); 
 }
 

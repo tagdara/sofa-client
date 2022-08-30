@@ -25,7 +25,7 @@ export default function MainPage() {
 
     return (
         <AppFrame   bottom={ <BottomBar open={ () => setOpened(true) } />} 
-                    header={ <FrameHeader opened={opened} setOpened={setOpened} />}
+                    header={ wide && <FrameHeader opened={opened} setOpened={setOpened} /> }
                     navbar={ <FrameNav opened={ opened } close={ () => setOpened(false) } />}
                     drawer={ <RightDrawer opened={drawerOpened} close={ () => setDrawerOpened(false) } /> }
                     wide={wide}

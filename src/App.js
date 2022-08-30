@@ -11,7 +11,7 @@ export default function App() {
     const loggedIn = useLoginStore(state => state.logged_in )
 
     return (
-        <MantineProvider theme={{ colorScheme: colorScheme }}  withGlobalStyles>
+        <MantineProvider theme={{ colorScheme: colorScheme }}  withNormalizeCSS withGlobalStyles>
             <NotificationsProvider>
                 { loggedIn ?
                     <FrameGrid />

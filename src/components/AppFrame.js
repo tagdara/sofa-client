@@ -38,6 +38,7 @@ const AppFrame = props => {
 
     return (
             <AppShell   
+                fixed
                 padding="sm"
                 styles={(theme) => ({
                     body: { flex: 1,  // Warning: Removing flex prevents full height growth

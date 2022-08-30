@@ -2,6 +2,7 @@ import React from 'react';
 import { Group, Image, Text } from '@mantine/core'
 import { Music } from 'react-feather'
 import useTokenImage from 'helpers/useTokenImage'
+import { Stack } from 'react-bootstrap-icons';
 
 export default function PlayerArtOverlay(props) {
     
@@ -13,7 +14,7 @@ export default function PlayerArtOverlay(props) {
     const { localImageUrl, imageLoaded } = useTokenImage(art)
 
     return ( 
-            <Group direction="row" noWrap>
+            <Group noWrap>
                 <Image 
                     radius="sm"
                     style={{ display: "flex", flexGrow: 1, maxWidth: "30%" }}
@@ -24,15 +25,15 @@ export default function PlayerArtOverlay(props) {
                     alt={ title }
                     onClick={ (e) => props.cover(e)}
                 />
-                <Group position="apart" direction="column" grow
-                        style={{ display: "flex", flexGrow: 2}}
-                        onClick={()=> props.setMini(true)}>
-                    <Group direction="column" noWrap spacing={0}>
+                <Stack  style={{ display: "flex", flexGrow: 2}}
+                        onClick={()=> props.setMini(true)}
+                >
+                    <Stack spacing={0}>
                         <Text lineClamp={2} weight={500} size="lg" style={{ lineHeight: 1.2 }}>{title}</Text>
                         <Text lineClamp={1} weight={500} color="dimmed" size="md">{artist}</Text>
-                    </Group>
+                    </Stack>
                     {props.children}
-                </Group>
+                </Stack>
             </Group>           
     );
 }

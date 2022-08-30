@@ -3,7 +3,7 @@ import StackCard from 'components/StackCard';
 import Fan from 'devices/Fan/Fan';
 import Shade from 'devices/Shade/Shade';
 import { endpointIdsByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers'
-import { Group } from '@mantine/core'
+import { Stack } from '@mantine/core'
 
 const MoreDevicesHero = props => {
     
@@ -12,14 +12,14 @@ const MoreDevicesHero = props => {
     
     return (
         <StackCard>
-            <Group direction="column" spacing="xl">
+            <Stack spacing="xl">
                 { shades.map( shade => (
                     <Shade key={shade} endpointId={shade} itemType={"listItem"} />
                 ))}
                 { fans.map(fan =>
                     <Fan key={fan} endpointId={fan} nested={true} itemType={"listItem"} />
                 )}
-            </Group>
+            </Stack>
         </StackCard>
     );
 }

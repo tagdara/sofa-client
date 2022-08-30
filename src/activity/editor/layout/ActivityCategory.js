@@ -1,5 +1,5 @@
 import React from 'react';
-import { Group } from '@mantine/core';
+import { Stack } from '@mantine/core';
 
 const ActivityCategory = props => {
 
@@ -8,9 +8,9 @@ const ActivityCategory = props => {
     }
 
     return (
-        <Group direction="column" spacing={16}>
+        <Stack spacing={16}>
             { props.children }
-       </Group>
+        </Stack>
     )
 
 };

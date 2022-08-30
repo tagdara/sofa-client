@@ -12,6 +12,7 @@ export const SectionGrid = props => {
                         style={{ 
                             margin: "0 auto", 
                             width: "100%", 
+                            minWidth: maxStacks * 324,
                             maxWidth: stacksWidth
                         }}
             >

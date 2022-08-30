@@ -5,8 +5,8 @@ import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
 import useDeviceStateStore from 'store/deviceStateStore'
 import { AlertTriangle, Tablet } from 'react-feather'
 import PlaceholderCard from 'layout/PlaceholderCard';
-import { Button, Group, PasswordInput } from '@mantine/core';
-import { useForm } from '@mantine/hooks';
+import { Button, Group, PasswordInput, Stack } from '@mantine/core';
+import { useForm } from '@mantine/form';
 
 export default function StatusLock(props) {
 
@@ -72,7 +72,7 @@ export default function StatusLock(props) {
     }
      
     return (
-        <Group direction="column" grow>
+        <Stack grow>
             <CardLine onClick={handlePress} 
                         avatar={closed ? <Tablet size={20} /> : <AlertTriangle size={20} /> } 
                         color={ closed ? 'green' : 'red'}
@@ -97,7 +97,7 @@ export default function StatusLock(props) {
                     </Group>
                 </form>
             }
-        </Group>
+        </Stack>
     );
 
 }

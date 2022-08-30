@@ -29,9 +29,13 @@ const CardPopover = props => {
                 noFocusTrap
                 noEscape
                 transition="pop-top-left"
-                target={ props.target }
         >
-            { props.children }
+            <Popover.Target>
+                { props.target }
+            </Popover.Target>
+            <Popover.Dropdown>
+                { props.children }
+            </Popover.Dropdown>
         </Popover>
     );
 

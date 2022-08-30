@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActionIcon, Avatar, Group, Loader, Text, ThemeIcon } from '@mantine/core';
+import { ActionIcon, Avatar, Group, Loader, Stack, Text, ThemeIcon } from '@mantine/core';
 
 export const CardLine = React.forwardRef( (props, ref) => {
 
@@ -28,14 +28,14 @@ export const CardLine = React.forwardRef( (props, ref) => {
                     )
                 )
             }           
-            <Group direction="column" spacing={0} grow style={{ flexGrow: 1 }}>
+            <Stack spacing={0} grow style={{ flexGrow: 1 }}>
                 <Text lineClamp={1} size={ props.size ? props.size : "lg" } weight={500} style={{ flexGrow: 1 }}>
                     { props.primary }
                 </Text>
                 <Text color="dimmed" size={ props.size ? props.size : "md"} lineClamp={1}>
                     { props.secondary }
                 </Text>
-            </Group>
+            </Stack>
             { props.children }
         </Group> 
     )

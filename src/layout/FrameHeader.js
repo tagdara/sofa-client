@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActionIcon, Group, Header, MediaQuery, Burger, Text, useMantineTheme } from '@mantine/core';
+import { ActionIcon, Group, Header, Burger, Text, useMantineTheme } from '@mantine/core';
 import { Home, Maximize } from 'react-feather';
 import { selectPage } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
@@ -19,10 +19,8 @@ const FrameHeader = props => {
     }
 
     return (
-        <MediaQuery smallerThan="md" styles={{ display: 'none' }}>
-            <Header height={64} padding="md" style={{ zIndex: 5001, width: "100%"}}>
-            {/* You can handle other responsive styles with MediaQuery component or createStyles function */}
-            <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+        <Header height={64} p="md" style={{ display: "flex", zIndex: 5001, width: "100%"}}>
+            <Group style={{width: "100%"}} spacing={0}>
                 <Burger
                     opened={props.opened}
                     onClick={() => props.setOpened(!props.opened) }
@@ -35,9 +33,8 @@ const FrameHeader = props => {
                 { !homePage && <ActionIcon variant="light" color="primary" size="md" onClick={ () => selectPage('Stacks')}><Home size={20} /></ActionIcon> }
                 <ActionIcon size="md" onClick={goFullScreen}><Maximize size={20} /></ActionIcon>
                 </Group>
-            </div>
-            </Header>
-        </MediaQuery>
+            </Group>
+        </Header>
     )
 }
 

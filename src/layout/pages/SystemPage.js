@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Group, ScrollArea } from '@mantine/core';
+import { Stack, ScrollArea } from '@mantine/core';
 import { ListUl } from 'react-bootstrap-icons';
 
 import UserNav from 'layout/UserNav';
@@ -16,7 +16,7 @@ const SystemPage = props => {
     const powerUser = true
 
     return (
-        <Group direction="column" style={{ width: "100%", paddingTop: 8, paddingBottom: "env(safe-area-inset-bottom)" }}>
+        <Stack style={{ width: "100%", paddingTop: 8, paddingBottom: "env(safe-area-inset-bottom)" }}>
             <UserNav expand={navMode === "user"} action={ () => setNavMode('user')} />
             { powerUser &&
                 <AdminNav expand={navMode === "user"} action={ () => setNavMode('user')} />
@@ -28,7 +28,7 @@ const SystemPage = props => {
                 { ( navMode === "activities" ) && <Favorites /> }
                 { ( navMode === "settings" && powerUser ) && <SettingsList /> }
             </ScrollArea>
-        </Group>
+        </Stack>
     )
 }
 

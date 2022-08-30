@@ -12,7 +12,7 @@ const Thermostat = props => {
     //  { hasCapability(props.endpointId, "ToggleController", "Night Mode") && <ToggleStateSegment endpointId={props.endpointId} instance={"Night Mode"} /> }
 
     return ( 
-        <Group spacing="xl" grow noWrap style={{ width: "100%" }} position="apart">
+        <Group spacing="xl" noWrap style={{ width: "100%" }} position="apart">
             <TemperatureSensorLine endpointId={props.endpointId} onClick={props.onClick} size={props.size}>
                 {props.children}
             </TemperatureSensorLine>

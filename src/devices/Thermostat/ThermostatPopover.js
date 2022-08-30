@@ -2,7 +2,7 @@ import React from 'react';
 import CardPopover from 'components/CardPopover'
 import TargetSetpointAdjuster from 'device-model/property/targetSetpoint/TargetSetpointAdjuster'
 import ThermostatModeButtons from 'device-model/property/thermostatMode/ThermostatModeButtons'
-import { Group } from '@mantine/core';
+import { Stack } from '@mantine/core';
 const TargetSetpointPopover = props => {
 
     return (
@@ -11,10 +11,10 @@ const TargetSetpointPopover = props => {
                 setOpen={ props.setOpen }
                 target={ props.target }
         >
-            <Group position="center" direction="column" noWrap>
+            <Stack>
                 <ThermostatModeButtons endpointId={props.endpointId} />
                 <TargetSetpointAdjuster endpointId={props.endpointId} />
-            </Group>
+            </Stack>
         </CardPopover>
     );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Drawer, Group, ScrollArea } from '@mantine/core';
+import { Button, Drawer, Stack, ScrollArea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useNotifications } from '@mantine/notifications';
 import { LogIn } from 'react-feather';
@@ -42,33 +42,33 @@ const RightDrawer = props => {
                                     zIndex:5000,
                                 } }}
             >
-            <Group noWrap direction="column" spacing="sm" grow style={{ flexGrow: 1, paddingBottom: "env(safe-area-inset-bottom)" }} >
+            <Stack spacing="sm" style={{ flexGrow: 1, paddingBottom: "env(safe-area-inset-bottom)" }} >
                 { contextItem ?
-                    <Group direction="column" grow>
+                    <Stack>
                         <Button>Context Item</Button>
-                    </Group>
+                    </Stack>
                     :
-                    <Group direction="column" grow>
+                    <Stack>
                         <Button>No context</Button>
-                    </Group>                 
+                    </Stack>                 
                 }
                 <ScrollArea>
-                    <Group direction="column" grow>
+                    <Stack>
                         <Button>Main</Button>
-                    </Group> 
+                    </Stack> 
                 </ScrollArea>
                 { contextItem &&
-                    <Group direction="column" grow spacing="xs" noWrap >
+                    <Stack spacing="xs" noWrap >
                         { powerUser && <NavButton highlight label={"Use this "+contextItem} 
                             color="transparent" icon={<LogIn size={20} />} reverse  /> 
                         }
                         <NavButton highlight label={"Back"} leftArrow reverse onClick={notifyAction} />
-                    </Group>
+                    </Stack>
                 }
                 { (!wide && !contextItem) && 
                     <NavButton highlight label={"Back to app"} leftArrow reverse onClick={closeDrawer} />
                 }
-            </Group>
+            </Stack>
         </Drawer>
     )
 }

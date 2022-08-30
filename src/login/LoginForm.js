@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Button, Group, PasswordInput, Text, TextInput } from '@mantine/core';
-import { useForm } from '@mantine/hooks';
+import { Button, Stack, PasswordInput, Text, TextInput } from '@mantine/core';
+import { useForm } from '@mantine/form';
 import useLoginStore from 'store/loginStore';
 
 export default function Login(props) {
@@ -24,7 +24,7 @@ export default function Login(props) {
 
     return (
         <form onSubmit={form.onSubmit((values) => login(values.user, values.password))}>
-            <Group direction="column" grow>
+            <Stack>
                 <TextInput  label="Username" 
                             placeholder="Your user name"
                             required
@@ -40,7 +40,7 @@ export default function Login(props) {
                 <Button fullWidth type = "submit">
                     Login
                 </Button>
-            </Group>
+            </Stack>
         </form>
     )
 };

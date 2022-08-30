@@ -7,7 +7,7 @@ import ScheduleDays from 'activity/editor/schedule/ScheduleDays'
 
 import useActivityEditorStore from 'store/activityEditorStore'
 import { updateActivityItem } from 'store/activityEditorHelpers'
-import { ThemeIcon, Group, Text } from '@mantine/core';
+import { ThemeIcon, Group, Stack, Text } from '@mantine/core';
 import { Calendar } from 'react-feather'
 
 const ActivitySchedule = props => {
@@ -32,7 +32,7 @@ const ActivitySchedule = props => {
     return (
         <ActivityLine compact={props.compact}>
             <ThemeIcon color="purple" radius="xl" size="md" style={{ margin: "4px 8px 4px 0px", padding: 0, width: 28 }} ><Calendar size={16} /></ThemeIcon>
-            <Group direction="column" noWrap spacing={2} >
+            <Stack spacing={2} >
                 <Text size="sm">{"Start"}</Text>
                 <ScheduleStart target="start" change={changeValue} value={schedule.start} />
                 <Group>
@@ -42,7 +42,7 @@ const ActivitySchedule = props => {
                         <ScheduleDays wide={props.wide} toggle={toggleType} change={changeValue} value={schedule.days} />
                     }
                 </Group>
-            </Group>
+            </Stack>
         </ActivityLine>
     )
 }

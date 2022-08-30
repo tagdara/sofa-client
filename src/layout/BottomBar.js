@@ -95,12 +95,14 @@ const BottomBar = props => {
     return (
             <SegmentedControl 
                     fullWidth 
+                    size="md"
                     color={theme.primaryColor}
                     onChange={pickStack} 
                     value={displayStack} 
                     data={selections} 
                     style={{    minHeight: 48,
                                 alignItems: "center",
+                                justfiyContent: "center",
                                 marginBottom: "env(safe-area-inset-bottom)" 
                     }}
                     styles={{ 

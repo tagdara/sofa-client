@@ -39,7 +39,7 @@ const JukeboxHero = props => {
     }
 
     return (
-        <Stack grow spacing="xl">
+        <Stack spacing="xl">
             { (isIdle() && !showIdle) ?
                 <PlayerHeaderSmall endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers} url={props.url} />
             :

@@ -8,8 +8,9 @@ export default function PlayerArtOverlayButtons(props) {
         window.open(props.url,'_jukebox');
     }
     
+
     return ( 
-        <Group direction="row" position="apart" noWrap style={{width: "100%"}}>
+        <Group position="apart" noWrap style={{width: "100%"}}>
             <Group>
                 <ActionIcon  size="sm" onClick={ (e) => props.playPause(e)}>
                     { props.playbackState==='PLAYING' ? <Pause size={20} /> : <Play size={20} /> }

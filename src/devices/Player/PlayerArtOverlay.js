@@ -1,8 +1,7 @@
 import React from 'react';
-import { Group, Image, Text } from '@mantine/core'
+import { Group, Image, Stack, Text } from '@mantine/core'
 import { Music } from 'react-feather'
 import useTokenImage from 'helpers/useTokenImage'
-import { Stack } from 'react-bootstrap-icons';
 
 export default function PlayerArtOverlay(props) {
     

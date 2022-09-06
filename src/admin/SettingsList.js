@@ -11,6 +11,7 @@ export default function SettingsList(props) {
     }
 
     return (
+        
         <Stack spacing={2} style={{ paddingTop: 16 }} >
             <NavButton transparent color="primary" icon={<Layers size={20} />} arrow label={"Adapter management"} onClick={() => selectPage('AdapterLayout')} /> 
             <NavButton transparent color="green" icon={<Sliders size={20}/>} arrow label={"Modes"} onClick={()=> selectPage('ModePage')} /> 

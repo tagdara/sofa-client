@@ -21,7 +21,7 @@ const LightPopover = props => {
                 { noControllers ?
                     <Text>{"No additional configuration is available"}</Text>
                 :
-                    <Stack grow spacing={"xl"}>
+                    <Stack spacing={"xl"}>
                         <BrightnessSlider endpointId={props.endpointId} icon={true} />
                         <ColorTemperatureSlider endpointId={props.endpointId} icon={true} />
                         <ColorSlider endpointId={props.endpointId} icon={true} />

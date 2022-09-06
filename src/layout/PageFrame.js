@@ -24,7 +24,7 @@ const PageFrame = props => {
                             ...styles, 
                             maxWidth: props.maxWidth ? props.maxWidth : stacksWidth, 
                             height: "100%", 
-                            overflow: "hidden", 
+
                             margin: "0 auto", 
                             width: "100%", 
                             paddingBottom : wide ? 64 : 8,

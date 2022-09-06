@@ -11,21 +11,12 @@ const CardPopover = props => {
                     popover: { 
                         minWidth: props.minWidth ? props.minWidth: 200,
                         maxWidth: props.maxWidth ? props.maxWidth: 320,                       
-                        backgroundColor: theme.colorScheme === 'dark' ? 
-                                            theme.fn.lighten(theme.colors.dark[7], 0.1)  : 
-                                            theme.colors[theme.primaryColor][5],
-                    },
-                    arrow: { 
-                        backgroundColor: theme.colorScheme === 'dark' ? 
-                                            theme.fn.lighten(theme.colors.dark[7], 0.1)  : 
-                                            theme.colors[theme.primaryColor][5],
-                    },                    
+                    }             
                 }}
                 opened={props.opened}
                 onClose={() => props.setOpen(false)}
-                position="bottom"
-                placement="end"
                 withArrow
+                withinPortal
                 noFocusTrap
                 noEscape
                 transition="pop-top-left"

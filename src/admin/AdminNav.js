@@ -1,27 +1,29 @@
-import React, { useState } from 'react';
-import NavButton from 'layout/NavButton';
-import { Card } from '@mantine/core';
+import React from 'react';
+import { NavLink } from '@mantine/core';
 import { PersonBadge } from 'react-bootstrap-icons'
-import SettingsList from 'admin/SettingsList'
+import { Activity, Clock, Layers, Sliders  } from 'react-feather';
+import { selectPage } from 'helpers/layoutHelpers';
 
 const AdminNav = props => {
 
-    const [ expand, setExpand] = useState(false)
 
-    if (expand) {
-        return (
-            <Card sx={{ width: "100%", padding: 0}}>
-                <NavButton leftArrow icon={<PersonBadge size={20} />} label={"Admin Settings"} onClick={ () => setExpand(false) }  />
-                <SettingsList setExpand={setExpand}/>
-            </Card>
-        )
+    function toggleLogSSE() {
+        // needs to be re-implemented if needed
     }
 
     return (
-        <Card sx={{ width: "100%", padding: 0}}>
-            <NavButton highlight arrow icon={<PersonBadge size={20} />} label={"Admin Settings"} onClick={ () => setExpand(true) }  />
-        </Card>
+        <NavLink 
+            label="Admin Settings" 
+            childrenOffset={16}
+            icon={<PersonBadge size={20} stroke={1.5} />}
+        >
+            <NavLink icon={<Layers size={16} />} arrow label={"Adapter management"} onClick={() => selectPage('AdapterLayout')} /> 
+            <NavLink icon={<Sliders size={16}/>} arrow label={"Modes"} onClick={()=> selectPage('ModePage')} /> 
+            <NavLink icon={<Clock size={16}/>} arrow label={"Recent Activity"} onClick={() => selectPage('RecentLayout')} /> 
+            <NavLink icon={<Activity size={16}/>} arrow label={"Toggle SSE Log"} onClick={() => toggleLogSSE()} /> 
+        </NavLink>
     )
+
 }
 
 export default AdminNav

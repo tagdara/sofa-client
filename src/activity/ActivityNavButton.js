@@ -7,8 +7,9 @@ import { directive } from 'store/directive'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import moment from 'moment';
-import { X as Close, ListUl, Star, PlayCircle } from 'react-bootstrap-icons'
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, NavLink } from '@mantine/core';
+import { IconListDetails, IconStar, IconTrash, IconPlayerPlay } from '@tabler/icons';
+import { ListUl } from 'react-bootstrap-icons'
 
 const ActivityItem = props => {
     
@@ -66,6 +67,7 @@ const ActivityItem = props => {
     }
 
     function summary() {
+        if (props.description) { return props.description }
         if (!props.activity || !props.allowEdit) { return undefined }
         if (props.showNextRun) { return scheduleSummary() }
         return partsSummary()
@@ -77,25 +79,23 @@ const ActivityItem = props => {
     }
 
     return (
-            <NavButton  onClick={ () => props.select(props.endpointId) }
-                        iconOnClick={ (event) => { event.stopPropagation(); makeFavorite(props.endpointId, !props.favorite) }}
-                        icon={ isFavorite(props.endpointId) && props.icon !== "base" ? <Star size={20} /> : <ListUl size={20} /> }
-                        loading={ !loading() } 
-                        color={ props.favorite ? "primary" : undefined } 
-                        label={ name } 
-                        secondary={ summary() } 
-            >
-            { props.delete ?
+        <NavLink
+            label={ name } 
+            icon={ isFavorite(props.endpointId) && props.icon !== "base" ? <IconStar size={16} /> : <IconListDetails size={16} /> }
+            variant="light"
+            description={ summary() }
+            rightSection={ props.delete ?
                 <ActionIcon size={"small"} onClick={ (event) => { event.stopPropagation(); props.delete(props.endpointId); }} >
-                    <Close size={20} />
+                    <IconTrash size={16} />
                 </ActionIcon>
             :
-                <ActionIcon disabled={ loading() } size={"small"} onClick={ (event) => { event.stopPropagation(); runActivity(props.endpointId) }} >
-                    <PlayCircle size={20} />
-                </ActionIcon>                
+                <ActionIcon color={"primary"} variant="light" disabled={ loading() } size={"md"} onClick={ (event) => { event.stopPropagation(); runActivity(props.endpointId) }} >
+                    <IconPlayerPlay size={16} />
+                </ActionIcon>    
             }
-            </NavButton>
-    );
+      />
+    )
+
 }
 
 export default ActivityItem;

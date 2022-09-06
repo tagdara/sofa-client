@@ -1,41 +1,26 @@
-import React, { useState } from 'react';
-import NavButton from 'layout/NavButton';
-import { Card, Stack } from '@mantine/core';
+import React from 'react';
+import { NavLink } from '@mantine/core';
 import { User, LogOut, RotateCcw } from 'react-feather';
 import useLoginStore from 'store/loginStore';
+import { reloadPWA } from 'store/reloadPWA'
 
 const UserNav = props => {
 
-    const [ expand, setExpand] = useState(false)
     const name = useLoginStore( state => state.name )
     const logout = useLoginStore( state => state.logout )
 
-    function reloadPWA() {
-        
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.unregister();
-            });
-        }
-        window.location.reload(true)
-    } 
-
-    if (expand) {
-        return (
-            <Card sx={{ width: "100%", padding: 0}}>
-                <Stack spacing={2} >
-                    <NavButton icon={<User size={20} />} label={name} leftArrow={expand} arrow={!expand} onClick={ () => setExpand(false) } />
-                    <NavButton color="orange" icon={<RotateCcw size={20} />} label={"Reload"} detail={"v" + process.env.REACT_APP_VERSION} arrowLeft onClick={ () => reloadPWA() } />
-                    <NavButton color="red" icon={<LogOut size={20} />} label={"Logout"} arrowLeft onClick={ () => logout() } />
-                </Stack>
-            </Card>
-        )
-    }
+    const capitalName = name.charAt(0).toUpperCase() + name.slice(1);
 
     return (
-        <Card sx={{ width: "100%", padding: 0}}>
-            <NavButton icon={<User size={20} />} label={name} arrow onClick={ () => setExpand(true) }  />
-        </Card>
+        <NavLink 
+            childrenOffset={16}
+            label={capitalName}
+            description={"User Settings"}
+            icon={<User size={20} />}
+        >
+            <NavLink icon={<RotateCcw size={16} />} label={"Reload"} description={"v" + process.env.REACT_APP_VERSION} arrowLeft onClick={ () => reloadPWA() } />
+            <NavLink icon={<LogOut size={16} />} label={"Logout"} arrowLeft onClick={ () => logout() } /> 
+        </NavLink>
     )
 }
 

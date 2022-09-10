@@ -79,8 +79,6 @@ const MultiLightColor = props => {
                 position="bottom"
                 placement="start"
                 withArrow
-                noFocusTrap
-                noEscape
                 transition="pop-top-left"
             >
             <Popover.Target>

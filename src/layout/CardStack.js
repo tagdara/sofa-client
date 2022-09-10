@@ -36,16 +36,16 @@ export default function CardStack(props) {
     const cards = cardData.map( (card, i) => renderSuspenseModule(card['module'], card['props'], i ))
 
     return (
-            <Stack  noWrap 
-                    spacing="xs" 
-                    style={{
-                                paddingBottom: 16, 
-                                minWidth: 320, 
-                                maxWidth: 480, 
-                                height: "100%", 
-                                width: "100%", 
-                                justifyContent: "flex-start"
-                            }} 
+            <Stack
+                spacing="xs" 
+                style={{
+                            paddingBottom: 16, 
+                            minWidth: 320, 
+                            maxWidth: 480, 
+                            height: "100%", 
+                            width: "100%", 
+                            justifyContent: "flex-start"
+                        }} 
             >
                 {props.showTitle &&
                     <StackPicker stack={stack} setStack={setStack} />

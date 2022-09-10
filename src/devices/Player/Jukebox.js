@@ -5,6 +5,8 @@ import PlayerHeader from 'devices/Player/PlayerHeader'
 import PlayerHeaderSmall from 'devices/Player/PlayerHeaderSmall'
 import SpeakerList from 'devices/Speaker/SpeakerList';
 import { useRegister } from 'store/useRegister'
+import useMultiPower from 'device-model/multidevice/useMultiPower'
+import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 
 const JukeboxHero = props => {
     
@@ -12,6 +14,8 @@ const JukeboxHero = props => {
     const [ filterOff, setFilterOff] = useState(true)
     const { deviceState } = useRegister(props.endpointId)
     const exclude = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
+    const speakers = endpointIdsByDisplayCategory( "SPEAKER").filter(item => !exclude.includes(item))
+    const { onCount } =useMultiPower(speakers)
 
     if (!deviceState) {
         return <PlaceholderCard count={ 3 } />
@@ -40,7 +44,7 @@ const JukeboxHero = props => {
 
     return (
         <Stack spacing="xl">
-            { (isIdle() && !showIdle) ?
+            { ( isIdle() && !showIdle && !onCount ) ?
                 <PlayerHeaderSmall endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers} url={props.url} />
             :
                 <PlayerHeader endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers}  url={props.url} />

@@ -9,6 +9,9 @@ const StackCard = props => {
 
     useEffect(() => {
         setMounted(true)
+        return () => {
+            setMounted(false)
+        }
     // eslint-disable-next-line 
     }, []);
 

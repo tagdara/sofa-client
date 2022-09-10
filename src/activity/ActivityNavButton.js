@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import NavButton from 'components/NavButton'
 import ActivityItemMissing from 'activity/ActivityItemMissing'
 
-import { isFavorite, makeFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { isFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import moment from 'moment';
 import { ActionIcon, NavLink } from '@mantine/core';
 import { IconListDetails, IconStar, IconTrash, IconPlayerPlay } from '@tabler/icons';
-import { ListUl } from 'react-bootstrap-icons'
 
 const ActivityItem = props => {
     

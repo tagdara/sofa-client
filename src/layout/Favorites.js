@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import CardLine from 'components/CardLine';
 import ActivityNavButton from 'activity/ActivityNavButton';
 import useUserStore from 'store/userStore';
 import { selectPage } from 'helpers/layoutHelpers';
-import { NavLink, Stack } from '@mantine/core';
-import { ListUl, Star, PlayCircle } from 'react-bootstrap-icons'
+import { NavLink } from '@mantine/core';
+import { Star } from 'react-bootstrap-icons'
 
 const Favorites = props => {
 
@@ -36,19 +35,6 @@ const Favorites = props => {
                 />
             )}
         </NavLink>
-    )
-
-    return (    
-            <Stack spacing={"xs"}>
-                <CardLine primary={"Favorites"} />
-                { favorites.map(endpointId => 
-                    <ActivityNavButton small={true} endpointId={endpointId} key={endpointId}
-                                    favorite={true} allowEdit={false} 
-                                    launcher={true} icon={"base"}
-                                    select={selectAutomation}
-                    />
-                )}
-            </Stack>
     )
 }
 

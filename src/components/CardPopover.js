@@ -1,9 +1,7 @@
 import React from 'react';
-import { Popover, useMantineTheme } from '@mantine/core'
+import { Popover } from '@mantine/core'
 
 const CardPopover = props => {
-
-    const theme = useMantineTheme()
 
     return (
         <Popover
@@ -17,8 +15,6 @@ const CardPopover = props => {
                 onClose={() => props.setOpen(false)}
                 withArrow
                 withinPortal
-                noFocusTrap
-                noEscape
                 transition="pop-top-left"
         >
             <Popover.Target>

@@ -13,7 +13,7 @@ const PowerLevelAutoPopover = props => {
                 setOpen={ props.setOpen }
                 target={ props.target }
         >
-            <Stack grow spacing="xl">
+            <Stack spacing="xl">
                 <PowerLevelSlider endpointId={props.endpointId} />
                 <ToggleStateSwitch size="sm" endpointId={props.endpointId} instance={props.instance} label={"Auto"} />
             </Stack>

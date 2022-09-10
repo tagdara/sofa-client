@@ -15,7 +15,7 @@ export default function LoginReload(props) {
 
     return (
         <Card>
-            <Stack grow>
+            <Stack>
                 <Text>{"Attempting to connect"} </Text >
                 <Button color="primary" fullWidth onClick={ ()=> reloadPWA()}>
                     RELOAD

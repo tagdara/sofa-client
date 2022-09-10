@@ -16,8 +16,6 @@ export const useMultiRegister = (endpointIds) => {
 
     const uuid = useId();
 
-    console.log('umr', endpointIds)
-
     useEffect(() => {
         register(endpointIds, uuid)
         setRegisteredDevices(endpointIds)

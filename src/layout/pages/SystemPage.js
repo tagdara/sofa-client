@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 
 import { Stack, ScrollArea } from '@mantine/core';
-import { ListUl } from 'react-bootstrap-icons';
-
 import UserNav from 'layout/UserNav';
 import AdminNav from 'admin/AdminNav'
-import NavButton from 'layout/NavButton';
 import Favorites from 'layout/Favorites';
 import SettingsList from 'admin/SettingsList'
-import { selectPage } from 'helpers/layoutHelpers';
 import ActivitiesAllButton from 'activity/ActivitiesAllButton';
 
 const SystemPage = props => {

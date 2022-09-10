@@ -83,7 +83,7 @@ const LightSummary = props => {
                             left={ lightCount('on') ? <Lightbulb size="20" /> : <LightbulbOff size="20" /> }
                             right={ lightCount('on') ? lightCount('on') : undefined }
                     /> 
-                <Stack spacing={"xs"} grow >
+                <Stack spacing={"xs"}>
                     <Text   size={ lightCount('on') ? "sm" : "lg" }
                             weight={500} 
                             style={{width: "100%"}} 

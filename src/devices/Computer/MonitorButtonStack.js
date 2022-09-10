@@ -33,7 +33,7 @@ const MonitorButtonStack = props => {
     const on = !monitorOff && !outletStandby
 
     return (
-        <Stack grow spacing={1}>
+        <Stack spacing={1}>
             <Button onClick={ () => toggleInput() }
                     size="md" compact style={{ margin: 0, fontSize: 12, borderBottomLeftRadius: 0, borderBottomRightRadius: 0, minWidth: 48 }}
                     color={ monitorOff ? "gray" : undefined }
@@ -48,7 +48,7 @@ const MonitorButtonStack = props => {
             >
                 {monitorOff ? "" : "PC"+props.label}
             </Button>
-        </Group>
+        </Stack>
     );
 }
 

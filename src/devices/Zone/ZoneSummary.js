@@ -53,7 +53,7 @@ const ZoneSummary = props => {
                             left={ violated ? < ShieldSlash size={20} /> : <Shield size={20} />} 
                             right={ violated ? openZones.length : undefined }
                 />
-                <Stack grow spacing={"xs"} >
+                <Stack spacing={"xs"} >
                     <Text   size={ violated ? "sm" : "lg" }
                             weight={500} 
                             style={{width: "100%"}} 

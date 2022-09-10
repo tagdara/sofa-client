@@ -1,5 +1,5 @@
 import React from 'react';
-import { UnstyledButton, useMantineTheme, Text } from '@mantine/core';
+import { Paper, useMantineTheme, Text } from '@mantine/core';
 import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import useMode from 'device-model/property/mode/useMode'
@@ -34,7 +34,7 @@ const ComputerCube = props => {
     const bgColor = on ? modeColors[modeLabel] : ( theme.colorScheme === 'dark' ? theme.colors.dark[7] : theme.white)
 
     return (
-        <UnstyledButton 
+        <Paper
             style={{    borderRadius: 4,
                         padding: 8,
                         display: "flex", 
@@ -53,7 +53,7 @@ const ComputerCube = props => {
             <Text size="xs" mt={7}>
                 {name}
             </Text>
-        </UnstyledButton>
+        </Paper>
     )
 }
 

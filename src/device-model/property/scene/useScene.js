@@ -13,7 +13,7 @@ const useScene = (endpointId, value, directive) => {
     // scene may become a dynamic modeController instead
 
     const activeDirective = directive 
-    const stateScene = deviceState && deviceState.AreaController ? deviceState.AreaController.scene.value : []
+    const stateScene = deviceState && deviceState.AreaController && deviceState.AreaController.scene ? deviceState.AreaController.scene.value : []
     const scene = value ? value : stateScene
     const selections = scenes.map( item => ({ label: friendlyNameByEndpointId(item), value: item }))
 

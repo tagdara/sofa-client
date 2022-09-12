@@ -7,7 +7,7 @@ const useShortcuts = (endpointId, value, directive) => {
 
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
-    const stateShortcuts = deviceState && deviceState.AreaController ? deviceState.AreaController.shortcuts.value : []
+    const stateShortcuts = deviceState && deviceState.AreaController && deviceState.AreaController.shortcuts ? deviceState.AreaController.shortcuts.value : []
     const shortcuts = value ? value : stateShortcuts
 
     const setShortcuts = newShortcuts => {

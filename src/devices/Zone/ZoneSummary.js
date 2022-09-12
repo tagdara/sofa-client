@@ -33,12 +33,15 @@ const ZoneSummary = props => {
     const violated = openZones.length > 0
 
     function isOpen(endpointId) {
-        if (hasCapability(endpointId, 'ContactSensor') && states[endpointId]) { 
-            return states[endpointId].ContactSensor.detectionState.value === "DETECTED"
-        }
-        if (hasCapability(endpointId, 'MotionSensor') && states[endpointId]) { 
-            return states[endpointId].MotionSensor.detectionState.value === "DETECTED"
-        }
+        try {
+            if (hasCapability(endpointId, 'ContactSensor') && states[endpointId]) { 
+                return states[endpointId].ContactSensor.detectionState.value === "DETECTED"
+            }
+            if (hasCapability(endpointId, 'MotionSensor') && states[endpointId]) { 
+                return states[endpointId].MotionSensor.detectionState.value === "DETECTED"
+            }
+        } 
+        catch {}
         return false
     }
     

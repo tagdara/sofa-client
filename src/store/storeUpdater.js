@@ -10,18 +10,6 @@ const without = (object, keys) => {
     return keys.reduce((o, k) => { const { [k]: _ , ...p } = o; return p; }, object)
 }
 
-function getDeepValue(valueProp) {
-    try {
-        if (valueProp && valueProp.hasOwnProperty('value')) {
-            return valueProp.value
-        }
-        return valueProp
-    } 
-    catch {
-        return valueProp
-    }
-}
-
 function updateProperty(device, prop, endpointId) {
     var interfaceName = prop.namespace.split('.')[1]
 
@@ -49,7 +37,6 @@ function updateProperty(device, prop, endpointId) {
                     [propertyName] : {
                         ...deviceInterface[propertyName], 
                         'value': prop.value, 
-                        "deepvalue": getDeepValue(prop.value), 
                         'timeOfSample': prop.timeOfSample
                     }
                 }

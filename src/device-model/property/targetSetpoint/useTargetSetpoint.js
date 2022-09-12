@@ -5,7 +5,7 @@ const useTargetSetpoint = ( endpointId, value, directive) => {
 
     const { device, deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
-    const stateTargetSetpoint = deviceState ? deviceState.ThermostatController.targetSetpoint.deepvalue : undefined
+    const stateTargetSetpoint = deviceState ? deviceState.ThermostatController.targetSetpoint.value.value : undefined
     const targetSetpoint = value !== undefined ? value.value : stateTargetSetpoint
 
     const isDyson = value === undefined && device && device.manufacturerName === "Dyson"

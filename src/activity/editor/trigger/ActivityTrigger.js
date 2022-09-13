@@ -10,12 +10,19 @@ import ActivityConditionMenu from 'activity/editor/condition/ActivityConditionMe
 
 const ActivityTrigger = props => {
 
+    const mobile = false
+
     return (
         <ActivityLine compact={props.compact}>
             <ActivityConditionMenu index={props.index} category={props.category} />
             <Stack spacing={2} >
-                <ActivityDevice category={props.category} index={props.index} compact={props.compact} removing={props.removing} reordering={props.reordering} />
+                { mobile &&
+                    <ActivityDevice category={props.category} index={props.index} compact={props.compact} removing={props.removing} reordering={props.reordering} />
+                }
                 <Group spacing={2}>
+                    { !mobile &&
+                        <ActivityDevice category={props.category} index={props.index} compact={props.compact} removing={props.removing} reordering={props.reordering} />
+                    }
                     <ControllerProperty category={props.category} index={props.index} compact={props.compact}/> 
                     <ConditionOperator compact={props.compact} category={ props.category } index={props.index} />
                     <PropertyValue category={props.category} index={props.index} compact={props.compact} />

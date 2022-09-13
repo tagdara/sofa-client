@@ -19,6 +19,8 @@ export default function ControllerProperty(props) {
         var index = parseInt(newValue)
         if (index < 0 || index > propertyMap.length-1) { return false}
         var updatedValue = propertyMap[index]
+        //console.log('newv', newValue, selections, propertyMap)
+        //var updatedValue = propertyMap.find((item) => item.directive === newValue)
         console.log('updatedValue', props.category, props.index, updatedValue)
 
         const updatedItem = {   ...item,   

@@ -17,10 +17,10 @@ const AdminNav = props => {
             childrenOffset={16}
             icon={<PersonBadge size={20} stroke={1.5} />}
         >
-            <NavLink icon={<Layers size={16} />} arrow label={"Adapter management"} onClick={() => selectPage('AdapterLayout')} /> 
-            <NavLink icon={<Sliders size={16}/>} arrow label={"Modes"} onClick={()=> selectPage('ModePage')} /> 
-            <NavLink icon={<Clock size={16}/>} arrow label={"Recent Activity"} onClick={() => selectPage('RecentLayout')} /> 
-            <NavLink icon={<Activity size={16}/>} arrow label={"Toggle SSE Log"} onClick={() => toggleLogSSE()} /> 
+            <NavLink icon={<Layers size={16} />} label={"Adapter management"} onClick={() => selectPage('AdapterLayout')} /> 
+            <NavLink icon={<Sliders size={16}/>} label={"Modes"} onClick={()=> selectPage('ModePage')} /> 
+            <NavLink icon={<Clock size={16}/>} label={"Recent Activity"} onClick={() => selectPage('RecentLayout')} /> 
+            <NavLink icon={<Activity size={16}/>} label={"Toggle SSE Log"} onClick={() => toggleLogSSE()} /> 
         </NavLink>
     )
 

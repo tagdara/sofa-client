@@ -8,9 +8,8 @@ import useUserStore from 'store/userStore'
 
 import { X as Close, List, Star, PlayCircle } from 'react-feather'
 
-import { ActionIcon, Badge, Group } from '@mantine/core';
+import { Badge, Button, Group, Loader, Stack, Text } from '@mantine/core';
 
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import ActivityItemMissing from 'activity/ActivityItemMissing'
 import ActivityComponentIcon from 'activity/ActivityComponentIcon'
 
@@ -106,34 +105,80 @@ const ActivityItem = props => {
     //console.log('activitystate', activityState)
 
     const loading = launched || activityState.Running.toggleState.value === 'ON'
-
     return (
-        <SplitButtonGroup>
-            <SplitButton >         
-                <ActionIcon variant={ favorite ? "light" : undefined} 
-                            color={favorite ? "green" : undefined } 
-                            onClick={ () => toggleFavorite(props.endpointId) }
+        <Button.Group style={{ width: "100%", border: "none"}}>
+            <Button 
+                size="md"
+                styles={{ 
+                    root: {
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        height: 58,
+                        padding: 12,
+                    }
+                }}
+                variant={ favorite ? "light" : "default" }
+                onClick={ () => toggleFavorite(props.endpointId) }
+            >
+                { (favorite && props.icon !== "base") ? <Star size={20} /> : <List size={20} /> }
+            </Button>         
+            <Button 
+                size="md"
+                styles={{ 
+                    root: {
+                        display: "flex",
+                        justifyContent: "flex-start",
+                        height: 58,
+                        overflow: "hidden",
+                        padding: "0 12px",
+                    }
+                }}
+                variant={favorite ? "light" : "default" }
+
+                fullWidth 
+                onClick={ () => props.select(props.endpointId) }
+            >
+                <Stack spacing={2}>
+                    <Text size={"sm"}>
+                        { name }
+                    </Text>
+                    <Group noWrap>
+                        { xsummary() }
+                    </Group>
+                </Stack>
+            </Button> 
+            { props.delete ?        
+                <Button 
+                    size="md"
+                    styles={{ 
+                        root: {
+                            height: 58,
+                            padding: 12,
+                        }
+                    }}
+                    variant={ favorite ? "light" : "default" }
+                    onClick={ (event) => { event.stopPropagation(); props.delete(props.endpointId); }}
                 >
-                    { (favorite && props.icon !== "base") ? <Star size={20} /> : <List size={20} /> }
-                </ActionIcon>
-            </SplitButton>
-            <SplitButton    label = { name } 
-                            secondary = { xsummary() }
-                            onClick={ () => props.select(props.endpointId) }
-            />
-            <SplitButton >
-                { props.delete ?
-                    <ActionIcon size={"small"} onClick={ (event) => { event.stopPropagation(); props.delete(props.endpointId); }} >
-                        <Close size={20} />
-                    </ActionIcon>
+                    <Close size={20} />
+                </Button> 
                 :
-                    <ActionIcon loading={loading} onClick={ loading ? undefined : () => runActivity(props.endpointId) } >
-                        <PlayCircle size={20} />
-                    </ActionIcon>                
-                }
-            </SplitButton>
-        </SplitButtonGroup>
-    );
+                <Button 
+                    size="md"
+                    styles={{ 
+                        root: {
+                            height: 58,
+                            padding: 12,
+                        }
+                    }}
+                    variant={ favorite ? "light" : "default" }
+                    onClick={ loading ? undefined : () => runActivity(props.endpointId) } 
+                >
+                    {loading ? <Loader size="xs" variant="dots" /> :  <PlayCircle size={20} /> }
+                </Button> 
+            }
+        </Button.Group>
+    )
+
 }
 
 export default ActivityItem;

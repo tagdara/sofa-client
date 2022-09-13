@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import SegmentMenu from 'components/SegmentMenu'
 import useActivityItem from 'activity/useActivityItem'
 import { updateActivityItem } from 'store/activityEditorHelpers'
@@ -9,9 +9,13 @@ export default function ConditionOperator(props) {
     const operatorList=[ '=','!=','>','>=','<','=<', ]
     const selections = operatorList.map( item => ({ label: item, value: item}))
 
-    if (!item || !item.endpointId || !item.propertyName ) { return null }
+    useEffect(() => {
+        if (!item.operator) { setOperator("=") }
+    // eslint-disable-next-line
+    }, [  ]);
 
-    if (!item.operator) { setOperator("=") }
+
+    if (!item || !item.endpointId || !item.propertyName ) { return null }
 
     function setOperator(newValue) {
 
@@ -27,8 +31,6 @@ export default function ConditionOperator(props) {
         if (props.anyOp) { return 'Any' }
         return '='
     }
-
-    if (!item.operator) { setOperator("=") }
     // <OperatorButton index={props.index} value={ opDefaultOrValue() } setOperator={ editOperatorValue } anyOp={props.anyOp} />
 
     return <SegmentMenu size={props.size} value={ opDefaultOrValue() } selections={selections} select={setOperator} />

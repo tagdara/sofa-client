@@ -6,8 +6,8 @@ import { directive } from 'store/directive'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import moment from 'moment';
-import { ActionIcon, NavLink } from '@mantine/core';
-import { IconListDetails, IconStar, IconTrash, IconPlayerPlay } from '@tabler/icons';
+import { Loader, NavLink } from '@mantine/core';
+import { IconListDetails, IconStar, IconPlayerPlay } from '@tabler/icons';
 
 const ActivityItem = props => {
     
@@ -82,14 +82,11 @@ const ActivityItem = props => {
             icon={ isFavorite(props.endpointId) && props.icon !== "base" ? <IconStar size={16} /> : <IconListDetails size={16} /> }
             variant="light"
             description={ summary() }
-            rightSection={ props.delete ?
-                <ActionIcon size={"small"} onClick={ (event) => { event.stopPropagation(); props.delete(props.endpointId); }} >
-                    <IconTrash size={16} />
-                </ActionIcon>
-            :
-                <ActionIcon color={"primary"} variant="light" disabled={ loading() } size={"md"} onClick={ (event) => { event.stopPropagation(); runActivity(props.endpointId) }} >
-                    <IconPlayerPlay size={16} />
-                </ActionIcon>    
+            rightSection={
+                loading() ?
+                    <Loader size="xs" variant="dots" />
+                    :
+                    <IconPlayerPlay size={16} onClick={ (event) => { event.stopPropagation(); runActivity(props.endpointId) }} />  
             }
       />
     )

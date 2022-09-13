@@ -10,17 +10,19 @@ const ActivityActionMenu = props => {
         { label: "Move down", value: "down"},                                
     ]
 
-    return  <Menu   style={{ display: "flex", flexDirection: "column"}}
-                    control = { <ThemeIcon   radius="xl"
+    return  <Menu   style={{ display: "flex", flexDirection: "column"}}>
+                <Menu.Target>
+                    <ThemeIcon   radius="xl"
                                             onClick={ () => { console.log('clicky')}}
                                 >
                                     { props.endpointId && <DeviceIcon size={16} endpointId={props.endpointId} /> }
-                                </ThemeIcon> 
-                            }
-            >
-                { selections.map( item => 
-                    <Menu.Item key={item.label} onClick={ () => props.select(item.value, props.index)}>{item.label}</Menu.Item>
-                )}   
+                    </ThemeIcon> 
+                </Menu.Target>
+                <Menu.Dropdown>
+                    { selections.map( item => 
+                        <Menu.Item key={item.label} onClick={ () => props.select(item.value, props.index)}>{item.label}</Menu.Item>
+                    )}   
+                </Menu.Dropdown>    
             </Menu>
 
 }

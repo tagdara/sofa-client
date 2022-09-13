@@ -16,8 +16,6 @@ export default function DeviceDirective(props) {
     const device = endpointId ? deviceByEndpointId(endpointId) : undefined
     const directiveMap = deviceDirectives(device)
 
-    console.log('dmap', directiveMap)
-
     function propertyFromDirective(controllerName, directiveName) {
         if (controllerName===undefined || directiveName===undefined) {
             return undefined
@@ -34,10 +32,11 @@ export default function DeviceDirective(props) {
     if (!device) { return null }    
 
     function handleChangeDirectiveName(newValue) {
-        var index = parseInt(newValue)
-        if (index < 0 || index > directiveMap.length-1) { return false}
+        // var index = parseInt(newValue)
+        // if (index < 0 || index > directiveMap.length-1) { return false}
+        var newDirective = directiveMap.find((item) => item.directive === newValue)
 
-        var newDirective = directiveMap[index]
+        //var newDirective = directiveMap[index]
         var propertyName = propertyFromDirective(newDirective.controller, newDirective.directive)
         var updatedItem =   {...item, propertyName: propertyName, 
                                     controller: newDirective.controller, 
@@ -86,18 +85,19 @@ export default function DeviceDirective(props) {
     //const selections = directiveMap.map( (item,index) => { return { value: index.toString(), label: getLabel(item) }})
 
     const selections = directiveMap.map( (item,index) => { return { value: item.directive, label: getLabel(item) }})
-    console.log('selections', selections)
     const value = defaultOrValue()
 
     if (props.compact) {
-        return  <Menu 
-                    control ={ <Segment value={getLabel(directiveMap[parseInt(value)])} /> }
-                >
-                    <Menu.Label>Directives</Menu.Label>
-                    { selections.map( item => 
-                        <Menu.Item key={item.label} onClick={ () => handleChangeDirectiveName(item.value)}>{item.label}</Menu.Item>
-                    )}   
-
+        return  <Menu>
+                    <Menu.Target>
+                        <Segment value={getLabel(directiveMap[parseInt(value)])} />
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                        <Menu.Label>Directives</Menu.Label>
+                        { selections.map( item => 
+                            <Menu.Item key={item.label} onClick={ () => handleChangeDirectiveName(item.value)}>{item.label}</Menu.Item>
+                        )}   
+                    </Menu.Dropdown>
                 </Menu>
     }
 

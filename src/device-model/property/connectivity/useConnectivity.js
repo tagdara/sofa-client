@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useRegister } from 'store/useRegister'
 
 const useConnectivity = (endpointId, value, directive) => {
@@ -7,6 +8,15 @@ const useConnectivity = (endpointId, value, directive) => {
     const stateConnectivity = deviceState && deviceState.EndpointHealth.connectivity ? deviceState.EndpointHealth.connectivity.value : null
     const connectivity = value !== undefined ? value : stateConnectivity
 
+    useEffect(() => {
+        // set default in activity editor
+        if (directive && value === undefined) {
+            setConnectivity(stateConnectivity)
+        }
+    // eslint-disable-next-line 
+    }, [  ]);
+
+
     const setConnectivity = value => {
         // Can't set connectivity on a real object but this is used in the
         // activity editor to set triggers and conditions
@@ -15,11 +25,6 @@ const useConnectivity = (endpointId, value, directive) => {
     
     const connectivityLabel = connectivity === "UNREACHABLE" ? "Unreachable" : "OK"
     const connectivityBool = connectivity ===  "OK"
-
-    // set default in activity editor
-    if (directive && value === undefined) {
-        setConnectivity(stateConnectivity)
-    }
 
     return { connectivity, connectivityBool, connectivityLabel, setConnectivity, selections }
 

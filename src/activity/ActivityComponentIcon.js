@@ -1,6 +1,6 @@
 import React from 'react';
 import { BroadcastPin, Calendar, Play, QuestionCircle, SignpostSplit } from 'react-bootstrap-icons'
-import { ActionIcon, Badge } from '@mantine/core';
+import { Badge } from '@mantine/core';
 
 const ActivityComponentIcon = props => {
 
@@ -20,7 +20,7 @@ const ActivityComponentIcon = props => {
         'missing_devices_count': 'red'
     }   
 
-    function getIcon(category, size=14) {
+    function getIcon(category, size=12) {
 
         var RealIcon = QuestionCircle
         if (icons.hasOwnProperty(category)) {
@@ -33,11 +33,8 @@ const ActivityComponentIcon = props => {
         <Badge  size="sm" 
                 color = {colors[props.component]}
                 varian="light"
-                leftSection={
-                    <ActionIcon color = {colors[props.component]} size="xs" radius="xl" variant="transparent">
-                        { getIcon(props.component) }
-                    </ActionIcon>
-                }
+                leftSection={ getIcon(props.component) }
+                styles={{ leftSection: { display:"flex", alignItems: "center"}}}
         >
             {props.text}
         </Badge>

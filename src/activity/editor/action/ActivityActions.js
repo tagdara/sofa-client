@@ -15,6 +15,7 @@ const ActivityActions = props => {
     const items = useActivityEditorStore(state => state.activity.actions)
     //const name = "Actions"
     const category = "actions"
+    const mobile = false
     //const count = items ? items.length : 0
 
     const itemAction = (action, index) => {
@@ -24,6 +25,7 @@ const ActivityActions = props => {
         if (action === "down") { moveActivityItemDown(category, index) }
     }
 
+
     return (
         <>
         { (items && items.length >0) && <Divider style={{ width: "100%"}} />}
@@ -32,9 +34,10 @@ const ActivityActions = props => {
                 <Timeline.Item 
                     key={index}
                     bullet = {  <ActivityActionMenu index={index} select={itemAction} endpointId={item.endpointId} />}
-                    title={<ActivityDevice compact={true} category={category} index={index} />}
+                    title={ mobile ? <ActivityDevice compact={true} category={category} index={index} /> : null }
                 >
                     <Group spacing={2}>
+                        { !mobile && <ActivityDevice compact={true} category={category} index={index} /> }
                         <DeviceDirective compact={true} category={category } index={index}  />
                         <PropertyValue compact={true} category={ category } index={index} />
                     </Group>

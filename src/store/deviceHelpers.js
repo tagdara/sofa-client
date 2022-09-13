@@ -478,7 +478,7 @@ export const deviceDirectives = (dev, includeNonControllable) => {
     const directives = useDeviceStore.getState().directives
     if (dev === undefined) { return undefined }
     var dirs = []
-    console.log('dirs', directives)
+
     if (dev.hasOwnProperty('capabilities')) {
         for (var j = 0; j < dev.capabilities.length; j++) {
             var shortIf = dev.capabilities[j].interface.split('.')[1]

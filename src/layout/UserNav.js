@@ -18,8 +18,8 @@ const UserNav = props => {
             description={"User Settings"}
             icon={<User size={20} />}
         >
-            <NavLink icon={<RotateCcw size={16} />} label={"Reload"} description={"v" + process.env.REACT_APP_VERSION} arrowLeft onClick={ () => reloadPWA() } />
-            <NavLink icon={<LogOut size={16} />} label={"Logout"} arrowLeft onClick={ () => logout() } /> 
+            <NavLink icon={<RotateCcw size={16} />} label={"Reload"} description={"v" + process.env.REACT_APP_VERSION} onClick={ () => reloadPWA() } />
+            <NavLink icon={<LogOut size={16} />} label={"Logout"} onClick={ () => logout() } /> 
         </NavLink>
     )
 }

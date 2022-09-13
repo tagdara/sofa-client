@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { CloudSlash, Lightbulb, X as XIcon} from "react-bootstrap-icons"
-import { ActionIcon } from '@mantine/core';
+import { ActionIcon, Button } from '@mantine/core';
 import LightPopover from 'devices/Light/LightPopover'
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
@@ -43,34 +42,44 @@ const LightLine = props => {
     if ( filteredResult ) { return null }
 
     return (
-        <SplitButtonGroup on={on} onCard={props.onCard}>
-            <SplitButton >
-                <LightPopover   
-                    endpointId = {props.endpointId}
-                    open={ showPopover } 
-                    setOpen={ setShowPopover }
-                    target={            
-                        <ActionIcon size="md" color={ on ? "primary" : undefined } onClick={ () => setShowPopover(!showPopover) }>
-                            { reachable ? <Lightbulb size={20} /> : <CloudSlash size={16} /> }
-                        </ActionIcon>
+        <Button.Group style={{ width: "100%", border: "none"}}>
+            <LightPopover   
+                endpointId = {props.endpointId}
+                open={ showPopover } 
+                setOpen={ setShowPopover }
+                target={   
+                    <Button 
+                        size="md"
+                        styles={{ 
+                            root: {
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                paddingLeft: 16,
+                            },
+                            leftIcon: {
+                                marginRight: 24,
+                            },
+                        }}
+                        variant={ on ? "light" : "default" }
+                        fullWidth 
+                        leftIcon={ reachable ? <Lightbulb size={20} /> : <CloudSlash size={16} /> }
+                        onClick={ () => setShowPopover(!showPopover) }
+                    >
+                        { name }
+                    </Button>         
                     }     
                 />
-            </SplitButton>
-            <SplitButton    label = { name } 
-                            secondary = { reachable ? null : 'Not reachable' }
-                            on={on}
-            />
-            <SplitButton>
-                { props.remove && 
+
+            <Button size="md" variant={ on ? "light" : "default" }>
+                { props.remove ?
                     <ActionIcon size="small" onClick={ () => props.remove(props.endpointId) } >
                         <XIcon />
-                    </ActionIcon>
-                }
-                { !props.remove &&
+                    </ActionIcon>                
+                :
                     <PowerStateSwitch endpointId={props.endpointId} />
                 }
-            </SplitButton>
-        </SplitButtonGroup>
+            </Button>
+        </Button.Group>
     )
 }
 

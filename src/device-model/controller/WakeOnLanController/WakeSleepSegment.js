@@ -10,7 +10,7 @@ export default function WakeSleepSegment(props) {
     const { powerStateBool, toggle } = usePowerState(props.endpointId, props.value, props.directive)
     const [ waiting, setWaiting ] = useState(false);
 
-    const { start, clear } =  useTimeout(() => setWaiting(false), 5000);
+    const { start } =  useTimeout(() => setWaiting(false), 5000);
     const icon = powerStateBool ? <IconZzz size={16} /> : ( waiting ? <Loader size={16} /> : <IconBroadcast size={16} /> ) 
     const label = powerStateBool ? "Sleep" : "Wake"
 

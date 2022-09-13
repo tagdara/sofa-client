@@ -1,7 +1,7 @@
 import React from "react";
 import { sortByName, endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
 import ComputerCube from 'devices/Computer/ComputerCube';
-import { SimpleGrid } from '@mantine/core';
+import { Group } from '@mantine/core';
 import CardLine from 'components/CardLine'
 import { PcDisplayHorizontal as Pc } from "react-bootstrap-icons";
 
@@ -15,11 +15,11 @@ const ComputerCollection = props => {
                             primary={ "Computers"}
                             onClick={ props.onClick}
         />
-        <SimpleGrid cols={4} style={{ paddingTop: 12 }}>
+        <Group spacing={"xs"} noWrap grow style={{ paddingTop: 12 }}>
             { computers.map(endpointId => 
                 <ComputerCube key={endpointId} endpointId={ endpointId } outlet={endpointIdByFriendlyName(outletMap[endpointId])} />
             )}
-        </SimpleGrid>
+        </Group>
         </>
     );
 }

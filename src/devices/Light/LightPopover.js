@@ -16,6 +16,7 @@ const LightPopover = props => {
                 opened={props.open}
                 setOpen={props.setOpen}
                 target={ props.target }
+                withinPortal={true}
 
             >
                 { noControllers ?

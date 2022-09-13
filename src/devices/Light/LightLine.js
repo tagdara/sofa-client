@@ -42,7 +42,7 @@ const LightLine = props => {
     if ( filteredResult ) { return null }
 
     return (
-        <Button.Group style={{ width: "100%", border: "none"}}>
+        <Button.Group buttonBorderWidth={0} style={{ width: "100%", border: "none"}}>
             <LightPopover   
                 endpointId = {props.endpointId}
                 open={ showPopover } 

@@ -5,7 +5,7 @@ const useConnectivity = (endpointId, value, directive) => {
 
     const { deviceState } = useRegister(endpointId)
     const selections = [{ label: "OK", value: "OK"}, { label: "Unreachable", value: "UNREACHABLE"}]
-    const stateConnectivity = deviceState && deviceState.EndpointHealth.connectivity ? deviceState.EndpointHealth.connectivity.value : null
+    const stateConnectivity = deviceState?.EndpointHealth?.connectivity?.value
     const connectivity = value !== undefined ? value : stateConnectivity
 
     useEffect(() => {

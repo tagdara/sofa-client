@@ -1,6 +1,6 @@
 import React from 'react';
 import CardLineSlider from 'components/CardLineSlider';
-import { Group, ThemeIcon } from '@mantine/core'
+import { Group, Text, ThemeIcon } from '@mantine/core'
 import { Volume2 } from 'react-feather';
 import useVolume from 'device-model/property/volume/useVolume'
 import usePowerState from 'device-model/property/powerState/usePowerState'
@@ -16,12 +16,17 @@ export default function VolumeSlider(props) {
     const on = ( props.value !== undefined || powerStateBool )
 
     return (
-        <Group noWrap style={{ flexGrow: 1}}>
+        <Group noWrap position="apart" style={{ width: "100%", flexGrow: 1}}>
+            <Group noWrap>
             { props.icon &&
                 <ThemeIcon variant="light">
                     <Volume2 size={16} />
                 </ThemeIcon >
             }
+            { props.label &&
+                <Text>{props.label}</Text>
+            }
+            </Group>
             <CardLineSlider label={"Volume"} 
                 value={ volume } 
                 on={on}

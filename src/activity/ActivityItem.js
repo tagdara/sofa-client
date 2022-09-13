@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 
-import { removeFavorite, makeFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { removeFavorite, makeFavorite, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
-import useDeviceStateStore from 'store/deviceStateStore'
+import { useRegister } from 'store/useRegister'
 import useUserStore from 'store/userStore'
 
 import { X as Close, List, Star, PlayCircle } from 'react-feather'
@@ -18,19 +18,12 @@ const ActivityItem = props => {
 
     const [ launched, setLaunched] = useState(false)
     const activity = deviceByEndpointId(props.endpointId)
-    const activityState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const { deviceState } = useRegister(props.endpointId)
+
     const favorites = useUserStore( state => state.preferences.favorites )
     const favorite = favorites && favorites.includes(props.endpointId)
 
-    useEffect(() => {
-        register(props.endpointId, "Activity-"+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, "Activity-"+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [props.endpointId])
-
-    if (!activity || !activityState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
+    if (!activity || !deviceState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 
     const name = activity.friendlyName
 
@@ -102,11 +95,12 @@ const ActivityItem = props => {
         )
     }   
 
-    //console.log('activitystate', activityState)
+    //console.log('activitystate', deviceState)
 
-    const loading = launched || activityState.Running.toggleState.value === 'ON'
+    const loading = launched || deviceState?.Running?.toggleState?.value === 'ON'
+
     return (
-        <Button.Group style={{ width: "100%", border: "none"}}>
+        <Button.Group buttonBorderWidth={0} style={{ width: "100%", border: "none"}}>
             <Button 
                 size="md"
                 styles={{ 

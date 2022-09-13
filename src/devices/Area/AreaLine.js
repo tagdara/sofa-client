@@ -9,7 +9,7 @@ const AreaLine = props => {
 
     return (
         <Group position="apart" noWrap spacing={"lg"} style={{ width: "100%"}}>
-            <Text weight={500} lineClamp={1} style={{ width: "40%" }} size="lg" onClick={ () => props.selectArea(props.endpointId)}>{name}</Text>
+            <Text weight={500} lineClamp={1} style={{ flexShrink: 0, width: "40%" }} size="lg" onClick={ () => props.selectArea(props.endpointId)}>{name}</Text>
             <AreaShortcutSlider endpointId={props.endpointId} />
         </Group>
     );

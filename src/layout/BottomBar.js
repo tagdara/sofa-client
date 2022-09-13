@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
 import { selectStack } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
-import { Affix, Group, SegmentedControl, useMantineTheme } from '@mantine/core';
+import { Affix, Group, Stack, SegmentedControl, useMantineTheme } from '@mantine/core';
 import { List as Menu, Lightbulb, MusicNoteBeamed as Music, Shield, Thermometer } from "react-bootstrap-icons";
 import HomeButton from 'layout/HomeButton'
 
@@ -90,9 +90,15 @@ const BottomBar = props => {
         )
     }
 
-    if (wide) { return null }
+    if (wide) { 
+        return (
+            <Group id="bottomrender" spacing={"xs"} /> 
+        )
+    }
 
     return (
+        <Stack id="bottomrender" spacing={"xs"} style={{flexDirection: "column-reverse"}} >
+
             <SegmentedControl 
                     fullWidth 
                     size="md"
@@ -111,6 +117,7 @@ const BottomBar = props => {
                         }
                     }}
             />
+        </Stack>
     )
 
 }

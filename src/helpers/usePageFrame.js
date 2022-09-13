@@ -12,8 +12,9 @@ export const usePageFrame = props => {
     const { width } = useViewportSize()
     const stacksWidth = Math.min(maxScreenWidth, width)
     const maxStacks = Math.min(4, Math.floor( stacksWidth / (minStackWidth+stackPad)))
+    const stackWidth = Math.round(stacksWidth / maxStacks)
 
-    return { maxStacks, stacksWidth }
+    return { maxStacks, stacksWidth, stackWidth }
 
 }
 

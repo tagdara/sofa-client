@@ -35,7 +35,7 @@ export const useRegister = endpointId => {
     const [ registeredDevice, setRegisteredDevice ] = useState(undefined)
     const deviceState = useDeviceStateStore( state => state.deviceStates[endpointId] )
     const device = deviceByEndpointId(endpointId)   
-
+    const connected = deviceState?.EndpointHealth?.connectivity?.value?.value === 'OK'
     const uuid = useId();
 
     useEffect(() => {
@@ -51,5 +51,5 @@ export const useRegister = endpointId => {
     // eslint-disable-next-line 
     }, [ endpointId ])
   
-    return { device, deviceState, registeredDevice }
+    return { device, deviceState, connected, registeredDevice }
 }

@@ -3,7 +3,7 @@ import { useRegister } from 'store/useRegister'
 const useTemperature = ( endpointId, value, directive) => {
     
     const { device, deviceState } = useRegister(endpointId)
-    const stateTemperature = deviceState ? deviceState.TemperatureSensor.temperature.value.value : undefined
+    const stateTemperature = deviceState ? deviceState.TemperatureSensor?.temperature?.value?.value : undefined
     const temperature = value !== undefined ? value : stateTemperature
 
     const setTemperature = newTemp => {

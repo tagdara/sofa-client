@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ActivityItemMissing from 'activity/ActivityItemMissing'
 
-import { isFavorite, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import { isFavorite, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
-
-import useDeviceStateStore from 'store/deviceStateStore'
+import { useRegister } from 'store/useRegister'
 import moment from 'moment';
 import { Loader, NavLink } from '@mantine/core';
 import { IconListDetails, IconStar, IconPlayerPlay } from '@tabler/icons';
@@ -13,17 +12,9 @@ const ActivityItem = props => {
     
     const [ launched, setLaunched] = useState(false)
     const activity = deviceByEndpointId(props.endpointId)
-    const activityState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const { deviceState } = useRegister(props.endpointId)
 
-    useEffect(() => {
-        register(props.endpointId, "Activity-"+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, "Activity-"+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [props.endpointId])
-
-    if (!activity || !activityState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
+    if (!activity || !deviceState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 
     const name = activity.friendlyName
 
@@ -73,7 +64,7 @@ const ActivityItem = props => {
 
     function loading() {
         if (launched) { return true }
-        return activityState.Running.toggleState.value === 'ON'
+        return deviceState.Running?.toggleState?.value === 'ON'
     }
 
     return (

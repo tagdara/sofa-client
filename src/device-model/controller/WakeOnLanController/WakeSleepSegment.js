@@ -1,20 +1,32 @@
-import React from 'react';
+import React, { useState } from 'react';
 import usePowerState from 'device-model/property/powerState/usePowerState'
 import Segment from 'components/Segment'
-import { Moon, Loader } from 'react-feather'
+import { IconBroadcast, IconZzz } from '@tabler/icons';
+import { useTimeout } from '@mantine/hooks';
+import { Loader } from '@mantine/core';
 
 export default function WakeSleepSegment(props) {
 
     const { powerStateBool, toggle } = usePowerState(props.endpointId, props.value, props.directive)
-    
-    const icon = powerStateBool ? <Moon size={16} /> : <Loader size={16} /> 
+    const [ waiting, setWaiting ] = useState(false);
+
+    const { start, clear } =  useTimeout(() => setWaiting(false), 5000);
+    const icon = powerStateBool ? <IconZzz size={16} /> : ( waiting ? <Loader size={16} /> : <IconBroadcast size={16} /> ) 
     const label = powerStateBool ? "Sleep" : "Wake"
+
+    const sendToggle = () => {
+        if (!powerStateBool) {
+            setWaiting(true)
+            start()
+        }
+        toggle()
+    }
 
     return (
         <Segment    position={props.position} 
                     size={props.size} 
                     color={ props.color } 
-                    onClick={toggle} 
+                    onClick={sendToggle} 
                     icon={ (!props.icon && !props.small) && icon}
                     value={ !props.icon && !props.small ? label : icon }
         />

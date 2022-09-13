@@ -5,6 +5,7 @@ import SecurityCamera from 'devices/Camera/SecurityCamera';
 import useUserStore from 'store/userStore'
 import StatusLock from 'devices/Lock/StatusLock';
 import StackCard from 'components/StackCard'
+import usePageFrame from 'helpers/usePageFrame'
 
 export default function CameraSelect(props) {
 
@@ -12,6 +13,7 @@ export default function CameraSelect(props) {
     const updateUserSetting = useUserStore( state => state.update)
     const cameras = sortByName(endpointIdsByDisplayCategory('CAMERA'))
     const [ currentCamera, setCurrentCamera ] = useState(userCamera)
+    const { maxStacks } = usePageFrame()
 
     function nextCamera() {
         try {
@@ -53,8 +55,21 @@ export default function CameraSelect(props) {
             return null
         }
     }
+    
+    const nullOnClick= () => {}
 
     const activeCamera = currentCamera ? currentCamera : cameras[0]
+
+    if (maxStacks === 1) {
+        return (
+            <>
+                { cameras.map(camera => 
+                    <SecurityCamera key={camera} endpointId={camera} onClick={nullOnClick} />
+                )}
+            </>
+        )
+    }
+
     
     return (
         <>

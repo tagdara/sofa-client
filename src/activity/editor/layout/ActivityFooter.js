@@ -7,6 +7,7 @@ import { directive  } from 'store/directive';
 import { selectPage } from 'helpers/layoutHelpers';
 import ActivityAddMenu from 'activity/editor/layout/ActivityAddMenu'
 import ActivityJSON from 'activity/editor/ActivityJSON'
+import { showNotification } from '@mantine/notifications';
 
 export default function ActivityFooter(props) {
 
@@ -24,6 +25,11 @@ export default function ActivityFooter(props) {
     function parseResult(result) {
         try {
             if (result.event.header.name==='ErrorResponse') {
+                showNotification({
+                    title: 'Error',
+                    message: result.event.payload.message,
+                    color: 'red',
+                })
                 //setResultMessage(result.event.payload.message); 
                 //setSeverity('error')
                 //setShowResult(true); 
@@ -38,7 +44,7 @@ export default function ActivityFooter(props) {
     }    
 
     return (
-        <Group noWrap>
+        <Group>
             <Modal  opened={dialogOpen}
                     onClose={() => setDialogOpen(false)}
                     title="Activity JSON"
@@ -46,7 +52,6 @@ export default function ActivityFooter(props) {
             >
                 <ActivityJSON />
             </Modal>
-
             <ActionIcon variant="light" size="md" onClick={() => selectPage('ActivitiesPage')}>
                 <X size={20} />
             </ActionIcon>

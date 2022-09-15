@@ -38,10 +38,15 @@ const ActivityAddMenu = props => {
     }
 
     return (
-        <Menu control={ <ActionIcon variant="light" size="md"><Plus size={20} /></ActionIcon> }>
-            <Menu.Item onClick={ addAction } icon={<Plus size={16} />}>Action</Menu.Item>
-            <Menu.Item onClick={ addCondition } icon={<Plus size={16} />}>Condition</Menu.Item>
-            <Menu.Item onClick={ addTrigger } icon={<Plus size={16} />}>Trigger</Menu.Item>
+        <Menu>
+            <Menu.Target>
+                <ActionIcon variant="light" size="md"><Plus size={20} /></ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+                <Menu.Item onClick={ addAction } icon={<Plus size={16} />}>Action</Menu.Item>
+                <Menu.Item onClick={ addCondition } icon={<Plus size={16} />}>Condition</Menu.Item>
+                <Menu.Item onClick={ addTrigger } icon={<Plus size={16} />}>Trigger</Menu.Item>
+            </Menu.Dropdown>
         </Menu>
     );
 }

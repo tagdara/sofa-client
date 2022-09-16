@@ -12,6 +12,8 @@ const PowerLevelAutoPopover = props => {
                 opened={ props.opened }
                 setOpen={ props.setOpen }
                 target={ props.target }
+                withinPortal={true}
+                width={320}
         >
             <Stack spacing="xl">
                 <PowerLevelSlider endpointId={props.endpointId} />

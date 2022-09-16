@@ -19,8 +19,9 @@ const CameraImage = props => {
                     image: { 
                         width: "100%",
                         aspectRatio: "16/9", 
-                        borderBottomLeftRadius: 0,
-                        borderBottomRightRadius: 0,
+                        borderBottomLeftRadius: props.noLabel ? undefined : 0,
+                        borderBottomRightRadius: props.noLabel ? undefined : 0,
+
                     }
                 }}
                 radius="sm"

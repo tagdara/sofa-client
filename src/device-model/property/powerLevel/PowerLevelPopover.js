@@ -9,6 +9,7 @@ const PowerLevelPopover = props => {
                 opened={ props.opened }
                 setOpen={ props.setOpen }
                 target={ props.target }
+                width={320}
         >
             <PowerLevelSlider endpointId={props.endpointId} />
         </CardPopover>

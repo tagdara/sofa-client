@@ -11,6 +11,8 @@ const TargetSetpointPopover = props => {
                 opened={ props.opened }
                 setOpen={ props.setOpen }
                 target={ props.target }
+                withinPortal={true}
+                width={320}
         >
             <Stack>
                 <ThermostatModeButtons endpointId={props.endpointId} />

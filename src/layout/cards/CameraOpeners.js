@@ -1,45 +1,42 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { endpointIdByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 
 import SecurityCamera from 'devices/Camera/SecurityCamera';
-import useUserStore from 'store/userStore'
 import StatusLock from 'devices/Lock/StatusLock';
 import StackCard from 'components/StackCard'
 import usePageFrame from 'helpers/usePageFrame'
+import { Carousel } from '@mantine/carousel';
+import { createStyles } from '@mantine/core';
+
+const useStyles = createStyles((_theme, _params, getRef) => ({
+    controls: {
+        ref: getRef('controls'),
+        transition: 'opacity 150ms ease',
+        opacity: 0,
+    },
+    indicators: {
+        ref: getRef('indicators'),
+        transition: 'opacity 150ms ease',
+        opacity: 0,
+    },
+    root: {
+        '&:hover': {
+            [`& .${getRef('controls')}`]: {
+                opacity: 1,
+            },
+            [`& .${getRef('indicators')}`]: {
+                opacity: 1,
+            },
+        },
+    },
+}));
+
 
 export default function CameraSelect(props) {
 
-    const userCamera = useUserStore( state => state.preferences.camera)
-    const updateUserSetting = useUserStore( state => state.update)
+    const { classes } = useStyles();
     const cameras = sortByName(endpointIdsByDisplayCategory('CAMERA'))
-    const [ currentCamera, setCurrentCamera ] = useState(userCamera)
     const { maxStacks } = usePageFrame()
-
-    function nextCamera() {
-        try {
-            var cameraPosition = cameras.indexOf(currentCamera)
-            cameraPosition = (cameraPosition + 1) % cameras.length
-        }
-        catch {
-            cameraPosition = 0
-        }
-        updateUserSetting('camera', cameras[cameraPosition])
-        setCurrentCamera(cameras[cameraPosition])
-        return cameras[cameraPosition]
-    }
-
-    function prevCamera() {
-        try {
-            var cameraPosition = cameras.indexOf(currentCamera)
-            cameraPosition = ((cameraPosition - 1 ) + cameras.length) % cameras.length
-        }
-        catch {
-            cameraPosition = cameras.length -1
-        }
-        updateUserSetting('camera', cameras[cameraPosition])
-        setCurrentCamera(cameras[cameraPosition])
-        return cameras[cameraPosition]
-    }
 
     const getOpener = (opener) => {
         try {
@@ -47,7 +44,7 @@ export default function CameraSelect(props) {
             if (!endpointId) { return null}
             return (
                 <StackCard key={endpointId}>
-                    <StatusLock endpointId={endpointId} displayName={ opener.displayName } buttonDuration={opener.buttonDuration} setCamera={setCurrentCamera} />
+                    <StatusLock endpointId={endpointId} displayName={ opener.displayName } buttonDuration={opener.buttonDuration}  />
                 </StackCard>
             )
         }
@@ -56,9 +53,7 @@ export default function CameraSelect(props) {
         }
     }
     
-    const nullOnClick= () => {}
-
-    const activeCamera = currentCamera ? currentCamera : cameras[0]
+    const nullOnClick = () => {}
 
     if (maxStacks === 1) {
         return (
@@ -70,13 +65,16 @@ export default function CameraSelect(props) {
         )
     }
 
-    
     return (
         <>
-            <SecurityCamera endpointId={activeCamera} selectButtons={true} 
-                            nextCamera={nextCamera} prevCamera={prevCamera} 
-                            wide={props.wide} top={false} showOffline={true} 
-                        />
+            <Carousel withIndicators loop classNames={classes}>
+                { cameras.map(camera => 
+                    <Carousel.Slide key={camera}>
+                        <SecurityCamera endpointId={camera} noLabel/>
+                    </Carousel.Slide>
+                )}
+            </Carousel>
+
             { props.openers &&
                 <>
                     { props.openers.map( opener => getOpener(opener)) }

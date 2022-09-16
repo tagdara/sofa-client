@@ -1,7 +1,8 @@
 import React from 'react';
 import SectionFrame from 'layout/SectionFrame'
 import useActivityEditorStore from 'store/activityEditorStore'
-import ReactJson from 'react-json-view';
+//import ReactJson from 'react-json-view';
+import ReactJson from '@textea/json-viewer'
 import { modifyActivityJson } from 'store/activityEditorHelpers'
 
 export default function ActivityEditor(props) {
@@ -20,7 +21,6 @@ export default function ActivityEditor(props) {
         // }
         // setActiviy
     }
-
     return (
         <SectionFrame>
             <ReactJson  theme={"hopscotch"} 

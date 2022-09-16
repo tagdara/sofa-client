@@ -14,7 +14,7 @@ const ThermostatAvatar = props => {
 
     const setpointAvatar =  <Avatar color={targetSetpointColor} size={props.size ? props.size : "lg"} onClick={ props.noPopover ? undefined : togglePopover } >
                                 <div style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: 8 }} >
-                                    <span>{targetSetpointLabel}</span>
+                                    { targetSetpointLabel !== "--" && <span>{targetSetpointLabel}</span> }
                                     <span style={{ fontSize: 10 }}>{thermostatMode }</span>
                                 </div>
                             </Avatar>

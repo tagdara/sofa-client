@@ -505,7 +505,6 @@ export const isModeNonControllable = (dev, instance) => {
     }
     
     for (var k = 0; k < dev.capabilities.length; k++) {
-        console.log('IMN', dev.capabilities[k])
         if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.split('.')[1]===instance) {
             try {
                 return dev.capabilities[k].properties.nonControllable

@@ -36,12 +36,15 @@ const SecurityCamera = props => {
                                 name={"Camera"}
                                 refreshInterval={refreshInterval} 
                                 onClick={imageClick}
+                                noLabel={props.noLabel}
                 />
             }
             </Card.Section>
-            <Group grow style={{ width: "100%"}}>
-                <Text onClick={ () => setLive(!live)}>{device.friendlyName}</Text>
-            </Group>
+            { !props.noLabel &&
+                <Group grow style={{ width: "100%"}}>
+                    <Text onClick={ () => setLive(!live)}>{device.friendlyName}</Text>
+                </Group>
+            }
         </StackCard>
     );
 }

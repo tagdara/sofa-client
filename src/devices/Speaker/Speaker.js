@@ -15,8 +15,8 @@ const Speaker = props => {
     }
 
     return (
-        <Group direction="row" noWrap grow>
-            <Group style={{ width: "40%"}} noWrap>
+        <Group direction="row" noWrap style={{ width: "100%"}}>
+            <Group style={{ flexShrink: 0, width: "40%" }} noWrap>
                 <ThemeIcon size="lg" variant={on ? "filled" : "light"} radius="md" onClick={toggle}>
                     <SpeakerIcon size={20} />
                 </ThemeIcon>

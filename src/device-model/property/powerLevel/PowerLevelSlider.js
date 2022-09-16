@@ -10,7 +10,7 @@ const PowerLevelSlider = props => {
     console.log('slider level', powerLevel)
 
     return ( 
-        <CardLineSlider minWidth={200} on={true} value={powerLevel} step={props.step ? props.step : 10} change={setPowerLevel} />
+        <CardLineSlider  minWidth={200} on={props.on} value={powerLevel} step={props.step ? props.step : 10} change={setPowerLevel} />
     );
 }
 

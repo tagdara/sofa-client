@@ -32,6 +32,7 @@ const PowerLevelAutoAvatar = props => {
             endpointId = { props.endpointId }
             target = {  levelAvatar }
             instance = {props.instance}
+            sliderDisabled = { toggleStateBool }
         />
     );
 }

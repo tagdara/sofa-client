@@ -1,41 +1,35 @@
 import React from 'react';
 import { ActionIcon, Group } from '@mantine/core'
-import { List, Pause, Play, SkipForward, Speaker as SpeakerIcon, Music } from 'react-feather'
+import { IconMusic, IconPlayerPause, IconPlayerPlay, IconPlayerTrackNext, IconDeviceSpeaker } from '@tabler/icons';
 
 export default function PlayerArtOverlayButtons(props) {
 
     function openJukebox() {
         window.open(props.url,'_jukebox');
     }
-    
 
     return ( 
         <Group position="apart" noWrap style={{width: "100%"}}>
             <Group>
                 <ActionIcon  size="sm" onClick={ (e) => props.playPause(e)}>
-                    { props.playbackState==='PLAYING' ? <Pause size={20} /> : <Play size={20} /> }
+                    { props.playbackState==='PLAYING' ? <IconPlayerPause size={20} /> : <IconPlayerPlay size={20} /> }
                 </ActionIcon>
                 { props.playbackState!=='STOPPED' &&
                     <ActionIcon size="sm" onClick={ (e) => props.skip(e)}>
-                        <SkipForward size={20} />
+                        <IconPlayerTrackNext size={20} />
                     </ActionIcon>
                 }
                 </Group>
             <Group>
                 { props.jukebox &&
                     <ActionIcon  size="sm" onClick={props.toggleSpeakerFilter}>
-                        <SpeakerIcon size={20} />
+                        <IconDeviceSpeaker size={20} />
                     </ActionIcon>
                 }
                 { props.jukebox &&
                     <ActionIcon  size="sm" onClick={openJukebox}>
-                        <Music size={20} />
+                        <IconMusic size={20} />
                     </ActionIcon>
-                }
-                { props.players &&
-                <ActionIcon  size="sm" onClick={ (e) => props.players(e)}>
-                    <List size={20} />
-                </ActionIcon>
                 }
                 </Group>
         </Group>

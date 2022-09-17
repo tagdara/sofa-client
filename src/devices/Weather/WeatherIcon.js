@@ -2,7 +2,7 @@ import React from 'react';
 import useMode from 'endpoint-model/property/mode/useMode'
 import { IconCloud, IconCloudStorm, IconCloudRain, IconDots, IconSun, IconWind } from '@tabler/icons';
 
-export default function WeatherAvatar(props) {
+export default function WeatherIcon(props) {
 
     const { modeLabel} = useMode(props.endpointId, props.instance)
 

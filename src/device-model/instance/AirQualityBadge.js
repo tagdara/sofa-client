@@ -1,13 +1,10 @@
 import React from 'react';
-import { modeDisplayName } from 'store/deviceHelpers'
 import { Badge } from '@mantine/core';
-import { useRegister } from 'store/useRegister'
+import useRangeValue from 'device-model/property/rangeValue/useRangeValue'
 
 export default function AirQualityBadge(props) { 
 
-    const { deviceState} = useRegister(props.endpointId)
-
-    if (!deviceState) { return null }
+    const { rangeValue } = useRangeValue(props.endpointId, props.instance )
 
     const aqColor = ( aqi ) => {
         switch (true) {
@@ -26,10 +23,8 @@ export default function AirQualityBadge(props) {
         }
     }
 
-    const aqController = deviceState[props.instance]
-    const value = aqController.rangeValue ? aqController.rangeValue.value : modeDisplayName(props.endpointId, props.instance, aqController.mode.value)
-    const label = ( props.prefix ? props.prefix + " " : "") + value + (props.suffix ? " "+props.suffix : "")
-    const color = aqColor(value)
+    const label = ( props.prefix ? props.prefix + " " : "") + ( rangeValue || "?")+ (props.suffix ? " "+props.suffix : "")
+    const color = aqColor(rangeValue)
 
     return (
         <Badge radius="sm" variant="light" size={props.size ? props.size : "lg"} color={ color } style={{ fontWeight: 500, textTransform: "initial"}}>

@@ -2,6 +2,7 @@ import useLoginStore from 'store/loginStore'
 import useDeviceStore from 'store/deviceStore'
 import { storeUpdater } from "store/storeUpdater" 
 import { getController } from 'store/deviceHelpers'
+import { showNotification } from '@mantine/notifications';
 
 const serverUrl = useLoginStore.getState().server_url
 const directivesUrl = serverUrl + "/directives"
@@ -19,11 +20,14 @@ export const directive = async (endpointId, controllerName, command, payload={},
     if (!controller) {
         var dev = useDeviceStore.getState().devices[endpointId]
         if (!dev) {
-            console.log('device not ready', endpointId)
+            showNotification({
+                title: 'Error: Device is not ready',
+                message: endpointId+' device has not been discovered by this client',
+                color: 'red',
+            }) 
             return {}
         }
-        console.log('controller not ready for directive', endpointId, controllerName, controller)
-        console.log('device', dev)
+        console.log('controller not ready for directive', endpointId, controllerName, instance, controller)
         return {}
     }
     const headers = { authorization : accessToken }
@@ -37,6 +41,13 @@ export const directive = async (endpointId, controllerName, command, payload={},
     const body = { "directive": {"header": directiveHeader, "endpoint": directiveEndpoint, "payload": payload }}
     const response = await fetch(serverUrl, {  headers: headers, method: "post", body: JSON.stringify(body)})
     const result = await response.json()
+    if (result.event?.header?.name === "ErrorResponse") {
+        showNotification({
+            title: 'Error: '+result.event.payload.type,
+            message: result.event.payload.message,
+            color: 'red',
+        })        
+    }
     storeUpdater(result)
     return result
 }

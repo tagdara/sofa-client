@@ -11,10 +11,12 @@ const Matrix = props => {
 
     const name = friendlyNameByEndpointId(props.endpointId)
     const { reachable } = useEndpointHealth(props.endpointId)
-    const { mode, setMode } = useMode(props.endpointId, "Input", props.value, props.directive)
+    const { mode, setMode } = useMode(props.endpointId, "Output.Source", props.value, props.directive)
 
-    const blank = "Input.I8"
+    const blank = "Source.I8"
     const on = mode !== blank
+
+    console.log('xxmode',mode)
 
     const toggleInput = () => { 
         if (on) { 
@@ -37,7 +39,7 @@ const Matrix = props => {
             />
             <SplitButton >
                 <Group grow noWrap spacing={0}>
-                    <ModeSelect half size="xs" instance={"Input"} endpointId={props.endpointId} />
+                    <ModeSelect half size="xs" instance={"Output.Source"} endpointId={props.endpointId} />
                 </Group>
             </SplitButton>
         </SplitButtonGroup>

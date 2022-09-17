@@ -1,37 +1,11 @@
-import React, { useEffect } from 'react';
-import useDeviceStateStore from 'store/deviceStateStore'
-import { register, unregister } from 'store/deviceHelpers'
+import React from 'react';
 import { Button, Text } from '@mantine/core';
+import useRangeValue from 'device-model/property/rangeValue/useRangeValue'
 
 export default function ForecastAvatar(props) { 
 
-    const forecastDeviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-
-    useEffect(() => {
-        register(props.endpointId, 'forecastavatar-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'forecastavatar-'+props.endpointId);
-        };
-    // eslint-disable-next-line 
-    }, [ ] )
-    
-    function getForecastHigh() {
-        try {
-            return forecastDeviceState['Forecast High'].rangeValue.value
-        }
-        catch {
-            return " "
-        }
-    }
-
-    function getForecastLow() {
-        try {
-            return forecastDeviceState['Forecast Low'].rangeValue.value
-        }
-        catch {
-            return " "
-        }
-    }
+    const { rangeValue: forecastHigh } = useRangeValue(props.endpointId, "Forecast.High")
+    const { rangeValue: forecastLow } = useRangeValue(props.endpointId, "Forecast.Low")
 
     const tempColor = ( temp ) => {
         switch (true) {
@@ -51,13 +25,17 @@ export default function ForecastAvatar(props) {
     }
 
     if (!props.colors) {
-        return <Text lineClamp={1} color={props.dimmed && "dimmed"} size={props.size}>{getForecastLow()+ "° - " + getForecastHigh() +"°" }</Text>
+        return <Text lineClamp={1} color={props.dimmed && "dimmed"} size={props.size}>{forecastLow+ "° - " + forecastHigh +"°" }</Text>
     }
 
     return (
         <Button style={{ padding: "0 2px", borderWidth: 0}} 
-                compact size="xs" variant={ props.colors ?  "light" : "outline" } color={ props.colors && tempColor(getForecastHigh()) }>
-            {getForecastLow()+ "° - " + getForecastHigh() +"°" }
+                compact 
+                size="xs" 
+                variant={ props.colors ?  "light" : "outline" } 
+                color={ props.colors && tempColor(forecastHigh) }
+        >
+            {forecastLow+ "° - " + forecastHigh +"°" }
         </Button>
     )
 }

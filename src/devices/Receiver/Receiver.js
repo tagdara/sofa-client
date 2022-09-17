@@ -41,7 +41,7 @@ const Receiver = props => {
             <Collapse in={showDetail}>
                 <Stack spacing="sm">
                     <Group grow noWrap position={"apart"}>
-                        <ModeSelect filter={surroundPresets} endpointId={props.endpointId} instance={"Surround"} />
+                        <ModeSelect filter={surroundPresets} endpointId={props.endpointId} instance={"Sound.Program"} />
                         <MutedButton endpointId={props.endpointId} />
                     </Group>
                     <Group grow noWrap position={"apart"}>

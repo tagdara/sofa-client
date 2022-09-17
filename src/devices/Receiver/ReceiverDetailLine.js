@@ -16,7 +16,7 @@ const ReceiverDetailLine = props => {
     return  <Group noWrap style={{ paddingLeft: 48 }} spacing={2} >
                 { locked && <InputLockSegment size="xs" icon endpointId={props.endpointId} /> }
                 <InputSegment size="xs" endpointId={props.endpointId} />
-                <ModeSegment size="xs" endpointId={props.endpointId} instance={"Surround"} />
+                <ModeSegment size="xs" endpointId={props.endpointId} instance={"Sound.Program"} />
                 { muted && <MutedSegment size="xs" icon endpointId={props.endpointId} /> }
             </Group> 
 }

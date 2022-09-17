@@ -7,13 +7,13 @@ import { Monitor } from 'react-feather'
 const MatrixConflict = props => {
     
     const name = friendlyNameByEndpointId(props.endpointId)
-    const { mode, setMode } = useMode(props.endpointId, 'Input')
-    const on = mode === props.input
+    const { mode, setMode } = useMode(props.endpointId, 'Output.Source')
+    const on = mode === props.source
 
     if (!on) { return null }
 
     return (
-        <Button fullWidth onClick={ () => setMode('Input.I8') } leftIcon={<Monitor size={16} />}
+        <Button fullWidth onClick={ () => setMode('Source.I8') } leftIcon={<Monitor size={16} />}
                 variant = { "light"}
         >
             Turn off {name} monitor 

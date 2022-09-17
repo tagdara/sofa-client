@@ -5,6 +5,7 @@ import CardPopover from 'components/CardPopover'
 import ColorTemperatureSlider from 'device-model/property/colorTemperatureInKelvin/ColorTemperatureSlider'
 import BrightnessSlider from 'device-model/property/brightness/BrightnessSlider'
 import ColorSlider from 'device-model/property/color/ColorSlider'
+import OnLevelSlider from 'device-model/instance/OnLevelSlider'
 import { hasCapability } from 'store/deviceHelpers'
 
 const LightPopover = props => {
@@ -26,6 +27,7 @@ const LightPopover = props => {
                         <BrightnessSlider endpointId={props.endpointId} icon={true} />
                         <ColorTemperatureSlider endpointId={props.endpointId} icon={true} />
                         <ColorSlider endpointId={props.endpointId} icon={true} />
+                        <OnLevelSlider endpointId={props.endpointId} icon={true} />
                     </Stack>
             }
         </CardPopover>

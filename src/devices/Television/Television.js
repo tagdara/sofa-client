@@ -35,7 +35,7 @@ const Television = props => {
                 <Stack>
                     <Group noWrap grow>
                         <InputSelect endpointId={props.endpointId} />
-                        { inputLabel === "Matrix" && <ModeSelect instance={"Input"} endpointId={props.matrix} /> }
+                        { inputLabel === "Matrix" && <ModeSelect instance={"Output.Source"} endpointId={props.matrix} /> }
                     </Group>
                     { (on && inputLabel === "Matrix") && <MatrixConflictList endpointId={props.matrix} /> }
                 </Stack>
@@ -43,7 +43,7 @@ const Television = props => {
             <Collapse in={showDetail}>
                 <Stack>
                     <Group noWrap>
-                        <ModeSelect endpointId={props.endpointId} instance={"PowerSaving"} />
+                        <ModeSelect endpointId={props.endpointId} instance={"Power.Saving"} />
                     </Group>
                 </Stack>
             </Collapse>

@@ -6,7 +6,7 @@ import { ChevronUp, ChevronDown, Minus } from 'react-feather'
 const ShadeButtons = props => {
 
     function handlePress(modechoice) {
-        directive(props.endpointId, 'Blinds.Position', 'SetMode', { "mode": modechoice}, {})
+        directive(props.endpointId, 'Shade.Position', 'SetMode', { "mode": modechoice}, {})
     }
     
     return ( 

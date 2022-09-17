@@ -1,28 +1,14 @@
-import React, { useEffect } from 'react';
-import useDeviceStateStore from 'store/deviceStateStore'
-import { modeDisplayName, register, unregister } from 'store/deviceHelpers'
+import React from 'react';
+import useMode from 'device-model/property/mode/useMode'
 import { Group, Text} from '@mantine/core';
 
 export default function ModeControllerText(props) {
 
-    const deviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
-
-    useEffect(() => {
-        register(props.endpointId, 'ModeControllerText-'+props.endpointId)
-        return function cleanup() {
-            unregister(props.endpointId, 'ModeControllerText-'+props.endpointId)
-        };
-    // eslint-disable-next-line 
-    }, [ ] )
-
-    if (!deviceState) { return null }
-
-    const modeValue = deviceState[props.instance].mode.value
-    const modeText = modeDisplayName(props.endpointId, props.instance, modeValue)
+    const { modeLabel } = useMode(props.endpointId, props.instance)
 
     return (
         <Group>
-            <Text lineClamp={1} size={props.size}>{modeText}</Text>
+            <Text lineClamp={1} size={props.size}>{modeLabel}</Text>
             { props.secondary &&
                 <Text>{props.secondary}</Text>
             }

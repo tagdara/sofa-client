@@ -11,14 +11,14 @@ export default function MatrixList(props) {
                             ]
 
     const defaults = 
-    {   "matrix:output:O1" : "Input.I1",
-        "matrix:output:O2" : "Input.I1", 
-        "matrix:output:O3" : "Input.I2", 
-        "matrix:output:O4" : "Input.I2", 
-        "matrix:output:O5" : "Input.I2", 
-        "matrix:output:O6" : "Input.I3", 
-        "matrix:output:O7" : "Input.I4", 
-        "matrix:output:O8" : "Input.I8", 
+    {   "matrix:output:O1" : "Source.I1",
+        "matrix:output:O2" : "Source.I1", 
+        "matrix:output:O3" : "Source.I2", 
+        "matrix:output:O4" : "Source.I2", 
+        "matrix:output:O5" : "Source.I2", 
+        "matrix:output:O6" : "Source.I3", 
+        "matrix:output:O7" : "Source.I4", 
+        "matrix:output:O8" : "Source.I8", 
     }
 
     return (

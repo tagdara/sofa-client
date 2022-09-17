@@ -1,16 +1,15 @@
 import React from 'react';
-import { modeDisplayName } from 'store/deviceHelpers'
 import { Cloud, CloudDrizzle, CloudLightning, CloudRain, Sun } from 'react-feather';
-import { useRegister } from 'store/useRegister'
+import useMode from 'device-model/property/mode/useMode'
+import { IconDots} from '@tabler/icons';
 
 export default function WeatherAvatar(props) {
 
-    const { deviceState } = useRegister(props.endpointId)
+    const { modeLabel} = useMode(props.endpointId, props.instance)
 
-    if (!deviceState || !deviceState[props.instance]) { return null }
+    if (!modeLabel) { return <IconDots size={props.size} /> }
 
-    const modeValue = deviceState[props.instance].mode.value
-    const modeText = modeDisplayName(props.endpointId, props.instance, modeValue).toLowerCase()
+    const modeText = modeLabel.toLowerCase()
 
     const getIcon = () => {
         if (modeText.includes('thunder')) {

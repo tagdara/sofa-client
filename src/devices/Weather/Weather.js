@@ -25,7 +25,7 @@ export default function Weather(props) {
                 { reachable ? 
                     <WideAvatar color={temperatureColor} 
                                 size="lg"
-                                left={ <WeatherIcon size="24" instance={"Weather Condition"} endpointId={forecastDevice} /> }
+                                left={ <WeatherIcon size="24" instance={"Weather.Condition"} endpointId={forecastDevice} /> }
                                 right={ temperatureLabel }
                     />
                 :
@@ -36,10 +36,10 @@ export default function Weather(props) {
                     />
                 }   
                 <Stack spacing={2}>
-                    <ModeControllerText size="lg" endpointId={forecastDevice} instance={"Weather Condition"} />
+                    <ModeControllerText size="lg" endpointId={forecastDevice} instance={"Weather.Condition"} />
                     <Group noWrap style={{ width: "100%"}}>
                         <ForecastAvatar size={"sm"} dimmed endpointId={forecastDevice} currentTemp={currentDevice}  />
-                        { aqEndpoint && <AirQualityBadge size="md" endpointId={aqEndpoint} instance={"AQI"} prefix={"AQI"} /> }
+                        { aqEndpoint && <AirQualityBadge size="md" endpointId={aqEndpoint} instance={"Air.AQI"} prefix={"AQI"} /> }
                     </Group>
                 </Stack>
             </Group>

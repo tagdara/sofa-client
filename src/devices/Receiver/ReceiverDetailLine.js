@@ -1,11 +1,11 @@
 import React from 'react';
 import { Group } from '@mantine/core'
-import MutedSegment from 'device-model/property/muted/MutedSegment'
-import useMuted from 'device-model/property/muted/useMuted'
-import InputSegment from 'device-model/property/input/InputSegment'
+import MutedSegment from 'endpoint-model/property/muted/MutedSegment'
+import useMuted from 'endpoint-model/property/muted/useMuted'
+import InputSegment from 'endpoint-model/property/input/InputSegment'
 import InputLockSegment from 'devices/Receiver/InputLockSegment'
-import ModeSegment from 'device-model/property/mode/ModeSegment'
-import useMode from 'device-model/property/mode/useMode'
+import ModeSegment from 'endpoint-model/property/mode/ModeSegment'
+import useMode from 'endpoint-model/property/mode/useMode'
 
 const ReceiverDetailLine = props => {
 

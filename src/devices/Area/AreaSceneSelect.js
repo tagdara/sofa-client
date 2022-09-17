@@ -2,8 +2,8 @@ import React from 'react';
 import { Group, Select, Text} from '@mantine/core'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
-import useChildren from 'device-model/property/children/useChildren'
-import useScene from 'device-model/property/scene/useScene'
+import useChildren from 'endpoint-model/property/children/useChildren'
+import useScene from 'endpoint-model/property/scene/useScene'
 
 
 const AreaSceneSelect = props => {

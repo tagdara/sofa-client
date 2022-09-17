@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import CardLine from 'components/CardLine'
 import {  Collapse, Stack } from '@mantine/core'
-import useApp from 'device-model/property/app/useApp'
-import useArt from 'device-model/property/art/useArt'
-import useTitle from 'device-model/property/title/useTitle'
-import usePowerState from 'device-model/property/powerState/usePowerState'
+import useApp from 'endpoint-model/property/app/useApp'
+import useArt from 'endpoint-model/property/art/useArt'
+import useTitle from 'endpoint-model/property/title/useTitle'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import { Apple as AppleTvIcon } from "react-bootstrap-icons"
 

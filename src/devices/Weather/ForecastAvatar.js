@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Text } from '@mantine/core';
-import useRangeValue from 'device-model/property/rangeValue/useRangeValue'
+import useRangeValue from 'endpoint-model/property/rangeValue/useRangeValue'
 
 export default function ForecastAvatar(props) { 
 

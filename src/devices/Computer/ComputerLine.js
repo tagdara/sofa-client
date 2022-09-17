@@ -2,16 +2,16 @@ import React from 'react';
 import { CloudOff, HardDrive } from 'react-feather'
 import { ActionIcon, Group } from '@mantine/core';
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
-import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
-import usePowerState from 'device-model/property/powerState/usePowerState'
-import useLockState from 'device-model/property/lockState/useLockState'
-import useMode from 'device-model/property/mode/useMode'
-import WakeSleepSegment from 'device-model/controller/WakeOnLanController/WakeSleepSegment'
+import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import useLockState from 'endpoint-model/property/lockState/useLockState'
+import useMode from 'endpoint-model/property/mode/useMode'
+import WakeSleepSegment from 'endpoint-model/controller/WakeOnLanController/WakeSleepSegment'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
-import VolumeSegment from 'device-model/property/volume/VolumeSegment'
-import EnergyLevelModeSegment from 'device-model/instance/EnergyLevelModeSegment'
-import MutedSegment from 'device-model/property/muted/MutedSegment'
-import LockStateSegment from 'device-model/property/lockState/LockStateSegment'
+import VolumeSegment from 'endpoint-model/property/volume/VolumeSegment'
+import EnergyLevelModeSegment from 'endpoint-model/instance/EnergyLevelModeSegment'
+import MutedSegment from 'endpoint-model/property/muted/MutedSegment'
+import LockStateSegment from 'endpoint-model/property/lockState/LockStateSegment'
 
 const ComputerLine = props => {
 

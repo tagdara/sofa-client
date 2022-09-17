@@ -2,7 +2,7 @@ import React from 'react';
 
 import { sortByName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
 import Thermostat from 'devices/Thermostat/Thermostat';
-import TemperatureSensorLine from 'device-model/controller/temperatureSensor/TemperatureSensorLine';
+import TemperatureSensorLine from 'endpoint-model/controller/temperatureSensor/TemperatureSensorLine';
 import { Stack } from '@mantine/core';
 
 const ThermostatList = props => {

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Badge } from '@mantine/core';
-import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
-import usePowerState from 'device-model/property/powerState/usePowerState'
-import useMode from 'device-model/property/mode/useMode'
+import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import useMode from 'endpoint-model/property/mode/useMode'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 
 const ComputerBadge = props => {

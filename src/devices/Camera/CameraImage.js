@@ -1,8 +1,8 @@
 import React from 'react';
 import { Image } from '@mantine/core';
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
-import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
-import useRefreshCameraImage from 'device-model/controller/CameraStreamController/useRefreshCameraImage'
+import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
+import useRefreshCameraImage from 'endpoint-model/controller/CameraStreamController/useRefreshCameraImage'
 import CameraPlaceholder from 'devices/Camera/CameraPlaceholder'
 
 const CameraImage = props => {

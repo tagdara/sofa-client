@@ -1,8 +1,8 @@
 import React from "react";
 import StackCard from 'components/StackCard'
-import usePowerState from 'device-model/property/powerState/usePowerState'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import AppleTV from 'devices/AppleTV/AppleTV'
-import useInput from 'device-model/property/input/useInput'
+import useInput from 'endpoint-model/property/input/useInput'
 
 const TelevisionAppleTv = props => {
 

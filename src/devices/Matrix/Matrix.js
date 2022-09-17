@@ -1,10 +1,10 @@
 import React from 'react';
-import ModeSelect from 'device-model/property/mode/ModeSelect'
+import ModeSelect from 'endpoint-model/property/mode/ModeSelect'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
-import useMode from 'device-model/property/mode/useMode'
+import useMode from 'endpoint-model/property/mode/useMode'
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import { CloudOff, Monitor } from 'react-feather'
-import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
+import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import { ActionIcon, Group } from '@mantine/core';
 
 const Matrix = props => {

@@ -1,8 +1,8 @@
 import React from 'react';
-import MultiLightColor from 'device-model/multidevice/MultiLightColor';
+import MultiLightColor from 'endpoint-model/multidevice/MultiLightColor';
 import { Group } from '@mantine/core'
 
-import useChildren from 'device-model/property/children/useChildren'
+import useChildren from 'endpoint-model/property/children/useChildren'
 import AreaShortcutSlider from 'devices/Area/AreaShortcutSlider'
 
 const AreaSummaryLine = props => {

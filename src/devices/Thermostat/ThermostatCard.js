@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import Thermostat from 'devices/Thermostat/Thermostat';
-import AirQualityBadge from 'device-model/instance/AirQualityBadge'
+import AirQualityBadge from 'endpoint-model/instance/AirQualityBadge'
 import PlaceholderCard from 'layout/PlaceholderCard';
 
 import StackCard from 'components/StackCard'
@@ -23,7 +23,7 @@ const ThermostatCard = props => {
                         onClick={ () => setExpanded(!expanded) } 
                         wide={props.wide } 
                 >
-                    <AirQualityBadge size="md" endpointId={props.airQuality} instance={"Air Quality"} suffix={"Indoor AQ"} />
+                    <AirQualityBadge size="md" endpointId={props.airQuality} instance={"Air.Quality"} suffix={"Indoor AQ"} />
                 </Thermostat>
                 { props.expand &&
                     <Collapse in={expanded} style={{ width: "100%"}}>

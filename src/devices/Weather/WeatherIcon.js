@@ -1,7 +1,6 @@
 import React from 'react';
-import { Cloud, CloudDrizzle, CloudLightning, CloudRain, Sun } from 'react-feather';
-import useMode from 'device-model/property/mode/useMode'
-import { IconDots} from '@tabler/icons';
+import useMode from 'endpoint-model/property/mode/useMode'
+import { IconCloud, IconCloudStorm, IconCloudRain, IconDots, IconSun, IconWind } from '@tabler/icons';
 
 export default function WeatherAvatar(props) {
 
@@ -13,22 +12,24 @@ export default function WeatherAvatar(props) {
 
     const getIcon = () => {
         if (modeText.includes('thunder')) {
-            return <CloudLightning size={props.size} />
+            return <IconCloudStorm size={props.size} />
         }
-        
+        if (modeText.includes('windy')) {
+            return <IconWind size={props.size} />
+        }        
         if (modeText.includes('light rain')) {
-            return <CloudDrizzle size={props.size} />
+            return <IconCloudRain size={props.size} />
         }
         if (modeText.includes('rain')) {
-            return <CloudRain size={props.size} />
+            return <IconCloudRain size={props.size} />
         }
         if (modeText.includes('cloud')) {
-            return <Cloud size={props.size} />
+            return <IconCloud size={props.size} />
         } 
         if (modeText.includes('overcast')) {
-            return <Cloud size={props.size} />
+            return <IconCloud size={props.size} />
         } 
-        return <Sun size={props.size} />
+        return <IconSun size={props.size} />
     }
 
     return getIcon()

@@ -2,9 +2,9 @@ import React from 'react';
 import { ActionIcon, Center, Group, Space, Text } from '@mantine/core'
 import { Lock, Unlock } from 'react-feather'
 import CardSegmentedControl from 'components/CardSegmentedControl'
-import useMode from 'device-model/property/mode/useMode'
-import usePowerState from 'device-model/property/powerState/usePowerState'
-import useInput from 'device-model/property/input/useInput'
+import useMode from 'endpoint-model/property/mode/useMode'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import useInput from 'endpoint-model/property/input/useInput'
 
 const ReceiverInputSelect = props => {
 

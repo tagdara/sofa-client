@@ -2,13 +2,13 @@ import React, { useState } from 'react';
 import CardLine from 'components/CardLine'
 import { Collapse, Group, Stack } from '@mantine/core'
 import DeviceIcon from 'components/DeviceIcon'
-import usePowerState from 'device-model/property/powerState/usePowerState'
-import useInput from 'device-model/property/input/useInput'
-import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
-import InputSelect from 'device-model/property/input/InputSelect'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import useInput from 'endpoint-model/property/input/useInput'
+import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
+import InputSelect from 'endpoint-model/property/input/InputSelect'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import TelevisionDetailLine from 'devices/Television/TelevisionDetailLine'
-import ModeSelect from 'device-model/property/mode/ModeSelect'
+import ModeSelect from 'endpoint-model/property/mode/ModeSelect'
 import MatrixConflictList from 'devices/Matrix/MatrixConflictList'
 
 const Television = props => {

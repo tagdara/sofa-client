@@ -1,7 +1,7 @@
 import React from 'react';
 import CardPopover from 'components/CardPopover'
-import TargetSetpointAdjuster from 'device-model/property/targetSetpoint/TargetSetpointAdjuster'
-import ThermostatModeButtons from 'device-model/property/thermostatMode/ThermostatModeButtons'
+import TargetSetpointAdjuster from 'endpoint-model/property/targetSetpoint/TargetSetpointAdjuster'
+import ThermostatModeButtons from 'endpoint-model/property/thermostatMode/ThermostatModeButtons'
 import { Stack } from '@mantine/core';
 
 const TargetSetpointPopover = props => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon } from '@mantine/core'
 import { Lock, Unlock } from 'react-feather'
-import useMode from 'device-model/property/mode/useMode'
+import useMode from 'endpoint-model/property/mode/useMode'
 
 
 const InputLockButton = props => {

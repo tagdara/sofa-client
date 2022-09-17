@@ -182,7 +182,7 @@ export const getFullInstance = (endpointId, instance) => {
     for (var k = 0; k < dev.capabilities.length; k++) {
         if (dev.capabilities[k].interface.endsWith('ModeController')) {
             var modeCapability = dev.capabilities[k]
-            if (instance === modeCapability.instance || instance === modeCapability.instance.split('.')[1]) {
+            if (instance === modeCapability.instance) {  // || instance === modeCapability.instance.split('.')[1]) {
                 return modeCapability.instance
                 //console.log('---', modeCapability.instance)                
             }
@@ -379,7 +379,8 @@ export const controllerForProperty = (endpointId, controllerProp) => {
                     return dev.capabilities[j].interface.split('.')[1]
                 }
             }
-            if (dev.capabilities[j].hasOwnProperty('instance') && dev.capabilities[j].instance.split('.')[1]===controllerProp) {
+            // if (dev.capabilities[j].hasOwnProperty('instance') && dev.capabilities[j].instance.split('.')[1]===controllerProp) {
+            if (dev.capabilities[j].hasOwnProperty('instance') && dev.capabilities[j].instance === controllerProp) {
                 return dev.capabilities[j].interface.split('.')[1]
             }
         }
@@ -417,7 +418,8 @@ export const getControllerInterface = (device, item)  => {
                     return device.capabilities[j]
                 }
                 if (item.hasOwnProperty('instance') && device.capabilities[j].hasOwnProperty('instance')) {
-                    if (item.instance===device.capabilities[j].instance || item.instance===device.capabilities[j].instance.split('.')[1]) {
+                    if (item.instance===device.capabilities[j].instance) { // || item.instance===device.capabilities[j].instance.split('.')[1]) {
+
                         return device.capabilities[j]
                     }
                 }               
@@ -435,7 +437,8 @@ export const getDeviceProperties = dev => {
     if (dev) {
         for (var j = 0; j < dev.capabilities.length; j++) {
             if (dev.capabilities[j].hasOwnProperty('instance')) {
-                devprops=devprops.concat([dev.capabilities[j].instance.split('.')[1]])
+                //devprops=devprops.concat([dev.capabilities[j].instance.split('.')[1]])
+                devprops=devprops.concat([dev.capabilities[j].instance])
             } else if (controllerProperties[dev.capabilities[j].interface.split('.')[1]]!==undefined) {
                 devprops=devprops.concat(Object.keys(controllerProperties[dev.capabilities[j].interface.split('.')[1]]))
             } else if (eventSources.hasOwnProperty(dev.capabilities[j].interface.split('.')[1])) {
@@ -505,7 +508,8 @@ export const isModeNonControllable = (dev, instance) => {
     }
     
     for (var k = 0; k < dev.capabilities.length; k++) {
-        if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.split('.')[1]===instance) {
+        // if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.split('.')[1]===instance) {
+        if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance === instance) {
             try {
                 return dev.capabilities[k].properties.nonControllable
             }

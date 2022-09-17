@@ -1,6 +1,6 @@
 import React from 'react';
 import { Lock, Unlock } from 'react-feather'
-import useMode from 'device-model/property/mode/useMode'
+import useMode from 'endpoint-model/property/mode/useMode'
 import Segment from 'components/Segment'
 
 

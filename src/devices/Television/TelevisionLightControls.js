@@ -1,12 +1,12 @@
 import React from "react";
 import { endpointIdByFriendlyName } from 'store/deviceHelpers';
 import StackCard from 'components/StackCard'
-import usePowerState from 'device-model/property/powerState/usePowerState'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import AreaShortcutSlider from 'devices/Area/AreaShortcutSlider'
 import { ActionIcon, Group, Text } from '@mantine/core'
 import { directive } from 'store/directive'
 import { Tv } from 'react-bootstrap-icons'
-import useScene from 'device-model/property/scene/useScene'
+import useScene from 'endpoint-model/property/scene/useScene'
 
 const TelevisionLightControls = props => {
 

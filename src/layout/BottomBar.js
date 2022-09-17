@@ -97,7 +97,7 @@ const BottomBar = props => {
     }
 
     return (
-        <Stack id="bottomrender" spacing={"xs"} style={{flexDirection: "column-reverse"}} >
+        <Stack id="bottomrender" spacing={"xs"} style={{maxWidth: "100%", flexDirection: "column-reverse"}} >
 
             <SegmentedControl 
                     fullWidth 

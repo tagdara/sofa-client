@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Avatar } from '@mantine/core';
 import ThermostatPopover from 'devices/Thermostat/ThermostatPopover'
-import useTargetSetpoint from 'device-model/property/targetSetpoint/useTargetSetpoint'
-import useThermostatMode from 'device-model/property/thermostatMode/useThermostatMode'
+import useTargetSetpoint from 'endpoint-model/property/targetSetpoint/useTargetSetpoint'
+import useThermostatMode from 'endpoint-model/property/thermostatMode/useThermostatMode'
 
 const ThermostatAvatar = props => {
 

@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { CloudSlash, Lightbulb, X as XIcon} from "react-bootstrap-icons"
 import { ActionIcon, Button } from '@mantine/core';
 import LightPopover from 'devices/Light/LightPopover'
-import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
-import usePowerState from 'device-model/property/powerState/usePowerState'
-import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
+import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 
 const LightLine = props => {

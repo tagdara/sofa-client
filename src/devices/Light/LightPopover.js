@@ -2,10 +2,10 @@ import React from 'react';
 import { Stack, Text} from '@mantine/core'
 import CardPopover from 'components/CardPopover'
 
-import ColorTemperatureSlider from 'device-model/property/colorTemperatureInKelvin/ColorTemperatureSlider'
-import BrightnessSlider from 'device-model/property/brightness/BrightnessSlider'
-import ColorSlider from 'device-model/property/color/ColorSlider'
-import OnLevelSlider from 'device-model/instance/OnLevelSlider'
+import ColorTemperatureSlider from 'endpoint-model/property/colorTemperatureInKelvin/ColorTemperatureSlider'
+import BrightnessSlider from 'endpoint-model/property/brightness/BrightnessSlider'
+import ColorSlider from 'endpoint-model/property/color/ColorSlider'
+import OnLevelSlider from 'endpoint-model/instance/OnLevelSlider'
 import { hasCapability } from 'store/deviceHelpers'
 
 const LightPopover = props => {

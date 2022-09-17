@@ -1,13 +1,13 @@
 import React from 'react';
-import ModeControllerText from 'device-model/controller/ModeController/ModeControllerText'
+import ModeControllerText from 'endpoint-model/controller/ModeController/ModeControllerText'
 import ForecastAvatar from 'devices/Weather/ForecastAvatar'
 import WeatherIcon from 'devices/Weather/WeatherIcon'
 import WideAvatar from 'components/WideAvatar'
-import AirQualityBadge from 'device-model/instance/AirQualityBadge'
+import AQIBadge from 'endpoint-model/instance/AQIBadge'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers'
 import { Group, Stack} from '@mantine/core';
-import useTemperature from 'device-model/property/temperature/useTemperature'
-import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
+import useTemperature from 'endpoint-model/property/temperature/useTemperature'
+import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import { Battery } from 'react-bootstrap-icons'
 
 export default function Weather(props) { 
@@ -39,7 +39,7 @@ export default function Weather(props) {
                     <ModeControllerText size="lg" endpointId={forecastDevice} instance={"Weather.Condition"} />
                     <Group noWrap style={{ width: "100%"}}>
                         <ForecastAvatar size={"sm"} dimmed endpointId={forecastDevice} currentTemp={currentDevice}  />
-                        { aqEndpoint && <AirQualityBadge size="md" endpointId={aqEndpoint} instance={"Air.AQI"} prefix={"AQI"} /> }
+                        { aqEndpoint && <AQIBadge size="md" endpointId={aqEndpoint} instance={"Air.AQI"} prefix={"AQI"} /> }
                     </Group>
                 </Stack>
             </Group>

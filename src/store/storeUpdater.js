@@ -14,7 +14,8 @@ function updateProperty(device, prop, endpointId) {
     var interfaceName = prop.namespace.split('.')[1]
 
     if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-        interfaceName=prop.instance.split('.')[1]
+        // interfaceName=prop.instance.split('.')[1]
+        interfaceName=prop.instance
     }
 
     var propertyName = prop['name']
@@ -48,7 +49,8 @@ function updateProperty(device, prop, endpointId) {
 function getInterfaceName(prop) {
     var interfaceName = prop.namespace.split('.')[1]
     if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-        interfaceName=prop.instance.split('.')[1]
+        // interfaceName=prop.instance.split('.')[1]
+        interfaceName = prop.instance
     } else {
         if (interfaceName === "ToggleController") {
             console.log('toggle without instance', prop)

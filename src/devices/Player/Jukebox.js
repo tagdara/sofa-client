@@ -5,7 +5,7 @@ import PlayerHeader from 'devices/Player/PlayerHeader'
 import PlayerHeaderSmall from 'devices/Player/PlayerHeaderSmall'
 import SpeakerList from 'devices/Speaker/SpeakerList';
 import { useRegister } from 'store/useRegister'
-import useMultiPower from 'device-model/multidevice/useMultiPower'
+import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
 import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
 
 const JukeboxHero = props => {

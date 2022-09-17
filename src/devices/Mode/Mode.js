@@ -2,8 +2,8 @@ import React from 'react';
 import { ActionIcon } from '@mantine/core';
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
-import usePowerState from 'device-model/property/powerState/usePowerState'
-import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 import { Tag } from 'react-feather'
 
 export default function Mode(props) {

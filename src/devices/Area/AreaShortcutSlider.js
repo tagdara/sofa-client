@@ -2,8 +2,8 @@ import React from 'react';
 import CardLineSlider from 'components/CardLineSlider';
 import { directive } from 'store/directive'
 import { deviceByEndpointId } from 'store/deviceHelpers'
-import useScene from 'device-model/property/scene/useScene'
-import useShortcuts from 'device-model/property/shortcuts/useShortcuts'
+import useScene from 'endpoint-model/property/scene/useScene'
+import useShortcuts from 'endpoint-model/property/shortcuts/useShortcuts'
 
 const AreaShortcutSlider = props => {
 

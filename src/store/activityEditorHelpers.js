@@ -225,7 +225,7 @@ function errorBlock(modulename) {
 export const loadPropertyModule = (name) => {
     let propertyModule = React.lazy(() => { 
         try { 
-            return import('device-model/property/' + name ).catch(() => ({ default: () => errorBlock(name) }))
+            return import('endpoint-model/property/' + name ).catch(() => ({ default: () => errorBlock(name) }))
         }
         catch {
             return <Button disabled>{name ? name : "Not available"}</Button>

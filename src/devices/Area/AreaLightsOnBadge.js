@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon, Badge } from '@mantine/core'
 import { compareState,friendlyNameByEndpointId, isReachable } from 'store/deviceHelpers'
-import useChildren from 'device-model/property/children/useChildren'
+import useChildren from 'endpoint-model/property/children/useChildren'
 import useDeviceStateStore from 'store/deviceStateStore'
 import { directive } from 'store/directive'
 import { X } from "react-bootstrap-icons";

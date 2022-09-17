@@ -1,7 +1,7 @@
 import React from 'react';
 import CardLine from 'components/CardLine'
 import { PlusSquare } from 'react-feather'
-import DeviceSelect from 'device-model/device/DeviceSelect'
+import DeviceSelect from 'endpoint-model/device/DeviceSelect'
 
 const ActivityDeviceMissing = props => {
 

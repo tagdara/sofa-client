@@ -6,8 +6,8 @@ import useActivityEditorStore from 'store/activityEditorStore'
 
 import ActivityDeviceItem from 'activity/editor/ActivityDeviceItem'
 import ActivityDeviceMissing from 'activity/editor/ActivityDeviceMissing'
-import DeviceSelect from 'device-model/device/DeviceSelect'
-import DeviceSegment from 'device-model/device/DeviceSegment'
+import DeviceSelect from 'endpoint-model/device/DeviceSelect'
+import DeviceSegment from 'endpoint-model/device/DeviceSegment'
 
 const ActivityDevice = props => {
     const [selecting, setSelecting ] = useState(false)

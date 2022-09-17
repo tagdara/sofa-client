@@ -1,6 +1,6 @@
 import React from 'react';
 import { Group } from '@mantine/core'
-import useChildren from 'device-model/property/children/useChildren'
+import useChildren from 'endpoint-model/property/children/useChildren'
 import AreaLightsOnBadge from 'devices/Area/AreaLightsOnBadge'
 
 const AreasLightsOn = props => {

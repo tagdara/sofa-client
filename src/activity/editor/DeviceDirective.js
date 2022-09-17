@@ -68,15 +68,15 @@ export default function DeviceDirective(props) {
 
         if (item.instance) {
             if (item.directive === "SetMode") {
-                return "Set "+item.instance.split('.')[1]
+                return "Set "+item.instance
             }
             if (item.directive === "TurnOn") {
-                return "Turn On "+item.instance.split('.')[1]
+                return "Turn On "+item.instance
             }
             if (item.directive === "TurnOff") {
-                return "Turn Off "+item.instance.split('.')[1]
+                return "Turn Off "+item.instance
             }
-            return item.instance.split('.')[1]+"  ("+item.directive+")"
+            return item.instance+"  ("+item.directive+")"
         } else {
             return item.directive
         }

@@ -8,7 +8,7 @@ import 'moment-timezone';
 import { Shield, AlertTriangle } from 'react-feather'
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
 import { ActionIcon } from '@mantine/core';
-import useDetectionState from 'device-model/property/detectionState/useDetectionState'
+import useDetectionState from 'endpoint-model/property/detectionState/useDetectionState'
 
 const Zone = props => {
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import useMode from 'device-model/property/mode/useMode'
+import useMode from 'endpoint-model/property/mode/useMode'
 import { Group, Button } from '@mantine/core';
 
 const MonitorButtonStack = props => {

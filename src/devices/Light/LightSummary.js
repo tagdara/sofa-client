@@ -9,6 +9,7 @@ import { Group, Stack, Text, useMantineTheme } from '@mantine/core'
 import { selectPage } from 'helpers/layoutHelpers';
 import WideAvatar from 'components/WideAvatar'
 import AreasLightsOn from 'devices/Area/AreasLightsOn'
+import { IconBulbOff } from '@tabler/icons'
 
 const LightSummary = props => {
     const theme = useMantineTheme()
@@ -74,6 +75,22 @@ const LightSummary = props => {
     }
 
     const iconColor = lightsOn ? theme.colors[theme.primaryColor] : undefined
+
+    if (!lightCount('on')) {
+        return (
+            <Group style={{ display: "flex", alignItems: "center"}}>
+                <IconBulbOff size={24} />
+                <Text   
+                    size={ "lg" }
+                    weight={500} 
+                    lineClamp={1}
+                    style={{ paddingTop: 4}}
+                >
+                    { "All lights are off" }  
+                </Text>
+            </Group>
+        )
+    }
 
     return (
         <Group position="apart" noWrap >

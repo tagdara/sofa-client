@@ -1,8 +1,8 @@
 import React from 'react';
-import TemperatureSensorLine from 'device-model/controller/temperatureSensor/TemperatureSensorLine'
+import TemperatureSensorLine from 'endpoint-model/controller/temperatureSensor/TemperatureSensorLine'
 import ThermostatAvatar from 'devices/Thermostat/ThermostatAvatar'
-import PowerLevelAutoAvatar from 'device-model/combo/PowerLevelAutoAvatar'
-// import ToggleStateSegment from 'device-model/property/toggleState/ToggleStateSegment'
+import PowerLevelAutoAvatar from 'endpoint-model/combo/PowerLevelAutoAvatar'
+// import ToggleStateSegment from 'endpoint-model/property/toggleState/ToggleStateSegment'
 // import { hasCapability } from 'store/deviceHelpers'
 
 import { Group } from '@mantine/core';

@@ -1,5 +1,5 @@
 import React from 'react';
-import useMode from 'device-model/property/mode/useMode'
+import useMode from 'endpoint-model/property/mode/useMode'
 import { Button } from '@mantine/core';
 import { friendlyNameByEndpointId } from 'store/deviceHelpers';
 import { Monitor } from 'react-feather'

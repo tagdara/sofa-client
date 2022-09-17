@@ -1,7 +1,7 @@
 import React from 'react';
 import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
 import MatrixConflict from 'devices/Matrix/MatrixConflict';
-import useMode from 'device-model/property/mode/useMode'
+import useMode from 'endpoint-model/property/mode/useMode'
 import { Stack } from '@mantine/core';
 export default function MatrixConflictList(props) {
 

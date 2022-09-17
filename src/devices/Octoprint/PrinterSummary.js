@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Group, Text } from '@mantine/core'
-import useEndpointHealth from 'device-model/property/endpointHealth/useEndpointHealth'
-import usePowerState from 'device-model/property/powerState/usePowerState'
-import PowerStateSwitch from 'device-model/property/powerState/PowerStateSwitch'
+import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 import { endpointIdByFriendlyName } from 'store/deviceHelpers';
 import StackCard from 'components/StackCard'
 import PrinterCam from 'devices/Octoprint/PrinterCam'

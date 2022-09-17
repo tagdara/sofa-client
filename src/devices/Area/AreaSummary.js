@@ -9,9 +9,9 @@ import AreaSummaryLine from 'devices/Area/AreaSummaryLine';
 import useUserStore from 'store/userStore'
 import { friendlyNameByEndpointId } from 'store/deviceHelpers'
 import { Stack } from '@mantine/core'
-import useChildren from 'device-model/property/children/useChildren'
-import useScene from 'device-model/property/scene/useScene'
-import useShortcuts from 'device-model/property/shortcuts/useShortcuts'
+import useChildren from 'endpoint-model/property/children/useChildren'
+import useScene from 'endpoint-model/property/scene/useScene'
+import useShortcuts from 'endpoint-model/property/shortcuts/useShortcuts'
 
 const AreaSummary = props => {
 

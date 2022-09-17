@@ -1,14 +1,12 @@
 import React, { useEffect, useState} from 'react';
 import { Stack, Transition } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks'
 import usePageFrame from 'helpers/usePageFrame'
 
 const PageFrame = props => {
-    const { stacksWidth } = usePageFrame()
-    const wide = useMediaQuery('(min-width: 640px)');
+
     // Used to fill in the space between the top of the screen and possible navbar and the bottom of the screen and the potential bottombar
     // <Stack style={{ width: "100%", overflow: "hidden", paddingBottom: 8 }}></Group>
-
+    const { stacksWidth } = usePageFrame()
     const [mounted, setMounted] = useState(false)
 
     useEffect(() => {
@@ -27,7 +25,7 @@ const PageFrame = props => {
 
                             margin: "0 auto", 
                             width: "100%", 
-                            paddingBottom : wide ? 64 : 8,
+                            paddingBottom : 8,
                             position: "relative",
                             boxSizing: "border-box",
                         }} 

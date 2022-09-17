@@ -4,20 +4,20 @@ import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'devices/Player/PlayerArtOverlayButtons';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { directive } from 'store/directive'
-import { useRegister } from 'store/useRegister'
+import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'
 
 const PlayerHeader = props => {
     
     const jukebox = 'jukebox'
-    const { deviceState } = useRegister(props.endpointId)
+    const { playbackState } = usePlaybackState(props.endpointId)
 
-    if (!deviceState) {
+    if (!playbackState) {
         return <PlaceholderCard count={ 3 } />
     }
 
     function handlePlayPause(event) {
         event.stopPropagation();
-        if (deviceState.MusicController.playbackState.value ==='PLAYING') {
+        if (playbackState ==='PLAYING') {
             directive(jukebox, 'MusicController', 'Pause')
         } else {
             directive(jukebox, 'MusicController', 'Play')
@@ -40,10 +40,21 @@ const PlayerHeader = props => {
 
     return (
         <Group direction="row">
-            <PlayerArtOverlay   deviceState={deviceState} cover={openJukebox} setMini={props.toggleIdle} >
-                <PlayerArtOverlayButtons    min={props.setMini} cover={props.toggleIdle} stop={handleStop} url={props.url}
-                                            playPause={handlePlayPause} skip={handleSkip} jukebox={true} toggleSpeakerFilter={ props.toggleSpeakers }
-                                            playbackState={ deviceState.MusicController.playbackState.value ? deviceState.MusicController.playbackState.value : 'Unknown'} />
+            <PlayerArtOverlay   
+                endpointId={props.endpointId}
+                cover={openJukebox} 
+                setMini={props.toggleIdle}
+            >
+                <PlayerArtOverlayButtons    
+                    min={props.setMini} 
+                    cover={props.toggleIdle} 
+                    stop={handleStop} 
+                    url={props.url}
+                    playPause={handlePlayPause}
+                    skip={handleSkip}
+                    jukebox={true} 
+                    toggleSpeakerFilter={ props.toggleSpeakers }
+                    playbackState={ playbackState } />
             </PlayerArtOverlay>
         </Group>
     );

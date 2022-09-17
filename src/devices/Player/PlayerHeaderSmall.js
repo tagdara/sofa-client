@@ -26,8 +26,9 @@ const PlayerHeaderSmall = props => {
 
     return (
             <CardLine   
-                        icon={ <MusicNoteList size={24} onClick={ props.toggleIdle }/> }
-                        primary={ 'Jukebox' }
+                onClick={ props.toggleIdle }
+                icon={ <MusicNoteList size={24} /> }
+                primary={ 'Jukebox' }
             >
                 <Group spacing={"xs"}>
                     <ActionIcon variant="light" size="lg" onClick={props.toggleSpeakers}>

@@ -28,7 +28,7 @@ export const CardLine = React.forwardRef( (props, ref) => {
                     )
                 )
             }           
-            <Stack spacing={0} style={{ flexGrow: 1 }}>
+            <Stack spacing={0} style={{ flexGrow: 1 }} onClick={props.onClick}>
                 <Text lineClamp={1} size={ props.size ? props.size : "lg" } weight={500} style={{ flexGrow: 1 }}>
                     { props.primary }
                 </Text>

@@ -3,7 +3,7 @@ import moment from 'moment';
 
 import { removeFavorite, makeFavorite, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
-import { useRegister } from 'store/useRegister'
+import { useRegister } from 'endpoint-model/register/useRegister'
 import useUserStore from 'store/userStore'
 
 import { X as Close, List, Star, PlayCircle } from 'react-feather'

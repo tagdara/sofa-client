@@ -1,5 +1,5 @@
 import React from 'react';
-import SceneItem from 'devices/Scene/SceneItem';
+import SceneItem from 'endpoint-model/controller/SceneController/SceneItem';
 import { Divider, Stack } from '@mantine/core'
 
 const AreaScenes = props => {

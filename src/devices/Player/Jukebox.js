@@ -13,9 +13,10 @@ const JukeboxHero = props => {
     const [ showIdle, setShowIdle ]=useState(false)
     const [ filterOff, setFilterOff] = useState(true)
     const { playbackState } = usePlaybackState(props.endpointId)
-    const exclude = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
-    const speakers = endpointIdsByDisplayCategory( "SPEAKER").filter(item => !exclude.includes(item))
-    const { onCount } =useMultiPower(speakers)
+
+    const excludeSpeakers = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
+    const speakers = endpointIdsByDisplayCategory( "SPEAKER").filter(item => !excludeSpeakers.includes(item))
+    const { onCount } = useMultiPower(speakers)
 
     if (!playbackState) {
         return <PlaceholderCard count={ 3 } />
@@ -49,7 +50,7 @@ const JukeboxHero = props => {
             :
                 <PlayerHeader endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers}  url={props.url} />
             }
-                <SpeakerList filterOff={filterOff} exclude={exclude} />
+                <SpeakerList filterOff={filterOff} excludeSpeakers={excludeSpeakers} />
         </Stack>
     );
 }

@@ -3,7 +3,7 @@ import ActivityItemMissing from 'activity/ActivityItemMissing'
 
 import { isFavorite, deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
-import { useRegister } from 'store/useRegister'
+import { useRegister } from 'endpoint-model/register/useRegister'
 import moment from 'moment';
 import { Loader, NavLink } from '@mantine/core';
 import { IconListDetails, IconStar, IconPlayerPlay } from '@tabler/icons';

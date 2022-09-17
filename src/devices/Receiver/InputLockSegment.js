@@ -1,5 +1,5 @@
 import React from 'react';
-import { Lock, Unlock } from 'react-feather'
+import { IconLock, IconLockOpen } from '@tabler/icons';
 import useMode from 'endpoint-model/property/mode/useMode'
 import Segment from 'components/Segment'
 
@@ -8,18 +8,18 @@ const InputLockSegment = props => {
 
     // should eventually be changed to a toggle
   
-    const { mode, setMode } = useMode(props.endpointId, 'Receiver.InputLock')
-    const locked = mode === 'InputLock.Locked' 
+    const { mode, setMode } = useMode(props.endpointId, 'Input.Lock')
+    const locked = mode === 'Lock.Locked' 
 
     const modeToggleClick = ( event) => {
         event.stopPropagation()
         console.log('mode', mode, locked)
-        setMode( locked ? 'InputLock.Unlocked' : 'InputLock.Locked')
+        setMode( locked ? 'Lock.Unlocked' : 'Lock.Locked')
     }
 
     return (
         <Segment size={props.size} color={ locked ? "primary" : undefined } variant={ locked ? "filled" : "light"} onClick={modeToggleClick} >
-            { locked ? <Lock size={12} /> : <Unlock size={12} /> }
+            { locked ? <IconLock size={12} /> : <IconLockOpen size={12} /> }
         </Segment>
     );
 

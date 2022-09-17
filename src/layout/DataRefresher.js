@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import useUserStore from 'store/userStore'
-import useRegisterStore from 'store/registerStore'
+import useRegisterStore from 'endpoint-model/register/registerStore'
 import { discovery, refreshDirectives, refreshProperties } from 'store/directive'
 import { Button, Stack } from '@mantine/core'
-import { CloudOff } from 'react-feather';
-
+import { IconCloudOff } from '@tabler/icons';
 import useStream from 'store/useStream'
 import storeUpdater from 'store/storeUpdater'
 import { useDidUpdate } from '@mantine/hooks';
@@ -34,19 +33,14 @@ export default function SofaFrame(props) {
         }
     }, [ streamStatus ])
 
-    //<Button color="red" fullWidth variant={'light'} leftIcon={<CloudOff size={20} />} loading >
-    //    {streamLabel} { url} {streamStatus} { refreshed }
-    //</Button>
-
     const statusLabel = streamStatus === 0 ? 'connecting' : (streamStatus === 2 ? 'closed' : 'not ready')
-
 
     if (!streamConnected || streamStatus !== 1 ) {
         return  <Stack style={{ maxWidth: 320, margin: "0 auto" }}>
                     <Button color={ streamStatus === 0 ? undefined : "red"} 
                             fullWidth 
                             variant={'light'} 
-                            leftIcon={<CloudOff size={20} /> }
+                            leftIcon={<IconCloudOff size={20} /> }
                             loading={ streamStatus === 0}
                             onClick={reconnect}
                     >

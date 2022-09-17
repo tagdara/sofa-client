@@ -1,8 +1,7 @@
 import React from 'react';
 import { ActionIcon } from '@mantine/core'
-import { Lock, Unlock } from 'react-feather'
 import useMode from 'endpoint-model/property/mode/useMode'
-
+import { IconLock, IconLockOpen } from '@tabler/icons';
 
 const InputLockButton = props => {
 
@@ -14,18 +13,17 @@ const InputLockButton = props => {
     // A better model would be to have the lock sit next to the control and when locked, disable user
     // changes as well
   
-    const { mode, setMode } = useMode(props.endpointId, 'Receiver.InputLock')
-    const locked = mode === 'InputLock.Locked' 
+    const { mode, setMode } = useMode(props.endpointId, 'Input.Lock')
+    const locked = mode === 'Lock.Locked' 
 
     const modeToggleClick = ( event) => {
         event.stopPropagation()
-        console.log('mode', mode, locked)
-        setMode( locked ? 'InputLock.Unlocked' : 'InputLock.Locked')
+        setMode( locked ? 'Lock.Unlocked' : 'Lock.Locked')
     }
 
     return (
         <ActionIcon size={props.size ? props.size : "md"} color={ locked ? "primary" : undefined } variant={ locked ? "filled" : "light"} onClick={modeToggleClick} >
-            { locked ? <Lock size={16} /> : <Unlock size={16} /> }
+            { locked ? <IconLock size={16} /> : <IconLockOpen size={16} /> }
         </ActionIcon>
     );
 }

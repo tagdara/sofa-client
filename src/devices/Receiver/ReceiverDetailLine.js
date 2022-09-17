@@ -10,8 +10,8 @@ import useMode from 'endpoint-model/property/mode/useMode'
 const ReceiverDetailLine = props => {
 
     const { muted } = useMuted(props.endpointId)
-    const { mode } = useMode(props.endpointId, 'Receiver.InputLock')
-    const locked = mode === 'InputLock.Locked' 
+    const { mode } = useMode(props.endpointId, 'Input.Lock')
+    const locked = mode === 'Lock.Locked' 
 
     return  <Group noWrap style={{ paddingLeft: 48 }} spacing={2} >
                 { locked && <InputLockSegment size="xs" icon endpointId={props.endpointId} /> }

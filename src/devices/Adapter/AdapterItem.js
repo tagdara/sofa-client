@@ -5,7 +5,7 @@ import { directive } from 'store/directive'
 import { ActionIcon } from '@mantine/core'
 import { Layers, RotateCcw, Square } from 'react-feather'
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
-import { useRegister } from 'store/useRegister'
+import { useRegister } from 'endpoint-model/register/useRegister'
 
 export default function AdapterItem(props) { 
 

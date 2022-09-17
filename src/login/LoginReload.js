@@ -1,18 +1,9 @@
 import React from 'react';
 import { Button, Card, Stack, Text } from '@mantine/core';
+import { reloadPWA } from 'store/reloadPWA'
 
 export default function LoginReload(props) {
     
-    function reloadPWA() {
-        
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.unregister();
-            });
-        }
-        window.location.reload(true)
-    } 
-
     return (
         <Card>
             <Stack>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActionIcon, Center, Group, Space, Text } from '@mantine/core'
-import { Lock, Unlock } from 'react-feather'
+import { IconLock, IconLockOpen } from '@tabler/icons';
 import CardSegmentedControl from 'components/CardSegmentedControl'
 import useMode from 'endpoint-model/property/mode/useMode'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
@@ -38,11 +38,17 @@ const ReceiverInputSelect = props => {
                                     variant={ "filled" }
                                     onClick={ modeToggleClick } 
                         > 
-                            { locked ? <Lock size={16} /> : <Unlock size={16} /> }
+                            { locked ? <IconLock size={16} /> : <IconLockOpen size={16} /> }
                         </ActionIcon>
                     </Center>
         }
-        return <Center><Text size="sm">{inp}</Text></Center>
+        return (
+            <Center>
+                <Text size="sm">
+                    {inp}
+                </Text>
+            </Center>
+        )
     }
 
     const selections = inputs.map( inp => { return { label : makeCustomSegmentLabel(inp), value : inp} } )

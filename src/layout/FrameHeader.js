@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActionIcon, Group, Header, Burger, Text, useMantineTheme } from '@mantine/core';
-import { Home, Maximize } from 'react-feather';
+import { IconHome, IconMaximize } from '@tabler/icons';
 import { selectPage } from 'helpers/layoutHelpers';
 import useLayoutStore from 'store/layoutStore'
 
@@ -30,8 +30,8 @@ const FrameHeader = props => {
                 />
                 <Text sx={{ flexGrow: 1 }}>Sofa</Text>
                 <Group noWrap spacing="lg">
-                { !homePage && <ActionIcon variant="light" color="primary" size="md" onClick={ () => selectPage('Stacks')}><Home size={20} /></ActionIcon> }
-                <ActionIcon size="md" onClick={goFullScreen}><Maximize size={20} /></ActionIcon>
+                { !homePage && <ActionIcon variant="light" color="primary" size="md" onClick={ () => selectPage('Stacks')}><IconHome size={20} /></ActionIcon> }
+                <ActionIcon size="md" onClick={goFullScreen}><IconMaximize size={20} /></ActionIcon>
                 </Group>
             </Group>
         </Header>

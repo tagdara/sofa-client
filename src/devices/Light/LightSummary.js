@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
-import { Lightbulb, LightbulbOff} from "react-bootstrap-icons";
-import PlaceholderCard from 'layout/PlaceholderCard';
-import LightChristmasButton from 'devices/Light/LightChristmasButton';
+import { Group, Stack, Text, useMantineTheme } from '@mantine/core'
 
 import useDeviceStateStore from 'store/deviceStateStore'
 import { compareState, endpointIdsByDisplayCategory, register, unregister } from 'store/deviceHelpers'
-import { Group, Stack, Text, useMantineTheme } from '@mantine/core'
 import { selectPage } from 'helpers/layoutHelpers';
+import PlaceholderCard from 'layout/PlaceholderCard';
 import WideAvatar from 'components/WideAvatar'
 import AreasLightsOn from 'devices/Area/AreasLightsOn'
-import { IconBulbOff } from '@tabler/icons'
+import LightChristmasButton from 'devices/Light/LightChristmasButton';
+import { IconBulb, IconBulbOff } from '@tabler/icons'
 
-const LightSummary = props => {
+const LightSummary = () => {
     const theme = useMantineTheme()
     const xmas = false
     const lights = endpointIdsByDisplayCategory('LIGHT')
@@ -29,7 +28,7 @@ const LightSummary = props => {
 
     if (!states || Object.keys(states).length < 1) { return <PlaceholderCard /> }
     
-    function lightCount(condition, source) {
+    function lightCount(condition) {
         var count = 0;
         for (var dev in states) {
             var light = states[dev]
@@ -78,7 +77,7 @@ const LightSummary = props => {
 
     if (!lightCount('on')) {
         return (
-            <Group style={{ display: "flex", alignItems: "center"}}>
+            <Group style={{ display: "flex", alignItems: "center"}} onClick={ () => selectPage('LightPage') }>
                 <IconBulbOff size={24} />
                 <Text   
                     size={ "lg" }
@@ -97,7 +96,7 @@ const LightSummary = props => {
             <Group noWrap style={{ alignItems: lightsOn ? "flex-start" : "center "}}>
                 <WideAvatar color={iconColor} size="lg"
                             onClick={ () => selectPage('LightPage') }
-                            left={ lightCount('on') ? <Lightbulb size="20" /> : <LightbulbOff size="20" /> }
+                            left={ <IconBulb size="24" /> }
                             right={ lightCount('on') ? lightCount('on') : undefined }
                     /> 
                 <Stack spacing={"xs"}>

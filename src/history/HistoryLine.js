@@ -2,7 +2,7 @@ import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
 import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
-import { Shield, AlertOctagon } from 'react-feather'
+import { IconShield, IconShieldOff } from '@tabler/icons';
 import { ActionIcon } from '@mantine/core';
 
 export default function HistoryLine(props) {    
@@ -11,14 +11,15 @@ export default function HistoryLine(props) {
         <SplitButtonGroup>
             <SplitButton>
                 <ActionIcon variant="light" color={props.val==='NOT_DETECTED' ? 'green' : 'red' }>
-                    { props.val==='NOT_DETECTED' ? <Shield size={20} /> : <AlertOctagon size={20} /> }
+                    { props.val==='NOT_DETECTED' ? <IconShield size={20} /> : <IconShieldOff size={20} /> }
                 </ActionIcon>
             </SplitButton>
-            <SplitButton label={ 
-                            <Moment format={ props.justTime ? "h:mm:ssa" : "ddd MMM D h:mm:ssa" }>
-                                {props.time}
-                            </Moment>
-                        } 
+            <SplitButton 
+                label={ 
+                    <Moment format={ props.justTime ? "h:mm:ssa" : "ddd MMM D h:mm:ssa" }>
+                        {props.time}
+                    </Moment>
+                } 
             />
         </SplitButtonGroup>
     );

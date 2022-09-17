@@ -1,5 +1,5 @@
 import useDeviceStore from 'store/deviceStore'
-import useRegisterStore from 'store/registerStore'
+import useRegisterStore from 'endpoint-model/register/registerStore'
 import useLoginStore from 'store/loginStore'
 import useUserStore from 'store/userStore'
 import { tokenFetch } from 'store/tokenFetch'

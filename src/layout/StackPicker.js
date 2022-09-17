@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import useLayoutStore from 'store/layoutStore'
 import { ActionIcon, Group, Select, Text } from '@mantine/core';
 import { usePageFrame } from 'helpers/usePageFrame'
-import { X } from 'react-feather';
+import { IconX } from '@tabler/icons';
 
 const StackPicker = props => {
     const stackLayout = useLayoutStore(state => state.stackLayout )    
@@ -24,7 +24,7 @@ const StackPicker = props => {
         />
         { userSelect &&
             <ActionIcon onClick={ () => setUserSelect(false) }>
-                <X size={16}/>
+                <IconX size={16}/>
             </ActionIcon>
         }
         </Group>

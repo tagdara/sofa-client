@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Drawer, Stack, ScrollArea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useNotifications } from '@mantine/notifications';
-import { LogIn } from 'react-feather';
+import { IconLogin } from '@tabler/icons';
 
 import NavButton from 'layout/NavButton';
 
@@ -60,7 +60,7 @@ const RightDrawer = props => {
                 { contextItem &&
                     <Stack spacing="xs" noWrap >
                         { powerUser && <NavButton highlight label={"Use this "+contextItem} 
-                            color="transparent" icon={<LogIn size={20} />} reverse  /> 
+                            color="transparent" icon={<IconLogin size={20} />} reverse  /> 
                         }
                         <NavButton highlight label={"Back"} leftArrow reverse onClick={notifyAction} />
                     </Stack>

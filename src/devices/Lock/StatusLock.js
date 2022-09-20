@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import CardLine from 'components/CardLine';
 import { directive } from 'store/directive'
 import { deviceByEndpointId, register, unregister } from 'store/deviceHelpers'
-import useDeviceStateStore from 'store/deviceStateStore'
+import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
 import { AlertTriangle, Tablet } from 'react-feather'
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { Button, Group, PasswordInput, Stack } from '@mantine/core';
@@ -13,7 +13,7 @@ export default function StatusLock(props) {
     const pin= "7818";
     const [ showPin, setShowPin ] = useState(false);
     const device = deviceByEndpointId(props.endpointId)   
-    const deviceState = useDeviceStateStore( state => state.deviceStates[props.endpointId] )    
+    const deviceState = useEndpointStateStore(state => state.deviceStates[props.endpointId] )    
     const name = props.displayName ? props.displayName : props.deviceName 
     const buttonDuration = props.buttonDuration ? props.buttonDuraion : 1
 

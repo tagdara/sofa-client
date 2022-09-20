@@ -20,7 +20,7 @@ const ActivityItem = props => {
 
     function runActivity(conditions=true) {
         setLaunched(true)
-        directive(props.endpointId, 'SceneController', 'Activate', {}, {"conditions": conditions})
+        directive(props.endpointId, 'Alexa.SceneController', 'Activate', {}, {"conditions": conditions})
             .then(result=> { parseResult(result) })
     }
 

@@ -18,7 +18,7 @@ export default function ActivityFooter(props) {
 
 
     function runAutomation(processConditions=true) {
-        directive(endpointId, 'SceneController', 'Activate', {}, {"conditions": processConditions})
+        directive(endpointId, 'Alexa.SceneController', 'Activate', {}, {"conditions": processConditions})
             .then(result=> { parseResult(result) })
     }
     

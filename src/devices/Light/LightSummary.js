@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Group, Stack, Text, useMantineTheme } from '@mantine/core'
 
-import useDeviceStateStore from 'store/deviceStateStore'
+import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
 import { compareState, endpointIdsByDisplayCategory, register, unregister } from 'store/deviceHelpers'
 import { selectPage } from 'helpers/layoutHelpers';
 import PlaceholderCard from 'layout/PlaceholderCard';
@@ -14,7 +14,7 @@ const LightSummary = () => {
     const theme = useMantineTheme()
     const xmas = false
     const lights = endpointIdsByDisplayCategory('LIGHT')
-    const states = useDeviceStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
+    const states = useEndpointStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
     const treeEndpointId = 'insteon:node:1A F1 A5 1'
 
     useEffect(() => {

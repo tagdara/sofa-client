@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import useDeviceStateStore from 'store/deviceStateStore'
+import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
 import WideAvatar from 'components/WideAvatar'
 import { ShieldSlash  } from "react-bootstrap-icons"
 
@@ -15,7 +15,7 @@ const ZoneSummary = props => {
     const motionSensors = endpointIdsByDisplayCategory( "MOTION_SENSOR")     
     const allSensors = [...contactSensors, ...motionSensors] 
     const devices = devicesByEndpointIds(allSensors)
-    const states = useDeviceStateStore(state => Object.fromEntries(allSensors.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
+    const states = useEndpointStateStore(state => Object.fromEntries(allSensors.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
 
     useEffect(() => {
         register(allSensors, "ZoneHero")

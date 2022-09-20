@@ -1,5 +1,5 @@
 import useDeviceStore from "store/deviceStore"
-import useDeviceStateStore from "store/deviceStateStore"
+import useEndpointStateStore from "endpoint-model/store/endpointStateStore"
 
 export const storeUpdater = (data) => {
     updateDeviceStore(data)
@@ -10,96 +10,39 @@ const without = (object, keys) => {
     return keys.reduce((o, k) => { const { [k]: _ , ...p } = o; return p; }, object)
 }
 
-function updateProperty(device, prop, endpointId) {
-    var interfaceName = prop.namespace.split('.')[1]
 
-    if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-        // interfaceName=prop.instance.split('.')[1]
-        interfaceName=prop.instance
-    }
-
-    var propertyName = prop['name']
-    var deviceInterface={...device[interfaceName]}
-    
-    //var older = deviceInterface[propertyName].timeOfSample > prop.timeOfSample
-    // TODO Jukebox especially seemed to have a race between response and changereport so keep an eye on this
-    // console.log('samples', propertyName, older, 'old', deviceInterface[propertyName].timeOfSample, 'new',prop.timeOfSample)
-
-    try {
-        if (deviceInterface[propertyName].timeOfSample && deviceInterface[propertyName].timeOfSample > prop.timeOfSample) {
-            console.log('.. update refused on timeOfSample check', endpointId, propertyName, deviceInterface[propertyName].timeOfSample, prop.timeOfSample)
-            return deviceInterface
-        }
-    }
-    catch {}
-
-    var result = {  
-                    ...deviceInterface, 
-                    [propertyName] : {
-                        ...deviceInterface[propertyName], 
-                        'value': prop.value, 
-                        'timeOfSample': prop.timeOfSample
-                    }
-                }
-
-    return result
-
+function computeChanges(changeProperties, current) {
+    return changeProperties.reduce( (allChanges, change) => {
+        allChanges[change.instance || change.namespace] = allChanges?.[change.instance || change.namespace] || {}
+        allChanges[change.instance || change.namespace][change.name] = { "value": change.value }
+        return allChanges
+    }, current)    
 }
 
-function getInterfaceName(prop) {
-    var interfaceName = prop.namespace.split('.')[1]
-    if (prop.hasOwnProperty('instance') && prop.instance!=="") {
-        // interfaceName=prop.instance.split('.')[1]
-        interfaceName = prop.instance
-    } else {
-        if (interfaceName === "ToggleController") {
-            console.log('toggle without instance', prop)
-        }
-    }    
-    return interfaceName 
-}
 
 function handleReportProperties(device, data) {
-    
+
     var updatedDevice = {}
-    var endpointId = "unknown"
-    try {
-        endpointId = data.event.endpoint.endpointId
-    } 
-    catch(err) {}
 
     if (device) {
         updatedDevice = { ...device }
     }
 
     try {
-        for (var p = 0; p < data.event.payload.change.properties.length; p++) {
-            var changeProperty = data.event.payload.change.properties[p]
-            var changeInterfaceName = getInterfaceName(changeProperty)
-            updatedDevice = { ...updatedDevice, [changeInterfaceName]: updateProperty(updatedDevice, changeProperty, endpointId) }
-        }
-    }
-    catch(err) {
-        
-    }
+        const contextProperties = computeChanges(data.context?.properties || [], updatedDevice)
+        updatedDevice = computeChanges(data.event?.payload?.change?.properties || [], contextProperties)
 
-    try {
-        for (var c = 0; c < data.context.properties.length; c++) {
-            var contextProperty = data.context.properties[c]
-            var contextInterfaceName = getInterfaceName(contextProperty)
-            updatedDevice = { ...updatedDevice, [contextInterfaceName]: updateProperty(updatedDevice, contextProperty, endpointId) }
-        }
-    }
-    catch(err) {}
-
-    try {
-        if (data.payload && data.payload.imageUri) {
+        // CameraStreamController is weird
+        if (data.payload && data.payload?.imageUri) {
             updatedDevice = { ...updatedDevice, CameraStreamController: data.payload }
         }
+
+        var date = new Date();
+        updatedDevice = { ...updatedDevice, last_update: date.toISOString()}
     }
-    catch(err) {}
-    var date = new Date();
-    updatedDevice = { ...updatedDevice, last_update: date.toISOString() }
+    catch(err) {
+        console.log('!! Error updating device from report properties', err)
+    }
     return updatedDevice
 }
 
@@ -124,9 +67,9 @@ const updateDeviceStore = (data, defer=false) => {
                 var deviceResult = without(devices, data.event.payload.endpoints);
                 useDeviceStore.setState({ devices: deviceResult, last_update: date.toISOString() })
 
-                var deviceStates = useDeviceStateStore.getState().deviceStates
+                var deviceStates = useEndpointStateStore.getState().deviceStates
                 var stateResult = without(deviceStates, data.event.payload.endpoints);
-                useDeviceStateStore.setState({ deviceStates: stateResult, last_update: date.toISOString() })
+                useEndpointStateStore.setState({ deviceStates: stateResult, last_update: date.toISOString() })
                 break;
             case 'Discover.Response':
                 var discoveredDevices = data.event.payload.endpoints.reduce((items, endpoint) => ({ ...items, [endpoint.endpointId]: endpoint }), {})
@@ -140,12 +83,10 @@ const updateDeviceStore = (data, defer=false) => {
             case "StateReport":
             case "Response":
             case "ChangeReport":
-                var oldDeviceStates = useDeviceStateStore.getState().deviceStates
+                var oldDeviceStates = useEndpointStateStore.getState().deviceStates
                 var changes = handleReportProperties(oldDeviceStates[endpointId], data)
-                if (defer) {
-                    return { [endpointId] :  changes }
-                }
-                useDeviceStateStore.setState({ deviceStates: {...oldDeviceStates, [endpointId]: changes }, last_update: date.toISOString() })
+                if (defer) { return { [endpointId] :  changes } }
+                useEndpointStateStore.setState({ deviceStates: {...oldDeviceStates, [endpointId]: changes }, last_update: date.toISOString() })
                 break
             case 'ActivationStarted':
                 console.log('ActivationStarted', data)
@@ -153,11 +94,11 @@ const updateDeviceStore = (data, defer=false) => {
             case "ErrorResponse":
                 if (data.event.payload.type === 'BRIDGE_UNREACHABLE' || data.event.payload.type === 'ENDPOINT_UNREACHABLE') {
                     console.log('.. unreachable device', endpointId, data.event.payload.type)
-                    var errDeviceStates = useDeviceStateStore.getState().deviceStates
+                    var errDeviceStates = useEndpointStateStore.getState().deviceStates
                     if (errDeviceStates.hasOwnProperty(endpointId)) {
                         var errorDevice = useDeviceStore.getState().devices[endpointId]
                         if (errorDevice) {
-                            useDeviceStateStore.setState({ errDeviceStates: { [endpointId]: markUnreachable(errorDevice) }, last_update: date.toISOString() })
+                            useEndpointStateStore.setState({ errDeviceStates: { [endpointId]: markUnreachable(errorDevice) }, last_update: date.toISOString() })
                         }
                     }
                 }
@@ -169,14 +110,14 @@ const updateDeviceStore = (data, defer=false) => {
                 break
             case "multiple StateReports":
                 //console.log('multi')
-                var oldMultiStates = useDeviceStateStore.getState().deviceStates
+                var oldMultiStates = useEndpointStateStore.getState().deviceStates
                 if (data.data) {
                     var result = {}
                     for (var x = 0; x < data.data.length; x++) {
                         result = { ...result, ...updateDeviceStore(data.data[x], true) }
                     }
                 }
-                useDeviceStateStore.setState({ deviceStates: {...oldMultiStates, ...result }, last_update: date.toISOString()})
+                useEndpointStateStore.setState({ deviceStates: {...oldMultiStates, ...result }, last_update: date.toISOString()})
                 break
             default:
                 console.log('unhandled report name', data.event.header.name)

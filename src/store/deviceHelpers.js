@@ -80,14 +80,15 @@ export const getInputs = ( endpointId, exclude=[] ) => {
     return choices
 }
 
+
 export const getController = (endpointId, name) => {
     var dev = useDeviceStore.getState().devices[endpointId]
-    if (dev!==undefined) {
+    if (dev !== undefined) {
         for (var j = 0; j < dev.capabilities.length; j++) {
-            if (dev.capabilities[j].interface.endsWith("."+name)) {
+            if (dev?.capabilities[j]?.interface === name) {
                 return dev.capabilities[j]
             }
-            if (dev.capabilities[j].hasOwnProperty('instance') && (dev.capabilities[j].instance === name || dev.capabilities[j].instance.endsWith("."+name))) {
+            if (dev?.capabilities[j]?.instance === name) {
                 return dev.capabilities[j]
             }
         }
@@ -413,6 +414,7 @@ export const getControllerInterface = (device, item)  => {
     if (device===undefined) { return undefined }
     if (device.hasOwnProperty('capabilities')) {
         for (var j = 0; j < device.capabilities.length; j++) {
+            console.log('compare', device.capabilities[j], item)
             if (device.capabilities[j].interface.split('.')[1]===item.controller || device.capabilities[j].interface===item.controller || device.capabilities[j].interface.split('.')[1]===item.controller.split('.')[1]) {
                 if (item.instance===undefined && device.capabilities[j].interface.instance===undefined) {
                     return device.capabilities[j]
@@ -490,6 +492,7 @@ export const deviceDirectives = (dev, includeNonControllable) => {
                 for (var i = 0; i < idirs.length; i++) {
                     if (dev.capabilities[j].properties && dev.capabilities[j].properties.nonControllable && !includeNonControllable) { continue}
                     if (dev.capabilities[j].hasOwnProperty('instance')) {
+                        console.log('inst?', dev.capabilities[j].instance )
                         dirs.push({"directive":idirs[i], "controller":shortIf, "instance":dev.capabilities[j].instance})
                     } else {
                         dirs.push({"directive":idirs[i], "controller":shortIf, "instance":undefined})
@@ -499,27 +502,6 @@ export const deviceDirectives = (dev, includeNonControllable) => {
         }
     } 
     return dirs
-}
-
-export const isModeNonControllable = (dev, instance) => {
-    try {
-    if (typeof(dev)=='string') {
-        dev = deviceByEndpointId(dev)
-    }
-    
-    for (var k = 0; k < dev.capabilities.length; k++) {
-        // if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance.split('.')[1]===instance) {
-        if (dev.capabilities[k].hasOwnProperty('instance') && dev.capabilities[k].instance === instance) {
-            try {
-                return dev.capabilities[k].properties.nonControllable
-            }
-            catch { console.log('could not get noncontrollable for', instance) }
-        }
-    }
-    }
-    catch(e) { console.log('error checking for noncontrollable',e)}
-    return false
-
 }
 
 export const devicesByDisplayCategory = (categories, searchterm) => {

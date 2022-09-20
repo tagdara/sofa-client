@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Stack } from '@mantine/core'
-import PlaceholderCard from 'layout/PlaceholderCard';
+// import PlaceholderCard from 'layout/PlaceholderCard';
 import PlayerHeader from 'devices/Player/PlayerHeader'
 import PlayerHeaderSmall from 'devices/Player/PlayerHeaderSmall'
 import SpeakerList from 'devices/Speaker/SpeakerList';
@@ -17,10 +17,6 @@ const JukeboxHero = props => {
     const excludeSpeakers = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
     const speakers = endpointIdsByDisplayCategory( "SPEAKER").filter(item => !excludeSpeakers.includes(item))
     const { onCount } = useMultiPower(speakers)
-
-    if (!playbackState) {
-        return <PlaceholderCard count={ 3 } />
-    }
 
     function toggleSpeakers() {
         console.log('toggling speaker filter to ', !filterOff, 'showidle is', showIdle)

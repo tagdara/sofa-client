@@ -32,9 +32,18 @@ export default function DeviceDirective(props) {
     if (!device) { return null }    
 
     function handleChangeDirectiveName(newValue) {
+        console.log('new', newValue.split("/",1).length, newValue, directiveMap)
+        var newInstance = undefined
+        if (newValue.split("/").length > 1) {
+            newInstance = newValue.split("/")[1]
+            newValue = newValue.split("/")[0]
+            console.log('news', newValue, newInstance)
+        }
         // var index = parseInt(newValue)
         // if (index < 0 || index > directiveMap.length-1) { return false}
-        var newDirective = directiveMap.find((item) => item.directive === newValue)
+
+        var newDirective = directiveMap.find((item) => item.instance = newInstance && item.directive === newValue)
+        console.log('newd', newDirective)
 
         //var newDirective = directiveMap[index]
         var propertyName = propertyFromDirective(newDirective.controller, newDirective.directive)
@@ -44,15 +53,15 @@ export default function DeviceDirective(props) {
                                     instance: newDirective.instance, 
                                     value: undefined
                             }
+        console.log('updated item', updatedItem)
         updateActivityItem(props.category, props.index, updatedItem)
     }
     
     function defaultOrValue() { 
         var controller = item.controller
         if (!controller) { return null }
-        if (controller.includes('.')) {
-            controller = controller.split('.')[1]
-        }
+
+        console.log('cont', controller, item)
         for (var j = 0; j < directiveMap.length; j++) {
             if ((directiveMap[j].instance === item.instance) && (directiveMap[j].controller === controller) && (directiveMap[j].directive === item.command)) {
                 return j.toString()
@@ -84,9 +93,9 @@ export default function DeviceDirective(props) {
 
     //const selections = directiveMap.map( (item,index) => { return { value: index.toString(), label: getLabel(item) }})
 
-    const selections = directiveMap.map( (item,index) => { return { value: item.directive, label: getLabel(item) }})
+    const selections = directiveMap.map( (item,index) => { return { value: item.directive + ( item.instance ? "/"+item.instance : ""), label: getLabel(item), instance: item.instance }})
     const value = defaultOrValue()
-
+ 
     if (props.compact) {
         return  <Menu>
                     <Menu.Target>

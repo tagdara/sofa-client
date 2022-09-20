@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import ChristmasTreeIcon from 'resources/ChristmasTreeIcon';
-import useDeviceStateStore from 'store/deviceStateStore'
+import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
 import { directive } from 'store/directive'
 import { register, unregister } from 'store/deviceHelpers'
 import { ActionIcon } from '@mantine/core'
 
 const LightChristmasButton = props => {
 
-    const tree = useDeviceStateStore( state => state.deviceStates[props.endpointId] )
+    const tree = useEndpointStateStore(state => state.deviceStates[props.endpointId] )
     const treeOn = tree && tree.PowerController.powerState.value === 'ON'
 
     useEffect(() => {

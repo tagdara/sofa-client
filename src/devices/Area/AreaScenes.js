@@ -15,8 +15,6 @@ const AreaScenes = props => {
 
     if (!sceneSet || sceneSet.length<1 ) { return null }
 
-    console.log('curr', props.current)
-
     return (
         <Stack spacing="xs" style={{ width: "100%"}}>
             <Divider variant="dashed" label="Scenes" />

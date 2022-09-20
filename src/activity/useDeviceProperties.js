@@ -8,16 +8,14 @@ export const useDeviceProperties = (endpointId) => {
     const controllerProperties = useDeviceStore.getState().controllerProperties
 
     const getCapabilityPropertyMap = capability => {
-        const shortCapability = capability && capability.interface ? capability.interface.split('.')[1] : undefined
-        const controllerPropertyNames = controllerProperties.hasOwnProperty(shortCapability) ? Object.keys(controllerProperties[shortCapability]) : []
-        const controllerPropertyMap = controllerPropertyNames.map( item => ({ instance: capability.instance, controller: shortCapability, property: item }) )
+        const controllerPropertyNames = controllerProperties.hasOwnProperty(capability.interface) ? Object.keys(controllerProperties[capability.interface]) : []
+        const controllerPropertyMap = controllerPropertyNames.map( item => ({ instance: capability.instance, controller: capability.interface, property: item }) )
         return controllerPropertyMap
     }
 
     const getEventSourceMap = capability => {
-        const shortCapability = capability && capability.interface ? capability.interface.split('.')[1] : undefined
-        const eventSourceNames = eventSources.hasOwnProperty(shortCapability) ? Object.keys(eventSources[shortCapability]) : []
-        const eventSourceMap = eventSourceNames.map( item => ({ instance: capability.instance, controller: shortCapability, property: item }) )
+        const eventSourceNames = eventSources.hasOwnProperty(capability.interface) ? Object.keys(eventSources[capability.interface]) : []
+        const eventSourceMap = eventSourceNames.map( item => ({ instance: capability.instance, controller: capability.interface, property: item }) )
         return eventSourceMap
     }
 

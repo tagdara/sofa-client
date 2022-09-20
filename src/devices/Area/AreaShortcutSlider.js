@@ -12,7 +12,7 @@ const AreaShortcutSlider = props => {
 
     function runShortcut(level) {
         //var scene=deviceStateByEndpointId(props.area.AreaController.shortcuts.value[level])
-        directive(shortcuts[level], 'SceneController', 'Activate')
+        directive(shortcuts[level], 'Alexa.SceneController', 'Activate')
     }
     
     if (shortcuts.length === 0 ) { return null }

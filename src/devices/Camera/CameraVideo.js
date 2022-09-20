@@ -14,7 +14,7 @@ const CameraVideo = props => {
     }, []);
  
     function startStream() {
-        directive(props.endpointId, "CameraStreamController", "InitializeCameraStreams", 
+        directive(props.endpointId, "Alexa.CameraStreamController", "InitializeCameraStreams", 
             {
                 "cameraStreams": [
                     {

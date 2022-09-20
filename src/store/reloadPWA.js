@@ -1,5 +1,5 @@
 export const reloadPWA = () => {
-    localStorage.removeItem('deviceStateStore');
+    localStorage.removeItem('endpointStateStore');
     localStorage.removeItem('deviceStore')
     localStorage.removeItem('userStore')
     if ('serviceWorker' in navigator) {

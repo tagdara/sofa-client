@@ -2,7 +2,7 @@ import React from 'react';
 import { ActionIcon, Badge } from '@mantine/core'
 import { compareState,friendlyNameByEndpointId, isReachable } from 'store/deviceHelpers'
 import useChildren from 'endpoint-model/property/children/useChildren'
-import useDeviceStateStore from 'store/deviceStateStore'
+import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
 import { directive } from 'store/directive'
 import { X } from "react-bootstrap-icons";
 
@@ -10,7 +10,7 @@ const AreaLightsOnBadge = props => {
 
     const name = friendlyNameByEndpointId(props.endpointId)
     const { lights } = useChildren(props.endpointId)
-    const states = useDeviceStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
+    const states = useEndpointStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
 
     if (!lights || lights.length<1 ) { return null }
 

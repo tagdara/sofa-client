@@ -18,18 +18,18 @@ const PlayerHeader = props => {
     function handlePlayPause(event) {
         event.stopPropagation();
         if (playbackState ==='PLAYING') {
-            directive(jukebox, 'MusicController', 'Pause')
+            directive(jukebox, 'Sofa.MusicController', 'Pause')
         } else {
-            directive(jukebox, 'MusicController', 'Play')
+            directive(jukebox, 'Sofa.MusicController', 'Play')
         }
     }; 
 
     function handleSkip(event) {
-        directive(jukebox, 'MusicController', "Skip")
+        directive(jukebox, 'Sofa.MusicController', "Skip")
     }; 
 
     function handleStop(event) {
-        directive(jukebox, 'MusicController', "Stop")
+        directive(jukebox, 'Sofa.MusicController', "Stop")
     }; 
 
     function openJukebox() {

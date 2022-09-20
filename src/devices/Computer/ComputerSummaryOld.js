@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import useDeviceStateStore from 'store/deviceStateStore';
+import useEndpointStateStore from 'endpoint-model/store/endpointStateStore';
 import { register, unregister } from 'store/deviceHelpers'
 import { compareState } from 'store/deviceHelpers'
 import {  Group, Text, useMantineTheme } from '@mantine/core'
@@ -12,7 +12,7 @@ const ComputerSummaryOld = props => {
 
     const theme = useMantineTheme()
     const endpointIds = props.endpointIds
-    const states = useDeviceStateStore(state => Object.fromEntries(endpointIds.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
+    const states = useEndpointStateStore(state => Object.fromEntries(endpointIds.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
 
     useEffect(() => {
         register( endpointIds, "ComputerSummary")

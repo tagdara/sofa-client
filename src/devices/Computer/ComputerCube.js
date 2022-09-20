@@ -27,8 +27,6 @@ const ComputerCube = props => {
     const on = reachable && powerStateBool && outletOn
     const baseColor = theme.colors[theme.primaryColor][2]
 
-    console.log(baseColor)
-
     function openMouse() {
         var newurl="https://mouse.dayton.tech?pc="+name+".dayton.tech"
         var safariWindow = window.open();

@@ -1,32 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import StackCard from 'components/StackCard'
 import AreaLine from 'devices/Area/AreaLine';
 import AreaLights from 'devices/Area/AreaLights'
 import AreaScenes from 'devices/Area/AreaScenes';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import useDeviceStateStore from 'store/deviceStateStore'
-
-import { sortByName, hasCapability, register, unregister, deviceByEndpointId } from 'store/deviceHelpers'
+import useAreaController from 'endpoint-model/controller/AreaController/useAreaController'
 import { Stack } from '@mantine/core'
 
 const SubAreaHero = props => {
 
-    const [ currentArea, setCurrentArea ] = useState(props.area)
-    const area = deviceByEndpointId(currentArea)
-    const areaState = useDeviceStateStore( state => state.deviceStates[currentArea] )
+    const [ currentArea, setCurrentArea ] = useState(props.area)   
+    const { children, areas, lights, scenes } = useAreaController(currentArea)
 
-    useEffect(() => {
-        register(currentArea, 'SubAreaHero')
-        return function cleanup() {
-            unregister(currentArea, 'SubAreaHero')
-        };
-    // eslint-disable-next-line 
-    }, [currentArea])
-
-
-    if (!areaState ) { return <PlaceholderCard count={ 6 } /> }
-    const children = sortByName(areaState.AreaController.children.value)
-    const areas = children.filter(endpointId => hasCapability(endpointId, "AreaController"))
+    if (!children ) { return <PlaceholderCard count={ 6 } /> }
 
     function selectArea(endpointId) {
         setCurrentArea(endpointId)
@@ -38,8 +24,8 @@ const SubAreaHero = props => {
                 { areas.map(area =>
                     <AreaLine key={area} endpointId={area} selectArea={selectArea} />
                 )}
-                <AreaScenes noShortcuts deviceState={areaState} />
-                <AreaLights device={area} deviceState={areaState} />
+                <AreaScenes noShortcuts scenes={scenes} />
+                <AreaLights lights={lights} />
             </Stack>
         </StackCard>
     );

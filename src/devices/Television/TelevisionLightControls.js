@@ -20,7 +20,7 @@ const TelevisionLightControls = props => {
 
     function runScene( sceneEndpointId) {
         //setWorking(true)
-        directive(sceneEndpointId, 'SceneController', 'Activate')
+        directive(sceneEndpointId, 'Alexa.SceneController', 'Activate')
     }
     
     const currentWatch = currentScene === "logic:scene:Watch"

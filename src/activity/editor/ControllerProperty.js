@@ -6,7 +6,7 @@ import useActivityItem from 'activity/useActivityItem'
 
 export default function ControllerProperty(props) {
 
-    const { item, endpointId } = useActivityItem(props.category, props.index)
+    const { item, itemType, endpointId } = useActivityItem(props.category, props.index)
     const { propertyMap, selections, getDefaultOrValue, getSelectionLabel } = useDeviceProperties(endpointId)
     const value = getDefaultOrValue(item)
 
@@ -21,18 +21,27 @@ export default function ControllerProperty(props) {
         var updatedValue = propertyMap[index]
         //console.log('newv', newValue, selections, propertyMap)
         //var updatedValue = propertyMap.find((item) => item.directive === newValue)
-        console.log('updatedValue', props.category, props.index, updatedValue)
+        console.log('updatedValue', endpointId, props.category, props.index, updatedValue)
 
         const updatedItem = {   ...item,   
                                 "instance": updatedValue.instance, 
                                 "value": undefined, 
                                 "command": undefined, 
                                 "controller":updatedValue.controller, 
-                                "propertyName": updatedValue.property 
+                                "namespace": updatedValue.controller,
+                                "propertyName": updatedValue.property, 
+                                "type": itemType
                             }
 
         updateActivityItem(props.category, props.index, updatedItem)
     }
 
-    return <SegmentMenu selections={selections} color={ label ? undefined : "red" } value={ label ? label : "No property" } select={setPropertyName} />
+    return (
+        <SegmentMenu 
+            selections={selections} 
+            color={ label ? undefined : "red" } 
+            value={ label ? label : "No property" } 
+            select={setPropertyName} 
+        />
+    )
 }

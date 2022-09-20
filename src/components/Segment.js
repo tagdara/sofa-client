@@ -8,6 +8,8 @@ const Segment = React.forwardRef( (props, ref) => {
 
     const cssColor = props.color && ( props.color.startsWith('#') || props.color.startsWith('rgb'))
 
+    const label = props.label || props.value 
+
     return (
         <Button compact 
                 ref = {ref}
@@ -31,7 +33,7 @@ const Segment = React.forwardRef( (props, ref) => {
                 size={props.size ? props.size : "sm"}
                 onClick={props.onClick}
         >
-            {props.value && props.value} { props.children}
+            { label } { props.children}
         </Button>
     )
 })

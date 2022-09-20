@@ -107,10 +107,6 @@ export const propertyFromDirective = (controller, directive) => {
         return undefined
     }
 
-    if (controller.includes('.')) {
-        controller = controller.split('.')[1]
-    }
-
     if (directives.hasOwnProperty(controller) && directives[controller].hasOwnProperty(directive)) {
         var actionValues = directives[controller][directive]
         if (actionValues) { 

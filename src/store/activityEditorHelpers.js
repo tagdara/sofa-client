@@ -42,12 +42,11 @@ const checkSectionNotReady = (section, data) => {
 }
 
 export const okToSave = () => {
-    console.log('-------- checking ok to save')
     const sections = [ "actions", "conditions", "triggers"]
     const saved = useActivityEditorStore.getState().saved
-    if (saved) { console.log('already saved'); return false }
+    if (saved) { return false }
     const activity = useActivityEditorStore.getState().activity
-    if (!activity.name) { console.log('no name in activity', activity); return false }
+    if (!activity.name) { return false }
     const results = sections.filter( section => checkSectionNotReady(section, activity[section]) )
     return (results.length === 0)
 }
@@ -84,7 +83,7 @@ export const saveActivity = async () => {
     const activity = useActivityEditorStore.getState().activity
     const headers = { authorization : accessToken }
     const body = { ...activity, endpointId : endpointId }
-    const response = await fetch(saveUrl + endpointId, { headers: headers, method: "post", body: JSON.stringify(body)})
+    const response = await fetch(saveUrl + endpointId, { headers: headers, method: "POST", body: JSON.stringify(body)})
     const result = await response.json()
     console.log('result', result)
     useActivityEditorStore.setState({ saved: true })
@@ -95,7 +94,7 @@ export const addActivity = async () => {
     const activity = useActivityEditorStore.getState().activity
     const headers = { authorization : accessToken }
     const body = { ...activity }
-    const response = await fetch(addUrl, { headers: headers, method: "post", body: JSON.stringify(body)})
+    const response = await fetch(addUrl, { headers: headers, method: "POST", body: JSON.stringify(body)})
     const result = await response.json()
     console.log('created', result.endpointId, 'and refreshing', typeof result, result)
     useActivityEditorStore.setState({ endpointId: result.endpointId, activity: result, saved: true })
@@ -175,16 +174,6 @@ export const activityDirective = (endpointId, controllerName, command, payload={
     // Need to refactor for zustand
     //props.save(props.index, {...item, controller:controllerName, command:command, instance: instance, value: payload})
 }
-
-//function directive (endpointId, controllerName, command, payload={}, cookie={}, instance) {
-//    console.log('fake directive', controllerName, props.item.controller)
-//    var itemController = props.item.controller
-//    if (itemController.includes('.')) {
-//        itemController = itemController.split('.')[1]
-////    }
-///    if (controllerName!==itemController) { return false}
-//    props.save(props.index, {...props.item, controller:controllerName, command:command, instance: instance, value: payload})
-//}
 
 
 export const selectActivityDevice = (section, index, endpointId) => {

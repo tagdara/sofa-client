@@ -42,20 +42,22 @@ export const useDeviceProperties = (endpointId) => {
     const selections = propertyMap.map( (item,index) => { return { value: index.toString(), label: getLabel(item) }})
 
     const getSelectionLabel = selection => {
-        return getLabel(propertyMap[parseInt(selection)])
+        const x =  getLabel(propertyMap[parseInt(selection)])
+        return x
     }
 
     const getDefaultOrValue = item => { 
         // Returns the stringified index of the property index for use with Mantine Select
-
+        
         for (var j = 0; j < propertyMap.length; j++) {
             if (    (propertyMap[j].instance === item.instance) && 
                     (propertyMap[j].controller === item.controller) && 
-                    (propertyMap[j].property === item.propertyName)
+                    (propertyMap[j].property === item.propertyName || item.value?.[propertyMap[j].property])
             ) {
                 return j.toString()
             }
         }
+        console.log('did not find', item,'in', propertyMap)
         return null
     }
 

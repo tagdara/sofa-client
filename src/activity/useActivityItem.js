@@ -6,8 +6,15 @@ export const useActivityItem = (category, index) => {
     const item = useActivityEditorStore(state => state.activity[category][index] )
     const endpointId = item.endpointId
     const device = deviceByEndpointId(endpointId)
+    const itemTypes = {
+        "conditions": "property",
+        "triggers": "property",
+        "actions": "command"
+    }
 
-    return { item, endpointId, device }
+    const itemType = itemTypes[category]
+
+    return { item, itemType, endpointId, device }
 }
 
 export default useActivityItem

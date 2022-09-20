@@ -32,27 +32,24 @@ export default function DeviceDirective(props) {
     if (!device) { return null }    
 
     function handleChangeDirectiveName(newValue) {
-        console.log('new', newValue.split("/",1).length, newValue, directiveMap)
-        var newInstance = undefined
-        if (newValue.split("/").length > 1) {
-            newInstance = newValue.split("/")[1]
-            newValue = newValue.split("/")[0]
-            console.log('news', newValue, newInstance)
-        }
+        const selectedItem = selections.find( item => item.value === newValue)
         // var index = parseInt(newValue)
         // if (index < 0 || index > directiveMap.length-1) { return false}
 
-        var newDirective = directiveMap.find((item) => item.instance = newInstance && item.directive === newValue)
-        console.log('newd', newDirective)
+        // var newDirective = directiveMap.find((item) => item.instance === newInstance && item.directive === newValue)
+        // console.log('newd', newDirective)
 
         //var newDirective = directiveMap[index]
-        var propertyName = propertyFromDirective(newDirective.controller, newDirective.directive)
-        var updatedItem =   {...item, propertyName: propertyName, 
-                                    controller: newDirective.controller, 
-                                    command: newDirective.directive, 
-                                    instance: newDirective.instance, 
-                                    value: undefined
-                            }
+        var propertyName = propertyFromDirective(selectedItem.namespace, selectedItem.directive)
+        var updatedItem = {
+            value: undefined,
+            ...item, 
+            propertyName: propertyName, 
+            namespace: selectedItem.namespace,
+            controller: selectedItem.namespace, 
+            command: selectedItem.directive, 
+            instance: selectedItem.instance, 
+        }
         console.log('updated item', updatedItem)
         updateActivityItem(props.category, props.index, updatedItem)
     }
@@ -61,7 +58,6 @@ export default function DeviceDirective(props) {
         var controller = item.controller
         if (!controller) { return null }
 
-        console.log('cont', controller, item)
         for (var j = 0; j < directiveMap.length; j++) {
             if ((directiveMap[j].instance === item.instance) && (directiveMap[j].controller === controller) && (directiveMap[j].directive === item.command)) {
                 return j.toString()
@@ -92,8 +88,10 @@ export default function DeviceDirective(props) {
     }
 
     //const selections = directiveMap.map( (item,index) => { return { value: index.toString(), label: getLabel(item) }})
-
-    const selections = directiveMap.map( (item,index) => { return { value: item.directive + ( item.instance ? "/"+item.instance : ""), label: getLabel(item), instance: item.instance }})
+    // console.log('dmap', directiveMap)
+    const selections = directiveMap.map( (item,index) => { 
+        return { value: item.directive + ( item.instance ? "/" + item.instance : ""), label: getLabel(item), namespace: item.controller, directive: item.directive, instance: item.instance }
+    })
     const value = defaultOrValue()
  
     if (props.compact) {

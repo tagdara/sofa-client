@@ -611,11 +611,5 @@ export function removeFavorite(endpointId) {
 
 export function isReachable(deviceState) {
     // requires devicestate to prevent subscription in the helper
-    try {
-        if (deviceState.EndpointHealth.connectivity.value.value==='OK') {
-            return true
-        }
-    }
-    catch {}
-    return false
+    return deviceState?.["Alexa.EndpointHealth"]?.connectivity?.value?.value==='OK'
 }

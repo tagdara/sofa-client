@@ -33,7 +33,7 @@ const LightSummary = () => {
         for (var dev in states) {
             var light = states[dev]
             if (light) {
-                const powerState = light && light.PowerController ? light.PowerController.powerState.value : "OFF"
+                const powerState = light?.["Alexa.PowerController"]?.powerState?.value || "OFF"
                 switch (condition.toUpperCase()) {
                     case "OFF":
                         if (powerState === "OFF" || !isReachable(light)) {
@@ -57,13 +57,7 @@ const LightSummary = () => {
     const lightsOn = lightCount('on') > 0
 
     function isReachable(dev) {
-        try {
-            if (dev.EndpointHealth.connectivity.value.value==='OK') {
-                return true
-            }
-        }
-        catch {}
-        return false
+        return dev?.["Alexa.EndpointHealth"]?.connectivity?.value?.value === 'OK'
     }
 
     function checkHoliday() {

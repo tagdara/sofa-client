@@ -16,7 +16,7 @@ const AreaLightsOnBadge = props => {
 
     function turnOffLights() {
         lights.map( lightEndpointId => {
-            return directive(lightEndpointId, "PowerController", "TurnOff")
+            return directive(lightEndpointId, "Alexa.PowerController", "TurnOff")
         })
     }
 
@@ -25,7 +25,7 @@ const AreaLightsOnBadge = props => {
         for (var dev in states) {
             var light = states[dev]
             if (light) {
-                const powerState = light && light.PowerController ? light.PowerController.powerState.value : "OFF"
+                const powerState = light?.["Alexa.PowerController"]?.powerState?.value || "OFF"
                 switch (condition.toUpperCase()) {
                     case "OFF":
                         if (powerState === "OFF" || !isReachable(light)) {

@@ -6,7 +6,7 @@ const ActivityConditionMenu = props => {
     const selections = [ 
         { label: "Delete", value: "delete"},                              
     ]
-
+    
     return  <Menu   style={{ display: "flex", flexDirection: "column"}}>
                 <Menu.Target>
                     <Avatar size="sm" 

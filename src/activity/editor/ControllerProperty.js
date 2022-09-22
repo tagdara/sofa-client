@@ -8,6 +8,7 @@ export default function ControllerProperty(props) {
 
     const { item, itemType, endpointId } = useActivityItem(props.category, props.index)
     const { propertyMap, selections, getDefaultOrValue, getSelectionLabel } = useDeviceProperties(endpointId)
+
     const value = getDefaultOrValue(item)
 
     if (!endpointId) { return null }

@@ -14,19 +14,19 @@ const ActivityTrigger = props => {
 
     return (
         <ActivityLine compact={props.compact}>
-            <ActivityConditionMenu index={props.index} category={props.category} />
+            <ActivityConditionMenu select={props.select} index={props.index} category={props.category} />
             <Stack spacing={2} >
                 { mobile &&
-                    <ActivityDevice category={props.category} index={props.index} compact={props.compact} removing={props.removing} reordering={props.reordering} />
+                    <ActivityDevice category={props.category} index={props.index} compact={props.compact} />
                 }
                 <Group spacing={2}>
                     { !mobile &&
-                        <ActivityDevice category={props.category} index={props.index} compact={props.compact} removing={props.removing} reordering={props.reordering} />
+                        <ActivityDevice category={props.category} index={props.index} compact={props.compact}  />
                     }
                     <ControllerProperty category={props.category} index={props.index} compact={props.compact}/> 
                     <ConditionOperator compact={props.compact} category={ props.category } index={props.index} />
                     <PropertyValue category={props.category} index={props.index} compact={props.compact} />
-                    <ActivityItemActions category={props.category} index={props.index} compact={props.compact} removing={props.removing} reordering={props.reordering} />
+                    <ActivityItemActions category={props.category} index={props.index} compact={props.compact}  />
                 </Group>
             </Stack>
         </ActivityLine>

@@ -12,19 +12,19 @@ const ActivityCondition = props => {
     const mobile = false
 
     return (
-        <ActivityLine compact={props.compact} category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} count={props.count}>
-            <ActivityConditionMenu index={props.index} category={props.category} />
+        <ActivityLine compact={props.compact} category={ props.category } index={props.index} count={props.count}>
+            <ActivityConditionMenu select={props.select} index={props.index} category={props.category} />
             <Stack spacing={2} >
                 { mobile &&
-                    <ActivityDevice compact={props.compact} category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />      
+                    <ActivityDevice compact={props.compact} category={ props.category } index={props.index} />      
                 }
                 <Group spacing={2}>
                     { !mobile &&
-                        <ActivityDevice compact={props.compact} category={ props.category } index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} />      
+                        <ActivityDevice compact={props.compact} category={ props.category } index={props.index}  />      
                     }
-                    <ControllerProperty compact={props.compact} category={props.category} index={props.index} wide={props.wide} removing={props.removing} reordering={props.reordering} /> 
+                    <ControllerProperty compact={props.compact} category={props.category} index={props.index}  /> 
                     <ConditionOperator compact={props.compact} category={ props.category } index={props.index} />
-                    <PropertyValue compact={props.compact} category={ props.category } index={props.index} wide={props.wide} />
+                    <PropertyValue compact={props.compact} category={ props.category } index={props.index}  />
                 </Group>
             </Stack>
         </ActivityLine >

@@ -407,6 +407,20 @@ export const getControllerProperties = endpointId => {
     return devprops
 }    
 
+export const getControllerByInstance = (device, instance)  => {
+
+    if (device?.capabilities) {
+        for (var j = 0; j < device.capabilities.length; j++) {
+            //console.log('compare', device.capabilities[j], item)
+            if (device.capabilities[j].instance === instance) { 
+                return device.capabilities[j]
+            }               
+        }
+    }
+    console.log('failed get interface', device, instance)
+    return undefined
+}
+
 export const getControllerInterface = (device, item)  => {
 
     if (device===undefined) { return undefined }

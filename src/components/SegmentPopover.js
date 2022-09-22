@@ -10,6 +10,7 @@ const SegmentPopover = props => {
 
     return (
         <CardPopover
+                width={props.width}
                 minWidth={props.minWidth}
                 opened={ open }
                 setOpen={ setOpen }

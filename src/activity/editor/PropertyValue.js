@@ -54,9 +54,10 @@ export default function PropertyValue(props) {
             type: item.type,
             endpointId: endpointId, 
             controller: controllerName, 
+            instance: instance,
             propertyName: item.propertyName, 
             operator: item.operator, 
-            value: payload[item.propertyName]
+            value: payload
         }
         updateActivityItem( props.category, props.index, update)
     }

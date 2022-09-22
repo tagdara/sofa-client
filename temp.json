@@ -1,0 +1,75 @@
+{
+    "event": {
+        "header": {
+            "name": "ChangeReport",
+            "payloadVersion": 3,
+            "messageId": "9d97fe4a-3873-11ed-9817-2b6cfcf77eb1",
+            "namespace": "Alexa"
+        },
+        "endpoint": {
+            "endpointId": "logic:area:Office",
+            "cookie": {},
+            "scope": {
+                "type": "BearerToken",
+                "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoibG9naWMiLCJjb2xsZWN0b3IiOmZhbHNlLCJleHAiOjE2NjM5ODY4NDQsImluc3RhbmNlIjoiMmU1NjJmM2QtMzYzMS0xMWVkLTk3ZTAtMmI2Y2ZjZjc3ZWIxIn0.RUXwESVI6xT-Rlsyr1-FAe6cz1--atjrFsQj3nvxGNQ"
+            }
+        },
+        "payload": {
+            "change": {
+                "cause": {
+                    "type": "APP_INTERACTION"
+                },
+                "properties": [
+                    {
+                        "name": "scene",
+                        "value": "logic:scene:Office High",
+                        "namespace": "Sofa.AreaController",
+                        "uncertaintyInMilliseconds": 0,
+                        "timeOfSample": "2022-09-19T23:34:33.47Z"
+                    }
+                ]
+            }
+        }
+    },
+    "context": {
+        "properties": [
+            {
+                "name": "children",
+                "value": [
+                    "hue:lights:28",
+                    "hue:lights:29",
+                    "insteon:node:2F 96 D 1",
+                    "logic:scene:Office High",
+                    "logic:scene:Office Off",
+                    "logic:scene:Office SuperBright",
+                    "logic:scene:Office Low",
+                    "logic:scene:Office Med",
+                    "logic:scene:Office Blue",
+                    "logic:scene:Magenta"
+                ],
+                "namespace": "Sofa.AreaController",
+                "uncertaintyInMilliseconds": 0,
+                "timeOfSample": "2022-09-19T23:34:33.47Z"
+            },
+            {
+                "name": "shortcuts",
+                "value": [
+                    "logic:scene:Office Off",
+                    "logic:scene:Office Low",
+                    "logic:scene:Office Med",
+                    "logic:scene:Office High"
+                ],
+                "namespace": "Sofa.AreaController",
+                "uncertaintyInMilliseconds": 0,
+                "timeOfSample": "2022-09-19T23:34:33.47Z"
+            },
+            {
+                "name": "scene",
+                "value": "logic:scene:Office High",
+                "namespace": "Sofa.AreaController",
+                "uncertaintyInMilliseconds": 0,
+                "timeOfSample": "2022-09-19T23:34:33.47Z"
+            }
+        ]
+    }
+}

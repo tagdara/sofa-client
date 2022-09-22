@@ -56,13 +56,12 @@ const BottomBar = props => {
                     paddingRight: 16, 
                     width: "100%", 
                     display: "flex", 
-                    justifyContent: "center", 
-                    alignItems: "center", 
-                    marginBottom: "env(safe-area-inset-bottom)" 
+                    marginBottom: "env(safe-area-inset-bottom)",
+                    flexDirection: "row-reverse"
                 }} 
                 position={{ bottom: wide ? 8: 0 }}
             >
-                <Group noWrap grow style={{ width: "100%", maxWidth: 400, flexDirection: "row-reverse"}} id="bottomPortal">
+                <Group noWrap style={{ width: "100%", maxWidth: 400, flexDirection: "row-reverse"}} id="bottomPortal">
                     <HomeButton />
                 </Group>
             </Affix>

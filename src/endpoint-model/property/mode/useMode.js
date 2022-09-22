@@ -42,7 +42,6 @@ const useMode = ( endpointId, instance, value, directive) => {
     const modeData = getModeSelections(modeCapability)
 
     const selections = Object.keys(modeData).map(modeChoice => ({ value: modeChoice, label: modeData[modeChoice] })) || []
-    //const stateMode = deviceState && deviceState.hasOwnProperty(instance) ? deviceState[instance].mode.value : undefined
     const stateMode = deviceState?.[instance]?.mode.value
     const mode = value?.mode ? value.mode : stateMode
 
@@ -50,8 +49,6 @@ const useMode = ( endpointId, instance, value, directive) => {
     const modeLabel = modeData ? modeData[mode] : friendlyName
 
     const setMode = newMode => {
-        //endpointId, controllerName, command, payload={}, cookie={}, instance=""
-        console.log("useMode-setMode", endpointId, controller, "SetMode", {"mode": newMode}, {}, instance)
         activeDirective(endpointId, controller, "SetMode", {"mode": newMode}, {}, instance)
     }
 

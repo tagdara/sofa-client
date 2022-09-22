@@ -6,19 +6,17 @@ import ActivityItem from 'activity/ActivityItem';
 import { isFavorite, makeFavorite } from 'store/deviceHelpers';
 import { loadActivities, deleteActivity } from 'store/activityHelpers';
 import { ActionIcon, Group } from '@mantine/core';
-import { Clock, Trash2, Star, Plus } from 'react-feather';
 
 import SectionHeader from 'layout/SectionHeader';
 import SectionFrame from 'layout/SectionFrame'
 import SectionGrid from 'layout/SectionGrid'
 import PageFrame from 'layout/PageFrame'
 
+import { IconClock, IconStar, IconPlus } from '@tabler/icons';
 
 const ActivitiesLayout = props => {
 
-    const editing = false
     const [ activities, setActivities ] = useState([])
-    const [ removing, setRemoving ] = useState(false)
     const [ favorites, setFavorites ] = useState(props.favorites)
     const [ showScheduled, setShowScheduled] = useState(false)
 
@@ -71,31 +69,28 @@ const ActivitiesLayout = props => {
             <SectionHeader title={"Activities"} >
                 <Group noWrap>
                     <ActionIcon size="sm" onClick={ () => newActivity() } >
-                        <Plus size={20} />
+                        <IconPlus size={20} />
                     </ActionIcon>
-                    { Object.keys(activities).length>0 &&
-                        <ActionIcon size="sm" onClick={ () => { setRemoving(!removing); }} >
-                            <Trash2 size={20} />
-                        </ActionIcon>             
-                    }
                     <ActionIcon size="sm" onClick={ () => toggleScheduled() } >
-                        <Clock size={20} />
+                        <IconClock size={20} />
                     </ActionIcon>
                     <ActionIcon size="sm" onClick={ () => toggleFavorites() }  color={ favorites ? "primary" : "inherit" } >
-                        <Star size={20} />
+                        <IconStar size={20} />
                     </ActionIcon>
                 </Group>
             </SectionHeader>
             <SectionFrame padScroll>
                 <SectionGrid>
                 { activityList && activityList.map(activity => 
-                    <ActivityItem   endpointId={activity.endpointId} key={activity.endpointId}
-                                    select={selectActivity}
-                                    activity={ activity }
-                                    makeFavorite={makeFavorite}
-                                    edit={editing} delete={removing ? deleteAndRefresh : undefined} 
-                                    showNextRun = {showScheduled}
-                                />
+                    <ActivityItem
+                        endpointId={activity.endpointId} 
+                        key={activity.endpointId}
+                        select={selectActivity}
+                        activity={ activity }
+                        makeFavorite={makeFavorite}
+                        delete={deleteAndRefresh} 
+                        showNextRun = {showScheduled}
+                    />
                 )}
                 </SectionGrid>
             </SectionFrame>

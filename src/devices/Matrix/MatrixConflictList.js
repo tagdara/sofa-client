@@ -9,8 +9,6 @@ export default function MatrixConflictList(props) {
     const { mode } = useMode(props.endpointId, 'Output.Source')
     const otherMatrix = matrix.filter( item => item !== props.endpointId)
 
-    console.log('mode', props.endpointId, mode)
-
     return (
         <Stack>
             { otherMatrix.map(device =>

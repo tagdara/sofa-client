@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import moment from 'moment';
 
-import { removeFavorite, makeFavorite, deviceByEndpointId } from 'store/deviceHelpers'
+import { Badge, Button, Group, Loader, Stack, Text } from '@mantine/core';
+
+import { deviceByEndpointId } from 'store/deviceHelpers'
 import { directive } from 'store/directive'
 import { useRegister } from 'endpoint-model/register/useRegister'
 import useUserStore from 'store/userStore'
-
-import { X as Close, List, Star, PlayCircle } from 'react-feather'
-
-import { Badge, Button, Group, Loader, Stack, Text } from '@mantine/core';
-
+import ActivityItemMenu from 'activity/ActivityItemMenu'
 import ActivityItemMissing from 'activity/ActivityItemMissing'
 import ActivityComponentIcon from 'activity/ActivityComponentIcon'
+
+import { IconListDetails, IconStar, IconPlayerPlay } from '@tabler/icons';
 
 const ActivityItem = props => {
     
@@ -26,14 +26,6 @@ const ActivityItem = props => {
     if (!activity || !deviceState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 
     const name = activity.friendlyName
-
-    function toggleFavorite() {
-        if (!favorite) {
-            makeFavorite(props.endpointId) 
-        } else {
-            removeFavorite(props.endpointId)
-        }
-    }
 
     function runActivity(conditions=true) {
         setLaunched(true)
@@ -84,7 +76,7 @@ const ActivityItem = props => {
     }
 
     function xsummary() {
-        if (!props.activity || !props.allowEdit) { return null}
+        if (!props.activity || props.disableEdit) { return null}
         if (props.showNextRun) { return scheduleSummary() }
         const summary = partsSummary()
         if (summary.length < 1) { return null }
@@ -100,22 +92,32 @@ const ActivityItem = props => {
     const loading = launched || deviceState?.Running?.toggleState?.value === 'ON'
 
     return (
-        <Button.Group buttonBorderWidth={0} style={{ width: "100%", border: "none"}}>
-            <Button 
-                size="md"
-                styles={{ 
-                    root: {
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        height: 58,
-                        padding: 12,
-                    }
-                }}
-                variant={ favorite ? "light" : "default" }
-                onClick={ () => toggleFavorite(props.endpointId) }
-            >
-                { (favorite && props.icon !== "base") ? <Star size={20} /> : <List size={20} /> }
-            </Button>         
+        <Button.Group  buttonBorderWidth={0} style={{ width: "100%"}}>
+            <ActivityItemMenu
+                delete={props.delete}
+                run={runActivity}
+                endpointId={props.endpointId}
+                target={   
+                    <Button 
+                        radius="md"
+                        size="md"
+                        styles={{ 
+                            root: {
+                                display: "flex",
+                                justifyContent: "flex-start",
+                                paddingLeft: 16,
+                                height: 58,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                            }
+                        }}
+                        variant={ favorite ? "light" : "default" }
+                    >
+                        { (favorite && props.icon !== "base") ? <IconStar size={20} /> : <IconListDetails size={20} /> }
+                    </Button>         
+                    }     
+            />     
             <Button 
                 size="md"
                 styles={{ 
@@ -128,11 +130,10 @@ const ActivityItem = props => {
                     }
                 }}
                 variant={favorite ? "light" : "default" }
-
                 fullWidth 
                 onClick={ () => props.select(props.endpointId) }
             >
-                <Stack spacing={2}>
+                <Stack spacing={4}>
                     <Text size={"sm"}>
                         { name }
                     </Text>
@@ -141,44 +142,23 @@ const ActivityItem = props => {
                     </Group>
                 </Stack>
             </Button> 
-            { props.delete ?        
-                <Button 
-                    size="md"
-                    styles={{ 
-                        root: {
-                            height: 58,
-                            padding: 12,
-                        }
-                    }}
-                    variant={ favorite ? "light" : "default" }
-                    onClick={ (event) => { event.stopPropagation(); props.delete(props.endpointId); }}
-                >
-                    <Close size={20} />
-                </Button> 
-                :
-                <Button 
-                    size="md"
-                    styles={{ 
-                        root: {
-                            height: 58,
-                            padding: 12,
-                        }
-                    }}
-                    variant={ favorite ? "light" : "default" }
-                    onClick={ loading ? undefined : () => runActivity(props.endpointId) } 
-                >
-                    {loading ? <Loader size="xs" variant="dots" /> :  <PlayCircle size={20} /> }
-                </Button> 
-            }
+            <Button 
+                radius="md"
+                size="md"
+                styles={{ 
+                    root: {
+                        height: 58,
+                        padding: 12,
+                    }
+                }}
+                variant={ favorite ? "light" : "default" }
+                onClick={ loading ? undefined : () => runActivity(props.endpointId) } 
+            >
+                {loading ? <Loader size="xs" variant="dots" /> :  <IconPlayerPlay size={20} /> }
+            </Button> 
         </Button.Group>
     )
-
 }
 
 export default ActivityItem;
-
-ActivityItem.defaultProps = {
-    allowEdit: true,
-    deleting: false,
-}
 

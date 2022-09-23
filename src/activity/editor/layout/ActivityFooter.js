@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import useActivityEditorStore from 'store/activityEditorStore'
-import { okToSave, saveActivity, addActivity } from 'store/activityEditorHelpers'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
+import { okToSave, saveActivity, addActivity } from 'activity/editor/activityEditorHelpers'
 import { Button, Group, ActionIcon, Modal, Paper } from '@mantine/core';
-import { directive  } from 'store/directive';
+import { directive  } from 'endpoint-model/directive/directive';
 import { selectPage } from 'helpers/layoutHelpers';
 import ActivityAddMenu from 'activity/editor/layout/ActivityAddMenu'
 import ActivityJSON from 'activity/editor/ActivityJSON'

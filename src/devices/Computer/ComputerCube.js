@@ -3,7 +3,7 @@ import { Text, useMantineTheme } from '@mantine/core';
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useMode from 'endpoint-model/property/mode/useMode'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import WakeSleepSegment from 'endpoint-model/controller/WakeOnLanController/WakeSleepSegment'
 import EnergyLevelModeIcon from 'endpoint-model/instance/EnergyLevelModeIcon'
 import EnergyLevelLine from 'endpoint-model/instance/EnergyLevelLine'

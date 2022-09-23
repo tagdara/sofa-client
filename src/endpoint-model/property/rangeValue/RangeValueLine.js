@@ -1,7 +1,7 @@
 import React from 'react';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 import RangeValueText from 'endpoint-model/property/rangeValue/RangeValueText'
-import { hasInstance } from 'store/deviceHelpers'
+import { hasInstance } from 'endpoint-model/discovery'
 
 const RangeValueLine = props => {
 

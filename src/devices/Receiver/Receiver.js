@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 import { Collapse, Group, Stack } from '@mantine/core'
-import DeviceIcon from 'components/DeviceIcon'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import EndpointIcon from 'endpoint-model/endpoint/EndpointIcon'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 import ModeSelect from 'endpoint-model/property/mode/ModeSelect'
 import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
@@ -25,7 +25,7 @@ const Receiver = props => {
     return (
         <Stack spacing="xl">
             <Stack spacing={8}>
-                <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
+                <CardLine   arrow icon={ <EndpointIcon endpointId={props.endpointId} /> }
                             color={ on ? "primary" : undefined}
                             on={on}
                             primary={ name }

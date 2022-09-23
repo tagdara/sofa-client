@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import CameraImage from 'devices/Camera/CameraImage';
-import StackCard from 'components/StackCard'
+import StackCard from 'layout/components/StackCard'
 import { Card, Group, Text } from '@mantine/core';
-import { deviceByEndpointId } from 'store/deviceHelpers'
+import { endpointByEndpointId } from 'endpoint-model/discovery'
 import { selectPage } from 'helpers/layoutHelpers';
 import CameraVideo from 'devices/Camera/CameraVideo'
 
@@ -14,7 +14,7 @@ const SecurityCamera = props => {
 
     const refreshInterval = 11
     const [live, setLive] = useState(false)
-    const device = deviceByEndpointId(props.endpointId)
+    const device = endpointByEndpointId(props.endpointId)
 
     const imageClick = () => {
         if (props.onClick) { 

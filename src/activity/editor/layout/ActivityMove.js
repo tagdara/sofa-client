@@ -7,7 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
-import { moveActivityItemUp, moveActivityItemDown, removeActivityItem } from 'store/activityEditorHelpers'
+import { moveActivityItemUp, moveActivityItemDown, removeActivityItem } from 'activity/editor/activityEditorHelpers'
 
 
 export default function ActivityMove(props) {

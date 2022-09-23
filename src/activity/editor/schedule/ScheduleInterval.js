@@ -1,5 +1,5 @@
 import React from 'react';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 import { TextInput } from '@mantine/core'
 import TimeUnitButton from 'activity/editor/input/TimeUnitButton';
 import { Clock } from 'react-feather'

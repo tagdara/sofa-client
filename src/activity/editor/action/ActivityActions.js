@@ -2,10 +2,10 @@ import React from 'react';
 import PropertyValue from 'activity/editor/PropertyValue';
 import DeviceDirective from 'activity/editor/DeviceDirective';
 import ActivityDevice from 'activity/editor/ActivityDevice';
-import useActivityEditorStore from "store/activityEditorStore"
+import useActivityEditorStore from "activity/editor/activityEditorStore"
 import { Divider, Group, Timeline} from '@mantine/core';
 import ActivityActionMenu from 'activity/editor/action/ActivityActionMenu'
-import { removeActivityItem, moveActivityItemDown, moveActivityItemUp } from 'store/activityEditorHelpers'
+import { removeActivityItem, moveActivityItemDown, moveActivityItemUp } from 'activity/editor/activityEditorHelpers'
 
 const ActivityActions = props => {
 

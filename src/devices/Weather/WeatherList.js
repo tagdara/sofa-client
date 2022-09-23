@@ -1,6 +1,6 @@
 import React from 'react';
 import RangeValueLine from 'endpoint-model/property/rangeValue/RangeValueLine'
-import { hasInstance} from 'store/deviceHelpers'
+import { hasInstance} from 'endpoint-model/discovery'
 import { Stack, Text } from '@mantine/core';
 import { CloudDrizzle, Droplet, Lightbulb, Sun, Wind } from "react-bootstrap-icons";
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'

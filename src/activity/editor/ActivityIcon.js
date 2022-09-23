@@ -1,6 +1,6 @@
 import React from 'react';
 import { ThemeIcon } from '@mantine/core';
-import DeviceIcon from 'components/DeviceIcon'
+import EndpointIcon from 'endpoint-model/endpoint/EndpointIcon'
 
 const ActivityIcon = React.forwardRef( (props, ref) => {
 
@@ -10,7 +10,7 @@ const ActivityIcon = React.forwardRef( (props, ref) => {
             radius="xl"
             onClick={ () => { console.log('clicky')}}
         >
-                { props.endpointId && <DeviceIcon size={16} endpointId={props.endpointId} /> }
+                { props.endpointId && <EndpointIcon size={16} endpointId={props.endpointId} /> }
         </ThemeIcon>
     )
 

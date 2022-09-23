@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { tokenFetchImage } from 'store/tokenFetch'
+import { tokenFetchImage } from 'network/tokenFetch'
 
 export default function useTokenImage(url) {
     
@@ -14,7 +14,6 @@ export default function useTokenImage(url) {
                 if (result) {
                     setLocalImageUrl(result)
                     setImageLoaded(true)
-                    //console.log('loaded', url)
                 }
             }
         }

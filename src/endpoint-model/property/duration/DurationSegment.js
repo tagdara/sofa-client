@@ -1,6 +1,6 @@
 import React from 'react';
 import useDuration from "endpoint-model/property/duration/useDuration"
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import DurationInput from 'endpoint-model/property/duration/DurationInput'
 
 export default function DurationSegment(props) {

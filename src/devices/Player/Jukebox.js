@@ -6,7 +6,7 @@ import PlayerHeaderSmall from 'devices/Player/PlayerHeaderSmall'
 import SpeakerList from 'devices/Speaker/SpeakerList';
 import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
 import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'
-import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
+import { endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 
 const JukeboxHero = props => {
     

@@ -1,4 +1,4 @@
-import useLayoutStore from 'store/layoutStore'
+import useLayoutStore from 'layout/layoutStore'
 import { useMantineTheme } from '@mantine/core';
 import { useViewportSize, useMediaQuery } from '@mantine/hooks';
 

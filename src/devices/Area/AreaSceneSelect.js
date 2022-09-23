@@ -1,7 +1,7 @@
 import React from 'react';
 import { Group, Select, Text} from '@mantine/core'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
-import { directive } from 'store/directive'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
+import { directive } from 'endpoint-model/directive/directive'
 import useChildren from 'endpoint-model/property/children/useChildren'
 import useScene from 'endpoint-model/property/scene/useScene'
 

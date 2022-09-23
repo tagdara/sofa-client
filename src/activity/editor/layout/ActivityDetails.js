@@ -2,7 +2,7 @@ import React from 'react';
 import { Badge, Group, Text } from '@mantine/core';
 
 import moment from 'moment';
-import useActivityEditorStore from 'store/activityEditorStore'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
 
 const ActivityDetails = props => {
   

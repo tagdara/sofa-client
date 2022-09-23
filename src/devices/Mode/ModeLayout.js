@@ -1,11 +1,11 @@
 import React from 'react';
 import Mode from 'devices/Mode/Mode';
-import SectionHeader from 'layout/SectionHeader';
-import SectionFrame from 'layout/SectionFrame'
-import SectionGrid from 'layout/SectionGrid'
+import SectionHeader from 'layout/section/SectionHeader';
+import SectionFrame from 'layout/section/SectionFrame'
+import SectionGrid from 'layout/section/SectionGrid'
 import PageFrame from 'layout/PageFrame'
 import HomeButton from 'layout/HomeButton';
-import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers'
+import { endpointIdsByDisplayCategory, sortByName } from 'endpoint-model/discovery'
 
 const ModeLayout = props => {
 

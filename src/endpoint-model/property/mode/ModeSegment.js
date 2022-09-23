@@ -1,6 +1,6 @@
 import React from 'react';
 import useMode from 'endpoint-model/property/mode/useMode'
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 
 export default function ModeSegment(props) {
 

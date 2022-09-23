@@ -1,7 +1,7 @@
 import React from 'react';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 import { IconWindmill as IconFan } from '@tabler/icons';
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 
 const Fan = props => {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 import useActivityItem from 'activity/useActivityItem'
-import { updateActivityItem } from 'store/activityEditorHelpers'
+import { updateActivityItem } from 'activity/editor/activityEditorHelpers'
 
 export default function ConditionOperator(props) {
 

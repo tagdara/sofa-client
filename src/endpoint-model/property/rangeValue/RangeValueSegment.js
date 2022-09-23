@@ -1,6 +1,6 @@
 import React from 'react';
 import useMode from 'endpoint-model/property/rangeValue/useRangeValue'
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import RangeValueSlider from 'endpoint-model/property/rangeValue/RangeValueSlider'
 
 export default function ModeSegment(props) {

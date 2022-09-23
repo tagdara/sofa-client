@@ -1,5 +1,5 @@
 import React from 'react';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 import { HelpCircle} from 'react-feather'
 
 const ActivityDeviceMissing = props => {

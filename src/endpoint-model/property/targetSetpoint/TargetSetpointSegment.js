@@ -1,5 +1,5 @@
 import React from 'react';
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import useTargetSetpoint from 'endpoint-model/property/targetSetpoint/useTargetSetpoint'
 import TargetSetpointAdjuster from 'endpoint-model/property/targetSetpoint/TargetSetpointAdjuster'
 

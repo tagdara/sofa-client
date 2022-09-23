@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Stack, ScrollArea } from '@mantine/core';
 import UserNav from 'layout/UserNav';
 import AdminNav from 'admin/AdminNav'
-import Favorites from 'layout/Favorites';
+import Favorites from 'user/favorites/Favorites';
 import SettingsList from 'admin/SettingsList'
 import ActivitiesAllButton from 'activity/ActivitiesAllButton';
 

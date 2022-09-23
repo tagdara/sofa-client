@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon, Menu } from '@mantine/core';
 import { Plus } from 'react-feather'
-import { addActivityItem } from 'store/activityEditorHelpers'
+import { addActivityItem } from 'activity/editor/activityEditorHelpers'
 
 const ActivityAddMenu = props => {
 

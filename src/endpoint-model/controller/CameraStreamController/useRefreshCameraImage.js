@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useInterval } from 'store/useInterval';
+import { useInterval } from 'helpers/useInterval';
 import { useCameraImage } from 'endpoint-model/controller/CameraStreamController/useCameraImage'
 import useTokenImage from 'helpers/useTokenImage'
                                 

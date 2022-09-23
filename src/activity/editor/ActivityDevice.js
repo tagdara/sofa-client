@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 
-import { deviceByEndpointId } from 'store/deviceHelpers'
-import { selectActivityDevice } from 'store/activityEditorHelpers'
-import useActivityEditorStore from 'store/activityEditorStore'
+import { endpointByEndpointId } from 'endpoint-model/discovery'
+import { selectActivityDevice } from 'activity/editor/activityEditorHelpers'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
 
 import ActivityDeviceItem from 'activity/editor/ActivityDeviceItem'
 import ActivityDeviceMissing from 'activity/editor/ActivityDeviceMissing'
-import DeviceSelect from 'endpoint-model/device/DeviceSelect'
-import DeviceSegment from 'endpoint-model/device/DeviceSegment'
+import DeviceSelect from 'endpoint-model/endpoint/DeviceSelect'
+import DeviceSegment from 'endpoint-model/endpoint/DeviceSegment'
 
 const ActivityDevice = props => {
     const [selecting, setSelecting ] = useState(false)
@@ -16,7 +16,7 @@ const ActivityDevice = props => {
     if (!item) { return null}
 
     const endpointId = item.endpointId
-    const device = endpointId ? deviceByEndpointId(endpointId) : undefined
+    const device = endpointId ? endpointByEndpointId(endpointId) : undefined
     const deviceEmpty = ( !endpointId && !device)
     const deviceMissing = ( endpointId && !device)
 

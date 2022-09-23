@@ -1,8 +1,8 @@
 import React from 'react';
 import { NavLink } from '@mantine/core';
 import { IconUser, IconReload, IconLogout } from '@tabler/icons';
-import useLoginStore from 'store/loginStore';
-import { reloadPWA } from 'store/reloadPWA'
+import useLoginStore from 'login/loginStore';
+import { reloadPWA } from 'network/reloadPWA'
 
 const UserNav = () => {
 

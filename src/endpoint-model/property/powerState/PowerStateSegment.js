@@ -1,6 +1,6 @@
 import React from 'react';
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 
 export default function PowerStateSegment(props) {
 

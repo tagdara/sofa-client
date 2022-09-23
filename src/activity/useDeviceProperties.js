@@ -1,11 +1,11 @@
-import { deviceByEndpointId }  from 'store/deviceHelpers'
-import useDeviceStore from 'store/deviceStore'
+import { endpointByEndpointId }  from 'endpoint-model/discovery'
+import useDiscoveryStore from 'endpoint-model/discovery/discoveryStore'
 
 export const useDeviceProperties = (endpointId) => {
     
-    const device = deviceByEndpointId(endpointId)
+    const device = endpointByEndpointId(endpointId)
     const eventSources={ 'DoorbellEventSource': { "doorbellPress": {} }} 
-    const controllerProperties = useDeviceStore.getState().controllerProperties
+    const controllerProperties = useDiscoveryStore.getState().controllerProperties
 
     const getCapabilityPropertyMap = capability => {
         const controllerPropertyNames = controllerProperties.hasOwnProperty(capability.interface) ? Object.keys(controllerProperties[capability.interface]) : []

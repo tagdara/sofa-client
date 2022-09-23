@@ -1,6 +1,6 @@
 import React from 'react';
 import useToggleState from 'endpoint-model/property/toggleState/useToggleState'
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 
 export default function ToggleStateSegment(props) {
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import CardLineSlider from 'components/CardLineSlider';
+import CardLineSlider from 'layout/components/CardLineSlider';
 import { Group } from '@mantine/core'
-import useTemperature from 'endpoint-model/property/temperature/useTemperature'
+import useTemperatureSensor from 'endpoint-model/controller/TemperatureSensor/useTemperatureSensor'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 
 export default function TemperatureSlider(props) {
 
-    const { temperature, setTemperature } = useTemperature(props.endpointId, props.value, props.directive)
+    const { temperature, setTemperature } = useTemperatureSensor(props.endpointId, props.value, props.directive)
     const { powerState } = usePowerState(props.endpointId)
 
     if (temperature === undefined ) { return null }

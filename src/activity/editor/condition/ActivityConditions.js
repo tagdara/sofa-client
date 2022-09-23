@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ActivityCondition from "activity/editor/condition/ActivityCondition"
-import useActivityEditorStore from 'store/activityEditorStore'
-import { addActivityItem, removeActivityItem } from 'store/activityEditorHelpers'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
+import { addActivityItem, removeActivityItem } from 'activity/editor/activityEditorHelpers'
 import ErrorBoundary from 'error/ErrorBoundary'
 import { Divider} from '@mantine/core';
 

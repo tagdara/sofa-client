@@ -1,5 +1,5 @@
-import useActivityEditorStore from 'store/activityEditorStore'
-import { mapDeviceProperties, deviceByEndpointId }  from 'store/deviceHelpers'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
+import { mapDeviceProperties, endpointByEndpointId }  from 'endpoint-model/discovery'
 
 export const useActivityCondition = (category, index) => {
 
@@ -15,7 +15,7 @@ export const useActivityCondition = (category, index) => {
     try {
         item = useActivityEditorStore(state => state.activity[props.category][props.index] )
         endpointId = item.endpointId
-        device = deviceByEndpointId(endpointId)
+        device = endpointByEndpointId(endpointId)
     } 
     catch (error) {
         console.log('Error getting activity item', category, index)

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
-import Segment from 'components/Segment'
+import Segment from 'layout/components/Segment'
 import { IconBroadcast, IconZzz } from '@tabler/icons';
 import { useTimeout } from '@mantine/hooks';
 import { Loader } from '@mantine/core';

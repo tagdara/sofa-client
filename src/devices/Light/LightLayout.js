@@ -2,20 +2,20 @@ import React, { useState, useCallback }  from 'react';
 
 import { Divider, SegmentedControl, Portal } from '@mantine/core';
 import LightLine from 'devices/Light/LightLine';
-import useDeviceStore from 'store/deviceStore'
-import { sortByName } from 'store/deviceHelpers'
+import useDiscoveryStore from 'endpoint-model/discovery/discoveryStore'
+import { sortByName } from 'endpoint-model/discovery'
 
-import SectionHeader from 'layout/SectionHeader';
-import SectionFrame from 'layout/SectionFrame'
-import SectionGrid from 'layout/SectionGrid'
+import SectionHeader from 'layout/section/SectionHeader';
+import SectionFrame from 'layout/section/SectionFrame'
+import SectionGrid from 'layout/section/SectionGrid'
 import PageFrame from 'layout/PageFrame'
-import IsyLauncherButton from 'components/IsyLauncherButton'
+import IsyLauncherButton from 'devices/Insteon/IsyLauncherButton'
 
 
 const LightLayout = props => {
 
     const [filter, setFilter] = useState(props.filter);
-    const lights = sortByName(useDeviceStore(useCallback(state => Object.keys(state.devices).filter( dev => state.devices[dev].displayCategories.includes('LIGHT')), [])))
+    const lights = sortByName(useDiscoveryStore(useCallback(state => Object.keys(state.devices).filter( dev => state.devices[dev].displayCategories.includes('LIGHT')), [])))
 
     const selections= [
         { value: "ALL", "label": "All" },

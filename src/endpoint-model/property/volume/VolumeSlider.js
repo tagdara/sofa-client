@@ -1,5 +1,5 @@
 import React from 'react';
-import CardLineSlider from 'components/CardLineSlider';
+import CardLineSlider from 'layout/components/CardLineSlider';
 import { Group, Text, ThemeIcon } from '@mantine/core'
 import useVolume from 'endpoint-model/property/volume/useVolume'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
@@ -13,7 +13,7 @@ export default function VolumeSlider(props) {
     if (volume === undefined ) { return null }
 
     const disabled = props.disabled || ( props.value === undefined && !powerStateBool )
-    const on = ( props.value !== undefined || powerStateBool )
+    const on = ( props.value !== undefined || powerStateBool || props.on)
 
     return (
         <Group noWrap position="apart" style={{ width: "100%", flexGrow: 1}}>
@@ -33,7 +33,7 @@ export default function VolumeSlider(props) {
                 change={setVolume}
                 disabled={ disabled }
                 marks={props.marks}
-
+                hideLabels={props.hideLabels}
                 step={ props.step ? props.step : 10 }
             />
         </Group>

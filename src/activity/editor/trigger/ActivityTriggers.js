@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import useActivityEditorStore from "store/activityEditorStore"
+import useActivityEditorStore from "activity/editor/activityEditorStore"
 import ActivityTrigger from "activity/editor/trigger/ActivityTrigger"
 import ActivityCategory from "activity/editor/layout/ActivityCategory"
 import ErrorBoundary from 'error/ErrorBoundary'
 
-import { addActivityItem, removeActivityItem } from 'store/activityEditorHelpers'
+import { addActivityItem, removeActivityItem } from 'activity/editor/activityEditorHelpers'
 
 const ActivityTriggers = props => {
 

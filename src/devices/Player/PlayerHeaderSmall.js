@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon, Group } from '@mantine/core'
 import { IconMusic, IconPlaylist, IconDeviceSpeaker } from '@tabler/icons';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 
 const PlayerHeaderSmall = props => {
     

@@ -1,6 +1,6 @@
 import React from 'react';
 import useMuted from 'endpoint-model/property/muted/useMuted'
-import Segment from 'components/Segment'
+import Segment from 'layout/components/Segment'
 import { IconVolume2, IconVolume3 } from '@tabler/icons';
 
 export default function MutedSegment(props) {

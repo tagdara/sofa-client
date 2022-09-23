@@ -1,6 +1,6 @@
 import React from 'react';
 import useBrightness from 'endpoint-model/property/brightness/useBrightness'
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import BrightnessSlider from 'endpoint-model/property/brightness/BrightnessSlider'
 
 export default function BrightnessSegment(props) {

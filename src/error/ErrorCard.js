@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar, Card, Group, Text } from '@mantine/core';
-import { reloadPWA } from 'store/reloadPWA'
+import { reloadPWA } from 'network/reloadPWA'
 import { IconSkull } from '@tabler/icons';
 
 export default function ErrorCard(props) {

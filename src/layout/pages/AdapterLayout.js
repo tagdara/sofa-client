@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import AdapterItem from 'devices/Adapter/AdminAdapterItem';
 import PageFrame from 'layout/PageFrame'
-import { tokenFetch } from 'store/tokenFetch'
+import { tokenFetch } from 'network/tokenFetch'
 
 export default function AdapterLayout(props) {
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import ModeSelect from 'endpoint-model/property/mode/ModeSelect'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import useMode from 'endpoint-model/property/mode/useMode'
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { CloudOff, Monitor } from 'react-feather'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import { ActionIcon, Group } from '@mantine/core';

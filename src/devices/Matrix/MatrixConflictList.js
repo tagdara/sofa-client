@@ -1,5 +1,5 @@
 import React from 'react';
-import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
+import { endpointIdsByDisplayCategory, sortByName } from 'endpoint-model/discovery'
 import MatrixConflict from 'devices/Matrix/MatrixConflict';
 import useMode from 'endpoint-model/property/mode/useMode'
 import { Stack } from '@mantine/core';

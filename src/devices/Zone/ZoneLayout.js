@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { selectPage } from 'helpers/layoutHelpers';
-import { endpointIdsByDisplayCategory, hasDescription, getChangeTimesForDevices } from 'store/deviceHelpers';
-import { sortByName } from 'store/deviceHelpers'
-import SectionFrame from 'layout/SectionFrame'
-import SectionGrid from 'layout/SectionGrid'
-import SectionDivider from 'layout/SectionDivider'
+import { endpointIdsByDisplayCategory, descriptionIncludes } from 'endpoint-model/discovery'
+import { getChangeTimesForDevices } from 'history/historyUtils'
+import { sortByName } from 'endpoint-model/discovery'
+import SectionFrame from 'layout/section/SectionFrame'
+import SectionGrid from 'layout/section/SectionGrid'
+import SectionDivider from 'layout/section/SectionDivider'
 import PageFrame from 'layout/PageFrame'
-import SectionHeader from 'layout/SectionHeader'
+import SectionHeader from 'layout/section/SectionHeader'
 import Zone from 'devices/Zone/Zone';
 
 
@@ -16,8 +17,8 @@ const ZoneLayout = props => {
     const contactSensors = endpointIdsByDisplayCategory('CONTACT_SENSOR')
 
     const allZones = sortByName([...motionSensors, ...contactSensors])
-    const automationZones = allZones.filter( endpointId => hasDescription(endpointId, '(Automation)'))
-    const securityZones = allZones.filter( endpointId => !hasDescription(endpointId, '(Automation)'))
+    const automationZones = allZones.filter( endpointId => descriptionIncludes(endpointId, '(Automation)'))
+    const securityZones = allZones.filter( endpointId => !descriptionIncludes(endpointId, '(Automation)'))
     const [ changeTimes, setChangeTimes ] = useState({})
 
     useEffect(() => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactHLS from 'react-hls-player';
-import { directive } from 'store/directive'
+import { directive } from 'endpoint-model/directive/directive'
 
 const CameraVideo = props => {
 

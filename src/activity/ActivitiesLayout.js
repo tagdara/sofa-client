@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { selectPage } from 'helpers/layoutHelpers';
 
 import ActivityItem from 'activity/ActivityItem';
-import { isFavorite, makeFavorite } from 'store/deviceHelpers';
-import { loadActivities, deleteActivity } from 'store/activityHelpers';
+import { isFavorite, makeFavorite } from 'user/favorites/favoritesUtils';
+import { loadActivities, deleteActivity } from 'activity/activityHelpers';
 import { ActionIcon, Group } from '@mantine/core';
 
-import SectionHeader from 'layout/SectionHeader';
-import SectionFrame from 'layout/SectionFrame'
-import SectionGrid from 'layout/SectionGrid'
+import SectionHeader from 'layout/section/SectionHeader';
+import SectionFrame from 'layout/section/SectionFrame'
+import SectionGrid from 'layout/section/SectionGrid'
 import PageFrame from 'layout/PageFrame'
 
 import { IconClock, IconStar, IconPlus } from '@tabler/icons';

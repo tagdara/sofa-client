@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import StackCard from 'components/StackCard'
+import StackCard from 'layout/components/StackCard'
 import AreaLine from 'devices/Area/AreaLine';
 import AreaLights from 'devices/Area/AreaLights'
 import AreaScenes from 'devices/Area/AreaScenes';

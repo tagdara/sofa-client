@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Card, Stack, Text } from '@mantine/core';
-import { reloadPWA } from 'store/reloadPWA'
+import { reloadPWA } from 'network/reloadPWA'
 
 export default function LoginReload(props) {
     

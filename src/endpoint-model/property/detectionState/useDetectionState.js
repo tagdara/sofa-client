@@ -5,7 +5,7 @@ const useDetectionState = (endpointId, value, directive, userSensorType) => {
 
     const { deviceState } = useRegister(endpointId)
 
-    const getController = () => {
+    const getSensorController = () => {
         if (!deviceState) { return undefined }
         if (userSensorType && deviceState?.[userSensorType]) { return userSensorType }
         if (deviceState?.['Alexa.MotionSensor']) { return 'Alexa.MotionSensor'}
@@ -13,7 +13,7 @@ const useDetectionState = (endpointId, value, directive, userSensorType) => {
         return undefined
     }
 
-    const controller = getController()
+    const controller = getSensorController()
     const selections =[{ label: "Detected", value: "DETECTED"}, { label: "Not Detected", value: "NOT_DETECTED"}]
     const stateDetectionState = deviceState?.[controller]?.detectionState?.value
     const detectionState = value?.detectionState || stateDetectionState

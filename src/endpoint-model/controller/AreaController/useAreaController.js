@@ -1,5 +1,5 @@
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { sortByName, hasCapability, hasDisplayCategory } from 'store/deviceHelpers'
+import { sortByName, hasCapability, hasDisplayCategory } from 'endpoint-model/discovery'
 
 const useAreaController = ( endpointId, directive) => {
 

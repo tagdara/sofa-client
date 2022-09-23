@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
-import { getControllerByInstance } from 'store/deviceHelpers'
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
+import { getControllerInterface } from 'endpoint-model/discovery'
 
 const useRangeValue = ( endpointId, instance, value, directive) => {
 
@@ -15,7 +15,7 @@ const useRangeValue = ( endpointId, instance, value, directive) => {
     const rangeValueLabel = rangeValue
     const disabled = false
 
-    const rangeController = getControllerByInstance(device,instance)
+    const rangeController = getControllerInterface(device,instance)
     const minimumRange = rangeController?.configuration?.supportedRange?.minimumValue !== undefined || 0
     const maximumRange = rangeController?.configuration?.supportedRange?.maximumValue || 100
     const precision = rangeController?.configuration?.supportedRange?.precision || 1

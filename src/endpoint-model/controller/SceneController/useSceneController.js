@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { useInterval } from 'store/useInterval';
-import { directive as storeDirective } from 'store/directive'
+import { useInterval } from 'helpers/useInterval';
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
 
 const useSceneController = ( endpointId, currentScene, directive) => {
 

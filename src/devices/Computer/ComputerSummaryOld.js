@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import useEndpointStateStore from 'endpoint-model/store/endpointStateStore';
-import { register, unregister } from 'store/deviceHelpers'
-import { compareState } from 'store/deviceHelpers'
+import useEndpointStateStore from 'endpoint-model/state/endpointStateStore';
+import { register, unregister } from 'endpoint-model/discovery'
+import { compareState } from 'endpoint-model/discovery'
 import {  Group, Text, useMantineTheme } from '@mantine/core'
 import { PcDisplayHorizontal as Pc } from "react-bootstrap-icons";
-import WideAvatar from 'components/WideAvatar'
+import WideAvatar from 'layout/components/WideAvatar'
 import ComputerOnList from 'devices/Computer/ComputerOnList'
 
 const ComputerSummaryOld = props => {

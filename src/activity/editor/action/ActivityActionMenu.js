@@ -1,5 +1,5 @@
 import React from 'react';
-import DeviceIcon from 'components/DeviceIcon'
+import EndpointIcon from 'endpoint-model/endpoint/EndpointIcon'
 import { ThemeIcon, Menu } from '@mantine/core';
 
 const ActivityActionMenu = props => {
@@ -15,7 +15,7 @@ const ActivityActionMenu = props => {
                     <ThemeIcon   radius="xl"
                                             onClick={ () => { console.log('clicky')}}
                                 >
-                                    { props.endpointId && <DeviceIcon size={16} endpointId={props.endpointId} /> }
+                                    { props.endpointId && <EndpointIcon size={16} endpointId={props.endpointId} /> }
                     </ThemeIcon> 
                 </Menu.Target>
                 <Menu.Dropdown>

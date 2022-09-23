@@ -1,9 +1,9 @@
 import React from 'react';
 import { MantineProvider } from '@mantine/core';
 import { NotificationsProvider } from '@mantine/notifications';
-import FrameGrid from 'layout/FrameGrid';
+import FrameGrid from 'layout/frame/FrameGrid';
 import Login from 'login/Login';
-import useLoginStore from 'store/loginStore';
+import useLoginStore from 'login/loginStore';
 
 export default function App() {
 

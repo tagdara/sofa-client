@@ -1,6 +1,6 @@
 import React from 'react';
 import { selectPage } from 'helpers/layoutHelpers';
-import useLayoutStore from 'store/layoutStore'
+import useLayoutStore from 'layout/layoutStore'
 import { Button } from '@mantine/core';
 import { IconHome } from '@tabler/icons';
 

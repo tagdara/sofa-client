@@ -1,5 +1,5 @@
 import React from 'react';
-import CardLineSlider from 'components/CardLineSlider';
+import CardLineSlider from 'layout/components/CardLineSlider';
 import { Group, ThemeIcon } from '@mantine/core'
 import useRangeValue from 'endpoint-model/property/rangeValue/useRangeValue'
 import { IconPlug } from '@tabler/icons';

@@ -1,6 +1,6 @@
 import React from 'react';
 import ThermostatCard from 'devices/Thermostat/ThermostatCard'
-import { endpointIdByFriendlyName } from 'store/deviceHelpers'
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 
 const ThermostatHero = props => {
     const primary =  endpointIdByFriendlyName(props.primary)

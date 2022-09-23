@@ -1,6 +1,6 @@
 import React from 'react';
-import { updateActivityItem } from 'store/activityEditorHelpers'
-import SegmentMenu from 'components/SegmentMenu'
+import { updateActivityItem } from 'activity/editor/activityEditorHelpers'
+import SegmentMenu from 'layout/components/SegmentMenu'
 import useDeviceProperties from 'activity/useDeviceProperties'
 import useActivityItem from 'activity/useActivityItem'
 

@@ -1,6 +1,6 @@
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
-import { sortByName, hasDisplayCategory, hasCapability } from 'store/deviceHelpers'
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
+import { sortByName, hasDisplayCategory, hasCapability } from 'endpoint-model/discovery'
 
 const useChildren = (endpointId, value, directive) => {
 

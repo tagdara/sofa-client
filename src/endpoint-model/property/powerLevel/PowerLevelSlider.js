@@ -1,5 +1,5 @@
 import React from 'react';
-import CardLineSlider from 'components/CardLineSlider'
+import CardLineSlider from 'layout/components/CardLineSlider'
 import usePowerLevel from 'endpoint-model/property/powerLevel/usePowerLevel'
 
 const PowerLevelSlider = props => {

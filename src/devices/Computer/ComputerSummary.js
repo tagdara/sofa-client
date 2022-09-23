@@ -1,8 +1,8 @@
 import React from "react";
-import { sortByName, endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
+import { sortByName, endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 import ComputerCube from 'devices/Computer/ComputerCube';
 import { Group } from '@mantine/core';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 import { PcDisplayHorizontal as Pc } from "react-bootstrap-icons";
 
 const ComputerCollection = props => {

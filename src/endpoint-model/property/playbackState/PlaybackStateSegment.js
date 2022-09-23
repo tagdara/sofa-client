@@ -1,6 +1,6 @@
 import React from 'react';
 import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 
 export default function PlaybackStateSegment(props) {
 

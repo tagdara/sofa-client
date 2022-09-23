@@ -1,6 +1,6 @@
 import React from "react";
-import { endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
-import StackCard from 'components/StackCard'
+import { endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
+import StackCard from 'layout/components/StackCard'
 import Television from 'devices/Television/Television';
 import TelevisionLightControls from 'devices/Television/TelevisionLightControls'
 import TelevisionAppleTv from 'devices/Television/TelevisionAppleTv'

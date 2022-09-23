@@ -1,5 +1,5 @@
 import React from 'react';
-import CardPopover from 'components/CardPopover'
+import CardPopover from 'layout/components/CardPopover'
 import { Stack } from '@mantine/core';
 import PowerLevelSlider from 'endpoint-model/property/powerLevel/PowerLevelSlider'
 import ToggleStateSwitch from 'endpoint-model/property/toggleState/ToggleStateSwitch'

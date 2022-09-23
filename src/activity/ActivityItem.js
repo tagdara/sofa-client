@@ -3,10 +3,10 @@ import moment from 'moment';
 
 import { Badge, Button, Group, Loader, Stack, Text } from '@mantine/core';
 
-import { deviceByEndpointId } from 'store/deviceHelpers'
-import { directive } from 'store/directive'
+import { endpointByEndpointId } from 'endpoint-model/discovery'
+import { directive } from 'endpoint-model/directive/directive'
 import { useRegister } from 'endpoint-model/register/useRegister'
-import useUserStore from 'store/userStore'
+import useUserStore from 'user/userStore'
 import ActivityItemMenu from 'activity/ActivityItemMenu'
 import ActivityItemMissing from 'activity/ActivityItemMissing'
 import ActivityComponentIcon from 'activity/ActivityComponentIcon'
@@ -17,7 +17,7 @@ const ActivityItem = props => {
     
 
     const [ launched, setLaunched] = useState(false)
-    const activity = deviceByEndpointId(props.endpointId)
+    const activity = endpointByEndpointId(props.endpointId)
     const { deviceState } = useRegister(props.endpointId)
 
     const favorites = useUserStore( state => state.preferences.favorites )

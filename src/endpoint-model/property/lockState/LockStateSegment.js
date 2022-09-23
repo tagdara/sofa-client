@@ -1,6 +1,6 @@
 import React from 'react';
 import useLockState from 'endpoint-model/property/lockState/useLockState'
-import Segment from 'components/Segment'
+import Segment from 'layout/components/Segment'
 import { IconLock, IconLockOpen } from '@tabler/icons';
 
 export default function LockStateSegment(props) {

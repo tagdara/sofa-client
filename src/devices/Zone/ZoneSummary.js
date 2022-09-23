@@ -1,13 +1,13 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
-import WideAvatar from 'components/WideAvatar'
-import { ShieldSlash  } from "react-bootstrap-icons"
-
-import { compareState, hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds, register, unregister } from 'store/deviceHelpers'
+import WideAvatar from 'layout/components/WideAvatar'
 import { Badge, Group, Stack, Text } from '@mantine/core'
-import { Shield } from 'react-feather';
 import { selectPage } from 'helpers/layoutHelpers';
+import { useMultiRegister } from 'endpoint-model/register'
+
+import { hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds } from 'endpoint-model/discovery'
+
+import { IconShield, IconShieldOff } from '@tabler/icons';
 
 const ZoneSummary = props => {
   
@@ -15,15 +15,7 @@ const ZoneSummary = props => {
     const motionSensors = endpointIdsByDisplayCategory( "MOTION_SENSOR")     
     const allSensors = [...contactSensors, ...motionSensors] 
     const devices = devicesByEndpointIds(allSensors)
-    const states = useEndpointStateStore(state => Object.fromEntries(allSensors.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
-
-    useEffect(() => {
-        register(allSensors, "ZoneHero")
-        return function cleanup() {
-            unregister(allSensors, "ZoneHero")
-        };
-    // eslint-disable-next-line 
-    }, [])
+    const states = useMultiRegister(allSensors)
 
     if (!states || Object.keys(states).length < 1) { return <PlaceholderCard /> }
 
@@ -53,7 +45,7 @@ const ZoneSummary = props => {
                 <WideAvatar color={violated ? "red" : "green"} 
                             size="lg"
                             onClick={ () => selectPage('LightPage') }
-                            left={ violated ? < ShieldSlash size={20} /> : <Shield size={20} />} 
+                            left={ violated ? < IconShieldOff size={20} /> : <IconShield size={20} />} 
                             right={ violated ? openZones.length : undefined }
                 />
                 <Stack spacing={"xs"} >

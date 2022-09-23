@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon } from '@mantine/core'
 import { Layers, RotateCcw } from 'react-feather'
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 
 export default function AdapterItem(props) { 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import CardLineSlider from 'components/CardLineSlider';
+import CardLineSlider from 'layout/components/CardLineSlider';
 import { Group, ThemeIcon } from '@mantine/core'
 import { IconSun } from '@tabler/icons';
 import useBrightness from 'endpoint-model/property/brightness/useBrightness'

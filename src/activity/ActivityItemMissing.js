@@ -1,6 +1,6 @@
 import React from 'react';
-import CardLine from 'components/CardLine'
-import { isFavorite, removeFavorite } from 'store/deviceHelpers'
+import CardLine from 'layout/components/CardLine'
+import { isFavorite, removeFavorite } from 'user/favorites/favoritesUtils';
 import { X as Close, CloudOff } from 'react-feather'
 import { ActionIcon } from '@mantine/core';
 

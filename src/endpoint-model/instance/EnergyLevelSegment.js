@@ -1,6 +1,6 @@
 import React from 'react';
 import useMode from 'endpoint-model/property/mode/useMode'
-import Segment from 'components/Segment'
+import Segment from 'layout/components/Segment'
 import { ZapOff, ChevronDown, ChevronUp, ChevronsUp, Minus} from 'react-feather'
 
 export default function EnergyLevelSegment(props) {

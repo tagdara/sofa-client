@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 import { Collapse, Group, Stack } from '@mantine/core'
-import DeviceIcon from 'components/DeviceIcon'
+import EndpointIcon from 'endpoint-model/endpoint/EndpointIcon'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useInput from 'endpoint-model/property/input/useInput'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 import InputSelect from 'endpoint-model/property/input/InputSelect'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import TelevisionDetailLine from 'devices/Television/TelevisionDetailLine'
 import ModeSelect from 'endpoint-model/property/mode/ModeSelect'
 import MatrixConflictList from 'devices/Matrix/MatrixConflictList'
@@ -21,7 +21,7 @@ const Television = props => {
     return (
         <Stack spacing="lg">
             <Stack spacing={8}>
-                <CardLine   arrow icon={ <DeviceIcon endpointId={props.endpointId} /> }
+                <CardLine   arrow icon={ <EndpointIcon endpointId={props.endpointId} /> }
                             color={ on ? "primary" : undefined}
                             on={on}
                             primary={ name }

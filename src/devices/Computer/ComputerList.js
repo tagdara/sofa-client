@@ -1,5 +1,5 @@
 import React from "react";
-import { sortByName, endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
+import { sortByName, endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 import ComputerLine from 'devices/Computer/ComputerLine';
 
 

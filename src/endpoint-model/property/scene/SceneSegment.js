@@ -1,6 +1,6 @@
 import React from 'react';
 import useScene from 'endpoint-model/property/scene/useScene'
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 
 export default function SceneSegment(props) {
 

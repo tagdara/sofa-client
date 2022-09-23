@@ -1,7 +1,7 @@
 import React from 'react';
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import TimeSelect from 'endpoint-model/property/time/TimeSelect'
-import Segment from 'components/Segment'
+import Segment from 'layout/components/Segment'
 import { Group } from '@mantine/core';
 import useTimeRange from 'endpoint-model/property/time/useTimeRange'
 

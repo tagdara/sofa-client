@@ -1,9 +1,9 @@
 import React from 'react';
-import SectionFrame from 'layout/SectionFrame'
-import useActivityEditorStore from 'store/activityEditorStore'
+import SectionFrame from 'layout/section/SectionFrame'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
 //import ReactJson from 'react-json-view';
 import { JsonViewer  } from '@textea/json-viewer'
-import { modifyActivityJson } from 'store/activityEditorHelpers'
+import { modifyActivityJson } from 'activity/editor/activityEditorHelpers'
 
 export const ocean = {
     scheme: 'Ocean',

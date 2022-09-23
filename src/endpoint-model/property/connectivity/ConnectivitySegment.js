@@ -1,5 +1,5 @@
 import React from 'react';
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 import useConnectivity from 'endpoint-model/property/connectivity/useConnectivity'
 
 const ConnectivitySegment = props => {

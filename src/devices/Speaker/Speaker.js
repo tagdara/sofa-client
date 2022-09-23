@@ -1,14 +1,15 @@
 import React from 'react';
 import { ThemeIcon, Group, Text } from '@mantine/core';
 import { Speaker as SpeakerIcon } from 'react-feather'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 
 const Speaker = props => {
 
-    const { powerStateBool: on, toggle } = usePowerState(props.endpointId)
+    const { powerStateBool: powerStateOn, toggle } = usePowerState(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId).replace(" Speakers", "");
+    const on = props.on || powerStateOn
 
     if (props.filterOff && !on) {
         return null
@@ -24,7 +25,13 @@ const Speaker = props => {
                     {name}
                 </Text>
             </Group>
-            <VolumeSlider endpointId={props.endpointId} />
+            <VolumeSlider 
+                endpointId={props.endpointId} 
+                on={on} 
+                step={ props.volumeStep } 
+                marks={ props.volumeMarks } 
+                hideLabels={ props.noVolumeMarkLabels }
+            />
         </Group>
     );
 }

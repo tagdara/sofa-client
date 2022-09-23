@@ -1,7 +1,7 @@
 import React from 'react';
 import { IconLock, IconLockOpen } from '@tabler/icons';
 import useMode from 'endpoint-model/property/mode/useMode'
-import Segment from 'components/Segment'
+import Segment from 'layout/components/Segment'
 
 
 const InputLockSegment = props => {

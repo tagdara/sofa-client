@@ -1,5 +1,5 @@
 import React from 'react';
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 import useThermostatMode from 'endpoint-model/property/thermostatMode/useThermostatMode'
 
 export default function ThermostatModeSegment(props) {

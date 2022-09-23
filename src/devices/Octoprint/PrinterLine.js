@@ -3,9 +3,9 @@ import { ActionIcon } from '@mantine/core'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
-import { endpointIdByFriendlyName } from 'store/deviceHelpers';
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 import { CloudSlash, Layers } from "react-bootstrap-icons";
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import PrinterCam from 'devices/Octoprint/PrinterCam'
 import PrinterLink from 'devices/Octoprint/PrinterLink'
 

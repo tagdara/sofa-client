@@ -1,5 +1,5 @@
 import React from 'react';
-import StackCard from 'components/StackCard'
+import StackCard from 'layout/components/StackCard'
 import AreaSummary from 'devices/Area/AreaSummary';
 
 const AreaHero = props => {

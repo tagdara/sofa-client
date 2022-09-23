@@ -1,8 +1,8 @@
 import React  from 'react';
 
-import SectionHeader from 'layout/SectionHeader';
-import SectionFrame from 'layout/SectionFrame'
-import SectionGrid from 'layout/SectionGrid'
+import SectionHeader from 'layout/section/SectionHeader';
+import SectionFrame from 'layout/section/SectionFrame'
+import SectionGrid from 'layout/section/SectionGrid'
 import PageFrame from 'layout/PageFrame'
 import ComputerList from 'devices/Computer/ComputerList'
 import MatrixList from 'devices/Matrix/MatrixList';

@@ -1,10 +1,10 @@
 import React, { useState} from 'react';
 import { QrCode } from 'react-bootstrap-icons'
-import SectionHeader from 'layout/SectionHeader';
-import SectionFrame from 'layout/SectionFrame'
-import SectionGrid from 'layout/SectionGrid'
+import SectionHeader from 'layout/section/SectionHeader';
+import SectionFrame from 'layout/section/SectionFrame'
+import SectionGrid from 'layout/section/SectionGrid'
 import PageFrame from 'layout/PageFrame'
-import { endpointIdsByDisplayCategory, sortByName }  from 'store/deviceHelpers'
+import { endpointIdsByDisplayCategory, sortByName }  from 'endpoint-model/discovery'
 import SecurityCamera from 'devices/Camera/SecurityCamera';
 import { ActionIcon, Portal } from '@mantine/core';
 import UnifiProtectButton from 'devices/Camera/UnifiProtectButton'

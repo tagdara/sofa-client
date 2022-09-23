@@ -1,10 +1,10 @@
 import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import { directive } from 'store/directive'
+import { directive } from 'endpoint-model/directive/directive'
 import { ActionIcon } from '@mantine/core'
 import { Layers, RotateCcw, Square } from 'react-feather'
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { useRegister } from 'endpoint-model/register/useRegister'
 
 export default function AdapterItem(props) { 

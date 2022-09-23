@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { propertyFromDirective } from 'store/directive'
-import { deviceByEndpointId, getControllerInterface }  from 'store/deviceHelpers'
-import { updateActivityItem,  loadPropertyModule, renderSuspensePropertyModule } from 'store/activityEditorHelpers'
-import useActivityEditorStore from 'store/activityEditorStore'
+import { propertyFromDirective } from 'endpoint-model/directive/directive'
+import { endpointByEndpointId, getControllerInterface }  from 'endpoint-model/discovery'
+import { updateActivityItem,  loadPropertyModule, renderSuspensePropertyModule } from 'activity/editor/activityEditorHelpers'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
 
 export default function PropertyValue(props) {
     
@@ -39,11 +39,11 @@ export default function PropertyValue(props) {
     if (!item) { return null }
 
     const endpointId = item.endpointId
-    const device = endpointId ? deviceByEndpointId(endpointId) : undefined
+    const device = endpointId ? endpointByEndpointId(endpointId) : undefined
  
     if ( !device || !propertyModuleName || !item || item.operator ==='Any') { return null }
 
-    const controllerInterface = getControllerInterface(device,item) 
+    const controllerInterface = getControllerInterface(device, item?.controller) 
 
     const conditionPropertyDirective = (endpointId, controllerName, command, payload={}, cookie={}, instance)  => {
 

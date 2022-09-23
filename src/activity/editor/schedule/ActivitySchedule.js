@@ -5,8 +5,8 @@ import ScheduleStart from 'activity/editor/schedule/ScheduleStart'
 import ScheduleInterval from 'activity/editor/schedule/ScheduleInterval'
 import ScheduleDays from 'activity/editor/schedule/ScheduleDays'
 
-import useActivityEditorStore from 'store/activityEditorStore'
-import { updateActivityItem } from 'store/activityEditorHelpers'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
+import { updateActivityItem } from 'activity/editor/activityEditorHelpers'
 import { ThemeIcon, Group, Stack, Text } from '@mantine/core';
 import { Calendar } from 'react-feather'
 

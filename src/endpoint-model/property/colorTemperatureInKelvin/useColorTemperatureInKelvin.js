@@ -1,5 +1,5 @@
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
 
 const useColorTemperatureInKelvin = ( endpointId, value, directive) => {
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import useVolume from 'endpoint-model/property/volume/useVolume'
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
 
 export default function VolumeSegment(props) {

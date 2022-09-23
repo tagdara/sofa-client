@@ -1,5 +1,5 @@
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
 import { useEffect } from 'react';
 
 const useBrightness = ( endpointId, value, directive) => {

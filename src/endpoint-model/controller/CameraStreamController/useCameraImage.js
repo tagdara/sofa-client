@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { directive } from 'store/directive'
+import { directive } from 'endpoint-model/directive/directive'
 
 export const useCameraImage = endpointId => {
 

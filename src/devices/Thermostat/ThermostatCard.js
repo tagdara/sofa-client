@@ -4,7 +4,7 @@ import Thermostat from 'devices/Thermostat/Thermostat';
 import AirQualityBadge from 'endpoint-model/instance/AirQualityBadge'
 import PlaceholderCard from 'layout/PlaceholderCard';
 
-import StackCard from 'components/StackCard'
+import StackCard from 'layout/components/StackCard'
 import ThermostatList from 'devices/Thermostat/ThermostatList'
 import { Collapse, Stack } from '@mantine/core';
 

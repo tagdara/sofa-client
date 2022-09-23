@@ -1,5 +1,5 @@
 import React from 'react';
-//import { endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
+//import { endpointIdsByDisplayCategory, sortByName } from 'endpoint-model/discovery'
 import Matrix from 'devices/Matrix/Matrix';
 
 export default function MatrixList(props) {

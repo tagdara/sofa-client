@@ -1,6 +1,6 @@
 import React from 'react';
 import { Group, Text } from '@mantine/core'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import AreaShortcutSlider from 'devices/Area/AreaShortcutSlider'
 
 const AreaLine = props => {

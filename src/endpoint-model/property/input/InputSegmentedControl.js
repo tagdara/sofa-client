@@ -1,6 +1,6 @@
 import React from 'react';
 import useInput from 'endpoint-model/property/input/useInput'
-import CardSegmentedControl from 'components/CardSegmentedControl'
+import CardSegmentedControl from 'layout/components/CardSegmentedControl'
 
 const InputSegmentedControl = props => {
 

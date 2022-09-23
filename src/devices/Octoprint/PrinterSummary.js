@@ -3,8 +3,8 @@ import { Group, Text } from '@mantine/core'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
-import { endpointIdByFriendlyName } from 'store/deviceHelpers';
-import StackCard from 'components/StackCard'
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
+import StackCard from 'layout/components/StackCard'
 import PrinterCam from 'devices/Octoprint/PrinterCam'
 import PrinterLink from 'devices/Octoprint/PrinterLink'
 

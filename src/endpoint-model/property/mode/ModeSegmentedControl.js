@@ -1,6 +1,6 @@
 import React from 'react';
 import useMode from 'endpoint-model/property/mode/useMode'
-import CardSegmentedControl from 'components/CardSegmentedControl'
+import CardSegmentedControl from 'layout/components/CardSegmentedControl'
 
 const ModeSegmentedControl = props => {
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import useMode from 'endpoint-model/property/mode/useMode'
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import PlugPopover from 'devices/Plug/PlugPopover'
 import { ZapOff, ChevronDown, ChevronUp, ChevronsUp, Minus} from 'react-feather'
 

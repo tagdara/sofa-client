@@ -1,5 +1,5 @@
 import React from 'react';
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import useColor from 'endpoint-model/property/color/useColor'
 import ColorSlider from 'endpoint-model/property/color/ColorSlider'
 

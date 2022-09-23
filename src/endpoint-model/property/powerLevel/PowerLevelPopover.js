@@ -1,5 +1,5 @@
 import React from 'react';
-import CardPopover from 'components/CardPopover'
+import CardPopover from 'layout/components/CardPopover'
 import PowerLevelSlider from 'endpoint-model/property/powerLevel/PowerLevelSlider'
 
 const PowerLevelPopover = props => {

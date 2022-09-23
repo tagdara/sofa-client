@@ -3,7 +3,7 @@ import { Badge } from '@mantine/core';
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useMode from 'endpoint-model/property/mode/useMode'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 
 const ComputerBadge = props => {
 

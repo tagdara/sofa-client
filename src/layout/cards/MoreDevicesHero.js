@@ -1,14 +1,14 @@
 import React from 'react';
-import StackCard from 'components/StackCard';
+import StackCard from 'layout/components/StackCard';
 import Fan from 'devices/Fan/Fan';
 import Shade from 'devices/Shade/Shade';
-import { endpointIdsByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers'
+import { endpointIdByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'endpoint-model/discovery'
 import { Stack } from '@mantine/core'
 
 const MoreDevicesHero = props => {
     
     const shades = sortByName(endpointIdsByDisplayCategory('INTERIOR_BLIND'))    
-    const fans = endpointIdsByFriendlyName(['Bathroom Fan', 'Bathroom Heat Fan'])
+    const fans = endpointIdByFriendlyName(['Bathroom Fan', 'Bathroom Heat Fan'])
     
     return (
         <StackCard>

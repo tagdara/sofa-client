@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon, Center, Group, Space, Text } from '@mantine/core'
 import { IconLock, IconLockOpen } from '@tabler/icons';
-import CardSegmentedControl from 'components/CardSegmentedControl'
+import CardSegmentedControl from 'layout/components/CardSegmentedControl'
 import useMode from 'endpoint-model/property/mode/useMode'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useInput from 'endpoint-model/property/input/useInput'

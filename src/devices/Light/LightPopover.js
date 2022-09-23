@@ -1,12 +1,12 @@
 import React from 'react';
 import { Stack, Text} from '@mantine/core'
-import CardPopover from 'components/CardPopover'
+import CardPopover from 'layout/components/CardPopover'
 
 import ColorTemperatureSlider from 'endpoint-model/property/colorTemperatureInKelvin/ColorTemperatureSlider'
 import BrightnessSlider from 'endpoint-model/property/brightness/BrightnessSlider'
 import ColorSlider from 'endpoint-model/property/color/ColorSlider'
 import OnLevelSlider from 'endpoint-model/instance/OnLevelSlider'
-import { hasCapability } from 'store/deviceHelpers'
+import { hasCapability } from 'endpoint-model/discovery'
 
 const LightPopover = props => {
 

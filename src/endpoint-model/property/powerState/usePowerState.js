@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
-import { camelCase, isReachable } from 'store/deviceHelpers'
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
+import { camelCase } from 'helpers/camelCase'
+import { isReachable } from 'endpoint-model/state'
 
 const usePowerState = (endpointId, value, directive) => {
 

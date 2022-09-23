@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronUp, X as Clear, ChevronDown } from 'react-feather'
 import { ActionIcon, Group } from '@mantine/core';
 
-import { moveActivityItemUp, moveActivityItemDown, removeActivityItem } from 'store/activityEditorHelpers'
+import { moveActivityItemUp, moveActivityItemDown, removeActivityItem } from 'activity/editor/activityEditorHelpers'
 
 
 const ActivityItemActions = props => {

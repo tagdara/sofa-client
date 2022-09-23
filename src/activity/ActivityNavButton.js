@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import ActivityItemMissing from 'activity/ActivityItemMissing'
 
-import { isFavorite, deviceByEndpointId } from 'store/deviceHelpers'
-import { directive } from 'store/directive'
+import { isFavorite} from 'user/favorites/favoritesUtils';
+import { endpointByEndpointId } from 'endpoint-model/discovery'
+import { directive } from 'endpoint-model/directive/directive'
 import { useRegister } from 'endpoint-model/register/useRegister'
 import moment from 'moment';
 import { Loader, NavLink } from '@mantine/core';
@@ -11,7 +12,7 @@ import { IconListDetails, IconStar, IconPlayerPlay } from '@tabler/icons';
 const ActivityItem = props => {
     
     const [ launched, setLaunched] = useState(false)
-    const activity = deviceByEndpointId(props.endpointId)
+    const activity = endpointByEndpointId(props.endpointId)
     const { deviceState } = useRegister(props.endpointId)
 
     if (!activity || !deviceState) { return <ActivityItemMissing endpointId={props.endpointId} /> }

@@ -1,5 +1,5 @@
 import React from 'react';
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 import useInput from 'endpoint-model/property/input/useInput'
 
 export default function DeviceDirective(props) {

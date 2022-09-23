@@ -6,8 +6,8 @@ import AreaLights from 'devices/Area/AreaLights'
 import AreaScenes from 'devices/Area/AreaScenes';
 import AreaSummaryLine from 'devices/Area/AreaSummaryLine';
 
-import useUserStore from 'store/userStore'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import useUserStore from 'user/userStore'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import { Stack } from '@mantine/core'
 import useChildren from 'endpoint-model/property/children/useChildren'
 import useScene from 'endpoint-model/property/scene/useScene'

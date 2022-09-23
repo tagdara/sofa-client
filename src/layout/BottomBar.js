@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
 import { selectStack } from 'helpers/layoutHelpers';
-import useLayoutStore from 'store/layoutStore'
+import useLayoutStore from 'layout/layoutStore'
 import { Affix, Group, Stack, SegmentedControl, useMantineTheme } from '@mantine/core';
 import { List as Menu, Lightbulb, MusicNoteBeamed as Music, Shield, Thermometer } from "react-bootstrap-icons";
 import HomeButton from 'layout/HomeButton'

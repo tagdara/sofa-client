@@ -1,10 +1,10 @@
 import React from "react";
-import { endpointIdByFriendlyName } from 'store/deviceHelpers';
-import StackCard from 'components/StackCard'
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
+import StackCard from 'layout/components/StackCard'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import AreaShortcutSlider from 'devices/Area/AreaShortcutSlider'
 import { ActionIcon, Group, Text } from '@mantine/core'
-import { directive } from 'store/directive'
+import { directive } from 'endpoint-model/directive/directive'
 import { Tv } from 'react-bootstrap-icons'
 import useScene from 'endpoint-model/property/scene/useScene'
 

@@ -2,9 +2,9 @@ import React from 'react';
 import ModeControllerText from 'endpoint-model/controller/ModeController/ModeControllerText'
 import ForecastAvatar from 'devices/Weather/ForecastAvatar'
 import WeatherIcon from 'devices/Weather/WeatherIcon'
-import WideAvatar from 'components/WideAvatar'
+import WideAvatar from 'layout/components/WideAvatar'
 import AQIBadge from 'endpoint-model/instance/AQIBadge'
-import { endpointIdByFriendlyName } from 'store/deviceHelpers'
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 import { Group, Stack} from '@mantine/core';
 import useTemperature from 'endpoint-model/property/temperature/useTemperature'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'

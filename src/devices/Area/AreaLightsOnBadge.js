@@ -1,9 +1,10 @@
 import React from 'react';
 import { ActionIcon, Badge } from '@mantine/core'
-import { compareState,friendlyNameByEndpointId, isReachable } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
+import { compareState, isReachable } from 'endpoint-model/state'
 import useChildren from 'endpoint-model/property/children/useChildren'
-import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
-import { directive } from 'store/directive'
+import useEndpointStateStore from 'endpoint-model/state/endpointStateStore'
+import { directive } from 'endpoint-model/directive/directive'
 import { X } from "react-bootstrap-icons";
 
 const AreaLightsOnBadge = props => {

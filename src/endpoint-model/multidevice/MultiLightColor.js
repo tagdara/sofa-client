@@ -1,28 +1,20 @@
-import React, { useMemo, useState, useEffect } from 'react';
-import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
-import { directive } from 'store/directive'
+import React, { useMemo, useState } from 'react';
+import { directive } from 'endpoint-model/directive/directive'
 import { Checkbox, ColorPicker, ColorSwatch, Stack, Popover } from '@mantine/core'
 import { hsv2rgb, hsl2hsv } from 'helpers/colorHelpers';
 import { useDidUpdate, useDebouncedValue } from '@mantine/hooks';
-import { hasCapability, compareState, register, unregister } from 'store/deviceHelpers'
+import { hasCapability } from 'endpoint-model/discovery'
+import { useMultiRegister } from 'endpoint-model/register'
 
 const MultiLightColor = props => {
 
     const [ open, setOpen ] = useState(false);
     const colorLights = useMemo( () => { return props.endpointIds.filter(endpointId => hasCapability(endpointId, "Alexa.ColorController")) }, [props.endpointIds])
-    const states = useEndpointStateStore(state => Object.fromEntries(colorLights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))  
+    const states = useMultiRegister(colorLights)
 
     const [ value, setValue ] = useState(undefined)
     const [ retainBrightness, setRetainBrightness] = useState(true)
     const [ debounced ] = useDebouncedValue( value, props.delay ? props.delay : 300 );
-
-    useEffect(() => {
-        register(colorLights, 'MultiLightColor')
-        return function cleanup() {
-            unregister(colorLights, 'MultiLightColor');
-        };
-    // eslint-disable-next-line 
-    }, [ colorLights ])    
 
     useDidUpdate(() => {
         if (debounced !== undefined) {

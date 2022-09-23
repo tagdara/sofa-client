@@ -1,7 +1,7 @@
 import React from 'react';
 import { Group, ThemeIcon } from '@mantine/core'
 
-import CardLineSlider from 'components/CardLineSlider';
+import CardLineSlider from 'layout/components/CardLineSlider';
 import useColorTemperatureInKelvin from 'endpoint-model/property/colorTemperatureInKelvin/useColorTemperatureInKelvin'
 
 import { IconTemperature } from '@tabler/icons';

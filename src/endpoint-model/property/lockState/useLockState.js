@@ -1,6 +1,6 @@
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
-import { camelCase } from 'store/deviceHelpers';
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
+import { camelCase } from 'helpers/camelCase'
 
 const useLockState = (endpointId, value, directive) => {
 

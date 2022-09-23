@@ -1,9 +1,9 @@
 import React from 'react';
-import { endpointIdByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'store/deviceHelpers';
+import { endpointIdByFriendlyName, endpointIdsByDisplayCategory, sortByName } from 'endpoint-model/discovery'
 
 import SecurityCamera from 'devices/Camera/SecurityCamera';
 import StatusLock from 'devices/Lock/StatusLock';
-import StackCard from 'components/StackCard'
+import StackCard from 'layout/components/StackCard'
 import usePageFrame from 'helpers/usePageFrame'
 import { Carousel } from '@mantine/carousel';
 import { createStyles } from '@mantine/core';

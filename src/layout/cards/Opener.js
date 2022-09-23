@@ -1,7 +1,7 @@
 import React from 'react';
-import { endpointIdByFriendlyName } from 'store/deviceHelpers';
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 import StatusLock from 'devices/Lock/StatusLock';
-import StackCard from 'components/StackCard'
+import StackCard from 'layout/components/StackCard'
 
 export default function Opener(props) {
     

@@ -1,12 +1,12 @@
 import React from 'react';
 import { selectPage } from 'helpers/layoutHelpers';
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 
 import Moment from 'react-moment';
 import 'moment-timezone';
 
 import { Shield, AlertTriangle } from 'react-feather'
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { ActionIcon } from '@mantine/core';
 import useDetectionState from 'endpoint-model/property/detectionState/useDetectionState'
 

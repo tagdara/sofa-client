@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import useChildren from 'endpoint-model/property/children/useChildren'
 
 const useScene = (endpointId, value, directive) => {

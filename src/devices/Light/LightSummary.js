@@ -1,30 +1,21 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Group, Stack, Text, useMantineTheme } from '@mantine/core'
 
-import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
-import { compareState, endpointIdsByDisplayCategory, register, unregister } from 'store/deviceHelpers'
+import { endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 import { selectPage } from 'helpers/layoutHelpers';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import WideAvatar from 'components/WideAvatar'
+import WideAvatar from 'layout/components/WideAvatar'
 import AreasLightsOn from 'devices/Area/AreasLightsOn'
 import LightChristmasButton from 'devices/Light/LightChristmasButton';
 import { IconBulb, IconBulbOff } from '@tabler/icons'
+import { useMultiRegister } from 'endpoint-model/register'
 
 const LightSummary = () => {
     const theme = useMantineTheme()
     const xmas = false
     const lights = endpointIdsByDisplayCategory('LIGHT')
-    const states = useEndpointStateStore(state => Object.fromEntries(lights.filter(key => key in state.deviceStates).map(key => [key, state.deviceStates[key]])), (oldState, newState) => compareState(oldState, newState))
+    const states = useMultiRegister(lights)
     const treeEndpointId = 'insteon:node:1A F1 A5 1'
-
-    useEffect(() => {
-        register(lights, "LightSummary")
-        return function cleanup() {
-            unregister(lights, "LightSummary")
-        };
-    // eslint-disable-next-line 
-    }, [])
-
 
     if (!states || Object.keys(states).length < 1) { return <PlaceholderCard /> }
     
@@ -69,28 +60,12 @@ const LightSummary = () => {
 
     const iconColor = lightsOn ? theme.colors[theme.primaryColor] : undefined
 
-    if (!lightCount('on')) {
-        return (
-            <Group style={{ display: "flex", alignItems: "center"}} onClick={ () => selectPage('LightPage') }>
-                <IconBulbOff size={24} />
-                <Text   
-                    size={ "lg" }
-                    weight={500} 
-                    lineClamp={1}
-                    style={{ paddingTop: 4}}
-                >
-                    { "All lights are off" }  
-                </Text>
-            </Group>
-        )
-    }
-
     return (
         <Group position="apart" noWrap >
             <Group noWrap style={{ alignItems: lightsOn ? "flex-start" : "center "}}>
                 <WideAvatar color={iconColor} size="lg"
                             onClick={ () => selectPage('LightPage') }
-                            left={ <IconBulb size="24" /> }
+                            left={ lightCount('on') ? <IconBulb size="24" /> : <IconBulbOff size="24" />}
                             right={ lightCount('on') ? lightCount('on') : undefined }
                     /> 
                 <Stack spacing={"xs"}>
@@ -102,7 +77,7 @@ const LightSummary = () => {
                         { lightCount('on') ? "Lights are on in these areas" : "All lights off" }
                         
                     </Text>
-                    <AreasLightsOn />
+                    { lightsOn && <AreasLightsOn /> }
                 </Stack>
             </Group>
             { checkHoliday() }

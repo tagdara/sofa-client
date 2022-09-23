@@ -1,5 +1,5 @@
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { camelCase } from 'store/deviceHelpers';
+import { camelCase } from 'helpers/camelCase'
 
 const useMusicController = ( endpointId, value, directive) => {
 

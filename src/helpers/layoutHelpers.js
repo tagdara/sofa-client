@@ -1,6 +1,6 @@
 import React from 'react';
-import useLayoutStore from 'store/layoutStore'
-import useLoginStore from 'store/loginStore'
+import useLayoutStore from 'layout/layoutStore'
+import useLoginStore from 'login/loginStore'
 
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { Text } from '@mantine/core'

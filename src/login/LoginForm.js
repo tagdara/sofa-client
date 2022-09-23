@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Button, Stack, PasswordInput, Text, TextInput } from '@mantine/core';
 import { useForm } from '@mantine/form';
-import useLoginStore from 'store/loginStore';
+import useLoginStore from 'login/loginStore';
 
 export default function Login(props) {
 

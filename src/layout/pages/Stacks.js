@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import CardStack from 'layout/CardStack';
-import useLayoutStore from 'store/layoutStore'
+import useLayoutStore from 'layout/layoutStore'
 import { refreshStackLayout } from 'helpers/layoutHelpers';
 import PageFrame from 'layout/PageFrame'
 import usePageFrame from 'helpers/usePageFrame'
-import SectionGrid from 'layout/SectionGrid'
-import SectionFrame from 'layout/SectionFrame'
+import SectionGrid from 'layout/section/SectionGrid'
+import SectionFrame from 'layout/section/SectionFrame'
 import SystemPage from 'layout/pages/SystemPage'
 
 export default function Stacks(props) {

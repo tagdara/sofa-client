@@ -1,10 +1,12 @@
 import React from 'react';
-import { directives } from 'store/directive'
-import { deviceByEndpointId, deviceDirectives } from 'store/deviceHelpers'
-import { updateActivityItem } from 'store/activityEditorHelpers'
-import useActivityEditorStore from 'store/activityEditorStore'
+import { directives } from 'endpoint-model/directive/directive'
+import { endpointByEndpointId } from 'endpoint-model/discovery'
+import { deviceDirectives } from 'endpoint-model/discovery'
+import { updateActivityItem } from 'activity/editor/activityEditorHelpers'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
 import { Menu, Select } from '@mantine/core';
-import Segment from 'components/Segment'
+import Segment from 'layout/components/Segment'
+
 
 export default function DeviceDirective(props) {
     
@@ -13,7 +15,7 @@ export default function DeviceDirective(props) {
     if (!item) { return null }
 
     const endpointId = item.endpointId
-    const device = endpointId ? deviceByEndpointId(endpointId) : undefined
+    const device = endpointId ? endpointByEndpointId(endpointId) : undefined
     const directiveMap = deviceDirectives(device)
 
     function propertyFromDirective(controllerName, directiveName) {

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
 
 const useTitle = (endpointId, value, directive) => {
 

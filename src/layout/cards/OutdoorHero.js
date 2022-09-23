@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import StackCard from 'components/StackCard'
+import StackCard from 'layout/components/StackCard'
 import Weather from 'devices/Weather/Weather';
 import WeatherList from 'devices/Weather/WeatherList'
 import { Collapse, Stack } from '@mantine/core';
-import { endpointIdByFriendlyName } from 'store/deviceHelpers'
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 
 export default function OutdoorHero(props) {
     

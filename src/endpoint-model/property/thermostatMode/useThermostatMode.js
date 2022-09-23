@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
-import { camelCase, getController } from 'store/deviceHelpers'
+import { camelCase } from 'helpers/camelCase'
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
+import { getControllerInterface } from 'endpoint-model/discovery'
 
 const useThermostatMode = ( endpointId, value, directive) => {
 
@@ -20,19 +21,12 @@ const useThermostatMode = ( endpointId, value, directive) => {
     // eslint-disable-next-line 
     }, [  ]);
 
-    function getSupportedModes() {
-        try { 
-            return getController(endpointId, controller).configuration.supportedModes 
-            }
-        catch {}
-        return []
-    }
-
+ 
     function setThermostatMode(newMode) {
         activeDirective(endpointId, controller, "SetThermostatMode",  {"thermostatMode" : { "value": newMode }} )
     }; 
 
-    const supportedModes = getSupportedModes()
+    const supportedModes = getControllerInterface(endpointId, controller)?.configuration?.supportedModes || []
     const selections = supportedModes.map( mode => { return { label : mode, value : mode}})
     const thermostatModeLabel = camelCase(thermostatMode)
 

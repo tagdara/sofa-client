@@ -1,8 +1,8 @@
 import React from 'react';
 import ComputerSummary from 'devices/Computer/ComputerSummary'
 import { selectPage } from 'helpers/layoutHelpers';
-import StackCard from 'components/StackCard'
-import { endpointIdByFriendlyName } from 'store/deviceHelpers';
+import StackCard from 'layout/components/StackCard'
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 
 export default function ComputerHero(props) {
     

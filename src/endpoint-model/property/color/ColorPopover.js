@@ -1,5 +1,5 @@
 import React from 'react';
-import CardPopover from 'components/CardPopover'
+import CardPopover from 'layout/components/CardPopover'
 import ColorSlider from 'endpoint-model/property/color/ColorSlider'
 
 const ColorPopover = props => {

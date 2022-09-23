@@ -1,7 +1,7 @@
 import create from 'zustand'
-import { storeUpdater } from 'store/storeUpdater'
-import { tokenFetch } from 'store/tokenFetch'
-import useLoginStore from "store/loginStore"
+import { storeUpdater } from 'endpoint-model/storeUpdater'
+import { tokenFetch } from 'network/tokenFetch'
+import useLoginStore from "login/loginStore"
 import produce from "immer"
 
 const registerUrl = "/register_devices";

@@ -1,5 +1,5 @@
 import React from 'react';
-import { directive } from 'store/directive'
+import { directive } from 'endpoint-model/directive/directive'
 import { ActionIcon, Group } from '@mantine/core'
 import { ChevronUp, ChevronDown, Minus } from 'react-feather'
 

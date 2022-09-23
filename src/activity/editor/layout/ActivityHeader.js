@@ -4,10 +4,10 @@ import { Star } from 'react-feather'
 
 import ActivityName from "activity/editor/layout/ActivityName"
 import ActivityDetails from "activity/editor/layout/ActivityDetails"
-import { makeFavorite, removeFavorite } from 'store/deviceHelpers'
-import useActivityEditorStore from 'store/activityEditorStore'
-import useUserStore from 'store/userStore'
-import SectionHeader from 'layout/SectionHeader';
+import { makeFavorite, removeFavorite } from 'user/favorites/favoritesUtils'
+import useActivityEditorStore from 'activity/editor/activityEditorStore'
+import useUserStore from 'user/userStore'
+import SectionHeader from 'layout/section/SectionHeader';
 
 const ActivityHeader = props => {
 

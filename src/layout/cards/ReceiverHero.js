@@ -1,8 +1,8 @@
 import React from 'react';
 import Receiver from 'devices/Receiver/Receiver';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import { endpointIdsByDisplayCategory } from 'store/deviceHelpers'
-import StackCard from 'components/StackCard'
+import { endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
+import StackCard from 'layout/components/StackCard'
 
 const ReceiverHero = props => {
 

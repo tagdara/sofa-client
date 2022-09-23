@@ -1,7 +1,7 @@
 import React from 'react';
 
-import CardLine from 'components/CardLine'
-import DeviceIcon from 'components/DeviceIcon';
+import CardLine from 'layout/components/CardLine'
+import EndpointIcon from 'endpoint-model/endpoint/EndpointIcon';
 
 const ActivityDeviceItem = React.forwardRef( (props, ref) => {
 
@@ -17,7 +17,7 @@ const ActivityDeviceItem = React.forwardRef( (props, ref) => {
 
     return (
         <CardLine onClick={props.onClick} size={props.size ? props.size : "sm"}
-            icon={ <DeviceIcon name={ category } /> }
+            icon={ <EndpointIcon name={ category } /> }
             primary={ name } 
             secondary={ camelSentence(category) } 
         />

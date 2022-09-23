@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useMultiRegister } from 'endpoint-model/register/useRegister'
-import { hasCapability } from 'store/deviceHelpers'
+import { hasCapability } from 'endpoint-model/discovery'
 
 const useMultiPower = (endpointIds) => {
 

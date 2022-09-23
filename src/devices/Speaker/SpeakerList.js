@@ -1,6 +1,6 @@
 import React from 'react';
 import Speaker from 'devices/Speaker/Speaker';
-import { sortByName, endpointIdsByDisplayCategory } from 'store/deviceHelpers'
+import { sortByName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 
 const SpeakerList = props => {
     

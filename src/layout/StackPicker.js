@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import useLayoutStore from 'store/layoutStore'
+import useLayoutStore from 'layout/layoutStore'
 import { ActionIcon, Group, Select, Text } from '@mantine/core';
 import { usePageFrame } from 'helpers/usePageFrame'
 import { IconX } from '@tabler/icons';

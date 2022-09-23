@@ -5,7 +5,7 @@ import LightPopover from 'devices/Light/LightPopover'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 
 const LightLine = props => {
 

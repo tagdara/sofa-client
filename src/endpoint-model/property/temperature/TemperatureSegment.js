@@ -1,6 +1,6 @@
 import React from 'react';
 import useTemperature from 'endpoint-model/property/temperature/useTemperature'
-import SegmentPopover from 'components/SegmentPopover'
+import SegmentPopover from 'layout/components/SegmentPopover'
 import TemperatureSlider from 'endpoint-model/property/temperature/TemperatureSlider'
 
 const TemperatureSegment = props => {

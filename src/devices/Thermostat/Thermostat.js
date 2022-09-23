@@ -1,9 +1,9 @@
 import React from 'react';
-import TemperatureSensorLine from 'endpoint-model/controller/temperatureSensor/TemperatureSensorLine'
+import TemperatureSensorLine from 'endpoint-model/controller/TemperatureSensor/TemperatureSensorLine'
 import ThermostatAvatar from 'devices/Thermostat/ThermostatAvatar'
 import PowerLevelAutoAvatar from 'endpoint-model/combo/PowerLevelAutoAvatar'
 
-// import { hasCapability } from 'store/deviceHelpers'
+// import { hasCapability } from 'endpoint-model/discovery'
 
 import { Group } from '@mantine/core';
 

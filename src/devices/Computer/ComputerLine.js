@@ -1,13 +1,13 @@
 import React from 'react';
 import { CloudOff, HardDrive } from 'react-feather'
 import { ActionIcon, Group } from '@mantine/core';
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useLockState from 'endpoint-model/property/lockState/useLockState'
 import useMode from 'endpoint-model/property/mode/useMode'
 import WakeSleepSegment from 'endpoint-model/controller/WakeOnLanController/WakeSleepSegment'
-import { friendlyNameByEndpointId } from 'store/deviceHelpers'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import VolumeSegment from 'endpoint-model/property/volume/VolumeSegment'
 import EnergyLevelModeSegment from 'endpoint-model/instance/EnergyLevelModeSegment'
 import MutedSegment from 'endpoint-model/property/muted/MutedSegment'

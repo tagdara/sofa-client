@@ -3,7 +3,7 @@ import { Group } from '@mantine/core'
 import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'devices/Player/PlayerArtOverlayButtons';
 import PlaceholderCard from 'layout/PlaceholderCard';
-import { directive } from 'store/directive'
+import { directive } from 'endpoint-model/directive/directive'
 import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'
 
 const PlayerHeader = props => {

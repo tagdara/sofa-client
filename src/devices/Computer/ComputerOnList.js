@@ -1,5 +1,5 @@
 import React from "react";
-import { sortByName, endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'store/deviceHelpers';
+import { sortByName, endpointIdByFriendlyName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 import ComputerBadge from 'devices/Computer/ComputerBadge';
 import { Group } from '@mantine/core'
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import useMode from 'endpoint-model/property/mode/useMode'
 import { Button } from '@mantine/core';
-import { friendlyNameByEndpointId } from 'store/deviceHelpers';
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery';
 import { Monitor } from 'react-feather'
 
 const MatrixConflict = props => {

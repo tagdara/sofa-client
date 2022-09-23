@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 
 import LoginReload from 'login/LoginReload';
 import LoginForm from 'login/LoginForm';
-import useLoginStore from 'store/loginStore';
-import AppFrame from 'components/AppFrame';
+import useLoginStore from 'login/loginStore';
+import AppFrame from 'layout/components/AppFrame';
 
 import { Card, Space, Stack, Title } from '@mantine/core';
 

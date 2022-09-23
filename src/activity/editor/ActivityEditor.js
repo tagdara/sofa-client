@@ -5,9 +5,9 @@ import ActivityActions from "activity/editor/action/ActivityActions"
 import ActivitySchedules from "activity/editor/schedule/ActivitySchedules"
 import ActivityHeader from "activity/editor/layout/ActivityHeader"
 import ActivityFooter from "activity/editor/layout/ActivityFooter"
-import { loadActivity, newActivity } from 'store/activityEditorHelpers';
+import { loadActivity, newActivity } from 'activity/editor/activityEditorHelpers';
 
-import SectionFrame from 'layout/SectionFrame'
+import SectionFrame from 'layout/section/SectionFrame'
 import PageFrame from 'layout/PageFrame'
 import { Portal, Stack } from '@mantine/core';
 

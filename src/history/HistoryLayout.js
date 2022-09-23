@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Stack } from '@mantine/core';
-import { getHistoryForDevice, friendlyNameByEndpointId } from 'store/deviceHelpers';
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery';
+import { getHistoryForDevice } from 'history/historyUtils'
 
 import HistoryLine from 'history/HistoryLine';
 import PageFrame from 'layout/PageFrame'
-import SectionGrid from 'layout/SectionGrid'
-import SectionHeader from 'layout/SectionHeader';
-import SectionDivider from 'layout/SectionDivider';
-import SectionFrame from 'layout/SectionFrame';
+import SectionGrid from 'layout/section/SectionGrid'
+import SectionHeader from 'layout/section/SectionHeader';
+import SectionDivider from 'layout/section/SectionDivider';
+import SectionFrame from 'layout/section/SectionFrame';
 
 export default function HistoryLayout(props) {
 
-    const [history, setHistory] = useState([])
-    const [page, setPage] = useState(0)
+    const [ history, setHistory ] = useState([])
+    const [ page, setPage ] = useState(0)
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const dayNames = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
     //const { getHistoryForDevice } = useRef(useContext(DataContext)).current;

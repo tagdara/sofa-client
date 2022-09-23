@@ -1,12 +1,12 @@
 import React from 'react';
-import CardLine from 'components/CardLine'
+import CardLine from 'layout/components/CardLine'
 import ShadeButtons from 'devices/Shade/ShadeButtons'
-import { deviceByEndpointId } from 'store/deviceHelpers'
+import { endpointByEndpointId } from 'endpoint-model/discovery'
 import { Easel3 as ShadeIcon } from 'react-bootstrap-icons'
 
 const Shade = props => {
 
-    const device = deviceByEndpointId(props.endpointId)   
+    const device = endpointByEndpointId(props.endpointId)   
 
     return ( 
         <CardLine size={"lg"} icon={<ShadeIcon size={20} />} 

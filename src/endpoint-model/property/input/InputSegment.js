@@ -1,6 +1,6 @@
 import React from 'react';
 import useInput from 'endpoint-model/property/input/useInput'
-import SegmentMenu from 'components/SegmentMenu'
+import SegmentMenu from 'layout/components/SegmentMenu'
 
 export default function InputSegment(props) {
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import Moment from 'react-moment';
 import 'moment-timezone';
-import { SplitButtonGroup, SplitButton } from 'components/SplitButton'
+import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { IconShield, IconShieldOff } from '@tabler/icons';
 import { ActionIcon } from '@mantine/core';
 

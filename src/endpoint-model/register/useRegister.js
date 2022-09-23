@@ -2,8 +2,8 @@
 import { useEffect, useState } from 'react'
 import { useId } from '@mantine/hooks';
 import useRegisterStore from 'endpoint-model/register/registerStore'
-import useEndpointStateStore from 'endpoint-model/store/endpointStateStore'
-import { deviceByEndpointId, compareState } from 'store/deviceHelpers'
+import useEndpointStateStore from 'endpoint-model/state/endpointStateStore'
+import { endpointByEndpointId } from 'endpoint-model/discovery'
 
 // In order to prevent network spam to endpoint devices, we track which endpoints are currently visibile or required
 // and only receive updates for those endpoints.  The individual use[ Controller / Property ] hooks include the registration
@@ -11,6 +11,23 @@ import { deviceByEndpointId, compareState } from 'store/deviceHelpers'
 
 // There are separate registration hooks for multiple devices and solo devices due to the added complexity and overhead
 // of 'overselecting' too many devices and causing network traffic and unneeded renders
+
+export const compareState = (oldData, newData) => {
+    for (var item in oldData) {
+        if (!oldData[item].hasOwnProperty('last_update')) { console.log('state no last update', oldData[item])}
+        if ((oldData[item].last_update !== newData[item].last_update)) { 
+            //console.log(item, 'last update mismatch', oldData[item].last_update, newData[item].last_update )
+            return false
+        }
+    }
+    for (var dataItem in newData) {
+        if (!oldData[dataItem]) {
+            //console.log('missing state mismatch')
+            return false
+        }
+    }    
+    return true
+}
 
 export const useMultiRegister = (endpointIds) => {
 
@@ -41,7 +58,7 @@ export const useRegister = endpointId => {
     const unregister = useRegisterStore( state => state.remove)
     const [ registeredDevice, setRegisteredDevice ] = useState(undefined)
     const deviceState = useEndpointStateStore(state => state.deviceStates[endpointId] )
-    const device = deviceByEndpointId(endpointId)   
+    const device = endpointByEndpointId(endpointId)   
     const connected = deviceState?.EndpointHealth?.connectivity?.value?.value === 'OK'
     const uuid = useId();
 

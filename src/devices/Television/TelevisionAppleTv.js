@@ -1,5 +1,5 @@
 import React from "react";
-import StackCard from 'components/StackCard'
+import StackCard from 'layout/components/StackCard'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import AppleTV from 'devices/AppleTV/AppleTV'
 import useInput from 'endpoint-model/property/input/useInput'

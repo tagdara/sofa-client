@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { directive as storeDirective } from 'store/directive'
-import useDeviceStore from 'store/deviceStore'
+import { directive as storeDirective } from 'endpoint-model/directive/directive'
+import useDiscoveryStore from 'endpoint-model/discovery/discoveryStore'
 
 const getModeSelections = (modeCapability) => {
     if (!modeCapability) return []
@@ -32,7 +32,7 @@ const useMode = ( endpointId, instance, value, directive) => {
 
     const controller = "Alexa.ModeController"
     const { deviceState } = useRegister(endpointId)
-    const device = useDeviceStore( state => state.devices[endpointId] )
+    const device = useDiscoveryStore( state => state.devices[endpointId] )
     const modeCapability = getMode(device, instance)
 
     const nonControllable = modeCapability?.properties?.nonControllable || false

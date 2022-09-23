@@ -27,7 +27,7 @@ export default function ActivityEditor(props) {
         <PageFrame>
             <ActivityHeader />
             <SectionFrame padScroll>
-                <Stack style={{ width: "100%"}}>
+                <Stack style={{ width: "100%", paddingBottom: 64}}>
                     <ActivitySchedules />
                     <ActivityTriggers />
                     <ActivityConditions />

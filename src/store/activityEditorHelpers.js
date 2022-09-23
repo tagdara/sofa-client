@@ -44,9 +44,15 @@ const checkSectionNotReady = (section, data) => {
 export const okToSave = () => {
     const sections = [ "actions", "conditions", "triggers"]
     const saved = useActivityEditorStore.getState().saved
-    if (saved) { return false }
+    if (saved) { 
+        console.log('already saved')
+        return false 
+    }
     const activity = useActivityEditorStore.getState().activity
-    if (!activity.name) { return false }
+    if (!activity.name) { 
+        console.log('no activity name')
+        return false 
+    }
     const results = sections.filter( section => checkSectionNotReady(section, activity[section]) )
     return (results.length === 0)
 }

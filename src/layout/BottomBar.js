@@ -47,7 +47,7 @@ const BottomBar = props => {
 
     const bgColor = theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.1)
 
-    if (wide && currentPage !== "Stacks") {  
+    if (currentPage !== "Stacks") {   //wide && 
         return  (
             <Affix 
                 style={{ 
@@ -59,7 +59,7 @@ const BottomBar = props => {
                     marginBottom: "env(safe-area-inset-bottom)",
                     flexDirection: "row-reverse"
                 }} 
-                position={{ bottom: wide ? 8: 0 }}
+                position={{ bottom: 8 }}
             >
                 <Group noWrap style={{ width: "100%", maxWidth: 400, flexDirection: "row-reverse"}} id="bottomPortal">
                     <HomeButton />
@@ -70,7 +70,7 @@ const BottomBar = props => {
         
     if (currentPage !== "Stacks") { 
         return  (
-            <Group noWrap grow 
+            <Group noWrap
                 style={{ 
                     boxSizing: "border-box", 
                     width: "100%", 

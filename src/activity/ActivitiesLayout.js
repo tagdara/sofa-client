@@ -27,8 +27,8 @@ const ActivitiesLayout = props => {
 
     if (!activities) { return null }
 
-    function deleteAndRefresh(activity) {
-        deleteActivity(activity)
+    async function deleteAndRefresh(activity) {
+        await deleteActivity(activity)
         loadActivities().then(result => { setActivities(result)})
     }
 

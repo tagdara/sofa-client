@@ -1,11 +1,9 @@
-import moment from 'moment';
 import { useEffect } from 'react';
 
 const useTimeRange = ( endpointId, value, directive) => {
 
-    console.log('tr value', value)
     const activeDirective = directive
-    const timeRange = value 
+    const timeRange = value?.time
     const presets = ['sunrise', 'sunset']
 
     useEffect(() => {
@@ -17,9 +15,28 @@ const useTimeRange = ( endpointId, value, directive) => {
     }, [  ]);   
 
     const strToTime = timeStr => {
-        var target = new Date("1970-01-01 " + timeStr);
-        return target
+        try {
+            var dateStr = "1970-01-01 " + timeStr
+            var target = new Date(dateStr);
+            return target
+        }
+        catch(e) {
+            console.log('error in strtotime', e)
+        }
     }
+
+    function formatAMPM(date) {
+        var hours = date.getHours();
+        var minutes = date.getMinutes();
+        var ampm = hours >= 12 ? 'pm' : 'am';
+        hours = hours % 12;
+        hours = hours ? hours : 12; // the hour '0' should be '12'
+        minutes = minutes < 10 ? '0'+minutes : minutes;
+        var strTime = hours + ':' + minutes + ' ' + ampm;
+        return strTime;
+    }
+
+
 
     const timeToStr = timeValue => {
         try {
@@ -28,7 +45,9 @@ const useTimeRange = ( endpointId, value, directive) => {
                     return timeValue
                 }
             }
-            return moment(timeValue).format("H:mm")
+            var datetext = timeValue.toTimeString().split(' ')[0];
+            var dateHHMM = datetext.split(':')[0]+":"+datetext.split(':')[1]
+            return dateHHMM
         }
         catch (e) {
             console.log('!! bad time', timeValue, e)
@@ -61,8 +80,10 @@ const useTimeRange = ( endpointId, value, directive) => {
         }
     }
 
-    const startLabel = startTime ? moment(startTime).format("h:mma") : "start"
-    const endLabel = endTime ? moment(endTime).format("h:mma") : "end"
+    //const startLabel = startTime ? moment(startTime).format("h:mma") : "start"
+    const startLabel = startTime ? formatAMPM(startTime) : "start"
+    //const endLabel = endTime ? moment(endTime).format("h:mma") : "end"
+    const endLabel = endTime ? formatAMPM(endTime) : "end"
     const timeRangeLabel = startLabel + " - " + endLabel
 
     return { timeRange, startTime, endTime, startLabel, endLabel, timeRangeLabel, setTimeRange, setStartTime, setEndTime, strToTime}

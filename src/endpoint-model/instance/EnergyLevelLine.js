@@ -6,7 +6,7 @@ import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitc
 
 export default function EnergyLevelLine(props) {
 
-    const { modeLabel } = useMode(props.endpointId, "Energy Level", props.value, props.directive)
+    const { modeLabel } = useMode(props.endpointId, "Energy.Level", props.value, props.directive)
 
     return (
         <Group noWrap position="apart" style={{ paddingRight: 8 }}>

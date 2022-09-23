@@ -9,13 +9,15 @@ const ActivityConditionMenu = props => {
     
     return  <Menu   style={{ display: "flex", flexDirection: "column"}}>
                 <Menu.Target>
-                    <Avatar size="sm" 
-                                    color={ props.category === "triggers" ? "orange" : "violet" }
-                                    radius="xl"
-                                    style={{ fontWeight: 600, margin: "4px 8px 4px 0px" }} 
-                                >
-                                    { props.category === "triggers" ? "ON" : "IF" }
-                                </Avatar>
+                    <Avatar 
+                        size="sm" 
+                        color={ props.category === "triggers" ? "orange" : "violet" }
+                        radius="xl"
+                        styles={{ root: { marginRight: 8}}}
+                        style={{ fontWeight: 600, margin: "4px 8px 4px 0px" }} 
+                    >
+                        { props.category === "triggers" ? "ON" : "IF" }
+                    </Avatar>
                 </Menu.Target>
                 <Menu.Dropdown>
                 { selections.map( item => 

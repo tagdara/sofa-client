@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import useActivityEditorStore from 'store/activityEditorStore'
 import { okToSave, saveActivity, addActivity } from 'store/activityEditorHelpers'
-import { FileEarmarkCode, LayerBackward, Save, Plus, Play, X } from 'react-bootstrap-icons'
-import { Group, ActionIcon, Modal } from '@mantine/core';
+import { Button, Group, ActionIcon, Modal, Paper } from '@mantine/core';
 import { directive  } from 'store/directive';
 import { selectPage } from 'helpers/layoutHelpers';
 import ActivityAddMenu from 'activity/editor/layout/ActivityAddMenu'
 import ActivityJSON from 'activity/editor/ActivityJSON'
-import { showNotification } from '@mantine/notifications';
+
+import { IconDeviceFloppy, IconPlayerPlay, IconPlayerTrackNext, IconPlus, IconSourceCode, IconX } from '@tabler/icons';
 
 export default function ActivityFooter(props) {
 
@@ -15,6 +15,7 @@ export default function ActivityFooter(props) {
     const endpointId = useActivityEditorStore( state => state.endpointId )
     const activity = useActivityEditorStore( state => state.activity )
     const saveOk = activity && okToSave()
+    const wide=false
 
 
     function runAutomation(processConditions=true) {
@@ -24,16 +25,6 @@ export default function ActivityFooter(props) {
     
     function parseResult(result) {
         try {
-            if (result.event.header.name==='ErrorResponse') {
-                showNotification({
-                    title: 'Error',
-                    message: result.event.payload.message,
-                    color: 'red',
-                })
-                //setResultMessage(result.event.payload.message); 
-                //setSeverity('error')
-                //setShowResult(true); 
-            }
             if (result.event.header.name==='ActivationStarted') {
                 //setResultMessage('Activation started'); 
                 //setSeverity('success')
@@ -44,33 +35,43 @@ export default function ActivityFooter(props) {
     }    
 
     return (
-        <Group>
-            <Modal  opened={dialogOpen}
-                    onClose={() => setDialogOpen(false)}
-                    title="Activity JSON"
-                    size={"lg"}
-            >
-                <ActivityJSON />
-            </Modal>
-            <ActionIcon variant="light" size="md" onClick={() => selectPage('ActivitiesPage')}>
-                <X size={20} />
-            </ActionIcon>
-            <ActionIcon variant="light" size="md" onClick={() => setDialogOpen(!dialogOpen)}>
-                <FileEarmarkCode size={20} />
-            </ActionIcon>
-            <ActivityAddMenu add={props.add} />
-            <ActionIcon variant="light" size="md" disabled={ !saveOk } onClick={endpointId ? saveActivity : addActivity } >
-                { endpointId ? <Save size={20} /> : <Plus size={20} /> } 
-            </ActionIcon>
-            <Group noWrap position="right">
-                <ActionIcon variant="light" size="md" onClick={() => runAutomation()}>
-                    <Play size={20} />
-                </ActionIcon>
-                <ActionIcon variant="light" size="md" onClick={() => runAutomation(false)}>
-                    <LayerBackward size={20} />
-                </ActionIcon>
+        <Paper p={8}>
+            <Group noWrap={wide}>
+                <Modal  opened={dialogOpen}
+                        onClose={() => setDialogOpen(false)}
+                        title="Activity JSON"
+                        size={"lg"}
+                >
+                    <ActivityJSON />
+                </Modal>
+                <Group noWrap>
+                    <ActionIcon variant="light" size="md" onClick={() => selectPage('ActivitiesPage')}>
+                        <IconX size={20} />
+                    </ActionIcon>
+                    <ActionIcon variant="light" size="md" onClick={() => setDialogOpen(!dialogOpen)}>
+                        <IconSourceCode size={20} />
+                    </ActionIcon>
+                    <ActivityAddMenu add={props.add} />
+                    <Group noWrap position="right">
+                        <ActionIcon variant="light" size="md" onClick={() => runAutomation()}>
+                            <IconPlayerPlay size={20} />
+                        </ActionIcon>
+                        <ActionIcon variant="light" size="md" onClick={() => runAutomation(false)}>
+                            <IconPlayerTrackNext size={20} />
+                        </ActionIcon>
+                    </Group>
+                </Group>
+                <Button 
+                    compact
+                    variant = "light"
+                    leftIcon= { endpointId ? <IconDeviceFloppy size={20} /> : <IconPlus size={20} /> } 
+                    size="md" 
+                    disabled={ !saveOk } 
+                    onClick={endpointId ? saveActivity : addActivity } > 
+                    Save
+                </Button>
             </Group>
-        </Group>
+        </Paper>
     )
 }
 

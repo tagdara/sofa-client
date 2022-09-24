@@ -13,7 +13,7 @@ const ComputerLayout = props => {
 
     return (  
         <PageFrame>
-            <SectionFrame>
+            <SectionFrame padScroll={200}>
                 <Stack>
                     <SectionHeader first title={"Computers"} />
                     <SectionGrid>

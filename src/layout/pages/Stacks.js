@@ -32,7 +32,7 @@ export default function Stacks(props) {
 
     return (
         <PageFrame>
-            <SectionFrame>
+            <SectionFrame padScroll={96}>
             { currentStack === "System" ?
                 <SystemPage />
                 :

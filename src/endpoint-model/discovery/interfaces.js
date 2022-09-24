@@ -3,14 +3,14 @@ import useDiscoveryStore from 'endpoint-model/discovery/discoveryStore'
 export const getControllerInterface = (device, name)  => {
     
     if (typeof device === 'string') { 
-        var device = useDiscoveryStore.getState().devices[device]
+        device = useDiscoveryStore.getState().devices[device]
     }
     if (device===undefined) { return undefined }
     if (!name) { return undefined}
 
     if (device?.capabilities) {
         for (var j = 0; j < device.capabilities.length; j++) {
-            if (device.capabilities[j].instance === name || device.capabilities[j].interface == name) { 
+            if (device.capabilities[j].instance === name || device.capabilities[j].interface === name) { 
                 return device.capabilities[j]
             }               
         }

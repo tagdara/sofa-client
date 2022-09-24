@@ -33,7 +33,7 @@ const LightLayout = props => {
                         data={selections} 
                 />
             </SectionHeader >
-            <SectionFrame padScroll>
+            <SectionFrame padScroll={200}>
                 <SectionGrid>
                 { lights.map( endpointId =>
                     <LightLine  key={ endpointId } endpointId={endpointId}  small={true} filter={filter} remove={props.remove}

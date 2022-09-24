@@ -31,7 +31,7 @@ const PageFrame = props => {
                         }} 
                 >
                     { props.children}
-                    { props.padScroll && <div style={{ height: props.padScroll }} /> }
+                    { props.padScroll && <div style={{ height: "calc( "+props.padScroll+"px + env(safe-area-inset-bottom))" }} /> }
                 </Stack>
             }
         </Transition>

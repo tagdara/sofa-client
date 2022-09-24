@@ -39,7 +39,7 @@ const ZoneLayout = props => {
     return (    
         <PageFrame>
             <SectionHeader title={"Zones"} />
-            <SectionFrame padScroll>
+            <SectionFrame padScroll={200}>
                 <SectionDivider first label={"Security Zones"} />
                 <SectionGrid>
                     { securityZones.map(endpointId =>

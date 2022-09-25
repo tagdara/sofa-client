@@ -12,7 +12,7 @@ const ReceiverHero = props => {
     return (
         <>
             { receivers.map( receiver => 
-                <StackCard key={receiver}>
+                <StackCard key={receiver} hidden={props.hidden}>
                     <Receiver endpointId={receiver} wide={props.wide} key={receiver} />
                 </StackCard>
             )}

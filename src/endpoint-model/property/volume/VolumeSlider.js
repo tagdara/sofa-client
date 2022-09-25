@@ -17,16 +17,18 @@ export default function VolumeSlider(props) {
 
     return (
         <Group noWrap position="apart" style={{ width: "100%", flexGrow: 1}}>
-            <Group noWrap>
-            { props.icon &&
-                <ThemeIcon variant="light">
-                    <IconVolume2 size={16} />
-                </ThemeIcon >
+            { (props.icon || props.label) &&
+                <Group noWrap>
+                { props.icon &&
+                    <ThemeIcon variant="light">
+                        <IconVolume2 size={16} />
+                    </ThemeIcon >
+                }
+                { props.label &&
+                    <Text>{props.label}</Text>
+                }
+                </Group>
             }
-            { props.label &&
-                <Text>{props.label}</Text>
-            }
-            </Group>
             <CardLineSlider label={"Volume"} 
                 value={ volume } 
                 on={on}

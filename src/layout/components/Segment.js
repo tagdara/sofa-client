@@ -29,7 +29,7 @@ const Segment = React.forwardRef( (props, ref) => {
                     borderBottomRightRadius: (props.position && props.position !== "end") ? 0 : undefined,
                 }}
                 color={ !cssColor && props.color ? props.color : "primary" }
-                radius="sm"
+                radius="md"
                 size={props.size ? props.size : "sm"}
                 onClick={props.onClick}
         >

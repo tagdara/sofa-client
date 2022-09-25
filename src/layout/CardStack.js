@@ -13,7 +13,6 @@ export default function CardStack(props) {
     //const [ expand, setExpand ]=useState(false)
     const expand = false
     const stackCardHighlight = useLayoutStore( state => state.stackCardHighlight)
-    const stackPullUp = useLayoutStore( state => state.stackPullUp)
     const wide = useMediaQuery('(min-width: 640px)');
 
     useEffect(() => { 
@@ -24,21 +23,18 @@ export default function CardStack(props) {
         }
     }, [ stack ] )
 
-    //function expandable() {
-    //    if (stackData && stackData.cards) {
-    //        for (var i = 0; i < stackData.cards.length; i++) {
-    //            if (stackData.cards[i].hasOwnProperty('expand')) {
-    //                return true
-    //            }
-    //        }
-    //    }
-    //    return false
-   // }
-
     if (!stack || !stackData ) { return null}
 
-    const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand) && ( wide || !stackCardHighlight || stackCardHighlight == card.module) )
-    const cards = cardData.map( (card, i) => renderSuspenseModule(card.module, {...card.props } , i ))
+    const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand)) //&& ( wide || !stackCardHighlight || stackCardHighlight === card.module) )
+    const cards = cardData.map( 
+        (card, i) => renderSuspenseModule(
+                        card.module, 
+                        {...card.props, 
+                            hidden: !wide && stackCardHighlight && stackCardHighlight !== card.module 
+                        },
+                        i 
+                    )
+        )
 
     return (
             <Stack
@@ -59,9 +55,6 @@ export default function CardStack(props) {
             </Stack>
     );
 }
-
-//                 { expandable() && <StackMoreButton expand={expand} onClick={ () => setExpand(!expand)} /> } 
-
 
 CardStack.defaultProps = {
     showTitle: true,

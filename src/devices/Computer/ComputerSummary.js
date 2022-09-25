@@ -15,7 +15,7 @@ const ComputerCollection = props => {
                             primary={ "Computers"}
                             onClick={ props.onClick}
         />
-        <Group spacing={"xs"} noWrap grow style={{ paddingTop: 12 }}>
+        <Group noWrap grow style={{ paddingTop: 12 }}>
             { computers.map(endpointId => 
                 <ComputerCube key={endpointId} endpointId={ endpointId } outlet={endpointIdByFriendlyName(outletMap[endpointId])} />
             )}

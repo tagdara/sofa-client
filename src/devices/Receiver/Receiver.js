@@ -1,14 +1,13 @@
 import React from 'react';
-import CardLine from 'layout/components/CardLine'
-import EndpointIcon from 'endpoint-model/endpoint/EndpointIcon'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
-import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
+import PowerStateAvatar from 'endpoint-model/property/powerState/PowerStateAvatar'
 import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import ReceiverDetailLine from 'devices/Receiver/ReceiverDetailLine'
 import useLayoutStore from 'layout/layoutStore'
-import { Collapse, Stack } from '@mantine/core'
+import { Group, Stack, Text } from '@mantine/core'
 import ReceiverPullUp from 'devices/Receiver/ReceiverPullUp'
+import { IconDeviceSpeaker, IconDeviceSpeakerOff } from '@tabler/icons';
 
 
 const Receiver = props => {
@@ -31,24 +30,32 @@ const Receiver = props => {
 
     return (
         <>
-        <Stack spacing="xl">
-            <Stack spacing={8}>
-                <CardLine   arrow icon={ <EndpointIcon endpointId={props.endpointId} /> }
-                            color={ on ? "primary" : undefined}
-                            on={on}
-                            primary={ name }
-                            onClick={showOverlay}
-                >
-                    <PowerStateSwitch endpointId={props.endpointId} />
-                </CardLine>
-                { on && <ReceiverDetailLine endpointId={props.endpointId} />  }
+            <Stack spacing="xl">
+                <Group spacing="xl" onClick={showOverlay}>
+                    <PowerStateAvatar 
+                        endpointId={ props.endpointId } 
+                        icon={ on ?
+                            <IconDeviceSpeaker size={24} endpointId={props.endpointId} />  
+                            :
+                            <IconDeviceSpeakerOff size={24} endpointId={props.endpointId} /> 
+                            } 
+                        />
+                    <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}>
+                        <Text 
+                            size={props.size ? props.size : "lg"} 
+                            lineClamp={1} 
+                            style={{ flexGrow: 1 }}
+                        >
+                            {name}
+                        </Text>
+                        { on && <ReceiverDetailLine endpointId={props.endpointId} />  }
+                    </Stack>
+                </Group>
+                { (pullUpActive || on) &&
+                    <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
+                }
             </Stack>
-            <Collapse in={ pullUpActive || on }>
-                <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
-            </Collapse>
-        </Stack>
-
-        { pullUpActive && <ReceiverPullUp endpointId={props.endpointId} /> }
+            { pullUpActive && <ReceiverPullUp endpointId={props.endpointId} /> }
         </>
 );
 }

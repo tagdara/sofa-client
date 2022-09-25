@@ -11,7 +11,7 @@ export default function ComputerHero(props) {
     const computerPlugEndpoints=computerPlugs.map( plug => endpointIdByFriendlyName(plug))
 
     return (
-        <StackCard>
+        <StackCard hidden={props.hidden}>
             <ComputerSummary endpointIds={computerPlugEndpoints} onClick={ ()=> selectPage('ComputerPage') } />
         </StackCard>
     );

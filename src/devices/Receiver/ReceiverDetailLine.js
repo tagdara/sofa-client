@@ -13,7 +13,7 @@ const ReceiverDetailLine = props => {
     const { mode } = useMode(props.endpointId, 'Input.Lock')
     const locked = mode === 'Lock.Locked' 
 
-    return  <Group noWrap style={{ paddingLeft: 48 }} spacing={2} >
+    return  <Group noWrap spacing={2} >
                 { locked && <InputLockSegment size="xs" icon endpointId={props.endpointId} /> }
                 <InputSegment size="xs" endpointId={props.endpointId} />
                 <ModeSegment size="xs" endpointId={props.endpointId} instance={"Sound.Program"} />

@@ -11,7 +11,7 @@ const TelevisionDetailLine = props => {
     const { modeLabel } = useMode(props.endpointId, "Audio.Output")
     const speakersOff = modeLabel === "Receiver"
     
-    return  <Group style={{ paddingLeft: 48 }} spacing={2} >
+    return  <Group spacing={2} >
                 <InputSegment size="xs" endpointId={props.endpointId} />
                 { ( !speakersOff && muted ) &&  <MutedSegment size="xs" icon endpointId={props.endpointId} /> }
             </Group> 

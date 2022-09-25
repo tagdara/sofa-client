@@ -15,7 +15,7 @@ const SonosSelector = props => {
 
     if ( playbackState ==='PLAYING' || ( floorLightPower && !tvLightPower )) { 
         return (
-            <StackCard>
+            <StackCard hidden={props.hidden}>
                 <SonosCard endpointId = {props.endpointId} />
             </StackCard>
         )

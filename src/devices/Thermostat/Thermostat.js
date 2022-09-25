@@ -19,7 +19,6 @@ const Thermostat = props => {
             <Group noWrap spacing="xs">
                 <PowerLevelAutoAvatar size="md" label={"Fan"} endpointId={props.endpointId} instance={"Power Level Auto"} />
                 <ThermostatAvatar size="md" endpointId={props.endpointId} />
-                
             </Group>
         </Group>
     );

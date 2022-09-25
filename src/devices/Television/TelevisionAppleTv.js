@@ -14,7 +14,7 @@ const TelevisionAppleTv = props => {
     }
 
     return (
-        <StackCard>
+        <StackCard hidden={props.hidden}>
             <AppleTV endpointId={props.endpointId} />
         </StackCard>
     );

@@ -18,7 +18,6 @@ const useLayoutStore = create((set, get) => ({
     isMobile: window.innerWidth <= 800,
     minStackWidth: 310,
     stackPad: 16, // This should be computed from mantine pad
-    transitionDirection: "fade",
 
     stackCardHighlight: undefined,
     setStackCardHighlight: id => {

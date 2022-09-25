@@ -26,7 +26,7 @@ const TelevisionLightControls = props => {
     const currentWatch = currentScene === "logic:scene:Watch"
 
     return (
-        <StackCard>
+        <StackCard hidden={props.hidden}>
             <Group noWrap>
                 <Text>Lights</Text>
                 <AreaShortcutSlider endpointId={area} />

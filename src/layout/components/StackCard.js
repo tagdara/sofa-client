@@ -26,7 +26,9 @@ const StackCard = props => {
                             width:"100%", 
                             maxWidth: 480, 
                             minWidth: 300, 
-                            overflow: "visible" }}
+                            overflow: "visible",
+                            display: props.hidden ? "none": undefined
+                        }}
                     >
                         { props.children }
                     </Card >

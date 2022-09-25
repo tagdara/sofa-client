@@ -1,4 +1,4 @@
-import React, { useId } from 'react';
+import React from 'react';
 import { Divider, ScrollArea } from '@mantine/core'
 import usePageFrame from 'helpers/usePageFrame'
 import useLayoutStore from 'layout/layoutStore'
@@ -9,7 +9,6 @@ export const SectionFrame = props => {
     const setStackCardHighlight = useLayoutStore( state => state.setStackCardHighlight)
     const setStackPullUp= useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
-    const frameId = useId()
     const clearPullUp = ( clickEvent ) => {
         // Look for a cleaner way to prevent non-direct clicks
         if (stackPullUp && clickEvent.target.classList.contains('mantine-ScrollArea-viewport')) {

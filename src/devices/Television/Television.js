@@ -1,25 +1,17 @@
-import React, { useState } from 'react';
-import CardLine from 'layout/components/CardLine'
-import { Collapse, Group, Stack } from '@mantine/core'
-import EndpointIcon from 'endpoint-model/endpoint/EndpointIcon'
+import React from 'react';
+import {  Group, Stack, Text } from '@mantine/core'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
-import useInput from 'endpoint-model/property/input/useInput'
-import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
-import InputSelect from 'endpoint-model/property/input/InputSelect'
+import PowerStateAvatar from 'endpoint-model/property/powerState/PowerStateAvatar'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import TelevisionDetailLine from 'devices/Television/TelevisionDetailLine'
-import ModeSelect from 'endpoint-model/property/mode/ModeSelect'
-import MatrixConflictList from 'devices/Matrix/MatrixConflictList'
 import useLayoutStore from 'layout/layoutStore'
 import TelevisionPullUp from 'devices/Television/TelevisionPullUp'
+import { IconDeviceTv, IconDeviceTvOff } from '@tabler/icons';
 
 const Television = props => {
   
-    const [ showDetail, setShowDetail ] = useState(false);
     const { powerStateBool: on } = usePowerState(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
-    const { inputLabel } = useInput(props.endpointId)
-
     const setStackCardHighlight = useLayoutStore( state => state.setStackCardHighlight)
     const setStackPullUp= useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
@@ -33,15 +25,26 @@ const Television = props => {
     return (
         <>
             <Stack spacing={8}>
-                <CardLine   arrow icon={ <EndpointIcon endpointId={props.endpointId} /> }
-                            color={ on ? "primary" : undefined}
-                            on={on}
-                            primary={ name }
-                            onClick={showOverlay}
-                >
-                    <PowerStateSwitch endpointId={props.endpointId} />
-                </CardLine>
-                { on && <TelevisionDetailLine endpointId={props.endpointId} /> }
+                <Group spacing="xl" onClick={showOverlay}>
+                    <PowerStateAvatar 
+                        endpointId={ props.endpointId } 
+                        icon={ on ?
+                            <IconDeviceTv size={24} endpointId={props.endpointId} />  
+                            :
+                            <IconDeviceTvOff size={24} endpointId={props.endpointId} /> 
+                            } 
+                        />
+                    <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}>
+                        <Text 
+                            size={props.size ? props.size : "lg"} 
+                            lineClamp={1} 
+                            style={{ flexGrow: 1 }}
+                        >
+                            {name}
+                        </Text>
+                        { on && <TelevisionDetailLine endpointId={props.endpointId} />  }
+                    </Stack>
+                </Group>
             </Stack>
         
         { pullUpActive && <TelevisionPullUp matrix={props.matrix} endpointId={props.endpointId} /> }

@@ -25,6 +25,7 @@ const ComputerCube = props => {
     const outletOn = !outletOffStates.includes(modeLabel)
     const on = reachable && powerStateBool && outletOn
     const pullUpActive = stackPullUp === name
+    const nameLabel = name.replace('pc','')
 
 
     const showOverlay = () => {
@@ -37,11 +38,11 @@ const ComputerCube = props => {
 
     return (  
         <>   
-        <Button size="md" fullWidth compact variant={ buttonVariant }
+        <Button size="md" fullWidth variant={ buttonVariant }
             onClick={ showOverlay }
             leftIcon={ on ? <EnergyLevelModeIcon size={16} endpointId={props.outlet} /> : <IconMoon size={12} />}
         >
-            {name}
+            {nameLabel}
         </Button>        
 
         { pullUpActive &&

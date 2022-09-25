@@ -3,6 +3,8 @@ import { getStack, renderSuspenseModule } from 'helpers/layoutHelpers';
 import { Stack } from '@mantine/core';
 // import StackMoreButton from 'layout/StackMoreButton';
 import StackPicker from 'layout/StackPicker';
+import useLayoutStore from 'layout/layoutStore'
+import { useMediaQuery } from '@mantine/hooks';
 
 export default function CardStack(props) {
     
@@ -10,6 +12,9 @@ export default function CardStack(props) {
     const [ stackData, setStackData ] = useState(undefined)
     //const [ expand, setExpand ]=useState(false)
     const expand = false
+    const stackCardHighlight = useLayoutStore( state => state.stackCardHighlight)
+    const stackPullUp = useLayoutStore( state => state.stackPullUp)
+    const wide = useMediaQuery('(min-width: 640px)');
 
     useEffect(() => { 
         if (stack) {
@@ -32,8 +37,8 @@ export default function CardStack(props) {
 
     if (!stack || !stackData ) { return null}
 
-    const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand))
-    const cards = cardData.map( (card, i) => renderSuspenseModule(card['module'], card['props'], i ))
+    const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand) && ( wide || !stackCardHighlight || stackCardHighlight == card.module) )
+    const cards = cardData.map( (card, i) => renderSuspenseModule(card.module, {...card.props } , i ))
 
     return (
             <Stack

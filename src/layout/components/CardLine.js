@@ -4,12 +4,12 @@ import { ActionIcon, Avatar, Group, Loader, Stack, Text, ThemeIcon } from '@mant
 export const CardLine = React.forwardRef( (props, ref) => {
 
     return (
-        <Group ref={ref} noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }} onClick={props.onClick} >
+        <Group ref={ref} noWrap style={{ width: "100%", maxWidth: "100%", alignItems: "center", position: "relative" }} >
             { (props.avatar || props.avatarSrc) && 
                 ( props.loading ?
                     <Loader size={props.size ? props.size : "lg" } />
                 :
-                    <Avatar style={{ width: props.avatarSrc ? 100 : undefined, backgroundColor: "rgba(0,0,0, 0.2)" }}
+                    <Avatar onClick={props.onClick} style={{ width: props.avatarSrc ? 100 : undefined, backgroundColor: "rgba(0,0,0, 0.2)" }}
                             src={props.avatarSrc ? props.avatarSrc : undefined} size={props.size ? props.size : "lg" } color={props.avatarSrc ? undefined : props.color} >{props.avatar}</Avatar>
                 )
             }
@@ -18,11 +18,11 @@ export const CardLine = React.forwardRef( (props, ref) => {
                     <Loader size={props.size ? props.size : "sm" } />
                 :
                     ( props.on ?
-                        <ThemeIcon radius="md" size={props.size ? props.size : "lg" } color={props.color } variant={ props.on ? "filled" : undefined}>
+                        <ThemeIcon onClick={props.onClick} radius="md" size={props.size ? props.size : "lg" } color={props.color } variant={ props.on ? "filled" : undefined}>
                             { props.icon }
                         </ThemeIcon>
                     :
-                        <ActionIcon radius="md" size={props.size ? props.size : "lg" } color={props.color } variant={ props.on ? "filled" : undefined}>
+                        <ActionIcon onClick={props.onClick} radius="md" size={props.size ? props.size : "lg" } color={props.color } variant={ props.on ? "filled" : undefined}>
                                                         { props.icon }
                         </ActionIcon>
                     )

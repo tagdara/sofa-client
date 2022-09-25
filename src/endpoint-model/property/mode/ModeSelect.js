@@ -10,12 +10,14 @@ const ModeSelect = props => {
         <Group noWrap>
             { props.label && <Text>{props.label}</Text> } 
             <Select size={ props.size ? props.size : "sm" } 
+                    dropdownPosition={"top"}
+                    withinPortal={true}
                     disabled={ disabled } 
                     placeholder={ instance }
                     onChange={ setMode } 
                     value={ mode }
                     data={ selections }
-                    style={{  minWidth: 100, width: props.half ? "50%" : "auto" }}
+                    style={{  zIndex: 9000, minWidth: 100, width: props.half ? "50%" : "auto" }}
             />
         </Group>
     )

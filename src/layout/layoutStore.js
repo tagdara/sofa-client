@@ -19,6 +19,17 @@ const useLayoutStore = create((set, get) => ({
     minStackWidth: 310,
     stackPad: 16, // This should be computed from mantine pad
     transitionDirection: "fade",
+
+    stackCardHighlight: undefined,
+    setStackCardHighlight: id => {
+        set({ stackCardHighlight: id })
+    },
+    stackPullUp: undefined,
+    setStackPullUp: name => {
+        set({ stackPullUp: name})
+    },
+
+    transitionDirection: "fade",
     setTransitionDirection: direction => {
         set({ transitionDirection: direction })
     },

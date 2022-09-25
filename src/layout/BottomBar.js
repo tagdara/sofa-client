@@ -6,6 +6,8 @@ import { Affix, Group, Stack, SegmentedControl, useMantineTheme } from '@mantine
 import { List as Menu, Lightbulb, MusicNoteBeamed as Music, Shield, Thermometer } from "react-bootstrap-icons";
 import HomeButton from 'layout/HomeButton'
 
+import { IconX, IconMenu, IconDevices2, IconTemperature, IconShield, IconBulb } from '@tabler/icons';
+
 const BottomBar = props => {
 
     const [ displayStack, setDisplayStack] = useState(undefined)
@@ -14,6 +16,9 @@ const BottomBar = props => {
     const theme = useMantineTheme();
     const setTransitionDirection = useLayoutStore( state => state.setTransitionDirection)
     const wide = useMediaQuery('(min-width: 640px)');
+    const setStackCardHighlight = useLayoutStore( state => state.setStackCardHighlight)
+    const setStackPullUp = useLayoutStore( state => state.setStackPullUp)
+    const stackPullUp = useLayoutStore( state => state.stackPullUp)
 
     useDidUpdate(() => {
         if (currentStack) {
@@ -33,16 +38,21 @@ const BottomBar = props => {
         selectStack(newStack)
     }
 
+    const clearPullUp = () => {
+        setStackCardHighlight(undefined)
+        setStackPullUp(undefined)        
+    }
+
     const getPosition = val => {
         return selections.findIndex(p => p.value === val)
     }
 
     const selections= [
-        { value: "Audio Video",         "label": <Music size={20} /> },
-        { value: "Lights and Comfort",  "label": <Lightbulb size={20} /> }, 
-        { value: "Climate",             "label": <Thermometer size={20} /> }, 
-        { value: "Security",            "label": <Shield size={20} /> }, 
-        { value: "System",              "label": <Menu size={20} />},
+        { value: "Audio Video",         "label": stackPullUp ? <IconX size={20} /> : <IconDevices2 size={20} /> },
+        { value: "Lights and Comfort",  "label": <IconBulb size={20} /> }, 
+        { value: "Climate",             "label": <IconTemperature size={20} /> }, 
+        { value: "Security",            "label": <IconShield size={20} /> }, 
+        { value: "System",              "label": <IconMenu size={20} />},
     ]
 
     const bgColor = theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.1)
@@ -96,18 +106,24 @@ const BottomBar = props => {
     }
 
     return (
-        <Stack id="bottomrender" spacing={"xs"} style={{maxWidth: "100%", flexDirection: "column-reverse"}} >
-
+        <Stack 
+            id="bottomrender" 
+            spacing={"xl"} 
+            style={{
+                maxWidth: "100%", 
+                flexDirection: "column-reverse"
+            }}
+        >
             <SegmentedControl 
                     fullWidth 
                     size="md"
-                    color={theme.primaryColor}
-                    onChange={pickStack} 
-                    value={displayStack} 
+                    color = {theme.primaryColor}
+                    onClick = {clearPullUp}
+                    onChange = {pickStack} 
+                    value = {displayStack} 
                     data={selections} 
                     style={{    minHeight: 48,
-                                alignItems: "center",
-                                justfiyContent: "center",
+
                                 marginBottom: "env(safe-area-inset-bottom)" 
                     }}
                     styles={{ 

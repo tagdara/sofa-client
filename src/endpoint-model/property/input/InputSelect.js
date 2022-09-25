@@ -8,7 +8,9 @@ const InputSelect = props => {
     const disabled = props.disabled 
 
     return (
-        <Select size="sm" disabled={disabled} 
+        <Select size="sm" disabled={disabled}
+                dropdownPosition={"top"}
+                withinPortal={true}
                 placeholder={"Input"}
                 onChange={ selectInput } 
                 value={ inputValue }

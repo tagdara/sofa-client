@@ -16,15 +16,22 @@ const StackCard = props => {
     }, []);
 
     return (
-        <>
             <Transition mounted={ mounted }  transition={transitionDirection} duration={100} timingFunction="ease">
                 {(styles) => 
-                    <Card padding="md" radius="md" style={{  ...styles, width:"100%", maxWidth: 480, minWidth: 300, overflow: "visible" }}>
+                    <Card 
+                        padding="md" 
+                        radius="md" 
+                        style={{  
+                            ...styles, 
+                            width:"100%", 
+                            maxWidth: 480, 
+                            minWidth: 300, 
+                            overflow: "visible" }}
+                    >
                         { props.children }
                     </Card >
                 }
             </Transition>
-        </>
     );
 }
 

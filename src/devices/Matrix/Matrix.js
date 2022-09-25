@@ -16,8 +16,6 @@ const Matrix = props => {
     const blank = "Source.I8"
     const on = mode !== blank
 
-    console.log('xxmode',mode)
-
     const toggleInput = () => { 
         if (on) { 
             setMode(blank)

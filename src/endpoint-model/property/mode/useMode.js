@@ -60,7 +60,7 @@ const useMode = ( endpointId, instance, value, directive) => {
     // eslint-disable-next-line 
     }, [  ]);
 
-    return { mode, modeLabel, selections, instance, setMode, disabled }
+    return { friendlyName, mode, modeLabel, selections, instance, setMode, disabled }
 
 }
 

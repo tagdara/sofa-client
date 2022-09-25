@@ -4,7 +4,7 @@ import StackCard from 'layout/components/StackCard'
 import SonosSelector from 'devices/Sonos/SonosSelector'
 
 const JukeboxHero = props => {
-    
+
     return (
         <>
         <StackCard>

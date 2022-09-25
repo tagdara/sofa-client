@@ -32,20 +32,15 @@ const PlayerHeader = props => {
         directive(jukebox, 'Sofa.MusicController', "Stop")
     }; 
 
-    function openJukebox() {
-        var newurl="https://jukebox.dayton.tech"
-        var safariWindow = window.open();
-        safariWindow.location.href = newurl
-    }
-
     return (
         <Group direction="row">
             <PlayerArtOverlay   
                 endpointId={props.endpointId}
-                cover={openJukebox} 
+                onClick={props.showOverlay} 
                 setMini={props.toggleIdle}
             >
                 <PlayerArtOverlayButtons    
+                    showOverlay={props.showOverlay}
                     min={props.setMini} 
                     cover={props.toggleIdle} 
                     stop={handleStop} 

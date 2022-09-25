@@ -35,9 +35,9 @@ const Receiver = props => {
                     <PowerStateAvatar 
                         endpointId={ props.endpointId } 
                         icon={ on ?
-                            <IconDeviceSpeaker size={24} endpointId={props.endpointId} />  
+                            <IconDeviceSpeaker size={24}  />  
                             :
-                            <IconDeviceSpeakerOff size={24} endpointId={props.endpointId} /> 
+                            <IconDeviceSpeakerOff size={24} /> 
                             } 
                         />
                     <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}>

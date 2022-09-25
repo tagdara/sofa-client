@@ -12,7 +12,7 @@ export default function PlayerArtOverlay(props) {
     const { localImageUrl, imageLoaded } = useTokenImage(artOrDefault)
 
     return ( 
-            <Group noWrap>
+            <Group noWrap onClick={ (e) => props.onClick(e)}>
                 <Image 
                     radius="sm"
                     style={{ display: "flex", flexGrow: 1, maxWidth: "30%" }}
@@ -21,7 +21,6 @@ export default function PlayerArtOverlay(props) {
                     src={ imageLoaded ? localImageUrl : null }
                     title={ titleLabel }
                     alt={ titleLabel }
-                    onClick={ (e) => props.cover(e)}
                 />
                 <Stack  style={{ display: "flex", flexGrow: 2}}
                         onClick={()=> props.setMini(true)}

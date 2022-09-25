@@ -9,7 +9,6 @@ const useTitle = (endpointId, value, directive) => {
     const activeDirective = directive || storeDirective
     const stateTitle = deviceState?.[controller]?.title?.value 
 
-    console.log('deviceState', deviceState)
     const title = value !== undefined ? value : stateTitle
 
     useEffect(() => {

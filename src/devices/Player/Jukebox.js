@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Stack } from '@mantine/core'
 // import PlaceholderCard from 'layout/PlaceholderCard';
 import PlayerHeader from 'devices/Player/PlayerHeader'
-import SpeakerList from 'devices/Speaker/SpeakerList';
 import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
 import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'
 import { endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
@@ -39,7 +38,7 @@ const JukeboxHero = props => {
         setShowIdle(!showIdle)
     }
 
-    const isIdle = () => { return ['IDLE','STOPPED'].includes(playbackState)  }
+    const isIdle = ['IDLE','STOPPED'].includes(playbackState) 
 
     const showOverlay = () => {
         setStackCardHighlight(pullUpActive ? null : 'JukeboxHero')
@@ -52,9 +51,14 @@ const JukeboxHero = props => {
                 { ( isIdle && !onCount ) ?
                     <JukeboxOff onClick={showOverlay} name={"Jukebox"} endpointId={props.endpointId} />           
                 :
-                    <PlayerHeader endpointId={props.endpointId} toggleIdle={toggleIdle} toggleSpeakers={toggleSpeakers}  url={props.url} />
+                    <PlayerHeader 
+                        showOverlay={showOverlay} 
+                        endpointId={props.endpointId} 
+                        toggleIdle={toggleIdle} 
+                        toggleSpeakers={toggleSpeakers}  
+                        url={props.url} 
+                    />
                 }
-                    <SpeakerList filterOff={filterOff} excludeSpeakers={excludeSpeakers} />
             </Stack>
             { pullUpActive && <JukeboxPullUp endpointId={props.endpointId} /> }
         </>

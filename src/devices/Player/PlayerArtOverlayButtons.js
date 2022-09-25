@@ -1,12 +1,9 @@
 import React from 'react';
 import { ActionIcon, Group } from '@mantine/core'
-import { IconMusic, IconPlayerPause, IconPlayerPlay, IconPlayerTrackNext, IconDeviceSpeaker } from '@tabler/icons';
+import { IconPlayerPause, IconPlayerPlay, IconPlayerTrackNext } from '@tabler/icons';
+import JukeboxSpeakerButton from 'devices/Player/JukeboxSpeakerButton'
 
 export default function PlayerArtOverlayButtons(props) {
-
-    function openJukebox() {
-        window.open(props.url,'_jukebox');
-    }
 
     return ( 
         <Group position="apart" noWrap style={{width: "100%"}}>
@@ -20,18 +17,7 @@ export default function PlayerArtOverlayButtons(props) {
                     </ActionIcon>
                 }
                 </Group>
-            <Group>
-                { props.jukebox &&
-                    <ActionIcon  size="sm" onClick={props.toggleSpeakerFilter}>
-                        <IconDeviceSpeaker size={20} />
-                    </ActionIcon>
-                }
-                { props.jukebox &&
-                    <ActionIcon  size="sm" onClick={openJukebox}>
-                        <IconMusic size={20} />
-                    </ActionIcon>
-                }
-                </Group>
+                { props.jukebox && <JukeboxSpeakerButton onClick={props.showOverlay} /> }
         </Group>
     );
 }

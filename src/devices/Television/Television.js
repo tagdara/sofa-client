@@ -29,9 +29,9 @@ const Television = props => {
                     <PowerStateAvatar 
                         endpointId={ props.endpointId } 
                         icon={ on ?
-                            <IconDeviceTv size={24} endpointId={props.endpointId} />  
+                            <IconDeviceTv size={24}  />  
                             :
-                            <IconDeviceTvOff size={24} endpointId={props.endpointId} /> 
+                            <IconDeviceTvOff size={24} /> 
                             } 
                         />
                     <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}>

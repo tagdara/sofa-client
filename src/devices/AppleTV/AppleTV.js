@@ -17,6 +17,8 @@ const AppleTV = props => {
     const { title } = useTitle(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
 
+    console.log('xxx', props.endpointId, on, art, title)
+
     return (
             <Stack>
                 <CardLine   avatarSrc={ (on && art) ? image : undefined }

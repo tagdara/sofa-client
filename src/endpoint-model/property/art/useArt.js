@@ -4,7 +4,7 @@ import useTokenImage from 'helpers/useTokenImage'
 
 const useArt = (endpointId, value, directive) => {
 
-    const controller = 'Alexa.MediaMetadata'
+    const controller = 'Sofa.MediaMetadata'
     const { deviceState } = useRegister(endpointId)
     const stateArt = deviceState?.[controller]?.art?.value 
     const stateTitle = deviceState?.[controller]?.title?.value

@@ -4,10 +4,12 @@ import { directive as storeDirective } from 'endpoint-model/directive/directive'
 
 const useTitle = (endpointId, value, directive) => {
 
-    const controller = 'Alexa.MediaMetadata'
+    const controller = 'Sofa.MediaMetadata'
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive || storeDirective
     const stateTitle = deviceState?.[controller]?.title?.value 
+
+    console.log('deviceState', deviceState)
     const title = value !== undefined ? value : stateTitle
 
     useEffect(() => {

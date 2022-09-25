@@ -1,9 +1,10 @@
 import React, { useEffect, useState} from 'react';
-import { Card, Transition } from '@mantine/core'
+import { Card, Transition, useMantineTheme } from '@mantine/core'
 import useLayoutStore from 'layout/layoutStore'
 
 const StackCard = props => {
- 
+	  
+		const theme = useMantineTheme()
     const [mounted, setMounted] = useState(false)
     const transitionDirection = useLayoutStore( state => state.transitionDirection)
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Jukebox from 'devices/Player/Jukebox'
+import Jukebox from 'devices/Jukebox/Jukebox'
 import StackCard from 'layout/components/StackCard'
 import SonosSelector from 'devices/Sonos/SonosSelector'
 

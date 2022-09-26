@@ -22,7 +22,7 @@ export default function PlayerArtOverlay(props) {
                     title={ titleLabel }
                     alt={ titleLabel }
                 />
-                <Stack  style={{ display: "flex", flexGrow: 2}}
+                <Stack spacing="sm" style={{ display: "flex", flexGrow: 2}}
                         onClick={()=> props.setMini(true)}
                 >
                     <Stack spacing={0}>

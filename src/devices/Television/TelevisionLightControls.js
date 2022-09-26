@@ -1,12 +1,11 @@
 import React from "react";
 import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
-import StackCard from 'layout/components/StackCard'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import AreaShortcutSlider from 'devices/Area/AreaShortcutSlider'
-import { ActionIcon, Group, Text } from '@mantine/core'
+import { ActionIcon, Group } from '@mantine/core'
 import { directive } from 'endpoint-model/directive/directive'
-import { Tv } from 'react-bootstrap-icons'
 import useScene from 'endpoint-model/property/scene/useScene'
+import { IconMovie, IconBulb } from '@tabler/icons';
 
 const TelevisionLightControls = props => {
 
@@ -26,15 +25,15 @@ const TelevisionLightControls = props => {
     const currentWatch = currentScene === "logic:scene:Watch"
 
     return (
-        <StackCard hidden={props.hidden}>
-            <Group noWrap>
-                <Text>Lights</Text>
-                <AreaShortcutSlider endpointId={area} />
-                <ActionIcon color={currentWatch ? "red" : undefined } variant="light" onClick={ () => runScene("logic:scene:Watch")}>
-                    <Tv size={20} />
-                </ActionIcon>
-            </Group>
-        </StackCard>
+        <Group noWrap>
+            <ActionIcon>
+                <IconBulb size={20} />
+            </ActionIcon>
+            <AreaShortcutSlider endpointId={area} />
+            <ActionIcon color={currentWatch ? "red" : undefined } variant="light" onClick={ () => runScene("logic:scene:Watch")}>
+                <IconMovie size={20} />
+            </ActionIcon>
+        </Group>
     );
 }
 

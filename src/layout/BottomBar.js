@@ -55,7 +55,7 @@ const BottomBar = props => {
     ]
 
     const bgColor = theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.1)
-
+    
     if (currentPage !== "Stacks") {   //wide && 
         return  (
             <Affix 
@@ -100,7 +100,21 @@ const BottomBar = props => {
 
     if (wide) { 
         return (
-            <Group id="bottomrender" spacing={"xs"} /> 
+            <Affix 
+                style={{ 
+                    boxSizing: "border-box", 
+                    paddingLeft: 16, 
+                    paddingRight: 16, 
+                    width: "100%", 
+                    display: "flex", 
+                    marginBottom: "env(safe-area-inset-bottom)",
+                    flexDirection: "row-reverse"
+                }} 
+                position={{ bottom: 8 }}
+            >
+                <div style={{ width: "100%"}} id="bottomrender" >
+                </div>
+            </Affix>
         )
     }
 

@@ -42,7 +42,7 @@ const Television = props => {
                         >
                             {name}
                         </Text>
-                        { on && <TelevisionDetailLine endpointId={props.endpointId} />  }
+                        { on && <TelevisionDetailLine endpointId={props.endpointId} matrix={props.matrix} />  }
                     </Stack>
                 </Group>
             </Stack>

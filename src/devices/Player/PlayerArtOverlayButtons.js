@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon, Group } from '@mantine/core'
 import { IconPlayerPause, IconPlayerPlay, IconPlayerTrackNext } from '@tabler/icons';
-import JukeboxSpeakerButton from 'devices/Player/JukeboxSpeakerButton'
+import JukeboxSpeakerButton from 'devices/Jukebox/JukeboxSpeakerButton'
 
 export default function PlayerArtOverlayButtons(props) {
 

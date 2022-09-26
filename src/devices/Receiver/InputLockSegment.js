@@ -17,6 +17,10 @@ const InputLockSegment = props => {
         setMode( locked ? 'Lock.Unlocked' : 'Lock.Locked')
     }
 
+    if (props.text) {
+        return locked ? <IconLock size={12} /> : null 
+    }
+
     return (
         <Segment size={props.size} color={ locked ? "primary" : undefined } variant={ locked ? "filled" : "light"} onClick={modeToggleClick} >
             { locked ? <IconLock size={12} /> : <IconLockOpen size={12} /> }

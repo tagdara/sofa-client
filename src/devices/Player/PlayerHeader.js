@@ -1,5 +1,4 @@
 import React from 'react';
-import { Group } from '@mantine/core'
 import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
 import PlayerArtOverlayButtons from 'devices/Player/PlayerArtOverlayButtons';
 import PlaceholderCard from 'layout/PlaceholderCard';
@@ -33,25 +32,23 @@ const PlayerHeader = props => {
     }; 
 
     return (
-        <Group direction="row">
-            <PlayerArtOverlay   
-                endpointId={props.endpointId}
-                onClick={props.showOverlay} 
-                setMini={props.toggleIdle}
-            >
-                <PlayerArtOverlayButtons    
-                    showOverlay={props.showOverlay}
-                    min={props.setMini} 
-                    cover={props.toggleIdle} 
-                    stop={handleStop} 
-                    url={props.url}
-                    playPause={handlePlayPause}
-                    skip={handleSkip}
-                    jukebox={true} 
-                    toggleSpeakerFilter={ props.toggleSpeakers }
-                    playbackState={ playbackState } />
-            </PlayerArtOverlay>
-        </Group>
+        <PlayerArtOverlay   
+            endpointId={props.endpointId}
+            onClick={props.showOverlay} 
+            setMini={props.toggleIdle}
+        >
+            <PlayerArtOverlayButtons    
+                showOverlay={props.showOverlay}
+                min={props.setMini} 
+                cover={props.toggleIdle} 
+                stop={handleStop} 
+                url={props.url}
+                playPause={handlePlayPause}
+                skip={handleSkip}
+                jukebox={true} 
+                toggleSpeakerFilter={ props.toggleSpeakers }
+                playbackState={ playbackState } />
+        </PlayerArtOverlay>
     );
 }
 

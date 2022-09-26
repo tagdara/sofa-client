@@ -7,7 +7,7 @@ export default function PowerStateSegment(props) {
     const { powerStateLabel, selections, selectPowerState} = usePowerState(props.endpointId, props.value, props.directive)
 
     return (
-        <SegmentMenu size={props.size} value={ powerStateLabel } selections={selections} select={selectPowerState} />
+        <SegmentMenu color={props.color} size={props.size} value={ props.label ? props.label : powerStateLabel } selections={selections} select={selectPowerState} />
     );
 }
 

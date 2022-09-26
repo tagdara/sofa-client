@@ -1,7 +1,7 @@
 import React from 'react';
 import { Group, Stack, Text } from '@mantine/core'
 
-import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
+import { endpointIdByFriendlyName, friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import PowerStateAvatar from 'endpoint-model/property/powerState/PowerStateAvatar'
 import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
@@ -14,8 +14,10 @@ import { IconDeviceSpeaker, IconDeviceSpeakerOff } from '@tabler/icons';
 
 const Receiver = props => {
 
+    const zone2 = endpointIdByFriendlyName("Receiver Zone 2")
     const name = friendlyNameByEndpointId(props.endpointId) 
     const { powerStateBool: on } = usePowerState(props.endpointId)
+    const { powerStateBool: zone2On } = usePowerState(zone2)
     const { pullUpActive, showPullUp } = usePullUp('ReceiverHero', name)
 
     const volumePresets = [40, 55, 60, 65, 70, 80];
@@ -41,14 +43,14 @@ const Receiver = props => {
                         >
                             {name}
                         </Text>
-                        { on && <ReceiverDetailLine endpointId={props.endpointId} />  }
+                        { (on || zone2On) && <ReceiverDetailLine endpointId={props.endpointId} zone2={zone2} />  }
                     </Stack>
                 </Group>
                 { on &&
                     <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
                 }
             </Stack>
-            { pullUpActive && <ReceiverPullUp endpointId={props.endpointId} /> }
+            { pullUpActive && <ReceiverPullUp endpointId={props.endpointId} zone2={zone2} /> }
         </>
     );
 }

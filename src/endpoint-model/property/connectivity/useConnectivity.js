@@ -5,7 +5,7 @@ const useConnectivity = (endpointId, value, directive) => {
 
     const controller = "Alexa.EndpointHealth"
     const { deviceState } = useRegister(endpointId)
-    const stateConnectivity = deviceState?.[controller]?.connectivity?.value
+    const stateConnectivity = deviceState?.[controller]?.connectivity?.value?.value
     const connectivity = value?.connectivity || stateConnectivity
 
     useEffect(() => {
@@ -22,7 +22,7 @@ const useConnectivity = (endpointId, value, directive) => {
         // activity editor to set triggers and conditions
         directive(endpointId, controller, "SetConnectivity", { connectivity: value } )
     }
-    
+
     const connectivityLabel = connectivity === "UNREACHABLE" ? "Unreachable" : "OK"
     const connectivityBool = connectivity ===  "OK"
     const selections = [{ label: "OK", value: "OK"}, { label: "Unreachable", value: "UNREACHABLE"}]

@@ -4,28 +4,20 @@ import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import PowerStateAvatar from 'endpoint-model/property/powerState/PowerStateAvatar'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import TelevisionDetailLine from 'devices/Television/TelevisionDetailLine'
-import useLayoutStore from 'layout/layoutStore'
+import usePullUp from 'layout/pullup/usePullUp'
 import TelevisionPullUp from 'devices/Television/TelevisionPullUp'
+
 import { IconDeviceTv, IconDeviceTvOff } from '@tabler/icons';
 
 const Television = props => {
-  
-    const { powerStateBool: on } = usePowerState(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
-    const setStackCardHighlight = useLayoutStore( state => state.setStackCardHighlight)
-    const setStackPullUp= useLayoutStore( state => state.setStackPullUp)
-    const stackPullUp = useLayoutStore( state => state.stackPullUp)
-    const pullUpActive = stackPullUp === name
-
-    const showOverlay = () => {
-        setStackCardHighlight(pullUpActive ? null : 'TvHero')
-        setStackPullUp(pullUpActive ? null : name, {})
-    }
+    const { pullUpActive, showPullUp } = usePullUp('TvHero', name)
+    const { powerStateBool: on } = usePowerState(props.endpointId)
 
     return (
         <>
             <Stack spacing={8}>
-                <Group spacing="xl" onClick={showOverlay}>
+                <Group spacing="xl" onClick={showPullUp}>
                     <PowerStateAvatar 
                         endpointId={ props.endpointId } 
                         icon={ on ?
@@ -47,27 +39,10 @@ const Television = props => {
                 </Group>
             </Stack>
         
-        { pullUpActive && <TelevisionPullUp matrix={props.matrix} endpointId={props.endpointId} /> }
+            { pullUpActive && <TelevisionPullUp matrix={props.matrix} endpointId={props.endpointId} /> }
         </>
     );
 }
-//     <Collapse in={ (on && inputLabel === "Matrix") || showDetail}>
-        //         <Stack>
-        //             <Group noWrap grow>
-        //                 <InputSelect endpointId={props.endpointId} />
-        //                 { inputLabel === "Matrix" && <ModeSelect instance={"Output.Source"} endpointId={props.matrix} /> }
-        //             </Group>
-        //             { (on && inputLabel === "Matrix") && <MatrixConflictList endpointId={props.matrix} /> }
-        //         </Stack>
-        //     </Collapse>
-        //     <Collapse in={showDetail}>
-        //         <Stack>
-        //             <Group noWrap>
-        //                 <ModeSelect endpointId={props.endpointId} instance={"Power.Saving"} />
-        //             </Group>
-        //         </Stack>
-        //     </Collapse>
-        // </Stack>
 
 
 export default Television;

@@ -1,7 +1,7 @@
 import React from 'react';
 import useMode from 'endpoint-model/property/mode/useMode'
-import { IconPlug } from '@tabler/icons';
-import { Group, ThemeIcon, Text } from '@mantine/core'
+import { IconRecharging } from '@tabler/icons';
+import { ActionIcon, Group, Text } from '@mantine/core'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 
 export default function EnergyLevelLine(props) {
@@ -12,12 +12,12 @@ export default function EnergyLevelLine(props) {
         <Group noWrap position="apart" style={{ paddingRight: 8 }}>
             <Group noWrap>
             { props.icon &&
-                <ThemeIcon variant="light">
-                    <IconPlug size={16} />
-                </ThemeIcon >
+                <ActionIcon>
+                    <IconRecharging size={20} />
+                </ActionIcon >
             }
             { props.label &&
-                <Text>{props.label === true ? "Energy Use:" : props.label }</Text>
+                <Text>{props.label === true ? "Energy Use" : props.label }</Text>
             }
             { props.switch &&
                 <Text>{modeLabel}</Text>

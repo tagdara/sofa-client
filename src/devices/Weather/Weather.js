@@ -8,7 +8,7 @@ import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 import { Group, Stack} from '@mantine/core';
 import useTemperature from 'endpoint-model/property/temperature/useTemperature'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
-import { Battery } from 'react-bootstrap-icons'
+import { IconBatteryOff } from '@tabler/icons';
 
 export default function Weather(props) { 
 
@@ -31,7 +31,7 @@ export default function Weather(props) {
                 :
                     <WideAvatar color="gray" 
                                 size="lg"
-                                left={ <Battery size="24" /> }
+                                left={ <IconBatteryOff size="24" /> }
                                 right={ "?" }
                     />
                 }   

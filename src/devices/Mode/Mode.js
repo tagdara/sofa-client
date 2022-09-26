@@ -4,7 +4,7 @@ import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
-import { Tag } from 'react-feather'
+import { IconTag } from '@tabler/icons';
 
 export default function Mode(props) {
 
@@ -15,7 +15,7 @@ export default function Mode(props) {
         <SplitButtonGroup on={on}>
             <SplitButton >        
                 <ActionIcon size="md" color={ on ? "primary" : undefined } >
-                    <Tag size={16} />
+                    <IconTag size={16} />
                 </ActionIcon>
             </SplitButton>
             <SplitButton label = { name } on={on} />

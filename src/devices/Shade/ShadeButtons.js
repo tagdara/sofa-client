@@ -1,8 +1,7 @@
 import React from 'react';
 import { directive } from 'endpoint-model/directive/directive'
 import { ActionIcon, Group } from '@mantine/core'
-import { ChevronUp, ChevronDown, Minus } from 'react-feather'
-
+import { IconChevronUp, IconChevronDown, IconMinus } from '@tabler/icons';
 const ShadeButtons = props => {
 
     function handlePress(modechoice) {
@@ -12,13 +11,13 @@ const ShadeButtons = props => {
     return ( 
         <Group spacing={4}>
             <ActionIcon variant="light" size="lg" onClick={ () => handlePress('Position.Down') }>
-                <ChevronDown size={20} />
+                <IconChevronDown size={20} />
             </ActionIcon >
             <ActionIcon variant="light" size="lg" onClick={ () => handlePress('Position.Stop') }>
-                <Minus size={20} />
+                <IconMinus size={20} />
             </ActionIcon >
             <ActionIcon variant="light" size="lg" onClick={ () => handlePress('Position.Up') }>
-                <ChevronUp size={20} />
+                <IconChevronUp size={20} />
             </ActionIcon >
         </Group>
     );

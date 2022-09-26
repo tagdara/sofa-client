@@ -1,12 +1,12 @@
 import React from 'react';
-import { ActionIcon, } from '@mantine/core';
-import { Monitor } from 'react-feather'
+import { ActionIcon } from '@mantine/core';
+import { IconDeviceDesktop } from '@tabler/icons';
 
 const MonitorButtonStackLabel = props => {
 
     return (
         <ActionIcon size="lg" onClick={ props.topClick } >
-            <Monitor size={20} />
+            <IconDeviceDesktop size={20} />
         </ActionIcon>
     );
 }

@@ -1,15 +1,15 @@
 import React from 'react';
-import { BroadcastPin, Calendar, Play, QuestionCircle, SignpostSplit } from 'react-bootstrap-icons'
 import { Badge } from '@mantine/core';
+import { IconArrowsExchange, IconCalendarTime, IconLoader, IconPlayerPlay, IconSquareX } from '@tabler/icons';
 
 const ActivityComponentIcon = props => {
 
     const icons = { 
-        'triggers_count': BroadcastPin, 
-        'conditions_count': SignpostSplit,
-        'actions_count': Play,
-        'schedules_count': Calendar, 
-        'missing_devices_count': QuestionCircle, 
+        'triggers_count': IconLoader, 
+        'conditions_count': IconArrowsExchange,
+        'actions_count': IconPlayerPlay,
+        'schedules_count': IconCalendarTime, 
+        'missing_devices_count': IconSquareX, 
     }
 
     const colors = { 
@@ -22,7 +22,7 @@ const ActivityComponentIcon = props => {
 
     function getIcon(category, size=12) {
 
-        var RealIcon = QuestionCircle
+        var RealIcon = IconSquareX
         if (icons.hasOwnProperty(category)) {
             RealIcon = icons[category]
         }

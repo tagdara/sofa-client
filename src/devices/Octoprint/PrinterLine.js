@@ -4,7 +4,7 @@ import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpoin
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
-import { CloudSlash, Layers } from "react-bootstrap-icons";
+import { IconCloudOff, Icon3dCubeSphere } from '@tabler/icons';
 import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import PrinterCam from 'devices/Octoprint/PrinterCam'
 import PrinterLink from 'devices/Octoprint/PrinterLink'
@@ -27,7 +27,7 @@ const PrinterLine = props => {
                     <PrinterCam zoom={zoom} setZoom={setZoom} />
                 :
                     <ActionIcon size="md" color={ on ? "primary" : undefined }>
-                        { reachable ? <Layers size={24} /> : <CloudSlash size={16} /> }
+                        { reachable ? <Icon3dCubeSphere size={24} /> : <IconCloudOff size={16} /> }
                     </ActionIcon>
                 }
             </SplitButton>

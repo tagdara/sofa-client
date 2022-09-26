@@ -1,7 +1,6 @@
 import React from 'react';
 import { ActionIcon, Stack, Paper } from '@mantine/core';
-import { Star } from 'react-feather'
-
+import { IconStar } from '@tabler/icons';
 import ActivityName from "activity/editor/layout/ActivityName"
 import ActivityDetails from "activity/editor/layout/ActivityDetails"
 import { makeFavorite, removeFavorite } from 'user/favorites/favoritesUtils'
@@ -29,7 +28,7 @@ const ActivityHeader = props => {
             <Stack style={{ width: "100%" }}>
                 <ActivityName>
                     <ActionIcon size="lg" color={favorite ? "primary" : undefined} variant={ favorite ? "light" : undefined} onClick={toggleFavorite}>
-                        <Star size={20} />
+                        <IconStar size={20} />
                     </ActionIcon>
                 </ActivityName>
                 <ActivityDetails />

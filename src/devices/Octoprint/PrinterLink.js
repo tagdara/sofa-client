@@ -1,7 +1,6 @@
 import React from 'react';
 import { ActionIcon } from '@mantine/core'
-import { ArrowUpRightSquare as Link } from "react-bootstrap-icons";
-
+import { IconExternalLink } from '@tabler/icons';
 
 const PrinterLink = props => {
 
@@ -14,7 +13,7 @@ const PrinterLink = props => {
 
     return (
         <ActionIcon onClick={ () => openOctoPrint() }>
-            <Link size={20} />
+            <IconExternalLink size={20} />
         </ActionIcon>
     )
 

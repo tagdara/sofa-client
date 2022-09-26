@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import CardLine from 'layout/components/CardLine';
 import { directive } from 'endpoint-model/directive/directive'
-import { AlertTriangle, Tablet } from 'react-feather'
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { Button, Group, PasswordInput, Stack } from '@mantine/core';
 import { useForm } from '@mantine/form';
 import { useRegister } from 'endpoint-model/register'
+import { IconAlertTriangle, IconDeviceTablet } from '@tabler/icons';
 
 export default function StatusLock(props) {
 
@@ -65,7 +65,7 @@ export default function StatusLock(props) {
     return (
         <Stack grow>
             <CardLine onClick={handlePress} 
-                        avatar={closed ? <Tablet size={20} /> : <AlertTriangle size={20} /> } 
+                        avatar={closed ? <IconDeviceTablet size={20} /> : <IconAlertTriangle size={20} /> } 
                         color={ closed ? 'green' : 'red'}
                         primary={name} 
                         secondary={ closed ? 'Closed' : 'Open' }

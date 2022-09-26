@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStyles } from '@mantine/styles';
 import { Switch, ThemeIcon, UnstyledButton, Group, Text } from '@mantine/core';
-import { ChevronLeft, ChevronRight } from 'react-feather';
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons';
 
 const useStyles = createStyles((theme) => ({
     button: {
@@ -97,12 +97,12 @@ const NavButton = ( props ) => {
             <Group>
                 { (props.reverse && props.arrow) &&
                     <ThemeIcon className={arrowClass()}>
-                        <ChevronRight />
+                        <IconChevronRight />
                     </ThemeIcon>
                 }
                 { (props.reverse && props.leftArrow) &&
                     <ThemeIcon className={arrowClass()}>
-                        <ChevronLeft />
+                        <IconChevronLeft />
                     </ThemeIcon>
                 }
 
@@ -118,12 +118,12 @@ const NavButton = ( props ) => {
                 { props.children }
                 { (!props.reverse && props.arrow) &&
                     <ThemeIcon className={arrowClass()} >
-                        <ChevronRight />
+                        <IconChevronRight />
                     </ThemeIcon>
                 }
                 { (!props.reverse && props.leftArrow) &&
                     <ThemeIcon className={arrowClass()} >
-                        <ChevronLeft />
+                        <IconChevronLeft />
                     </ThemeIcon>
                 }
                 { props.switch &&

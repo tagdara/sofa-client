@@ -2,7 +2,7 @@ import React from 'react';
 import CardLine from 'layout/components/CardLine'
 import { TextInput } from '@mantine/core'
 import TimeUnitButton from 'activity/editor/input/TimeUnitButton';
-import { Clock } from 'react-feather'
+import { IconClock } from '@tabler/icons';
 
 export default function ScheduleInterval(props) {
     
@@ -11,7 +11,7 @@ export default function ScheduleInterval(props) {
     }
     
     return (
-        <CardLine primary="Every" icon={<Clock onClick={props.toggle} size={20}/>} > 
+        <CardLine primary="Every" icon={<IconClock onClick={props.toggle} size={20}/>} > 
             <TextInput 
                 sx={{ width: 100}}
                 size="small"

@@ -2,17 +2,18 @@ import React from 'react';
 import RangeValueLine from 'endpoint-model/property/rangeValue/RangeValueLine'
 import { hasInstance} from 'endpoint-model/discovery'
 import { Stack, Text } from '@mantine/core';
-import { CloudDrizzle, Droplet, Lightbulb, Sun, Wind } from "react-bootstrap-icons";
+import { IconCloudRain, IconDroplet, IconBrightnessHalf, IconSun, IconWind } from '@tabler/icons';
+
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 
 const WeatherList = props => {
 
     const { reachable } = useEndpointHealth(props.endpointId)
-    const additionalAttributes = {  'Light.Level' : { "icon" : <Lightbulb size={16} />, "unit": "lux" },
-                                    'Air.Humidity': { "icon" : <Droplet size={16} />, "unit": "%" },
-                                    'Wind.Speed': { "icon" : <Wind size={16} />, "unit": "mph" },
-                                    'Sun.UVI': { "icon" : <Sun size={16} />, "unit": "" },
-                                    'Weather.Rainfall': { "icon" : <CloudDrizzle size={16} />, "unit": "in" }
+    const additionalAttributes = {  'Light.Level' : { "icon" : <IconBrightnessHalf size={16} />, "unit": "lux" },
+                                    'Air.Humidity': { "icon" : <IconDroplet size={16} />, "unit": "%" },
+                                    'Wind.Speed': { "icon" : <IconWind size={16} />, "unit": "mph" },
+                                    'Sun.UVI': { "icon" : <IconSun size={16} />, "unit": "" },
+                                    'Weather.Rainfall': { "icon" : <IconCloudRain size={16} />, "unit": "in" }
                                 }
 
     function checkMoreData() {

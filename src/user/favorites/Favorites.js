@@ -3,7 +3,7 @@ import ActivityNavButton from 'activity/ActivityNavButton';
 import useUserStore from 'user/userStore';
 import { selectPage } from 'helpers/layoutHelpers';
 import { NavLink } from '@mantine/core';
-import { Star } from 'react-bootstrap-icons'
+import { IconStar } from '@tabler/icons';
 
 const Favorites = props => {
 
@@ -20,7 +20,7 @@ const Favorites = props => {
         <NavLink 
             label={"Favorites"}
             description={"Activities and selected devices"}
-            icon={<Star size={20} />}
+            icon={<IconStar size={20} />}
             defaultOpened={true}
             childrenOffset={16}
             active={openActive}

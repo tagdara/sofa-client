@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CloudSlash, Lightbulb, X as XIcon} from "react-bootstrap-icons"
+import { IconCloudOff, IconBulb, IconX } from '@tabler/icons';
 import { ActionIcon, Button } from '@mantine/core';
 import LightPopover from 'devices/Light/LightPopover'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
@@ -65,7 +65,7 @@ const LightLine = props => {
                         }}
                         variant={ on ? "light" : "default" }
                         fullWidth 
-                        leftIcon={ reachable ? <Lightbulb size={20} /> : <CloudSlash size={16} /> }
+                        leftIcon={ reachable ? <IconBulb size={20} /> : <IconCloudOff size={16} /> }
                         onClick={ () => setShowPopover(!showPopover) }
                     >
                         { name }
@@ -76,7 +76,7 @@ const LightLine = props => {
             <Button size="md" variant={ on ? "light" : "default" }>
                 { props.remove ?
                     <ActionIcon size="small" onClick={ () => props.remove(props.endpointId) } >
-                        <XIcon />
+                        <IconX />
                     </ActionIcon>                
                 :
                     <PowerStateSwitch endpointId={props.endpointId} />

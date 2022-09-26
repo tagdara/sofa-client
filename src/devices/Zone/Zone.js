@@ -4,11 +4,10 @@ import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 
 import Moment from 'react-moment';
 import 'moment-timezone';
-
-import { Shield, AlertTriangle } from 'react-feather'
 import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { ActionIcon } from '@mantine/core';
 import useDetectionState from 'endpoint-model/property/detectionState/useDetectionState'
+import { IconShield, IconAlertTriangle } from '@tabler/icons';
 
 const Zone = props => {
 
@@ -23,7 +22,7 @@ const Zone = props => {
         <SplitButtonGroup >
             <SplitButton onClick={ () => historyZone() } >
                 <ActionIcon size="md" variant="light" color={open ? "red" : "green"}>
-                    { open ? < AlertTriangle size={20} /> : <Shield size={20} /> }
+                    { open ? < IconAlertTriangle size={20} /> : <IconShield size={20} /> }
                 </ActionIcon>     
             </SplitButton>
             <SplitButton    label = { name } 

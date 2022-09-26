@@ -3,7 +3,7 @@ import Moment from 'react-moment';
 import 'moment-timezone';
 import { directive } from 'endpoint-model/directive/directive'
 import { ActionIcon } from '@mantine/core'
-import { Layers, RotateCcw, Square } from 'react-feather'
+import { IconRefresh, IconStack, IconSquareOff } from '@tabler/icons';
 import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { useRegister } from 'endpoint-model/register/useRegister'
 
@@ -93,17 +93,17 @@ export default function AdapterItem(props) {
         <SplitButtonGroup>
             <SplitButton >
                 <ActionIcon color={ getErrorState(5) } onClick={ () => directive(props.endpointId, "PowerController", 'TurnOn')} >
-                    <Layers size={20} />
+                    <IconStack size={20} />
                 </ActionIcon>               
             </SplitButton>
             <SplitButton  label={ device.friendlyName + getActiveState() } secondary={ getStartupDate() } />
             { getStartupDate()!=='Remote' && 
                 <SplitButton>
                     <ActionIcon onClick={ () => directive(props.endpointId, "PowerController", 'TurnOn')} >
-                        <RotateCcw size={20} />
+                        <IconRefresh size={20} />
                     </ActionIcon>
                     <ActionIcon onClick={ () => directive(props.endpointId, "PowerController", 'TurnOff')} >
-                        <Square size={16} />
+                        <IconSquareOff size={16} />
                     </ActionIcon>
                 </SplitButton>
             }

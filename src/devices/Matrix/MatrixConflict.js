@@ -2,7 +2,7 @@ import React from 'react';
 import useMode from 'endpoint-model/property/mode/useMode'
 import { Button } from '@mantine/core';
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery';
-import { Monitor } from 'react-feather'
+import { IconScreenShareOff } from '@tabler/icons';
 
 const MatrixConflict = props => {
     
@@ -13,7 +13,9 @@ const MatrixConflict = props => {
     if (!on) { return null }
 
     return (
-        <Button fullWidth onClick={ () => setMode('Source.I8') } leftIcon={<Monitor size={16} />}
+        <Button fullWidth 
+                onClick={ () => setMode('Source.I8') } 
+                leftIcon={<IconScreenShareOff size={16} />}
                 variant = { "light"}
         >
             Turn off {name} monitor 

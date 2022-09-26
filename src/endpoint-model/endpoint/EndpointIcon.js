@@ -1,28 +1,29 @@
 import React from 'react';
-import { Fan as FanIcon, Grid, List, Lightbulb, QuestionCircle, Tag, Thermometer, ToggleOn, Triangle, Sliders, Speaker, Tv} from "react-bootstrap-icons";
+import { IconDevices, IconAdjustments, IconBulb, IconDeviceSpeaker, IconTemperature, IconWindmill, IconMaximize, IconTag, IconToggleRight, IconTrafficLights, IconDeviceTv, IconListDetails } from '@tabler/icons';
+
 import { endpointByEndpointId } from 'endpoint-model/discovery'
 
 const EndpointIcon = React.forwardRef( (props, ref) => {
 
     const icons = { 
-        'FAN': FanIcon, 
-        'MISSING': QuestionCircle,
-        'MODE': Tag,
-        'SCENE_TRIGGER': Grid, 
-        'ACTIVITY_TRIGGER': List, 
-        'LIGHT': Lightbulb, 
-        'LOGIC': Sliders,
-        'BUTTON': ToggleOn, 
-        'SPEAKER': Speaker, 
-        'THERMOSTAT': Thermometer, 
-        'TEMPERATURE_SENSOR': Thermometer, 
-        'RECEIVER': Speaker, 
-        'TV': Tv
+        'FAN': IconWindmill, 
+        'MISSING': IconMaximize,
+        'MODE': IconTag,
+        'SCENE_TRIGGER': IconTrafficLights, 
+        'ACTIVITY_TRIGGER': IconListDetails, 
+        'LIGHT': IconBulb, 
+        'LOGIC': IconAdjustments,
+        'BUTTON': IconToggleRight, 
+        'SPEAKER': IconDeviceSpeaker, 
+        'THERMOSTAT': IconTemperature, 
+        'TEMPERATURE_SENSOR': IconTemperature, 
+        'RECEIVER': IconDeviceSpeaker, 
+        'TV': IconDeviceTv
     }
 
     function getIcon(category, size=20) {
 
-        var RealIcon = Triangle
+        var RealIcon = IconDevices
         if (icons.hasOwnProperty(category)) {
             RealIcon = icons[category]
         }

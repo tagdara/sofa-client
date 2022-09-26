@@ -1,8 +1,8 @@
 import React from 'react';
 import CardLine from 'layout/components/CardLine'
 import { isFavorite, removeFavorite } from 'user/favorites/favoritesUtils';
-import { X as Close, CloudOff } from 'react-feather'
 import { ActionIcon } from '@mantine/core';
+import { IconCloudOff, IconX } from '@tabler/icons';
 
 const ActivityItemMissing = props => {
 
@@ -10,11 +10,11 @@ const ActivityItemMissing = props => {
     if (!isFavorite(props.endpointId)) { return null }
 
     return (
-        <CardLine   icon={<CloudOff size={20} />}
+        <CardLine   icon={<IconCloudOff size={20} />}
                     primary={"Missing: "+props.endpointId} 
         >
             <ActionIcon size={"small"} onClick={ (event) => { event.stopPropagation(); removeFavorite(props.endpointId); }} >
-                <Close size={20} />
+                <IconX size={20} />
             </ActionIcon>
         </CardLine>
     );

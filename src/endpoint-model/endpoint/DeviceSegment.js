@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from '@mantine/core';
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import EndpointIcon from 'endpoint-model/endpoint/EndpointIcon'
-import { HelpCircle } from 'react-feather';
+import { IconMaximize } from '@tabler/icons';
 
 const DeviceSegment = props => {
 
@@ -13,7 +13,7 @@ const DeviceSegment = props => {
                     radius="md"
                     color="red"
                     onClick={props.onClick}
-                    leftIcon={props.icon ? <HelpCircle size={12} /> : undefined }
+                    leftIcon={props.icon ? <IconMaximize  size={12} /> : undefined }
                     variant="light" size={props.size ? props.size : "sm"}
                 >
                     {!props.endpointId ? "No device" : "Missing device "+props.endpointId}

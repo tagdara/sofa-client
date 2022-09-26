@@ -1,7 +1,7 @@
 import React from 'react';
 import { ActionIcon, Menu } from '@mantine/core';
-import { Plus } from 'react-feather'
 import { addActivityItem } from 'activity/editor/activityEditorHelpers'
+import { IconPlus } from '@tabler/icons';
 
 const ActivityAddMenu = props => {
 
@@ -40,12 +40,12 @@ const ActivityAddMenu = props => {
     return (
         <Menu>
             <Menu.Target>
-                <ActionIcon variant="light" size="md"><Plus size={20} /></ActionIcon>
+                <ActionIcon variant="light" size="md"><IconPlus size={20} /></ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-                <Menu.Item onClick={ addAction } icon={<Plus size={16} />}>Action</Menu.Item>
-                <Menu.Item onClick={ addCondition } icon={<Plus size={16} />}>Condition</Menu.Item>
-                <Menu.Item onClick={ addTrigger } icon={<Plus size={16} />}>Trigger</Menu.Item>
+                <Menu.Item onClick={ addAction } icon={<IconPlus size={16} />}>Action</Menu.Item>
+                <Menu.Item onClick={ addCondition } icon={<IconPlus size={16} />}>Condition</Menu.Item>
+                <Menu.Item onClick={ addTrigger } icon={<IconPlus size={16} />}>Trigger</Menu.Item>
             </Menu.Dropdown>
         </Menu>
     );

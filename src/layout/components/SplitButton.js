@@ -1,7 +1,8 @@
 import React from 'react';
 import { createStyles } from '@mantine/styles';
 import { Paper, ThemeIcon, Group, Stack, Text, useMantineTheme } from '@mantine/core';
-import { ChevronRight } from 'react-feather';
+
+import { IconChevronRight } from '@tabler/icons';
 import clsx from 'clsx';
 import useLayoutStore from 'layout/layoutStore'
 
@@ -176,7 +177,7 @@ export const SplitButton = ( props ) => {
                 { props.children }
                 { props.arrow &&
                     <ThemeIcon className={arrowClass()} >
-                        <ChevronRight />
+                        <IconChevronRight />
                     </ThemeIcon>
                 }
             </Group>

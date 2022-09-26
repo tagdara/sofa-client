@@ -3,7 +3,7 @@ import ModeSelect from 'endpoint-model/property/mode/ModeSelect'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import useMode from 'endpoint-model/property/mode/useMode'
 import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
-import { CloudOff, Monitor } from 'react-feather'
+import { IconCloudOff, IconDeviceDesktop } from '@tabler/icons';
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import { ActionIcon, Group } from '@mantine/core';
 
@@ -28,7 +28,7 @@ const Matrix = props => {
         <SplitButtonGroup on={on}>
             <SplitButton >  
                 <ActionIcon size="md" color={ on ? "primary" : undefined } onClick={toggleInput}>
-                    { reachable ? <Monitor size={20} /> : <CloudOff size={16} /> }
+                    { reachable ? <IconDeviceDesktop size={20} /> : <IconCloudOff size={16} /> }
                 </ActionIcon>
             </SplitButton>
             <SplitButton    label = { name } 

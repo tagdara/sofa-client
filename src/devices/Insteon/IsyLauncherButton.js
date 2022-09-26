@@ -1,7 +1,7 @@
 import React from 'react';
 import { useOs } from '@mantine/hooks';
 import { Button } from '@mantine/core';
-import { HddNetwork } from "react-bootstrap-icons"
+import { IconTableOptions } from '@tabler/icons';
 
 const IsyLauncherButton = props => {
 
@@ -17,7 +17,7 @@ const IsyLauncherButton = props => {
     }
 
     return (
-        <Button variant="light" size={ "md" } fullWidth leftIcon={<HddNetwork size={16} />} onClick={() => openApp() } >
+        <Button variant="light" size={ "md" } fullWidth leftIcon={<IconTableOptions size={16} />} onClick={() => openApp() } >
             ISY Admin
         </Button>
     )

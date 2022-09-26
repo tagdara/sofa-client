@@ -5,7 +5,7 @@ import { compareState, isReachable } from 'endpoint-model/state'
 import useChildren from 'endpoint-model/property/children/useChildren'
 import useEndpointStateStore from 'endpoint-model/state/endpointStateStore'
 import { directive } from 'endpoint-model/directive/directive'
-import { X } from "react-bootstrap-icons";
+import { IconX } from '@tabler/icons';
 
 const AreaLightsOnBadge = props => {
 
@@ -56,7 +56,7 @@ const AreaLightsOnBadge = props => {
             size="sm" 
             variant="light" 
             rightSection={  <ActionIcon size="xs" radius="xl" variant="transparent">
-                                <X size={12} />
+                                <IconX  size={12} />
                             </ActionIcon>
             }
         >

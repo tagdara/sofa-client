@@ -1,5 +1,4 @@
 import React, { useState} from 'react';
-import { QrCode } from 'react-bootstrap-icons'
 import SectionHeader from 'layout/section/SectionHeader';
 import SectionFrame from 'layout/section/SectionFrame'
 import SectionGrid from 'layout/section/SectionGrid'
@@ -8,6 +7,7 @@ import { endpointIdsByDisplayCategory, sortByName }  from 'endpoint-model/discov
 import SecurityCamera from 'devices/Camera/SecurityCamera';
 import { ActionIcon, Portal } from '@mantine/core';
 import UnifiProtectButton from 'devices/Camera/UnifiProtectButton'
+import { IconQrcode } from '@tabler/icons';
 
 const CameraLayout = props => {
 
@@ -20,7 +20,7 @@ const CameraLayout = props => {
             <SectionHeader title={"Cameras"} >
                 { homekitSupport &&
                     <ActionIcon onClick={ () => setShowQR(!showQR) }>
-                        <QrCode size={20}  />
+                        <IconQrcode size={20}  />
                     </ActionIcon> 
                 }
             </SectionHeader>

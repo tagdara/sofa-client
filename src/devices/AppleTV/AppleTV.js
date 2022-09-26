@@ -6,7 +6,7 @@ import useArt from 'endpoint-model/property/art/useArt'
 import useTitle from 'endpoint-model/property/title/useTitle'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
-import { Apple as AppleTvIcon } from "react-bootstrap-icons"
+import { IconBrandApple } from '@tabler/icons';
 
 const AppleTV = props => {
   
@@ -22,7 +22,7 @@ const AppleTV = props => {
     return (
             <Stack>
                 <CardLine   avatarSrc={ (on && art) ? image : undefined }
-                            icon = { (!on || !art) ? <AppleTvIcon size={20} /> : undefined } 
+                            icon = { (!on || !art) ? <IconBrandApple size={20} /> : undefined } 
                             primary={ title ? title : appName }
                             secondary = { name }
                             onClick={ () => setShowDetail(!showDetail)}

@@ -1,6 +1,6 @@
 import React from 'react';
-import { ArrowLeft, Home } from 'react-feather'
 import { ActionIcon, Button, Group, Space} from '@mantine/core'
+import { IconArrowLeft, IconHome } from '@tabler/icons';
 
 const AreaControlHeader = (props) => {
 
@@ -8,7 +8,7 @@ const AreaControlHeader = (props) => {
         <Group noWrap style={{ width: "100%"}} position="apart" >
             { props.currentArea !== "logic:area:all" ?
                 <ActionIcon size="lg" onClick={()=>props.selectArea("logic:area:all")}>
-                    <ArrowLeft size={20}  />
+                    <IconArrowLeft size={20}  />
                 </ActionIcon>
                 :
                 <Space w="md" />
@@ -18,7 +18,7 @@ const AreaControlHeader = (props) => {
             </Button>
             { props.currentArea !== props.home ?
                 <ActionIcon size="lg" onClick={()=>props.selectArea(props.home)}>
-                    <Home size={20} />
+                    <IconHome size={20} />
                 </ActionIcon >
                 :
                 <Space w="xl" />

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropertyValue from 'activity/editor/PropertyValue';
 import DeviceDirective from 'activity/editor/DeviceDirective';
-import ActivityDevice from 'activity/editor/ActivityDevice';
+import ActivityDevice from 'activity/editor/device/ActivityDevice';
 import useActivityEditorStore from "activity/editor/activityEditorStore"
 import { Divider, Group, Timeline} from '@mantine/core';
 import ActivityActionMenu from 'activity/editor/action/ActivityActionMenu'

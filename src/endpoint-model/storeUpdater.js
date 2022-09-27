@@ -64,11 +64,14 @@ const updatediscoveryStore = (data, defer=false) => {
         switch (data.event.header.name) {
             case 'DeleteReport':
                 var devices = useDiscoveryStore.getState().devices
-                var deviceResult = without(devices, data.event.payload.endpoints);
+                var ids = data.event.payload.endpoints.map(item => item.endpointId)
+                console.log('DeleteReport', ids, data.event.payload.endpoints)
+                var deviceResult = without(devices, ids);
+                console.log('Without', deviceResult )
                 useDiscoveryStore.setState({ devices: deviceResult, last_update: date.toISOString() })
 
                 var deviceStates = useEndpointStateStore.getState().deviceStates
-                var stateResult = without(deviceStates, data.event.payload.endpoints);
+                var stateResult = without(deviceStates, ids);
                 useEndpointStateStore.setState({ deviceStates: stateResult, last_update: date.toISOString() })
                 break;
             case 'Discover.Response':

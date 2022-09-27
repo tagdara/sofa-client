@@ -4,8 +4,8 @@ import { endpointByEndpointId } from 'endpoint-model/discovery'
 import { selectActivityDevice } from 'activity/editor/activityEditorHelpers'
 import useActivityEditorStore from 'activity/editor/activityEditorStore'
 
-import ActivityDeviceItem from 'activity/editor/ActivityDeviceItem'
-import ActivityDeviceMissing from 'activity/editor/ActivityDeviceMissing'
+import ActivityDeviceItem from 'activity/editor/device/ActivityDeviceItem'
+import ActivityDeviceMissing from 'activity/editor/device/ActivityDeviceMissing'
 import DeviceSelect from 'endpoint-model/endpoint/DeviceSelect'
 import DeviceSegment from 'endpoint-model/endpoint/DeviceSegment'
 

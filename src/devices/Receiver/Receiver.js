@@ -26,7 +26,7 @@ const Receiver = props => {
     return (
         <>
             <Stack spacing="xl">
-                <Group spacing="xl" onClick={showPullUp}>
+                <Group spacing="xl" >
                     <PowerStateAvatar 
                         endpointId={ props.endpointId } 
                         icon={ on ?
@@ -35,7 +35,7 @@ const Receiver = props => {
                             <IconDeviceSpeakerOff size={24} /> 
                             } 
                         />
-                    <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}>
+                    <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4} onClick={showPullUp}>
                         <Text 
                             size={props.size ? props.size : "lg"} 
                             lineClamp={1} 

@@ -1,39 +1,31 @@
-import React, { useState } from 'react';
-import CardLine from 'layout/components/CardLine'
-import {  Collapse, Stack } from '@mantine/core'
-import useApp from 'endpoint-model/property/app/useApp'
-import useArt from 'endpoint-model/property/art/useArt'
-import useTitle from 'endpoint-model/property/title/useTitle'
+import React from 'react';
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import useInput from 'endpoint-model/property/input/useInput'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
-import { IconBrandApple } from '@tabler/icons';
+import AppleTVArtOverlay from 'devices/AppleTV/AppleTVArtOverlay'
+import AppleTVButtons from 'devices/AppleTV/AppleTVButtons'
+import AppleTVPullUp from 'devices/AppleTV/AppleTVPullUp'
+import usePullUp from 'layout/pullup/usePullUp'
+import StackCard from 'layout/components/StackCard'
 
 const AppleTV = props => {
   
-    const [ showDetail, setShowDetail ] = useState(false);
-    const { app: appName } = useApp(props.endpointId)
-    const { powerStateBool: on } = usePowerState(props.endpointId)
-    const { image, art } = useArt(props.endpointId)
-    const { title } = useTitle(props.endpointId)
+    const { powerStateBool: tvOn } = usePowerState(props.tv)
+    const { inputLabel: tvInput } = useInput(props.tv)
     const name = friendlyNameByEndpointId(props.endpointId) 
+    const { pullUpActive, showPullUp } = usePullUp('AppleTvHero', name)
 
-    console.log('xxx', props.endpointId, on, art, title)
+    if (props.tv && (!tvOn || tvInput !== "Apple TV")) { return null }
 
     return (
-            <Stack>
-                <CardLine   avatarSrc={ (on && art) ? image : undefined }
-                            icon = { (!on || !art) ? <IconBrandApple size={20} /> : undefined } 
-                            primary={ title ? title : appName }
-                            secondary = { name }
-                            onClick={ () => setShowDetail(!showDetail)}
-                            color={ on ? "primary" : undefined }
-                >
-                </CardLine>
-                <Collapse in={showDetail}>
-                    
-                </Collapse>
-            </Stack>
+        <StackCard hidden={props.hidden}>
+            <AppleTVArtOverlay endpointId={props.endpointId} onClick={showPullUp} >
+                <AppleTVButtons  endpointId={props.endpointId} />
+            </AppleTVArtOverlay>
+            { pullUpActive && <AppleTVPullUp endpointId={props.endpointId} /> }
+        </StackCard>
     );
 }
+
 
 export default AppleTV;

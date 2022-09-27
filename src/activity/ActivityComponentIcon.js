@@ -36,7 +36,7 @@ const ActivityComponentIcon = props => {
                 leftSection={ getIcon(props.component) }
                 styles={{ leftSection: { display:"flex", alignItems: "center"}}}
         >
-            {props.text}
+            {props.count}
         </Badge>
     )
 }

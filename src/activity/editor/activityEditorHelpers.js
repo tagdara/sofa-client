@@ -1,14 +1,8 @@
 import React, { Suspense } from 'react';
 import { Button } from '@mantine/core';
 import useActivityEditorStore from 'activity/editor/activityEditorStore'
-import useLoginStore from 'login/loginStore'
 import { hasCapability } from 'endpoint-model/discovery'
-
-const serverUrl = useLoginStore.getState().server_url
-const activityUrl = serverUrl + "/list/logic/activity/" // +props.endpointId
-const saveUrl = serverUrl + "/save/logic/activity/" // +props.endpointId
-const addUrl = serverUrl + "/add/logic/activity" // +props.endpointId
-
+import { tokenFetch } from 'network/tokenFetch';
 
 const checkItemNotReady = (section, item) => {
     if (!item.endpointId || item.endpointId === undefined) { 
@@ -62,12 +56,7 @@ export const loadActivity = async (endpointId) => {
     // loadJSONAutomation
     useActivityEditorStore.setState({name: undefined, endpointId: endpointId, activity: {}, saved: false}, true)
     if (endpointId) {
-        const accessToken = useLoginStore.getState().access_token;
-        const headers = { authorization : accessToken }
-        console.log('attempting to get activity', endpointId)
-        const response = await fetch(activityUrl + endpointId, { headers: headers })
-        const result = await response.json()
-        console.log('result', result)
+        const result = await tokenFetch("/list/logic/activity/"+endpointId)
         useActivityEditorStore.setState({endpointId: endpointId, activity: result, saved: true}, true)
     }
 }
@@ -84,24 +73,18 @@ export const modifyActivityJson = data => {
 }
 
 export const saveActivity = async () => {
-    const accessToken = useLoginStore.getState().access_token;
     const endpointId = useActivityEditorStore.getState().endpointId
     const activity = useActivityEditorStore.getState().activity
-    const headers = { authorization : accessToken }
-    const body = { ...activity, endpointId : endpointId }
-    const response = await fetch(saveUrl + endpointId, { headers: headers, method: "POST", body: JSON.stringify(body)})
-    const result = await response.json()
+    const data = { ...activity, endpointId : endpointId }
+    const result = await tokenFetch("/save/logic/activity/" + endpointId, data)
     console.log('result', result)
     useActivityEditorStore.setState({ saved: true })
 }
 
 export const addActivity = async () => {
-    const accessToken = useLoginStore.getState().access_token;
     const activity = useActivityEditorStore.getState().activity
-    const headers = { authorization : accessToken }
-    const body = { ...activity }
-    const response = await fetch(addUrl, { headers: headers, method: "POST", body: JSON.stringify(body)})
-    const result = await response.json()
+    const data = { ...activity }
+    const result = await tokenFetch("/add/logic/activity", data)
     console.log('created', result.endpointId, 'and refreshing', typeof result, result)
     useActivityEditorStore.setState({ endpointId: result.endpointId, activity: result, saved: true })
 }

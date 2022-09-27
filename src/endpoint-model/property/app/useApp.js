@@ -3,11 +3,11 @@ import { directive as storeDirective } from 'endpoint-model/directive/directive'
 
 const useApp = (endpointId, value, directive) => {
 
-    const controller = 'Alexa.MediaMetadata'
+    const controller = 'Sofa.MediaMetadata'
     const { deviceState } = useRegister(endpointId)
     const activeDirective = directive ? directive : storeDirective
     const stateApp = deviceState?.[controller]?.app?.value
-    const app = value !== undefined ? value : stateApp
+    const app = value?.app ? value.app : stateApp
 
     const setApp = newState => {
         // only for editor

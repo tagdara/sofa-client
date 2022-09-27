@@ -10,23 +10,20 @@ import useUserStore from 'user/userStore'
 import ActivityItemMenu from 'activity/ActivityItemMenu'
 import ActivityItemMissing from 'activity/ActivityItemMissing'
 import ActivityComponentIcon from 'activity/ActivityComponentIcon'
-import useDefinitionController from 'endpoint-model/controller/DefinitionController/useDefinitionController'
 
 import { IconListDetails, IconStar, IconPlayerPlay } from '@tabler/icons';
 
 const ActivityItem = props => {
     
+
     const [ launched, setLaunched] = useState(false)
     const activity = endpointByEndpointId(props.endpointId)
     const { deviceState } = useRegister(props.endpointId)
-    const { countData, nextRun } = useDefinitionController(props.endpointId)
 
     const favorites = useUserStore( state => state.preferences.favorites )
     const favorite = favorites && favorites.includes(props.endpointId)
 
     if (!activity || !deviceState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
-
-    if ( props.scheduled && !nextRun) { return null }
 
     const name = activity.friendlyName
 
@@ -57,23 +54,29 @@ const ActivityItem = props => {
 
 
     function partsSummary() {
-        var results = Object.keys(countData).map(part => 
-            { if (countData[part]) {
-                    return <ActivityComponentIcon key={props.endpointId + part} count={countData[part]} component={part} /> 
-                } else { return null }
-            })
-        results = results.filter(n => n)
-        if (!results || results.length < 1 ) {  return <Badge size="sm" color="red">{"Empty"}</Badge> }
+        var parts = ['schedules_count', 'triggers_count', 'conditions_count', 'actions_count', 'missing_devices_count']
+        var results = parts.map(part => 
+            { 
+                if (props.activity[part] > 0)  { 
+                    return (
+                        <ActivityComponentIcon key={props.activity.name+part} text={props.activity[part]} component={part} />
+                    )
+                } 
+                return false
+            }
+        )
+        results = results.filter(Boolean)
+        if (!results ||  results.length<1) {  return <Badge color="red">{"Empty"}</Badge> }
         return results
     }    
  
     function scheduleSummary() {
-        if (nextRun) { return moment(nextRun).calendar() }
+        if (props.activity.next_run) { return moment(props.activity.next_run).calendar() }
         return undefined
     }
 
     function xsummary() {
-        if ( !activity || props.disableEdit ) { return null }
+        if (!props.activity || props.disableEdit) { return null}
         if (props.showNextRun) { return scheduleSummary() }
         const summary = partsSummary()
         if (summary.length < 1) { return null }
@@ -83,6 +86,8 @@ const ActivityItem = props => {
             </Group>
         )
     }   
+
+    //console.log('activitystate', deviceState)
 
     const loading = launched || deviceState?.Running?.toggleState?.value === 'ON'
 

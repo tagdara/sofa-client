@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { selectPage } from 'helpers/layoutHelpers';
 
 import ActivityItem from 'activity/ActivityItem';
 import { isFavorite, makeFavorite } from 'user/favorites/favoritesUtils';
-import { deleteActivityDefinition } from 'endpoint-model/controller/DefinitionController/deleteActivityDefinition'
+import { loadActivities, deleteActivity } from 'activity/activityHelpers';
 import { ActionIcon, Group } from '@mantine/core';
 
 import SectionHeader from 'layout/section/SectionHeader';
@@ -13,15 +13,24 @@ import SectionGrid from 'layout/section/SectionGrid'
 import PageFrame from 'layout/PageFrame'
 
 import { IconClock, IconStar, IconPlus } from '@tabler/icons';
-import { sortByName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 
 const ActivitiesLayout = props => {
 
+    const [ activities, setActivities ] = useState([])
     const [ favorites, setFavorites ] = useState(props.favorites)
     const [ showScheduled, setShowScheduled] = useState(false)
-    const activities = sortByName(endpointIdsByDisplayCategory('ACTIVITY_TRIGGER'))
+
+    useEffect(() => {
+        loadActivities().then(result => { setActivities(result)})
+    // eslint-disable-next-line 
+    }, []);
 
     if (!activities) { return null }
+
+    async function deleteAndRefresh(activity) {
+        await deleteActivity(activity)
+        loadActivities().then(result => { setActivities(result)})
+    }
 
     function selectActivity(activity) {
         selectPage('ActivityEditorPage', {'endpointId':activity, 'noBottom':true } )
@@ -45,12 +54,15 @@ const ActivitiesLayout = props => {
             workingList = [...activities]
         }
         if (favorites) {
-            workingList = workingList.filter(activity => isFavorite(activity))
+            workingList = workingList.filter(activity => isFavorite(activity.endpointId))
+        }
+        if (showScheduled) {
+            workingList = workingList.filter(activity => activity.next_run )
         }
         return workingList
     }
 
-    const filteredActivities = getListItems()
+    const activityList = getListItems()
 
     return (
         <PageFrame>
@@ -69,14 +81,15 @@ const ActivitiesLayout = props => {
             </SectionHeader>
             <SectionFrame padScroll>
                 <SectionGrid>
-                { filteredActivities.map(activity => 
+                { activityList && activityList.map(activity => 
                     <ActivityItem
-                        endpointId={activity} 
-                        key={activity}
+                        endpointId={activity.endpointId} 
+                        key={activity.endpointId}
                         select={selectActivity}
+                        activity={ activity }
                         makeFavorite={makeFavorite}
-                        delete={deleteActivityDefinition} 
-                        scheduled = {showScheduled}
+                        delete={deleteAndRefresh} 
+                        showNextRun = {showScheduled}
                     />
                 )}
                 </SectionGrid>

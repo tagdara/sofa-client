@@ -1,5 +1,5 @@
 import React from 'react';
-import ActivityDevice from 'activity/editor/ActivityDevice';
+import ActivityDevice from 'activity/editor/device/ActivityDevice';
 import PropertyValue from 'activity/editor/PropertyValue';
 import ControllerProperty from 'activity/editor/ControllerProperty';
 import ConditionOperator from 'activity/editor/ConditionOperator';

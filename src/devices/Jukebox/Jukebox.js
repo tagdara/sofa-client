@@ -29,9 +29,9 @@ const JukeboxHero = props => {
             { ( isIdle && !onCount ) ?
                 <JukeboxOff onClick={showPullUp} name={"Jukebox"} endpointId={props.endpointId} />           
             :
-                <Group onClick={showPullUp} noWrap >
+                <Group onClick={showPullUp} noWrap style={{ width: "100%"}}>
                     <PlayerArt endpointId={props.endpointId} />
-                    <Stack>
+                    <Stack style={{ width: "100%"}}>
                         <PlayerMediaInfo endpointId={props.endpointId} />
                         <PlayerButtons endpointId={props.endpointId} >
                             <JukeboxSpeakerButton endpointId={props.endpointId} onClick={showPullUp} />

@@ -31,16 +31,16 @@ export default function PlayerButtons(props) {
     return ( 
         <Group position="apart" noWrap style={{width: "100%"}} onClick={ (event) => {event.stopPropagation();} }>
             <Group>
-                <ActionIcon color="primary" variant="light" size="md" onClick={playPause}>
+                <ActionIcon color="primary" variant="light" size="lg" onClick={playPause}>
                     { playbackState==='PLAYING' ? <IconPlayerPause size={20} /> : <IconPlayerPlay size={20} /> }
                 </ActionIcon>
                 { playbackState !== 'STOPPED' &&
-                    <ActionIcon color="primary" variant="light" size="md" onClick={sofaSkip}>
+                    <ActionIcon color="primary" variant="light" size="lg" onClick={sofaSkip}>
                         <IconPlayerTrackNext size={20} />
                     </ActionIcon>
                 }
-                </Group>
-                { props.children }
+            </Group>
+            { props.children }
         </Group>
     );
 }

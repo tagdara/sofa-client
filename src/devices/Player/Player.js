@@ -1,6 +1,6 @@
 import React from 'react';
 import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
-import PlayerArtOverlayButtons from 'devices/Player/PlayerArtOverlayButtons';
+import PlayerButtons from 'devices/Player/PlayerButtons';
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { directive } from 'endpoint-model/directive/directive'
 import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'

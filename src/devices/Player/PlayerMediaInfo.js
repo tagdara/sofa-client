@@ -1,15 +1,19 @@
 import React from 'react';
 import { Stack, Text } from '@mantine/core'
-import useMusicController from 'endpoint-model/controller/MusicController/useMusicController'
+import useMediaReporter from 'endpoint-model/controller/MediaReporter/useMediaReporter'
+import { friendlyNameByEndpointId } from 'endpoint-model/discovery';
 
-export default function PlayerArtOverlay(props) {
+export default function PlayerMediaInfo(props) {
     
-    const { artist, title } = useMusicController(props.endpointId)
+    const { artist, title, app } = useMediaReporter(props.endpointId)
+    const friendlyName = friendlyNameByEndpointId(props.endpointId)
+    const topLine = title || "Idle"
+    const secondLine = artist || app || friendlyName
 
     return ( 
         <Stack spacing={0}>
-                <Text lineClamp={2} weight={500} size="lg" style={{ lineHeight: 1.2 }}>{title}</Text>
-                <Text lineClamp={1} weight={500} color="dimmed" size="md">{artist}</Text>
+            <Text lineClamp={2} weight={500} size="lg" style={{ lineHeight: 1.2 }}>{topLine}</Text>
+            <Text lineClamp={1} weight={500} color="dimmed" size="md">{secondLine}</Text>
         </Stack> 
     );
 }

@@ -3,7 +3,7 @@ import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import SonosCard from 'devices/Sonos/SonosCard'
 import StackCard from 'layout/components/StackCard'
 import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
-import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'
+import usePlaybackStateReporter from 'endpoint-model/controller/PlaybackStateReporter/usePlaybackStateReporter'
 
 const SonosSelector = props => {
     
@@ -11,9 +11,9 @@ const SonosSelector = props => {
     const tvLight = endpointIdByFriendlyName('Living Room TV Light')
     const { powerStateBool: floorLightPower } = usePowerState(bedroomFloor)
     const { powerStateBool: tvLightPower } = usePowerState(tvLight)
-    const { playbackState } = usePlaybackState(props.endpointId)
+    const { playbackState } = usePlaybackStateReporter(props.endpointId)
 
-    if ( playbackState ==='PLAYING' || ( floorLightPower && !tvLightPower )) { 
+    if ( 1==1 || playbackState ==='PLAYING' || ( floorLightPower && !tvLightPower )) { 
         return (
             <StackCard hidden={props.hidden}>
                 <SonosCard endpointId = {props.endpointId} />

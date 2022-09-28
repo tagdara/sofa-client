@@ -1,9 +1,6 @@
 import React from 'react';
-import PlayerArt from 'devices/Player/PlayerArt'
-import PlayerMediaInfo from 'devices/Player/PlayerMediaInfo'
-import PlayerButtons from 'devices/Player/PlayerButtons'
+import Player from 'devices/Player/Player'
 import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
-import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'
 import { endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 import JukeboxOff from 'devices/Jukebox/JukeboxOff'
 import usePullUp from 'layout/pullup/usePullUp'
@@ -11,10 +8,11 @@ import JukeboxPullUp from 'devices/Jukebox/JukeboxPullUp'
 import JukeboxSpeakerButton from 'devices/Jukebox/JukeboxSpeakerButton'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import { Group, Stack } from '@mantine/core'
+import usePlaybackStateReporter from 'endpoint-model/controller/PlaybackStateReporter/usePlaybackStateReporter'
 
 const JukeboxHero = props => {
 
-    const { playbackState } = usePlaybackState(props.endpointId)
+    const { playbackState } = usePlaybackStateReporter(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
     const { pullUpActive, showPullUp } = usePullUp('JukeboxHero', name)
 
@@ -29,15 +27,11 @@ const JukeboxHero = props => {
             { ( isIdle && !onCount ) ?
                 <JukeboxOff onClick={showPullUp} name={"Jukebox"} endpointId={props.endpointId} />           
             :
-                <Group onClick={showPullUp} noWrap style={{ width: "100%"}}>
-                    <PlayerArt endpointId={props.endpointId} />
-                    <Stack style={{ width: "100%"}}>
-                        <PlayerMediaInfo endpointId={props.endpointId} />
-                        <PlayerButtons endpointId={props.endpointId} >
-                            <JukeboxSpeakerButton endpointId={props.endpointId} onClick={showPullUp} />
-                        </PlayerButtons>
-                    </Stack>
-                </Group>
+                <Player 
+                    endpointId={props.endpointId}
+                    buttons={<JukeboxSpeakerButton endpointId={props.endpointId} onClick={showPullUp} />}
+                    onClick={showPullUp}
+                />
             }
             { pullUpActive && <JukeboxPullUp endpointId={props.endpointId} /> }
         </>

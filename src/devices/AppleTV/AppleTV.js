@@ -2,11 +2,12 @@ import React from 'react';
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useInput from 'endpoint-model/property/input/useInput'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
-import AppleTVArtOverlay from 'devices/AppleTV/AppleTVArtOverlay'
-import AppleTVButtons from 'devices/AppleTV/AppleTVButtons'
 import AppleTVPullUp from 'devices/AppleTV/AppleTVPullUp'
 import usePullUp from 'layout/pullup/usePullUp'
 import StackCard from 'layout/components/StackCard'
+import Player from 'devices/Player/Player'
+import { IconBrandApple } from '@tabler/icons';
+import PowerStateSwitch from 'endpoint-model/property/powerState/PowerStateSwitch'
 
 const AppleTV = props => {
   
@@ -19,9 +20,14 @@ const AppleTV = props => {
 
     return (
         <StackCard hidden={props.hidden}>
-            <AppleTVArtOverlay endpointId={props.endpointId} onClick={showPullUp} >
-                <AppleTVButtons  endpointId={props.endpointId} />
-            </AppleTVArtOverlay>
+            <Player 
+                placeholder={<IconBrandApple style={{ height: "100%", maxWidth: "30%" }} />} 
+                endpointId={props.endpointId} 
+                onClick={showPullUp}
+                buttons={
+                    <PowerStateSwitch endpointId={props.endpointId} />  
+                }
+            />
             { pullUpActive && <AppleTVPullUp endpointId={props.endpointId} /> }
         </StackCard>
     );

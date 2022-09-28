@@ -1,58 +1,25 @@
 import React from 'react';
-import PlayerArtOverlay from 'devices/Player/PlayerArtOverlay';
+import PlayerArt from 'devices/Player/PlayerArt';
 import PlayerButtons from 'devices/Player/PlayerButtons';
-import PlaceholderCard from 'layout/PlaceholderCard';
-import { directive } from 'endpoint-model/directive/directive'
-import usePlaybackState from 'endpoint-model/property/playbackState/usePlaybackState'
+import PlayerMediaInfo from 'devices/Player/PlayerMediaInfo';
+import { Group, Stack } from '@mantine/core'
 
-const PlayerHeader = props => {
+const Player = props => {
+
+    // This is a generic player that can be used directly or as the model for other more specific players
     
-    const jukebox = 'jukebox'
-    const { playbackState } = usePlaybackState(props.endpointId)
-
-    if (!playbackState) {
-        return <PlaceholderCard count={ 3 } />
-    }
-
-    function handlePlayPause(event) {
-        event.stopPropagation();
-        if (playbackState ==='PLAYING') {
-            directive(jukebox, 'Sofa.MusicController', 'Pause')
-        } else {
-            directive(jukebox, 'Sofa.MusicController', 'Play')
-        }
-    }; 
-
-    function handleSkip(event) {
-        event.stopPropagation();
-        directive(jukebox, 'Sofa.MusicController', "Skip")
-    }; 
-
-    function handleStop(event) {
-        event.stopPropagation();
-        directive(jukebox, 'Sofa.MusicController', "Stop")
-    }; 
-
     return (
-        <PlayerArtOverlay   
-            endpointId={props.endpointId}
-            onClick={props.showOverlay} 
-            setMini={props.toggleIdle}
-        >
-            <PlayerArtOverlayButtons    
-                showOverlay={props.showOverlay}
-                min={props.setMini} 
-                cover={props.toggleIdle} 
-                stop={handleStop} 
-                url={props.url}
-                playPause={handlePlayPause}
-                skip={handleSkip}
-                jukebox={true} 
-                toggleSpeakerFilter={ props.toggleSpeakers }
-                playbackState={ playbackState } />
-        </PlayerArtOverlay>
+        <Group onClick={props.onClick} noWrap style={{ width: "100%"}}>
+            <PlayerArt endpointId={props.endpointId} />
+            <Stack style={{ width: "100%"}}>
+                <PlayerMediaInfo endpointId={props.endpointId} />
+                <PlayerButtons endpointId={props.endpointId} >
+                    {props.buttons}
+                </PlayerButtons>
+            </Stack>
+        </Group>
     );
 }
 
-export default PlayerHeader;
+export default Player;
 

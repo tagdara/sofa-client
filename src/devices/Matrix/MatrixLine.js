@@ -26,7 +26,7 @@ const MatrixLine = props => {
     return (
         <ModeLine 
             icon={
-                <ThemeIcon size="md" variant={ on ? "filled" : "default"} onClick={toggleInput}>
+                <ThemeIcon size="lg" variant={ on ? "filled" : "default"} onClick={toggleInput}>
                     { reachable ? ( on ? <IconDeviceDesktop size={16} /> : <IconDeviceDesktopOff size={16} /> ) : <IconCloudOff size={16} /> }
                 </ThemeIcon>
             }

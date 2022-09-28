@@ -47,11 +47,11 @@ const BottomBar = props => {
     }
 
     const selections= [
-        { value: "Audio Video",         "label": stackPullUp ? <IconX size={20} /> : <IconDevices2 size={20} /> },
-        { value: "Lights and Comfort",  "label": <IconBulb size={20} /> }, 
-        { value: "Climate",             "label": <IconTemperature size={20} /> }, 
-        { value: "Security",            "label": <IconShield size={20} /> }, 
-        { value: "System",              "label": <IconMenu size={20} />},
+        { value: "Audio Video",         "label": stackPullUp ? <IconX size={24} /> : <IconDevices2 size={24} /> },
+        { value: "Lights and Comfort",  "label": <IconBulb size={24} /> }, 
+        { value: "Climate",             "label": <IconTemperature size={24} /> }, 
+        { value: "Security",            "label": <IconShield size={24} /> }, 
+        { value: "System",              "label": <IconMenu size={24} />},
     ]
 
     const bgColor = theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.1)
@@ -111,19 +111,16 @@ const BottomBar = props => {
         >
             <SegmentedControl 
                     fullWidth 
-                    size="md"
+                    size="lg"
                     color = {theme.primaryColor}
                     onClick = {clearPullUp}
                     onChange = {pickStack} 
                     value = {displayStack} 
                     data={selections} 
-                    style={{    minHeight: 48,
-
-                                marginBottom: "env(safe-area-inset-bottom)" 
-                    }}
+                    style={{ marginBottom: "env(safe-area-inset-bottom)" }}
                     styles={{ 
                         root: {
-                                backgroundColor: bgColor
+                            backgroundColor: bgColor
                         }
                     }}
             />

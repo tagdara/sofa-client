@@ -24,7 +24,7 @@ const ComputerPullUp = props => {
 
     return (  
         <PullUpCard title={"Matrix"} name={"matrix"}>
-            <Stack spacing={"xl"} width={"100%"}>
+            <Stack spacing={"lg"} width={"100%"}>
                 { matrixManualSort.map(device =>
                     <MatrixLine key={ device } endpointId={device} default={defaults[device]} nested={true} itemType={"listItem"} />
                 )}

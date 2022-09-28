@@ -24,10 +24,12 @@ const PlayerHeader = props => {
     }; 
 
     function handleSkip(event) {
+        event.stopPropagation();
         directive(jukebox, 'Sofa.MusicController', "Skip")
     }; 
 
     function handleStop(event) {
+        event.stopPropagation();
         directive(jukebox, 'Sofa.MusicController', "Stop")
     }; 
 

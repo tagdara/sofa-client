@@ -98,25 +98,7 @@ const BottomBar = props => {
         )
     }
 
-    if (wide) { 
-        return (
-            <Affix 
-                style={{ 
-                    boxSizing: "border-box", 
-                    paddingLeft: 16, 
-                    paddingRight: 16, 
-                    width: "100%", 
-                    display: "flex", 
-                    marginBottom: "env(safe-area-inset-bottom)",
-                    flexDirection: "row-reverse"
-                }} 
-                position={{ bottom: 8 }}
-            >
-                <div style={{ width: "100%"}} id="bottomrender" >
-                </div>
-            </Affix>
-        )
-    }
+    if (wide) { return null }
 
     return (
         <Stack 

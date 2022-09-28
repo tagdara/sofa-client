@@ -12,7 +12,7 @@ const JukeboxSpeakerButton = props => {
     const { onCount } = useMultiPower(speakers)
 
     return (
-        <Button compact leftIcon={<IconDeviceSpeaker size={16} />} onClick={props.onClick}>
+        <Button variant={ onCount ? "filled" : "default" } compact leftIcon={<IconDeviceSpeaker size={16} />} onClick={props.onClick}>
             {onCount}
         </Button>
     );

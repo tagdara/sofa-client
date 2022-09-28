@@ -10,7 +10,6 @@ export default function AppleTVButtons(props) {
     const { play, pause, skip } = usePlaybackController(props.endpointId)
 
     const playPause = (event) => {
-        event.stopPropagation();
         if ( playbackState === 'PLAYING' ) {
             pause()
         } else {
@@ -19,13 +18,13 @@ export default function AppleTVButtons(props) {
     }
 
     return ( 
-        <Group position="apart" noWrap style={{width: "100%"}}>
+        <Group position="apart" noWrap style={{width: "100%"}} onClick={ (event) => {event.stopPropagation();} }>
             <Group>
-                <ActionIcon  size="sm" onClick={ (event) => playPause(event) } >
+                <ActionIcon color="primary" variant="light" size="md" onClick={ (event) => playPause(event) } >
                     { playbackState === 'PLAYING' ? <IconPlayerPause size={20} /> : <IconPlayerPlay size={20} /> }
                 </ActionIcon>
                 { props.playbackState!=='STOPPED' &&
-                    <ActionIcon size="sm" onClick={ skip} >
+                    <ActionIcon color="primary" variant="light" size="md" onClick={ skip} >
                         <IconPlayerTrackNext size={20} />
                     </ActionIcon>
                 }

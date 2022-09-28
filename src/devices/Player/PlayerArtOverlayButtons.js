@@ -8,11 +8,11 @@ export default function PlayerArtOverlayButtons(props) {
     return ( 
         <Group position="apart" noWrap style={{width: "100%"}}>
             <Group>
-                <ActionIcon  size="sm" onClick={ (e) => props.playPause(e)}>
+                <ActionIcon color="primary" variant="light" size="md" onClick={ (e) => props.playPause(e)}>
                     { props.playbackState==='PLAYING' ? <IconPlayerPause size={20} /> : <IconPlayerPlay size={20} /> }
                 </ActionIcon>
                 { props.playbackState!=='STOPPED' &&
-                    <ActionIcon size="sm" onClick={ (e) => props.skip(e)}>
+                    <ActionIcon color="primary" variant="light" size="md" onClick={ (e) => props.skip(e)}>
                         <IconPlayerTrackNext size={20} />
                     </ActionIcon>
                 }

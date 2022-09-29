@@ -62,6 +62,10 @@ const updatediscoveryStore = (data, defer=false) => {
         }
 
         switch (data.event.header.name) {
+            case 'DeferredResponse':
+                // Currently we handle notifications in the directive function and no action is required in the store, althought it may
+                // be interesting to track deferrals in the future to ensure an async result is eventually delivered
+                break;
             case 'DeleteReport':
                 var devices = useDiscoveryStore.getState().devices
                 var ids = data.event.payload.endpoints.map(item => item.endpointId)

@@ -45,6 +45,14 @@ export const directive = async (endpointId, controllerName, command, payload={},
             color: 'red',
         })        
     }
+    if (result.event?.header?.name === "DeferredResponse") {
+        const delay = result.event.payload?.estimatedDeferralInSeconds || "several"
+        showNotification({
+            title: 'Request Received',
+            message: 'Your request was received but may take ' + delay + ' seconds to process',
+            color: 'green',
+        })        
+    }
     storeUpdater(result)
     return result
 }

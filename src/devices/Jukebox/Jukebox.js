@@ -7,7 +7,6 @@ import usePullUp from 'layout/pullup/usePullUp'
 import JukeboxPullUp from 'devices/Jukebox/JukeboxPullUp'
 import JukeboxSpeakerButton from 'devices/Jukebox/JukeboxSpeakerButton'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
-import { Group, Stack } from '@mantine/core'
 import usePlaybackStateReporter from 'endpoint-model/controller/PlaybackStateReporter/usePlaybackStateReporter'
 
 const JukeboxHero = props => {

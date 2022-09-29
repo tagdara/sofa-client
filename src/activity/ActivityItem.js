@@ -98,6 +98,7 @@ const ActivityItem = props => {
                         size="md"
                         styles={{ 
                             root: {
+                                border: 0,
                                 display: "flex",
                                 justifyContent: "flex-start",
                                 paddingLeft: 16,
@@ -114,9 +115,11 @@ const ActivityItem = props => {
                     }     
             />     
             <Button 
+                buttonBorderWidth={0}
                 size="md"
                 styles={{ 
-                    root: {
+                    root: {          
+                        border: 0,
                         display: "flex",
                         justifyContent: "flex-start",
                         height: 58,
@@ -142,6 +145,7 @@ const ActivityItem = props => {
                 size="md"
                 styles={{ 
                     root: {
+                        border: 0,
                         height: 58,
                         padding: 12,
                     }

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useLayoutStore from 'layout/layoutStore'
 import { useMediaQuery } from '@mantine/hooks';
 import { ActionIcon, Card, Group, Modal, Stack, Title, Portal,Transition  } from '@mantine/core'
@@ -11,6 +11,12 @@ const PullUpCard = props => {
     const setStackCardHighlight = useLayoutStore( state => state.setStackCardHighlight)
     const setStackPullUp= useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
+    const [ mounted, setMounted ] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    // eslint-disable-next-line 
+    }, []);
 
 
     const closeOverlay = () => {
@@ -23,7 +29,7 @@ const PullUpCard = props => {
             <Stack spacing="lg">
                 <Group position="apart">
                     <Title order={3}>{props.title}</Title>
-                    <ActionIcon onClick={closeOverlay}>
+                    <ActionIcon onClick={() => { wide ? closeOverlay() : setMounted(false)} }>
                         <IconX size={20} />
                     </ActionIcon>
                 </Group>
@@ -39,17 +45,17 @@ const PullUpCard = props => {
             </Modal>
         )
     }
-
+    // stackPullUp === props.name }
     return (
-        <Transition mounted={ stackPullUp === props.name }  transition={"slide-up"} duration={2000} timingFunction="ease">
-        {(styles) => 
-            <Portal target={container} style={{ ...styles, width: 10 }}>
-                <Card radius="lg" p="xl" style={{ width: "100%", maxWidth: 480 }}>
-                    <PullUpContents {...props} />
-                </Card>    
-            </Portal>
-        }
-        </Transition>
+        <Portal target={container} >
+            <Transition mounted={ mounted }  transition={"slide-up"} exitDuration={100} duration={200} timingFunction="ease" onExited={closeOverlay}>
+                {(styles) => 
+                        <Card radius="lg" p="xl" style={{  ...styles, width: "100%", maxWidth: 480 }}>
+                            <PullUpContents {...props} />
+                        </Card>    
+                }
+            </Transition>
+        </Portal>
     );
 }
 

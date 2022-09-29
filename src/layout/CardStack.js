@@ -5,6 +5,7 @@ import { Stack } from '@mantine/core';
 import StackPicker from 'layout/StackPicker';
 import useLayoutStore from 'layout/layoutStore'
 import { useMediaQuery } from '@mantine/hooks';
+import { useDidUpdate } from '@mantine/hooks';
 
 export default function CardStack(props) {
     
@@ -14,6 +15,7 @@ export default function CardStack(props) {
     const expand = false
     const stackCardHighlight = useLayoutStore( state => state.stackCardHighlight)
     const wide = useMediaQuery('(min-width: 640px)');
+    const [ cards, setCards ] = useState([])
 
     useEffect(() => { 
         if (stack) {
@@ -23,18 +25,33 @@ export default function CardStack(props) {
         }
     }, [ stack ] )
 
+    useDidUpdate( () => {
+        const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand)) //&& ( wide || !stackCardHighlight || stackCardHighlight === card.module) )
+        const renderCards = cardData.map( 
+            (card, i) => renderSuspenseModule(
+                            card.module, 
+                            {...card.props, 
+                                hidden: !wide && stackCardHighlight && stackCardHighlight !== card.module 
+                            },
+                            i 
+                        )
+            )
+        setCards(renderCards)
+    }, [ stackData, stackCardHighlight ])
+
     if (!stack || !stackData ) { return null}
 
-    const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand)) //&& ( wide || !stackCardHighlight || stackCardHighlight === card.module) )
-    const cards = cardData.map( 
-        (card, i) => renderSuspenseModule(
-                        card.module, 
-                        {...card.props, 
-                            hidden: !wide && stackCardHighlight && stackCardHighlight !== card.module 
-                        },
-                        i 
-                    )
-        )
+    // const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand)) //&& ( wide || !stackCardHighlight || stackCardHighlight === card.module) )
+    // const rendercards = cardData.map( 
+    //     (card, i) => renderSuspenseModule(
+    //                     card.module, 
+    //                     {...card.props, 
+    //                         hidden: !wide && stackCardHighlight && stackCardHighlight !== card.module 
+    //                     },
+    //                     i 
+    //                 )
+    //     )
+    
 
     return (
             <Stack

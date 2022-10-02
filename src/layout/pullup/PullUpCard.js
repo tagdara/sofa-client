@@ -29,7 +29,7 @@ const PullUpCard = props => {
             <Stack spacing="lg">
                 <Group position="apart">
                     <Title order={3}>{props.title}</Title>
-                    <ActionIcon onClick={() => { wide ? closeOverlay() : setMounted(false)} }>
+                    <ActionIcon onClick={() => { (1==1 || wide) ? closeOverlay() : setMounted(false)} }>
                         <IconX size={20} />
                     </ActionIcon>
                 </Group>
@@ -40,11 +40,19 @@ const PullUpCard = props => {
 
     if (wide) {
         return (
-            <Modal withCloseButton={false} onClose={closeOverlay} centered opened={stackPullUp !== undefined} >
+            <Modal withCloseButton={false} onClose={closeOverlay} transition={"slide-up"} duration={1000} centered opened={stackPullUp !== undefined} >
                 <PullUpContents {...props} />
             </Modal>
         )
     }
+
+
+    return (
+        <Modal withCloseButton={false} onClose={closeOverlay} transition={"slide-up"} duration={1000} style={{ bottom: 0 }} opened={stackPullUp !== undefined} >
+            <PullUpContents {...props} />
+        </Modal>
+    )
+
     // stackPullUp === props.name }
     return (
         <Portal target={container} >

@@ -23,7 +23,7 @@ const ComputerPullUp = props => {
     }
 
     return (  
-        <PullUpCard title={"Matrix"} name={"matrix"}>
+        <PullUpCard title={"Matrix"} name={"matrix"} opened={props.opened}>
             <Stack spacing={"lg"} width={"100%"}>
                 { matrixManualSort.map(device =>
                     <MatrixLine key={ device } endpointId={device} default={defaults[device]} nested={true} itemType={"listItem"} />

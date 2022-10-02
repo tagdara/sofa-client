@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import { getStack, renderSuspenseModule } from 'helpers/layoutHelpers';
 import { Stack } from '@mantine/core';
 // import StackMoreButton from 'layout/StackMoreButton';
@@ -27,6 +27,7 @@ export default function CardStack(props) {
 
     useDidUpdate( () => {
         const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand)) //&& ( wide || !stackCardHighlight || stackCardHighlight === card.module) )
+        console.log('stackdata', stackData)
         const renderCards = cardData.map( 
             (card, i) => renderSuspenseModule(
                             card.module, 
@@ -56,7 +57,7 @@ export default function CardStack(props) {
     return (
             <Stack
                 spacing="xs" 
-                style={{
+                style={{   
                             paddingBottom: 16, 
                             minWidth: 320, 
                             maxWidth: 480, 

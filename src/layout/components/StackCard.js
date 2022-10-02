@@ -8,15 +8,16 @@ const StackCard = props => {
     const transitionDirection = useLayoutStore( state => state.transitionDirection)
 
     useEffect(() => {
-        setMounted(true)
+        setMounted(!props.hidden)
+        console.log(transitionDirection)
         return () => {
             setMounted(false)
         }
     // eslint-disable-next-line 
-    }, []);
+    }, [ props.hidden ]);
 
     return (
-            <Transition mounted={ mounted }  transition={transitionDirection} duration={100} timingFunction="ease">
+            <Transition mounted={ mounted }  transition={transitionDirection} exitDuration={1000} duration={100} timingFunction="ease">
                 {(styles) => 
                     <Card 
                         padding="md" 
@@ -27,7 +28,7 @@ const StackCard = props => {
                             maxWidth: 480, 
                             minWidth: 300, 
                             overflow: "visible",
-                            display: props.hidden ? "none": undefined
+                            
                         }}
                     >
                         { props.children }

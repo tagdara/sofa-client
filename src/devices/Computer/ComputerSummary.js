@@ -48,9 +48,7 @@ const ComputerSummary = props => {
                     )}
                 </Group>
             </Stack>
-            { pullUpActive &&
-                <MatrixPullUp />
-            }
+            <MatrixPullUp opened={pullUpActive}/>
         </>
     );
 }

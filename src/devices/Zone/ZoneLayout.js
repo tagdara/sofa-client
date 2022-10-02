@@ -19,11 +19,13 @@ const ZoneLayout = props => {
     const allZones = sortByName([...motionSensors, ...contactSensors])
     const automationZones = allZones.filter( endpointId => descriptionIncludes(endpointId, '(Automation)'))
     const securityZones = allZones.filter( endpointId => !descriptionIncludes(endpointId, '(Automation)'))
-    const [ changeTimes, setChangeTimes ] = useState({})
+    const [ changeTimes, setChangeTimes ] = useState([])
+
 
     useEffect(() => {
         if (allZones) {
-            getChangeTimesForDevices('detectionState',allZones).then(result => { setChangeTimes(result) } )
+            getChangeTimesForDevices('detectionState',allZones)
+                .then(result => { setChangeTimes(result.event.payload) } )
         }
     // eslint-disable-next-line 
     }, []);
@@ -33,7 +35,13 @@ const ZoneLayout = props => {
     }
 
     function getChangeTime(endpointId) {
-        return (changeTimes && (endpointId in changeTimes)) ? changeTimes[endpointId].time : "Unknown"
+        if (changeTimes && changeTimes.length) {
+            const results = changeTimes.filter(item => item.endpointId === endpointId)
+            console.log('cgt', endpointId, results)
+            return results[0].timestamp
+            // return (changeTimes && (endpointId in changeTimes)) ? changeTimes[endpointId].time : "Unknown"
+        }
+        return "Unknown"
     }
 
     return (    

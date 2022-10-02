@@ -17,7 +17,7 @@ const ReceiverPullUp = props => {
     const surroundPresets = [ "7ch Stereo", "Surround Decoder", "Straight" ]
 
     return (
-        <PullUpCard name={name} title={name}  >
+        <PullUpCard name={name} title={name} opened={props.opened} >
             <Stack spacing="xl">
                 <PowerStateLine icon label="Zone 2" endpointId={props.zone2} />
                 <MutedLine endpointId={props.endpointId} />

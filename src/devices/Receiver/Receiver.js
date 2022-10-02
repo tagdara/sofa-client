@@ -50,7 +50,7 @@ const Receiver = props => {
                     <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
                 }
             </Stack>
-            { pullUpActive && <ReceiverPullUp endpointId={props.endpointId} zone2={zone2} /> }
+            <ReceiverPullUp endpointId={props.endpointId} zone2={zone2} opened={pullUpActive} />
         </>
     );
 }

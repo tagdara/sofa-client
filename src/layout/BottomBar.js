@@ -15,7 +15,6 @@ const BottomBar = props => {
     const theme = useMantineTheme();
     const setTransitionDirection = useLayoutStore( state => state.setTransitionDirection)
     const wide = useMediaQuery('(min-width: 640px)');
-    const setStackCardHighlight = useLayoutStore( state => state.setStackCardHighlight)
     const setStackPullUp = useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
 
@@ -38,7 +37,6 @@ const BottomBar = props => {
     }
 
     const clearPullUp = () => {
-        setStackCardHighlight(undefined)
         setStackPullUp(undefined)        
     }
 

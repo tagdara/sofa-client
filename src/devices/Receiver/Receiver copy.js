@@ -19,13 +19,11 @@ const Receiver = props => {
     const volumePresets = [40, 55, 60, 65, 70, 80];
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
-    const setStackCardHighlight = useLayoutStore( state => state.setStackCardHighlight)
     const setStackPullUp= useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
     const pullUpActive = stackPullUp === name
 
     const showOverlay = () => {
-        setStackCardHighlight(pullUpActive ? null : 'ReceiverHero')
         setStackPullUp(pullUpActive ? null : name, {})
     }
 

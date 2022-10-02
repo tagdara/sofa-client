@@ -11,7 +11,7 @@ import WideAvatar from 'layout/components/WideAvatar'
 
 const ComputerCube = props => {
     const name = friendlyNameByEndpointId(props.endpointId)
-    const { pullUpActive, showPullUp } = usePullUp('ComputerHero', name)
+    const { showPullUp } = usePullUp('ComputerHero', name)
 
     const { reachable } = useEndpointHealth(props.endpointId)
     const { powerStateBool } = usePowerState(props.endpointId)
@@ -24,16 +24,14 @@ const ComputerCube = props => {
 
     return (
         <>
-        <WideAvatar 
-            color={ on ? "primary" : undefined }
-            onClick={ showPullUp }
-            size="md"
-            left={ on ? <EnergyLevelModeIcon size={16} endpointId={props.outlet} /> : <IconMoon size={12} />}
-            right={nameLabel}
-        />
-        { pullUpActive &&
+            <WideAvatar 
+                color={ on ? "primary" : undefined }
+                onClick={ showPullUp }
+                size="md"
+                left={ on ? <EnergyLevelModeIcon size={16} endpointId={props.outlet} /> : <IconMoon size={12} />}
+                right={nameLabel}
+            />
             <ComputerPullUp name={name} endpointId={props.endpointId} outlet={props.outlet}/>
-        }
         </>
     )
 

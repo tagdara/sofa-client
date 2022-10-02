@@ -13,7 +13,7 @@ const JukeboxHero = props => {
 
     const { playbackState } = usePlaybackStateReporter(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
-    const { pullUpActive, showPullUp } = usePullUp('JukeboxHero', name)
+    const { showPullUp } = usePullUp('JukeboxHero', name)
 
     const excludeSpeakers = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
     const speakers = endpointIdsByDisplayCategory( "SPEAKER").filter(item => !excludeSpeakers.includes(item))
@@ -32,7 +32,7 @@ const JukeboxHero = props => {
                     onClick={showPullUp}
                 />
             }
-            { pullUpActive && <JukeboxPullUp endpointId={props.endpointId} /> }
+            <JukeboxPullUp endpointId={props.endpointId} />
         </>
     );
 }

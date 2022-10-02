@@ -11,7 +11,7 @@ import { IconDeviceTv, IconDeviceTvOff } from '@tabler/icons';
 
 const Television = props => {
     const name = friendlyNameByEndpointId(props.endpointId) 
-    const { pullUpActive, showPullUp } = usePullUp('TvHero', name)
+    const { showPullUp } = usePullUp('TvHero', name)
     const { powerStateBool: on } = usePowerState(props.endpointId)
 
     return (
@@ -39,7 +39,7 @@ const Television = props => {
                 </Group>
             </Stack>
         
-            { pullUpActive && <TelevisionPullUp matrix={props.matrix} endpointId={props.endpointId} /> }
+            <TelevisionPullUp matrix={props.matrix} endpointId={props.endpointId} name={name} />
         </>
     );
 }

@@ -19,10 +19,6 @@ const useLayoutStore = create((set, get) => ({
     minStackWidth: 310,
     stackPad: 16, // This should be computed from mantine pad
 
-    stackCardHighlight: undefined,
-    setStackCardHighlight: id => {
-        set({ stackCardHighlight: id })
-    },
     stackPullUp: undefined,
     setStackPullUp: name => {
         set({ stackPullUp: name})

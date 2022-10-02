@@ -9,16 +9,20 @@ import PullUpCard from 'layout/pullup/PullUpCard'
 import { ActionIcon, Stack } from '@mantine/core'
 import { IconAccessPoint } from '@tabler/icons';
 import PowerStateLine from 'endpoint-model/property/powerState/PowerStateLine'
+import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
 
 const ReceiverPullUp = props => {
 
     // const { powerStateBool: on } = usePowerState(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
     const surroundPresets = [ "7ch Stereo", "Surround Decoder", "Straight" ]
-
+    const volumePresets = [40, 55, 60, 65, 70, 80];
+    const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
+    
     return (
         <PullUpCard name={name} title={name} opened={props.opened} >
             <Stack spacing="xl">
+                <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
                 <PowerStateLine icon label="Zone 2" endpointId={props.zone2} />
                 <MutedLine endpointId={props.endpointId} />
                 <ModeLine 

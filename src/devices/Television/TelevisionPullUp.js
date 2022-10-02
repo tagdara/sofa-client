@@ -26,10 +26,8 @@ const TelevisionPullUp = props => {
     const currentHour = new Date().getHours();
     const night = currentHour >= 17 || currentHour <= 6
 
-    console.log("aud", audioOutput)
-
     return (
-        <PullUpCard title={name} name={name} mounted={ stackPullUp === name } >
+        <PullUpCard title={name} name={props.name} mounted={ stackPullUp === name } >
             <Stack spacing="lg">
             <InputSelectLine 
                 icon={<ActionIcon>

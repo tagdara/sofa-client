@@ -6,6 +6,7 @@ import ThermostatModeLine from 'endpoint-model/property/thermostatMode/Thermosta
 import ToggleStateLine from 'endpoint-model/property/toggleState/ToggleStateLine'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import { IconMoon } from '@tabler/icons';
+import PowerLevelSliderLine from 'endpoint-model/property/powerLevel/PowerLevelSliderLine'
 
 const ThermostatPullUp = props => {
 
@@ -22,6 +23,7 @@ const ThermostatPullUp = props => {
                     instance={"Fan.NightMode"} 
                     label={"Night Mode"} 
                 />
+                <PowerLevelSliderLine endpointId={props.endpointId} />
             </Stack>
         </PullUpCard>
     );

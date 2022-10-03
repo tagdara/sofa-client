@@ -2,14 +2,14 @@ import React from "react";
 import { sortByName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 import ComputerOnList from 'devices/Computer/ComputerOnList';
 import { Avatar, Group, Stack, Text } from '@mantine/core';
-import { IconDevicesPc, IconDevicesPcOff } from '@tabler/icons';
+import { IconDeviceDesktop, IconDeviceDesktopOff } from '@tabler/icons';
 import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
 import MatrixPullUp from 'devices/Matrix/MatrixPullUp'
 import usePullUp from 'layout/pullup/usePullUp'
 
 const MatrixSummary = props => {
 
-    const { pullUpActive, showPullUp } = usePullUp('ComputerHero', 'matrix')
+    const { pullUpActive, showPullUp } = usePullUp('matrix')
     const computers = sortByName(endpointIdsByDisplayCategory('COMPUTER'))
     const { onCount } = useMultiPower(computers)
 
@@ -22,9 +22,9 @@ const MatrixSummary = props => {
                         size={"lg"} 
                     >
                         { onCount ?
-                            <IconDevicesPc size={24}  />  
+                            <IconDeviceDesktop size={24}  />  
                         :
-                            <IconDevicesPcOff size={24} /> 
+                            <IconDeviceDesktopOff size={24} /> 
                         } 
                     </Avatar>
                     <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}>

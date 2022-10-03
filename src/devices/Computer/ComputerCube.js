@@ -10,7 +10,7 @@ import WideAvatar from 'layout/components/WideAvatar'
 
 const ComputerCube = props => {
     const name = friendlyNameByEndpointId(props.endpointId)
-    const { showPullUp } = usePullUp('ComputerHero', name)
+    const { showPullUp } = usePullUp(name)
 
     const { reachable } = useEndpointHealth(props.endpointId)
     const { powerStateBool } = usePowerState(props.endpointId)

@@ -13,7 +13,7 @@ const JukeboxHero = props => {
 
     const { playbackState } = usePlaybackStateReporter(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
-    const { showPullUp } = usePullUp('JukeboxHero', name)
+    const { showPullUp } = usePullUp(name)
 
     const excludeSpeakers = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
     const speakers = endpointIdsByDisplayCategory( "SPEAKER").filter(item => !excludeSpeakers.includes(item))

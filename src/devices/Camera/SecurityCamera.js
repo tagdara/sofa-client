@@ -41,8 +41,8 @@ const SecurityCamera = props => {
             }
             </Card.Section>
             { !props.noLabel &&
-                <Group grow style={{ width: "100%"}}>
-                    <Text onClick={ () => setLive(!live)}>{device.friendlyName}</Text>
+                <Group grow style={{ paddingTop: 8, width: "100%"}}>
+                    <Text size="sm" onClick={ () => setLive(!live)}>{device.friendlyName}</Text>
                 </Group>
             }
         </StackCard>

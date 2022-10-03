@@ -10,7 +10,7 @@ export default function PlayerArtOverlay(props) {
     const artOrDefault = art || ""
     const titleLabel = title || "Jukebox is idle"
     const { localImageUrl, imageLoaded } = useTokenImage(artOrDefault)
-    const placeholder = props.placeholder || <IconMusic style={{ height: "100%", maxWidth: "30%" }} />
+    const placeholder = props.placeholder || <IconMusic style={{ aspectRatio: 1, height: "100%", width: 480, maxWidth: "30%" }} />
 
     return ( 
         <Image 

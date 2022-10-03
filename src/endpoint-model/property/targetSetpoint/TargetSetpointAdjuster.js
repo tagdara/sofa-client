@@ -9,14 +9,14 @@ const TargetSetpointAdjuster = props => {
 
     return (
         <Button.Group buttonBorderWidth={0} >
-            <Button size="sm" variant={"light"} onClick={ () => decreaseSetpoint(1) }>
-                <IconChevronDown size={20} />
+            <Button compact size="md" variant={"light"} onClick={ () => decreaseSetpoint(1) }>
+                <IconChevronDown size={16} />
             </Button>
-            <Button size="sm" variant={"light"}>
+            <Button compact size="md" variant={"light"}>
                 { targetSetpoint }
             </Button>
-            <Button size="sm" variant={"light"} onClick={ () => increaseSetpoint(1) }>
-                <IconChevronUp size={20} />
+            <Button compact size="md" variant={"light"} onClick={ () => increaseSetpoint(1) }>
+                <IconChevronUp size={16} />
             </Button>
         </Button.Group>
     );

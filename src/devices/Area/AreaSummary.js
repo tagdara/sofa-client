@@ -29,7 +29,7 @@ const AreaSummary = props => {
     }
 
     return (
-        <Stack spacing="xl">
+        <Stack spacing="lg">
             <AreaControlHeader name={ name } home={homeArea} currentArea={currentArea} selectArea={setCurrentArea} expand={expandArea} />
             <AreaSummaryLine endpointId={currentArea} />
             { areas.map(area =>

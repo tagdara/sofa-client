@@ -1,6 +1,6 @@
 import useLayoutStore from 'layout/layoutStore'
 
-const usePullUp = (cardName, pullUpName) => {
+const usePullUp = (pullUpName) => {
 
     const setStackPullUp = useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)

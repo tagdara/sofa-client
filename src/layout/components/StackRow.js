@@ -1,8 +1,8 @@
 import React, { useEffect, useState} from 'react';
-import { Card, Transition } from '@mantine/core'
+import { Transition } from '@mantine/core'
 import useLayoutStore from 'layout/layoutStore'
 
-const StackCard = props => {
+const StackRow = props => {
 	  
     const [mounted, setMounted] = useState(false)
     const transitionDirection = useLayoutStore( state => state.transitionDirection)
@@ -18,24 +18,23 @@ const StackCard = props => {
     return (
             <Transition mounted={ mounted }  transition={transitionDirection} exitDuration={1000} duration={100} timingFunction="ease">
                 {(styles) => 
-                    <Card 
-                        padding="md" 
-                        radius="md" 
+                    <div 
                         style={{  
                             ...styles, 
                             width:"100%", 
                             maxWidth: 480, 
                             minWidth: 300, 
                             overflow: "visible",
-                            
+                            padding: 0,
+                            margin: 0,
                         }}
                     >
                         { props.children }
-                    </Card >
+                    </div>
                 }
             </Transition>
     );
 }
 
-export default StackCard;
+export default StackRow;
 

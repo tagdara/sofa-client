@@ -3,8 +3,7 @@ import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpoin
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useMode from 'endpoint-model/property/mode/useMode'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
-import EnergyLevelModeIcon from 'endpoint-model/instance/EnergyLevelModeIcon'
-import { IconMoon } from '@tabler/icons';
+import { IconDevicesPc,IconDevicesPcOff } from '@tabler/icons';
 import usePullUp from 'layout/pullup/usePullUp'
 import ComputerPullUp from 'devices/Computer/ComputerPullUp'
 import WideAvatar from 'layout/components/WideAvatar'
@@ -22,14 +21,18 @@ const ComputerCube = props => {
     const on = reachable && powerStateBool && outletOn
     const nameLabel = name.replace('pc','')
 
+    //left={ on ? <EnergyLevelModeIcon size={16} endpointId={props.outlet} /> : <IconMoon size={12} />}
+
     return (
         <>
             <WideAvatar 
-                color={ on ? "primary" : undefined }
+                radius={"md"}
+                color={ on ? "primary" : "paper" }
                 onClick={ showPullUp }
                 size="md"
-                left={ on ? <EnergyLevelModeIcon size={16} endpointId={props.outlet} /> : <IconMoon size={12} />}
+                left={ on ? <IconDevicesPc size={24} /> : <IconDevicesPcOff size={24} />}
                 right={nameLabel}
+                height={72}
             />
             <ComputerPullUp name={name} endpointId={props.endpointId} outlet={props.outlet}/>
         </>

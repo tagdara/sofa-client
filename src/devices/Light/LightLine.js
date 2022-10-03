@@ -52,6 +52,7 @@ const LightLine = props => {
                         size="md"
                         styles={{ 
                             root: {
+                                border: 0,
                                 display: "flex",
                                 justifyContent: "flex-start",
                                 paddingLeft: 16,
@@ -73,7 +74,15 @@ const LightLine = props => {
                     }     
                 />
 
-            <Button size="md" variant={ on ? "light" : "default" }>
+            <Button 
+                styles={{ 
+                    root: {
+                        border: 0
+                    }
+                }}
+                size="md" 
+                variant={ on ? "light" : "default" }
+            >
                 { props.remove ?
                     <ActionIcon size="small" onClick={ () => props.remove(props.endpointId) } >
                         <IconX />

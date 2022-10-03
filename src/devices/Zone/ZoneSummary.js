@@ -5,7 +5,7 @@ import { Badge, Group, Stack, Text } from '@mantine/core'
 import { selectPage } from 'helpers/layoutHelpers';
 import { useMultiRegister } from 'endpoint-model/register'
 
-import { hasCapability, endpointIdsByDisplayCategory, devicesByEndpointIds } from 'endpoint-model/discovery'
+import { endpointIdsByDisplayCategory, devicesByEndpointIds } from 'endpoint-model/discovery'
 
 import { IconShield, IconShieldOff } from '@tabler/icons';
 
@@ -13,11 +13,12 @@ const ZoneSummary = props => {
   
     const contactSensors = endpointIdsByDisplayCategory( "CONTACT_SENSOR")   
     const motionSensors = endpointIdsByDisplayCategory( "MOTION_SENSOR")     
+    
     const allSensors = [...contactSensors, ...motionSensors] 
     const devices = devicesByEndpointIds(allSensors)
-    const states = useMultiRegister(allSensors)
+    const { deviceStates } = useMultiRegister(allSensors)
 
-    if (!states || Object.keys(states).length < 1) { return <PlaceholderCard /> }
+    if (!deviceStates || Object.keys(deviceStates).length < 1) { return <PlaceholderCard /> }
 
     const automationZones = Object.keys(devices).filter( endpointId => devices[endpointId].description.includes('(Automation)'))
     const securityZones = Object.keys(devices).filter( endpointId => !automationZones.includes(endpointId))
@@ -26,11 +27,11 @@ const ZoneSummary = props => {
 
     function isOpen(endpointId) {
         try {
-            if (hasCapability(endpointId, 'ContactSensor') && states[endpointId]) { 
-                return states[endpointId].ContactSensor.detectionState.value === "DETECTED"
+            if ( deviceStates[endpointId]?.['Alexa.ContactSensor']?.detectionState.value === "DETECTED") {
+                return true
             }
-            if (hasCapability(endpointId, 'MotionSensor') && states[endpointId]) { 
-                return states[endpointId].MotionSensor.detectionState.value === "DETECTED"
+            if (deviceStates[endpointId]?.['Alexa.MotionSensor']?.detectionState.value === "DETECTED") {
+                return true
             }
         } 
         catch {}
@@ -38,7 +39,7 @@ const ZoneSummary = props => {
     }
     
     const openZoneList = openZones.map(endpointId => devices[endpointId].friendlyName)
-    
+
     return (
         <Stack onClick={ () => selectPage('ZonePage') }> 
             <Group noWrap style={{ alignItems: violated ? "flex-start" : "center "}}>

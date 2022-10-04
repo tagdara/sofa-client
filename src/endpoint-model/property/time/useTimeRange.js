@@ -80,9 +80,7 @@ const useTimeRange = ( endpointId, value, directive) => {
         }
     }
 
-    //const startLabel = startTime ? moment(startTime).format("h:mma") : "start"
     const startLabel = startTime ? formatAMPM(startTime) : "start"
-    //const endLabel = endTime ? moment(endTime).format("h:mma") : "end"
     const endLabel = endTime ? formatAMPM(endTime) : "end"
     const timeRangeLabel = startLabel + " - " + endLabel
 

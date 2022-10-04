@@ -43,7 +43,7 @@ export default function CardStack(props) {
                         maxWidth: 480, 
                         height: "100%", 
                         width: "100%", 
-                        justifyContent: "flex-start"
+                        justifyContent: "flex-start",
                     }} 
         >
             {props.showTitle &&

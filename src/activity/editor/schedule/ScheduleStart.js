@@ -1,12 +1,12 @@
 import React from 'react';
 import { Group } from '@mantine/core';
 import { DatePicker, TimeInput} from '@mantine/dates';
-import moment from 'moment';
+import dayjs from 'dayjs'
 
 export default function ScheduleStart(props) {
 
     console.log('props.value', props.value)
-    const dateValue = props.value ? moment(props.value).toDate() : null
+    const dateValue = props.value ? dayjs(props.value).toDate() : null
     console.log('props.value', props.value, dateValue)
 
     return (

@@ -23,7 +23,7 @@ const ThermostatPullUp = props => {
                     instance={"Fan.NightMode"} 
                     label={"Night Mode"} 
                 />
-                <PowerLevelSliderLine endpointId={props.endpointId} />
+                <PowerLevelSliderLine icon label endpointId={props.endpointId} />
             </Stack>
         </PullUpCard>
     );

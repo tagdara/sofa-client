@@ -9,7 +9,7 @@ import SectionDivider from 'layout/section/SectionDivider'
 import PageFrame from 'layout/PageFrame'
 import SectionHeader from 'layout/section/SectionHeader'
 import Zone from 'devices/Zone/Zone';
-
+import dayjs from 'dayjs'
 
 const ZoneLayout = props => {
 
@@ -37,8 +37,10 @@ const ZoneLayout = props => {
     function getChangeTime(endpointId) {
         if (changeTimes && changeTimes.length) {
             const results = changeTimes.filter(item => item.endpointId === endpointId)
-            console.log('cgt', endpointId, results)
-            return results[0].timestamp
+            if (results.length > 0) {
+                return dayjs(results[0].timestamp).format("ddd MMM D h:mm:sa")
+            }
+            return "More than 90 days"
             // return (changeTimes && (endpointId in changeTimes)) ? changeTimes[endpointId].time : "Unknown"
         }
         return "Unknown"
@@ -46,7 +48,7 @@ const ZoneLayout = props => {
 
     return (    
         <PageFrame>
-            <SectionHeader title={"Zones"} />
+            <SectionHeader first title={"Zones"} />
             <SectionFrame padScroll={200}>
                 <SectionDivider first label={"Security Zones"} />
                 <SectionGrid>

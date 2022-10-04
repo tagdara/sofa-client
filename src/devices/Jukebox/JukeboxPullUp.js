@@ -26,6 +26,7 @@ const JukeboxPullUp = props => {
                 <Divider />
                 <PowerStateLine icon label="Amp Power" endpointId={ampOutlet} />
                 <Button 
+                    size="lg"
                     fullWidth 
                     variant="filled" 
                     onClick={openJukebox}

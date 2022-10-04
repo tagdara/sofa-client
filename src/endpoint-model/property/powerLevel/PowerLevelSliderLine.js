@@ -1,6 +1,6 @@
 import React from 'react';
 import CardLineSlider from 'layout/components/CardLineSlider';
-import { Group, Text, ThemeIcon } from '@mantine/core'
+import { Group, Text, ActionIcon } from '@mantine/core'
 import usePowerLevel from 'endpoint-model/property/powerLevel/usePowerLevel'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import { IconRecharging} from '@tabler/icons';
@@ -10,7 +10,7 @@ export default function PowerLevelSliderLine(props) {
     const { powerLevel, setPowerLevel } = usePowerLevel(props.endpointId, props.value, props.directive)
     const { powerStateBool } = usePowerState(props.endpointId)
 
-    if (powerLevel === undefined ) { return null }
+    if ( powerLevel === undefined ) { return null }
 
     const disabled = props.disabled || ( props.value === undefined && !powerStateBool )
     const on = ( props.value !== undefined || powerStateBool || props.on)
@@ -20,12 +20,12 @@ export default function PowerLevelSliderLine(props) {
             { (props.icon || props.label) &&
                 <Group noWrap style={{ minWidth: "50%"}}>
                 { props.icon &&
-                    <ThemeIcon variant="light">
+                    <ActionIcon variant="light">
                         <IconRecharging size={16} />
-                    </ThemeIcon >
+                    </ActionIcon >
                 }
                 { props.label &&
-                    <Text>{props.label}</Text>
+                    <Text>Power level</Text>
                 }
                 </Group>
             }

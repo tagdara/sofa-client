@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import moment from 'moment';
+import dayjs from 'dayjs'
 
 import { Badge, Button, Group, Loader, Stack, Text } from '@mantine/core';
 
@@ -68,7 +68,7 @@ const ActivityItem = props => {
     }    
  
     function scheduleSummary() {
-        if (nextRun) { return moment(nextRun).calendar() }
+        if (nextRun) { return dayjs(nextRun).calendar() }
         return undefined
     }
 

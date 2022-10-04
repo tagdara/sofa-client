@@ -1,11 +1,10 @@
 import React from 'react';
-import Moment from 'react-moment';
-import 'moment-timezone';
 import { directive } from 'endpoint-model/directive/directive'
 import { ActionIcon } from '@mantine/core'
 import { IconRefresh, IconStack, IconSquareOff } from '@tabler/icons';
 import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { useRegister } from 'endpoint-model/register/useRegister'
+import dayjs from 'dayjs';
 
 export default function AdapterItem(props) { 
 
@@ -35,38 +34,12 @@ export default function AdapterItem(props) {
         }
     }
 
-//    function getErrorCount() {
- //       try {
-//            if (deviceState.AdapterHealth.hasOwnProperty('errors')) {
-//                return "Errors: "+deviceState.AdapterHealth.errors.value
-//            } else {
-//                return "No Errors"
-//            }
-//        }
-//        catch {
-//            return ""
-//        }
-//    }
 
-//    function getDataSize() {
-//        try {
-//            if (deviceState.AdapterHealth.hasOwnProperty('datasize')) {
-//                return "/ Data: "+deviceState.AdapterHealth.datasize.value
-///            } else {
- //               return ""
- //           }
-//        }
- //       catch {
- //           return ""
- //       }
- //   }
-
-    
     function getStartupDate() {
         try {
             if (deviceState.AdapterHealth.startup.value) {
                 if (deviceState.AdapterHealth.startup.value==="Remote") { return "Remote" }
-                return <Moment format="ddd MMM D h:mm:sa">{deviceState.AdapterHealth.startup.value}</Moment>
+                return dayjs(deviceState.AdapterHealth.startup.value).format("ddd MMM D h:mm:sa")
             }
         } 
         catch {}
@@ -83,11 +56,6 @@ export default function AdapterItem(props) {
         catch {}
         return ""
     }
-
-//    <SofaListItem   button={true} onClick={ () => window.open(deviceState.AdapterHealth.url.value, '_'+device.friendlyName) }
-//    avatarState={ getErrorState(5) } avatar={device.friendlyName.charAt()}
-//    primary={ device.friendlyName + getActiveState() } secondary={deviceState.AdapterHealth.url.value}
-//   />
 
     return (
         <SplitButtonGroup>

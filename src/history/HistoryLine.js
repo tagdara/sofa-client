@@ -1,9 +1,8 @@
 import React from 'react';
-import Moment from 'react-moment';
-import 'moment-timezone';
 import { SplitButtonGroup, SplitButton } from 'layout/components/SplitButton'
 import { IconShield, IconShieldOff } from '@tabler/icons';
 import { ActionIcon } from '@mantine/core';
+import dayjs from 'dayjs'
 
 export default function HistoryLine(props) {    
     
@@ -15,11 +14,7 @@ export default function HistoryLine(props) {
                 </ActionIcon>
             </SplitButton>
             <SplitButton 
-                label={ 
-                    <Moment format={ props.justTime ? "h:mm:ssa" : "ddd MMM D h:mm:ssa" }>
-                        {props.time}
-                    </Moment>
-                } 
+                label={ dayjs(props.time).format(props.justTime ? "h:mm:ssa" : "ddd MMM D h:mm:ssa") } 
             />
         </SplitButtonGroup>
     );

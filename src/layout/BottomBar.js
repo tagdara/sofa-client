@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
 import { selectStack } from 'helpers/layoutHelpers';
 import useLayoutStore from 'layout/layoutStore'
-import { Affix, Group, Stack, SegmentedControl, useMantineTheme } from '@mantine/core';
+import { Affix, Group, SegmentedControl, useMantineTheme } from '@mantine/core';
 import HomeButton from 'layout/HomeButton'
 
 import { IconX, IconMenu, IconDevices2, IconTemperature, IconShield, IconBulb } from '@tabler/icons';
@@ -52,7 +52,8 @@ const BottomBar = props => {
         { value: "System",              "label": <IconMenu size={24} />},
     ]
 
-    const bgColor = theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.1)
+    //const bgColor = theme.fn.rgba(theme.colors[theme.primaryColor][9], 0.1)
+    const bgColor = theme.colors.dark[7]
     
     if (currentPage !== "Stacks") {   //wide && 
         return  (
@@ -74,38 +75,21 @@ const BottomBar = props => {
             </Affix>
         )
     }
-        
-    if (currentPage !== "Stacks") { 
-        return  (
-            <Group noWrap
-                style={{ 
-                    boxSizing: "border-box", 
-                    width: "100%", 
-                    display: "flex", 
-                    justifyContent: "center", 
-                    alignItems: "center", 
-                    marginBottom: "env(safe-area-inset-bottom)", 
-                    flexDirection: "row-reverse",
-                    paddingBottom: 4,
-                    paddingTop: 8,
-                }} 
-                id="bottomPortal"
-            >
-                    <HomeButton />
-            </Group>
-        )
-    }
 
     if (wide) { return null }
 
     return (
-        <Stack 
-            id="bottomrender" 
-            spacing={"xl"} 
-            style={{
-                maxWidth: "100%", 
-                flexDirection: "column-reverse"
-            }}
+        <Affix 
+            style={{ 
+                backgroundColor: bgColor,
+                boxSizing: "border-box", 
+                paddingTop: 8,
+                paddingLeft: 8, 
+                paddingRight: 8, 
+                width: "100%", 
+                display: "flex", 
+                // paddingBottom: "env(safe-area-inset-bottom)",
+            }} 
         >
             <SegmentedControl 
                     fullWidth 
@@ -118,13 +102,13 @@ const BottomBar = props => {
                     style={{ marginBottom: "env(safe-area-inset-bottom)" }}
                     styles={{ 
                         root: {
+                            width: "100%",
                             backgroundColor: bgColor
                         }
                     }}
             />
-        </Stack>
+    </Affix>
     )
-
 }
 
 export default BottomBar

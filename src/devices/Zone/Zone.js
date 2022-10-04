@@ -1,9 +1,6 @@
 import React from 'react';
 //import { selectPage } from 'helpers/layoutHelpers';
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
-
-import Moment from 'react-moment';
-import 'moment-timezone';
 import { Stack, Text, Button} from '@mantine/core';
 import useDetectionState from 'endpoint-model/property/detectionState/useDetectionState'
 import { IconShield, IconAlertTriangle } from '@tabler/icons';
@@ -43,7 +40,7 @@ const Zone = props => {
             >
                 <Stack spacing={0}>
                     <Text size="sm">{ name }</Text>
-                    <Text size="xs" color={"dimmed"}>{ props.changeTime!=='Unknown' && <Moment format="ddd MMM D h:mm:sa">{props.changeTime}</Moment> }</Text>
+                    <Text size="xs" color={"dimmed"}>{ props.changeTime!=='Unknown' && props.changeTime }</Text>
                 </Stack>
             </Button>            
     )

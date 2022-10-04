@@ -54,7 +54,7 @@ const ActivitiesLayout = props => {
 
     return (
         <PageFrame>
-            <SectionHeader title={"Activities"} >
+            <SectionHeader first title={"Activities"} >
                 <Group noWrap>
                     <ActionIcon size="sm" onClick={ () => newActivity() } >
                         <IconPlus size={20} />

@@ -1,7 +1,6 @@
 import React from 'react';
 import { Badge, Group, Text } from '@mantine/core';
-
-import moment from 'moment';
+import dayjs from 'dayjs'
 import useActivityEditorStore from 'activity/editor/activityEditorStore'
 
 const ActivityDetails = props => {
@@ -9,7 +8,7 @@ const ActivityDetails = props => {
     const endpointId = useActivityEditorStore( state => state.endpointId )
     const storeLastRun = useActivityEditorStore( state => state.activity.last_run )
 
-    const lastRun = storeLastRun && storeLastRun.toLowerCase() !== 'never' ? moment(storeLastRun).calendar() : undefined
+    const lastRun = storeLastRun && storeLastRun.toLowerCase() !== 'never' ? dayjs(storeLastRun).calendar() : undefined
 
     return (    
         <Group noWrap position="apart" spacing="xl" style={{width: "100%", alignItems: "end"}} >

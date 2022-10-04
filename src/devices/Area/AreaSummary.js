@@ -10,7 +10,6 @@ import useUserStore from 'user/userStore'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import { Stack } from '@mantine/core'
 import useChildren from 'endpoint-model/property/children/useChildren'
-import useScene from 'endpoint-model/property/scene/useScene'
 import useShortcuts from 'endpoint-model/property/shortcuts/useShortcuts'
 
 const AreaSummary = props => {
@@ -21,7 +20,6 @@ const AreaSummary = props => {
     
     const name = friendlyNameByEndpointId(currentArea)
     const { areas, lights, scenes } = useChildren(currentArea)
-    const { scene } = useScene(currentArea)
     const { shortcuts } = useShortcuts(currentArea)
 
     function expandArea(endpointId) {
@@ -35,7 +33,7 @@ const AreaSummary = props => {
             { areas.map(area =>
                 <AreaLine key={area} endpointId={area} selectArea={setCurrentArea} />
             )}
-            <AreaScenes noShortcuts shortcuts={shortcuts} scenes={scenes} current={scene} />
+            <AreaScenes noShortcuts endpointId={currentArea} shortcuts={shortcuts} scenes={scenes} />
             <AreaLights lights={lights} prefix={name} />
         </Stack>
     );

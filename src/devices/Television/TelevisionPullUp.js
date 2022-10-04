@@ -72,7 +72,7 @@ const TelevisionPullUp = props => {
                 endpointId={props.endpointId} 
                 instance={"Power.Saving"}
             />
-            { ( on && night ) &&
+            { ( on && !night ) &&
                 <>
                     <Divider />
                     <TelevisionLightControls endpointId={props.endpointId}  />

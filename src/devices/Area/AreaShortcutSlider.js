@@ -2,12 +2,13 @@ import React from 'react';
 import CardLineSlider from 'layout/components/CardLineSlider';
 import { directive } from 'endpoint-model/directive/directive'
 import { endpointByEndpointId } from 'endpoint-model/discovery'
-import useScene from 'endpoint-model/property/scene/useScene'
+import useSceneCurrent from 'endpoint-model/property/mode/SceneCurrent/useSceneCurrent'
 import useShortcuts from 'endpoint-model/property/shortcuts/useShortcuts'
 
 const AreaShortcutSlider = props => {
 
-    const { scene } = useScene(props.endpointId)
+    const { sceneEndpointId } = useSceneCurrent(props.endpointId)
+    //const { scene } = useScene(props.endpointId)
     const { shortcuts } = useShortcuts(props.endpointId)
 
     function runShortcut(level) {
@@ -17,7 +18,7 @@ const AreaShortcutSlider = props => {
     
     if (shortcuts.length === 0 ) { return null }
 
-    const level = shortcuts.indexOf(scene);
+    const level = shortcuts.indexOf(sceneEndpointId);
     const levelLabels = shortcuts.map( (endpointId, index) => ( { value: index, label: endpointByEndpointId(endpointId).friendlyName  }))
 
     return (

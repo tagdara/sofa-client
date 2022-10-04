@@ -1,28 +1,21 @@
 import React from "react";
 import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
-import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import AreaShortcutSlider from 'devices/Area/AreaShortcutSlider'
 import { ActionIcon, Group } from '@mantine/core'
 import { directive } from 'endpoint-model/directive/directive'
-import useScene from 'endpoint-model/property/scene/useScene'
+import useSceneCurrent from 'endpoint-model/property/mode/SceneCurrent/useSceneCurrent'
 import { IconMovie, IconBulb } from '@tabler/icons';
 
 const TelevisionLightControls = props => {
 
-    const { powerStateBool: on } = usePowerState(props.endpointId)
     const area = endpointIdByFriendlyName('Living Room')
-    const currentHour = new Date().getHours();
-    const night = currentHour >= 17 || currentHour <= 6
-    const { scene: currentScene } = useScene(area)
-
-    if (!on || !night ) { return null}
+    const { sceneEndpointId } = useSceneCurrent(area)
 
     function runScene( sceneEndpointId) {
-        //setWorking(true)
         directive(sceneEndpointId, 'Alexa.SceneController', 'Activate')
     }
     
-    const currentWatch = currentScene === "logic:scene:Watch"
+    const currentWatch = sceneEndpointId === "logic:scene:Watch"
 
     return (
         <Group noWrap>

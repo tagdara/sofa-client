@@ -17,6 +17,7 @@ const BottomBar = props => {
     const wide = useMediaQuery('(min-width: 640px)');
     const setStackPullUp = useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
+    const hideHome = useLayoutStore( state => state.hideHome)
 
     useDidUpdate(() => {
         if (currentStack) {
@@ -69,9 +70,11 @@ const BottomBar = props => {
                 }} 
                 position={{ bottom: 8 }}
             >
+                {!hideHome &&
                 <Group noWrap style={{ width: "100%", maxWidth: 400, flexDirection: "row-reverse"}} id="bottomPortal">
                     <HomeButton />
                 </Group>
+                }
             </Affix>
         )
     }

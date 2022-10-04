@@ -18,7 +18,8 @@ export const refreshStackLayout = async () => {
     useLayoutStore.setState({ stackLayout: result})
 }
 
-export const selectPage = (pagename, pageprops) => {
+export const selectPage = (pagename, pageprops, hideHome) => {
+    useLayoutStore.setState({ hideHome: hideHome})
     const currentPage = useLayoutStore.getState().currentPage
     const currentProps = useLayoutStore.getState().currentProps
     if (currentPage !== "Stacks") {

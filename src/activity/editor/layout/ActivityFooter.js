@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import useActivityEditorStore from 'activity/editor/activityEditorStore'
 import { okToSave, saveActivity, addActivity } from 'activity/editor/activityEditorHelpers'
-import { Button, Group, ActionIcon, Modal, Paper } from '@mantine/core';
+import { Affix, Button, Group, ActionIcon, Modal, Paper } from '@mantine/core';
 import { directive  } from 'endpoint-model/directive/directive';
 import { selectPage } from 'helpers/layoutHelpers';
 import ActivityAddMenu from 'activity/editor/layout/ActivityAddMenu'
@@ -15,8 +15,6 @@ export default function ActivityFooter(props) {
     const endpointId = useActivityEditorStore( state => state.endpointId )
     const activity = useActivityEditorStore( state => state.activity )
     const saveOk = activity && okToSave()
-    const wide=false
-
 
     function runAutomation(processConditions=true) {
         directive(endpointId, 'Alexa.SceneController', 'Activate', {}, {"conditions": processConditions})
@@ -35,31 +33,41 @@ export default function ActivityFooter(props) {
     }    
 
     return (
-        <Paper p={8}>
-            <Group noWrap={wide}>
-                <Modal  opened={dialogOpen}
-                        onClose={() => setDialogOpen(false)}
-                        title="Activity JSON"
-                        size={"lg"}
-                >
-                    <ActivityJSON />
-                </Modal>
+        <Affix 
+            style={{ 
+                boxSizing: "border-box", 
+                paddingLeft: 16, 
+                paddingRight: 16, 
+                width: "100%", 
+                display: "flex", 
+                marginBottom: "env(safe-area-inset-bottom)",
+                flexDirection: "row-reverse"
+            }} 
+            position={{ bottom: 8 }}
+        >
+        <Paper p={8} style={{width: "100%"}} >
+            <Modal  opened={dialogOpen}
+                    onClose={() => setDialogOpen(false)}
+                    title="Activity JSON"
+                    size={"lg"}
+            >
+                <ActivityJSON />
+            </Modal>
+            <Group noWrap position='apart' style={{width: "100%"}}>
+                <ActionIcon variant="light" size="md" onClick={() => selectPage('ActivitiesPage')}>
+                    <IconX size={20} />
+                </ActionIcon>
                 <Group noWrap>
-                    <ActionIcon variant="light" size="md" onClick={() => selectPage('ActivitiesPage')}>
-                        <IconX size={20} />
-                    </ActionIcon>
                     <ActionIcon variant="light" size="md" onClick={() => setDialogOpen(!dialogOpen)}>
                         <IconSourceCode size={20} />
                     </ActionIcon>
                     <ActivityAddMenu add={props.add} />
-                    <Group noWrap position="right">
-                        <ActionIcon variant="light" size="md" onClick={() => runAutomation()}>
-                            <IconPlayerPlay size={20} />
-                        </ActionIcon>
-                        <ActionIcon variant="light" size="md" onClick={() => runAutomation(false)}>
-                            <IconPlayerTrackNext size={20} />
-                        </ActionIcon>
-                    </Group>
+                    <ActionIcon variant="light" size="md" onClick={() => runAutomation()}>
+                        <IconPlayerPlay size={20} />
+                    </ActionIcon>
+                    <ActionIcon variant="light" size="md" onClick={() => runAutomation(false)}>
+                        <IconPlayerTrackNext size={20} />
+                    </ActionIcon>
                 </Group>
                 <Button 
                     compact
@@ -72,6 +80,7 @@ export default function ActivityFooter(props) {
                 </Button>
             </Group>
         </Paper>
+        </Affix>
     )
 }
 

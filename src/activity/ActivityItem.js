@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import dayjs from 'dayjs'
+import calendar from 'dayjs/plugin/calendar' 
 
 import { Badge, Button, Group, Loader, Stack, Text } from '@mantine/core';
 
@@ -15,14 +16,15 @@ import useDefinitionController from 'endpoint-model/controller/DefinitionControl
 import { IconListDetails, IconStar, IconPlayerPlay } from '@tabler/icons';
 
 const ActivityItem = props => {
-    
+   
+    dayjs.extend(calendar)
     const [ launched, setLaunched] = useState(false)
     const activity = endpointByEndpointId(props.endpointId)
     const { deviceState } = useRegister(props.endpointId)
     const { countData, nextRun } = useDefinitionController(props.endpointId)
 
     const favorites = useUserStore( state => state.preferences.favorites )
-    const favorite = favorites && favorites.includes(props.endpointId)
+    const favorite = !props.hideFavorite && favorites && favorites.includes(props.endpointId)
 
     if (!activity || !deviceState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 
@@ -135,9 +137,11 @@ const ActivityItem = props => {
                     <Text size={"sm"}>
                         { name }
                     </Text>
+                    { !props.disableEdit &&
                     <Group noWrap>
                         { xsummary() }
                     </Group>
+                    }
                 </Stack>
             </Button> 
             <Button 

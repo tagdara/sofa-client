@@ -24,11 +24,11 @@ const ActivitiesLayout = props => {
     if (!activities) { return null }
 
     function selectActivity(activity) {
-        selectPage('ActivityEditorPage', {'endpointId':activity, 'noBottom':true } )
+        selectPage('ActivityEditorPage', {'endpointId':activity, 'noBottom':true }, true )
     }    
 
     function newActivity() {
-        selectPage('ActivityEditorPage', {'noBottom':true})        
+        selectPage('ActivityEditorPage', {'noBottom':true}, true)        
     }
 
     function toggleFavorites() {

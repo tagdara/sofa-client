@@ -40,7 +40,7 @@ export const directive = async (endpointId, controllerName, command, payload={},
     const result = await tokenFetch("/", directiveJson)
     if (result.event?.header?.name === "ErrorResponse") {
         showNotification({
-            title: 'Error: '+result.event.payload.type,
+            title: 'Error: '+result.event.payload.type+" ("+endpointId+")",
             message: result.event.payload.message,
             color: 'red',
         })        

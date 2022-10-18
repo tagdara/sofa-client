@@ -18,7 +18,7 @@ const ReceiverPullUp = props => {
     const surroundPresets = [ "7ch Stereo", "Surround Decoder", "Straight" ]
     const volumePresets = [40, 55, 60, 65, 70, 80];
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
-    
+
     return (
         <PullUpCard name={name} title={name} opened={props.opened} >
             <Stack spacing="xl">

@@ -55,6 +55,8 @@ export default function CameraSelect(props) {
     
     const nullOnClick = () => {}
 
+    if (!cameras || cameras.length < 1) { return null }
+
     if (maxStacks === 1) {
         return (
             <>

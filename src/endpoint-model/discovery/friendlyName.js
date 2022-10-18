@@ -37,8 +37,9 @@ export function endpointIdsByFriendlyName(names) {
 export function sortByName(devlist, exclude=[]) {
     var devices = useDiscoveryStore.getState().devices
     exclude = ['', ...exclude]
+
     if (devices && exclude && exclude.length>0) {
-        devlist = devlist.filter( device => !exclude.includes(devices[device].friendlyName) )
+        devlist = devlist.filter( device => ( devices[device]?.friendlyName && !exclude.includes(devices[device].friendlyName)) )
     }
     devlist.sort(function(a, b)  {
         var x = undefined

@@ -49,7 +49,7 @@ export const useStream = ( dataProcessor ) => {
             setStreamLabel('connect')
             console.log('.. connecting SSE data stream')
             //setIsConnecting(true)
-            const tokenUrl = sseUrl + "?token=" + tokenResult['linked_token']
+            const tokenUrl = sseUrl + "?token=" + tokenResult?.linked_token
             streamRef.current = new EventSource(tokenUrl, { withCredentials: true })
             streamRef.current.addEventListener('message', dataHandler);
             streamRef.current.addEventListener('error', errorHandler);
@@ -72,6 +72,7 @@ export const useStream = ( dataProcessor ) => {
         console.log('ERROR with EventSource',e.target )
         setStreamLabel('error '+JSON.stringify(e, ["message", "arguments", "type", "name"]))
         e.target.close()
+        connectingRef.current = false
         //checkToken()
     }
 
@@ -104,7 +105,8 @@ export const useStream = ( dataProcessor ) => {
 
     useEffect(() => {
         let unmounted = false;
-        if (!streamConnected && !unmounted && !connectingRef.current && accessToken) {
+        // console.log('stream change - connected', streamConnected, 'not connecting', !connectingRef.current, accessToken) 
+        if (!streamConnected && !connectingRef.current && accessToken) {
             setStreamLabel('connect needed')
             connectStream()
         }

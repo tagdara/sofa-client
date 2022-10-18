@@ -21,7 +21,6 @@ export default function CardStack(props) {
 
     useDidUpdate( () => {
         const cardData = stackData.cards.filter( card => (!card.expand || card.expand === expand))
-        console.log('stackdata', stackData)
         const renderCards = cardData.map( 
             (card, i) => renderSuspenseModule(
                             card.module, 

@@ -1,9 +1,9 @@
 import create from 'zustand'
 
 const hostName = ( process.env.REACT_APP_SERVER ? process.env.REACT_APP_SERVER : window.location.hostname )
-const serverUrl = "https://" + hostName // + ":5444"
+const serverUrl = "https://" + hostName + "/sofa" // + ":5444"
 //const serverUrl = "https://" + window.location.hostname;
-const tokenUrl = serverUrl+'/auth'
+const tokenUrl = serverUrl + '/auth'
 //const tokenUrl = serverUrl+'/auth/o2/token'
 const loginUrl = serverUrl + "/login";
 

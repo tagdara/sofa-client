@@ -20,7 +20,7 @@ const ReceiverPullUp = props => {
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
-        <PullUpCard name={name} title={name} opened={props.opened} >
+        <PullUpCard name={name} title={name} >
             <Stack spacing="xl">
                 <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
                 <PowerStateLine icon label="Zone 2" endpointId={props.zone2} />

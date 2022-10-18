@@ -18,7 +18,7 @@ const Receiver = props => {
     const name = friendlyNameByEndpointId(props.endpointId) 
     const { powerStateBool: on } = usePowerState(props.endpointId)
     const { powerStateBool: zone2On } = usePowerState(zone2)
-    const { pullUpActive, showPullUp } = usePullUp(name)
+    const { showPullUp } = usePullUp(name)
 
     const volumePresets = [40, 55, 60, 65, 70, 80];
     const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
@@ -50,7 +50,7 @@ const Receiver = props => {
                     <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
                 }
             </Stack>
-            <ReceiverPullUp endpointId={props.endpointId} zone2={zone2} opened={pullUpActive} />
+            <ReceiverPullUp endpointId={props.endpointId} zone2={zone2}  />
         </>
     );
 }

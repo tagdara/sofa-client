@@ -9,18 +9,19 @@ export default function PlayerArtOverlay(props) {
     const { art, title } = useMediaReporter(props.endpointId)
     const artOrDefault = art || ""
     const titleLabel = title || "Jukebox is idle"
+    const aspect = props.aspect === "video" ? "16/9" : "1/1"
     const { localImageUrl, imageLoaded } = useTokenImage(artOrDefault)
-    const placeholder = props.placeholder || <IconMusic style={{ aspectRatio: 1, height: "100%", width: 480, maxWidth: "30%" }} />
+    const placeholder = props.placeholder || <IconMusic  />
 
     return ( 
         <Image 
-            radius="sm"
-            style={{ display: "flex", flexGrow: 1, maxWidth: "30%" }}
+            style={{ display: "flex", aspectRatio: aspect, width: 480, maxWidth: "30%" }}
+            styles={{ figure: { aspectRatio: aspect, display: "flex"}, imageWrapper: { width: "100%" }}}
             withPlaceholder={!imageLoaded}
             placeholder={placeholder}
             src={ imageLoaded ? localImageUrl : null }
             title={ titleLabel }
-            alt={ titleLabel }
+            alt={"player art" }
         />
     );
 }

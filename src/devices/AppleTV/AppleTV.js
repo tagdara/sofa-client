@@ -21,6 +21,7 @@ const AppleTV = props => {
     return (
         <StackCard hidden={props.hidden}>
             <Player 
+                aspect="video"
                 placeholder={<IconBrandApple style={{ height: "100%", maxWidth: "30%" }} />} 
                 endpointId={props.endpointId} 
                 onClick={showPullUp}

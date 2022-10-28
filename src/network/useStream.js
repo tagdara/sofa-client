@@ -104,7 +104,6 @@ export const useStream = ( dataProcessor ) => {
 
 
     useEffect(() => {
-        let unmounted = false;
         // console.log('stream change - connected', streamConnected, 'not connecting', !connectingRef.current, accessToken) 
         if (!streamConnected && !connectingRef.current && accessToken) {
             setStreamLabel('connect needed')
@@ -112,7 +111,6 @@ export const useStream = ( dataProcessor ) => {
         }
             
         return () => {
-            unmounted = true;
         };
     // eslint-disable-next-line    
     }, [ accessToken, connectingRef.current, streamConnected, streamStatus]);

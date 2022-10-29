@@ -1,1 +1,1 @@
-rsync ~/clients/sofa-client/build/* code@sofa-docker.dayton.tech:/home/code/www/html/sofa -r --delete     
+rsync ~/clients/sofa-client/build/* code@sofa-docker.dayton.tech:/var/opt/docker/www/html/sofa -r --delete     

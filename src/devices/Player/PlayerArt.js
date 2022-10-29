@@ -13,6 +13,8 @@ export default function PlayerArtOverlay(props) {
     const { localImageUrl, imageLoaded } = useTokenImage(artOrDefault)
     const placeholder = props.placeholder || <IconMusic  />
 
+    console.log('imageurl', artOrDefault)
+
     return ( 
         <Image 
             style={{ display: "flex", aspectRatio: aspect, width: 480, maxWidth: "30%" }}

@@ -10,7 +10,7 @@ const JukeboxPullUp = props => {
 
     // const { powerStateBool: on } = usePowerState(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
-    const excludeSpeakers = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
+    const excludeSpeakers = ['mca:mca-zone-1', 'mca:mca-zone-2', 'jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
     const ampOutlet = "kasa:plug:50C7BF3325B0"
 
     function openJukebox() {

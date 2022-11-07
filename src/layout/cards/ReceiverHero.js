@@ -8,8 +8,8 @@ const ReceiverHero = props => {
     const receiver = endpointIdByFriendlyName('Receiver')
 
     return (
-        <StackCard key={receiver} hidden={props.hidden}>
-            <Receiver endpointId={receiver} wide={props.wide} key={receiver} />
+        <StackCard hidden={props.hidden}>
+            <Receiver endpointId={receiver} wide={props.wide} />
         </StackCard>
     )
 }

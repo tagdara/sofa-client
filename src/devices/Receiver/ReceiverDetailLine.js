@@ -5,9 +5,9 @@ import useMuted from 'endpoint-model/property/muted/useMuted'
 import InputSegment from 'endpoint-model/property/input/InputSegment'
 import InputLockSegment from 'devices/Receiver/InputLockSegment'
 import ModeSegment from 'endpoint-model/property/mode/ModeSegment'
-import PowerStateSegment from 'endpoint-model/property/powerState/PowerStateSegment'
 import useMode from 'endpoint-model/property/mode/useMode'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import VolumeSegment from 'endpoint-model/property/volume/VolumeSegment'
 
 const ReceiverDetailLine = props => {
 
@@ -22,7 +22,7 @@ const ReceiverDetailLine = props => {
                 { on && <InputSegment text size="xs" endpointId={props.endpointId} /> }
                 { on && <ModeSegment text size="xs" endpointId={props.endpointId} instance={"Sound.Program"} /> }
                 { (on && muted) && <MutedSegment size="xs" icon endpointId={props.endpointId} /> }
-                { zone2On && <PowerStateSegment text color="red" size="xs" icon label="Zone 2" endpointId={props.zone2} /> }
+                { zone2On && <VolumeSegment text color="blue" size="xs" icon prefix="Zone 2: " endpointId={props.zone2} /> }
             </Group> 
 }
 

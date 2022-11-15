@@ -21,12 +21,19 @@ const JukeboxHero = props => {
 
     const isIdle = ['IDLE','STOPPED'].includes(playbackState) 
 
+    function openJukebox() {
+        var newurl="https://jukebox.dayton.tech"
+        var safariWindow = window.open();
+        safariWindow.location.href = newurl
+    }
+
     return (
         <>
             { ( isIdle && !onCount ) ?
                 <JukeboxOff onClick={showPullUp} name={"Jukebox"} endpointId={props.endpointId} />           
             :
                 <Player 
+                    artClick={openJukebox}
                     endpointId={props.endpointId}
                     buttons={<JukeboxSpeakerButton endpointId={props.endpointId} onClick={showPullUp} />}
                     onClick={showPullUp}

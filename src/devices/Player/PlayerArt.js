@@ -4,7 +4,7 @@ import useTokenImage from 'helpers/useTokenImage'
 import useMediaReporter from 'endpoint-model/controller/MediaReporter/useMediaReporter'
 import { IconMusic } from '@tabler/icons';
 
-export default function PlayerArtOverlay(props) {
+export default function PlayerArt(props) {
     
     const { art, title } = useMediaReporter(props.endpointId)
     const artOrDefault = art || ""
@@ -15,6 +15,8 @@ export default function PlayerArtOverlay(props) {
 
     console.log('imageurl', artOrDefault)
 
+    console.log("artclick", props.artClick)
+
     return ( 
         <Image 
             style={{ display: "flex", aspectRatio: aspect, width: 480, maxWidth: "30%" }}
@@ -24,6 +26,7 @@ export default function PlayerArtOverlay(props) {
             src={ imageLoaded ? localImageUrl : null }
             title={ titleLabel }
             alt={"player art" }
+            onClick={ (event) => { event.stopPropagation(); props.onClick(event); }}
         />
     );
 }

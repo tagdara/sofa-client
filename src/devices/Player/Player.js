@@ -10,7 +10,7 @@ const Player = props => {
     
     return (
         <Group onClick={props.onClick} noWrap style={{ width: "100%"}}>
-            <PlayerArt endpointId={props.endpointId} aspect={props.aspect} placeholder={props.placeholder} />
+            <PlayerArt endpointId={props.endpointId} aspect={props.aspect} placeholder={props.placeholder} onClick={props.artClick} />
             <Stack style={{ width: "100%"}}>
                 <PlayerMediaInfo endpointId={props.endpointId} />
                 <PlayerButtons endpointId={props.endpointId} >

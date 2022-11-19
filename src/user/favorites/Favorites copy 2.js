@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import ActivityLink from 'activity/ActivityLink';
+import ActivityItem from 'activity/ActivityItem';
 import useUserStore from 'user/userStore';
-import { Collapse, NavLink, Stack } from '@mantine/core';
+import { Collapse, Stack } from '@mantine/core';
 import FavoriteToggle from 'user/favorites/FavoriteToggle'
-import { IconStar } from '@tabler/icons';
 
 const Favorites = props => {
 
@@ -17,17 +16,12 @@ const Favorites = props => {
     }
 
     return (
-        <NavLink 
-            onClick={ toggleActive}
-            opened={openActive}
-            active={openActive}
-            variant="light"
-            label="Favorites" 
-            childrenOffset={16}
-            icon={<IconStar size={20} stroke={1.5} />}
-        >
+        <Stack>
+            <FavoriteToggle open={openActive} onClick={toggleActive} />
+            <Collapse in={openActive} >
+                <Stack>
                     { favorites.map(endpointId => 
-                        <ActivityLink
+                        <ActivityItem 
                             endpointId={endpointId} 
                             key={endpointId} 
                             launcher={true}
@@ -36,7 +30,9 @@ const Favorites = props => {
                             hideFavorite
                         />
                     )}
-        </NavLink>
+                </Stack>
+            </Collapse>
+        </Stack>
     )
 }
 

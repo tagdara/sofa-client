@@ -15,5 +15,5 @@ export {
     friendlyNameByEndpointId, 
     hasCapability, hasDisplayCategory, hasInstance,
     mapDeviceProperties,
-    sortByName 
+    sortByName
 }

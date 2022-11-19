@@ -4,11 +4,11 @@ import ActivityLine from 'activity/editor/layout/ActivityLine'
 import ScheduleStart from 'activity/editor/schedule/ScheduleStart'
 import ScheduleInterval from 'activity/editor/schedule/ScheduleInterval'
 import ScheduleDays from 'activity/editor/schedule/ScheduleDays'
+import ActivityScheduleMenu from 'activity/editor/schedule/ActivityScheduleMenu'
 
 import useActivityEditorStore from 'activity/editor/activityEditorStore'
 import { updateActivityItem } from 'activity/editor/activityEditorHelpers'
-import { ThemeIcon, Group, Stack, Text } from '@mantine/core';
-import { IconCalendar } from '@tabler/icons';
+import { Group, Stack, Text } from '@mantine/core';
 
 const ActivitySchedule = props => {
 
@@ -31,7 +31,7 @@ const ActivitySchedule = props => {
 
     return (
         <ActivityLine compact={props.compact}>
-            <ThemeIcon color="purple" radius="xl" size="md" style={{ margin: "4px 8px 4px 0px", padding: 0, width: 28 }} ><IconCalendar size={16} /></ThemeIcon>
+            <ActivityScheduleMenu select={props.select} index={props.index} category={props.category} />
             <Stack spacing={2} >
                 <Text size="sm">{"Start"}</Text>
                 <ScheduleStart target="start" change={changeValue} value={schedule.start} />

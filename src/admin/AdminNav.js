@@ -17,7 +17,7 @@ const AdminNav = props => {
             icon={<IconIdBadge size={20} stroke={1.5} />}
         >
             <NavLink icon={<IconStack3 size={16} />} label={"Adapter management"} onClick={() => selectPage('AdapterLayout')} /> 
-            <NavLink icon={<IconAdjustments size={16}/>} label={"Modes"} onClick={()=> selectPage('ModePage')} /> 
+            <NavLink icon={<IconAdjustments size={16}/>} label={"Postures"} onClick={()=> selectPage('PosturePage')} /> 
             <NavLink icon={<IconCalendarTime size={16}/>} label={"Recent Activity"} onClick={() => selectPage('RecentLayout')} /> 
             <NavLink icon={<IconCloudDataConnection size={16}/>} label={"Toggle SSE Log"} onClick={() => toggleLogSSE()} /> 
         </NavLink>

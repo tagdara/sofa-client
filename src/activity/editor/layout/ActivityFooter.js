@@ -14,7 +14,8 @@ export default function ActivityFooter(props) {
     const [ dialogOpen, setDialogOpen ] = useState(false)
     const endpointId = useActivityEditorStore( state => state.endpointId )
     const activity = useActivityEditorStore( state => state.activity )
-    const saveOk = activity && okToSave()
+    const saved = useActivityEditorStore( state => state.saved )
+    const saveOk = activity && okToSave() && !saved
 
     function runAutomation(processConditions=true) {
         directive(endpointId, 'Alexa.SceneController', 'Activate', {}, {"conditions": processConditions})

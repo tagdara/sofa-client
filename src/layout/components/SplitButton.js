@@ -156,22 +156,22 @@ export const SplitButton = ( props ) => {
     }
 
     return (
-        <Paper p={isMobile ? "md": "xs"} className={classSelect()} style={{  width: props.label ? undefined : 1 }} onClick={props.onClick}>
-            <Group noWrap style={{  display: "flex", alignItems: "center"}}>
+        <Paper p={isMobile ? "md": "xs"} className={classSelect()} style={{  display: "flex", width: props.label ? undefined : 1 }} onClick={props.onClick}>
+            <Group noWrap style={{  display: "flex", alignItems: "center", overflow: "hidden"}}>
                 { props.icon &&
                     <ThemeIcon className={arrowClass()} >
                         { props.icon }
                     </ThemeIcon>
                 }
                 { props.label &&
-                    <Stack spacing={0} style={{ justifyContent: "center", display: "flex", flexGrow:1,}}>
+                    <Stack spacing={0} style={{ justifyContent: "center", display: "flex", maxWidth: "100%"}}>
                         <Text   size={isMobile ? "md": "sm"} 
                                 style={{ color : props.on ?  theme.colors[theme.primaryColor][2] : "dimmed" }} 
                                 weight={500} 
                                 lineClamp={1}>
                             {props.label}
                         </Text>
-                        { props.secondary && <Text weight={400} size="sm" lineClamp={1} color="dimmed" style={{ flexGrow: 1 }}>{props.secondary}</Text> }
+                        { props.secondary && <Text weight={400} size="sm" lineClamp={2} color="dimmed" style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>{props.secondary}</Text> }
                     </Stack>
                 }
                 { props.children }

@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { useRegister } from 'endpoint-model/register/useRegister'
+import { hasCapability } from 'endpoint-model/discovery'
 
 const useEndpointHealth = (endpointId, value, directive) => {
 
     const controller = "Alexa.EndpointHealth"
+    const hasEndpointHealth = hasCapability(endpointId, controller)
     const { deviceState } = useRegister(endpointId)
     const stateConnectivity = deviceState?.[controller]?.connectivity?.value?.value || 'UNREACHABLE'
     const userValue = value?.connectivity?.value?.value
@@ -28,7 +30,7 @@ const useEndpointHealth = (endpointId, value, directive) => {
     const connectivityBool = connectivity === 'OK'
     const reachable = connectivityBool // Convenience mapping for some existing items
 
-    return { connectivity, connectivityBool, connectivityLabel, setConnectivity, reachable }
+    return { connectivity, connectivityBool, connectivityLabel, setConnectivity, reachable, hasEndpointHealth }
 
 }
 

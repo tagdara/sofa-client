@@ -11,6 +11,7 @@ export default function Endpoint(props) {
     const { connectivityBool, hasEndpointHealth } = useEndpointHealth(props.endpointId)
 
     const select = (action) => {
+        console.log('select',action, props.endpointId)
         if (action === "delete") {
             deleteCachedEndpoint(props.endpointId)
         }

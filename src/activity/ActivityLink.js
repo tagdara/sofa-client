@@ -2,18 +2,15 @@ import React, { useState } from 'react';
 import dayjs from 'dayjs'
 import calendar from 'dayjs/plugin/calendar' 
 
-import { Badge, Button, Group, Loader, NavLink, Stack, Text } from '@mantine/core';
+import { Loader, NavLink} from '@mantine/core';
 
 import { endpointByEndpointId } from 'endpoint-model/discovery'
 import { directive } from 'endpoint-model/directive/directive'
 import { useRegister } from 'endpoint-model/register/useRegister'
-import useUserStore from 'user/userStore'
-import ActivityItemMenu from 'activity/ActivityItemMenu'
 import ActivityItemMissing from 'activity/ActivityItemMissing'
-import ActivityComponentIcon from 'activity/ActivityComponentIcon'
 import useDefinitionController from 'endpoint-model/controller/DefinitionController/useDefinitionController'
 
-import { IconListDetails, IconStar, IconPlayerPlay } from '@tabler/icons';
+import { IconListDetails } from '@tabler/icons';
 
 const ActivityLink = props => {
    
@@ -22,9 +19,6 @@ const ActivityLink = props => {
     const activity = endpointByEndpointId(props.endpointId)
     const { deviceState } = useRegister(props.endpointId)
     const { countData, nextRun } = useDefinitionController(props.endpointId)
-
-    const favorites = useUserStore( state => state.preferences.favorites )
-    const favorite = !props.hideFavorite && favorites && favorites.includes(props.endpointId)
 
     if (!activity || !deviceState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 

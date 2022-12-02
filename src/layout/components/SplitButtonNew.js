@@ -1,6 +1,5 @@
 import React from 'react';
-import { createStyles } from '@mantine/styles';
-import { Button, ThemeIcon, Group, Menu, Stack, Text, useMantineTheme } from '@mantine/core';
+import { Button, ThemeIcon, Menu, Stack, Text, useMantineTheme } from '@mantine/core';
 
 import { IconChevronRight } from '@tabler/icons';
 import useLayoutStore from 'layout/layoutStore'

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import ActivityLink from 'activity/ActivityLink';
 import useUserStore from 'user/userStore';
-import { Collapse, NavLink, Stack } from '@mantine/core';
-import FavoriteToggle from 'user/favorites/FavoriteToggle'
+import { NavLink } from '@mantine/core';
 import { IconStar } from '@tabler/icons';
 
 const Favorites = props => {

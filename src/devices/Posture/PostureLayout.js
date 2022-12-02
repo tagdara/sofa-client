@@ -4,7 +4,6 @@ import SectionHeader from 'layout/section/SectionHeader';
 import SectionFrame from 'layout/section/SectionFrame'
 import SectionGrid from 'layout/section/SectionGrid'
 import PageFrame from 'layout/PageFrame'
-import HomeButton from 'layout/HomeButton';
 import { endpointIdsByDisplayCategory, sortByName } from 'endpoint-model/discovery'
 
 const ModeLayout = props => {
@@ -21,9 +20,6 @@ const ModeLayout = props => {
                 )}
                 </SectionGrid>
             </SectionFrame>
-            <SectionHeader>
-                <HomeButton />
-            </SectionHeader>
         </PageFrame>
     )
 }

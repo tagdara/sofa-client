@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconDevices, IconAdjustments, IconBulb, IconDeviceSpeaker, IconTemperature, 
+import { IconCast, IconDevices, IconAdjustments, IconBulb, IconDeviceSpeaker, IconTemperature, 
         IconWindmill, IconMaximize, IconTag, IconToggleRight, IconTrafficLights, 
         IconDeviceTv, IconListDetails, IconWindowMaximize, IconBuildingWarehouse,
         IconCircuitSwitchOpen, IconDeviceCctv, IconShieldLock, IconWalk, IconPlugConnected, IconCpu
@@ -25,6 +25,7 @@ const EndpointIcon = React.forwardRef( (props, ref) => {
         'OTHER': IconCpu,
         'SMARTPLUG': IconPlugConnected,
         'BUTTON': IconToggleRight, 
+        'PLAYER': IconCast,
         'SWITCH': IconCircuitSwitchOpen,
         'SPEAKER': IconDeviceSpeaker, 
         'THERMOSTAT': IconTemperature, 

@@ -2,7 +2,6 @@ import useDiscoveryStore from 'endpoint-model/discovery/discoveryStore'
 
 export const getInputs = ( endpointId, exclude=[] ) => {
     var dev = useDiscoveryStore.getState().devices[endpointId]
-    console.log('dev get inputs', dev)
     var choices = []        
     if (dev && dev.hasOwnProperty('capabilities')) {
         for (var k = 0; k < dev.capabilities.length; k++) {

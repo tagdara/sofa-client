@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import CameraImage from 'devices/Camera/CameraImage';
 import StackCard from 'layout/components/StackCard'
-import { Card, Group, Text } from '@mantine/core';
+import { Alert, Card, Group, Text } from '@mantine/core';
 import { endpointByEndpointId } from 'endpoint-model/discovery'
 import { selectPage } from 'helpers/layoutHelpers';
 import CameraVideo from 'devices/Camera/CameraVideo'
+import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
+import { IconDeviceCctvOff } from '@tabler/icons';
 
 const SecurityCamera = props => {
 
@@ -15,6 +17,8 @@ const SecurityCamera = props => {
     const refreshInterval = 11
     const [live, setLive] = useState(false)
     const device = endpointByEndpointId(props.endpointId)
+    const { connectivityBool, hasEndpointHealth } = useEndpointHealth(props.endpointId)
+
 
     const imageClick = () => {
         if (props.onClick) { 
@@ -25,6 +29,18 @@ const SecurityCamera = props => {
     }
 
     if (!device) { return null }
+
+    if (hasEndpointHealth && !connectivityBool) {
+        return (
+            <Alert 
+                icon={<IconDeviceCctvOff size={16} />} 
+                title={device.friendlyName} 
+                color="red"
+            >
+            This camera is offline.
+          </Alert>
+        )
+    }
 
     return (
         <StackCard>

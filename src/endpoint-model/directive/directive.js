@@ -12,7 +12,7 @@ function newtoken() {
 }
 
 export const directive = async (endpointId, controllerName, command, payload={}, cookie={}, instance="") => {
-    console.log('directive', endpointId, controllerName, command, payload, cookie, instance)
+    // console.log('directive', endpointId, controllerName, command, payload, cookie, instance)
     const controller = getControllerInterface(endpointId, controllerName)
     if (!controller) {
         var dev = useDiscoveryStore.getState().devices[endpointId]

@@ -13,10 +13,6 @@ export default function PlayerArt(props) {
     const { localImageUrl, imageLoaded } = useTokenImage(artOrDefault)
     const placeholder = props.placeholder || <IconMusic  />
 
-    console.log('imageurl', artOrDefault)
-
-    console.log("artclick", props.artClick)
-
     return ( 
         <Image 
             style={{ display: "flex", aspectRatio: aspect, width: 480, maxWidth: "30%" }}

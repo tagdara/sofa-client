@@ -56,7 +56,7 @@ export const loadActivity = async (endpointId) => {
     // loadJSONAutomation
     useActivityEditorStore.setState({name: undefined, endpointId: endpointId, activity: {}, saved: false}, true)
     if (endpointId) {
-        const result = await tokenFetch("/list/logic/activity/"+endpointId)
+        const result = await tokenFetch("/list/activity/editor/"+endpointId)
         useActivityEditorStore.setState({endpointId: endpointId, activity: result, saved: true}, true)
     }
 }
@@ -76,7 +76,7 @@ export const saveActivity = async () => {
     const endpointId = useActivityEditorStore.getState().endpointId
     const activity = useActivityEditorStore.getState().activity
     const data = { ...activity, endpointId : endpointId }
-    const result = await tokenFetch("/save/logic/activity/" + endpointId, data)
+    const result = await tokenFetch("/save/activity/editor/" + endpointId, data)
     console.log('result', result)
     useActivityEditorStore.setState({ saved: true })
 }

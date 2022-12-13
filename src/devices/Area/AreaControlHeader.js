@@ -9,7 +9,7 @@ const AreaControlHeader = (props) => {
         if (props.currentArea !== props.home) {
             props.selectArea(props.home)
         } else {
-            props.selectArea("logic:area:all")
+            props.selectArea("area:all")
         }
     }
 

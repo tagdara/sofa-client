@@ -15,7 +15,7 @@ import useShortcuts from 'endpoint-model/property/shortcuts/useShortcuts'
 const AreaSummary = props => {
 
     const userArea = useUserStore( state => state.preferences.area)
-    const homeArea = userArea ? userArea : "logic:area:Main"
+    const homeArea = userArea ? userArea : "area:Main"
     const [ currentArea, setCurrentArea ] = useState(homeArea)
     
     const name = friendlyNameByEndpointId(currentArea)

@@ -5,7 +5,7 @@ import AreaLightsOnBadge from 'devices/Area/AreaLightsOnBadge'
 
 const AreasLightsOn = props => {
 
-    const currentArea = "logic:area:all"
+    const currentArea = "area:all"
     const { areas } = useChildren(currentArea)
     
     return (

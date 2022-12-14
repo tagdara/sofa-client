@@ -15,7 +15,7 @@ const TelevisionLightControls = props => {
         directive(sceneEndpointId, 'Alexa.SceneController', 'Activate')
     }
     
-    const currentWatch = sceneEndpointId === "logic:scene:Watch"
+    const currentWatch = sceneEndpointId === "scene:Watch"
 
     return (
         <Group noWrap>
@@ -23,7 +23,7 @@ const TelevisionLightControls = props => {
                 <IconBulb size={20} />
             </ActionIcon>
             <AreaShortcutSlider endpointId={area} />
-            <ActionIcon color={currentWatch ? "red" : undefined } variant="light" onClick={ () => runScene("logic:scene:Watch")}>
+            <ActionIcon color={currentWatch ? "red" : undefined } variant="light" onClick={ () => runScene("scene:Watch")}>
                 <IconMovie size={20} />
             </ActionIcon>
         </Group>

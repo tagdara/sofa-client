@@ -1,6 +1,6 @@
 {
     "name": "sofa-client",
-    "version": "3.71.0",
+    "version": "3.72.0",
     "homepage": "http://home.dayton.home/client",
     "private": true,
     "dependencies": {

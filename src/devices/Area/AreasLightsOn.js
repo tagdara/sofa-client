@@ -7,7 +7,7 @@ const AreasLightsOn = props => {
 
     const currentArea = "area:all"
     const { areas } = useChildren(currentArea)
-    
+
     return (
         <Group spacing="xs">
             { areas.map(area =>

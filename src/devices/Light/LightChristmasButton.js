@@ -1,22 +1,26 @@
 import React from 'react';
-import ChristmasTreeIcon from 'resources/ChristmasTreeIcon';
-import { directive } from 'endpoint-model/directive/directive'
-import { useRegister } from 'endpoint-model/register'
+// import ChristmasTreeIcon from 'resources/ChristmasTreeIcon';
+import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 import { ActionIcon } from '@mantine/core'
+import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+import useConnectivity from 'endpoint-model/property/connectivity/useConnectivity'
+import { IconChristmasTree, IconChristmasTreeOff } from '@tabler/icons';
 
 const LightChristmasButton = props => {
+    
+    const treeEndpointId = endpointIdByFriendlyName('Christmas Tree')
+    const { powerStateBool: treeOn, toggle } = usePowerState(treeEndpointId)
+    const { connectivityBool } = useConnectivity(treeEndpointId)
 
-    const tree = useRegister(props.endpointId)
-    const treeOn = tree && tree.PowerController.powerState.value === 'ON'
-
-    function toggleTree(event) {
-        event.stopPropagation()
-        directive(props.endpointId, 'PowerController', treeOn ? 'TurnOff' : 'TurnOn')
-    }
+    if (!connectivityBool) { return null }
 
     return (
-        <ActionIcon size="lg" style={{ backgroundColor: treeOn ? "rgba(255,255,0,0.1)" : undefined }} onClick={(event)=>toggleTree(event) } >
-            <ChristmasTreeIcon treeOn={ treeOn } />
+        <ActionIcon size="lg" color={ treeOn ? "green" : "gray" } variant={ treeOn ? "light" : "light" } onClick={toggle } >
+            { treeOn ?
+                <IconChristmasTree style={{color: 'lime' }} />
+                :
+                <IconChristmasTreeOff style={{color: 'green' }} />
+            }
         </ActionIcon >
     )
 

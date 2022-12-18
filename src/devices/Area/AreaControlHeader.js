@@ -1,6 +1,7 @@
 import React from 'react';
 import { ActionIcon, Divider, Group, Title } from '@mantine/core'
 import { IconDots, IconHome, IconLamp } from '@tabler/icons';
+import LightChristmasButton from 'devices/Light/LightChristmasButton'
 
 const AreaControlHeader = (props) => {
 
@@ -15,20 +16,23 @@ const AreaControlHeader = (props) => {
 
     return (
         <>
-            <Group noWrap style={{ width: "100%"}} position="apart" onClick={toggleArea}>
+            <Group noWrap style={{ width: "100%"}} position="apart">
                 <Group>
                     <IconLamp size={20} />
                     <Title order={4} >{props.name === "all" ? "All Areas" : props.name + " Lights"}</Title>
                 </Group>
-                { props.currentArea !== props.home ?
-                    <ActionIcon variant="light" color="primary" size="lg" onClick={toggleArea}>
-                        <IconHome size={20} />
-                    </ActionIcon >
-                    :
-                    <ActionIcon variant="light" color="primary" size="lg" onClick={toggleArea}>
-                        <IconDots size={20} />
-                    </ActionIcon >
-                }
+                <Group>
+                    <LightChristmasButton />
+                    { props.currentArea !== props.home ?
+                        <ActionIcon variant="light" color="primary" size="lg" onClick={toggleArea}>
+                            <IconHome size={20} />
+                        </ActionIcon >
+                        :
+                        <ActionIcon variant="light" color="primary" size="lg" onClick={toggleArea}>
+                            <IconDots size={20} />
+                        </ActionIcon >
+                    }
+                </Group>
             </Group>
             <Divider />
         </>

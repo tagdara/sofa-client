@@ -13,6 +13,7 @@ export default function SofaFrame(props) {
     const refreshUser = useUserStore(state => state.refresh)
     const { streamConnected, streamStatus, reconnect } = useStream(storeUpdater)
     const setRegisterReady = useRegisterStore( state => state.setReady )
+    const registerReady = useRegisterStore( state => state.ready )
     const refreshRegistered = useRegisterStore( state => state.refresh )
 
     useEffect(() => {
@@ -27,11 +28,17 @@ export default function SofaFrame(props) {
         if (streamStatus === 1) {
             console.log('>> sending registration refresh')
             setRegisterReady(true)
-            refreshRegistered()
         } else {
             setRegisterReady(false)
         }
     }, [ streamStatus ])
+
+    useDidUpdate(() => {
+        if (registerReady) {
+            console.log('>> sending registration refresh', registerReady)
+            refreshRegistered()
+        } 
+    }, [ registerReady ])   
 
     const statusLabel = streamStatus === 0 ? 'connecting' : (streamStatus === 2 ? 'closed' : 'not ready')
 

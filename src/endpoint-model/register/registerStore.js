@@ -15,7 +15,9 @@ const useRegisterStore = create((set, get) => ({
     registered: {},
     adds: [],
     removes: [],
-    setReady: newReady => set ({ready: newReady}),
+    setReady: newReady => {
+        set ({ready: newReady})
+    },
     refresh: async () => {
         const loggedIn = useLoginStore.getState().logged_in;
         if (!loggedIn) { return }
@@ -51,7 +53,6 @@ const useRegisterStore = create((set, get) => ({
             const result = await tokenFetch(registerUrl, data)
             storeUpdater({ "event": {"header": {"name": "multiple StateReports"}}, "data": result })
         }
-
         set({ registered: updatedRegistered })
     },
     remove: async (endpointIds, source) => {

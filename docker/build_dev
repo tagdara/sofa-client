@@ -1,0 +1,5 @@
+# This assumes the script is in the docker subdirectory of the project
+scriptdir="$( dirname -- "$BASH_SOURCE"; )";
+echo $scriptdir
+
+cd $scriptdir && docker build --tag sofa-client:dev -f Dockerfile.development ..

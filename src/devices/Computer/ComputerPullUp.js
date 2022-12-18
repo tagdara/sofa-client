@@ -36,7 +36,7 @@ const ComputerPullUp = props => {
                 <VolumeSliderLine label={"Volume"} endpointId={props.endpointId} icon={true} />
                 <Group grow position="apart" noWrap>
                     <Button onClick={openMouse} disabled={!on} compact leftIcon={<IconMouse size={16} />} variant="light">Control</Button>
-                    <WakeSleepSegment label icon endpointId={props.endpointId} value={on ? "ON" : "OFF"} />
+                    <WakeSleepSegment label icon endpointId={props.endpointId} value={{ "powerState" : on ? "ON" : "OFF" }} />
                 </Group>
             </Stack>
         </PullUpCard>

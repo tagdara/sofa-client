@@ -1,0 +1,19 @@
+# Name the node stage "builder"
+FROM node:19-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy our node module specification
+COPY package.json package.json
+
+# install node modules and build assets
+RUN npm install -g npm@latest
+RUN npm install
+
+# Copy all files from current directory to working dir in image
+# Except the one defined in '.dockerignore'
+COPY . .
+
+# Entry point when Docker container has started
+ENTRYPOINT ["npm", "start"]

@@ -1,7 +1,7 @@
 {
     "name": "sofa-client",
     "version": "3.72.0",
-    "homepage": "http://home.dayton.home/client",
+    "homepage": "/",
     "private": true,
     "dependencies": {
         "@emotion/react": "^11.5.0",

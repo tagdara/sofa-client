@@ -68,11 +68,15 @@ export const useStream = ( dataProcessor ) => {
         //setIsConnecting(false)
     }
 
-    const errorHandler = (e) => {
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    const errorHandler = async (e) => {
         console.log('ERROR with EventSource',e.target )
         setStreamLabel('error '+JSON.stringify(e, ["message", "arguments", "type", "name"]))
         e.target.close()
+        await delay(5000)
         connectingRef.current = false
+        setStreamLabel('cooldown after error complete')
         //checkToken()
     }
 
@@ -104,16 +108,16 @@ export const useStream = ( dataProcessor ) => {
 
 
     useEffect(() => {
-        // console.log('stream change - connected', streamConnected, 'not connecting', !connectingRef.current, accessToken) 
+        
         if (!streamConnected && !connectingRef.current && accessToken) {
             setStreamLabel('connect needed')
             connectStream()
-        }
-            
+        }    
+
         return () => {
         };
     // eslint-disable-next-line    
-    }, [ accessToken, connectingRef.current, streamConnected, streamStatus]);
+    }, [ accessToken, connectingRef.current, streamConnected, streamLabel, streamStatus]);
     
     return { url, streamConnected, streamStatus, streamLabel, reconnect };
 };

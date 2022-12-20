@@ -27,7 +27,7 @@ const ComputerCube = props => {
         <>
             <WideAvatar 
                 radius={"md"}
-                color={ on ? "primary" : "paper" }
+                color={ outletOn ? "primary" : "paper" }
                 onClick={ showPullUp }
                 size="md"
                 left={ on ? <IconDevicesPc size={24} /> : <IconDevicesPcOff size={24} />}

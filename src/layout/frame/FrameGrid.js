@@ -11,10 +11,8 @@ import BottomBar from 'layout/BottomBar';
 import DataRefresher from 'network/DataRefresher';
 import AppFrame from 'layout/components/AppFrame'
 
+export default function FrameGrid() {
 
-export default function MainPage() {
-
-    
     const wide = useMediaQuery('(min-width: 640px)');
     const opened = useLayoutStore( state => state.drawerOpen)
     const setOpened = useLayoutStore( state => state.setDrawerOpen)
@@ -23,15 +21,18 @@ export default function MainPage() {
     const currentPage = useLayoutStore(state => state.currentPage)
     const currentProps = useLayoutStore(state => state.currentProps)    
 
+    const result = renderSuspenseModule(currentPage, currentProps)
+
     return (
-        <AppFrame   bottom={ <BottomBar open={ () => setOpened(true) } />} 
-                    header={ wide && <FrameHeader opened={opened} setOpened={setOpened} /> }
-                    navbar={ <FrameNav opened={ opened } close={ () => setOpened(false) } />}
-                    drawer={ <RightDrawer opened={drawerOpened} close={ () => setDrawerOpened(false) } /> }
-                    wide={wide}
+        <AppFrame   
+            bottom={ <BottomBar open={ () => setOpened(true) } />} 
+            header={ wide && <FrameHeader opened={opened} setOpened={setOpened} /> }
+            navbar={ <FrameNav opened={ opened } close={ () => setOpened(false) } />}
+            drawer={ <RightDrawer opened={drawerOpened} close={ () => setDrawerOpened(false) } /> }
+            wide={wide}
         >
             <div style={{ height: 1, paddingTop: "env(safe-area-inset-top)"}} />
-            { renderSuspenseModule(currentPage, currentProps) } 
+            { result } 
             <DataRefresher />  
         </AppFrame>
     );

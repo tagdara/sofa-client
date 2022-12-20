@@ -9,6 +9,7 @@ import { directive } from 'endpoint-model/directive/directive'
 import { useRegister } from 'endpoint-model/register/useRegister'
 import useUserStore from 'user/userStore'
 import ActivityItemMenu from 'activity/ActivityItemMenu'
+import ActivityItemSchedule from 'activity/ActivityItemSchedule'
 import ActivityItemMissing from 'activity/ActivityItemMissing'
 import ActivityComponentIcon from 'activity/ActivityComponentIcon'
 import useDefinitionController from 'endpoint-model/controller/DefinitionController/useDefinitionController'
@@ -21,14 +22,16 @@ const ActivityItem = props => {
     const [ launched, setLaunched] = useState(false)
     const activity = endpointByEndpointId(props.endpointId)
     const { deviceState } = useRegister(props.endpointId)
-    const { countData, nextRun } = useDefinitionController(props.endpointId)
+    const { countData } = useDefinitionController(props.endpointId)
 
     const favorites = useUserStore( state => state.preferences.favorites )
     const favorite = !props.hideFavorite && favorites && favorites.includes(props.endpointId)
 
     if (!activity || !deviceState) { return <ActivityItemMissing endpointId={props.endpointId} /> }
 
-    if ( props.scheduled && !nextRun) { return null }
+    if ( props.scheduled && !countData?.schedules_count) { 
+        return null 
+    }
 
     const name = activity.friendlyName
 
@@ -57,7 +60,6 @@ const ActivityItem = props => {
         }, 500)
     }
 
-
     function partsSummary() {
         var results = Object.keys(countData).map(part => 
             { if (countData[part]) {
@@ -69,14 +71,7 @@ const ActivityItem = props => {
         return results
     }    
  
-    function scheduleSummary() {
-        if (nextRun) { return dayjs(nextRun).calendar() }
-        return undefined
-    }
-
-    function xsummary() {
-        if ( !activity || props.disableEdit ) { return null }
-        if (props.showNextRun) { return scheduleSummary() }
+    function activitySummary() {
         const summary = partsSummary()
         if (summary.length < 1) { return null }
         return  (
@@ -89,77 +84,81 @@ const ActivityItem = props => {
     const loading = launched || deviceState?.Running?.toggleState?.value === 'ON'
 
     return (
-        <Button.Group  buttonBorderWidth={0} style={{ width: "100%"}}>
-            <ActivityItemMenu
-                delete={props.delete}
-                run={runActivity}
-                endpointId={props.endpointId}
-                target={   
-                    <Button 
-                        radius="md"
-                        size="md"
-                        styles={{ 
-                            root: {
-                                border: 0,
-                                display: "flex",
-                                justifyContent: "flex-start",
-                                paddingLeft: 16,
-                                height: 58,
-                                overflow: "hidden",
-                                textOverflow: "ellipsis",
-                                whiteSpace: "nowrap",
-                            }
-                        }}
-                        variant={ favorite ? "light" : "default" }
-                    >
-                        { (favorite && props.icon !== "base") ? <IconStar size={20} /> : <IconListDetails size={20} /> }
-                    </Button>         
-                    }     
-            />     
-            <Button 
-                buttonBorderWidth={0}
-                size="md"
-                styles={{ 
-                    root: {          
-                        border: 0,
-                        display: "flex",
-                        justifyContent: "flex-start",
-                        height: 58,
-                        overflow: "hidden",
-                        padding: "0 12px",
-                    }
-                }}
-                variant={favorite ? "light" : "default" }
-                fullWidth 
-                onClick={ () => props.select(props.endpointId) }
-            >
-                <Stack spacing={4}>
-                    <Text size={"sm"}>
-                        { name }
-                    </Text>
-                    { !props.disableEdit &&
-                    <Group noWrap>
-                        { xsummary() }
-                    </Group>
-                    }
-                </Stack>
-            </Button> 
-            <Button 
-                radius="md"
-                size="md"
-                styles={{ 
-                    root: {
-                        border: 0,
-                        height: 58,
-                        padding: 12,
-                    }
-                }}
-                variant={ favorite ? "light" : "default" }
-                onClick={ loading ? undefined : () => runActivity(props.endpointId) } 
-            >
-                {loading ? <Loader size="xs" variant="dots" /> :  <IconPlayerPlay size={20} /> }
-            </Button> 
-        </Button.Group>
+        <Stack spacing={4} align="stretch">
+            <Button.Group  style={{ width: "100%"}}>
+                <ActivityItemMenu
+                    delete={props.delete}
+                    run={runActivity}
+                    endpointId={props.endpointId}
+                    target={   
+                        <Button 
+                            radius="md"
+                            size="md"
+                            styles={{ 
+                                root: {
+                                    border: 0,
+                                    display: "flex",
+                                    justifyContent: "flex-start",
+                                    paddingLeft: 16,
+                                    height: 58,
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                }
+                            }}
+                            variant={ favorite ? "light" : "default" }
+                        >
+                            { (favorite && props.icon !== "base") ? <IconStar size={20} /> : <IconListDetails size={20} /> }
+                        </Button>         
+                        }     
+                />     
+                <Button 
+                    size="md"
+                    styles={{ 
+                        root: {          
+                            border: 0,
+                            display: "flex",
+                            justifyContent: "flex-start",
+                            height: 58,
+                            overflow: "hidden",
+                            padding: "0 12px",
+                        }
+                    }}
+                    variant={favorite ? "light" : "default" }
+                    fullWidth 
+                    onClick={ () => props.select(props.endpointId) }
+                >
+                    <Stack spacing={4}>
+                        <Text size={"sm"}>
+                            { name }
+                        </Text>
+                        { !props.disableEdit &&
+                        <Group noWrap>
+                            { activitySummary() }
+                        </Group>
+                        }
+                    </Stack>
+                </Button> 
+                <Button 
+                    radius="md"
+                    size="md"
+                    styles={{ 
+                        root: {
+                            border: 0,
+                            height: 58,
+                            padding: 12,
+                        }
+                    }}
+                    variant={ favorite ? "light" : "default" }
+                    onClick={ loading ? undefined : () => runActivity(props.endpointId) } 
+                >
+                    {loading ? <Loader size="xs" variant="dots" /> :  <IconPlayerPlay size={20} /> }
+                </Button> 
+            </Button.Group>
+            { props.scheduled &&
+                <ActivityItemSchedule endpointId={props.endpointId} scheduled={props.scheduled} />
+            }
+        </Stack>
     )
 }
 

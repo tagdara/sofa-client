@@ -11,6 +11,7 @@ const useDefinitionController = ( endpointId, directive) => {
     const triggersCount = summary?.value?.triggers_count || 0
     const missingDevicesCount = summary?.value?.missing_devices_count || 0
     const nextRun = summary?.value?.next_run || null
+    const lastRun = summary?.value?.last_run || null
 
     const countData = {   "actions_count": actionsCount, 
                     "conditions_count": conditionsCount, 
@@ -19,7 +20,7 @@ const useDefinitionController = ( endpointId, directive) => {
                     "missing_devices_count": missingDevicesCount 
                 }
 
-    return { countData, nextRun, summary, actionsCount, conditionsCount, schedulesCount, triggersCount }
+    return { countData, nextRun, lastRun, summary, actionsCount, conditionsCount, schedulesCount, triggersCount }
 
 }
 

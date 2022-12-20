@@ -51,18 +51,18 @@ const ActivitiesLayout = props => {
     }
 
     const filteredActivities = getListItems()
-
+    
     return (
         <PageFrame>
             <SectionHeader first title={"Activities"} >
                 <Group noWrap>
-                    <ActionIcon size="sm" onClick={ () => newActivity() } >
+                    <ActionIcon size="md" onClick={ () => newActivity() } >
                         <IconPlus size={20} />
                     </ActionIcon>
-                    <ActionIcon size="sm" onClick={ () => toggleScheduled() } >
+                    <ActionIcon size="md" onClick={ () => toggleScheduled() }  variant={ showScheduled ? "filled" : "light" } >
                         <IconClock size={20} />
                     </ActionIcon>
-                    <ActionIcon size="sm" onClick={ () => toggleFavorites() }  color={ favorites ? "primary" : "inherit" } >
+                    <ActionIcon size="md" onClick={ () => toggleFavorites() }  color={ favorites ? "primary" : "inherit" } >
                         <IconStar size={20} />
                     </ActionIcon>
                 </Group>

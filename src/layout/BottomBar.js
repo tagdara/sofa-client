@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useDidUpdate, useMediaQuery } from '@mantine/hooks';
+import React from 'react';
+import { useMediaQuery } from '@mantine/hooks';
 import { selectStack } from 'helpers/layoutHelpers';
 import useLayoutStore from 'layout/layoutStore'
 import { Affix, Group, SegmentedControl, useMantineTheme } from '@mantine/core';
@@ -9,21 +9,15 @@ import { IconX, IconMenu, IconDevices2, IconTemperature, IconShield, IconBulb } 
 
 const BottomBar = props => {
 
-    const [ displayStack, setDisplayStack] = useState(undefined)
     const currentStack = useLayoutStore( state => state.currentStack)
     const currentPage = useLayoutStore(state => state.currentPage)
-    const theme = useMantineTheme();
     const setTransitionDirection = useLayoutStore( state => state.setTransitionDirection)
-    const wide = useMediaQuery('(min-width: 640px)');
     const setStackPullUp = useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
     const hideHome = useLayoutStore( state => state.hideHome)
 
-    useDidUpdate(() => {
-        if (currentStack) {
-            setDisplayStack(currentStack)
-        }
-    }, [ currentStack ])
+    const wide = useMediaQuery('(min-width: 640px)');
+    const theme = useMantineTheme();
 
     const pickStack = newStack => {
         if (getPosition(newStack) > getPosition(currentStack)) {
@@ -100,7 +94,7 @@ const BottomBar = props => {
                     color = {theme.primaryColor}
                     onClick = {clearPullUp}
                     onChange = {pickStack} 
-                    value = {displayStack} 
+                    value = {currentStack} 
                     data={selections} 
                     style={{ marginBottom: "env(safe-area-inset-bottom)" }}
                     styles={{ 

@@ -8,7 +8,6 @@ import HomeButton from 'layout/HomeButton'
 import { IconX, IconMenu, IconDevices2, IconTemperature, IconShield, IconBulb } from '@tabler/icons';
 
 const BottomBar = props => {
-
     const currentStack = useLayoutStore( state => state.currentStack)
     const currentPage = useLayoutStore(state => state.currentPage)
     const setTransitionDirection = useLayoutStore( state => state.setTransitionDirection)

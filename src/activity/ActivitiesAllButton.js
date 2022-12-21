@@ -8,7 +8,7 @@ const ActivitiesAllButton = () => {
     return (
         <NavLink onClick={() => selectPage('ActivitiesPage', {'favorites':false})}
                 icon={<IconList size={20} />}
-                label={"All Activities"}
+                label={"Activities"}
         />
     )
 }

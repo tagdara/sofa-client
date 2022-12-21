@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from '@mantine/core';
+import { Avatar, NavLink, Text, Group, ActionIcon} from '@mantine/core';
 import { IconUser, IconReload, IconLogout } from '@tabler/icons';
 import useLoginStore from 'login/loginStore';
 import { reloadPWA } from 'network/reloadPWA'
@@ -13,14 +13,19 @@ const UserNav = () => {
 
     return (
         <NavLink 
-            childrenOffset={16}
-            label={capitalName}
-            description={"User Settings"}
-            icon={<IconUser size={20} />}
-        >
-            <NavLink icon={<IconReload size={16} />} label={"Reload"} description={"v" + process.env.REACT_APP_VERSION} onClick={ () => reloadPWA() } />
-            <NavLink icon={<IconLogout size={16} />} label={"Logout"} onClick={ () => logout() } /> 
-        </NavLink>
+            label={capitalName} 
+            icon={<Avatar radius="xl">{capitalName.charAt(0)}</Avatar>}
+            rightSection={
+                <Group>
+                    <ActionIcon>
+                        <IconReload size={20} />
+                    </ActionIcon>
+                    <ActionIcon>
+                        <IconLogout size={20}  />
+                    </ActionIcon>
+                </Group>
+            }
+        /> 
     )
 }
 

@@ -56,7 +56,7 @@ const ActivityLink = props => {
     return (
         <NavLink 
             variant="subtle" active
-            icon={loading ? <Loader size="xs" variant="dots" /> : <IconListDetails size={16} />}
+            icon={loading ? <Loader size="xs" variant="dots" /> : <IconListDetails size={20}  />}
             label={ name }
             description={ countData['actions_count']+ " actions" }
             onClick={ loading ? undefined : () => runActivity(props.endpointId) } 

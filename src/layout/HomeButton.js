@@ -3,12 +3,18 @@ import { selectPage } from 'helpers/layoutHelpers';
 import useLayoutStore from 'layout/layoutStore'
 import { Button } from '@mantine/core';
 import { IconHome } from '@tabler/icons';
+import { selectStack } from 'helpers/layoutHelpers';
 
 const HomeButton = props => {
 
     const setTransitionDirection = useLayoutStore( state => state.setTransitionDirection)
+    const currentStack = useLayoutStore( state => state.currentStack)
+    const previousStack = useLayoutStore( state => state.previousStack)
 
     const goHome = () => {
+        if (currentStack === "System") {
+            selectStack(previousStack)
+        }
         setTransitionDirection('fade')
         selectPage('Stacks')
     }

@@ -17,6 +17,7 @@ const useLayoutStore = create((set, get) => ({
     maxScreenWidth: 1800,
     isMobile: window.innerWidth <= 800,
     minStackWidth: 310,
+    previousStack: undefined,
     stackPad: 16, // This should be computed from mantine pad
     hideHome: false,
     stackPullUp: undefined,

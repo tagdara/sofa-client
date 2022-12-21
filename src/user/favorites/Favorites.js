@@ -19,11 +19,9 @@ const Favorites = props => {
         <NavLink 
             onClick={ toggleActive}
             opened={openActive}
-            active={openActive}
             variant="light"
             label="Favorites" 
-            childrenOffset={16}
-            icon={<IconStar size={20} stroke={1.5} />}
+            childrenOffset={0}
         >
                     { favorites.map(endpointId => 
                         <ActivityLink

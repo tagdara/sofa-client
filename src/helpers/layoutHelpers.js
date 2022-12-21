@@ -164,7 +164,8 @@ export const toggleRightDrawer = newState => {
 }   
 
 export const selectStack = ( stackName, pageprops={} ) => {
-    useLayoutStore.setState({currentStack: stackName, currentPage: "Stacks", currentProps: pageprops})
+    const previous = useLayoutStore.getState().currentStack
+    useLayoutStore.setState({previousStack: stackName === "System" ? previous : stackName, currentStack: stackName, currentPage: "Stacks", currentProps: pageprops})
 }
 
 export const otherPort = (portnumber, tabname) => {

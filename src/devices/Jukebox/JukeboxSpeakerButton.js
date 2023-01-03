@@ -1,19 +1,15 @@
 import React from 'react';
 import { Button, } from '@mantine/core'
-import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
-import { endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
+import useRangeValue from 'endpoint-model/property/rangeValue/useRangeValue'
 import { IconDeviceSpeaker } from '@tabler/icons';
-
 
 const JukeboxSpeakerButton = props => {
     
-    const excludeSpeakers = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
-    const speakers = endpointIdsByDisplayCategory( "SPEAKER").filter(item => !excludeSpeakers.includes(item))
-    const { onCount } = useMultiPower(speakers)
+    const { rangeValue: activeSpeakerCount } = useRangeValue(props.endpointId, 'Speaker.Count')
 
     return (
-        <Button size="lg" variant={ onCount ? "filled" : "default" } compact leftIcon={<IconDeviceSpeaker size={16} />} onClick={props.onClick}>
-            {onCount}
+        <Button size="lg" variant={ activeSpeakerCount  ? "filled" : "default" } compact leftIcon={<IconDeviceSpeaker size={16} />} onClick={props.onClick}>
+            {activeSpeakerCount}
         </Button>
     );
 }

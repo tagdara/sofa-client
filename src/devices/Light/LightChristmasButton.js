@@ -23,7 +23,6 @@ const LightChristmasButton = props => {
             }
         </ActionIcon >
     )
-
 }
 
 export default LightChristmasButton;

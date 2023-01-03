@@ -1,7 +1,9 @@
 import React from 'react';
 import TemperatureSensorLine from 'endpoint-model/controller/TemperatureSensor/TemperatureSensorLine'
-import ThermostatAvatar from 'devices/Thermostat/ThermostatAvatar'
+//import ThermostatAvatar from 'devices/Thermostat/ThermostatAvatar'
+//import TargetSetpointAvatar from 'endpoint-model/property/targetSetpoint/TargetSetpointAvatar'
 import PowerLevelAutoAvatar from 'endpoint-model/combo/PowerLevelAutoAvatar'
+import SetpointModeStack from 'endpoint-model/combo/SetpointModeStack'
 
 // import { hasCapability } from 'endpoint-model/discovery'
 
@@ -18,7 +20,7 @@ const Thermostat = props => {
             </TemperatureSensorLine>
             <Group noWrap spacing="xs">
                 <PowerLevelAutoAvatar size="md" label={"Fan"} endpointId={props.endpointId} instance={"Power Level Auto"} />
-                <ThermostatAvatar size="md" endpointId={props.endpointId} />
+                <SetpointModeStack size="md" endpointId={props.endpointId} />
             </Group>
         </Group>
     );

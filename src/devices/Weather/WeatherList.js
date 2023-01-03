@@ -43,11 +43,13 @@ const WeatherList = props => {
     return (      
         <Stack>
             { Object.keys(additionalAttributes).map( attribName => 
-                <RangeValueLine endpointId={props.endpointId} 
-                                instance={attribName} 
-                                unit={additionalAttributes[attribName].unit} 
-                                icon={additionalAttributes[attribName].icon} 
-                                key={attribName+props.endpointId} 
+                <RangeValueLine 
+                    size="md"
+                    endpointId={props.endpointId} 
+                    instance={attribName} 
+                    unit={additionalAttributes[attribName].unit} 
+                    icon={additionalAttributes[attribName].icon} 
+                    key={attribName+props.endpointId} 
                 />
             )}
         </Stack>

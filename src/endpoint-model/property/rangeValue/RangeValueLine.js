@@ -10,8 +10,8 @@ const RangeValueLine = props => {
     }
 
     return (
-        <CardLine primary={props.instance} icon={props.icon} size="sm">
-            <RangeValueText endpointId={props.endpointId} instance={props.instance} unit={props.unit} />
+        <CardLine primary={props.instance} icon={props.icon} size={ props.size ? props.size : "sm" } >
+            <RangeValueText size={props.size} endpointId={props.endpointId} instance={props.instance} unit={props.unit} />
         </CardLine>
     );
 }

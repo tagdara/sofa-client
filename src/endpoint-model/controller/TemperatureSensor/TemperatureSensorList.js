@@ -4,9 +4,9 @@ import { sortByName, endpointIdsByDisplayCategory } from 'endpoint-model/discove
 import TemperatureSensorLine from 'endpoint-model/controller/TemperatureSensor/TemperatureSensorLine';
 import { Stack } from '@mantine/core';
 
-const ThermostatList = props => {
+const TemperatureSensorList = props => {
 
-    const temperatureSensors = sortByName(endpointIdsByDisplayCategory('TEMPERATURE_SENSOR'), ['Cayuga Weather Station', 'Sofa Host'])
+    const temperatureSensors = sortByName(endpointIdsByDisplayCategory('TEMPERATURE_SENSOR'), props.exclude ? props.exclude : [] )
 
     return (    
         <Stack style={{ width: "100%"}}>
@@ -17,4 +17,4 @@ const ThermostatList = props => {
     )
 };
 
-export default ThermostatList;
+export default TemperatureSensorList;

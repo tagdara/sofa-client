@@ -1,25 +1,17 @@
 import React from 'react';
 import Player from 'devices/Player/Player'
-import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
-import { endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 import JukeboxOff from 'devices/Jukebox/JukeboxOff'
 import usePullUp from 'layout/pullup/usePullUp'
 import JukeboxPullUp from 'devices/Jukebox/JukeboxPullUp'
 import JukeboxSpeakerButton from 'devices/Jukebox/JukeboxSpeakerButton'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
-import usePlaybackStateReporter from 'endpoint-model/controller/PlaybackStateReporter/usePlaybackStateReporter'
+import useRangeValue from 'endpoint-model/property/rangeValue/useRangeValue'
 
 const JukeboxHero = props => {
 
-    const { playbackState } = usePlaybackStateReporter(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
     const { showPullUp } = usePullUp(name)
-
-    const excludeSpeakers = ['jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
-    const speakers = endpointIdsByDisplayCategory( "SPEAKER").filter(item => !excludeSpeakers.includes(item))
-    const { onCount } = useMultiPower(speakers)
-
-    const isIdle = ['IDLE','STOPPED'].includes(playbackState) 
+    const { rangeValue: activeSpeakerCount } = useRangeValue(props.endpointId, 'Speaker.Count')
 
     function openJukebox() {
         var newurl="https://jukebox.dayton.tech"
@@ -29,7 +21,7 @@ const JukeboxHero = props => {
 
     return (
         <>
-            { ( isIdle && !onCount ) ?
+            {  !activeSpeakerCount ?
                 <JukeboxOff onClick={showPullUp} name={"Jukebox"} endpointId={props.endpointId} />           
             :
                 <Player 

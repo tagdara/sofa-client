@@ -1,6 +1,6 @@
 import React from 'react';
-import { Avatar, NavLink, Text, Group, ActionIcon} from '@mantine/core';
-import { IconUser, IconReload, IconLogout } from '@tabler/icons';
+import { Avatar, NavLink, Group, ActionIcon} from '@mantine/core';
+import { IconReload, IconLogout } from '@tabler/icons';
 import useLoginStore from 'login/loginStore';
 import { reloadPWA } from 'network/reloadPWA'
 
@@ -18,10 +18,10 @@ const UserNav = () => {
             rightSection={
                 <Group>
                     <ActionIcon>
-                        <IconReload size={20} />
+                        <IconReload size={20} onClick={reloadPWA} />
                     </ActionIcon>
                     <ActionIcon>
-                        <IconLogout size={20}  />
+                        <IconLogout size={20} onClick={logout} />
                     </ActionIcon>
                 </Group>
             }

@@ -12,12 +12,10 @@ import { IconBatteryOff } from '@tabler/icons';
 
 export default function Weather(props) { 
 
-    const currentDevice = endpointIdByFriendlyName(props.current)
-    const forecastDevice = endpointIdByFriendlyName(props.forecast)
     const aqEndpoint = props.aq ? endpointIdByFriendlyName(props.aq) : undefined
-    const { temperatureColor, temperatureLabel } = useTemperature(currentDevice)
+    const { temperatureColor, temperatureLabel } = useTemperature(props.current)
 
-    const { reachable } = useEndpointHealth(currentDevice)
+    const { reachable } = useEndpointHealth(props.current)
 
     return (
         <Stack>
@@ -25,7 +23,7 @@ export default function Weather(props) {
                 { reachable ? 
                     <WideAvatar color={temperatureColor} 
                                 size="lg"
-                                left={ <WeatherIcon size="24" instance={"Weather.Condition"} endpointId={forecastDevice} /> }
+                                left={ <WeatherIcon size="24" instance={"Weather.Condition"} endpointId={props.forecastEndpointId} /> }
                                 right={ temperatureLabel }
                     />
                 :
@@ -36,9 +34,9 @@ export default function Weather(props) {
                     />
                 }   
                 <Stack spacing={2}>
-                    <ModeControllerText size="lg" endpointId={forecastDevice} instance={"Weather.Condition"} />
+                    <ModeControllerText size="lg" endpointId={props.forecastEndpointId} instance={"Weather.Condition"} />
                     <Group noWrap style={{ width: "100%"}}>
-                        <ForecastAvatar size={"sm"} dimmed endpointId={forecastDevice} currentTemp={currentDevice}  />
+                        <ForecastAvatar size={"sm"} dimmed endpointId={props.forecastEndpointId} currentTemp={props.current}  />
                         { aqEndpoint && <AQIBadge size="md" endpointId={aqEndpoint} instance={"Air.AQI"} prefix={"AQI"} /> }
                     </Group>
                 </Stack>

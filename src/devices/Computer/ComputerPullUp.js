@@ -5,7 +5,7 @@ import useMode from 'endpoint-model/property/mode/useMode'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import WakeSleepSegment from 'endpoint-model/controller/WakeOnLanController/WakeSleepSegment'
 import EnergyLevelLine from 'endpoint-model/instance/EnergyLevelLine'
-import {  Button, Group, Stack } from '@mantine/core'
+import {  Button, Divider, Group, Stack } from '@mantine/core'
 import VolumeSliderLine from 'endpoint-model/property/volume/VolumeSliderLine'
 import { IconMouse } from '@tabler/icons';
 import PullUpCard from 'layout/pullup/PullUpCard'
@@ -34,9 +34,11 @@ const ComputerPullUp = props => {
                 <PowerStateLine icon label="Power Outlet" endpointId={props.outlet} />
                 <EnergyLevelLine icon label endpointId={props.outlet} />
                 <VolumeSliderLine label={"Volume"} endpointId={props.endpointId} icon={true} />
+                <Divider style={{ padding: 4 }} />
                 <Group grow position="apart" noWrap>
-                    <Button onClick={openMouse} disabled={!on} compact leftIcon={<IconMouse size={16} />} variant="light">Control</Button>
-                    <WakeSleepSegment label icon endpointId={props.endpointId} value={{ "powerState" : on ? "ON" : "OFF" }} />
+                    <Button onClick={openMouse} disabled={!outletOn} compact leftIcon={<IconMouse size={16} />} variant="light">Control</Button>
+                    <WakeSleepSegment label icon endpointId={props.endpointId} value={{ "powerState" : "ON" }} />
+                    <WakeSleepSegment label icon endpointId={props.endpointId} value={{ "powerState" : "OFF" }} />
                 </Group>
             </Stack>
         </PullUpCard>

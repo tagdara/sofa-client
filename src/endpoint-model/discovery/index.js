@@ -4,11 +4,11 @@ import { categoryLabelByEndpointId, endpointIdsByDisplayCategory,hasDisplayCateg
 import { hasCapability } from "endpoint-model/discovery/capability"
 import { devicesByEndpointIds, endpointByEndpointId } from "endpoint-model/discovery/endpointId"
 import { mapDeviceProperties } from "endpoint-model/discovery/properties"
-import { getControllerInterface, hasInstance } from "endpoint-model/discovery/interfaces"
+import { capabilityFriendlyName, getControllerInterface, hasInstance } from "endpoint-model/discovery/interfaces"
 import { descriptionIncludes } from "endpoint-model/discovery/description"
 
 export {    
-    categoryLabelByEndpointId,
+    capabilityFriendlyName, categoryLabelByEndpointId,
     descriptionIncludes, deviceDirectives, devicesByEndpointIds,
     endpointByEndpointId, endpointIdsByDisplayCategory, endpointIdByFriendlyName, 
     getControllerInterface,

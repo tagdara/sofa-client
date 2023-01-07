@@ -32,5 +32,13 @@ export const hasInstance = (endpointId, instance) => {
         console.log('error getting instance for', endpointId, instance)
     }
     return false
-  
+}
+
+export function capabilityFriendlyName(endpointId, instance) {
+    const controller = getControllerInterface(endpointId, instance)
+    const friendlyNames = controller?.capabilityResources?.friendlyNames
+    if (!friendlyNames || friendlyNames.length < 1 ) {
+        return controller?.instance
+    }
+    return friendlyNames[0].value?.text
 }

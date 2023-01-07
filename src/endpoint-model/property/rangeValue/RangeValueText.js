@@ -1,12 +1,12 @@
 import React from 'react';
 import { Text } from '@mantine/core';
 import { useRegister } from 'endpoint-model/register/useRegister'
-// import { getControllerInterface } from 'endpoint-model/discovery'
+import { getControllerInterface } from 'endpoint-model/discovery'
 
 const RangeValueText = props => {
 
     const { deviceState } = useRegister(props.endpointId)
-    // const controller = getControllerInterface(props.endpointId, props.instance)
+
 
     if (!deviceState || !deviceState.hasOwnProperty(props.instance)) { return null }
 

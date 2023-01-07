@@ -13,14 +13,14 @@ export default function OutdoorHero(props) {
     const forecastEndpointId = endpointIdByFriendlyName(forecast)
     const { pullUpActive, showPullUp } = usePullUp(name)
 
-
     return (
         <>
             <StackCard>
                 <Stack style={{ width: "100%"}} onClick={showPullUp  } >
-                    <Weather    aq={props.airQualityEndpointId} 
-                                current={props.weatherEndpointId} 
-                                forecastEndpointId={forecastEndpointId} 
+                    <Weather    
+                        airQualityEndpointId={props.airQualityEndpointId} 
+                        current={props.weatherEndpointId} 
+                        forecastEndpointId={forecastEndpointId} 
                     />  
                 </Stack>
             </StackCard>

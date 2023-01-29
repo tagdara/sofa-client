@@ -25,6 +25,7 @@ const useMuted = (endpointId, value, directive) => {
     const mutedLabel = muted ? "On" : "Off"
 
     const toggle = () => {
+        alert('toggle')
         setMute(!muted)
     }
 

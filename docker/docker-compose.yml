@@ -1,9 +1,16 @@
+name:
+  sofa-client
 services:
   sofa-client:
     container_name: sofa-client-dev
     image: sofa-client:dev
     stdin_open: true  # docker run -i
     tty: true        # docker run -t
+    deploy:
+      resources:
+        limits:
+          cpus: '0.80'
+          memory: 2048M
     networks:
       nginx-network:  
         aliases: 

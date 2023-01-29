@@ -6,6 +6,8 @@ import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import TelevisionDetailLine from 'devices/Television/TelevisionDetailLine'
 import usePullUp from 'layout/pullup/usePullUp'
 import TelevisionPullUp from 'devices/Television/TelevisionPullUp'
+import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
+import useMode from 'endpoint-model/property/mode/useMode'
 
 import { IconDeviceTv, IconDeviceTvOff } from '@tabler/icons';
 
@@ -13,10 +15,14 @@ const Television = props => {
     const name = friendlyNameByEndpointId(props.endpointId) 
     const { showPullUp } = usePullUp(name)
     const { powerStateBool: on } = usePowerState(props.endpointId)
+    const { modeLabel: audioOutput } = useMode(props.endpointId, "Audio.Output")
+
+    const volumePresets = [10, 20, 30, 40, 50];
+    const marks = volumePresets.map( vol => ({ value: vol, label: vol}))
 
     return (
         <>
-            <Stack spacing={8}>
+            <Stack spacing="xl">
                 <Group spacing="xl">
                     <PowerStateAvatar 
                         endpointId={ props.endpointId } 
@@ -37,6 +43,9 @@ const Television = props => {
                         { on && <TelevisionDetailLine endpointId={props.endpointId} matrix={props.matrix} />  }
                     </Stack>
                 </Group>
+                { audioOutput === "TV" &&
+                    <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
+                }
             </Stack>
         
             <TelevisionPullUp matrix={props.matrix} endpointId={props.endpointId} name={name} />

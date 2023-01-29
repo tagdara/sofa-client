@@ -1,6 +1,6 @@
 import React from 'react';
-import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
-import usePowerState from 'endpoint-model/property/powerState/usePowerState'
+// import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
+// import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useMode from 'endpoint-model/property/mode/useMode'
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import WakeSleepSegment from 'endpoint-model/controller/WakeOnLanController/WakeSleepSegment'
@@ -14,13 +14,13 @@ import PowerStateLine from 'endpoint-model/property/powerState/PowerStateLine'
 const ComputerPullUp = props => {
 
     const name = friendlyNameByEndpointId(props.endpointId)
-    const { reachable } = useEndpointHealth(props.endpointId)
-    const { powerStateBool } = usePowerState(props.endpointId)
+    // const { reachable } = useEndpointHealth(props.endpointId)
+    // const { powerStateBool } = usePowerState(props.endpointId)
     const { modeLabel } = useMode(props.outlet, "Energy.Level", props.value, props.directive)
 
     const outletOffStates = ["Off", "Standby"]
     const outletOn = !outletOffStates.includes(modeLabel)
-    const on = reachable && powerStateBool && outletOn
+    // const on = reachable && powerStateBool && outletOn
 
     function openMouse() {
         var newurl="https://mouse.dayton.tech?pc="+name+".dayton.tech"

@@ -1,8 +1,6 @@
 import React from 'react';
 import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import ModeLine from 'endpoint-model/property/mode/ModeLine'
-import MutedLine from 'endpoint-model/property/muted/MutedLine'
-// import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import InputSelectLine from 'endpoint-model/property/input/InputSelectLine'
 import useInput from 'endpoint-model/property/input/useInput'
 import useMode from 'endpoint-model/property/mode/useMode'
@@ -13,6 +11,7 @@ import { IconDeviceSpeaker, IconRecharging, IconDeviceDesktop, IconChartCandle }
 import MatrixConflictList from 'devices/Matrix/MatrixConflictList'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import TelevisionLightControls from 'devices/Television/TelevisionLightControls'
+import VolumeMuteSliderLine from 'endpoint-model/property/volume/VolumeMuteSliderLine'
 
 const TelevisionPullUp = props => {
 
@@ -48,9 +47,6 @@ const TelevisionPullUp = props => {
                     instance={matrixInstance} 
                 />
             }
-            { (on && inputLabel === "Matrix") && 
-                <MatrixConflictList endpointId={props.matrix} /> 
-            }
             <ModeLine 
                 icon={
                     <ActionIcon>
@@ -61,7 +57,7 @@ const TelevisionPullUp = props => {
                 instance={"Audio.Output"}
             />
             { audioOutput === "TV" &&
-                <MutedLine endpointId={props.endpointId} />
+                <VolumeMuteSliderLine icon label="Volume" endpointId={props.endpointId} step={5}/>
             }
             <ModeLine 
                 icon={
@@ -72,6 +68,9 @@ const TelevisionPullUp = props => {
                 endpointId={props.endpointId} 
                 instance={"Power.Saving"}
             />
+            { (on && inputLabel === "Matrix") && 
+                <MatrixConflictList endpointId={props.matrix} /> 
+            }
             { ( on && night ) &&
                 <>
                     <Divider />
@@ -79,6 +78,7 @@ const TelevisionPullUp = props => {
                 </>
             }   
             </Stack>
+
         </PullUpCard>
     );
 }

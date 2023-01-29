@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from '@mantine/core';
 import { selectPage } from 'helpers/layoutHelpers';
-import { IconStack3, IconAdjustments, IconCalendarTime, IconCloudDataConnection, IconIdBadge } from '@tabler/icons';
+import { IconStack3, IconAdjustments } from '@tabler/icons';
 
 const AdminNav = props => {
 

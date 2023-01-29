@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from '@mantine/core';
 import { useRegister } from 'endpoint-model/register/useRegister'
-import { getControllerInterface } from 'endpoint-model/discovery'
+// import { getControllerInterface } from 'endpoint-model/discovery'
 
 const RangeValueText = props => {
 

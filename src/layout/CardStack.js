@@ -25,7 +25,7 @@ export default function CardStack(props) {
             (card, i) => renderSuspenseModule(
                             card.module, 
                             {...card.props },
-                            i 
+                            i
                         )
             )
         setCards(renderCards)

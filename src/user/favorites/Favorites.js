@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ActivityLink from 'activity/ActivityLink';
 import useUserStore from 'user/userStore';
 import { NavLink } from '@mantine/core';
-import { IconStar } from '@tabler/icons';
+// import { IconStar } from '@tabler/icons';
 
 const Favorites = props => {
 

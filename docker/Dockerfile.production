@@ -10,7 +10,8 @@ COPY package.json package.json
 
 # install node modules and build assets
 RUN npm install -g npm@latest
-RUN npm install --production
+#RUN npm install --production --  this is deprecated per warnings and new code is omit=dev
+RUN npm install --omit=dev
 
 # Copy all files from current directory to working dir in image
 # Except the one defined in '.dockerignore'

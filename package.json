@@ -1,6 +1,6 @@
 {
     "name": "sofa-client",
-    "version": "3.74.0",
+    "version": "3.75.0",
     "homepage": "/",
     "private": true,
     "dependencies": {
@@ -17,6 +17,7 @@
         "@testing-library/react": "^11.2.7",
         "@testing-library/user-event": "^12.8.3",
         "@textea/json-viewer": "^2.3.1",
+        "@loadable/component": "^5.15.2",
         "dayjs": "^1.11.5",
         "immer": "^9.0.7",
         "normalize.css": "^8.0.1",

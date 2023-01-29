@@ -3,6 +3,7 @@ import { Button } from '@mantine/core';
 import useActivityEditorStore from 'activity/editor/activityEditorStore'
 import { hasCapability } from 'endpoint-model/discovery'
 import { tokenFetch } from 'network/tokenFetch';
+import loadable from '@loadable/component'
 
 const checkItemNotReady = (section, item) => {
     if (!item.endpointId || item.endpointId === undefined) { 
@@ -196,20 +197,23 @@ function placeholder(modulename) {
     return <Button disabled>{modulename ? modulename : "Loading..."}</Button>
 }
 
-function errorBlock(modulename) {
-    return <Button disabled>{modulename ? modulename : "Error"}</Button>
-}
+// function errorBlock(modulename) {
+//     return <Button disabled>{modulename ? modulename : "Error"}</Button>
+// }
 
 export const loadPropertyModule = (name) => {
-    let propertyModule = React.lazy(() => { 
-        try { 
-            return import('endpoint-model/property/' + name ).catch(() => ({ default: () => errorBlock(name) }))
-        }
-        catch {
-            return <Button disabled>{name ? name : "Not available"}</Button>
-        }
-    })
-    return propertyModule
+    const PropertyModule = loadable(moduleProps => import(`endpoint-model/property/${name}`))
+    return PropertyModule
+
+    // let propertyModule = React.lazy(() => { 
+    //     try { 
+    //         return import('endpoint-model/property/' + name ).catch(() => ({ default: () => errorBlock(name) }))
+    //     }
+    //     catch {
+    //         return <Button disabled>{name ? name : "Not available"}</Button>
+    //     }
+    // })
+    // return propertyModule
 }
 
 export const renderSuspensePropertyModule = ( moduleName, propertyModule, props, key ) => {

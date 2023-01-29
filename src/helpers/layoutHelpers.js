@@ -5,6 +5,7 @@ import useLoginStore from 'login/loginStore'
 import PlaceholderCard from 'layout/PlaceholderCard';
 import { Text } from '@mantine/core'
 import ErrorBoundary from 'error/ErrorBoundary'
+import loadable from '@loadable/component'
 
 const hostName = useLoginStore.getState().host_name
 const serverUrl = useLoginStore.getState().server_url
@@ -35,15 +36,17 @@ export const selectPage = (pagename, pageprops, hideHome) => {
 function addSuspenseModule(moduleName, inStack) {
     try {
         if (inStack) {
-            return ( React.lazy(() => 
-            import("layout/cards/" + moduleName)
-                .catch(err => { console.error('Error during loading module: ' + err)})
-            ))
+            return  loadable(moduleProps => import(`layout/cards/${moduleName}`))
+            // return ( React.lazy(() => 
+            // import("layout/cards/" + moduleName)
+            //     .catch(err => { console.error('Error during loading module: ' + err)})
+            // ))
         } else {
-            return ( React.lazy(() => 
-                import("layout/pages/" + moduleName)
-                    .catch(err => { console.error('Error during loading module: ' + err)})
-            ))
+            return  loadable(moduleProps => import(`layout/pages/${moduleName}`))
+            // return ( React.lazy(() => 
+            //     import("layout/pages/" + moduleName)
+            //         .catch(err => { console.error('Error during loading module: ' + err)})
+            // ))
         }
     }
     catch {

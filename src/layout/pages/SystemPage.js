@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 
-import { Divider, Stack, ScrollArea } from '@mantine/core';
+import { Divider, Stack } from '@mantine/core';
 import UserNav from 'layout/UserNav';
 import AdminNav from 'admin/AdminNav'
-import Favorites from 'user/favorites/Favorites';
-import SettingsList from 'admin/SettingsList'
+// import Favorites from 'user/favorites/Favorites';
+// import SettingsList from 'admin/SettingsList'
 import ActivitiesAllButton from 'activity/ActivitiesAllButton';
 import ActivitiesFavoritesButton from 'activity/ActivitiesFavoritesButton';
 

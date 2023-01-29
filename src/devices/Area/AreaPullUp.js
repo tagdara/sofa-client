@@ -11,7 +11,7 @@ import { Divider } from '@mantine/core'
 const AreaPullUp = props => {
 
     const name = friendlyNameByEndpointId(props.endpointId) 
-    const { areas, lights, scenes } = useChildren(props.endpointId)
+    const { lights, scenes } = useChildren(props.endpointId)
     const { shortcuts } = useShortcuts(props.endpointId)
 
     return (      

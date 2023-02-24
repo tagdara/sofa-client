@@ -1,4 +1,5 @@
-import create from 'zustand'
+import { create } from 'zustand'
+
 import { storeUpdater } from 'endpoint-model/storeUpdater'
 import { tokenFetch } from 'network/tokenFetch'
 import useLoginStore from "login/loginStore"

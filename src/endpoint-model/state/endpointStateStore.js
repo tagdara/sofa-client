@@ -1,5 +1,6 @@
-import create from 'zustand'
-import { persist } from "zustand/middleware"
+import { create } from 'zustand'
+
+import { persist, createJSONStorage } from 'zustand/middleware'
 
 const useEndpointStateStore = create(persist(
     set => ({
@@ -7,7 +8,7 @@ const useEndpointStateStore = create(persist(
     }),
     {
         name: "endpointState", // unique name
-        getStorage: () => localStorage, // (optional) by default the 'localStorage' is used        
+        storage: createJSONStorage(() => localStorage), // (optional) by default the 'localStorage' is used        
     }
 ))
 

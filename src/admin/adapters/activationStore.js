@@ -1,4 +1,5 @@
-import create from 'zustand'
+import { create } from 'zustand'
+
 import useLoginStore from "login/loginStore"
 
 const serverUrl = useLoginStore.getState().server_url

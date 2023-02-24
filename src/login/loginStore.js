@@ -1,4 +1,5 @@
-import create from 'zustand'
+import { create } from 'zustand'
+
 
 const hostName = ( process.env.REACT_APP_SERVER ? process.env.REACT_APP_SERVER : window.location.hostname )
 const serverUrl = "https://" + hostName + "/sofa" // + ":5444"

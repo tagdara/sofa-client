@@ -43,7 +43,7 @@ const Television = props => {
                         { on && <TelevisionDetailLine endpointId={props.endpointId} matrix={props.matrix} />  }
                     </Stack>
                 </Group>
-                { audioOutput === "TV" &&
+                { ( on && audioOutput === "TV" ) &&
                     <VolumeSlider endpointId={props.endpointId} marks={marks} step={5}/>
                 }
             </Stack>

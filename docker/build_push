@@ -1,0 +1,4 @@
+# This assumes the script is in the docker subdirectory of the project
+./build_prod
+docker tag sofa-client:latest dockerhub.dayton.tech/sofa-client:latest
+docker push dockerhub.dayton.tech/sofa-client:latest

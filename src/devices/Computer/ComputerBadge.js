@@ -12,7 +12,7 @@ const ComputerBadge = props => {
     const { powerStateBool } = usePowerState(props.endpointId)
     const { modeLabel } = useMode(props.outlet, "Energy Level", props.value, props.directive)
 
-    const outletOffStates = ["Off", "Standby"]
+    const outletOffStates = [ undefined, "Off", "Standby" ]
     const outletOn = !outletOffStates.includes(modeLabel)
     const on = reachable && powerStateBool && outletOn
 

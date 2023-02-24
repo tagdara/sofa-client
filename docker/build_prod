@@ -3,5 +3,3 @@ scriptdir="$( dirname -- "$BASH_SOURCE"; )";
 echo $scriptdir
 
 cd $scriptdir && docker build --tag sofa-client:latest -f Dockerfile.production ..
-docker tag sofa-client:latest dockerhub.dayton.tech/sofa-client:latest
-docker push dockerhub.dayton.tech/sofa-client:latest

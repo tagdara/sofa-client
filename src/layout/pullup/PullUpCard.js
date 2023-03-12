@@ -49,7 +49,7 @@ const PullUpCard = props => {
                 }
             }}
 
-            opened = { props.name === stackPullUp } 
+            opened = { props.name && props.name === stackPullUp } 
         >
             <Stack spacing="xl" 
                 {...handlers}

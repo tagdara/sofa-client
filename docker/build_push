@@ -1,4 +1,14 @@
 # This assumes the script is in the docker subdirectory of the project
 ./build_prod
-docker tag sofa-client:latest dockerhub.dayton.tech/sofa-client:latest
-docker push dockerhub.dayton.tech/sofa-client:latest
+version=$(grep -Po '"'"version"'"\s*:\s*"\K([^"]*)' ../package.json)
+name=$(grep -Po '"'"name"'"\s*:\s*"\K([^"]*)' ../package.json)
+
+echo $name $version
+
+docker tag $name:latest git.dayton.tech/dtech/$name:$version
+docker tag $name:latest git.dayton.tech/dtech/$name:latest
+docker push git.dayton.tech/dtech/$name:$version
+docker push git.dayton.tech/dtech/$name:latest
+
+ssh -t code@sofakube1.dayton.tech microk8s kubectl set image -n sofa statefulset.apps/sofa-client sofa-client=git.dayton.tech/dtech/$name:$version
+ssh -t code@sofakube1.dayton.tech microk8s kubectl rollout restart statefulset sofa-client -n sofa

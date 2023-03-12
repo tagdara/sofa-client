@@ -6,6 +6,7 @@ import { selectPage } from 'helpers/layoutHelpers';
 export default function PrinterHero(props) {
 
     const printer = endpointIdByFriendlyName(props.name)
+    console.log('printer', printer)
 
     return (
         <PrinterSummary hideOff endpointId={printer} onClick={ ()=> selectPage('ComputerPage') } />

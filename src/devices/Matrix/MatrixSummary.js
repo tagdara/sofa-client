@@ -2,30 +2,35 @@ import React from "react";
 import { sortByName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
 import ComputerOnList from 'devices/Computer/ComputerOnList';
 import { Avatar, Group, Stack, Text } from '@mantine/core';
-import { IconDeviceDesktop, IconDeviceDesktopOff } from '@tabler/icons';
+import { IconCloudOff, IconDeviceDesktop, IconDeviceDesktopOff } from '@tabler/icons';
 import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
+import useMultiEndpointHealth from 'endpoint-model/multidevice/useMultiEndpointHealth'
 import MatrixPullUp from 'devices/Matrix/MatrixPullUp'
 import usePullUp from 'layout/pullup/usePullUp'
+import { matrixManualSort } from 'devices/Matrix/matrixSettings'
 
 const MatrixSummary = props => {
 
     const { pullUpActive, showPullUp } = usePullUp('matrix')
     const computers = sortByName(endpointIdsByDisplayCategory('COMPUTER'))
+    const { onlineCount } = useMultiEndpointHealth(matrixManualSort)
+    const offlineCount = matrixManualSort.length - onlineCount
     const { onCount } = useMultiPower(computers)
+    const onIcon = onCount ? <IconDeviceDesktop size={24}  /> : <IconDeviceDesktopOff size={24} /> 
+    const matrixIcon = offlineCount ? <IconCloudOff size={24}  /> : onIcon
+    const onColor = onCount ? "primary" : undefined 
+    const matrixColor = offlineCount ? "red" : onColor
+
 
     return (
         <>
             <Stack spacing="md">
                 <Group spacing="xl" onClick={ showPullUp }>
                     <Avatar
-                        color = { onCount ? "primary" : undefined }
+                        color = { matrixColor }
                         size={"lg"} 
                     >
-                        { onCount ?
-                            <IconDeviceDesktop size={24}  />  
-                        :
-                            <IconDeviceDesktopOff size={24} /> 
-                        } 
+                        {matrixIcon}
                     </Avatar>
                     <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}>
                         <Text 

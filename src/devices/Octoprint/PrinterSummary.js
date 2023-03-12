@@ -15,6 +15,8 @@ const PrinterLine = props => {
     const endpointId = endpointIdByFriendlyName(name)
     const { reachable } = useEndpointHealth(endpointId)
     const { powerStateBool } = usePowerState(endpointId)
+    
+    console.log('printer', reachable, powerStateBool, endpointId)
 
     if ( props.hideOff & ( !reachable || !powerStateBool)) { return null }
 

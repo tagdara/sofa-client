@@ -26,8 +26,8 @@ services:
         source: /home/code/sofa-client/src
         target: /app/src
       - type: bind
-        source: /home/code/sofa-client/.env
-        target: /app/.env
+        source: /home/code/sofa-client/.env.development
+        target: /app/.env.development
 
 networks:
   nginx-network:

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Drawer, Stack, ScrollArea } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { useNotifications } from '@mantine/notifications';
+import { notifications } from '@mantine/notifications';
 import { IconLogin } from '@tabler/icons';
 
 import NavButton from 'layout/NavButton';
@@ -9,8 +9,7 @@ import NavButton from 'layout/NavButton';
 const RightDrawer = props => {
 
     const [contextItem, setContextItem] = useState(undefined)
-    const wide = useMediaQuery('(min-width: 640px)');
-    const notifications = useNotifications();       
+    const wide = useMediaQuery('(min-width: 640px)');     
     const powerUser = true
 
     function closeDrawer() {

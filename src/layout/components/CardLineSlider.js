@@ -26,8 +26,6 @@ const CardLineSlider = props => {
                 maxWidth: "100%", width: "100%", 
                 minWidth: props.minWidth, 
                 flexGrow: 1, 
-                paddingLeft: 8, 
-                paddingRight: 8
             }}
             styles={{ 
                 markLabel: { 

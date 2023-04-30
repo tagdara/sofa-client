@@ -7,6 +7,8 @@ const AppleTvHero = props => {
     const appleTV = endpointIdByFriendlyName(props.appleTV)
     const television = endpointIdByFriendlyName(props.television)
 
+    if (!appleTV) { return null }
+
     return (
         <AppleTV endpointId={appleTV} tv={television} hidden={props.hidden} />
     );

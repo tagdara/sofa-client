@@ -9,13 +9,13 @@ export default function BrightnessSlider(props) {
 
     const { brightness, setBrightness } = useBrightness(props.endpointId, props.value, props.directive)
     const { powerState } = usePowerState(props.endpointId)
-
     if (brightness === undefined ) { return null }
 
     const disabled = props.disabled || (props.value === undefined && powerState === "OFF")
 
+
     return (
-        <Group noWrap style={{ flexGrow: 1}}>
+        <Group noWrap style={{ padding: 8, width: "100%"}}>
             <ThemeIcon variant="light">
                 <IconSun size={16} />
             </ThemeIcon >

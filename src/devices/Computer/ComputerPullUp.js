@@ -2,7 +2,7 @@ import React from 'react';
 // import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 // import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useMode from 'endpoint-model/property/mode/useMode'
-import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
+import { endpointIdByFriendlyName,friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import WakeSleepSegment from 'endpoint-model/controller/WakeOnLanController/WakeSleepSegment'
 import EnergyLevelLine from 'endpoint-model/instance/EnergyLevelLine'
 import {  Button, Divider, Group, Stack } from '@mantine/core'
@@ -10,9 +10,12 @@ import VolumeSliderLine from 'endpoint-model/property/volume/VolumeSliderLine'
 import { IconMouse } from '@tabler/icons';
 import PullUpCard from 'layout/pullup/PullUpCard'
 import PowerStateLine from 'endpoint-model/property/powerState/PowerStateLine'
+import ComputerTV from 'devices/Computer/ComputerTV'
+
 
 const ComputerPullUp = props => {
 
+    const tv = endpointIdByFriendlyName('TV')
     const name = friendlyNameByEndpointId(props.endpointId)
     // const { reachable } = useEndpointHealth(props.endpointId)
     // const { powerStateBool } = usePowerState(props.endpointId)
@@ -41,6 +44,9 @@ const ComputerPullUp = props => {
                     <WakeSleepSegment label icon endpointId={props.endpointId} value={{ "powerState" : "OFF" }} />
                 </Group>
             </Stack>
+            { name === "pc2" &&
+                <ComputerTV endpointId={tv} />
+            }
         </PullUpCard>
     )
 

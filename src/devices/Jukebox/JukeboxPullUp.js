@@ -11,7 +11,7 @@ const JukeboxPullUp = props => {
     // const { powerStateBool: on } = usePowerState(props.endpointId)
     const name = friendlyNameByEndpointId(props.endpointId) 
     const excludeSpeakers = ['mca:mca-zone-1', 'mca:mca-zone-2', 'jukebox', 'sonos:player:RINCON_B8E9378E1E8001400' ]
-    const ampOutlet = "kasa:plug:50C7BF3325B0"
+    const ampOutlet = "kasa:plug:8006A33CCFD62AE0DF1753D5A9BCD86E1AD7F78E01"
 
     function openJukebox() {
         var newurl="https://jukebox.dayton.tech"

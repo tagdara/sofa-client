@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactHLS from 'react-hls-player';
-import { directive } from 'endpoint-model/directive/directive'
+// import ReactHLS from 'react-hls-player';
+// import { directive } from 'endpoint-model/directive/directive'
+// import { Image } from '@mantine/core';
+
+const hostName = ( process.env.REACT_APP_SERVER ? process.env.REACT_APP_SERVER : window.location.hostname )
 
 const CameraVideo = props => {
 
@@ -14,40 +17,45 @@ const CameraVideo = props => {
     }, []);
  
     function startStream() {
-        directive(props.endpointId, "Alexa.CameraStreamController", "InitializeCameraStreams", 
-            {
-                "cameraStreams": [
-                    {
-                        "protocol": "HLS",
-                        "resolution": {
-                            "width": 640,
-                            "height": 480
-                        },
-                        "authorizationType": "BASIC",
-                        "videoCodec": "H264",
-                        "audioCodec": "AAC"
-                    }
-                ]
-            }
-        ).then(response => getStreamUrl(response));
+        console.log('setting URI', "https://" + hostName + "/hls/" + props.endpointId.replaceAll(":","-"))
+        setVideoUri("https://" + hostName + "/hls/" + props.endpointId.replaceAll(":","-")+"/")
+        return
+        // directive(props.endpointId, "Alexa.CameraStreamController", "InitializeCameraStreams", 
+        //     {
+        //         "cameraStreams": [
+        //             {
+        //                 "protocol": "HLS",
+        //                 "resolution": {
+        //                     "width": 640,
+        //                     "height": 480
+        //                 },
+        //                 "authorizationType": "BASIC",
+        //                 "videoCodec": "H264",
+        //                 "audioCodec": "AAC"
+        //             }
+        //         ]
+        //     }
+        // ).then(response => getStreamUrl(response));
     }    
 
-    const getStreamUrl = (data) => {
-        console.log('data', data)
-        if (!data || !data.payload || !data.payload.cameraStreams) { 
-            console.log('No data in response', data)
-            return false
-        }
-        if (data.payload.cameraStreams.length<1) {
-            console.log('No streams were specified', data)
-            return false
-        }
-        setVideoUri(data.payload.cameraStreams[0].uri)
-    }
+    // const getStreamUrl = (data) => {
+    //     console.log('data', data)
+    //     if (!data || !data.payload || !data.payload.cameraStreams) { 
+    //         console.log('No data in response', data)
+    //         return false
+    //     }
+    //     if (data.payload.cameraStreams.length<1) {
+    //         console.log('No streams were specified', data)
+    //         return false
+    //     }
+    //     setVideoUri(data.payload.cameraStreams[0].uri)
+    // }
 
     function dateUri(uri) {
-        var date = new Date();
-        return uri+"?date="+date.toGMTString()
+        // var date = new Date();
+        console.log("du", ios, uri)
+        return uri
+        //return uri+"?date="+date.toGMTString()
     }
 
     if (ios) {
@@ -58,16 +66,18 @@ const CameraVideo = props => {
                 </video>
             </>
         )
-    }     
-    
-    return (
-        <>
-            <ReactHLS   url={dateUri(videoUri)} 
-                        videoProps={{ width: "100%", height: "100%", muted: true, autoPlay: true, playsInline: true, }} 
-                        hlsConfig ={{ liveDurationInfinity: true, enableWorker: false, }} 
-            />
-        </>
-    );
+    }    
+
+    return null
+
+    // return (
+    //     <>
+    //         <ReactHLS   src={"https://" + hostName + "/hls/" + props.endpointId.replaceAll(":","-")+"/"} 
+    //                     videoProps={{ width: "100%", height: "100%", muted: true, autoPlay: true, playsInline: true, }} 
+    //                     hlsConfig ={{ liveDurationInfinity: true, enableWorker: false, }} 
+    //         />
+    //     </>
+    // );
 }
 
 export default CameraVideo;

@@ -1,7 +1,7 @@
 import React from "react";
 import { sortByName, endpointIdsByDisplayCategory } from 'endpoint-model/discovery'
-import ComputerOnList from 'devices/Computer/ComputerOnList';
-import { Avatar, Group, Stack, Text } from '@mantine/core';
+import ComputerButtons from 'devices/Computer/ComputerButtons';
+import { Avatar, Divider, Group } from '@mantine/core';
 import { IconCloudOff, IconDeviceDesktop, IconDeviceDesktopOff } from '@tabler/icons';
 import useMultiPower from 'endpoint-model/multidevice/useMultiPower'
 import useMultiEndpointHealth from 'endpoint-model/multidevice/useMultiEndpointHealth'
@@ -23,30 +23,22 @@ const MatrixSummary = props => {
 
 
     return (
-        <>
-            <Stack spacing="md">
-                <Group spacing="xl" onClick={ showPullUp }>
-                    <Avatar
-                        color = { matrixColor }
-                        size={"lg"} 
-                    >
-                        {matrixIcon}
-                    </Avatar>
-                    <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}>
-                        <Text 
-                            size={props.size ? props.size : "lg"} 
-                            lineClamp={1} 
-                            style={{ flexGrow: 1 }}
-                        >
-                            Matrix Screens
-                        </Text>
-                        <ComputerOnList  />
-                    </Stack>
-                </Group>
-            </Stack>
+        <Group spacing="xl" noWrap style={{ width: "100%" }}>
+            <Avatar
+                color = { matrixColor }
+                size={"lg"} 
+                onClick={ showPullUp }
+                radius="md"
+            >
+                {matrixIcon}
+            </Avatar>
+            <Divider orientation="vertical" />
+            <ComputerButtons />
             <MatrixPullUp opened={pullUpActive}/>
-        </>
+        </Group>
     );
+
+
 }
 
 export default MatrixSummary;

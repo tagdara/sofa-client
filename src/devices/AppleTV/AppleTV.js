@@ -17,6 +17,8 @@ const AppleTV = props => {
     const { pullUpActive, showPullUp } = usePullUp('AppleTvHero', name)
 
     if (props.tv && (!tvOn || tvInput !== "Apple TV")) { return null }
+    
+    if (!props.endpointId || !name) { return null }
 
     return (
         <StackCard hidden={props.hidden}>

@@ -15,7 +15,6 @@ const PrinterCam = props => {
             src={ streamUrl }
             title={ name }
             alt={ name }
-            onClick={ (e) => props.setZoom(!props.zoom)}
         />
     )
 

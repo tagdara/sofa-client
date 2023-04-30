@@ -65,6 +65,12 @@ const useLoginStore = create((set,get) => ({
             var response = undefined
             try {
                 response = await fetch(tokenUrl, {  method: "post", body: JSON.stringify(body)})
+                if (response.status === 503) {
+                    console.log('server is offline', response.status)
+                    set({ login_message: 'Server offline'})
+                    set({ checking: false})
+                    return 
+                }
             }
             catch (e) {
                 console.log('server not ready', e)

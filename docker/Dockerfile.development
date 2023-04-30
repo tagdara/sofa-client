@@ -9,6 +9,7 @@ COPY package.json package.json
 
 # install node modules and build assets
 RUN npm install -g npm@latest
+RUN npm config set legacy-peer-deps true
 RUN npm install
 
 # Copy all files from current directory to working dir in image

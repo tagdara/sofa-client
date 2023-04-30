@@ -1,0 +1,35 @@
+if [[ -z "${DOCKER_REPOSITORY}" ]]; then
+  echo "No docker repository environment specified (git.domain.xxx/owner)"
+  exit 1
+fi
+
+if [[ -f "../package.json" ]]; then
+  # react package
+  name=$(grep -Po '"'"name"'"\s*:\s*"\K([^"]*)' ../package.json)
+  version=$(grep -Po '"'"version"'"\s*:\s*"\K([^"]*)' ../package.json)
+fi
+
+if [[ -f "../setup.cfg" ]]; then
+  # python package
+  version=$(grep -Po '(?<=^version\s=\s)\d.*$' ../setup.cfg)
+  name=$(grep -Po '(?<=^name\s=\s)\w.*$' ../setup.cfg)
+fi
+
+if [[ -z "${version}" ]]; then
+  echo "No version could be detected"
+  exit 1
+fi
+
+if [[ -z "${name}" ]]; then
+  echo "No package name could be detected"
+  exit 1
+fi
+
+# this can be changed for apps that have a prefix as part of a larger project to strip the prefix as needed
+echo pushhing $name $version to docker repository $DOCKER_REPOSITORY
+
+docker tag $name:latest $DOCKER_REPOSITORY/$name:$version
+docker tag $name:latest $DOCKER_REPOSITORY/$name:latest
+docker push $DOCKER_REPOSITORY/$name:$version
+docker push $DOCKER_REPOSITORY/$name:latest
+

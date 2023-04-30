@@ -23,8 +23,6 @@ const ComputerCube = props => {
 
     //left={ on ? <EnergyLevelModeIcon size={16} endpointId={props.outlet} /> : <IconMoon size={12} />}
 
-    if (props.dualbootMode === "secondary" && !on) { return null }
-
     return (
         <>
             <WideAvatar 

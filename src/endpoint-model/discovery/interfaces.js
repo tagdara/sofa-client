@@ -15,7 +15,7 @@ export const getControllerInterface = (device, name)  => {
             }               
         }
     }
-    console.log('failed get interface', device, name)
+    // console.log('failed get interface', device, name)
     return undefined
 }
 

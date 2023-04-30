@@ -1,5 +1,29 @@
 # This assumes the script is in the docker subdirectory of the project
+if [[ -f "../package.json" ]]; then
+  # react package
+  name=$(grep -Po '"'"name"'"\s*:\s*"\K([^"]*)' ../package.json)
+  version=$(grep -Po '"'"version"'"\s*:\s*"\K([^"]*)' ../package.json)
+fi
+
+if [[ -f "../setup.cfg" ]]; then
+  # python package
+  version=$(grep -Po '(?<=^version\s=\s)\d.*$' ../setup.cfg)
+  name=$(grep -Po '(?<=^name\s=\s)\w.*$' ../setup.cfg)
+fi
+
+if [[ -z "$version" ]]; then
+  echo "No version could be detected"
+  exit 1
+fi
+
+if [[ -z "$name" ]]; then
+  echo "No package name could be detected"
+  exit 1
+fi
+
+echo "building production docker for $name $version"
+
+
 scriptdir="$( dirname -- "$BASH_SOURCE"; )";
 echo $scriptdir
-
-cd $scriptdir && docker build --tag sofa-client:latest -f Dockerfile.production ..
+cd $scriptdir && docker build --tag $name:$version --tag $name:latest -f Dockerfile.production ..

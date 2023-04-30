@@ -8,7 +8,7 @@ export const InputSelectLine = props => {
         <Group noWrap grow position="apart" style={{ width: "100%"}}>
             <Group noWrap style={{ minWidth: "50%" }}>
                 { props.icon ? props.icon :  null }
-                <Text>Input</Text>
+                <Text>{props.label ? props.label : "Input"}</Text>
             </Group>
             <InputSelect endpointId={props.endpointId} />
         </Group>

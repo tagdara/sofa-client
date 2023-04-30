@@ -1,9 +1,7 @@
 import React from 'react';
 import MatrixSummary from 'devices/Matrix/MatrixSummary'
-import ComputerCubes from 'devices/Computer/ComputerCubes'
 import { selectPage } from 'helpers/layoutHelpers';
 import StackCard from 'layout/components/StackCard'
-import StackRow from 'layout/components/StackRow'
 import { endpointIdByFriendlyName } from 'endpoint-model/discovery'
 
 export default function ComputerHero(props) {
@@ -17,10 +15,6 @@ export default function ComputerHero(props) {
             <StackCard hidden={props.hidden}>
                 <MatrixSummary endpointIds={computerPlugEndpoints} onClick={ ()=> selectPage('ComputerPage') } />
             </StackCard>
-            <StackRow>
-                <ComputerCubes />
-            </StackRow>
-            
         </>
     );
 }

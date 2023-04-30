@@ -6,31 +6,53 @@ import StatusLock from 'devices/Lock/StatusLock';
 import StackCard from 'layout/components/StackCard'
 import usePageFrame from 'helpers/usePageFrame'
 import { Carousel } from '@mantine/carousel';
-import { createStyles } from '@mantine/core';
+import { createStyles, getStylesRef, rem } from '@mantine/core';
 
-const useStyles = createStyles((_theme, _params, getRef) => ({
+// const useStyles = createStyles((_theme, _params, getRef) => ({
+//     controls: {
+//         ref: getRef('controls'),
+//         transition: 'opacity 150ms ease',
+//         opacity: 0,
+//     },
+//     indicators: {
+//         ref: getRef('indicators'),
+//         transition: 'opacity 150ms ease',
+//         opacity: 0,
+//     },
+//     root: {
+//         '&:hover': {
+//             [`& .${getRef('controls')}`]: {
+//                 opacity: 1,
+//             },
+//             [`& .${getRef('indicators')}`]: {
+//                 opacity: 1,
+//             },
+//         },
+//     },
+// }));
+
+const useStyles = createStyles(() => ({
     controls: {
-        ref: getRef('controls'),
-        transition: 'opacity 150ms ease',
-        opacity: 0,
+      ref: getStylesRef('controls'),
+      transition: 'opacity 150ms ease',
+      opacity: 0,
     },
     indicators: {
-        ref: getRef('indicators'),
+        ref: getStylesRef('indicators'),
         transition: 'opacity 150ms ease',
         opacity: 0,
     },
     root: {
-        '&:hover': {
-            [`& .${getRef('controls')}`]: {
-                opacity: 1,
-            },
-            [`& .${getRef('indicators')}`]: {
-                opacity: 1,
-            },
+      '&:hover': {
+        [`& .${getStylesRef('controls')}`]: {
+          opacity: 1,
+        },
+        [`& .${getStylesRef('indicators')}`]: {
+            opacity: 1,
         },
     },
-}));
-
+    },
+  }));
 
 export default function CameraSelect(props) {
 
@@ -69,7 +91,21 @@ export default function CameraSelect(props) {
 
     return (
         <>
-            <Carousel withIndicators loop classNames={classes}>
+            <Carousel 
+                withIndicators 
+                loop  
+                classNames={classes}
+                styles={{
+                    indicator: {
+                      width: rem(8),
+                      height: rem(8),
+                      transition: 'width 250ms ease',
+                      '&[data-active]': {
+                        width: rem(20),
+                      },
+                    },
+                  }}    
+            >
                 { cameras.map(camera => 
                     <Carousel.Slide key={camera}>
                         <SecurityCamera endpointId={camera} noLabel/>

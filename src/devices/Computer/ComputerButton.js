@@ -6,9 +6,10 @@ import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import { IconDevicesPc,IconDevicesPcOff } from '@tabler/icons';
 import usePullUp from 'layout/pullup/usePullUp'
 import ComputerPullUp from 'devices/Computer/ComputerPullUp'
-import WideAvatar from 'layout/components/WideAvatar'
+import { ActionIcon, Stack, Text} from '@mantine/core';
 
-const ComputerCube = props => {
+const ComputerButton = props => {
+
     const name = friendlyNameByEndpointId(props.endpointId)
     const { showPullUp } = usePullUp(name)
 
@@ -19,27 +20,34 @@ const ComputerCube = props => {
     const outletOffStates = [undefined, "Off", "Standby"]
     const outletOn = !outletOffStates.includes(modeLabel)
     const on = reachable && powerStateBool && outletOn
-    const nameLabel = name.replace('pc','')
 
-    //left={ on ? <EnergyLevelModeIcon size={16} endpointId={props.outlet} /> : <IconMoon size={12} />}
-
-    if (props.dualbootMode === "secondary" && !on) { return null }
+    if (props.dualBootMode === "secondary" && !on) { return null }
 
     return (
         <>
-            <WideAvatar 
-                radius={"md"}
-                color={ outletOn ? "primary" : "paper" }
+            <ActionIcon
+                color="primary"
                 onClick={ showPullUp }
-                size="md"
-                left={ on ? <IconDevicesPc size={24} /> : <IconDevicesPcOff size={24} />}
-                right={nameLabel}
-                height={72}
-            />
+                radius={"md"}
+                size="xl"
+                style={{ 
+                    height: 52,
+                    display: "flex",
+                    flexGrow: 1,
+                    width: "100%",
+                }}
+                variant={ outletOn ? "light" : "default" }
+            >
+                <Stack spacing={1} style={{ alignItems: "center"}}>
+                    { on ? <IconDevicesPc size={24} /> : <IconDevicesPcOff size={24} />}
+                    <Text size="xs">{name}</Text>
+
+                </Stack>
+                </ActionIcon>
             <ComputerPullUp name={name} endpointId={props.endpointId} outlet={props.outlet}/>
         </>
     )
 
 }
 
-export default ComputerCube;
+export default ComputerButton;

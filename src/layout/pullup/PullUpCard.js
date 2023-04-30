@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import useLayoutStore from 'layout/layoutStore'
 import { useMediaQuery } from '@mantine/hooks';
 import { ActionIcon, Divider, Group, Modal, Stack, Title, useMantineTheme } from '@mantine/core';
@@ -11,9 +11,15 @@ const PullUpCard = props => {
     const wide = useMediaQuery('(min-width: 640px)');
     const setStackPullUp= useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
+    const [ name, setName ] = useState( stackPullUp)
 
+    useEffect(() => {
+        setName(stackPullUp)
+    // eslint-disable-next-line 
+    }, []);
+    
     const closeOverlay = () => {
-        setStackPullUp(undefined)
+       setStackPullUp(undefined)
     }
 
     const handlers = useSwipeable({
@@ -26,9 +32,11 @@ const PullUpCard = props => {
     return (
         <Modal 
             radius="lg"
-            overlayColor={theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2]}
-            overlayOpacity={0.80}
-            overlayBlur={3}
+            overlayProps={{
+                color: theme.colorScheme === 'dark' ? theme.colors.dark[9] : theme.colors.gray[2],
+                opacity: 0.80,
+                blur: 3,
+            }}
             withCloseButton={false} 
             onClose={closeOverlay} 
             centered={wide} 

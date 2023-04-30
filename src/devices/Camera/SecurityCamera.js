@@ -3,7 +3,7 @@ import CameraImage from 'devices/Camera/CameraImage';
 import StackCard from 'layout/components/StackCard'
 import { Alert, Card, Group, Text } from '@mantine/core';
 import { endpointByEndpointId } from 'endpoint-model/discovery'
-import { selectPage } from 'helpers/layoutHelpers';
+// import { selectPage } from 'helpers/layoutHelpers';
 import CameraVideo from 'devices/Camera/CameraVideo'
 import useEndpointHealth from 'endpoint-model/property/endpointHealth/useEndpointHealth'
 import { IconDeviceCctvOff } from '@tabler/icons';
@@ -21,11 +21,12 @@ const SecurityCamera = props => {
 
 
     const imageClick = () => {
-        if (props.onClick) { 
-            props.onClick()
-        } else {
-            selectPage('CameraPage')
-        }
+        setLive(!live)
+        // if (props.onClick) { 
+        //     props.onClick()
+        // } else {
+        //     selectPage('CameraPage')
+        // }
     }
 
     if (!device) { return null }

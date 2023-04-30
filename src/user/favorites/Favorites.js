@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ActivityLink from 'activity/ActivityLink';
 import useUserStore from 'user/userStore';
 import { NavLink } from '@mantine/core';
+import NotificationText from 'user/NotificationTest'
 // import { IconStar } from '@tabler/icons';
 
 const Favorites = props => {
@@ -33,6 +34,7 @@ const Favorites = props => {
                             hideFavorite
                         />
                     )}
+            <NotificationTest />
         </NavLink>
     )
 }

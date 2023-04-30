@@ -4,12 +4,6 @@ import { useMantineTheme } from '@mantine/core';
 
 const CardPopover = props => {
 
-    //styles={{ 
-    //    popover: { 
-    //        minWidth: props.minWidth ? props.minWidth: 200,
-    //        maxWidth: props.maxWidth ? props.maxWidth: 320,                       
-    //    }             
-    //}}
     const theme = useMantineTheme(); 
 
     return (

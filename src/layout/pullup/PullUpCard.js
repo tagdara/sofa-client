@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import useLayoutStore from 'layout/layoutStore'
 import { useMediaQuery } from '@mantine/hooks';
 import { ActionIcon, Divider, Group, Modal, Stack, Title, useMantineTheme } from '@mantine/core';
@@ -11,12 +11,6 @@ const PullUpCard = props => {
     const wide = useMediaQuery('(min-width: 640px)');
     const setStackPullUp= useLayoutStore( state => state.setStackPullUp)
     const stackPullUp = useLayoutStore( state => state.stackPullUp)
-    const [ name, setName ] = useState( stackPullUp)
-
-    useEffect(() => {
-        setName(stackPullUp)
-    // eslint-disable-next-line 
-    }, []);
     
     const closeOverlay = () => {
        setStackPullUp(undefined)
@@ -46,11 +40,11 @@ const PullUpCard = props => {
                     top: 0,
                 },
                 inner: {
-                    paddingLeft: 0,
-                    paddingRight: 0,
+                    paddingLeft: "0 !important",
+                    paddingRight: "0 !important",
                     top: wide ? undefined: "unset",
                     bottom: 0,
-                    paddingBottom: 0,
+                    paddingBottom: "0 !important",
                 },
                 modal: {
                     paddingBottom: "env(safe-area-inset-bottom)" 

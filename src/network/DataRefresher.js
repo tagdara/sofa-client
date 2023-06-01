@@ -8,7 +8,7 @@ import useStream from 'network/useStream'
 import storeUpdater from 'endpoint-model/storeUpdater'
 import { useDidUpdate } from '@mantine/hooks';
 
-export default function SofaFrame(props) {
+export default function DataRefresher(props) {
 
     const refreshUser = useUserStore(state => state.refresh)
     const { streamConnected, streamStatus, reconnect } = useStream(storeUpdater)
@@ -22,6 +22,19 @@ export default function SofaFrame(props) {
         discovery()
         refreshUser()
         // eslint-disable-next-line 
+    }, [])
+
+    useEffect (() => {
+        const watchVisibilityChanges = () => {
+            if (!document.hidden) {
+                console.log('refreshing on visibility')
+                refreshRegistered()
+            }
+        }
+        console.log('registering visibility watcher')
+        document.addEventListener("visibilitychange", watchVisibilityChanges)
+        return () => document.removeEventListener ("visibilitychange", watchVisibilityChanges)
+	// eslint-disable-next-line 
     }, [])
 
     useDidUpdate(() => {

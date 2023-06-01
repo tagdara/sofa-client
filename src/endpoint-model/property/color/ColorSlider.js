@@ -7,7 +7,7 @@ import useColor from 'endpoint-model/property/color/useColor'
 
 const ColorSlider = props => {
 
-    const { color, colorHex, setColor } = useColor(props.endpointId, props.value, props.directive)
+    const { color, setColor } = useColor(props.endpointId, props.value, props.directive)
     const [ value, setValue ] = useState(undefined)
     const [ hue, setHue ] = useState(undefined)
     const [ retainBrightness, setRetainBrightness] = useState(true)

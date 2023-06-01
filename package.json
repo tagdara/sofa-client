@@ -1,6 +1,6 @@
 {
     "name": "sofa-client",
-    "version": "3.76.1",
+    "version": "3.76.4",
     "homepage": "/",
     "private": true,
     "dependencies": {

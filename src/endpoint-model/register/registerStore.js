@@ -23,8 +23,9 @@ const useRegisterStore = create((set, get) => ({
         const loggedIn = useLoginStore.getState().logged_in;
         if (!loggedIn) { return }
         const endpointIds = Object.keys(get().registered)
-        const data = { add : endpointIds }
+        const data = { refresh : endpointIds }
         const result = await tokenFetch(registerUrl, data)
+        console.log('result', registerUrl, result)
         storeUpdater({ "event": {"header": {"name": "multiple StateReports"}}, "data": result })
     },
     add: async (endpointIds, source) => {

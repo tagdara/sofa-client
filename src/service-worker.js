@@ -28,7 +28,6 @@ const fileExtensionRegexp = new RegExp('/[^/?]+\\.[^/]+$');
 registerRoute(
   // Return false to exempt requests from being fulfilled by index.html.
   ({ request, url }) => {
-    console.log('register', url)
     // If this isn't a navigation, skip.
     if (request.mode !== 'navigate') {
       return false;
@@ -42,6 +41,7 @@ registerRoute(
       return false;
     } // Return true to signal that we want to use the handler.
 
+    console.log('register', url)
     return true;
   },
   createHandlerBoundToURL(process.env.PUBLIC_URL + '/index.html')

@@ -3,8 +3,8 @@ import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import PullUpCard from 'layout/pullup/PullUpCard'
 import { Button, Divider, Stack } from '@mantine/core'
 import SpeakerList from 'devices/Speaker/SpeakerList';
-import { IconMusic } from '@tabler/icons';
 import PowerStateLine from 'endpoint-model/property/powerState/PowerStateLine'
+import JukeboxPlayer from 'devices/Jukebox/JukeboxPlayer'
 
 const JukeboxPullUp = props => {
 
@@ -22,18 +22,19 @@ const JukeboxPullUp = props => {
     return (
         <PullUpCard name={name} title={name}  >
             <Stack spacing="xl">
+                <JukeboxPlayer
+                    endpointId={props.endpointId}
+                    buttons={
+                      <Button variant="light"
+                        onClick={openJukebox}
+                        radius="xl">
+                        Open Jukebox
+                      </Button>
+                    }
+                />
                 <SpeakerList exclude={excludeSpeakers} />
                 <Divider />
                 <PowerStateLine icon label="Amp Power" endpointId={ampOutlet} />
-                <Button 
-                    size="lg"
-                    fullWidth 
-                    variant="filled" 
-                    onClick={openJukebox}
-                    leftIcon={<IconMusic size={20} />}
-                >
-                    Jukebox App
-                </Button>
             </Stack>
         </PullUpCard>
     );

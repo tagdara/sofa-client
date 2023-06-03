@@ -4,7 +4,7 @@ import { friendlyNameByEndpointId } from 'endpoint-model/discovery'
 import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
 import usePowerState from 'endpoint-model/property/powerState/usePowerState'
 import useConnectivity from 'endpoint-model/property/connectivity/useConnectivity'
-import { IconCloudOff, IconDeviceSpeaker, IconDeviceSpeakerOff } from '@tabler/icons';
+import { IconDeviceSpeaker, IconDeviceSpeakerOff } from '@tabler/icons';
 
 const Speaker = props => {
 
@@ -18,19 +18,29 @@ const Speaker = props => {
     }
 
     return (
-        <Group direction="row" noWrap style={{ width: "100%"}} spacing={0}>
+        <Group direction="row" noWrap style={{ padding: "4px 0", width: "100%"}} >
             <Group style={{ flexShrink: 0, width: "50%" }} noWrap>
                 { !reachable ?
-                    <ThemeIcon color="red" size="lg" variant={on ? "filled" : "light"} radius="md">
-                        <IconCloudOff size={20} />
+                    <ThemeIcon size="lg" variant={"subtle"} radius="md">
+                        <IconDeviceSpeakerOff 
+                            size={20} 
+                            style={{ 
+                                color:  on ? undefined : "gray" 
+                            }}
+                        />
                     </ThemeIcon>                
                 :
-                    <ThemeIcon size="lg" variant={on ? "filled" : "default"} radius="md" onClick={toggle}>
-                        { on ? <IconDeviceSpeaker size={20} /> :  <IconDeviceSpeakerOff size={20} /> }
+                    <ThemeIcon size="lg" variant={on ? "light" : "default"} radius="md" onClick={toggle}>
+                        <IconDeviceSpeaker 
+                            size={20} 
+                            style={{ 
+                                color:  on ? undefined : "gray" 
+                            }}
+                        />
                     </ThemeIcon>
                 }
                 <Text weight={400} lineClamp={1} size="lg">
-                    {name}
+                  {name}
                 </Text>
             </Group>
             <VolumeSlider 

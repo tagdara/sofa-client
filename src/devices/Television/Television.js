@@ -9,7 +9,7 @@ import TelevisionPullUp from 'devices/Television/TelevisionPullUp'
 import VolumeSlider from 'endpoint-model/property/volume/VolumeSlider'
 import useMode from 'endpoint-model/property/mode/useMode'
 
-import { IconDeviceTv, IconDeviceTvOff } from '@tabler/icons';
+import { IconDeviceTv } from '@tabler/icons';
 
 const Television = props => {
     const name = friendlyNameByEndpointId(props.endpointId) 
@@ -29,7 +29,7 @@ const Television = props => {
                         icon={ on ?
                             <IconDeviceTv size={24}  />  
                             :
-                            <IconDeviceTvOff size={24} /> 
+                            <IconDeviceTv size={24} /> 
                             } 
                         />
                     <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4}  onClick={showPullUp}>

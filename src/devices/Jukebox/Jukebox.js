@@ -1,6 +1,6 @@
 import React from 'react';
-import Player from 'devices/Player/Player'
 import JukeboxOff from 'devices/Jukebox/JukeboxOff'
+import JukeboxPlayer from 'devices/Jukebox/JukeboxPlayer'
 import usePullUp from 'layout/pullup/usePullUp'
 import JukeboxPullUp from 'devices/Jukebox/JukeboxPullUp'
 import JukeboxSpeakerButton from 'devices/Jukebox/JukeboxSpeakerButton'
@@ -13,19 +13,17 @@ const JukeboxHero = props => {
     const { showPullUp } = usePullUp(name)
     const { rangeValue: activeSpeakerCount } = useRangeValue(props.endpointId, 'Speaker.Count')
 
-    function openJukebox() {
-        var newurl="https://jukebox.dayton.tech"
-        var safariWindow = window.open();
-        safariWindow.location.href = newurl
-    }
-
     return (
         <>
             {  !activeSpeakerCount ?
-                <JukeboxOff onClick={showPullUp} name={"Jukebox"} endpointId={props.endpointId} />           
+                <JukeboxOff 
+                    onClick={showPullUp} 
+                    name={"Jukebox"} 
+                    endpointId={props.endpointId} 
+                    buttons={<JukeboxSpeakerButton endpointId={props.endpointId} onClick={showPullUp} />}
+                />           
             :
-                <Player 
-                    artClick={openJukebox}
+                <JukeboxPlayer
                     endpointId={props.endpointId}
                     buttons={<JukeboxSpeakerButton endpointId={props.endpointId} onClick={showPullUp} />}
                     onClick={showPullUp}

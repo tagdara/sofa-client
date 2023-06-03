@@ -1,6 +1,6 @@
 import React from 'react';
-import { ActionIcon, Divider, Group, Title } from '@mantine/core'
-import { IconDots, IconHome, IconLamp } from '@tabler/icons';
+import { ActionIcon, Avatar, Divider, Group, Title } from '@mantine/core'
+import { IconDots, IconHome, IconBuildingWarehouse } from '@tabler/icons';
 import LightChristmasButton from 'devices/Light/LightChristmasButton'
 
 const AreaControlHeader = (props) => {
@@ -17,8 +17,10 @@ const AreaControlHeader = (props) => {
     return (
         <>
             <Group noWrap style={{ width: "100%"}} position="apart">
-                <Group>
-                    <IconLamp size={20} />
+                <Group onClick={toggleArea}>
+                    <Avatar size="lg">
+                        <IconBuildingWarehouse size={24} />
+                    </Avatar>
                     <Title order={4} >{props.name === "all" ? "All Areas" : props.name + " Lights"}</Title>
                 </Group>
                 <Group>

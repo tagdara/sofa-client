@@ -1,8 +1,0 @@
-if [[ -z "${DOCKER_REPOSITORY}" ]]; then
-  echo "No docker repository environment specified (git.domain.xxx/owner)"
-  exit 1
-fi
-
-./build_prod
-./docker_push
-./k8s_restart

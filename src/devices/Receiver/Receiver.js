@@ -9,7 +9,7 @@ import ReceiverDetailLine from 'devices/Receiver/ReceiverDetailLine'
 import usePullUp from 'layout/pullup/usePullUp'
 import ReceiverPullUp from 'devices/Receiver/ReceiverPullUp'
 
-import { IconDeviceSpeaker, IconDeviceSpeakerOff } from '@tabler/icons';
+import { IconDeviceSpeaker } from '@tabler/icons';
 
 
 const Receiver = props => {
@@ -34,7 +34,7 @@ const Receiver = props => {
                         icon={ on ?
                             <IconDeviceSpeaker size={24}  />  
                             :
-                            <IconDeviceSpeakerOff size={24} /> 
+                            <IconDeviceSpeaker size={24} /> 
                             } 
                         />
                     <Stack style={{ display: "flex", flex: 1, width: "100%"}} spacing={4} onClick={showPullUp}>

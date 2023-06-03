@@ -47,7 +47,7 @@ const SecurityCamera = props => {
         <StackCard>
             <Card.Section>
             { live ?
-                <CameraVideo endpointId={props.endpointId} />
+                <CameraVideo endpointId={props.endpointId} onClick={() => setLive(false)} />
             :
                 <CameraImage endpointId={props.endpointId} 
                                 name={"Camera"}

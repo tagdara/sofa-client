@@ -23,6 +23,7 @@ const JukeboxOff = props => {
                     {name}
                 </Text>
             </Stack>
+            { props.buttons }
         </Group>
     );
 }
